@@ -22,6 +22,8 @@ en:
             public_kpi_stats_description: Shows key performance indicators (KPI) to non-administrative users
             public_ai_stats: Show AI analysis for public
             public_ai_stats_description: Shows AI analysis to non-administrative users
+            similar_contributions_check: Check for similar contributions
+            similar_contributions_check_description: Checks newly submitted contributions in this phase against existing contributions with similar content, and shows administrators matching contributions from the same projekt while they work. In the frontend a notice with up to three similar contributions, which can be supported instead, appears before submitting. Enable this feature to avoid duplicate submissions and to speed up processing through references to contributions that have already been answered.
           resource:
             create_proposal_with_ai: Create proposal with AI
             create_proposal_with_ai_description: Enables the "Create proposal with AI" button in the frontend. Users can then have an AI assistant help them formulate proposals by describing their concern in their own words. The AI suggests a title, summary, and description text. The resulting draft remains fully editable before the user submits it.
@@ -46,6 +48,8 @@ en:
             public_kpi_stats_description: Shows key performance indicators (KPI) to non-administrative users
             public_ai_stats: Show AI analysis for public
             public_ai_stats_description: Shows AI analysis to non-administrative users
+            similar_contributions_check: Check for similar contributions
+            similar_contributions_check_description: Checks newly submitted contributions in this phase against existing contributions with similar content, and shows administrators matching contributions from the same projekt while they work. In the frontend a notice with up to three similar contributions, which can be supported instead, appears before submitting. Enable this feature to avoid duplicate submissions and to speed up processing through references to contributions that have already been answered.
           resource:
             create_investment_with_ai: Create investment proposal with AI
             create_investment_with_ai_description: Enables the "Create investment proposal with AI" button in the frontend. Users can have an AI assistant help them formulate an investment proposal by describing their concern in their own words. The AI suggests a title, summary, and description. The resulting draft remains fully editable before submission.

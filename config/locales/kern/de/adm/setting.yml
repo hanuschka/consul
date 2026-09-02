@@ -5,54 +5,21 @@ de:
       email_on_official_answer_description: "Versendet eine E-Mail an die einreichende Person, sobald zu ihrem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Die E-Mail enthält den Text der offiziellen Antwort sowie einen Link zum Vorschlag, auf der Vorschlagsseite selbst bleibt die Antwort wie bisher öffentlich sichtbar. Aktivieren Sie diese Einstellung, wenn Einreichende aktiv über die Rückmeldung der Verwaltung informiert werden sollen und nicht selbst auf die Plattform zurückkehren müssen."
     feature:
       bund_id_login: "BundID-Anmeldung aktivieren"
-      bund_id_login_description: "Zeigt auf der Anmelde- und Registrierungsseite eine BundID-Schaltfläche. Nutzer können sich dann mit ihrem BundID-Konto anmelden und registrieren."
+      bund_id_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine BundID-Schaltfläche zur Anmeldung mit BundID-Konto. Die Wohnsitz-Verifizierung ist davon unabhängig. Aktivieren Sie es für Verwaltungskonten. Erfordert Zugangsdaten in der Serverkonfiguration."
       twitter_login: "Twitter-Anmeldung aktivieren"
-      twitter_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Twitter-Konto. Erfordert hinterlegte Twitter-Zugangsdaten in der Serverkonfiguration."
+      twitter_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Twitter-Schaltfläche, über die sich Nutzer anmelden und registrieren. Aktivieren Sie es, wenn Ihre Zielgruppe dort ein Konto hat. Erfordert Zugangsdaten in der Serverkonfiguration."
       facebook_login: "Facebook-Anmeldung aktivieren"
-      facebook_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Facebook-Konto. Erfordert hinterlegte Facebook-Zugangsdaten in der Serverkonfiguration."
+      facebook_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Facebook-Schaltfläche, über die sich Nutzer anmelden und registrieren. Aktivieren Sie es, wenn Sie Menschen über Facebook erreichen. Erfordert Zugangsdaten in der Serverkonfiguration."
       google_login: "Google-Anmeldung aktivieren"
-      google_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Google-Konto. Erfordert hinterlegte Google-Zugangsdaten in der Serverkonfiguration."
+      google_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Google-Schaltfläche, über die sich Nutzer anmelden und registrieren. Aktivieren Sie es, um die Registrierung kurz zu halten. Erfordert Zugangsdaten in der Serverkonfiguration."
       wordpress_login: "Wordpress-Anmeldung aktivieren"
-      wordpress_login_description: "Erlaubt die Anmeldung und Registrierung mit einem Wordpress-Konto. Erfordert hinterlegte Wordpress-Zugangsdaten in der Serverkonfiguration."
+      wordpress_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Wordpress-Schaltfläche, über die sich Nutzer anmelden und registrieren. Aktivieren Sie es, wenn Ihre Nutzer dort ein Konto haben. Erfordert Zugangsdaten in der Serverkonfiguration."
       kobil_login: "KOBIL-Anmeldung aktivieren"
-      kobil_login_description: "Zeigt auf der Anmelde- und Registrierungsseite eine Schaltfläche „Mit KOBIL anmelden“. Nutzer können sich dann über ihr KOBIL-Konto (OpenID Connect) anmelden und registrieren. Erfordert hinterlegte KOBIL-Zugangsdaten in der Serverkonfiguration."
+      kobil_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Schaltfläche mit KOBIL-Logo (OpenID Connect). Aktivieren Sie es, wenn KOBIL Ihr zentrales Identitätssystem ist. Erfordert Zugangsdaten in der Serverkonfiguration."
       kobil_address_verification: "KOBIL Adressverifizierung"
-      kobil_address_verification_description: "Übernimmt die vom KOBIL-Konto bereitgestellte Adresse (Straße, PLZ, Ort) in das Nutzerprofil. Nur wirksam, wenn die KOBIL-Anmeldung aktiviert ist."
+      kobil_address_verification_description: "Übernimmt die Adresse aus dem KOBIL-Konto (Straße, PLZ, Ort) in das Nutzerprofil, ohne sie mit dem Adressregister zu verknüpfen. Gebietsbeschränkte Phasen schaltet sie nicht frei. Aktivieren Sie es, um Tipparbeit zu ersparen."
       whatsapp_bot: "WhatsApp-Bot aktivieren"
       whatsapp_bot_description: "Schaltet den WhatsApp-Bot für Bürger:innen frei. Wirkt erst, wenn euer technisches Team das WhatsApp-Geschäftskonto auf dem Server eingerichtet hat."
-    whatsapp:
-      default_locale: "Bot-Sprache für unbekannte Nummern"
-      default_locale_description: "Sprache, die der Bot verwendet, solange jemand sein Konto noch nicht verbunden hat – die Einladung und jede Antwort an eine unverbundene Nummer. Sobald eine Nummer verbunden ist, wird die Sprache des jeweiligen Kontos verwendet. Trage einen Sprachcode wie „de“ oder „en“ ein. Leer lassen, um die Standardsprache der Plattform zu verwenden."
-      address_form: "Anrede des Bots"
-      address_form_description: "Ob der Bot die Bürger:innen mit „Sie“ oder mit „du“ anspricht. Trage „sie“ oder „du“ ein; leer lassen für „Sie“. Gilt für die frei formulierten Antworten des Bots und für die Standardsätze rund um das Einreichen. Feste Beschriftungen von Schaltflächen und Auswahllisten bleiben unverändert."
-      welcome_message_enabled: "Erstbesucher:innen begrüßen"
-      welcome_message_enabled_description: "Öffnet jemand den Chat mit eurer Nummer zum ersten Mal, meldet WhatsApp das an den Bot und er antwortet sofort mit dem Begrüßungstext unten und einer Liste der laufenden Projekte. Ohne diese Option bleibt der Chat leer, bis die Person selbst etwas schreibt. Wirkt erst nach „An WhatsApp übertragen“ weiter unten."
-      welcome_greeting: "Begrüßungstext"
-      welcome_greeting_description: "Wird über der Liste der laufenden Projekte angezeigt, wenn jemand den Chat zum ersten Mal öffnet. Ein bis zwei Sätze genügen. Leer lassen, um die Standardformulierung zu verwenden."
-      ice_breaker_1: "Antippbarer Vorschlag 1"
-      ice_breaker_1_description: "Vorschläge erscheinen als antippbare Optionen im leeren Chat, sodass niemand zum Starten etwas tippen muss. Maximal 80 Zeichen, keine Emojis. Leer lassen, um die Standardformulierung zu verwenden. Wirkt erst nach „An WhatsApp übertragen“."
-      ice_breaker_2: "Antippbarer Vorschlag 2"
-      ice_breaker_2_description: "Zweiter Vorschlag im leeren Chat. Maximal 80 Zeichen, keine Emojis."
-      ice_breaker_3: "Antippbarer Vorschlag 3"
-      ice_breaker_3_description: "Dritter Vorschlag im leeren Chat. Maximal 80 Zeichen, keine Emojis."
-      ice_breaker_4: "Antippbarer Vorschlag 4"
-      ice_breaker_4_description: "Vierter und letzter Vorschlag im leeren Chat. Maximal 80 Zeichen, keine Emojis."
-      commands: "Befehle"
-      commands_description: "Kurzbefehle, die angezeigt werden, wenn jemand im Chat einen Schrägstrich tippt. Einer pro Zeile in der Form name|Erklärung, zum Beispiel: projekte|Laufende Projekte anzeigen. Maximal 30 Befehle, Name bis 32 Zeichen. Wirkt erst nach „An WhatsApp übertragen“."
-      broadcast_template: "Name der WhatsApp-Nachrichtenvorlage"
-      broadcast_template_description: "Name der in 360dialog freigegebenen Vorlage, die für Projekt-Benachrichtigungen verwendet wird. Die Vorlage muss genau zwei Platzhalter im Textkörper haben: 1. Projektname, 2. Projektlink. Ohne freigegebene Vorlage erreichen Benachrichtigungen nur Personen, die in den letzten 24 Stunden geschrieben haben."
-      broadcast_card_template: "Name der Vorlage für Projektkarten"
-      broadcast_card_template_description: "Optional. Name einer freigegebenen Vorlage mit Bild-Kopfzeile, zwei Platzhaltern im Text (1. Projektname, 2. Untertitel) und einer Link-Schaltfläche. Ist sie hinterlegt, wird die Benachrichtigung als Projektkarte mit Bild versendet – aber nur für Projekte, die ein Bild und einen Untertitel haben. Alle anderen erhalten die reine Textvorlage oben."
-      broadcast_template_language: "Sprache der Nachrichtenvorlage"
-      broadcast_template_language_description: "Sprachcode der freigegebenen Vorlage, z. B. „de“. Muss exakt dem in 360dialog hinterlegten Sprachcode entsprechen, sonst lehnt WhatsApp den Versand ab."
-      auto_broadcast_new_projekts: "Benachrichtigung automatisch senden"
-      auto_broadcast_new_projekts_description: "Sobald ein Projekt veröffentlicht wird, geht die WhatsApp-Benachrichtigung ohne weiteres Zutun an alle verbundenen Bürger:innen. Ist der Schalter aus, muss sie auf der Projektseite manuell ausgelöst werden. Jede Person erhält pro Projekt höchstens eine Nachricht."
-      transcription_model: "Modell für Sprachnachrichten"
-      transcription_model_description: "OpenAI-Modell, mit dem Sprachnachrichten in Text umgewandelt werden. Leer lassen für den Standard „gpt-4o-mini-transcribe“. Die Umwandlung funktioniert nur mit OpenAI-Zugangsdaten."
-      message_retention_days: "Aufbewahrung der Chatnachrichten (Tage)"
-      message_retention_days_description: "Nach dieser Zeitspanne löscht ein nächtlicher Auftrag die gespeicherten WhatsApp-Nachrichten samt Inhalt. Standard: 90 Tage."
-      max_voice_megabytes: "Maximale Größe einer Sprachnachricht (MB)"
-      max_voice_megabytes_description: "Größere Sprachnachrichten werden nicht heruntergeladen und nicht umgewandelt; der Bot bittet dann um Text. Standard: 16 MB."
     projekt_option:
       general:
         external_participation_link: Alternativen Link in den Projektressourcen verwenden
@@ -204,9 +171,9 @@ de:
         two_click_iframe_solution_description: "Aktivieren Sie diese Option, um einen datenschutzkonformen Blur-Effekt für eingebettete Inhalte (z. B. Karten oder Videos) zu verwenden. Der Inhalt wird erst nach einem aktiven Klick durch die Nutzer geladen („Zwei-Klick-Lösung“). So stellen Sie sicher, dass keine Daten an Drittanbieter übertragen werden, bevor eine Zustimmung erfolgt ist."
       general:
         enable_google_translate: Google Translate aktivieren
-        enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
+        enable_google_translate_description: 'Bindet das Übersetzungs-Widget von Google Translate ein. Im Hauptmenü erscheint ein Sprach-Symbol, die eigene Sprachauswahl entfällt. Aktivieren Sie es für viele Sprachen und stimmen Sie zuvor den <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform" target="_blank" rel="noopener">Nutzungsbedingungen</a> zu.'
         show_guest_login_links: Zeige Gast-Login an
-        show_guest_login_links_description: Zeigt den Gast-Login-Link in der Fußzeile
+        show_guest_login_links_description: "Erlaubt die Anmeldung als Gast, nur mit Anzeigenamen, ohne E-Mail und Passwort. In der Fußzeile erscheint dazu ein Link. Gäste können an Phasen mit Mindeststatus „Gastnutzer“ teilnehmen. Aktivieren Sie es für eine niedrige Hürde."
         users_overview_page: Übersicht aller Nutzer*innen
         users_overview_page_description: "Aktiviert eine öffentliche Übersichtsseite mit allen aktiven Nutzer*innen, die ihrer Anzeige zugestimmt haben. Besucher können Profile durchsuchen und die Beteiligungsaktivität anderer Nutzer*innen einsehen, etwa eingereichte Vorschläge, Kommentare und Abstimmungsteilnahmen."
         enable_projekt_events_page: Veranstaltungskalender
@@ -317,7 +284,7 @@ de:
         Ermöglicht es, Sachbearbeitenden oder Sachbearbeitergruppen Leserechte auf alle Anliegen zu geben, nicht nur auf die eigenen zugewiesenen. Ist die Einstellung aktiviert, erscheint in der Meldungsübersicht ein Filter mit den Werten „Mir zugewiesen“, „Unter Beobachtung“ und „Alle Anliegen“. Aktivieren Sie diese Funktion, wenn Sachbearbeitende einen Überblick über alle eingehenden Anliegen benötigen, auch außerhalb ihrer eigenen Zuständigkeit.
       ai_categorization: KI-Kategorisierung im Meldeformular
       ai_categorization_description: >
-        Bestimmt automatisch Haupt- und Unterkategorie einer Meldung anhand von Titel, Beschreibung und – sofern vorhanden – einer KI-Bildanalyse des hochgeladenen Fotos. Ist die Einstellung aktiviert, werden die Kategoriefelder der meldenden Person im öffentlichen Formular nicht angezeigt; ist sie deaktiviert, wählt die meldende Person Haupt- und Unterkategorie selbst über eine kaskadierende Auswahl. Aktivieren Sie diese Funktion, um die Kategorisierung eingehender Meldungen zu automatisieren und Sachbearbeitende zu entlasten.
+        Bestimmt automatisch Haupt- und Unterkategorie einer Meldung anhand von Titel, Beschreibung und – sofern vorhanden – einer KI-Bildanalyse des hochgeladenen Fotos. Ist die Einstellung aktiviert, werden die Kategoriefelder der meldenden Person im öffentlichen Formular nicht angezeigt; ist sie deaktiviert, wählt die meldende Person Haupt- und Unterkategorie selbst über eine kaskadierende Auswahl. Im Verwaltungsbereich bleiben die Kategoriefelder sichtbar: Lassen Sachbearbeitende sie beim Erstellen einer Meldung leer, übernimmt die KI die Zuordnung; wählen sie selbst eine Kategorie, bleibt diese Auswahl unverändert. Aktivieren Sie diese Funktion, um die Kategorisierung eingehender Meldungen zu automatisieren und Sachbearbeitende zu entlasten.
       officer_groups_only_for_assignment: Nur Sachbearbeitergruppen bei Zuweisung
       officer_groups_only_for_assignment_description: >
         Schränkt die Auswahl bei der Zuweisung einer Zuständigkeit (Meldung, Kategorie, Unterkategorie) auf Sachbearbeitergruppen ein; einzelne Personen stehen dann nicht mehr zur Auswahl. Im Verwaltungsbereich zeigt das Zuweisungsfeld nur noch Gruppen an. Aktivieren Sie diese Einstellung, wenn Anliegen konsequent über die vorgesehenen Gruppenprozesse bearbeitet werden sollen statt über einzelne Personen.

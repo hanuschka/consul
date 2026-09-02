@@ -2,4 +2,4 @@ en:
   custom:
     ai:
       errors:
-        watermarking_unavailable: "The image could not be marked as AI-generated and was therefore not saved. Please try again later or contact an administrator."
+        marking_unavailable: "The image could not be marked as AI-generated and was therefore not saved. Please try again later or contact an administrator."

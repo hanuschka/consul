@@ -147,6 +147,8 @@ This logo should be readable on both light and dark backgrounds, since it appear
           landing_site_logo_follow_to_landing_page_description: "When enabled, clicking the logo in the top navigation leads not to the general homepage but to the currently configured topic or area page."
           landing_navigation_link_color_label: Color of links in the top navigation
           landing_navigation_link_color_description: "Set the font color of the links in the top navigation bar. This matters because the background image on this topic page can differ from the one on the homepage, and readability must be ensured."
+          landing_ai_context_label: AI context for this landing page
+          landing_ai_context_description: "Store background information that applies only to this landing page, for example the name and form of address of the municipality it represents. The text is never shown publicly; it replaces the platform-wide AI context for all evaluations of this landing page. Fill it in when several municipalities with their own form of address are represented on this platform."
       budget/phase:
         name_label: Phase label
         name_description: >

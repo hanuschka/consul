@@ -93,7 +93,9 @@
           </div>
         <% end %>
 
-        <%= render "shared/errors", resource: resource %>
+        <div class="js-user-resource-form-errors">
+          <%= render "shared/errors", resource: resource %>
+        </div>
 
         <% if params[:origin].present? %>
           <%= hidden_field_tag :origin, params[:origin] %>
@@ -213,7 +215,12 @@
             </div>
 
           <% end %>
-          <%= f.submit(t("custom.user_resources.form.submit_button"), class: "button") %>
+          <% if !similar_contributions_check_running? %>
+            <%= f.submit(t("custom.user_resources.form.submit_button"),
+                         class: "button js-user-resource-submit") %>
+          <% end %>
+
+          <%= render ::SimilarContributions::ProgressComponent.new(resource) %>
         </div>
         <% end %>
       </div>

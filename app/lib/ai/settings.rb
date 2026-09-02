@@ -1,7 +1,11 @@
 module Ai::Settings
-  DEFAULT_GPT_MODEL = "gpt-5.4"
-  DEFAULT_GPT_FAST_MODEL = "gpt-5.4-mini"
-  # DEFAULT_GPT_MODEL = "gpt-5.2"
+  DEFAULT_GPT_MODEL = "gpt-5.6-sol"
+
+  # Cheaper tiers of the same generation, for calls that classify pre-filtered
+  # candidates rather than generate prose. Read them through fast_model and
+  # ultrafast_model, never directly: the names exist only on OpenAI itself.
+  FAST_MODEL = "gpt-5.6-terra".freeze
+  ULTRAFAST_MODEL = "gpt-5.6-luna".freeze
 
   def self.feature_enabled?
     Rails.application.secrets.dig(:ai, :enabled) == true
@@ -115,5 +119,25 @@ module Ai::Settings
 
   def self.current_llm_provider
     Setting["ai.llm_provider"].presence || "openai"
+  end
+
+  def self.fast_model
+    openai_tier_model(FAST_MODEL)
+  end
+
+  def self.ultrafast_model
+    openai_tier_model(ULTRAFAST_MODEL)
+  end
+
+  # An instance pointed at another provider, or at an OpenAI-compatible endpoint
+  # serving its own catalogue, gets the model it configured instead.
+  def self.openai_tier_model(model)
+    return model if standard_openai?
+
+    current_llm_model
+  end
+
+  def self.standard_openai?
+    current_llm_provider == "openai" && Setting["ai.llm_api_endpoint"].blank?
   end
 end

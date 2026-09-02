@@ -9390,6 +9390,16 @@ paths:
                       type: integer
                       nullable: true
                       description: Display order (auto-assigned if omitted)
+                    randomize_answers:
+                      type: boolean
+                      nullable: true
+                      description: Shuffle the answer options per participant (ignored
+                        for rating_scale and map_points)
+                    randomize_position:
+                      type: boolean
+                      nullable: true
+                      description: Shuffle the question position (cleared for bundle,
+                        contextualized or branching questions)
                     votation_type_attributes:
                       type: object
                       properties:
@@ -9589,6 +9599,16 @@ paths:
                       type: integer
                       nullable: true
                       description: Display order of the question
+                    randomize_answers:
+                      type: boolean
+                      nullable: true
+                      description: Shuffle the answer options per participant (ignored
+                        for rating_scale and map_points)
+                    randomize_position:
+                      type: boolean
+                      nullable: true
+                      description: Shuffle the question position (cleared for bundle,
+                        contextualized or branching questions)
                     votation_type_attributes:
                       type: object
                       properties:
@@ -15941,6 +15961,13 @@ components:
           nullable: true
           description: Total number of comments on the proposal
           example: 12
+        similar_contributions_count:
+          type: integer
+          nullable: true
+          description: Number of other contributions in the same projekt with similar
+            content. Determined freshly on every request and only when the "Pruefung
+            auf aehnliche Beitraege" phase setting is enabled; 0 otherwise.
+          example: 2
         image:
           "$ref": "#/components/schemas/ImageResponse"
       required:
@@ -16093,6 +16120,13 @@ components:
           format: date_time
           description: Timestamp when the investment was last modified
           example: '2024-01-18T14:30:00Z'
+        similar_contributions_count:
+          type: integer
+          nullable: true
+          description: Number of other contributions in the same projekt with similar
+            content. Determined freshly on every request and only when the "Pruefung
+            auf aehnliche Beitraege" phase setting is enabled; 0 otherwise.
+          example: 2
         image:
           "$ref": "#/components/schemas/ImageResponse"
       required:
@@ -16852,6 +16886,16 @@ components:
           nullable: true
           description: Display order of the question
           example: 1
+        randomize_answers:
+          type: boolean
+          nullable: true
+          description: Shuffle the answer options per participant (ignored for rating_scale
+            and map_points)
+        randomize_position:
+          type: boolean
+          nullable: true
+          description: Shuffle the question position (cleared for bundle, contextualized
+            or branching questions)
         created_at:
           type: string
           format: date_time

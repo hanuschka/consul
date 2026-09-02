@@ -60,8 +60,9 @@
 <% end %>
 
 <div data-controller="adm--subcategory-cascade">
+<% category_hint = form.object.new_record? && DeficiencyReports::AiCategorizationService.enabled? ? t(".hints.category_ai") : t(".hints.category") %>
 <%= render Kern::FormFieldComponent.new(divider: false,
-  label: t(".labels.category"), hint: t(".hints.category")) do %>
+  label: t(".labels.category"), hint: category_hint) do %>
   <% if form.object.errors[:deficiency_report_category_id].present? %>
     <p class="kern-error mb-2" role="alert">
       <span class="kern-icon kern-icon--danger kern-icon--md" aria-hidden="true"></span>

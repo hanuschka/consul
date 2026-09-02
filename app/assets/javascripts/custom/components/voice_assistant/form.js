@@ -167,10 +167,12 @@
     },
 
     updateImage: function(image) {
-      var imageFileInput = $(".js-direct-image-upload:visible")
-        .first()
+      var uploadContainer = $(".js-direct-image-upload:visible").first();
+      var imageFileInput = uploadContainer
         .find(".js-direct-image-upload--input")
         .get(0);
+
+      uploadContainer.find(".js-direct-image-upload--ai-generated").val(true);
 
       setBase64ToFileInput(imageFileInput, image);
     },

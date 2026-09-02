@@ -1,0 +1,80 @@
+<div class="modern-modal--header">
+  <h3><%= t(".title") %></h3>
+</div>
+
+<div class="similar-contributions-notice">
+  <p class="similar-contributions-notice--intro"><%= t(".intro", count: matches.size) %></p>
+
+  <ul class="similar-contributions-notice--list">
+    <% matches.each do |match| %>
+      <li class="similar-contributions-notice--item">
+        <% if image_visible_for?(match.resource) %>
+          <div class="similar-contributions-notice--item-image">
+            <%= render image_component_for(match.resource) %>
+          </div>
+        <% end %>
+
+        <div class="similar-contributions-notice--item-body">
+          <% if match.resource.sentiment.present? || match.resource.labels_available? %>
+            <div class="similar-contributions-notice--item-meta">
+              <% if match.resource.sentiment.present? %>
+                <span class="similar-contributions-notice--item-sentiment"
+                      style="<%= sentiment_style_for(match.resource) %>">
+                  <%= match.resource.sentiment.name %>
+                </span>
+              <% end %>
+
+              <% if match.resource.labels_available? %>
+                <%= render Shared::ProjektLabelsComponent.new(resource: match.resource) %>
+              <% end %>
+            </div>
+          <% end %>
+
+          <h4 class="similar-contributions-notice--item-title">
+            <%= link_to path_for(match.resource), target: "_blank",
+                  title: t("shared.target_blank") do %>
+              <%= match.resource.title %>
+              <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+            <% end %>
+          </h4>
+
+          <p class="similar-contributions-notice--item-excerpt"><%= excerpt_for(match.resource) %></p>
+
+          <% if supporting_available?(match.resource) %>
+            <div class="similar-contributions-notice--item-support"
+                 id="<%= votes_container_id(match.resource) %>">
+              <%= render votes_component_for(match.resource) %>
+            </div>
+          <% end %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="similar-contributions-notice--actions">
+  <%# Supporting a match ends the flow, so its link replaces the two default
+      actions. One link per supportable match, revealed by the JS that reads
+      the refreshed vote markup. %>
+  <% matches.each do |match| %>
+    <% if supporting_available?(match.resource) %>
+      <%= link_to t(".supported_link"), path_for(match.resource),
+            class: "button similar-contributions-notice--supported-link " \
+                   "js-similar-contributions-supported-link",
+            data: { votes_container: votes_container_id(match.resource) },
+            hidden: true %>
+    <% end %>
+  <% end %>
+
+  <div class="similar-contributions-notice--default-actions js-similar-contributions-default-actions">
+    <button type="button" class="button hollow js-similar-contributions-dismiss">
+      <%= t(".back_to_form") %>
+    </button>
+
+    <button type="button"
+            class="button similar-contributions-notice--submit-anyway js-similar-contributions-publish"
+            data-publish-url="<%= publish_url %>">
+      <%= t(".submit_anyway") %>
+    </button>
+  </div>
+</div>

@@ -31,6 +31,15 @@ class AiController < ApplicationController
 
     if response.success?
       mark_resource_generated_image
+
+      begin
+        render json: marked_payload(response.parsed_response), status: response.code
+      rescue Images::MarkAiGeneratedService::MarkingFailedError
+        render json: { error: I18n.t("custom.ai.errors.marking_unavailable") },
+               status: :service_unavailable
+      end
+
+      return
     end
 
     render json: response.parsed_response, status: response.code
@@ -66,9 +75,9 @@ class AiController < ApplicationController
     end
 
     begin
-      attach_generated_image(resource, image_response.parsed_response["image"])
-    rescue Images::EmbedAiWatermarkService::MarkingFailedError
-      render json: { error: I18n.t("custom.ai.errors.watermarking_unavailable") },
+      attach_generated_image(resource, image_response.parsed_response)
+    rescue Images::MarkAiGeneratedService::MarkingFailedError
+      render json: { error: I18n.t("custom.ai.errors.marking_unavailable") },
              status: :service_unavailable
       return
     end
@@ -113,10 +122,46 @@ class AiController < ApplicationController
       resource.update_column(:generated_image, true)
     end
 
-    def attach_generated_image(resource, base64_image)
+    def attach_generated_image(resource, response_body)
       ResourceImages::AttachService.from_generated_base64(
-        resource: resource, user: current_user, base64: base64_image
+        resource: resource,
+        user: current_user,
+        base64: response_body["image"],
+        ai_system: DtApi::Resources::Ai.reported_provider(response_body),
+        ai_system_version: DtApi::Resources::Ai.reported_model(response_body)
       )
+    end
+
+    def marked_payload(parsed_response)
+      base64_image = parsed_response["image"]
+      return parsed_response if base64_image.blank?
+
+      marked_data = marked_image_data(
+        base64_image,
+        filename: "ai_generated_#{Time.current.to_i}.jpg",
+        image: ::Image.new,
+        response_body: parsed_response
+      )
+
+      parsed_response.merge("image" => Base64.strict_encode64(marked_data))
+    end
+
+    def marked_image_data(base64_image, filename:, image:, response_body: {})
+      generated_file = Base64ImageUtils.decode_to_tempfile(base64_image)
+
+      begin
+        Images::MarkAiGeneratedService.call(
+          image: image,
+          data: File.binread(generated_file.path),
+          filename: filename,
+          content_type: "image/jpeg",
+          ai_system: DtApi::Resources::Ai.reported_provider(response_body),
+          ai_system_version: DtApi::Resources::Ai.reported_model(response_body)
+        ).data[:image_data]
+      ensure
+        generated_file.close
+        generated_file.unlink
+      end
     end
 
     def image_url(attachment)

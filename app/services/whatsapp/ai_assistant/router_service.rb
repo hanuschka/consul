@@ -139,7 +139,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       tool_loop = ::OpenaiApi::ToolLoop.new(
         tools: tools,
         tool_definitions: tool_definitions,
-        model: ::Ai::Settings::DEFAULT_GPT_FAST_MODEL,
+        model: ::Ai::Settings::FAST_MODEL,
         instructions: instructions,
         input: chain.input_for(@inbound_text),
         feature: ::AiUsageRecord::UNKNOWN_FEATURE,

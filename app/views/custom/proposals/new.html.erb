@@ -7,3 +7,5 @@
   url: proposals_path,
   title: t("new.start_new", scope: "proposals")
 ) %>
+
+<%= render SimilarContributions::CheckSectionComponent.new(@proposal) %>

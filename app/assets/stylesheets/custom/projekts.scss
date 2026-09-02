@@ -1510,6 +1510,13 @@ span.projekt-backlink:before {
   left: 165px;
 }
 
+// The buttons sit at fixed offsets, so a hidden AI marker would leave its slot
+// empty between the generate and delete buttons.
+.projekt-image-upload-wrapper:has(.projekt-image-ai-marker-button.d-none)
+  .projekt-image-delete-button {
+  left: 115px;
+}
+
 rich-tooltip:has(.projekt-image-generate-button:disabled) {
   cursor: not-allowed;
 }

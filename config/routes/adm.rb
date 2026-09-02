@@ -65,6 +65,7 @@ namespace :adm do
     resources :individual_group_values, as: :values, only: [:show, :new, :create, :edit, :update, :destroy] do
       post :search_user, on: :member
       post :add_user, on: :member
+      post :add_email, on: :member
       post :add_from_csv, on: :member
       delete :remove_user, on: :member
       delete :remove_email_from_auto_join_emails, on: :member

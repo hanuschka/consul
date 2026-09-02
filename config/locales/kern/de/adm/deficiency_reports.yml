@@ -85,6 +85,8 @@ de:
             status_changed_at: Statusänderung
             title: Titel
             author: Autor
+            on_behalf_of: Im Auftrag von
+            recorded_by: Erfasst von
             intake_channel: Eingangskanal
             status: Status
             location: Standort
@@ -132,7 +134,10 @@ de:
           category: Kategorie
           subcategory: Unterkategorie
           map_label: Karte
+          recorded_by_label: Erfasst von
           on_behalf_of_label: Im Auftrag von
+          on_behalf_of_company_label: Firma
+          on_behalf_of_email_label: E-Mail
           intake_channel_label: Eingangskanal
           video_url: Video-URL
           address: Adresse
@@ -146,10 +151,18 @@ de:
           answer_template_prompt: "— Vorlage auswählen —"
           official_answer: Offizielle Antwort
           official_answer_hint: "Geben Sie hier die offizielle Antwort zu diesem Anliegen ein. <strong>Wichtiger Hinweis:</strong> Dieser Text ist öffentlich sichtbar."
+          official_answer_documents: Dokumente zur Antwort
+          official_answer_documents_hint: >-
+            Erlaubte Dateitypen: %{types}. Maximal %{count} Dokumente, je bis zu %{size} MB.
+            Angehängte Dokumente sind öffentlich sichtbar.
         update_official_answer:
           success: Offizielle Antwort wurde erfolgreich aktualisiert.
+        remove_official_answer_document:
+          success: Dokument wurde entfernt.
         new:
           title: Neue Meldung erstellen
+        create:
+          ai_fallback: Meldung wurde erstellt. Die KI konnte keine sichere Zuordnung treffen, daher wurde die Kategorie „%{category}“ vergeben. Bitte prüfen und bei Bedarf korrigieren.
         edit:
           title: Mängelmelder bearbeiten
         form_fields:
@@ -183,6 +196,7 @@ de:
             on_behalf_of: Geben Sie hier den Namen der Person ein, in deren Auftrag der Beitrag erstellt wurde. Dieses Feld wird verwendet, wenn ein Sachbearbeiter oder Administrator einen Beitrag stellvertretend für einen Bürger erfasst. Der Name wird auf der Detailseite angezeigt und hilft bei der Zuordnung des Beitrags.
             on_behalf_of_company_name: Optional. Die Firma oder Organisation, für die die Person das Anliegen meldet. Der Eintrag wird im Profil des verknüpften Benutzerkontos gespeichert, nicht am Anliegen selbst, und nur übernommen, wenn im Konto noch keine Firma hinterlegt ist.
             on_behalf_of_email: Optional. Wenn Sie eine E-Mail-Adresse angeben, wird das Anliegen dem dahinterliegenden Benutzerkonto zugeordnet. Existiert für die Adresse noch kein Konto, wird eines angelegt und erhält eine Bestätigungs-E-Mail (Double-Opt-In). Ein bereits vorhandenes Konto wird nur verknüpft und erhält keine Bestätigungs-E-Mail. Lassen Sie das Feld leer, bleibt das Anliegen Ihnen zugeordnet.
+            category_ai: Lassen Sie die Kategorie leer, ordnet die KI beim Speichern Kategorie und Unterkategorie automatisch zu. Wählen Sie selbst eine Kategorie, bleibt Ihre Auswahl unverändert. Ist keine sichere Zuordnung möglich, landet das Anliegen in der Rückfall-Kategorie und kann anschließend jederzeit korrigiert werden.
             category: Die Kategorie ordnet den Beitrag einem bestimmten Themenbereich zu, z. B. Straßenschäden, Beleuchtung oder Grünflächen. Sie beeinflusst die automatische Zuweisung an zuständige Sachbearbeiter und wird in der Listenansicht als farbiger Filter angezeigt. Eine korrekte Zuordnung beschleunigt die Bearbeitung.
             intake_channel: Der Weg, auf dem das Anliegen bei der Verwaltung eingegangen ist, z. B. Telefon, E-Mail oder persönlich. Die Angabe ist verpflichtend, sobald Sie ein Anliegen im Namen einer dritten Person erfassen. Anliegen, die Bürgerinnen und Bürger selbst über die Plattform einreichen, erhalten automatisch den konfigurierten Standardkanal.
             subcategory: Die Unterkategorie gliedert das Anliegen innerhalb der gewählten Kategorie feiner, z. B. „Schlaglöcher” unter „Bau & Verkehr”. Zur Auswahl stehen nur Unterkategorien der oben gewählten Kategorie; Kategorien ohne Unterkategorien zeigen kein Auswahlfeld an. Hat die Unterkategorie eine eigene Standard-Zuständigkeit, wird das Anliegen automatisch dorthin zugewiesen.
@@ -519,6 +533,7 @@ de:
             reports_per_month: Meldungen pro Monat
             by_status: Verteilung nach Status
             by_category: Verteilung nach Kategorie (Top 10)
+            by_intake_channel: Verteilung nach Eingangskanal
           periods:
             week: Woche
             month: Monat
@@ -527,6 +542,7 @@ de:
             status: Status
             category: Kategorie
             responsible: Sachbearbeiter
+            intake_channel: Eingangskanal
           total: Gesamtzeit
           this_week: Diese Woche
           last_week: Letzte Woche
@@ -537,7 +553,11 @@ de:
           satisfaction: Zufriedenheit
           response_time: Reaktionszeit
           communication: Höflichkeit
-          without_status: Ohne Status
+          without:
+            status: Ohne Status
+            category: Ohne Kategorie
+            responsible: Nicht zugewiesen
+            intake_channel: Ohne Eingangskanal
           total_row: Gesamt
       ai_settings:
         show:

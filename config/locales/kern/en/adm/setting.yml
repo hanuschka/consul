@@ -5,54 +5,21 @@ en:
       email_on_official_answer_description: "Sends an email to the submitting person as soon as an official answer to their proposal is saved or changed. The email contains the text of the official answer and a link to the proposal; on the proposal page itself the answer stays publicly visible as before. Enable this setting if submitters should be actively informed about the administration's response instead of having to return to the platform themselves."
     feature:
       bund_id_login: "Enable BundID login"
-      bund_id_login_description: "Shows a BundID button on the sign-in and registration pages. Users can then sign in and register with their BundID account."
+      bund_id_login_description: "Adds a BundID button to the sign-in and registration pages for signing in with a BundID account. Residence verification is independent of this. Enable it for existing accounts. Requires the credentials to be configured on the server."
       twitter_login: "Enable Twitter login"
-      twitter_login_description: "Allows signing in and registering with a Twitter account. Requires the Twitter credentials to be configured on the server."
+      twitter_login_description: "Adds a Twitter button to the sign-in and registration pages, letting users sign in and register with their Twitter account. Enable it when your audience has an account there. Requires the credentials to be configured on the server."
       facebook_login: "Enable Facebook login"
-      facebook_login_description: "Allows signing in and registering with a Facebook account. Requires the Facebook credentials to be configured on the server."
+      facebook_login_description: "Adds a Facebook button to the sign-in and registration pages, letting users sign in and register with their Facebook account. Enable it when you reach people through Facebook. Requires the credentials to be configured on the server."
       google_login: "Enable Google login"
-      google_login_description: "Allows signing in and registering with a Google account. Requires the Google credentials to be configured on the server."
+      google_login_description: "Adds a Google button to the sign-in and registration pages, letting users sign in and register with their Google account. Enable it to keep registration short. Requires the credentials to be configured on the server."
       wordpress_login: "Enable Wordpress login"
-      wordpress_login_description: "Allows signing in and registering with a Wordpress account. Requires the Wordpress credentials to be configured on the server."
+      wordpress_login_description: "Adds a Wordpress button to the sign-in and registration pages, letting users sign in and register with their Wordpress account. Enable it when your users have an account there. Requires the credentials to be configured on the server."
       kobil_login: "Enable KOBIL login"
-      kobil_login_description: "Shows a “Sign in with KOBIL” button on the sign-in and registration pages. Users can then sign in and register with their KOBIL account (OpenID Connect). Requires the KOBIL credentials to be configured on the server."
+      kobil_login_description: "Adds a button with the KOBIL logo to the sign-in and registration pages, letting users sign in with a KOBIL account (OpenID Connect). Enable it when KOBIL is your central identity system. Requires the credentials to be configured on the server."
       whatsapp_bot: "Enable WhatsApp bot"
       whatsapp_bot_description: "Turns on the WhatsApp bot for citizens. Only takes effect once your technical team has set up the WhatsApp business account on the server."
       kobil_address_verification: "KOBIL address verification"
-      kobil_address_verification_description: "Imports the address (street, postal code, city) supplied by the KOBIL account into the user profile. Only effective when KOBIL login is enabled."
-    whatsapp:
-      default_locale: "Bot language for unknown numbers"
-      default_locale_description: "Language the bot uses before someone has linked their account — the invitation and every reply to an unlinked number. Once a number is linked, the language of that person's account is used instead. Enter a language code such as \"de\" or \"en\". Leave empty to use the platform's default language."
-      address_form: "How the bot addresses people"
-      address_form_description: "Whether the bot uses the formal \"Sie\" or the informal \"du\". Enter \"sie\" or \"du\"; leave empty for \"Sie\". It applies to the bot's freely written replies and to the standard sentences around submitting. Fixed button and list labels are unaffected."
-      welcome_message_enabled: "Greet first-time users"
-      welcome_message_enabled_description: "When someone opens the chat with your number for the first time, WhatsApp notifies the bot and it answers straight away with the greeting below and a list of the running projects. Without this, the chat stays empty until the person writes something themselves. Takes effect only after \"Apply to WhatsApp\" below."
-      welcome_greeting: "Greeting text"
-      welcome_greeting_description: "Shown above the list of running projects when someone opens the chat for the first time. Keep it to one or two sentences. Leave empty to use the standard wording."
-      ice_breaker_1: "Tappable suggestion 1"
-      ice_breaker_1_description: "Suggestions appear as tappable options in an empty chat, so people do not have to type anything to start. Maximum 80 characters, no emoji. Leave empty to use the standard wording. Takes effect only after \"Apply to WhatsApp\"."
-      ice_breaker_2: "Tappable suggestion 2"
-      ice_breaker_2_description: "Second suggestion in the empty chat. Maximum 80 characters, no emoji."
-      ice_breaker_3: "Tappable suggestion 3"
-      ice_breaker_3_description: "Third suggestion in the empty chat. Maximum 80 characters, no emoji."
-      ice_breaker_4: "Tappable suggestion 4"
-      ice_breaker_4_description: "Fourth and last suggestion in the empty chat. Maximum 80 characters, no emoji."
-      commands: "Commands"
-      commands_description: "Shortcuts people see when they type a slash in the chat. One per line in the form name|explanation, for example: projects|Show running projects. Maximum 30 commands, name up to 32 characters. Takes effect only after \"Apply to WhatsApp\"."
-      broadcast_template: "WhatsApp message template name"
-      broadcast_template_description: "Name of the 360dialog-approved template used for project notifications. The template must have exactly two body placeholders: 1. project name, 2. project link. Without an approved template, notifications only reach people who wrote in the last 24 hours."
-      broadcast_card_template: "Projekt card template name"
-      broadcast_card_template_description: "Optional. Name of an approved template with an image header, two body placeholders (1. projekt name, 2. subtitle) and a link button. When set, notifications go out as a projekt card with an image — but only for projekts that have both an image and a subtitle. Everything else uses the plain text template above."
-      broadcast_template_language: "Message template language"
-      broadcast_template_language_description: "Language code of the approved template, e.g. \"de\". Must match the code registered in 360dialog exactly, otherwise WhatsApp rejects the send."
-      auto_broadcast_new_projekts: "Send notification automatically"
-      auto_broadcast_new_projekts_description: "As soon as a projekt is published, the WhatsApp notification goes out to all linked citizens without any further action. With the switch off it has to be triggered manually on the projekt page. Each person receives at most one message per projekt."
-      transcription_model: "Voice message model"
-      transcription_model_description: "OpenAI model used to turn voice messages into text. Leave empty for the default \"gpt-4o-mini-transcribe\". Transcription only works with OpenAI credentials."
-      message_retention_days: "Chat message retention (days)"
-      message_retention_days_description: "After this period a nightly job deletes stored WhatsApp messages including their content. Default: 90 days."
-      max_voice_megabytes: "Maximum voice message size (MB)"
-      max_voice_megabytes_description: "Larger voice messages are not downloaded or transcribed; the bot asks for text instead. Default: 16 MB."
+      kobil_address_verification_description: "Imports the address from the KOBIL account (street, postal code, city) into the user profile without linking it to the address register. It unlocks no district-restricted phases. Enable it to spare users typing."
     projekt_option:
       general:
         external_participation_link: "Use an alternative link in the project resources"
@@ -202,9 +169,9 @@ en:
         two_click_iframe_solution_description: "Enable this option to use a GDPR-compliant blur effect for embedded content (e.g. maps or videos). The content is only loaded after an active click by the user (the 'two-click solution'). This ensures that no data is sent to third-party providers before consent has been given."
       general:
         enable_google_translate: Enable Google Translate
-        enable_google_translate_description: "Before enabling Google Translate, please agree to the terms of use at the following link: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
+        enable_google_translate_description: 'Embeds the Google Translate widget. A language icon appears in the main menu and the platform''s own language selector is dropped. Enable it for many languages, and first agree to the <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform" target="_blank" rel="noopener">terms of use</a>.'
         show_guest_login_links: Show guest login
-        show_guest_login_links_description: Shows the guest-login link in the footer
+        show_guest_login_links_description: "Lets users sign in as a guest with only a display name, no email and no password. A link appears in the footer. Guests can join phases whose minimum status is guest. Enable it for the lowest barrier to participation."
         users_overview_page: Overview of all users
         users_overview_page_description: "Enables a public overview page listing all active users who have agreed to be shown. Visitors can browse profiles and see other users' participation activity, such as submitted proposals, comments, and poll participation. It helps showcase the diversity of participants."
         enable_projekt_events_page: Events calendar
@@ -314,7 +281,7 @@ en:
         Lets case workers and officer groups read every report, not only the ones assigned to them. When enabled, the report overview gains a filter with the values "Assigned to me", "Watching" and "All reports". Enable this when case workers need an overview of all incoming reports, including those outside their own responsibility.
       ai_categorization: AI categorization in the report form
       ai_categorization_description: >
-        Determines a report's main and subcategory automatically from its title, description and — where present — an AI image analysis of the uploaded photo. When enabled, the category fields are hidden from the reporting person on the public form; when disabled, the reporting person picks main and subcategory themselves via a cascading selection. Enable this to automate the categorization of incoming reports and take work off your case workers.
+        Determines a report's main and subcategory automatically from its title, description and — where present — an AI image analysis of the uploaded photo. When enabled, the category fields are hidden from the reporting person on the public form; when disabled, the reporting person picks main and subcategory themselves via a cascading selection. In the admin area the category fields stay visible: a case worker who leaves them empty when creating a report hands the assignment to the AI, and a category picked by hand is kept as it is. Enable this to automate the categorization of incoming reports and take work off your case workers.
       officer_groups_only_for_assignment: Officer groups only for assignment
       officer_groups_only_for_assignment_description: >
         Restricts the choice when assigning responsibility (report, category, subcategory) to officer groups; individual people are no longer selectable. In the admin area the assignment field then only shows groups. Enable this when reports should consistently be handled through the intended group processes rather than through individuals.

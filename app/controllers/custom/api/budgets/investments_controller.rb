@@ -17,7 +17,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
         :heading,
         :map_location,
         budget: {
-          projekt_phase: :projekt,
+          projekt_phase: [:settings, :projekt],
           group: :heading
         }
       )
@@ -27,7 +27,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
         :heading,
         :map_location,
         budget: {
-          projekt_phase: :projekt,
+          projekt_phase: [:settings, :projekt],
           group: :heading
         }
       )

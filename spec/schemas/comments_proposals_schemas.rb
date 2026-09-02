@@ -30,6 +30,7 @@ module Schemas
         projekt_phase_id: { type: :integer, nullable: true, description: 'ID of the projekt phase this proposal belongs to', example: 25 },
         status: { type: :string, nullable: true, description: 'Current status of the proposal (e.g., published, archived)', example: 'published' },
         comments_count: { type: :integer, nullable: true, description: 'Total number of comments on the proposal', example: 12 },
+        similar_contributions_count: { type: :integer, nullable: true, description: 'Number of other contributions in the same projekt with similar content. Determined freshly on every request and only when the "Pruefung auf aehnliche Beitraege" phase setting is enabled; 0 otherwise.', example: 2 },
         image: { '$ref' => '#/components/schemas/ImageResponse' }
       },
       required: %w[id created_at updated_at]

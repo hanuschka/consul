@@ -45,7 +45,8 @@ class Api::ProposalsController < Api::BaseController
 
     proposals = paginate(
       proposals
-        .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
+        .includes(:author, :tags, :geozone, :projekt_labels, :sentiment,
+                  projekt_phase: [:settings, { projekt: :page }])
     )
 
     serialized_proposals = ProposalSerializer.serialize_collection(proposals)
@@ -175,7 +176,8 @@ class Api::ProposalsController < Api::BaseController
 
   def find_proposal
     @proposal = Proposal
-      .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
+      .includes(:author, :tags, :geozone, :projekt_labels, :sentiment,
+                  projekt_phase: [:settings, { projekt: :page }])
       .find(params[:id])
   end
 end

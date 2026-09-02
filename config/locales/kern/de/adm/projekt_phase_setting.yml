@@ -7,6 +7,8 @@ de:
           browse_mode_in_phase_footer_description: Aktiviert den Blättern-Modus im Footer-Bereich der Vorschlagsansicht. Nutzer können damit einzeln durch alle Vorschläge navigieren, ohne zur Übersichtsseite zurückkehren zu müssen. Dies verbessert die Nutzererfahrung bei vielen Einträgen. Deaktivieren Sie diese Option, wenn die Übersichtsseite bevorzugt genutzt werden soll.
           browse_mode_in_phase_footer_by_default: Blättern-Modus als Standard
           browse_mode_in_phase_footer_by_default_description: Legt den Blättern-Modus als Standardansicht fest, sodass Nutzer beim Aufruf der Seite direkt in der Einzelansicht starten und durch die Vorschläge blättern können. Ohne diese Einstellung sehen Nutzer zunächst die Listenansicht. Aktivieren Sie diese Option, wenn die sequentielle Darstellung der Vorschläge bevorzugt wird.
+          similar_contributions_check: Prüfung auf ähnliche Beiträge
+          similar_contributions_check_description: "Prüft neu eingereichte Beiträge dieser Phase auf inhaltlich ähnliche, bereits vorhandene Beiträge und zeigt der Verwaltung bei der Bearbeitung passende Beiträge aus demselben Projekt an. Im Frontend erscheint vor dem Absenden ein Hinweis mit bis zu drei ähnlichen Beiträgen, die stattdessen unterstützt werden können. Aktivieren Sie diese Funktion, um Doppeleinreichungen zu vermeiden und die Bearbeitung durch Verweise auf bereits beantwortete Beiträge zu beschleunigen."
         form:
           allow_attached_image: Titelbild
           allow_attached_image_description: Ermöglicht es dem Nutzer, beim Erstellen eines Vorschlags ein Titelbild hochzuladen. Dieses Bild wird im Frontend prominent in der Detailansicht und als Vorschaubild in der Listenübersicht angezeigt. Deaktivieren Sie diese Option, wenn keine visuellen Inhalte von Nutzern gewünscht sind oder die Moderation reduziert werden soll.
@@ -53,6 +55,8 @@ de:
           show_video_as_link_description: Stellt hinzugefügte Videos nicht als eingebetteten Player, sondern als anklickbaren Link dar. Im Frontend erscheint statt des Video-Players ein Textlink, der zum externen Anbieter führt. Aktivieren Sie diese Option, um die Ladezeit der Seite zu reduzieren oder wenn eingebettete Videos aus datenschutzrechtlichen Gründen vermieden werden sollen.
           hide_ballots_count: Stimmenanzahl ausblenden bei Abstimmung über Vorschläge
           hide_ballots_count_description: Blendet die aktuelle Stimmenanzahl während der laufenden Abstimmungsphase aus, sodass Nutzer die bisherige Stimmverteilung nicht einsehen können. Im Frontend wird der Zähler ausgeblendet. Aktivieren Sie diese Option, um eine Beeinflussung durch sichtbare Ergebnisse zu vermeiden und eine unbeeinflusste Stimmabgabe sicherzustellen.
+          hide_comments_count_order: Sortierung „Meist kommentiert“ ausblenden
+          hide_comments_count_order_description: Entfernt die Sortierung nach Anzahl der Kommentare aus der Auswahl. Im Frontend erscheint die Option nicht mehr, und ein Aufruf über die URL fällt auf die Standardsortierung zurück. Aktivieren Sie diese Option, wenn Beiträge nach Qualität und nicht nach Diskussionsvolumen wahrgenommen werden sollen.
       option:
         resource:
           max_submissions_per_user: Maximale Einreichungen pro Nutzer
@@ -73,7 +77,7 @@ de:
             total_votes: Aktuelles Ranking
             ballot_line_weight: Aktuelle Stimmenverteilung
             newest: Neueste zuerst
-            comments_count: Meist Kommentiert
+            comments_count: Meist kommentiert
     formular_phase:
       option:
         general:
@@ -138,6 +142,8 @@ de:
           browse_mode_in_phase_footer_by_default_description: Legt den Blättern-Modus als Standardansicht fest, sodass Nutzer beim Aufruf der Seite direkt in der Einzelansicht starten und durch die Vorschläge blättern können. Ohne diese Einstellung sehen Nutzer zunächst die Listenansicht. Aktivieren Sie diese Option, wenn die sequentielle Darstellung der Vorschläge bevorzugt wird.
           require_admin_acceptance: Adminfreigabe
           require_admin_acceptance_description: "Erfordert eine manuelle Freigabe durch einen Administrator, bevor ein von Nutzern erstellter Vorschlag im Frontend sichtbar wird. Ohne Freigabe bleibt der Vorschlag im Status Entwurf. Aktivieren Sie diese Option bei sensiblen Beteiligungen, um die inhaltliche Qualität sicherzustellen."
+          similar_contributions_check: Prüfung auf ähnliche Beiträge
+          similar_contributions_check_description: "Prüft neu eingereichte Beiträge dieser Phase auf inhaltlich ähnliche, bereits vorhandene Beiträge und zeigt der Verwaltung bei der Bearbeitung passende Beiträge aus demselben Projekt an. Im Frontend erscheint vor dem Absenden ein Hinweis mit bis zu drei ähnlichen Beiträgen, die stattdessen unterstützt werden können. Aktivieren Sie diese Funktion, um Doppeleinreichungen zu vermeiden und die Bearbeitung durch Verweise auf bereits beantwortete Beiträge zu beschleunigen."
         form:
           allow_attached_image: Titelbild
           allow_attached_image_description: "Ermöglicht es dem Nutzer, beim Erstellen eines Vorschlags ein Titelbild hochzuladen. Das Bild wird im Frontend prominent in der Detailansicht und als Vorschaubild in der Listenübersicht dargestellt. Deaktivieren Sie diese Option, wenn keine visuellen Inhalte von Nutzern gewünscht sind oder wenn der Moderationsaufwand für Bildprüfungen reduziert werden soll."

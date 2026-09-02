@@ -20,3 +20,28 @@ en:
       ai_image_label_component:
         text: "AI-generated image"
         tooltip: "This image was created or edited with artificial intelligence and does not show a real photograph. The notice is required by law."
+    similar_contributions:
+      check_section_component:
+        checking_hint: "Your contribution is being compared with the ones already submitted in this phase. This only takes a moment."
+      progress_component:
+        checking: "Checking proposal …"
+      notice_component:
+        title: "Similar contributions found"
+        intro:
+          one: "There is already a contribution with similar content. You can support it instead, or submit your contribution anyway."
+          other: "There are already contributions with similar content. You can support one of them instead, or submit your contribution anyway."
+        back_to_form: "Back to the form"
+        supported_link: "Go to the supported contribution"
+        submit_anyway: "Submit anyway"
+      list_component:
+        title: "Similar contributions in this projekt"
+        empty: "No contributions with similar content were found."
+        no_answer: "No published answer yet."
+        status:
+          answered: "Answered"
+          open: "In progress"
+          retired: "Retired"
+          unfeasible: "Unfeasible"
+      badge:
+        one: "%{count} similar contribution"
+        other: "%{count} similar contributions"

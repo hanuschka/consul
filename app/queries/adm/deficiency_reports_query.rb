@@ -50,7 +50,8 @@ module Adm
         scope = apply_id_search(scope)
         scope = apply_title_search(scope)
         scope = apply_address_search(scope)
-        apply_author_search(scope)
+        scope = apply_author_search(scope)
+        apply_on_behalf_of_search(scope)
       end
 
       def apply_id_search(scope)
@@ -86,6 +87,13 @@ module Adm
         return scope if value.blank?
 
         scope.joins(:author).where("users.username ILIKE ?", "%#{escape_like(value)}%")
+      end
+
+      def apply_on_behalf_of_search(scope)
+        value = params[:on_behalf_of__search]
+        return scope if value.blank?
+
+        scope.where("deficiency_reports.on_behalf_of ILIKE ?", "%#{escape_like(value)}%")
       end
 
       def apply_filters(scope)

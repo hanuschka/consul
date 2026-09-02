@@ -2,6 +2,8 @@ module CsvServices
   class BudgetInvestmentsExporter < CsvServices::BaseService
     require "csv"
 
+    COUNT_BATCH_SIZE = 200
+
     def initialize(budget_investments, host)
       @budget_investments = budget_investments
       @host = host
@@ -11,8 +13,13 @@ module CsvServices
       CSV.generate(headers: true, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         csv << headers
 
-        @budget_investments.includes(:image).each do |budget_investment|
-          csv << row(budget_investment)
+        @budget_investments
+          .includes(:image)
+          .preload(budget: { projekt_phase: [:projekt, :settings] })
+          .to_a.each_slice(COUNT_BATCH_SIZE) do |batch|
+          @similar_contributions_counts = SimilarContributions::CandidateCounts.call(batch)
+
+          batch.each { |budget_investment| csv << row(budget_investment) }
         end
       end
     end
@@ -37,7 +44,8 @@ module CsvServices
           "Anzahl Votes bei Auswahl",
           "Gebiet",
           "KI-generiertes Bild",
-          "URL"
+          "URL",
+          "Ähnliche Beiträge"
         ]
       end
 
@@ -59,8 +67,13 @@ module CsvServices
           investment.total_ballot_votes.to_s,
           investment.district&.name,
           investment.image&.ai_generated,
-          Rails.application.routes.url_helpers.budget_investment_url(investment.budget, investment, host: @host)
+          Rails.application.routes.url_helpers.budget_investment_url(investment.budget, investment, host: @host),
+          similar_contributions_count(investment)
         ]
+      end
+
+      def similar_contributions_count(resource)
+        @similar_contributions_counts.fetch(resource.id, 0)
       end
 
       def admin(investment)

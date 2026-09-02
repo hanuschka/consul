@@ -28,4 +28,14 @@ module ImagesHelper
   def show_image_thumbnail?(resource)
     resource.image.present? && !resource.image.concealed? && resource.image.attachment&.attached?
   end
+
+  # Map popups and the studio banner assemble their HTML in JavaScript, so the
+  # badge is rendered here and travels as markup. Keeping the component as the
+  # only definition means the wording, the icon and the class names cannot drift
+  # between the server-rendered surfaces and the scripted ones.
+  def ai_image_label_html(image)
+    return nil if image.blank? || !image.ai_generated?
+
+    render(Shared::AiImageLabelComponent.new)
+  end
 end

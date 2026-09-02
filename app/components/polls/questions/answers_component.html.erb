@@ -1,6 +1,9 @@
 <div class="<%= poll_question_answers_class %>">
 
-  <% if new_design? %>
+  <% if question.map_points? %>
+    <%= render Polls::Questions::MapPointsAnswersComponent.new(question) %>
+
+  <% elsif new_design? %>
     <% if question.vote_type == "rating_scale" %>
       <%= render Polls::Questions::RatingScaleAnswersComponent.new(question) %>
     <% else %>

@@ -1,0 +1,8 @@
+de:
+  components:
+    kern:
+      form:
+        attachments_component:
+          add: Dokument hinzufügen
+          remove_confirm: Möchten Sie dieses Dokument wirklich entfernen?
+          remove: Entfernen

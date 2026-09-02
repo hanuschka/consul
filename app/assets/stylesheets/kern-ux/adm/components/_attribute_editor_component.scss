@@ -35,4 +35,24 @@
       display: none;
     }
   }
+
+  .kern-form-input__input:disabled {
+    cursor: not-allowed;
+  }
+
+  .attribute-form.rich_text .disabled {
+    .ck-editor__top {
+      display: none;
+    }
+
+    .ck-editor__editable {
+      background: var(--kern-grey-050);
+    }
+  }
+
+  .attribute-form.color .color-picker.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 }

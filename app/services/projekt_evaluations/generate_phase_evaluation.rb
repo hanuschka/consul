@@ -169,18 +169,22 @@ class ProjektEvaluations::GeneratePhaseEvaluation < ApplicationService
   def generate_phase_evaluation_summary(phase)
     case phase[:phase_type]
     when "ProjektPhase::ProposalPhase"
-      ProjektEvaluations::GenerateProposalPhaseSummary.call(phase[:stats])
+      ProjektEvaluations::GenerateProposalPhaseSummary.call(
+        phase[:stats], projekt_phase: @projekt_phase
+      )
     when "ProjektPhase::VotingPhase"
-      ProjektEvaluations::GenerateVotingPhaseSummary.call(phase[:stats])
+      ProjektEvaluations::GenerateVotingPhaseSummary.call(
+        phase[:stats], projekt_phase: @projekt_phase
+      )
     end
   end
 
   def generate_phase_key_findings(phase)
-    ProjektEvaluations::GeneratePhaseKeyFindings.call(phase)
+    ProjektEvaluations::GeneratePhaseKeyFindings.call(phase, projekt_phase: @projekt_phase)
   end
 
   def generate_phase_short_summary(phase)
-    ProjektEvaluations::GeneratePhaseShortSummary.call(phase)
+    ProjektEvaluations::GeneratePhaseShortSummary.call(phase, projekt_phase: @projekt_phase)
   rescue StandardError => e
     Rails.logger.warn("[Evaluation] Phase short summary generation failed: #{e.message}")
     nil

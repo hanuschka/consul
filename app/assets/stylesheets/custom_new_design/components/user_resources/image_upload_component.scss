@@ -91,8 +91,30 @@
   }
 }
 
+// The AI marker and the credits field share one bar under the upload area: the
+// switch segment on the left, divided from the caption input by a hairline.
+.image-upload-meta-row {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid #d5d5d5;
+  border-radius: 0 0 10px 10px;
+  background: #fff;
+  overflow: hidden;
+}
+
+// Foundation gives inputs a fixed height and a bottom margin, both of which
+// break the segment out of the row's stretch and lift its text above the
+// switch label. The padding here mirrors the switch segment's, so the two
+// segments share one baseline and one height.
 form input.light-input.image-upload-credits-input {
-  padding: 0;
-  padding-left: 10px !important;
-  border-radius: 0 0 10px 10px !important;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: auto;
+  margin: 0;
+  padding: 8px 14px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: 16px;
+  line-height: 22px;
 }

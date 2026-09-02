@@ -14,6 +14,8 @@ class Poll::QuestionSerializer < BaseSerializer
         :show_images,
         :answer_mandatory,
         :bundle_question,
+        :randomize_answers,
+        :randomize_position,
         :created_at,
         :updated_at
       ]

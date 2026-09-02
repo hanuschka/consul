@@ -6,6 +6,7 @@
     "@hotwired/turbo-rails": "^8.0.18",
     "@kern-ux/native": "^2.3.1",
     "@rails/activestorage": "^8.1.100",
+    "@redocly/cli": "^2.9.0",
     "@simonwep/pickr": "^1.9.1",
     "ace-builds": "^1.44.0",
     "chart.js": "^4.5.1",
@@ -23,6 +24,7 @@
     "leaflet-geosearch": "^3.11.0",
     "leaflet-gesture-handling": "^1.2.2",
     "Leaflet.Deflate": "^2.1.0",
+    "leaflet.heat": "^0.2.0",
     "leaflet.locatecontrol": "^0.79.0",
     "leaflet.markercluster": "^1.5.3",
     "mapbox-gl": "^3.12.0",
@@ -33,8 +35,7 @@
     "sass": "^1.93.1",
     "select2": "^4.1.0-rc.0",
     "siriwave": "^2.4.0",
-    "sortablejs": "^1.15.6",
-    "@redocly/cli": "^2.9.0"
+    "sortablejs": "^1.15.6"
   },
   "scripts": {
     "build": "esbuild app/javascript/application-kern.js --bundle --format=esm --outdir=app/assets/builds --public-path=/assets",
@@ -42,5 +43,3 @@
     "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --load-path=app/assets/stylesheets --load-path=app/assets/stylesheets/cross_pack --style=compressed --no-source-map"
   }
 }
-
-

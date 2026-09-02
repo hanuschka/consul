@@ -137,6 +137,10 @@ export default class extends Controller {
     editorPromise.then(editor => {
       this.editor = editor
 
+      if (this.element.disabled) {
+        editor.enableReadOnlyMode("source-element-disabled")
+      }
+
       // DO NOT DELETE
       // IMPORTANT: it's used in projekt studio for content blocks
       window.App = window.App || {}

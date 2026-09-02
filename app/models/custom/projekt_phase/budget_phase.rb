@@ -135,6 +135,12 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     5
   end
 
+  def investment_orders
+    orders = Budget::Investment::DEFAULT_ORDERS.dup
+    orders.delete("comments_count") if feature?("resource.hide_comments_count_order")
+    orders
+  end
+
   def resource_count
     budget&.investments&.count
   end

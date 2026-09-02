@@ -73,7 +73,9 @@ class ProjektPhase::VotingPhase < ProjektPhase
       source = projekt.image
       return unless source&.attachment&.attached?
 
-      image = new_poll.build_image(user: source.user, title: source.title)
+      image = new_poll.build_image(
+        user: source.user, title: source.title, ai_generated: source.ai_generated
+      )
       image.attachment.attach(source.attachment.blob)
       image.save!(validate: false)
     end

@@ -1,5 +1,7 @@
 class ProjektEventRegistrationsController < ApplicationController
   skip_authorization_check
+  invisible_captcha only: [:create], honeypot: :subtitle,
+                    scope: :projekt_event_registration, timestamp_enabled: false
 
   before_action :set_projekt_event, except: [:confirm]
 

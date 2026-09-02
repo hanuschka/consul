@@ -53,6 +53,8 @@ de:
         description: Beschreibung
         answer_mandatory: Pflichtfrage
         show_images: Bilder bei Antwortoptionen
+        randomize_answers: Antwortreihenfolge randomisieren
+        randomize_position: Position randomisieren
         contextualize_by_poll_question_id: Kontextualisierung
       votation_type:
         vote_type: Abstimmungsmodus
@@ -77,6 +79,7 @@ de:
         multiple: Mehrere Stimmen
         multiple_with_weight: Mehrere gewichtete Stimmen
         rating_scale: Bewertungsskala
+        map_points: Kartenfrage (Pins setzen)
       individual_group:
         visible: Sichtbar
       newsletter:

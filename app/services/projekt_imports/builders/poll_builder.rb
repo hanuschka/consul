@@ -1,6 +1,14 @@
 class ProjektImports::Builders::PollBuilder < ProjektImports::Builders::Base
   DEFAULT_VOTE_TYPE = "unique".freeze
 
+  # The import flow creates the projekt itself, so its author is always set and
+  # stays the default. Generating questions for an existing projekt has no such
+  # guarantee -- most projekts carry no author -- so the caller may name one.
+  def initialize(projekt:, phase:, payload:, author: nil)
+    super(projekt: projekt, phase: phase, payload: payload)
+    @author = author
+  end
+
   # The single definition of "a poll question this import can actually build".
   # The chat's question count and the empty-voting-phase warning both ask here,
   # so what the admin is told always matches what gets created.
@@ -22,11 +30,15 @@ class ProjektImports::Builders::PollBuilder < ProjektImports::Builders::Base
 
   private
 
+  def question_author
+    @author || projekt.author
+  end
+
   def build_question(poll, payload_question, given_order)
     question = poll.questions.new(
       title: payload_question["title"],
       description: payload_question["description"],
-      author: projekt.author,
+      author: question_author,
       given_order: given_order
     )
     question.votation_type = build_votation_type(payload_question)

@@ -146,6 +146,10 @@ en:
         one: Local census record
         other: Local census records
     attributes:
+      deficiency_report:
+        admin_accepted: "Visibility"
+        admin_accepted_true: "Published"
+        admin_accepted_false: "Not published"
       budget:
         name: "Name"
         description_accepting: "Description during Accepting phase"
@@ -526,6 +530,12 @@ en:
         service_api_token: Service API token
     errors:
       models:
+        projekt:
+          attributes:
+            parent_id:
+              cannot_be_self: "A project cannot be its own parent"
+              cannot_have_children: "A project that has sub-projects cannot be assigned a parent project"
+              must_be_top_level: "Only a top-level project can be selected as the parent project"
         user:
           attributes:
             email:

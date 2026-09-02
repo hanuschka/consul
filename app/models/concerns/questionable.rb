@@ -5,7 +5,7 @@ module Questionable
     has_one :votation_type, as: :questionable, dependent: :destroy
     accepts_nested_attributes_for :votation_type
     # delegate :max_votes, :multiple?, :vote_type, to: :votation_type, allow_nil: true
-    delegate :multiple?, :vote_type, to: :votation_type, allow_nil: true # custom
+    delegate :multiple?, :map_points?, :rating_scale?, :vote_type, to: :votation_type, allow_nil: true # custom
   end
 
   def unique?

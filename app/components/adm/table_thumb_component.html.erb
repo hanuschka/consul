@@ -1,5 +1,5 @@
 <% if image_attached? %>
-  <%= image_tag image.attachment.variant(resize_to_limit: [80, 80], format: "jpeg"),
+  <%= image_tag image.attachment_variant(resize_to_limit: [80, 80], format: "jpeg"),
         class: "adm-table-thumb",
         alt: title,
         loading: "lazy" %>

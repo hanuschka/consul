@@ -13,7 +13,7 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
           { name: @proposal.title }
         ]
 
-        @image_url = @proposal.image&.attachment&.variant(
+        @image_url = @proposal.image&.attachment_variant(
           resize_to_limit: [500, 500],
           format: "jpeg"
         )

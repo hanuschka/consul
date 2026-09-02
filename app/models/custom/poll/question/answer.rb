@@ -6,6 +6,8 @@ class Poll::Question::Answer < ApplicationRecord
 
   delegate :author_id, to: :question
 
+  after_save :clear_randomize_position_on_branching
+
   default_scope { includes(:translations, :images, :documents, :videos) }
 
   def self.model_name
@@ -72,4 +74,13 @@ class Poll::Question::Answer < ApplicationRecord
 
     total_connected_votes_to(base_question_answer) * 100.0 / all_connected_answers_count
   end
+
+  private
+
+    def clear_randomize_position_on_branching
+      return if next_question_id.blank?
+
+      Poll::Question.where(id: [question_id, next_question_id], randomize_position: true)
+                    .update_all(randomize_position: false)
+    end
 end

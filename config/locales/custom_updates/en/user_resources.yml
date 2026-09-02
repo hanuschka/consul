@@ -11,9 +11,9 @@ en:
         map_location_instructions_mandatory: "Please place a pin on the map (mandatory)."
         map_location_instructions_optional: "Please place a pin on the map (optional)."
       image_upload:
-        top_line_default: Posts with a meaningful image receive an average of 34% more support
-        title_default: Add an image
-        bottom_line_default: "An image with a format of 490 x 290 pixels would be best"
+        top_line_default: Choose a fitting image for your contribution. Contributions with an image usually receive more support.
+        title_default: Add an image (optional)
+        bottom_line_default: "An image in a format of 490 x 290 pixels works best."
         max_image_size: Maximum image size is %{size} MB.
         supported_formats: "File format: %{formats}"
         credits_field_placeholder: Click here to add image credits

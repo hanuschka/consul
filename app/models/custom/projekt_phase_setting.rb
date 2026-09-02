@@ -154,6 +154,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.resource.conditional_voting": "",
           "feature.resource.show_video_as_link": "",
           "feature.resource.hide_ballots_count": "",
+          "feature.resource.hide_comments_count_order": "",
           "option.resource.max_submissions_per_user": "",
           "option.resource.max_supports_per_user": ""
         },

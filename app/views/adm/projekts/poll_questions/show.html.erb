@@ -7,7 +7,24 @@
 <%= render Adm::HeaderComponent.new(title: @question.title, breadcrumbs: @breadcrumbs, back_button_url: back_url) %>
 
 <div class="kern-container mb-5">
-  <% unless @question.bundle_question? %>
+  <% if @question.map_points? %>
+    <%= kern_alert(title: t(".map_points.title"), style: :info) do %>
+      <p><%= t(".map_points.description") %></p>
+    <% end %>
+
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mt-4">
+      <p class="kern-body mb-0"><%= t(".map_points.pin_count", count: @map_point_count.to_i) %></p>
+
+      <% if @map_point_count.to_i.positive? %>
+        <a href="<%= adm_projekts_phase_poll_question_path(@projekt_phase, @question, format: :geojson) %>"
+           class="adm-text-link" data-turbo="false">
+          <span class="material-symbols-outlined" aria-hidden="true">map</span>
+          <%= t(".map_points.download_geojson") %>
+        </a>
+      <% end %>
+    </div>
+
+  <% elsif !@question.bundle_question? %>
     <%= new_resource_link(new_adm_projekts_phase_poll_question_poll_question_answer_path(@projekt_phase, @question), t(".add_answer")) %>
 
     <% if @question.question_answers.any? %>

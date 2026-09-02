@@ -128,7 +128,8 @@
   <% end %>
 
   <%# ── Charts ─────────────────────────────────────────── %>
-  <% has_chart_data = @chart_reports[:values].any?(&:positive?) || @status_chart_labels.any? || @category_chart_labels.any? %>
+  <% has_chart_data = @chart_reports[:values].any?(&:positive?) || @status_chart_labels.any? ||
+       @category_chart_labels.any? || @intake_channel_chart_labels.any? %>
   <% if has_chart_data %>
     <div class="adm-dashboard__section">
       <div class="adm-dashboard__section-header">
@@ -137,7 +138,7 @@
       </div>
 
       <% if @chart_reports[:values].any?(&:positive?) %>
-        <div class="adm-stats-charts">
+        <div class="adm-stats-charts mb-4">
           <div class="adm-chart-card">
             <div class="adm-chart-card__title"><%= t(".charts.reports_per_month") %></div>
             <div class="adm-chart-card__total"><%= number_with_delimiter(@chart_reports[:values].sum) %></div>
@@ -152,7 +153,7 @@
         </div>
       <% end %>
 
-      <% if @status_chart_labels.any? || @category_chart_labels.any? %>
+      <% if @status_chart_labels.any? || @category_chart_labels.any? || @intake_channel_chart_labels.any? %>
         <div class="adm-stats-demographics">
           <% if @status_chart_labels.any? %>
             <div class="adm-stats-demographics__group">
@@ -172,6 +173,18 @@
               <div data-bar-chart
                    data-chart-labels="<%= @category_chart_labels.to_json %>"
                    data-chart-values="<%= @category_chart_values.to_json %>"
+                   data-chart-orientation="horizontal">
+                <canvas></canvas>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @intake_channel_chart_labels.any? %>
+            <div class="adm-stats-demographics__group">
+              <h4><%= t(".charts.by_intake_channel") %></h4>
+              <div data-bar-chart
+                   data-chart-labels="<%= @intake_channel_chart_labels.to_json %>"
+                   data-chart-values="<%= @intake_channel_chart_values.to_json %>"
                    data-chart-orientation="horizontal">
                 <canvas></canvas>
               </div>
@@ -198,6 +211,9 @@
 
       <h4 class="mt-5 mb-3"><%= t(".type.responsible") %></h4>
       <%= render "metric_rows", groups: @by_responsible, all_reports: @all_deficiency_reports, type: :responsible %>
+
+      <h4 class="mt-5 mb-3"><%= t(".type.intake_channel") %></h4>
+      <%= render "metric_rows", groups: @by_intake_channel, all_reports: @all_deficiency_reports, type: :intake_channel %>
     </div>
   <% end %>
 

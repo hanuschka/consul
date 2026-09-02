@@ -14,8 +14,50 @@ class IndividualGroupValue < ApplicationRecord
     return unless File.exist?(file_path)
 
     CSV.foreach(file_path, headers: true, encoding: "bom|utf-8") do |row|
-      email = normalize_email(row["email"])
-      next if email.blank?
+      apply_email(row["email"])
+    end
+
+    auto_join_emails.reject!(&:blank?)
+    save!
+  end
+
+  def add_email(email)
+    return false unless apply_email(email)
+
+    auto_join_emails.reject!(&:blank?)
+    save!
+    true
+  end
+
+  def add_user(user)
+    return false if user.blank?
+
+    users << user unless users.include?(user)
+    remove_auto_join_email(user.email)
+    true
+  end
+
+  def stored_email?(email)
+    email = normalize_email(email)
+    return false if email.blank?
+
+    auto_join_emails.include?(email) || users.exists?(["LOWER(users.email) = ?", email])
+  end
+
+  def remove_auto_join_email(email)
+    email = normalize_email(email)
+    return if email.blank?
+    return unless auto_join_emails.include?(email)
+
+    auto_join_emails.delete(email)
+    save!
+  end
+
+  private
+
+    def apply_email(email)
+      email = normalize_email(email)
+      return false if email.blank?
 
       user = User.find_by(email: email)
 
@@ -25,21 +67,9 @@ class IndividualGroupValue < ApplicationRecord
       else
         auto_join_emails << email unless auto_join_emails.include?(email)
       end
+
+      true
     end
-
-    auto_join_emails.reject!(&:blank?)
-    save!
-  end
-
-  def remove_auto_join_email(email)
-    email = normalize_email(email)
-    return if email.blank?
-
-    auto_join_emails.delete(email) if auto_join_emails.include?(email)
-    save!
-  end
-
-  private
 
     def update_user_assignments
       if email_pattern_changed? && email_pattern.start_with?("@")

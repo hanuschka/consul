@@ -12,7 +12,8 @@ class Resources::ListItemComponent < ApplicationComponent
       image_url: image_variant(image, IMAGE_THUMB_SIZE),
       image_url_2x: image_variant(image, IMAGE_THUMB_SIZE_2X),
       image_placeholder_icon_class: image_placeholder_icon_class,
-      resource: resource
+      resource: resource,
+      ai_generated: image&.ai_generated?
     )
   end
   renders_one :image_overlay_item
@@ -85,7 +86,7 @@ class Resources::ListItemComponent < ApplicationComponent
     def image_variant(image, size)
       return if image.blank?
 
-      image.attachment&.variant(
+      image.attachment_variant(
         coalesce: true,
         resize_to_fill: size,
         saver: { quality: 85 },

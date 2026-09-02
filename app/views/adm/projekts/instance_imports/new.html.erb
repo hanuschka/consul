@@ -1,0 +1,42 @@
+<%= content_for :title, t("adm.projekts.menu.items.instance_import") %>
+
+<%= render Adm::HeaderComponent.new(
+      title: t("adm.projekts.menu.items.instance_import"),
+      breadcrumbs: @breadcrumbs,
+      back_button_url: adm_projekts_root_path,
+      compact: true
+    ) do |header| %>
+  <% header.with_actions do %>
+    <%= kern_link_button adm_projekts_inspiration_path,
+          text: t("adm.projekts.projekts.instance_import.browse_inspiration"),
+          icon: "travel_explore",
+          style: :secondary %>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-3">
+  <div class="adm-projekts-instance-import">
+    <%= render Kern::FormFieldComponent.new(
+          label: t("adm.projekts.projekts.instance_import.url_label"),
+          hint: t("adm.projekts.projekts.instance_import.url_hint"),
+          stacked: true,
+          divider: false
+        ) do %>
+      <%= form_with(
+        url: adm_projekts_instance_import_path,
+        method: :post,
+        class: "adm-projekts-instance-import--form"
+      ) do |f| %>
+        <%= f.url_field :source_url,
+          label: t("adm.projekts.projekts.instance_import.url_field_label"),
+          placeholder: t("adm.projekts.projekts.instance_import.url_placeholder") %>
+
+        <%= kern_button(
+          text: t("adm.projekts.projekts.instance_import.action"),
+          icon: "save",
+          type: :submit
+        ) %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

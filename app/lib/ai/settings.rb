@@ -1,5 +1,5 @@
 module Ai::Settings
-  DEFAULT_GPT_MODEL = "gpt-5.4"
+  DEFAULT_GPT_MODEL = "gpt-5.6-sol"
   # DEFAULT_GPT_MODEL = "gpt-5.2"
 
   def self.feature_enabled?

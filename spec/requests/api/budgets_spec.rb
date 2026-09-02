@@ -138,6 +138,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                   attachment: { type: :string, nullable: true, description: 'Base64-encoded image file (JPEG, PNG, GIF, WebP, max 5MB)' },
                   cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution or copyright' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image' }
                 }
@@ -406,6 +407,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                   attachment: { type: :string, nullable: true, description: 'Base64-encoded image file (JPEG, PNG, GIF, WebP, max 5MB)' },
                   cached_attachment: { type: :string, nullable: true },
                   credits: { type: :string, nullable: true, description: 'Image source attribution or copyright' },
+                  ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
                   user_id: { type: :integer, nullable: true },
                   _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove the image' }
                 }

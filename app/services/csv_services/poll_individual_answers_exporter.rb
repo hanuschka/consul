@@ -33,17 +33,23 @@ module CsvServices
         [
           respondent_token(answer.author_id),
           sanitize_for_csv(strip_tags(question_title(answer.question))),
-          sanitize_for_csv(strip_tags(answer.answer)),
+          sanitize_for_csv(strip_tags(answer_text(answer))),
           sanitize_for_csv(strip_tags(answer.open_answer_text)),
           answer.answer_weight,
           answer.created_at&.strftime("%d.%m.%Y %H:%M")
         ]
       end
 
+      def answer_text(answer)
+        return answer.answer unless answer.map_points?
+
+        I18n.t("custom.polls.questions.map_points.csv_pin_count", count: answer.map_points.size)
+      end
+
       def answers
         @answers ||= Poll::Answer
           .where(question_id: @poll.question_ids)
-          .includes(question: :context)
+          .includes(:map_points, question: [:context, :votation_type])
           .order(:author_id, :question_id, :id)
       end
 

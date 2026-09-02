@@ -1,0 +1,16 @@
+// KERN 2.3.1 ships the loader at one fixed size (96px with a 10px border) and
+// no size modifier. Inside a badge it stands in for the icon, so it is matched
+// to the icon slot the badge already defines.
+.kern-badge .kern-loader {
+  width: var(--kern-metric-dimension-default, 24px);
+  height: var(--kern-metric-dimension-default, 24px);
+  border-width: var(--kern-metric-space-2x-small, 2px);
+  flex-shrink: 0;
+
+  // The rounded end caps are absolutely positioned against the 96px geometry,
+  // so their offsets no longer meet the arc once it is this small.
+  &::before,
+  &::after {
+    display: none;
+  }
+}

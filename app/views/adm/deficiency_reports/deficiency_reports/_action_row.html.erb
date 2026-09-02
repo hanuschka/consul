@@ -1,0 +1,27 @@
+<% policy = Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, deficiency_report) %>
+
+<div class="adm-detail-action-row d-flex align-items-center flex-wrap gap-2 mb-4">
+  <%= kern_link_button(deficiency_report_path(deficiency_report),
+        text: t(".website"), icon: "open_in_new", style: :secondary,
+        target: "_blank", rel: "noopener") %>
+
+  <%= render "adm/deficiency_reports/deficiency_reports/watch_toggle",
+        deficiency_report: deficiency_report, labeled: true %>
+
+  <% if policy.share? %>
+    <%= render "adm/deficiency_reports/deficiency_reports/share", deficiency_report: deficiency_report %>
+  <% end %>
+
+  <% if policy.edit? %>
+    <%= kern_link_button(edit_adm_deficiency_reports_deficiency_report_path(deficiency_report),
+          text: t(".edit"), icon: "edit", style: :secondary,
+          data: { turbo_frame: "deficiency_report_content" }) %>
+  <% end %>
+
+  <%= render Adm::DownloadPdfButtonComponent.new(
+        url: adm_deficiency_reports_deficiency_report_path(deficiency_report, format: :pdf),
+        label: t(".pdf"),
+        map_location: deficiency_report.map_location,
+        map_container_id: dom_id(deficiency_report, "map")
+      ) %>
+</div>

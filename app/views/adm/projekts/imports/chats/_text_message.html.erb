@@ -1,0 +1,82 @@
+<%
+  initials =
+    if message.role == "user" && user&.first_name.present? && user&.last_name.present?
+      "#{user.first_name.chars.first}#{user.last_name.chars.first}".upcase
+    elsif message.role == "user" && user.present?
+      user.first_letter_of_name.to_s
+    end
+
+  user_image = user&.image&.variant(:popup) if user&.image&.attached?
+%>
+<div class="projekt-import-chat-bubble -<%= message.role == 'assistant' ? 'ai' : 'user' %>"
+     data-projekt-imports--chat-target="message"
+     data-message-id="<%= message.id %>"
+     data-status="<%= message.status %>">
+  <% if message.role == "assistant" %>
+    <div class="projekt-import-chat-bubble--avatar" aria-hidden="true"><span>AI</span></div>
+  <% else %>
+    <div class="projekt-import-chat-bubble--avatar-wrapper">
+      <div class="projekt-import-chat-bubble--avatar -user" aria-hidden="true">
+        <% if user_image.present? %>
+          <%= image_tag(user_image, class: "projekt-import-chat-bubble--avatar-image") %>
+        <% elsif initials.present? %>
+          <span class="projekt-import-chat-bubble--avatar-initials"><%= initials %></span>
+        <% else %>
+          <span class="material-symbols-outlined">person</span>
+        <% end %>
+      </div>
+
+      <% if user.present? %>
+        <div class="projekt-import-chat-bubble--user-popover" role="tooltip">
+          <div class="projekt-import-chat-bubble--user-popover-avatar" aria-hidden="true">
+            <% if user_image.present? %>
+              <%= image_tag(user_image, class: "projekt-import-chat-bubble--user-popover-avatar-image") %>
+            <% else %>
+              <%= initials.presence || "?" %>
+            <% end %>
+          </div>
+          <div class="projekt-import-chat-bubble--user-popover-info">
+            <p class="projekt-import-chat-bubble--user-popover-name">
+              <%= user.full_name.presence || user.name %>
+            </p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%
+    assistant_pending =
+      message.role == "assistant" &&
+      message.content.blank? &&
+      (message.status == "scheduled" || message.status == "running")
+  %>
+  <div class="projekt-import-chat-bubble--wrapper">
+    <div class="projekt-import-chat-bubble--content">
+      <% if assistant_pending %>
+        <%= image_tag "loader_animations/3-dots-fade.svg",
+              class: "projekt-import-chat-bubble--loader",
+              alt: "",
+              aria: { hidden: true } %>
+      <% elsif message.role == "assistant" && message.content.present? %>
+        <%= markdown(message.content) %>
+      <% else %>
+        <%= simple_format(message.content.to_s) %>
+      <% end %>
+    </div>
+
+    <% if message.attached_documents.present? %>
+      <div class="projekt-import-chat--message-documents">
+        <% message.attached_documents.each do |doc| %>
+          <span class="projekt-import-chat--document-badge">
+            <span class="material-symbols-outlined" aria-hidden="true">description</span><%= doc["name"] %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if message.status == "error" %>
+      <p class="projekt-import-chat-bubble--error"><%= t("adm.projekts.imports.errors.message_failed") %></p>
+    <% end %>
+  </div>
+</div>

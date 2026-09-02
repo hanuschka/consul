@@ -37,10 +37,12 @@ export default class VirtualCityAdapter extends BaseAdapter {
 
     return this.loadScripts().then(() => {
       this.createMap(container, options)
+      this.observeContainerResize()
     })
   }
 
   destroy() {
+    this.stopObservingContainerResize()
     this.featureInfoSession?.stop()
     this.featureInfoSession = null
     this.mapActivatedHandlers = []

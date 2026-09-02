@@ -55,6 +55,7 @@ module Schemas
         title: { type: :string, nullable: true, description: 'Title or caption for the image' },
         attachment: { type: :string, description: 'Base64-encoded image data' },
         credits: { type: :string, nullable: true, description: 'Attribution or credits for the image' },
+        ai_generated: { type: :boolean, nullable: true, description: 'Set to true when the image was created or edited with AI; the public page then shows the AI disclosure label' },
         _destroy: { type: :boolean, nullable: true, description: 'Flag to delete the image' }
       }
     }.freeze

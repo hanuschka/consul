@@ -65,6 +65,7 @@ module Schemas
         id: { type: :integer, description: 'Image ID', example: 1 },
         title: { type: :string, nullable: true, description: 'Image title or alt text', example: 'Cover Image' },
         credits: { type: :string, nullable: true, description: 'Image attribution or credits', example: 'Photo by John Doe' },
+        ai_generated: { type: :boolean, description: 'True when the image was created or edited with AI. Drives the visible AI disclosure label on public pages.', example: false },
         url: { type: :string, description: 'Full URL to the image', example: 'https://example.com/uploads/image.jpg' },
         variants: {
           type: :object,

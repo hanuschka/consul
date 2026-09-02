@@ -99,6 +99,8 @@ de:
         add_user: Hinzufügen
         already_assigned: Bereits zugeordnet
         not_found: Keine Nutzer gefunden.
+        add_email: "%{email} ohne Konto hinzufügen"
+        already_stored: Diese E-Mail-Adresse ist bereits hinterlegt.
       new:
         title: Neuen Wert erstellen
       edit:
@@ -109,6 +111,12 @@ de:
         success: Wert erfolgreich aktualisiert.
       destroy:
         success: Wert erfolgreich gelöscht.
+      add_email:
+        success: >
+          E-Mail-Adresse hinzugefügt. Die Person wird der Gruppe bei der Registrierung
+          automatisch zugeordnet.
+        already_stored: Diese E-Mail-Adresse ist bereits hinterlegt.
+        invalid: Bitte geben Sie eine gültige E-Mail-Adresse ein.
       add_from_csv:
         no_file: Bitte wählen Sie eine Datei aus.
         invalid_format: Bitte wählen Sie eine CSV-Datei aus.

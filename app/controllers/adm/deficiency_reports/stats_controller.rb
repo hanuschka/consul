@@ -57,6 +57,17 @@ class Adm::DeficiencyReports::StatsController < Adm::DeficiencyReports::BaseCont
         @category_chart_values << count
       end
 
+    # ── Chart: by intake channel ──
+    @intake_channel_chart_labels = []
+    @intake_channel_chart_values = []
+    DeficiencyReport::IntakeChannel.all.each do |channel|
+      count = all.where(intake_channel: channel).count
+      next if count.zero?
+
+      @intake_channel_chart_labels << channel.name
+      @intake_channel_chart_values << count
+    end
+
     # ── Detail tables ──
     @by_status = DeficiencyReport::Status.all.map do |status|
       [status, DeficiencyReport.where(status: status)]
@@ -68,6 +79,19 @@ class Adm::DeficiencyReports::StatsController < Adm::DeficiencyReports::BaseCont
 
     @by_responsible = deficiency_report_all_responsible_sorted.map do |responsible|
       [responsible, DeficiencyReport.where(responsible: responsible)]
+    end
+
+    @by_intake_channel = DeficiencyReport::IntakeChannel.all.map do |channel|
+      [channel, DeficiencyReport.where(intake_channel: channel)]
+    end
+
+    # Reports a dimension does not cover were missing from its table while still counting towards the
+    # total row underneath, so the rows never added up. Appended only when the group has members.
+    { @by_category => :deficiency_report_category_id,
+      @by_responsible => :responsible_id,
+      @by_intake_channel => :deficiency_report_intake_channel_id }.each do |groups, column|
+      uncovered = all.where(column => nil)
+      groups << [nil, uncovered] if uncovered.exists?
     end
 
     @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.stats"), icon: "bar_chart" }]

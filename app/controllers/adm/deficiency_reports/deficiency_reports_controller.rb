@@ -3,6 +3,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   include MapLocationAttributes
   include ImageAttributes
   include DocumentAttributes
+  include DeficiencyReportAiCategorization
 
   helper_method :assignment_scope_filter?
 
@@ -16,7 +17,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
 
     respond_to do |format|
       format.html do
-        preloaded = base_scope.preload(:status, :translations, :author, :category, :subcategory,
+        preloaded = base_scope.preload(:status, :translations, :author, :recorded_by, :category, :subcategory,
                                        :intake_channel, :responsible, :feedback_form, :watches,
                                        map_location: :district)
         @pagy, @deficiency_reports = pagy(Adm::DeficiencyReportsQuery.call(preloaded, params, current_user: current_user))
@@ -24,6 +25,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
         @id_header_options = { search: true, sort: true }
         @title_header_options = { search: true }
         @author_header_options = { search: true }
+        @on_behalf_of_header_options = { search: true }
         @intake_channel_header_options = { filter_options: intake_channel_filter_options }
         @created_at_header_options = { sort: true, date_range: true }
         @updated_at_header_options = { sort: true, date_range: true }
@@ -42,7 +44,8 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       end
 
       format.csv do
-        scope = Adm::DeficiencyReportsQuery.call(base_scope, params, current_user: current_user)
+        scope = Adm::DeficiencyReportsQuery.call(base_scope.preload(:author, :recorded_by), params,
+                                                 current_user: current_user)
         send_data CsvServices::DeficiencyReportsExporter.call(scope),
           filename: "deficiency_reports-#{Time.zone.today}.csv",
           type: "text/csv"
@@ -70,16 +73,21 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   def create
     @deficiency_report = DeficiencyReport.new(create_params.merge(
       author: current_user,
+      recorded_by: current_user,
       status: DeficiencyReport::Status.default,
       status_changed_at: Time.zone.now,
       resource_terms: "1"
     ))
     authorize @deficiency_report, :create?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
+    ai_result = categorize_with_ai(@deficiency_report)
+
     if @deficiency_report.valid? && link_on_behalf_of_account(@deficiency_report) && @deficiency_report.save
       @deficiency_report.assign_default_responsible
-      redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report), notice: t("adm.attribute.create.success")
+      redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+        notice: create_notice(ai_result)
     else
+      clear_ai_categorization(@deficiency_report) if ai_result
       @deficiency_report.build_image(user: current_user) unless @deficiency_report.image
       @deficiency_report.build_map_location unless @deficiency_report.map_location
       @breadcrumbs = new_breadcrumbs
@@ -100,7 +108,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
           { name: @deficiency_report.title }
         ]
 
-        @image_url = @deficiency_report.image&.attachment&.variant(
+        @image_url = @deficiency_report.image&.attachment_variant(
           resize_to_limit: [580, nil],
           format: "jpeg"
         )
@@ -203,7 +211,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     render turbo_stream: turbo_stream.replace(
       helpers.dom_id(@deficiency_report, :watch_toggle),
       partial: "adm/deficiency_reports/deficiency_reports/watch_toggle",
-      locals: { deficiency_report: @deficiency_report.reload }
+      locals: { deficiency_report: @deficiency_report.reload, labeled: params[:labeled].present? }
     )
   end
 
@@ -259,7 +267,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
 
   def accept
     @deficiency_report = DeficiencyReport.find(params[:id])
-    authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+    authorize @deficiency_report, :accept?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     accepted = ActiveModel::Type::Boolean.new.cast(params[:deficiency_report][:admin_accepted])
     @deficiency_report.update!(admin_accepted: accepted)
@@ -285,29 +293,41 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     ]
   end
 
+  def remove_official_answer_document
+    @deficiency_report = DeficiencyReport.find(params[:id])
+    authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
+
+    attachment = @deficiency_report.official_answer_documents.find_by(id: params[:attachment_id])
+    attachment&.purge
+
+    redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report),
+      notice: t(".success")
+  end
+
   def update_official_answer
     @deficiency_report = DeficiencyReport.find(params[:id])
     authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     answer_was = @deficiency_report.official_answer.presence
+    documents = Array(params[:deficiency_report][:official_answer_documents]).reject(&:blank?)
 
     if @deficiency_report.update(params.require(:deficiency_report).permit(:official_answer))
       answer_now = @deficiency_report.official_answer.presence
 
       notify_watchers_about_change(@deficiency_report) if answer_now != answer_was
-      flash.now[:success] = t(".success")
+
+      if documents.any? && !@deficiency_report.official_answer_documents.attach(documents)
+        flash.now[:attachment_alert] = @deficiency_report.errors.full_messages.first
+        @deficiency_report.reload
+      else
+        flash.now[:success] = t(".success")
+      end
     end
 
     render turbo_stream: turbo_stream.replace(
       helpers.dom_id(@deficiency_report, :official_answer),
-      Adm::AttributeEditorComponent.new(
-        @deficiency_report,
-        :official_answer,
-        :rich_text,
-        path: update_official_answer_adm_deficiency_reports_deficiency_report_path(@deficiency_report),
-        label: t("adm.deficiency_reports.deficiency_reports.show.official_answer"),
-        description: t("adm.deficiency_reports.deficiency_reports.show.official_answer_hint")
-      )
+      partial: "adm/deficiency_reports/deficiency_reports/official_answer_form",
+      locals: { deficiency_report: @deficiency_report }
     )
   end
 
@@ -340,12 +360,24 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     def deficiency_report_params
       attributes = [:title, :description, :video_url, :on_behalf_of,
                     :deficiency_report_category_id,
+                    :deficiency_report_subcategory_id,
                     :deficiency_report_status_id,
                     :deficiency_report_intake_channel_id,
                     map_location_attributes: map_location_attributes,
                     documents_attributes: document_attributes,
                     image_attributes: image_attributes]
       params.require(:deficiency_report).permit(attributes)
+    end
+
+    def create_notice(ai_result)
+      return t("adm.attribute.create.success") unless ai_result&.fallback?
+
+      t(".ai_fallback", category: ai_result.category&.name)
+    end
+
+    def clear_ai_categorization(deficiency_report)
+      deficiency_report.category = nil
+      deficiency_report.subcategory = nil
     end
 
     def create_params

@@ -33,7 +33,7 @@ class Projekts::GenerateBannerImageService < ApplicationService
       raise GenerationFailedError, "DT returned no image"
     end
 
-    attach_image(base64_image)
+    attach_image(base64_image, response.parsed_response)
   end
 
   private
@@ -93,13 +93,16 @@ class Projekts::GenerateBannerImageService < ApplicationService
       ActionController::Base.helpers.strip_tags(text.to_s).squish
     end
 
-    def attach_image(base64_image)
+    def attach_image(base64_image, response_body)
       result = ::Projekts::AttachPageImageService.call(
         projekt: @projekt,
         user: @user,
         data: Base64.decode64(base64_image),
         filename: "projekt_#{@projekt.id}_ai_banner.jpg",
-        content_type: "image/jpeg"
+        content_type: "image/jpeg",
+        ai_generated: true,
+        ai_system: ::DtApi::Resources::Ai.reported_provider(response_body),
+        ai_system_version: ::DtApi::Resources::Ai.reported_model(response_body)
       )
 
       if !result.success?

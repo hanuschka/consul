@@ -17,6 +17,8 @@ module CommentableActions
 
     index_customization
 
+    return if performed?
+
     @tag_cloud = tag_cloud
 
     if params[:controller].include?("admin/")

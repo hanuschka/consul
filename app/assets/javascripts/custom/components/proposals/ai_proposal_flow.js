@@ -83,13 +83,33 @@
               App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(false);
               this.setSubmitButtonDisabled(false);
             },
-            () => {
+            (request) => {
               clearTimeout(safetyTimer);
               App.DirectUploadComponent.toggleGeneratingPlaceholderAnimation(false);
               this.setSubmitButtonDisabled(false);
+              this.showImageError(request.responseJSON && request.responseJSON.error);
             }
           );
       }, 100);
+    },
+
+    // The generated image is optional to the draft, so a failure is reported in
+    // place of the picture rather than blocking the form.
+    showImageError(message) {
+      if (!message) return;
+
+      const $upload = $(".js-direct-image-upload:visible").first();
+
+      if ($upload.length === 0) return;
+
+      let $error = $upload.find(".js-ai-image-error");
+
+      if ($error.length === 0) {
+        $error = $("<div class='callout alert js-ai-image-error'></div>");
+        $upload.prepend($error);
+      }
+
+      $error.text(message);
     },
 
     setSubmitButtonDisabled(disabled) {

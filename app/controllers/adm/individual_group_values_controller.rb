@@ -2,8 +2,8 @@ module Adm
   class IndividualGroupValuesController < Adm::BaseController
     before_action :load_individual_group
     before_action :load_individual_group_value, only: [
-      :show, :edit, :update, :destroy, :search_user, :add_user, :add_from_csv,
-      :remove_user, :remove_email_from_auto_join_emails
+      :show, :edit, :update, :destroy, :search_user, :add_user, :add_email,
+      :add_from_csv, :remove_user, :remove_email_from_auto_join_emails
     ]
 
     def show
@@ -78,9 +78,24 @@ module Adm
     def add_user
       authorize [:adm, @individual_group_value]
       @user = User.find(params[:user_id])
-      @individual_group_value.users << @user
+      @individual_group_value.add_user(@user)
 
       redirect_to adm_individual_group_value_path(@individual_group, @individual_group_value)
+    end
+
+    def add_email
+      authorize [:adm, @individual_group_value]
+      redirect_path = adm_individual_group_value_path(@individual_group, @individual_group_value)
+      email = params[:email].to_s
+
+      if !email.match?(URI::MailTo::EMAIL_REGEXP)
+        redirect_to redirect_path, alert: t(".invalid")
+      elsif @individual_group_value.stored_email?(email)
+        redirect_to redirect_path, notice: t(".already_stored")
+      else
+        @individual_group_value.add_email(email)
+        redirect_to redirect_path, notice: t(".success")
+      end
     end
 
     def add_from_csv

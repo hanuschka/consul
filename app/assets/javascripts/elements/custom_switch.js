@@ -24,6 +24,8 @@
   //   input-class   extra css classes for the inner checkbox (e.g. js- hooks)
   //   control-class extra css classes for the inner <label> (e.g. topbar chrome)
   //   control-title native title/tooltip for the inner <label>
+  //   aria-label    accessible name for the inner checkbox, for switches whose
+  //                 visible label is too terse to stand on its own
   //   data-*        forwarded onto the inner checkbox (Stimulus targets etc.)
   class CustomSwitch extends HTMLElement {
     connectedCallback() {
@@ -101,6 +103,9 @@
 
       const inputClass = this.getAttribute("input-class");
       if (inputClass) input.className += ` ${inputClass}`;
+
+      const ariaLabel = this.getAttribute("aria-label");
+      if (ariaLabel) input.setAttribute("aria-label", ariaLabel);
 
       Object.keys(forwardedData).forEach((key) => {
         input.setAttribute(`data-${key}`, forwardedData[key]);

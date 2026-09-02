@@ -1,9 +1,10 @@
 class Adm::AiSettings::FormComponent < ApplicationComponent
-  attr_reader :setting, :key
+  attr_reader :setting
 
-  def initialize(setting, key)
+  delegate :key, to: :setting
+
+  def initialize(setting)
     @setting = setting
-    @key = key
   end
 
   private

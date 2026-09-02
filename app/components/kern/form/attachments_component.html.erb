@@ -1,0 +1,43 @@
+<div data-controller="kern--form--nested-entries"
+     data-kern--form--nested-entries-max-value="<%= remaining_slots %>">
+
+  <% attached_documents.each do |attachment| %>
+    <div class="adm-form-attachment mb-2">
+      <%= link_to attachment.filename.to_s,
+            rails_blob_path(attachment, disposition: "attachment"),
+            target: :blank, class: "kern-link" %>
+
+      <% if remove_path_for(attachment).present? %>
+        <%= link_to tag.span("delete", class: "material-symbols-outlined kern-label", aria: { hidden: true }),
+              remove_path_for(attachment),
+              class: "adm-form-attachment__remove",
+              title: t(".remove"),
+              aria: { label: t(".remove") },
+              data: { turbo_method: :delete, turbo_frame: "_top",
+                      turbo_confirm: t(".remove_confirm") } %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div data-kern--form--nested-entries-target="entries"></div>
+
+  <template data-kern--form--nested-entries-target="template">
+    <div class="kern-form-input position-relative mb-2"
+         data-kern--form--nested-entries-target="entry">
+      <input type="file" class="kern-form-input__input"
+             name="<%= field_name %>" accept="<%= accept_attribute %>">
+      <button type="button"
+              class="kern-btn kern-btn--tertiary position-absolute top-0 right-0 mt-2 mr-2"
+              title="<%= t(".remove") %>"
+              aria-label="<%= t(".remove") %>"
+              data-action="kern--form--nested-entries#remove">
+        <span class="material-symbols-outlined kern-label" aria-hidden="true">delete</span>
+      </button>
+    </div>
+  </template>
+
+  <%= kern_button(text: t(".add"), icon: "add", style: :secondary,
+        class: "kern-btn--small mt-2",
+        data: { kern__form__nested_entries_target: "addButton",
+                action: "kern--form--nested-entries#add" }) %>
+</div>

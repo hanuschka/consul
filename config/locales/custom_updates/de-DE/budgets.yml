@@ -21,7 +21,9 @@ de:
         orders:
           random: Zufällig
           ballot_line_weight: Aktuelle Stimmenverteilung
+          total_votes: Aktuelles Ranking
           newest: Neueste zuerst
+          comments_count: Meist kommentiert
         sidebar:
           voted_info:
             distributed: Sie können jederzeit Ihre Stimme ändern bis zum Ende dieser Phase. Es besteht keine Notwendigkeit, das gesamte verfügbare Budget auszugeben.

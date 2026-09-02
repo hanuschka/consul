@@ -142,6 +142,55 @@
   }
 }
 
+// --- Action row (detail page top-level controls) ---
+.adm-detail-action-row {
+  .adm-button-with-progress__trigger[aria-disabled="true"],
+  .adm-button-with-progress__loading:not(.-active),
+  .adm-button-with-progress__success:not(.-active) {
+    display: none;
+  }
+}
+
+.adm-watch-toggle--on .material-symbols-outlined {
+  font-variation-settings: "FILL" 1;
+}
+
+.adm-share-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+.adm-share-menu__panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 30;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+  padding: var(--kern-metric-space-default, 16px);
+  background: var(--kern-color-layout-background-default, #fff);
+  border: 1px solid var(--kern-color-layout-border, #e0e0e0);
+  border-radius: var(--kern-metric-border-radius-default, 4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  &.is-open {
+    display: block;
+  }
+
+  .kern-form-check {
+    align-items: center;
+  }
+}
+
+.adm-share-menu__list {
+  max-height: 240px;
+  overflow-y: auto;
+  margin-bottom: var(--kern-metric-space-default, 16px);
+}
+
 // --- Section container (top-level page sections) ---
 .adm-detail-section {
   background: var(--kern-grey-50, #f9fafb);

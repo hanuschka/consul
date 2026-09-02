@@ -14,7 +14,7 @@
   <% end %>
 
   <div id="<%= container_id %>"
-       class="map_location map <%= map_location.rendering_library %> mb-4"
+       class="map_location map <%= rendering_library %> mb-4"
        style="<%= container_style %>"
        data-map-target="container"
        data-map-location-id="<%= map_location.id %>">
@@ -43,7 +43,7 @@
           {}, { data: { action: "change->map#switchRenderingLibrary" } } %>
     <% end %>
 
-    <div data-map-target="mapboxStyleField" class="<%= 'd-none' unless map_location.mapbox? %>">
+    <div data-map-target="mapboxStyleField" class="<%= 'd-none' unless rendering_library == 'mapbox' %>">
       <%= render Kern::FormFieldComponent.new(
         label: t('components.kern.map_component.mapbox_style_id_label'),
         hint: t('components.kern.map_component.mapbox_style_id_description')

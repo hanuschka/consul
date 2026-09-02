@@ -32,3 +32,4 @@ de:
             success: Sie haben sich erfolgreich als Gast abgemeldet
           create:
             existing_user_with_same_stamp: Bitte nutzen Sie die E-Mail-Adresse, mit der Sie sich ursprünglich registriert haben, um sich in Ihren Account einzuloggen.
+            email_taken_by_unconfirmed_account: Für diese E-Mail-Adresse besteht bereits ein Konto, das noch nicht bestätigt wurde. Wir haben Ihnen die Bestätigungs-E-Mail erneut zugesendet. Bitte prüfen Sie Ihr Postfach.

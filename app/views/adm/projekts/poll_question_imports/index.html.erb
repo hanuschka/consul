@@ -1,0 +1,79 @@
+<% page_title = t("adm.projekts.poll_question_imports.index.title") %>
+<%= content_for :title, [@projekt_phase.title, page_title].join(" | ") %>
+
+<%= render Adm::HeaderComponent.new(
+      title: page_title,
+      breadcrumbs: @breadcrumbs,
+      back_button_url: poll_questions_adm_projekts_phase_path(@projekt_phase),
+      compact: true
+    ) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t("adm.projekts.poll_question_imports.index.hint") %></p>
+  <% end %>
+
+  <% header.with_actions do %>
+    <div class="adm-poll-question-import-list__header-actions">
+      <%= kern_link_button new_adm_projekts_phase_poll_question_import_path(@projekt_phase),
+            text: t("adm.projekts.poll_question_imports.index.new_import"),
+            icon: "upload_file",
+            style: :primary %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-3 adm-poll-question-import-list">
+  <div class="adm-poll-question-import-list__filters">
+    <%= render Kern::FilterChipsComponent.new(
+          aria_label: t("adm.projekts.poll_question_imports.index.filters.aria"),
+          filters: [nil, *Adm::Projekts::PollQuestionImportsController::STATUS_FILTERS].map do |key|
+            {
+              label: t("adm.projekts.poll_question_imports.index.filters.#{key || 'all'}"),
+              url: adm_projekts_phase_poll_question_imports_path(@projekt_phase, status: key),
+              count: key ? @import_counts[key] : @import_counts.values.sum,
+              active: key == @status_filter
+            }
+          end
+        ) %>
+  </div>
+
+  <% if @imports.any? %>
+    <div class="kern-table-responsive" tabindex="0">
+      <table class="kern-table">
+        <thead class="kern-table__head">
+          <tr class="kern-table__row">
+            <th scope="col" class="kern-table__header">
+              <%= t("adm.projekts.poll_question_imports.index.columns.files") %>
+            </th>
+            <th scope="col" class="kern-table__header">
+              <%= t("adm.projekts.poll_question_imports.index.columns.status") %>
+            </th>
+            <th scope="col" class="kern-table__header">
+              <%= t("adm.projekts.poll_question_imports.index.columns.questions") %>
+            </th>
+            <th scope="col" class="kern-table__header">
+              <%= t("adm.projekts.poll_question_imports.index.columns.created") %>
+            </th>
+            <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+          </tr>
+        </thead>
+
+        <tbody class="kern-table__body">
+          <%= render(Adm::Projekts::PollQuestionImports::ListItemComponent.with_collection(
+                @imports,
+                projekt_phase: @projekt_phase,
+                created_questions_by_id: @created_questions_by_id)) %>
+        </tbody>
+      </table>
+    </div>
+
+    <%= paginate @imports if @imports.total_pages > 1 %>
+  <% else %>
+    <%= empty_state(
+          title: t("adm.projekts.poll_question_imports.index.empty_title"),
+          description: t("adm.projekts.poll_question_imports.index.empty_description"),
+          icon: "upload_file",
+          link_url: new_adm_projekts_phase_poll_question_import_path(@projekt_phase),
+          link_text: t("adm.projekts.poll_question_imports.index.new_import")
+        ) %>
+  <% end %>
+</div>

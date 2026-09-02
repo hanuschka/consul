@@ -62,6 +62,7 @@
                           method: :post,
                           local: false,
                           class: "registration-form" do |f| %>
+              <%= f.invisible_captcha :subtitle %>
               <%= f.text_field :first_name,
                     placeholder: t("custom.projekt_events.registration.first_name"),
                     value: (current_user&.first_name unless my_registrations.any?),

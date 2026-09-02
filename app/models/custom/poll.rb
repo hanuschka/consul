@@ -99,6 +99,19 @@ class Poll < ApplicationRecord
     projekt_phase.feature?("resource.wizard_mode")
   end
 
+  def questions_in_participant_order(questions, seed)
+    ordered = questions.to_a.dup
+    slots = ordered.each_index.select { |index| ordered[index].randomize_position? }
+    return ordered if slots.size < 2
+
+    shuffled = slots.map { |index| ordered[index] }
+                    .sort_by { |question| Digest::SHA256.hexdigest("#{seed}:#{id}:#{question.id}") }
+
+    slots.each_with_index { |slot, index| ordered[slot] = shuffled[index] }
+
+    ordered
+  end
+
   def advanced_stats_enabled?
     true
   end

@@ -1,13 +1,5 @@
 class Projekt < ApplicationRecord
   OVERVIEW_PAGE_NAME = "projekt_overview_page".freeze
-  PHASE_PRELOAD_FOR_CONTROLLER = {
-    "proposals" => { proposal_phases: [:individual_group_values, :settings] },
-    "debates" => { debate_phases: [:individual_group_values, :settings] },
-    "polls" => { voting_phases: [:individual_group_values, :settings, :polls] },
-    "processes" => {
-      legislation_phases: [:individual_group_values, :settings, :legislation_process]
-    }
-  }.freeze
 
   # The settings that SQL scopes filter on live as columns; every other
   # projekt setting stays a `projekt_settings` row.
@@ -40,10 +32,7 @@ class Projekt < ApplicationRecord
   has_many :children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "parent_id",
     inverse_of: :parent, dependent: :nullify
 
-  has_many :third_level_children, -> { order(order_number: :asc) }, class_name: "Projekt", foreign_key: "top_level_projekt_id",
-    inverse_of: :top_level_projekt, dependent: :nullify
   belongs_to :parent, class_name: "Projekt", optional: true
-  belongs_to :top_level_projekt, class_name: "Projekt", optional: true
 
   has_one :page, class_name: "SiteCustomization::Page", dependent: :destroy
   has_one :projekt_evaluation, dependent: :destroy
@@ -114,18 +103,21 @@ class Projekt < ApplicationRecord
 
   belongs_to :landing_page, class_name: 'SiteCustomization::Page', optional: true
 
+  belongs_to :copied_from_projekt, class_name: "Projekt", optional: true,
+    inverse_of: :copies
+  has_many :copies, class_name: "Projekt", foreign_key: "copied_from_projekt_id",
+    inverse_of: :copied_from_projekt, dependent: :nullify
+
   delegate :image, to: :page, allow_nil: true
   delegate :url, to: :page, allow_nil: true
 
   after_create :create_corresponding_page, :set_order, :create_default_settings,
     :copy_map_settings, :ensure_other_projekts_order_integrity, :assign_author_as_manager
 
-  after_update :sync_children_activated, if: :saved_change_to_activated?
   after_update :mirror_setting_columns_to_legacy_rows
 
   after_save :recalculate_subtree_levels, if: :saved_change_to_parent_id?
 
-  before_save :assign_top_level_projekt_from_parent
   before_save :sync_published_at
 
   before_create :initialize_content_updated_at
@@ -152,6 +144,7 @@ class Projekt < ApplicationRecord
 
   validates :color, format: { with: /\A#[\da-f]{6}\z/i }, allow_blank: true
   validates :name, presence: true
+  validate :hierarchy_should_not_exceed_two_levels
 
   attribute :order_number, :integer, default: 0
   attribute :new_content_block_mode, :boolean, default: true
@@ -164,6 +157,39 @@ class Projekt < ApplicationRecord
     completed: "completed",
     failed: "failed"
   }, _prefix: true, _default: "never_run"
+
+  enum copy_status: {
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :copy
+
+  # A worker killed mid-copy never reaches CopyJob's rescue, so the row keeps
+  # claiming "processing" with nothing left to finish it. Past this age it is
+  # reported as failed, which is what makes it deletable again.
+  COPY_STALE_AFTER = 30.minutes
+
+  # A copy that never finished: its phases and content are missing or partial,
+  # so the admin screens hide everything that would act on them.
+  def copy_unfinished?
+    copy_processing? || copy_failed?
+  end
+
+  def copy_stalled?
+    return false if !copy_processing?
+
+    updated_at < COPY_STALE_AFTER.ago
+  end
+
+  def copy_in_progress?
+    copy_processing? && !copy_stalled?
+  end
+
+  def reported_copy_status
+    return "failed" if copy_stalled?
+
+    copy_status || "completed"
+  end
 
   scope :regular, -> { where(special: false) }
   scope :with_order_number, -> { where.not(order_number: nil).order(order_number: :asc) }
@@ -463,12 +489,6 @@ class Projekt < ApplicationRecord
       .where(site_customization_pages: { status: "published" })
   }
 
-  def self.includes_children_projekts_with(*sub_relations)
-    includes(
-      children: [*sub_relations, {children: [*sub_relations]}]
-    )
-  end
-
   def self.overview_page
     find_by(
       special_name: "projekt_overview_page",
@@ -486,25 +506,6 @@ class Projekt < ApplicationRecord
       projekt_manager.id,
       Array(permissions)
     )
-  end
-
-  def self.selectable_in_selector(controller_name, current_user, resource = nil)
-    phase_preload = PHASE_PRELOAD_FOR_CONTROLLER.fetch(controller_name)
-    sub_relations = [
-      :individual_group_values, :hard_individual_group_values, phase_preload
-    ]
-
-    includes(:individual_group_values, phase_preload)
-      .includes_children_projekts_with(*sub_relations)
-      .includes({ parent: :individual_group_values }, { top_level_projekt: :hard_individual_group_values })
-      .select do |projekt|
-        (!projekt.hidden_for?(current_user) || projekt.all_parent_projekts.none? { |p| p.hidden_for?(current_user) }) &&
-        (projekt.can_assign_resources?(controller_name, current_user, resource) ||
-          projekt.all_children_projekts.any? do |p|
-            p.can_assign_resources?(controller_name, current_user, resource)
-          end
-        )
-      end
   end
 
   def self.search(terms)
@@ -526,32 +527,6 @@ class Projekt < ApplicationRecord
 
   def published?
     page&.status == "published"
-  end
-
-  def can_assign_resources?(controller_name, user, resource = nil)
-    return false if user.nil?
-    return true if resource&.respond_to?(:author) && resource.author == user
-    return false if !activated? && controller_name != "polls"
-
-    case controller_name
-    when "proposals"
-      any_phase_selectable?(proposal_phases, user, resource)
-
-    when "debates"
-      any_phase_selectable?(debate_phases, user, resource)
-
-    when "polls"
-      any_phase_selectable?(voting_phases, user)
-
-    when "processes"
-      legislation_phases
-        .reject { |phase| phase.legislation_process.present? || !phase.selectable_by?(user) }
-        .any?
-    end
-  end
-
-  def any_phase_selectable?(phases, user, resource = nil)
-    phases.to_a.any? { |phase| phase.selectable_by?(user, resource) }
   end
 
   def top_level?
@@ -616,11 +591,7 @@ class Projekt < ApplicationRecord
   end
 
   def all_parent_ids
-    all_parent_projekts.map(&:id)
-  end
-
-  def all_parent_projekts
-    [parent, top_level_projekt].compact.uniq
+    [parent_id].compact
   end
 
   def all_children_ids
@@ -637,6 +608,15 @@ class Projekt < ApplicationRecord
   def children_tree_preloaded?
     children.loaded? &&
       children.all? { |child| child.association(:children).loaded? }
+  end
+
+  def assignable_parents
+    Projekt.regular
+      .where(parent_id: nil)
+      .or(Projekt.regular.where(id: parent_id))
+      .where.not(id: id)
+      .includes(page: :translations)
+      .order(:name)
   end
 
   def has_active_phase?(controller_name)
@@ -741,18 +721,6 @@ class Projekt < ApplicationRecord
     else
       page.title
     end
-  end
-
-  def all_ids_in_tree
-    all_parent_ids + [id] + all_children_ids
-  end
-
-  def all_projekt_labels
-    ProjektLabel.where(projekt_id: (all_parent_ids + [id]))
-  end
-
-  def all_projekt_labels_in_tree
-    ProjektLabel.where(projekt_id: all_ids_in_tree)
   end
 
   def visible_for?(user = nil)
@@ -912,6 +880,18 @@ class Projekt < ApplicationRecord
 
   private
 
+    def hierarchy_should_not_exceed_two_levels
+      return if parent_id.blank? || !parent_id_changed?
+
+      if parent_id == id
+        errors.add(:parent_id, :cannot_be_self)
+      elsif children.exists?
+        errors.add(:parent_id, :cannot_have_children)
+      elsif Projekt.with_hidden.where(id: parent_id).where.not(parent_id: nil).exists?
+        errors.add(:parent_id, :must_be_top_level)
+      end
+    end
+
     def create_corresponding_page
       create_page(
         title: name,
@@ -991,7 +971,7 @@ class Projekt < ApplicationRecord
 
       create_map_location
 
-      (parent&.map_layers.presence || MapLayer.default).each do |map_layer|
+      MapLayer.default.each do |map_layer|
         map_layers << map_layer.dup
       end
     end
@@ -1029,14 +1009,6 @@ class Projekt < ApplicationRecord
       assignment = projekt_manager_assignments.find_or_initialize_by(projekt_manager: projekt_manager)
       assignment.permissions |= ProjektManagerAssignment::ACCEPTABLE_PERMISSIONS
       assignment.save!
-    end
-
-    def assign_top_level_projekt_from_parent
-      return unless parent_id_changed?
-
-      if parent&.parent_id.present?
-        self.top_level_projekt_id = parent.parent_id
-      end
     end
 
     def initialize_content_updated_at
@@ -1083,12 +1055,6 @@ class Projekt < ApplicationRecord
       end
 
       ProjektSetting.insert_all(missing_rows) if missing_rows.present?
-    end
-
-    def sync_children_activated
-      all_children_projekts.each do |child|
-        child.update!(activated: activated)
-      end
     end
 
     def sync_for_global_overview_if_changed

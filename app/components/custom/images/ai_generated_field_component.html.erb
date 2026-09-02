@@ -1,0 +1,18 @@
+<rich-tooltip placement="top" delay="300" trigger-only shadow="heavy" size="big">
+  <span class="ai-generated-image-switch">
+    <custom-switch
+      label="<%= switch_label %>"
+      aria-label="<%= label_text %>"
+      name="<%= field_name %>"
+      value="1"
+      <%= "checked" if marked? %>
+    ></custom-switch>
+  </span>
+  <template>
+    <span class="rich-tooltip-content">
+      <span class="rich-tooltip-content--title"><%= tooltip_title %></span>
+      <span class="rich-tooltip-content--text"><%= tooltip_text %></span>
+      <span class="rich-tooltip-content--note"><%= tooltip_note %></span>
+    </span>
+  </template>
+</rich-tooltip>

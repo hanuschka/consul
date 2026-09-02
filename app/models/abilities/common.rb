@@ -96,7 +96,8 @@ module Abilities
         poll.answerable_by?(user)
       end
 
-      can [:answer, :unanswer, :update_open_answer], Poll::Question do |question|
+      can [:answer, :unanswer, :update_open_answer, :add_map_point, :remove_map_point],
+          Poll::Question do |question|
         question.answerable_by?(user)
       end
 
@@ -167,7 +168,7 @@ module Abilities
       end
 
       can deficiency_report_read_actions, DeficiencyReport, author_id: user.id
-      can [:create], DeficiencyReport
+      can [:create], DeficiencyReport if DeficiencyReport.submissions_open?
       can :destroy, DeficiencyReport do |dr|
         dr.author_id == user.id &&
           dr.official_answer.blank?

@@ -1,6 +1,8 @@
 <%= @form.fields_for :image, image do |image_builder| %>
   <%= render Kern::Form::ImageComponent.new(form: image_builder, attribute: :attachment, auto_submit: @auto_submit, show_actions: @show_actions, crop: @crop, crop_aspect_ratio: @crop_aspect_ratio) %>
 
+  <%= render Images::AiGeneratedFieldComponent.new(image_builder) %>
+
   <%= image_builder.hidden_field :cached_attachment %>
   <%= image_builder.hidden_field :user_id, value: helpers.current_user&.id %>
 <% end %>

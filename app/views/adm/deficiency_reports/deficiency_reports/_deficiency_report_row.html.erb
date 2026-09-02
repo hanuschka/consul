@@ -35,7 +35,8 @@
       <%= render Adm::AttributeEditors::BooleanComponent.new(
         deficiency_report,
         :admin_accepted,
-        path: accept_adm_deficiency_reports_deficiency_report_path(deficiency_report)
+        path: accept_adm_deficiency_reports_deficiency_report_path(deficiency_report),
+        disabled: !Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, deficiency_report).accept?
       ) %>
     </td>
   <% end %>
@@ -43,6 +44,14 @@
   <td class="kern-table__cell" data-field="updated_at"><%= l(deficiency_report.updated_at, format: "%d.%m.%Y") %></td>
   <td class="kern-table__cell" data-field="status_changed_at"><%= l(deficiency_report.status_changed_at, format: "%d.%m.%Y") if deficiency_report.status_changed_at %></td>
   <td class="kern-table__cell" data-field="author"><%= link_to deficiency_report.author.username, user_path(deficiency_report.author), target: "_blank", class: "kern-link" %></td>
+  <td class="kern-table__cell" data-field="on_behalf_of">
+    <%= deficiency_report.on_behalf_of if deficiency_report.on_behalf_of_differs_from_author? %>
+  </td>
+  <td class="kern-table__cell" data-field="recorded_by">
+    <% if deficiency_report.on_behalf_of_account_linked? %>
+      <%= link_to deficiency_report.recorded_by.username, user_path(deficiency_report.recorded_by), target: "_blank", class: "kern-link" %>
+    <% end %>
+  </td>
   <td class="kern-table__cell" data-field="intake_channel"><%= deficiency_report.intake_channel&.name %></td>
   <td class="kern-table__cell" data-field="status"><%= deficiency_report.status&.title %></td>
   <td class="kern-table__cell" data-field="address"><%= deficiency_report.approximated_address %></td>

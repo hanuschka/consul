@@ -5,7 +5,6 @@ class DebatesController < ApplicationController
   include ProjektControllerHelper
   include DocumentAttributes
   include Takeable
-  include ProjektLabelAttributes
   include RandomSeed
   include GuestUsers
   include LandingPageResolvable
@@ -83,9 +82,9 @@ class DebatesController < ApplicationController
   def new
     @projekt_phase = ProjektPhase::DebatePhase.find(params[:projekt_phase_id]) if params[:projekt_phase_id].present?
 
-    if @projekt_phase.blank? && Projekt.top_level.selectable_in_selector("debates", current_user).empty?
+    if @projekt_phase.blank?
       redirect_to debates_path
-    elsif @projekt_phase.present? && !@projekt_phase.selectable_by?(current_user)
+    elsif !@projekt_phase.selectable_by?(current_user)
       redirect_to page_path(@projekt_phase.projekt.page.slug,
                             projekt_phase_id: @projekt_phase.id,
                             anchor: "filter-subnav")
@@ -150,14 +149,7 @@ class DebatesController < ApplicationController
   end
 
   def update
-    custom_debate_params =
-      if debate_params["image_attributes"]["cached_attachment"].blank?
-        debate_params.except("image_attributes")
-      else
-        debate_params
-      end
-
-    if resource.update(custom_debate_params)
+    if resource.update(debate_params)
       redirect_to resource, notice: t("flash.actions.update.#{resource_name.underscore}")
     else
       load_geozones

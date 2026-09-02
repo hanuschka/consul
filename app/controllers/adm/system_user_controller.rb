@@ -26,7 +26,7 @@ module Adm
         params.require(:user).permit(
           :username,
           :background_image,
-          image_attributes: [:id, :attachment, :cached_attachment, :user_id, :_destroy]
+          image_attributes: [:id, :attachment, :cached_attachment, :ai_generated, :user_id, :_destroy]
         )
       end
 

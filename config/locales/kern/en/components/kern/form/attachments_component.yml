@@ -1,0 +1,8 @@
+en:
+  components:
+    kern:
+      form:
+        attachments_component:
+          add: Add document
+          remove_confirm: Remove this document?
+          remove: Remove

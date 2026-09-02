@@ -8,6 +8,13 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   attribute :margin_bottom, :integer, default: DEFAULT_MARGIN_BOTTOM
 
   validates :name, presence: true, uniqueness: { scope: [:locale, :key] }, inclusion: { in: VALID_BLOCKS }
+
+  # The key is unique across the whole table (locale_key_name_index) and encodes
+  # the owning projekt, so it can never be reused between projekts.
+  def self.generate_projekt_key(projekt_id, position)
+    "projekt_content_block_#{projekt_id}_#{position}_#{DateTime.now.to_i}"
+  end
+
   belongs_to :projekt, optional: true
   belongs_to :newsletter, optional: true
   validate :single_parent

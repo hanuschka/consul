@@ -20,7 +20,7 @@
   <tbody>
     <%- groups.each do |group| %>
       <tr>
-        <td><%= group[0]&.name || "Ohne Status" %></td>
+        <td><%= group[0]&.name || t("adm.deficiency_reports.stats.show.without.#{type}") %></td>
         <td><%= group[1].count %></td>
         <td><%= group[1].where(created_at: Time.zone.now.beginning_of_week..Time.zone.now.end_of_week).count %></td>
         <td><%= group[1].where(created_at: Time.zone.now.prev_week.beginning_of_week..Time.zone.now.prev_week.end_of_week).count %></td>

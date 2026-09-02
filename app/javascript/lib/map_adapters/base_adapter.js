@@ -37,6 +37,36 @@ export default class BaseAdapter {
     throw new Error("Subclass must implement destroy()")
   }
 
+  /**
+   * Re-layout the map when its container becomes visible. A map created inside
+   * a hidden container gets a zero-sized viewport and stays broken otherwise.
+   */
+  observeContainerResize() {
+    if (typeof ResizeObserver === "undefined" || !this.container) return
+
+    this._containerVisible = this.container.offsetWidth > 0
+
+    this._containerResizeObserver = new ResizeObserver(() => {
+      const visible = this.container.offsetWidth > 0
+
+      if (visible && !this._containerVisible) this.invalidateSize()
+
+      this._containerVisible = visible
+    })
+
+    this._containerResizeObserver.observe(this.container)
+  }
+
+  /**
+   * Stop watching the container for visibility changes
+   */
+  stopObservingContainerResize() {
+    if (!this._containerResizeObserver) return
+
+    this._containerResizeObserver.disconnect()
+    this._containerResizeObserver = null
+  }
+
   // ===========================================================================
   // 2. MAP CREATION & CONTROLS
   // ===========================================================================

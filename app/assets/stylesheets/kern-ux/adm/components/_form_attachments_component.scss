@@ -1,0 +1,15 @@
+.adm-form-attachment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kern-metric-space-default, 16px);
+  padding: var(--kern-metric-space-large, 24px);
+  border-radius: var(--kern-metric-border-radius-small, 2px);
+  outline: var(--kern-metric-border-width-default, 2px) solid var(--kern-color-form-input-border, #171A2B);
+}
+
+.adm-form-attachment__remove {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+}

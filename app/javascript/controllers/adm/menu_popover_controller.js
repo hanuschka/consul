@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["menu"]
+  static targets = ["menu", "button"]
 
   connect() {
     this.handleOutsideClick = this.handleOutsideClick.bind(this)
@@ -19,11 +19,18 @@ export default class extends Controller {
   toggle(event) {
     event.preventDefault()
     event.stopPropagation()
-    this.menuTarget.classList.toggle("is-open")
+    this.syncExpanded(this.menuTarget.classList.toggle("is-open"))
   }
 
   close() {
     this.menuTarget.classList.remove("is-open")
+    this.syncExpanded(false)
+  }
+
+  syncExpanded(open) {
+    if (!this.hasButtonTarget) return
+
+    this.buttonTarget.setAttribute("aria-expanded", open ? "true" : "false")
   }
 
   handleOutsideClick(event) {

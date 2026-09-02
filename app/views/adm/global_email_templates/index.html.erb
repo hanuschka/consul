@@ -3,11 +3,21 @@
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) %>
 
 <div class="kern-container mb-5">
+  <div class="mb-5">
+    <%= render Adm::AttributeEditorComponent.new(
+      Setting.find_by!(key: "proposals.email_on_official_answer"), :value, :boolean
+    ) %>
+  </div>
+
   <% @email_templates.each do |template| %>
     <%= render Adm::EmailTemplateComponent.new(template) %>
   <% end %>
 
   <div class="my-5">
+    <%= render Adm::AttributeEditorComponent.new(
+      SiteCustomization::Image.find_or_create_by!(name: "logo_email"), :image, :image
+    ) %>
+
     <%= render Adm::AttributeEditorComponent.new(
       SiteCustomization::ContentBlock.custom_block_for(MailerFooterHelper::SYSTEM_EMAIL_FOOTER_BLOCK),
       :body, :rich_text, wide: true, toolbar: "email"

@@ -12,6 +12,12 @@ FactoryBot.define do
     trait :verified do
       verified_at { Time.current }
     end
+
+    trait :unconfirmed do
+      confirmed_at { nil }
+
+      after(:build, &:skip_confirmation_notification!)
+    end
   end
 
   factory :administrator do

@@ -252,6 +252,21 @@
   backdrop-filter: blur(10px) saturate(1.1);
 }
 
+.projekt-banner-upload-progress.-flat-ground .projekt-banner-upload-progress--backdrop {
+  background-color: #e5e7eb;
+  backdrop-filter: none;
+}
+
+.projekt-banner-upload-progress.-flat-ground .projekt-banner-upload-progress--spinner {
+  border-color: #6b7280;
+  border-bottom-color: transparent;
+}
+
+.projekt-banner-upload-progress.-flat-ground .projekt-banner-upload-progress--message {
+  color: #374151;
+  text-shadow: none;
+}
+
 .projekt-banner-upload-progress--spinner {
   position: relative;
   z-index: 1;

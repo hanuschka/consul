@@ -114,9 +114,11 @@
         </div>
       </div>
 
-      <div class="show-for-small-only margin-top">
-        <%= deficiency_report_create_cta_button(css_class: "button expanded js-preselect-projekt") %>
-      </div>
+      <% if DeficiencyReport.submissions_open? %>
+        <div class="show-for-small-only margin-top">
+          <%= deficiency_report_create_cta_button(css_class: "button expanded js-preselect-projekt") %>
+        </div>
+      <% end %>
 
       <div id="deficiency-reports-list">
         <% if @deficiency_reports.any? || current_user.blank? %>

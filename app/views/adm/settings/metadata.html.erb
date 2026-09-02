@@ -16,10 +16,15 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_description"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_keywords"), :value, :string) %>
 
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "apple-touch-icon-200"), :image, :image) %>
+
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "facebook_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "instagram_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "twitter_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "twitter_hashtag"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "telegram_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "youtube_handle"), :value, :string) %>
+
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "social_media_icon"), :image, :image) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "social_media_icon_twitter"), :image, :image) %>
 </div>

@@ -134,6 +134,7 @@
 //= require select2/dist/js/select2.full
 //= require siriwave/dist/siriwave.umd.min
 //= require cropperjs/dist/cropper
+//= require leaflet.heat/dist/leaflet-heat
 //= require deficiency_report_subcategories
 //= require custom
 //= require_tree ./custom
@@ -179,6 +180,8 @@ var initialize_modules = function() {
   App.TagAutocomplete.initialize();
   App.PollsAdmin.initialize();
   App.Map.initialize();
+  App.PollMapPoints.initialize();
+  App.PollMapResults.initialize();
   App.Polls.initialize();
   App.Sortable.initialize();
   App.TableSortable.initialize();
@@ -246,6 +249,7 @@ var destroy_non_idempotent_modules = function() {
   App.StikyHeader.destroy();
   App.PollsCustom.destroy();
   App.ResponsiveMenu.destroy();
+  App.VoiceAssistantWidget.destroy();
   App.FocusTrap.resetInert();
   App.SharedModal.reset();
 };

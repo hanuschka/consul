@@ -1,0 +1,28 @@
+<%
+  interactive = !local_assigns.fetch(:pdf_mode, false) && controller.is_a?(PollsController)
+  record = Poll::Question.find_by(id: question["id"])
+  collection = record.present? ? Polls::MapPointsFeatureCollection.new(record) : nil
+  features = collection&.call || { "type" => "FeatureCollection", "features" => [] }
+  pin_count = features["features"].size
+%>
+
+<div class="poll-question-block poll-question-block--map">
+  <div class="poll-question-title"><%= question["title"] %></div>
+
+  <div class="poll-question-meta">
+    <%= t("adm.projekts.projekts.evaluation.map_points.pin_count", count: pin_count) %>
+  </div>
+
+  <% if interactive && record.present? %>
+    <div class="poll-map-results js-poll-map-results"
+         data-heat-points="<%= collection.coordinates.to_json %>">
+      <%= render Shared::MapComponent.new(mappable: record,
+                                          features: features,
+                                          rendering_library: record.map_rendering_library) %>
+    </div>
+  <% elsif pin_count.positive? %>
+    <p class="poll-question-meta">
+      <%= t("adm.projekts.projekts.evaluation.map_points.map_on_results_page") %>
+    </p>
+  <% end %>
+</div>

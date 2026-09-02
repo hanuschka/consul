@@ -86,6 +86,8 @@ de:
           update_button: Aktualisieren
           not_connected: KI-App ist nicht verbunden
           not_connected_description: Um diese Funktion nutzen zu können, muss die KI-App erst durch demokratie.today aktiviert werden. Bitte wenden Sie sich an Ihren Ansprechpartner bei demokratie.today.
+          unavailable: KI-Dienst zurzeit nicht erreichbar
+          unavailable_description: Die Einstellungen des KI-Sprachassistenten können gerade nicht geladen werden. Bitte laden Sie die Seite später erneut. Die Einstellung oberhalb kann weiterhin geändert werden.
         projekt_phase:
           ai_user_flow: KI Textassistent
           ai_settings: KI Sprachassistent

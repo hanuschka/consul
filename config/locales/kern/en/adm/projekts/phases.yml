@@ -261,6 +261,7 @@ en:
             title: Questions
             type: Voting mode
             contextualized_by: "Contextualized by:"
+            randomized_position: Randomized position
             bundle_question: Question bundle
             edit_answers: Answer list
             edit_questions: Question list

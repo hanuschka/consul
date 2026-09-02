@@ -7,10 +7,6 @@ class AiProposalFlow::ProjectSummaryBannerComponent < ApplicationComponent
     @projekt_phase.projekt
   end
 
-  def initial
-    projekt.page.title.first.upcase
-  end
-
   def description_snippet
     text = projekt.page.subtitle.presence || helpers.strip_tags(projekt.page.content.to_s).first(200)
     helpers.sanitize(text)

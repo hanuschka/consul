@@ -55,21 +55,6 @@
 
   <%= f.invisible_captcha :subtitle %>
 
-  <% if current_user.administrator? || current_user.deficiency_report_manager? %>
-    <div>
-      <%= f.text_field :on_behalf_of %>
-    </div>
-
-    <% if intake_channel_field? %>
-      <div>
-        <%= f.select :deficiency_report_intake_channel_id,
-              intake_channels.map { |channel| [channel.name, channel.id] },
-              { label: t("custom.deficiency_reports.form.intake_channel.label"),
-                include_blank: t("custom.deficiency_reports.form.intake_channel.placeholder") } %>
-      </div>
-    <% end %>
-  <% end %>
-
   <fieldset>
     <div>
       <%= f.text_field :video_url, hint: t("proposals.form.proposal_video_url_note") %>

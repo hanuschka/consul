@@ -1,0 +1,28 @@
+// The AI disclosure switch, shared by every image form. The <rich-tooltip> host
+// and <custom-switch> are both display:contents, so this span is the box the
+// tooltip hovers on and the flex item the meta row lays out.
+.ai-generated-image-switch {
+  display: inline-flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.ai-generated-image-switch .custom-switch {
+  gap: 8px;
+}
+
+// Inside the upload bar the switch becomes its left segment, divided from the
+// caption field by a hairline.
+.image-upload-meta-row .ai-generated-image-switch {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border-right: 1px solid #d5d5d5;
+  background: #f4f4f4;
+}
+
+// A bar with no caption field (the deficiency report form) is the segment alone,
+// so it drops the divider and the segment tint.
+.image-upload-meta-row:not(:has(.image-upload-credits-input)) .ai-generated-image-switch {
+  border-right: 0;
+  background: transparent;
+}

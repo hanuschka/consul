@@ -1,6 +1,8 @@
 <% now = Time.zone.now %>
 <% max_count = groups.map { |_, reports| reports.count }.max || 1 %>
 
+<% empty_group_label = t("adm.deficiency_reports.stats.show.without.#{type}") %>
+
 <div class="adm-metric-rows">
   <% groups.each do |group, reports| %>
     <% total = reports.count %>
@@ -10,8 +12,8 @@
     <% year = reports.where(created_at: now.beginning_of_year..now.end_of_year).count %>
 
     <div class="adm-metric-row">
-      <div class="adm-metric-row__name" title="<%= group&.name || t("adm.deficiency_reports.stats.show.without_status") %>">
-        <%= group&.name || t("adm.deficiency_reports.stats.show.without_status") %>
+      <div class="adm-metric-row__name" title="<%= group&.name || empty_group_label %>">
+        <%= group&.name || empty_group_label %>
       </div>
 
       <div class="adm-metric-row__bar">
@@ -35,7 +37,7 @@
         </div>
       </div>
 
-      <% if type.in?([:category, :responsible]) %>
+      <% if type.in?([:category, :responsible, :intake_channel]) %>
         <% feedback = reports.joins(:feedback_form) %>
         <% feedback_count = feedback.count %>
         <% if feedback_count.positive? %>

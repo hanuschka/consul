@@ -10,7 +10,7 @@ module CsvServices
       CSV.generate(headers: true, col_sep: ";", force_quotes: true, encoding: "UTF-8") do |csv|
         csv << headers
 
-        @proposals.each do |proposal|
+        @proposals.includes(:image).each do |proposal|
           csv << row(proposal)
         end
       end
@@ -41,6 +41,7 @@ module CsvServices
           "published_at",
           "community_id",
           "selected",
+          "image_ai_generated",
           "district",
           "geometry"
         ]
@@ -69,6 +70,7 @@ module CsvServices
           proposal.published_at,
           proposal.community_id,
           proposal.selected,
+          proposal.image&.ai_generated,
           proposal.district&.name,
           format_geometry(proposal.map_location&.features)
         ]

@@ -1,0 +1,87 @@
+<%# What the import will create, read fresh so it reflects the AI's latest edits. %>
+<div class="projekt-import-summary">
+  <div class="projekt-import-summary--head">
+    <span class="projekt-import-summary--cover">
+      <% cover_url = import_title_image_preview_url(projekt_import) %>
+      <% if cover_url.present? %>
+        <%= image_tag cover_url, alt: "" %>
+      <% else %>
+        <span class="material-symbols-outlined" aria-hidden="true">
+          <%= import_title_image_icon(projekt_import.title_image_mode) %>
+        </span>
+      <% end %>
+    </span>
+
+    <div class="projekt-import-summary--head-text">
+      <p class="projekt-import-summary--title"><%= summary.title.presence || t("adm.projekts.imports.summary.untitled") %></p>
+
+      <% if summary.subtitle.present? %>
+        <p class="projekt-import-summary--subtitle"><%= summary.subtitle %></p>
+      <% end %>
+
+      <p class="projekt-import-summary--cover-label">
+        <span class="material-symbols-outlined" aria-hidden="true">wallpaper</span>
+        <%= import_title_image_summary(projekt_import) %>
+      </p>
+    </div>
+  </div>
+
+  <dl class="kern-description-list projekt-import-summary--meta">
+    <div class="kern-description-list-item">
+      <dt class="kern-description-list-item__key"><%= t("adm.projekts.imports.summary.period") %></dt>
+      <dd class="kern-description-list-item__value"><%= import_summary_period(summary.starts_on, summary.ends_on) %></dd>
+    </div>
+
+    <div class="kern-description-list-item">
+      <dt class="kern-description-list-item__key"><%= t("adm.projekts.imports.summary.categories") %></dt>
+      <dd class="kern-description-list-item__value">
+        <% if summary.categories.any? %>
+          <%= summary.categories.join(", ") %>
+        <% else %>
+          <span class="projekt-import-summary--empty"><%= t("adm.projekts.imports.summary.none") %></span>
+        <% end %>
+      </dd>
+    </div>
+
+    <div class="kern-description-list-item">
+      <dt class="kern-description-list-item__key"><%= t("adm.projekts.imports.summary.content_blocks") %></dt>
+      <dd class="kern-description-list-item__value"><%= t("adm.projekts.imports.summary.content_blocks_count", count: summary.content_block_count) %></dd>
+    </div>
+
+    <div class="kern-description-list-item">
+      <dt class="kern-description-list-item__key"><%= t("adm.projekts.imports.summary.source_files") %></dt>
+      <dd class="kern-description-list-item__value">
+        <% if summary.source_filenames.any? %>
+          <%= summary.source_filenames.join(", ") %>
+        <% else %>
+          <span class="projekt-import-summary--empty"><%= t("adm.projekts.imports.summary.none") %></span>
+        <% end %>
+      </dd>
+    </div>
+  </dl>
+
+  <div class="projekt-import-summary--phases">
+    <p class="projekt-import-summary--section-title">
+      <%= t("adm.projekts.imports.summary.phases_count", count: summary.phases.size) %>
+    </p>
+
+    <% if summary.phases.any? %>
+      <ul class="projekt-import-summary--phase-list">
+        <% summary.phases.each do |phase| %>
+          <li class="projekt-import-summary--phase">
+            <span class="projekt-import-summary--phase-name"><%= phase.name %></span>
+            <span class="projekt-import-summary--phase-dates"><%= import_summary_period(phase.starts_on, phase.ends_on) %></span>
+
+            <% if phase.poll_question_count.present? %>
+              <span class="projekt-import-summary--phase-questions <%= "-empty" if phase.poll_question_count.zero? %>">
+                <%= t("adm.projekts.imports.initial_message.poll_questions_count", count: phase.poll_question_count) %>
+              </span>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="projekt-import-summary--empty"><%= t("adm.projekts.imports.summary.no_phases") %></p>
+    <% end %>
+  </div>
+</div>

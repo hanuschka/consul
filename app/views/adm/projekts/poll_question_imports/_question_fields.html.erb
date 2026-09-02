@@ -1,0 +1,125 @@
+<%
+  answers = Array(question["answers"])
+  position = question_counter + 1
+  answers_id = "poll-question-import-answers-#{question_counter}"
+%>
+
+<section class="adm-poll-question-card">
+  <%= fields_for "questions[#{question_counter}]" do |question_fields| %>
+    <div class="adm-poll-question-card__head">
+      <span class="adm-poll-question-card__number" aria-hidden="true"><%= position %></span>
+
+      <div class="adm-poll-question-card__heading">
+        <p class="adm-poll-question-card__label">
+          <%= t("adm.projekts.poll_question_imports.question.label") %>
+        </p>
+
+        <p
+          class="adm-poll-question-card__title"
+          aria-hidden="true"
+          data-poll-question-imports--preview-target="titleOutput"
+        ></p>
+      </div>
+
+      <div class="adm-poll-question-card__include">
+        <%= render Kern::SwitchComponent.new(
+              label: t("adm.projekts.poll_question_imports.question.include"),
+              name: "questions[#{question_counter}][include]",
+              id: "poll-question-import-include-#{question_counter}",
+              checked: true) %>
+      </div>
+    </div>
+
+    <div class="adm-poll-question-card__body">
+      <%= question_fields.text_field :title,
+            value: question["title"],
+            label: Poll::Question.human_attribute_name(:title),
+            hint: t("adm.projekts.poll_question_imports.question.title_description"),
+            data: {
+              "poll-question-imports--preview-target": "titleInput",
+              action: "input->poll-question-imports--preview#updateTitle"
+            } %>
+
+      <%= question_fields.text_area :description,
+            value: question["description"],
+            label: Poll::Question.human_attribute_name(:description),
+            hint: t("adm.projekts.poll_question_imports.question.description_description"),
+            rows: 3 %>
+
+      <%= question_fields.select :vote_type,
+            vote_type_options,
+            { selected: question["vote_type"] },
+            {
+              label: t("adm.projekts.poll_question_imports.question.vote_type"),
+              hint: t("adm.projekts.poll_question_imports.question.vote_type_description")
+            } %>
+
+      <div class="adm-poll-question-card__section">
+        <p class="adm-poll-question-card__section-title">
+          <%= t("adm.projekts.poll_question_imports.question.rating_scale_labels") %>
+        </p>
+        <p class="adm-poll-question-card__section-hint">
+          <%= t("adm.projekts.poll_question_imports.question.rating_scale_labels_description") %>
+        </p>
+
+        <div class="adm-poll-question-card__scale">
+          <%= question_fields.text_field :min_rating_scale_label,
+                value: question["min_rating_scale_label"],
+                label: VotationType.human_attribute_name(:min_rating_scale_label) %>
+          <%= question_fields.text_field :max_rating_scale_label,
+                value: question["max_rating_scale_label"],
+                label: VotationType.human_attribute_name(:max_rating_scale_label) %>
+        </div>
+      </div>
+
+      <div
+        class="adm-poll-question-card__section"
+        data-controller="poll-question-imports--answer-fields"
+        data-poll-question-imports--answer-fields-next-index-value="<%= answers.size %>"
+      >
+        <p class="adm-poll-question-card__section-title">
+          <%= t("adm.projekts.poll_question_imports.question.answers") %>
+        </p>
+        <p class="adm-poll-question-card__section-hint">
+          <%= t("adm.projekts.poll_question_imports.question.answers_description") %>
+        </p>
+
+        <div
+          id="<%= answers_id %>"
+          class="adm-poll-question-answers"
+          data-poll-question-imports--answer-fields-target="list"
+        >
+          <% answers.each_with_index do |answer, answer_index| %>
+            <%= render "adm/projekts/poll_question_imports/answer_fields",
+                  question_index: question_counter,
+                  answer_index: answer_index,
+                  position: answer_index + 1,
+                  answer: answer %>
+          <% end %>
+        </div>
+
+        <%# The blank row is rendered through the same partial as the saved ones,
+            so a change to the answer markup cannot drift between the two. %>
+        <template data-poll-question-imports--answer-fields-target="template">
+          <%= render "adm/projekts/poll_question_imports/answer_fields",
+                question_index: question_counter,
+                answer_index: "__ANSWER_INDEX__",
+                position: "__ANSWER_POSITION__",
+                answer: {} %>
+        </template>
+
+        <button
+          type="button"
+          class="adm-poll-question-card__answer-add"
+          data-action="click->poll-question-imports--answer-fields#add"
+          aria-controls="<%= answers_id %>"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">add</span>
+          <span class="kern-label">
+            <%= t("adm.projekts.poll_question_imports.question.add_answer") %>
+          </span>
+        </button>
+      </div>
+    </div>
+  <% end %>
+</section>

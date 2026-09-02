@@ -21,10 +21,6 @@ class ProjektLivestream < ApplicationRecord
     all
   }
 
-  def self.scoped_projekt_ids_for_footer(projekt)
-    projekt.top_parent.all_children_projekts.unshift(projekt.top_parent).ids
-  end
-
   def assign_video_type_info
     video_info = VideoUtils.extract_info(url)
 

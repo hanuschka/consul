@@ -123,6 +123,13 @@
       this.scrollToWizardTop();
     },
 
+    refreshMaps(node) {
+      if (!node || !node.querySelector("[data-map]")) return;
+
+      App.Map.refreshMapsIn(node);
+      App.PollMapPoints.initialize();
+    },
+
     nextVisibleIdAfter(id) {
       for (let i = this.indexById[id] + 1; i < this.map.length; i++) {
         if (!this.hiddenIds[this.map[i].id]) return this.map[i].id;
@@ -231,6 +238,7 @@
       this.updateNavButtons();
       this.mandatoryQuestionActions();
       this.formatRatingScales();
+      this.refreshMaps(node);
     },
 
     updateNavButtons() {

@@ -47,7 +47,7 @@ class AiAnalytics::SemanticClustering < ApplicationService
         Ai::RubyLlmFactory
           .chat_with_json_output(AiAnalytics::ClusteringCore.output_schema,
                                  feature: "ai_analytics.semantic_clustering")
-          .with_instructions(system_instructions)
+          .with_instructions(Ai::EvaluationContext.prepend_to(system_instructions, projekt_phase))
           .ask(user_prompt)
 
       response.content["topics"]

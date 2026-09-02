@@ -15,7 +15,7 @@ class Adm::Ideas::IdeasController < Adm::Ideas::BaseController
           { name: @idea.title }
         ]
 
-        @image_url = @idea.image&.attachment&.variant(
+        @image_url = @idea.image&.attachment_variant(
           resize_to_limit: [500, 500],
           format: "jpeg"
         )

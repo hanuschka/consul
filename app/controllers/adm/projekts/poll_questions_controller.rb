@@ -1,5 +1,6 @@
 class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
   include Adm::ContextedClonesRegeneration
+  include MapLocationAttributes
 
   before_action :set_projekt_phase
   before_action :set_poll
@@ -50,7 +51,23 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
 
   def show
     authorize [:adm, :projekts, @question], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
-    @breadcrumbs = breadcrumbs_for_action(@question.title)
+
+    respond_to do |format|
+      format.html do
+        @map_point_count = Poll::Answer::MapPoint.for_question(@question).count if @question.map_points?
+        @breadcrumbs = breadcrumbs_for_action(@question.title)
+      end
+
+      format.geojson do
+        if @question.map_points?
+          send_data JSON.generate(Polls::MapPointsFeatureCollection.call(@question)),
+                    filename: "poll-question-#{@question.id}-map-points-#{Time.zone.today}.geojson",
+                    type: "application/geo+json"
+        else
+          head :not_found
+        end
+      end
+    end
   end
 
   def edit
@@ -135,11 +152,14 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
         :parent_question_id,
         :bundle_question,
         :answer_mandatory,
+        :randomize_answers,
+        :randomize_position,
         :contextualize_by_poll_question_id,
         votation_type_attributes: [
           :id, :vote_type, :max_votes, :max_votes_per_answer,
           :show_hint_callout, :min_rating_scale_label, :max_rating_scale_label
-        ]
+        ],
+        map_location_attributes: map_location_attributes
       )
     end
 

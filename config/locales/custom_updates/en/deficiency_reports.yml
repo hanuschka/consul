@@ -54,6 +54,7 @@ en:
         submit_button_new_design: Submit now
       create:
         flash_success: Your report has been successfully submitted.
+      submissions_closed: New reports cannot be submitted at the moment.
       index:
         title: Mängelmelder
         welcome_default_text_html: In every city there are deficiencies every now and then - it's good if they are reported by attentive citizens so that they can be rectified quickly.

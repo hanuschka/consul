@@ -4,12 +4,13 @@ class ProjektImports::PromptBuilder
     "English" => :en
   }.freeze
 
-  attr_reader :base_prompt, :refs
+  attr_reader :base_prompt, :refs, :source_images
 
-  def initialize(base_prompt:, refs:, response_language: nil)
+  def initialize(base_prompt:, refs:, response_language: nil, source_images: [])
     @base_prompt = base_prompt
     @refs = refs
     @response_language = response_language.presence || default_response_language
+    @source_images = Array(source_images)
   end
 
   def call
@@ -19,6 +20,8 @@ class ProjektImports::PromptBuilder
       #{build_language_section}
 
       #{build_templates_section}
+
+      #{build_source_images_section}
 
       #{build_reference_data_section}
 
@@ -102,10 +105,67 @@ class ProjektImports::PromptBuilder
 
     templates.each do |t|
       desc = t["description"].presence ? ": #{t['description']}" : ""
-      lines << "  #{t['id']} — #{t['name']}#{desc}"
+      slots = image_slot_count(t)
+      marker = slots.positive? ? " [has #{slots} image slot(s)]" : ""
+      lines << "  #{t['id']} — #{t['name']}#{desc}#{marker}"
     end
 
     lines.join("\n")
+  end
+
+  # The images embedded in the uploaded document are extracted before this call
+  # so that the templates chosen here can hold them. Selecting only text
+  # templates silently throws every photo in the document away, which is why the
+  # instruction is phrased as a requirement and repeats the count.
+  #
+  # No URLs are given: the model never sees them and never writes an <img src>.
+  # The slots are filled from the stored images afterwards, so a wrong or
+  # invented URL is not a failure mode that exists.
+  def build_source_images_section
+    return "" if source_images.blank?
+
+    <<~SECTION.strip
+      ## Images from the uploaded document
+
+      The uploaded document#{'s' if source_files_count > 1} contain #{source_images.size} usable
+      #{'image'.pluralize(source_images.size)}, listed here in the order they appear:
+      #{source_image_lines}
+
+      The first suitable one becomes the project's title image. You MUST choose
+      content block templates whose image slots together can hold the remaining
+      #{[source_images.size - 1, 0].max}, using the "[has N image slot(s)]" marker above to
+      find them — a gallery template for several images, an image-and-text
+      template for one. Place each such block where the document discusses what
+      the image shows. Never write an image URL or filename into content_data:
+      the slots are filled in automatically after you answer.
+    SECTION
+  end
+
+  def source_image_lines
+    source_images.each_with_index.map { |image, index|
+      "  #{index + 1}. #{image['width']}x#{image['height']} px (#{orientation_of(image)})"
+    }.join("\n")
+  end
+
+  def orientation_of(image)
+    width = image["width"].to_i
+    height = image["height"].to_i
+
+    return "portrait" if height > width * 1.2
+    return "landscape" if width > height * 1.2
+
+    "square"
+  end
+
+  def source_files_count
+    source_images.map { |image| image["source_filename"] }.uniq.size
+  end
+
+  # Counted by the filler's own rule rather than by grepping for <img>, so a hero
+  # or overlay template that carries its picture as a background-image is offered
+  # to the model instead of being marked as having no room for one.
+  def image_slot_count(template)
+    HtmlImageSlots.count(template["content"] || template["html"])
   end
 
   def build_projekt_settings_section

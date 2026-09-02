@@ -3,8 +3,7 @@ class Adm::Ideas::BaseController < Adm::BaseController
   before_action :verify_idea_manager
 
   rescue_from Pundit::NotAuthorizedError do |exception|
-    Sentry.capture_exception(exception, level: :warning)
-    redirect_to adm_ideas_root_path, alert: t("adm.not_authorized")
+    handle_not_authorized(exception, adm_ideas_root_path)
   end
 
   private

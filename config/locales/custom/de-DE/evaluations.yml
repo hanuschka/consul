@@ -172,6 +172,12 @@ de:
               semantic_clustering: Gruppierung der Beiträge nach Stimmungslage.
               ai_questions: Auf Basis der Beiträge KI-generierte Anschlussfragen.
           votes_label: Stimmen
+          map_points:
+            pin_count:
+              zero: Keine Pins gesetzt
+              one: 1 Pin gesetzt
+              other: "%{count} Pins gesetzt"
+            map_on_results_page: Die Karte mit Heatmap und Einzelpins wird auf der öffentlichen Ergebnisseite angezeigt.
           open_responses_title: "Offene Beiträge der Bürger:innen — %{count} Texteingaben"
           open_responses_show: Beiträge anzeigen
           open_responses_hide: Beiträge ausblenden

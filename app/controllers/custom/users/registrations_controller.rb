@@ -8,7 +8,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
     resource.registering_from_web = true
     process_temp_attributes_for(resource)
 
-    if resource.valid?
+    resource_valid = resource.valid?
+    unconfirmed_user = unconfirmed_user_with_same_email
+
+    if unconfirmed_user.present?
+      unconfirmed_user.resend_confirmation_instructions
+
+      redirect_to new_user_registration_path,
+        notice: t("custom.devise_views.users.registrations.create.email_taken_by_unconfirmed_account")
+    elsif resource_valid
       new_unique_stamp = resource.prepare_unique_stamp
       existing_user_with_same_stamp = User.find_by(unique_stamp: new_unique_stamp) if new_unique_stamp.present?
 
@@ -73,6 +81,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
   private
+
+    def unconfirmed_user_with_same_email
+      email = resource.email.to_s.strip.downcase
+      return if email.blank?
+
+      user = User.find_by(email: email)
+      user if user.present? && !user.confirmed?
+    end
 
     def pending_invitation
       return @pending_invitation if defined?(@pending_invitation)

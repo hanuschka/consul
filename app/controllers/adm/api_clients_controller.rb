@@ -1,7 +1,7 @@
 class Adm::ApiClientsController < Adm::BaseController
   SERVICE_USER_PERMITTED_ATTRIBUTES = [
     :username, :first_name, :last_name, :background_image,
-    { image_attributes: [:id, :attachment, :cached_attachment, :user_id, :_destroy] }
+    { image_attributes: [:id, :attachment, :cached_attachment, :ai_generated, :user_id, :_destroy] }
   ].freeze
 
   def index

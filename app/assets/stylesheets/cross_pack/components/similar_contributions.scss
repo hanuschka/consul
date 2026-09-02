@@ -1,65 +1,107 @@
-.similar-contributions-notice {
-  margin: 0 auto 24px;
-  max-width: 900px;
-  padding: 20px 24px;
-  border: 1px solid #d9d9d9;
-  border-left: 4px solid #1b5e20;
-  border-radius: 8px;
-  background: #f6f9f6;
+.shared-modal.-similar-contributions {
+  // sassc (main-app Sprockets pack) evaluates CSS min() as a Sass function and
+  // fails on mixed units, so the viewport cap stays on .shared-modal.
+  width: 640px;
 }
 
-.similar-contributions-notice--title {
-  margin: 0 0 8px;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.3;
+// Many matches must not push the actions out of a 90vh dialog.
+.similar-contributions-notice {
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .similar-contributions-notice--intro {
-  margin: 0 0 16px;
-  font-size: 15px;
+  margin: 0 0 20px;
+  font-size: 16px;
   line-height: 1.5;
+  color: #4a4a4a;
 }
 
 .similar-contributions-notice--list {
-  margin: 0 0 20px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .similar-contributions-notice--item {
-  padding: 14px 0;
+  padding: 16px 0;
   border-top: 1px solid #e2e2e2;
+
+  &:first-child {
+    padding-top: 0;
+    border-top: none;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 }
 
 .similar-contributions-notice--item-title {
-  margin: 0 0 6px;
-  font-size: 16px;
+  margin: 0 0 8px;
+  font-size: 18px;
   font-weight: 600;
   line-height: 1.3;
 }
 
-.similar-contributions-notice--item-excerpt {
-  margin: 0 0 10px;
+.similar-contributions-notice--item-title i {
+  margin-left: 4px;
   font-size: 14px;
+}
+
+.similar-contributions-notice--item-excerpt {
+  margin: 0;
+  font-size: 16px;
   line-height: 1.5;
   color: #4a4a4a;
 }
 
 .similar-contributions-notice--item-support {
+  margin-top: 12px;
+}
+
+// The shared votes markup is built for a centered sidebar column: here it has
+// to read as one compact row, with the quorum bar and any permission notice
+// still spanning the full width above it.
+.similar-contributions-notice--item-support .supports {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 8px 12px;
+  text-align: left;
+}
+
+.similar-contributions-notice--item-support .supports > *:not(.in-favor):not(.votes):not(.total-supports) {
+  flex: 0 0 100%;
+}
+
+.similar-contributions-notice--item-support .supports .in-favor,
+.similar-contributions-notice--item-support .supports .votes,
+.similar-contributions-notice--item-support .supports form {
+  margin: 0;
+}
+
+.similar-contributions-notice--item-support .supports .button {
+  margin: 0;
+  width: auto;
+}
+
+.similar-contributions-notice--item-support .supports .total-supports {
+  font-size: 14px;
+  color: #6a6a6a;
 }
 
 .similar-contributions-notice--actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e2e2;
 }
 
-.similar-contributions-notice--submit-anyway {
+.similar-contributions-notice--actions .button {
   margin: 0;
 }
 

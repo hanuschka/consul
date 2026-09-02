@@ -28,6 +28,7 @@ de:
         intro:
           one: "Zu Ihrem Beitrag gibt es bereits einen inhaltlich ähnlichen Beitrag. Sie können ihn stattdessen unterstützen oder Ihren Beitrag trotzdem einreichen."
           other: "Zu Ihrem Beitrag gibt es bereits ähnliche Beiträge. Sie können einen davon stattdessen unterstützen oder Ihren Beitrag trotzdem einreichen."
+        back_to_form: "Zurück zum Formular"
         submit_anyway: "Beitrag trotzdem einreichen"
       list_component:
         title: "Ähnliche Beiträge im Projekt"

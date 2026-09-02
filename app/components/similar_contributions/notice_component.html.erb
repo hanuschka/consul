@@ -1,35 +1,45 @@
-<section class="similar-contributions-notice" aria-labelledby="similar-contributions-notice-title">
-  <h2 class="similar-contributions-notice--title" id="similar-contributions-notice-title">
-    <%= t(".title") %>
-  </h2>
+<%= render Shared::ModalComponent.new(
+  id: MODAL_ID,
+  title: t(".title"),
+  modal_class: "-similar-contributions js-similar-contributions-notice-modal",
+  close_on_backdrop: false
+) do %>
+  <div class="similar-contributions-notice">
+    <p class="similar-contributions-notice--intro"><%= t(".intro", count: matches.size) %></p>
 
-  <p class="similar-contributions-notice--intro"><%= t(".intro", count: matches.size) %></p>
+    <ul class="similar-contributions-notice--list">
+      <% matches.each do |match| %>
+        <li class="similar-contributions-notice--item">
+          <h4 class="similar-contributions-notice--item-title">
+            <%= link_to path_for(match.resource), target: "_blank",
+                  title: t("shared.target_blank") do %>
+              <%= match.resource.title %>
+              <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+            <% end %>
+          </h4>
 
-  <ul class="similar-contributions-notice--list">
-    <% matches.each do |match| %>
-      <li class="similar-contributions-notice--item">
-        <h3 class="similar-contributions-notice--item-title">
-          <%= link_to match.resource.title, path_for(match.resource), target: "_blank",
-                title: t("shared.target_blank") %>
-        </h3>
+          <p class="similar-contributions-notice--item-excerpt"><%= excerpt_for(match.resource) %></p>
 
-        <p class="similar-contributions-notice--item-excerpt"><%= excerpt_for(match.resource) %></p>
-
-        <% if supporting_available?(match.resource) %>
-          <div class="similar-contributions-notice--item-support"
-               id="<%= dom_id(match.resource) %>_votes">
-            <%= render votes_component_for(match.resource) %>
-          </div>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
+          <% if supporting_available?(match.resource) %>
+            <div class="similar-contributions-notice--item-support"
+                 id="<%= dom_id(match.resource) %>_votes">
+              <%= render votes_component_for(match.resource) %>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 
   <div class="similar-contributions-notice--actions">
+    <button type="button" class="button hollow js-shared-modal-close">
+      <%= t(".back_to_form") %>
+    </button>
+
     <button type="button"
             class="button similar-contributions-notice--submit-anyway js-similar-contributions-publish"
             data-publish-url="<%= publish_url %>">
-      <%= t("components.similar_contributions.notice_component.submit_anyway") %>
+      <%= t(".submit_anyway") %>
     </button>
   </div>
-</section>
+<% end %>

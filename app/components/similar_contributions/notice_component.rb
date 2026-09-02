@@ -1,5 +1,6 @@
 class SimilarContributions::NoticeComponent < ApplicationComponent
   EXCERPT_LENGTH = 220
+  MODAL_ID = "similar-contributions-notice"
 
   attr_reader :matches, :resource
 

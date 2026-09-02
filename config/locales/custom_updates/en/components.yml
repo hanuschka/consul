@@ -28,6 +28,7 @@ en:
         intro:
           one: "There is already a contribution with similar content. You can support it instead, or submit your contribution anyway."
           other: "There are already contributions with similar content. You can support one of them instead, or submit your contribution anyway."
+        back_to_form: "Back to the form"
         submit_anyway: "Submit anyway"
       list_component:
         title: "Similar contributions in this projekt"

@@ -260,16 +260,33 @@
       }
     },
 
+    // The form leaves its in-flight state before the modal opens, not when the
+    // modal is dismissed: a native dialog makes the page behind it inert, so
+    // the restored submit button cannot be clicked while the decision is open,
+    // and it is already there whichever way the citizen dismisses the modal --
+    // no dependency on the dialog "close" event.
     showMatches: function(html) {
-      const progress = this.getProgress();
       const resultContainer = this.getResultContainer();
 
-      if (progress) {
-        progress.hidden = true;
-      }
+      this.restoreSubmitButton();
 
       resultContainer.innerHTML = html;
-      resultContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      this.openNoticeModal();
+    },
+
+    // The matches are shown in a modal so the half-submitted form behind them
+    // stops competing for the decision. Dismissing it hands the form back --
+    // the draft stays unpublished until a match is supported or the citizen
+    // submits anyway.
+    openNoticeModal: function() {
+      const modal = document.querySelector(".js-similar-contributions-notice-modal");
+
+      if (!modal) {
+        return;
+      }
+
+      App.SharedModal.open(modal.id);
     },
 
     handlePublishClick: function(publishButton) {

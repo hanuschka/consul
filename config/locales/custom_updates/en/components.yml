@@ -25,8 +25,13 @@ en:
         checking_hint: "Your contribution is being compared with the ones already submitted in this phase. This only takes a moment."
       progress_component:
         checking: "Checking proposal …"
+      decision_component:
+        show_duplicates: "Show similar contributions"
+        submit_anyway: "Submit anyway"
       notice_component:
-        title: "Similar contributions found"
+        title:
+          one: "%{count} similar contribution found"
+          other: "%{count} similar contributions found"
         intro:
           one: "There is already a contribution with similar content. You can support it instead, or submit your contribution anyway."
           other: "There are already contributions with similar content. You can support one of them instead, or submit your contribution anyway."
@@ -35,6 +40,8 @@ en:
         submit_anyway: "Submit anyway"
       list_component:
         title: "Similar contributions in this projekt"
+        not_a_duplicate: "Not a duplicate"
+        not_a_duplicate_confirm: "Remove this contribution from the duplicate set? It will not be grouped with this one again."
         empty: "No contributions with similar content were found."
         no_answer: "No published answer yet."
         status:

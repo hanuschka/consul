@@ -26,7 +26,10 @@
           data: { turbo_frame: "_top" } do %>
       <%= investment.title %><% if investment.hidden? %> (<%= t("shared.moderation_statuses.hidden") %>)<% end %>
     <% end %>
-    <%= similar_contributions_badge(similar_contributions_count_for(local_assigns[:similar_contributions_counts], investment)) %>
+    <%= similar_contributions_badge(
+      similar_contributions_count_for(local_assigns[:similar_contributions_counts], investment),
+      popup_url: similar_contributions_adm_projekts_phase_budget_investment_path(projekt_phase, investment)
+    ) %>
   </th>
   <td class="kern-table__cell" data-field="moderation_status"><%= moderation_status(investment) %></td>
   <td class="kern-table__cell" data-field="feasibility"><%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %></td>

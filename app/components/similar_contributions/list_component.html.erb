@@ -4,27 +4,41 @@
   <% if matches.empty? %>
     <p class="similar-contributions-list--empty"><%= t(".empty") %></p>
   <% else %>
-    <ul class="similar-contributions-list--items">
+    <ul class="similar-contributions-matches">
       <% matches.each do |match| %>
-        <li class="similar-contributions-list--item">
-          <h3 class="similar-contributions-list--item-title">
-            <%= link_to match.resource.title, path_for(match.resource), target: "_blank",
-                  data: { turbo: false }, title: t("shared.target_blank") %>
-          </h3>
-
-          <p class="similar-contributions-list--item-meta">
-            <%= phase_title_for(match.resource) %>
-            &middot;
-            <%= processing_status_for(match.resource) %>
-          </p>
-
-          <% answer_excerpt = answer_excerpt_for(match.resource) %>
-          <% if answer_excerpt.present? %>
-            <blockquote class="similar-contributions-list--item-answer"><%= answer_excerpt %></blockquote>
-          <% else %>
-            <p class="similar-contributions-list--item-no-answer"><%= t(".no_answer") %></p>
+        <%= render SimilarContributions::MatchItemComponent.new(match.resource, variant: :list) do |item| %>
+          <% item.with_meta do %>
+            <p class="similar-contributions-match--meta">
+              <%= phase_title_for(match.resource) %>
+              &middot;
+              <%= processing_status_for(match.resource) %>
+              &middot;
+              <%= created_at_for(match.resource) %>
+              &middot;
+              <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span>
+              <%= match.resource.cached_votes_up %>
+              &middot;
+              <span class="material-symbols-outlined" aria-hidden="true">comment</span>
+              <%= match.resource.comments_count %>
+            </p>
           <% end %>
-        </li>
+
+          <% item.with_footer do %>
+            <% answer_excerpt = answer_excerpt_for(match.resource) %>
+            <% if answer_excerpt.present? %>
+              <blockquote class="similar-contributions-match--answer"><%= answer_excerpt %></blockquote>
+            <% else %>
+              <p class="similar-contributions-match--no-answer"><%= t(".no_answer") %></p>
+            <% end %>
+
+            <%= button_to t(".not_a_duplicate"),
+                  exclude_path_for(match.resource),
+                  method: :delete,
+                  class: "similar-contributions-match--exclude",
+                  form: { data: { turbo_confirm: t(".not_a_duplicate_confirm") } },
+                  data: { confirm: t(".not_a_duplicate_confirm") } %>
+          <% end %>
+        <% end %>
       <% end %>
     </ul>
   <% end %>

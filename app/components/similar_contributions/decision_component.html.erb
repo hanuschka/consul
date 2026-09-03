@@ -1,0 +1,14 @@
+<%# What the form offers once the citizen has gone back to it from the matches:
+    the plain submit button is gone, so the decision they were asked to make --
+    look at the duplicates again, or submit anyway -- stays in front of them. %>
+<div class="similar-contributions-decision js-similar-contributions-decision" hidden>
+  <button type="button"
+          class="button hollow js-similar-contributions-show-duplicates">
+    <%= t("components.similar_contributions.decision_component.show_duplicates") %>
+  </button>
+
+  <button type="button"
+          class="button js-similar-contributions-submit-anyway">
+    <%= t("components.similar_contributions.decision_component.submit_anyway") %>
+  </button>
+</div>

@@ -188,6 +188,8 @@ namespace :adm do
       end
       resources :proposals, only: [:show] do
         member do
+          get :similar_contributions
+          delete :exclude_similar_contribution
           patch :toggle_admin_accepted
           patch :update_official_answer
           put :hide
@@ -230,6 +232,8 @@ namespace :adm do
         resources :milestones, controller: "milestones/budget_investments", except: %i[index show]
         resources :progress_bars, controller: "progress_bars/budget_investments", except: %i[index show]
         member do
+          get :similar_contributions
+          delete :exclude_similar_contribution
           get :administer
           get :people
           patch :frame_update

@@ -25,8 +25,13 @@ de:
         checking_hint: "Ihr Beitrag wird mit den bereits eingereichten Beiträgen dieser Phase verglichen. Das dauert nur einen Moment."
       progress_component:
         checking: "Beitrag wird geprüft …"
+      decision_component:
+        show_duplicates: "Ähnliche Beiträge anzeigen"
+        submit_anyway: "Beitrag trotzdem einreichen"
       notice_component:
-        title: "Ähnliche Beiträge gefunden"
+        title:
+          one: "%{count} ähnlicher Beitrag gefunden"
+          other: "%{count} ähnliche Beiträge gefunden"
         intro:
           one: "Zu Ihrem Beitrag gibt es bereits einen inhaltlich ähnlichen Beitrag. Sie können ihn stattdessen unterstützen oder Ihren Beitrag trotzdem einreichen."
           other: "Zu Ihrem Beitrag gibt es bereits ähnliche Beiträge. Sie können einen davon stattdessen unterstützen oder Ihren Beitrag trotzdem einreichen."
@@ -35,6 +40,8 @@ de:
         submit_anyway: "Beitrag trotzdem einreichen"
       list_component:
         title: "Ähnliche Beiträge im Projekt"
+        not_a_duplicate: "Kein Duplikat"
+        not_a_duplicate_confirm: "Diesen Beitrag aus der Duplikatgruppe entfernen? Er wird nicht erneut mit diesem Beitrag gruppiert."
         empty: "Es wurden keine inhaltlich ähnlichen Beiträge gefunden."
         no_answer: "Noch keine veröffentlichte Antwort."
         status:

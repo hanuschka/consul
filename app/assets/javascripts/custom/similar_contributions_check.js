@@ -85,6 +85,16 @@
 
         if (event.target.closest(".js-similar-contributions-dismiss")) {
           this.dismissModal();
+          return;
+        }
+
+        if (event.target.closest(".js-similar-contributions-show-duplicates")) {
+          this.openModal();
+          return;
+        }
+
+        if (event.target.closest(".js-similar-contributions-submit-anyway")) {
+          this.handleSubmitAnywayClick(event.target.closest(".js-similar-contributions-submit-anyway"));
         }
       };
 
@@ -140,6 +150,7 @@
 
       this.submitting = true;
 
+      this.hideDecisionActions();
       this.showProgress();
       this.openModal();
       this.clearEditorPlaceholders();
@@ -173,9 +184,14 @@
       }
     },
 
+    // rails-ujs disables every data-disable-with control on the submit event
+    // and only re-enables them for forms it submits itself. This form is
+    // submitted by hand, so without enableElement the button stays dead after
+    // a validation error and the citizen cannot resubmit at all.
     restoreSubmitButton: function() {
       const submitButton = this.getSubmitButton();
       const progress = this.getProgress();
+      const form = this.getForm();
 
       if (progress) {
         progress.hidden = true;
@@ -183,6 +199,10 @@
 
       if (submitButton) {
         submitButton.hidden = false;
+      }
+
+      if (window.Rails && form) {
+        window.Rails.enableElement(form);
       }
 
       this.submitting = false;
@@ -199,12 +219,43 @@
       App.SharedModal.closeById(this.getModal().id);
     },
 
-    // Back to the form: the matches go with the modal, so the next submission
-    // opens it on the spinner again instead of on a stale answer.
+    // Back to the form: the matches stay in the modal so the citizen can open
+    // them again, and the form swaps its plain submit button for the two ways
+    // out of the decision -- look again, or submit anyway.
     dismissModal: function() {
       this.closeModal();
-      this.getResultContainer().innerHTML = "";
-      this.getModalProgress().hidden = false;
+      this.showDecisionActions();
+    },
+
+    getDecisionActions: function() {
+      return document.querySelector(".js-similar-contributions-decision");
+    },
+
+    showDecisionActions: function() {
+      const submitButton = this.getSubmitButton();
+      const decisionActions = this.getDecisionActions();
+
+      if (submitButton) {
+        submitButton.hidden = true;
+      }
+
+      if (decisionActions) {
+        decisionActions.hidden = false;
+      }
+    },
+
+    hideDecisionActions: function() {
+      const decisionActions = this.getDecisionActions();
+
+      if (decisionActions) {
+        decisionActions.hidden = true;
+      }
+    },
+
+    handleSubmitAnywayClick: function(button) {
+      button.disabled = true;
+
+      this.publish(this.publishUrl);
     },
 
     // CKEditor writes back to its source textarea on native form submission,
@@ -373,10 +424,12 @@
 
       this.publishing = false;
 
-      const publishButton = document.querySelector(".js-similar-contributions-publish");
+      const publishButtons = document.querySelectorAll(
+        ".js-similar-contributions-publish, .js-similar-contributions-submit-anyway"
+      );
 
-      if (publishButton) {
-        publishButton.disabled = false;
+      if (publishButtons.length > 0) {
+        publishButtons.forEach((publishButton) => { publishButton.disabled = false; });
         return;
       }
 

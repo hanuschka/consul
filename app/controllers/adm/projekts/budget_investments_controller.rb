@@ -4,7 +4,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   include DocumentAttributes
 
   before_action :set_projekt_phase
-  before_action :set_investment, only: %i[show administer people edit update frame_update destroy milestones progress_bars audits toggle_image_concealed]
+  before_action :set_investment, only: %i[show similar_contributions exclude_similar_contribution administer people edit update frame_update destroy milestones progress_bars audits toggle_image_concealed]
   before_action :set_tabs, only: %i[show administer people edit update milestones progress_bars audits toggle_image_concealed]
 
   def show
@@ -18,13 +18,31 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
         )
 
         @breadcrumbs = breadcrumbs_for_action(@investment.title)
-        @similar_contributions = ::SimilarContributions::FindForProjekt.call(@investment)
+        @similar_contributions = ::SimilarContributions::StoredGroup.call(@investment)
       end
       format.pdf do
         pdf_content = PdfServices::BudgetInvestmentExporter.call(@investment, @projekt_phase)
         send_data pdf_content.render, filename: "budget_investment_#{@investment.id}.pdf", type: "application/pdf"
       end
     end
+  end
+
+  def similar_contributions
+    authorize [:adm, :projekts, @investment], :show?, policy_class: Adm::Projekts::BudgetPolicy
+
+    render partial: "adm/projekts/similar_contributions/popup",
+           locals: { matches: ::SimilarContributions::StoredGroup.call(@investment) }
+  end
+
+  def exclude_similar_contribution
+    authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
+
+    excluded = ::Budget::Investment.where(budget_id: @projekt_phase.projekt.budgets.select(:id))
+      .find(params[:excluded_id])
+    ::SimilarContributions::ExcludeFromGroup.call(@investment, excluded, admin: current_user)
+
+    redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),
+                notice: t("adm.projekts.similar_contributions.excluded")
   end
 
   def milestones

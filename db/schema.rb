@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_31_135239) do
+ActiveRecord::Schema.define(version: 2026_09_03_042347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3167,6 +3167,38 @@ ActiveRecord::Schema.define(version: 2026_08_31_135239) do
     t.string "postal_code"
   end
 
+  create_table "similar_contribution_exclusions", force: :cascade do |t|
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.string "excluded_contribution_type", null: false
+    t.bigint "excluded_contribution_id", null: false
+    t.bigint "excluded_by_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id", "excluded_contribution_type", "excluded_contribution_id"], name: "index_similar_contribution_exclusions_on_pair", unique: true
+    t.index ["contribution_type", "contribution_id"], name: "index_similar_contribution_exclusions_on_contribution"
+    t.index ["excluded_by_id"], name: "index_similar_contribution_exclusions_on_excluded_by_id"
+  end
+
+  create_table "similar_contribution_groups", force: :cascade do |t|
+    t.bigint "projekt_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_id"], name: "index_similar_contribution_groups_on_projekt_id"
+  end
+
+  create_table "similar_contribution_memberships", force: :cascade do |t|
+    t.bigint "similar_contribution_group_id", null: false
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.integer "relevance"
+    t.string "reason"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id"], name: "index_similar_contribution_memberships_on_contribution", unique: true
+    t.index ["similar_contribution_group_id"], name: "index_similar_contribution_memberships_on_group_id"
+  end
+
   create_table "site_customization_content_blocks", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "locale"
@@ -3878,6 +3910,9 @@ ActiveRecord::Schema.define(version: 2026_08_31_135239) do
   add_foreign_key "section_activities", "users"
   add_foreign_key "section_contact_people", "users"
   add_foreign_key "sentiments", "projekt_phases"
+  add_foreign_key "similar_contribution_exclusions", "users", column: "excluded_by_id"
+  add_foreign_key "similar_contribution_groups", "projekts"
+  add_foreign_key "similar_contribution_memberships", "similar_contribution_groups"
   add_foreign_key "site_customization_email_templates", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"

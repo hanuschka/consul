@@ -104,7 +104,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       chat = ::Ai::RubyLlmFactory.fast_chat(REQUEST_TIMEOUT_SECONDS)
 
       chat.with_instructions(instructions)
-      chat.with_tools(*tools)
+      ::Ai::RubyLlmFactory.attach_tools(chat, *tools)
       chat.on_tool_call { |tool_call| track_tool_call(tool_call) }
 
       state.replay_into(chat)

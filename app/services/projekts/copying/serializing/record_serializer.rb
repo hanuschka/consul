@@ -5,8 +5,10 @@ class Projekts::Copying::Serializing::RecordSerializer
   VOLATILE_COLUMNS = %w[id created_at updated_at tsv comments_count].freeze
 
   # `references` names the foreign keys the rewiring pass resolves once the
-  # whole graph exists. They are read out separately because an export strips
-  # every raw id from `attributes` -- these are the ones that must survive it.
+  # whole graph exists. A promoted reference is emitted here and withheld from
+  # `attributes`: assigned while the graph is half-built it would point the copy
+  # at the source's row, which Poll::Question rejects outright and every other
+  # model accepts silently.
   def self.call(record, except: [], references: [], attachments: [])
     new(record, except: except, references: references, attachments: attachments).call
   end
@@ -38,7 +40,9 @@ class Projekts::Copying::Serializing::RecordSerializer
     # (and stamp an empty translation on records that have none). They are
     # dropped and emitted per locale instead.
     def plain_attributes
-      record.attributes.except(*VOLATILE_COLUMNS, *translated_names, *except).as_json
+      record.attributes
+        .except(*VOLATILE_COLUMNS, *translated_names, *references, *except)
+        .as_json
     end
 
     def translations

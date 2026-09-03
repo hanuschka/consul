@@ -45,12 +45,16 @@ de:
         not_a_duplicate: "Kein Duplikat"
         not_a_duplicate_confirm: "Diesen Beitrag aus der Duplikatgruppe entfernen? Er wird nicht erneut mit diesem Beitrag gruppiert."
         empty: "Es wurden keine inhaltlich ähnlichen Beiträge gefunden."
+      match_item_component:
         no_answer: "Noch keine veröffentlichte Antwort."
-        status:
-          answered: "Beantwortet"
-          open: "In Bearbeitung"
-          retired: "Zurückgezogen"
-          unfeasible: "Nicht umsetzbar"
+        copy_answer: "Diese Antwort kopieren"
+        answer_without_text: "Antwort ohne Text — nur ein Bild oder eine Einbettung."
+        open_in_backend: "Im Backend öffnen"
+      match_status:
+        answered: "Beantwortet"
+        open: "In Bearbeitung"
+        retired: "Zurückgezogen"
+        unfeasible: "Nicht umsetzbar"
       badge:
         one: "%{count} ähnlicher Beitrag"
         other: "%{count} ähnliche Beiträge"

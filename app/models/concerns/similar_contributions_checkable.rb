@@ -37,7 +37,10 @@ module SimilarContributionsCheckable
 
     contribution_class
       .where(id: peer_ids_in(group))
-      .includes(*SimilarContributions::Scopes::PRESENTATION_INCLUDES)
+      .includes(
+        SimilarContributions::Scopes.phase_includes_for(contribution_class),
+        *SimilarContributions::Scopes::PRESENTATION_INCLUDES
+      )
   end
 
   def similar_contributions_peers_count

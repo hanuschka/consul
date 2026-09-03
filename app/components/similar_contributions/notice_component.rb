@@ -1,5 +1,5 @@
 class SimilarContributions::NoticeComponent < ApplicationComponent
-  include SimilarContributionsSupporting
+  SURFACE = "notice".freeze
 
   attr_reader :matches, :resource
 
@@ -18,9 +18,5 @@ class SimilarContributions::NoticeComponent < ApplicationComponent
     else
       publish_draft_proposal_path(resource)
     end
-  end
-
-  def votes_container_prefix
-    "notice"
   end
 end

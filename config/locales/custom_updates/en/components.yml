@@ -45,12 +45,16 @@ en:
         not_a_duplicate: "Not a duplicate"
         not_a_duplicate_confirm: "Remove this contribution from the duplicate set? It will not be grouped with this one again."
         empty: "No contributions with similar content were found."
+      match_item_component:
         no_answer: "No published answer yet."
-        status:
-          answered: "Answered"
-          open: "In progress"
-          retired: "Retired"
-          unfeasible: "Unfeasible"
+        copy_answer: "Copy this answer"
+        answer_without_text: "Answer without text — an image or an embed only."
+        open_in_backend: "Open in backend"
+      match_status:
+        answered: "Answered"
+        open: "In progress"
+        retired: "Retired"
+        unfeasible: "Unfeasible"
       badge:
         one: "%{count} similar contribution"
         other: "%{count} similar contributions"

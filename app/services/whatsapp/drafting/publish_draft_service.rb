@@ -52,9 +52,8 @@ class Whatsapp::Drafting::PublishDraftService < ApplicationService
     end
 
     # The same two steps the web takes, in the same order: save the record, then
-    # publish it. Publishing is what notifies the projekt's followers, and doing
-    # it by hand — which is what this used to do — meant a submission made by
-    # chat quietly reached nobody.
+    # hand it to the shared publication, which is what notifies the projekt's
+    # followers and makes the contribution findable by later similarity checks.
     def publish(resource)
       # Investments have no admin_accepted column, and the web budget flow
       # publishes them outright, so moderation stays a proposal concern.
@@ -65,20 +64,7 @@ class Whatsapp::Drafting::PublishDraftService < ApplicationService
       # caller to read back.
       return :invalid if !resource.save
 
-      release(resource)
-
-      resource
-    end
-
-    # Proposal#publish stamps published_at and runs the notifications. An
-    # investment has no such method and the web never calls one either, so it is
-    # stamped here and given the notifier its own controller sends.
-    def release(resource)
-      return resource.publish if resource.is_a?(::Proposal)
-
-      resource.update!(published_at: Time.current)
-
-      ::NotificationServices::NewBudgetInvestmentNotifier.call(resource.id)
+      ::UserResources::PublishService.call(resource)
     end
 
     # The evaluator swallows its own exceptions and answers with the error

@@ -6,7 +6,9 @@ class Admin::SiteCustomization::ContentBlocksController
   include AiErrorHandling
   include SiteContentBlocksAiActions
 
-  skip_load_and_authorize_resource only: [
+  # The core controller names this resource, so a nameless skip would never
+  # match it and CanCan would keep loading the content block underneath.
+  skip_load_and_authorize_resource :content_block, only: [
     :update_inline, :change_with_ai,
     :generate_with_ai, :ai_generation_status, :cancel_ai_generation
   ]

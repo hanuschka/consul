@@ -14,6 +14,11 @@ namespace :similar_contributions do
     end
   end
 
+  desc "Delete check drafts nobody came back to publish"
+  task prune_abandoned_drafts: :environment do
+    SimilarContributions::PruneAbandonedDraftsJob.perform_now
+  end
+
   desc "Embed published contributions in phases where the similarity check is on"
   task :backfill_embeddings, [:projekt_phase_id] => :environment do |_task, args|
     unless SimilarContributions::Embed.available?

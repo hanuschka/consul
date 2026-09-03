@@ -102,13 +102,7 @@ module Budgets
       end
 
       def publish_checked_investment
-        @investment.update!(draft: false, published_at: Time.current)
-
-        SimilarContributions::RecordGroupJob.perform_later(@investment)
-        SimilarContributions::EmbedJob.perform_later(@investment)
-
-        Mailer.budget_investment_created(@investment).deliver_later
-        NotificationServices::NewBudgetInvestmentNotifier.call(@investment.id) #custom
+        ::UserResources::PublishService.call(@investment)
       end
 
       def respond_with_invalid_investment

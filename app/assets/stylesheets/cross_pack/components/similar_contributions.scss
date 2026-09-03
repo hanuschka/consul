@@ -293,10 +293,10 @@
 }
 
 // The citizen's modal shows every match at once above a fixed action row, so
-// the notice rows are tightened by about a fifth against the base scale.
+// the notice rows are tightened by about a quarter against the base scale.
 .similar-contributions-match.-notice {
-  gap: 10px;
-  padding: 13px 0;
+  gap: 9px;
+  padding: 12px 0;
 
   @media (min-width: 600px) {
     gap: 16px;
@@ -304,21 +304,29 @@
 }
 
 .similar-contributions-match.-notice .similar-contributions-match--tags {
-  margin-bottom: 6px;
+  margin-bottom: 5px;
+}
+
+.similar-contributions-match.-notice .similar-contributions-match--sentiment,
+.similar-contributions-match.-notice .similar-contributions-match--label {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  line-height: 1.35;
 }
 
 .similar-contributions-match.-notice .similar-contributions-match--title {
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   font-size: 17px;
+  line-height: 1.2;
 }
 
 .similar-contributions-match.-notice .similar-contributions-match--excerpt {
   font-size: 15px;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .similar-contributions-match.-notice .similar-contributions-match--support {
-  margin-top: 11px;
+  margin-top: 10px;
 }
 
 .similar-contributions-match.-popup {

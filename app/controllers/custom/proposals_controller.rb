@@ -384,13 +384,7 @@ class ProposalsController
     end
 
     def publish_checked_proposal
-      @proposal.update!(draft: false)
-      @proposal.publish
-
-      SimilarContributions::RecordGroupJob.perform_later(@proposal)
-      SimilarContributions::EmbedJob.perform_later(@proposal)
-
-      Mailer.proposal_created(@proposal).deliver_later
+      UserResources::PublishService.call(@proposal)
     end
 
     def respond_with_invalid_proposal

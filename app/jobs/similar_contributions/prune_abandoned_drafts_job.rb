@@ -1,7 +1,8 @@
-# Every submission on a phase with the check enabled parks a draft before the
-# ranking runs, and a citizen who closes the tab never comes back to publish it.
-# Those rows are invisible to everyone but administrators, so nothing else would
-# ever clear them.
+# Two flows park a draft the citizen may never come back to: a submission on a
+# phase with the check enabled, parked before the ranking runs, and the AI
+# flow, which writes its generated draft to the database before showing it. Both
+# are invisible to everyone but administrators, so nothing else would ever clear
+# them. A draft the citizen saved on purpose has neither mark and is kept.
 class SimilarContributions::PruneAbandonedDraftsJob < ApplicationJob
   queue_as :default
 
@@ -26,10 +27,13 @@ class SimilarContributions::PruneAbandonedDraftsJob < ApplicationJob
     end
 
     def abandoned(resource_class)
-      resource_class
+      stale = resource_class
         .unscope(where: :draft)
         .where(draft: true, published_at: nil)
-        .where.not(similar_contributions_check_status: nil)
         .where(created_at: ...RETENTION.ago)
+
+      stale
+        .where.not(similar_contributions_check_status: nil)
+        .or(stale.where.not(ai_idea_text: [nil, ""]))
     end
 end

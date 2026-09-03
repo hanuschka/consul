@@ -49,6 +49,7 @@ de:
         no_answer: "Noch keine veröffentlichte Antwort."
         copy_answer: "Diese Antwort kopieren"
         answer_without_text: "Antwort ohne Text — nur ein Bild oder eine Einbettung."
+        open_in_backend: "Im Backend öffnen"
       match_status:
         answered: "Beantwortet"
         open: "In Bearbeitung"

@@ -2,8 +2,15 @@ module SimilarContributions::Scopes
   SETTING_KEY = "general.similar_contributions_check".freeze
 
   # Everything the admin list renders per match is preloaded here, because the
-  # matches reach the component as records this relation already loaded.
-  PRESENTATION_INCLUDES = [:sentiment, :projekt_labels, { image: { attachment_attachment: :blob } }].freeze
+  # matches reach the component as records this relation already loaded. Every
+  # readable string on the row is a Globalize attribute, so the translations sit
+  # in their own tables and each one left out costs a query per distinct record.
+  PRESENTATION_INCLUDES = [
+    :translations,
+    { sentiment: :translations },
+    { projekt_labels: :translations },
+    { image: { attachment_attachment: :blob } }
+  ].freeze
 
   module_function
 
@@ -20,6 +27,17 @@ module SimilarContributions::Scopes
       resource.budget&.projekt_phase
     else
       resource.try(:projekt_phase)
+    end
+  end
+
+  # The phase a row names and links to, plus the projekt behind it that decides
+  # who may follow that link. Reached through a different association per class,
+  # so it cannot join PRESENTATION_INCLUDES.
+  def phase_includes_for(contribution_class)
+    if contribution_class <= ::Budget::Investment
+      { budget: { projekt_phase: [:projekt, :translations] } }
+    else
+      { projekt_phase: [:projekt, :translations] }
     end
   end
 
@@ -46,11 +64,11 @@ module SimilarContributions::Scopes
       ::Proposal
         .where(projekt_phase_id: projekt.projekt_phases.select(:id))
         .base_selection
-        .includes(:projekt_phase, *PRESENTATION_INCLUDES)
+        .includes(phase_includes_for(::Proposal), *PRESENTATION_INCLUDES)
     when ::Budget::Investment
       ::Budget::Investment
         .where(budget_id: projekt.budgets.select(:id))
-        .includes({ budget: :projekt_phase }, *PRESENTATION_INCLUDES)
+        .includes(phase_includes_for(::Budget::Investment), *PRESENTATION_INCLUDES)
     else
       resource.class.none
     end

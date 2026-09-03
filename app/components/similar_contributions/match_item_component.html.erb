@@ -81,6 +81,17 @@
       <% end %>
     <% end %>
 
+    <% if backend_path.present? %>
+      <p class="similar-contributions-match--backend">
+        <%= link_to backend_path, target: "_blank", data: { turbo: false },
+              class: "similar-contributions-match--backend-link",
+              title: t("shared.target_blank") do %>
+          <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+          <span><%= t(".open_in_backend") %></span>
+        <% end %>
+      </p>
+    <% end %>
+
     <%= footer %>
   </div>
 </li>

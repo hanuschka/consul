@@ -49,6 +49,7 @@ en:
         no_answer: "No published answer yet."
         copy_answer: "Copy this answer"
         answer_without_text: "Answer without text — an image or an embed only."
+        open_in_backend: "Open in backend"
       match_status:
         answered: "Answered"
         open: "In progress"

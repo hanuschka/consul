@@ -268,6 +268,35 @@
   color: var(--kern-color-feedback-success, #157a3d);
 }
 
+// The other way out of a match. The title already carries the citizen page, so
+// this one names its destination in words rather than competing with it for
+// size -- it stays on the excerpt's step of the row's own scale.
+.similar-contributions-match--backend {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.similar-contributions-match--backend-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--kern-color-action-default, #21409a);
+  text-decoration: none;
+}
+
+// Only the underline moves on hover: the link sits inside a row whose other
+// interactive parts are a button and a title link, and a colour shift here
+// would read as a third kind of control.
+.similar-contributions-match--backend-link:hover,
+.similar-contributions-match--backend-link:focus-visible {
+  text-decoration: underline;
+}
+
+.similar-contributions-match--backend-link .material-symbols-outlined {
+  font-size: 16px;
+}
+
 // button_to wraps the kern button in a form; the form only has to place it.
 .similar-contributions-match--exclude {
   margin-top: 10px;
@@ -413,7 +442,8 @@
 }
 
 .similar-contributions-match.-popup .similar-contributions-match--answer-row,
-.similar-contributions-match.-popup .similar-contributions-match--no-answer {
+.similar-contributions-match.-popup .similar-contributions-match--no-answer,
+.similar-contributions-match.-popup .similar-contributions-match--backend {
   margin-top: 6px;
 }
 

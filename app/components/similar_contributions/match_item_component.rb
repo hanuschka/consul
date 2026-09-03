@@ -46,6 +46,19 @@ class SimilarContributions::MatchItemComponent < ApplicationComponent
     helpers.similar_contributions_path_for(resource)
   end
 
+  # The backend page of this match, for an admin who is reading the list while
+  # writing an answer. Only the admin variants get one: a citizen row must not
+  # carry it in the markup at all, the way an answer does not -- see
+  # shows_answer?.
+  def backend_path
+    return @backend_path if defined?(@backend_path)
+
+    @backend_path =
+      if admin? && helpers.similar_contributions_backend_permitted?(resource)
+        helpers.similar_contributions_backend_path_for(resource)
+      end
+  end
+
   def image_attached?
     resource.image&.attachment&.attached?
   end

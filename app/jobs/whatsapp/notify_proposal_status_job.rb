@@ -1,5 +1,6 @@
 class Whatsapp::NotifyProposalStatusJob < ApplicationJob
   queue_as :default
+  queue_with_priority ::Whatsapp::BULK_PRIORITY
 
   # Catalog B12. One push for three different events on a citizen's own
   # proposal — a new support, a new comment, a moderation decision — because

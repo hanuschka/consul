@@ -1,5 +1,6 @@
 class Whatsapp::BroadcastProjektJob < ApplicationJob
   queue_as :default
+  queue_with_priority ::Whatsapp::BULK_PRIORITY
 
   BATCH_SIZE = 50
   BATCH_INTERVAL = 20.seconds

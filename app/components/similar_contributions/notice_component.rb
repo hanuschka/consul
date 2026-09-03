@@ -1,4 +1,6 @@
 class SimilarContributions::NoticeComponent < ApplicationComponent
+  include SimilarContributionsSupporting
+
   attr_reader :matches, :resource
 
   def initialize(matches, resource:)
@@ -18,30 +20,7 @@ class SimilarContributions::NoticeComponent < ApplicationComponent
     end
   end
 
-  def votes_container_id(match_resource)
-    "#{dom_id(match_resource)}_votes"
-  end
-
-  def path_for(match_resource)
-    helpers.similar_contributions_path_for(match_resource)
-  end
-
-  def supporting_available?(match_resource)
-    projekt_phase = match_resource.projekt_phase
-
-    return false if projekt_phase.blank?
-
-    projekt_phase_feature?(projekt_phase, "resource.allow_voting")
-  end
-
-  def votes_component_for(match_resource)
-    if match_resource.is_a?(::Budget::Investment)
-      ::Budgets::Investments::VotesComponent.new(match_resource)
-    else
-      ::Proposals::NewVotesComponent.new(
-        match_resource,
-        vote_url: vote_proposal_path(match_resource, value: "yes")
-      )
-    end
+  def votes_container_prefix
+    "notice"
   end
 end

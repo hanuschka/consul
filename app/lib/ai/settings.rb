@@ -138,7 +138,16 @@ module Ai::Settings
     current_llm_model
   end
 
+  # Whether the provider is OpenAI at all, custom endpoint or not. Asked apart
+  # from standard_openai?, which is the narrower question of whether the model
+  # *catalogue* is OpenAI's own: the tier model names below exist only on OpenAI
+  # itself, while the chat-completions request schema is served by anything
+  # configured under this provider.
+  def self.openai?
+    current_llm_provider == "openai"
+  end
+
   def self.standard_openai?
-    current_llm_provider == "openai" && Setting["ai.llm_api_endpoint"].blank?
+    openai? && Setting["ai.llm_api_endpoint"].blank?
   end
 end

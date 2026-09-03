@@ -44,11 +44,20 @@ class Ai::ModelProfile
     transport == RESPONSES
   end
 
-  # Named only where the catalogue is known to be OpenAI's own. Behind a custom
-  # endpoint the model is whatever that endpoint serves, and a parameter it does
-  # not recognise comes back as a 400 rather than being ignored.
+  # Named for any endpoint configured under the OpenAI provider, custom or not,
+  # because reasoning_effort belongs to the chat-completions request schema that
+  # endpoint serves. Gating it on the *catalogue* being OpenAI's own instead was
+  # an outage rather than caution: from the GPT-5.5 generation on, a request
+  # carrying function tools and naming no effort is refused outright — "set
+  # reasoning_effort to 'none'" — so withholding the parameter from a portal
+  # with a custom endpoint broke every tool-carrying turn it made, the whole
+  # WhatsApp assistant included.
+  #
+  # The trade is a proxy serving a catalogue that has never heard of the
+  # parameter, which answers 400 for it. That one is a misconfiguration with a
+  # legible error; the other was every reply going missing.
   def reasoning_effort
-    return nil if !::Ai::Settings.standard_openai?
+    return nil if !::Ai::Settings.openai?
 
     TOOL_REASONING_EFFORT
   end

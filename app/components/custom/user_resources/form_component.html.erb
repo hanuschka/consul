@@ -221,7 +221,6 @@
           <% end %>
 
           <%= render ::SimilarContributions::ProgressComponent.new(resource) %>
-          <%= render ::SimilarContributions::DecisionComponent.new(resource) %>
         </div>
         <% end %>
       </div>
@@ -231,5 +230,17 @@
       </div>
     </div>
 
+  <% end %>
+
+  <%# Outside the form on purpose: the decision block offers the matches with
+      their own support buttons, and button_to inside a form is dropped by the
+      HTML parser. The layout wrapper is the form's own, so the block keeps the
+      width and the left edge of the fields above it. %>
+  <% if !@embbeded_in_ai_flow %>
+    <div class="flex-layout">
+      <div class="main-column">
+        <%= render ::SimilarContributions::DecisionComponent.new(resource) %>
+      </div>
+    </div>
   <% end %>
 </main>

@@ -1,11 +1,16 @@
 <%# What the form offers once the citizen has gone back to it from the matches:
     the plain submit button is gone, so the decision they were asked to make --
-    read the similar contributions again, or submit anyway -- stays in front of
-    them. The matches are rendered here as well, so the decision does not
-    depend on reopening the modal. The server render carries none of them: they
-    are only known once the check has finished, and the check's status response
-    replaces this whole block with the same component rendered with them. %>
-<div class="similar-contributions-decision js-similar-contributions-decision" hidden>
+    read the similar contributions again, support one of them, or submit anyway
+    -- stays in front of them. The server render carries no matches: they are
+    only known once the check has finished, and the check's status response
+    replaces this whole block with the same component rendered with them.
+
+    This block sits OUTSIDE the contribution's own form on purpose: the vote
+    markup below is built from button_to, and a form nested in a form is
+    dropped by the HTML parser, which would turn every support button into a
+    second submit button for the contribution itself. %>
+<div class="similar-contributions-decision js-similar-contributions-decision
+            js-similar-contributions-support-surface" hidden>
   <% if matches.any? %>
     <p class="similar-contributions-decision--headline">
       <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
@@ -18,31 +23,56 @@
   <% end %>
 
   <div class="similar-contributions-decision--actions">
-    <% if matches.any? %>
-      <button type="button"
-              class="button similar-contributions-decision--toggle js-similar-contributions-show-duplicates"
-              aria-expanded="false"
-              aria-controls="<%= MATCHES_ID %>"
-              data-label-collapsed="<%= t("components.similar_contributions.decision_component.show_duplicates") %>"
-              data-label-expanded="<%= t("components.similar_contributions.decision_component.hide_duplicates") %>">
-        <span class="js-similar-contributions-toggle-label">
-          <%= t("components.similar_contributions.decision_component.show_duplicates") %>
-        </span>
-        <i class="fas fa-chevron-down" aria-hidden="true"></i>
-      </button>
+    <%# Supporting a match ends the flow, so its link replaces the actions
+        below. One link per supportable match, revealed by the JS that reads
+        the refreshed vote markup. %>
+    <% matches.each do |match| %>
+      <% if supporting_available?(match.resource) %>
+        <%= link_to t("components.similar_contributions.notice_component.supported_link"),
+              path_for(match.resource),
+              class: "button similar-contributions-decision--supported-link " \
+                     "js-similar-contributions-supported-link",
+              data: { votes_container: votes_container_id(match.resource) },
+              hidden: true %>
+      <% end %>
     <% end %>
 
-    <button type="button"
-            class="button hollow js-similar-contributions-submit-anyway">
-      <%= t("components.similar_contributions.decision_component.submit_anyway") %>
-    </button>
+    <div class="similar-contributions-decision--default-actions js-similar-contributions-default-actions">
+      <% if matches.any? %>
+        <button type="button"
+                class="button similar-contributions-decision--toggle js-similar-contributions-show-duplicates"
+                aria-expanded="false"
+                aria-controls="<%= MATCHES_ID %>"
+                data-label-collapsed="<%= t("components.similar_contributions.decision_component.show_duplicates") %>"
+                data-label-expanded="<%= t("components.similar_contributions.decision_component.hide_duplicates") %>">
+          <span class="js-similar-contributions-toggle-label">
+            <%= t("components.similar_contributions.decision_component.show_duplicates") %>
+          </span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+      <% end %>
+
+      <button type="button"
+              class="button hollow js-similar-contributions-submit-anyway">
+        <%= t("components.similar_contributions.decision_component.submit_anyway") %>
+      </button>
+    </div>
   </div>
 
   <% if matches.any? %>
     <div class="similar-contributions-decision--matches" id="<%= MATCHES_ID %>" hidden>
       <ul class="similar-contributions-matches">
         <% matches.each do |match| %>
-          <%= render SimilarContributions::MatchItemComponent.new(match.resource, variant: :list) %>
+          <%= render SimilarContributions::MatchItemComponent.new(match.resource, variant: :list) do |item| %>
+            <% if supporting_available?(match.resource) %>
+              <% item.with_footer do %>
+                <div class="similar-contributions-match--support"
+                     id="<%= votes_container_id(match.resource) %>">
+                  <%= render votes_component_for(match.resource) %>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
         <% end %>
       </ul>
     </div>

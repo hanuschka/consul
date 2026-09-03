@@ -11,10 +11,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   nothing may allow, so leaving the channel cannot depend on a provider being
   #   reachable. That is also why the keyword list is the one piece of reading left
   #   in Ruby: it is deterministic on purpose, not for want of a better reader.
-  # - An unsubscribed number is answered by nothing at all. It used to reach a
-  #   classifier — a whole model call whose only question was whether the message was
-  #   an opt-in, which the keyword above now answers — and being conversed with is
-  #   the one thing unsubscribing asked us not to do.
+  # - An unsubscribed number reaches no model and gets nothing about the portal
+  #   answered: being conversed with is the one thing unsubscribing asked us not to
+  #   do. It used to reach a classifier — a whole model call whose only question was
+  #   whether the message was an opt-in, which the keyword above now answers. What
+  #   it does get, at most once a week, is the one line naming the word that brings
+  #   it back, because the keyword that took it out of the channel is also the
+  #   ordinary word for abandoning a draft.
   # - A voice note is transcribed just ahead of the keyword gate, the first text
   #   consumer. The "could not read it" reply goes out there, but the chain runs on.
   # - Cancelling is read before anything else can act on the message, for the same
@@ -58,7 +61,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     announce_unreadable_voice_note
 
     return if handle_channel_keywords
-    return if account.opt_out_at.present?
+    return offer_way_back_in if account.opt_out_at.present?
 
     disclose_ai
 
@@ -193,6 +196,39 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       ::Whatsapp::Accounts::MessageDeliveryService.enable(conversation: conversation)
 
       true
+    end
+
+    # ── An unsubscribed number that keeps writing ───────────────────────────
+    # Being conversed with is the one thing unsubscribing asked us not to do, so
+    # this stays outside the assistant's reach entirely — no model is asked and
+    # nothing about the portal is answered. What it is no longer is silence.
+    #
+    # "Stopp" is the ordinary German word for stop-what-you-are-doing, so a share
+    # of the numbers here meant to abandon a half-written contribution rather
+    # than to leave the channel; every message they wrote afterwards was dropped
+    # without a word, and the way back was a keyword nobody had been told.
+    #
+    # Throttled off the last thing the bot said to this number rather than off a
+    # column of its own, and the message log answers exactly this question for
+    # exactly this case: a broadcast skips an opted-out number and the assistant
+    # never reaches one, so the only thing that writes to one is this line.
+    OPT_OUT_REMINDER_INTERVAL = 7.days
+
+    def offer_way_back_in
+      return if !way_back_in_due?
+
+      send_bot_line(
+        I18n.t(
+          "whatsapp.bot.compliance.opted_out_reminder",
+          keyword: OPT_IN_KEYWORDS.first.upcase
+        )
+      )
+    end
+
+    def way_back_in_due?
+      last_spoken_at = account.whatsapp_messages.outbound.maximum(:created_at)
+
+      last_spoken_at.blank? || last_spoken_at < OPT_OUT_REMINDER_INTERVAL.ago
     end
 
     # Once per number rather than once per 24-hour window: a regular who reads it

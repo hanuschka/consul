@@ -113,11 +113,20 @@
       $(document).on("ajaxComplete", this.boundRefreshSupportedState);
     },
 
+    // The modal and the decision block on the form both offer the matches with
+    // their own vote markup, and both are in the document at the same time, so
+    // each one is resolved against its own links instead of the document's.
+    refreshSupportedState: function() {
+      const surfaces = document.querySelectorAll(".js-similar-contributions-support-surface");
+
+      surfaces.forEach((surface) => this.refreshSurfaceSupportedState(surface));
+    },
+
     // "unvote" is the support button of a single-support phase once it is
     // supported; "like voted" is the up-and-down-voting variant of the same
     // state.
-    refreshSupportedState: function() {
-      const supportedLinks = document.querySelectorAll(".js-similar-contributions-supported-link");
+    refreshSurfaceSupportedState: function(surface) {
+      const supportedLinks = surface.querySelectorAll(".js-similar-contributions-supported-link");
 
       if (supportedLinks.length === 0) {
         return;
@@ -136,11 +145,11 @@
         }
       });
 
-      this.getDefaultActions().hidden = anySupported;
-    },
+      const defaultActions = surface.querySelector(".js-similar-contributions-default-actions");
 
-    getDefaultActions: function() {
-      return document.querySelector(".js-similar-contributions-default-actions");
+      if (defaultActions) {
+        defaultActions.hidden = anySupported;
+      }
     },
 
     handleSubmit: function(event) {

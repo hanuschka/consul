@@ -518,7 +518,8 @@
   color: #4a4a4a;
 }
 
-.similar-contributions-decision--actions {
+.similar-contributions-decision--actions,
+.similar-contributions-decision--default-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -526,6 +527,13 @@
 
 .similar-contributions-decision--actions .button {
   margin: 0;
+}
+
+// .button and the flex rows above both beat the UA rule for [hidden], so the
+// toggled-off states need their own declarations.
+.similar-contributions-decision--supported-link[hidden],
+.similar-contributions-decision--default-actions[hidden] {
+  display: none;
 }
 
 .similar-contributions-decision--toggle {
@@ -558,4 +566,11 @@
 
 .similar-contributions-decision--matches[hidden] {
   display: none;
+}
+
+// The panel's own tinted ground would read through the shared votes markup, so
+// the support row is set off against the white match list instead.
+.similar-contributions-decision--matches .similar-contributions-match--support {
+  padding-top: 12px;
+  border-top: 1px dashed #e2e2e2;
 }

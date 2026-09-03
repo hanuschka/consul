@@ -8,6 +8,20 @@ module Whatsapp
   MAX_ICE_BREAKERS = 4
   COMMAND_SEPARATOR = "|".freeze
 
+  # ── Where the bot's jobs sit in the shared queue ────────────────────────
+  # Everything in this app runs on one Delayed Job queue at the default
+  # priority of 0, so an inbound reply used to wait behind whatever was already
+  # in it: an evaluation being generated, a PDF being rendered, or a projekt
+  # broadcast, which is one job per fifty numbers and a synchronous send per
+  # number inside each.
+  #
+  # A citizen is watching a typing bubble that expires in 25 seconds, so
+  # answering one outranks everything the app does; a broadcast nobody is
+  # waiting on yields to everything, the replies to its own arrivals included.
+  # Lower is sooner.
+  REPLY_PRIORITY = -10
+  BULK_PRIORITY = 20
+
   # A WhatsApp list holds ten rows, and the bot has nowhere to paginate to, so
   # every query that fills one is capped here rather than per query object.
   # WhatsappApi::Resources::Messages enforces the same number at the protocol

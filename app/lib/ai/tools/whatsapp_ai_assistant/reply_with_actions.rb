@@ -40,7 +40,9 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
     return unusable_actions_error if offerable.empty?
 
-    ::Whatsapp::Send.buttons(account: account, body: body.strip, buttons: offerable)
+    message = ::Whatsapp::Send.buttons(account: account, body: body.strip, buttons: offerable)
+
+    return send_refused_error if ::Whatsapp::Send.refused?(message)
 
     halt("Replied to the citizen with buttons: #{offerable.map { |button| button[:id] }.join(", ")}.")
   end

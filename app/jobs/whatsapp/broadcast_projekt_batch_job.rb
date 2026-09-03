@@ -1,5 +1,6 @@
 class Whatsapp::BroadcastProjektBatchJob < ApplicationJob
   queue_as :default
+  queue_with_priority ::Whatsapp::BULK_PRIORITY
 
   def perform(projekt_id, account_ids)
     @projekt = Projekt.find_by(id: projekt_id)

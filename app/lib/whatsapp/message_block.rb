@@ -60,17 +60,21 @@ module Whatsapp::MessageBlock
       .presence
   end
 
-  # A block longer than a WhatsApp text message, split rather than cut: the one
-  # thing these blocks exist to guarantee is that nothing the citizen reads has
-  # been shortened. Paragraph boundaries first, because they are where the block's
+  # A block longer than one message, split rather than cut: the one thing these
+  # blocks exist to guarantee is that nothing the citizen reads has been
+  # shortened. Paragraph boundaries first, because they are where the block's
   # own structure is.
-  def chunks(block)
-    return [block] if block.to_s.length <= ::Whatsapp::MAX_TEXT_BODY_LENGTH
+  #
+  # The limit is a parameter because a text message and an interactive one hold
+  # different amounts and both are split the same way. It defaults to the text
+  # message's, which is what every block caller wants.
+  def chunks(block, limit: ::Whatsapp::MAX_TEXT_BODY_LENGTH)
+    return [block] if block.to_s.length <= limit
 
     block
       .split(PARAGRAPH_BREAK)
-      .flat_map { |paragraph| hard_slices(paragraph) }
-      .each_with_object([]) { |paragraph, collected| append(collected, paragraph) }
+      .flat_map { |paragraph| hard_slices(paragraph, limit) }
+      .each_with_object([]) { |paragraph, collected| append(collected, paragraph, limit) }
   end
 
   # What was shown, reduced to the values behind it. Stored when a block is sent
@@ -89,17 +93,17 @@ module Whatsapp::MessageBlock
     ::Whatsapp.plain_text(text, length: text.length + 1).presence
   end
 
-  def hard_slices(paragraph)
-    return [paragraph] if paragraph.length <= ::Whatsapp::MAX_TEXT_BODY_LENGTH
+  def hard_slices(paragraph, limit)
+    return [paragraph] if paragraph.length <= limit
 
-    paragraph.scan(/.{1,#{::Whatsapp::MAX_TEXT_BODY_LENGTH}}/m)
+    paragraph.scan(/.{1,#{limit}}/m)
   end
 
-  def append(collected, paragraph)
+  def append(collected, paragraph, limit)
     previous = collected.last
     joined = [previous, paragraph].join(PARAGRAPH_BREAK)
 
-    if previous.present? && joined.length <= ::Whatsapp::MAX_TEXT_BODY_LENGTH
+    if previous.present? && joined.length <= limit
       collected[-1] = joined
     else
       collected << paragraph

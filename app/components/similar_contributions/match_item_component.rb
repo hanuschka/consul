@@ -5,7 +5,7 @@ class SimilarContributions::MatchItemComponent < ApplicationComponent
   # is worth reading and what is offered underneath -- not in what a match is
   # made of.
   VARIANTS = {
-    notice: { thumb_size: [360, 270], excerpt_words: 40 },
+    notice: { thumb_size: [360, 270], excerpt_words: 28 },
     list: { thumb_size: [360, 360], excerpt_words: 25 },
     popup: { thumb_size: [240, 240], excerpt_words: 20 }
   }.freeze

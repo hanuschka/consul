@@ -67,19 +67,22 @@ module SimilarContributionsCheck
       }
     end
 
-    def similar_contributions_check_started_payload(resource)
+    # The url that carries the contribution past the check is the caller's, not
+    # the resource's: the ordinary form publishes it, while the AI flow has to
+    # continue to its own next step instead.
+    def similar_contributions_check_started_payload(resource, publish_url:)
+      {
+        status: "processing",
+        status_url: similar_contributions_status_path_for(resource),
+        publish_url: publish_url
+      }
+    end
+
+    def similar_contributions_status_path_for(resource)
       if resource.is_a?(::Budget::Investment)
-        {
-          status: "processing",
-          status_url: similar_contributions_status_budget_investment_path(resource.budget, resource),
-          publish_url: publish_draft_budget_investment_path(resource.budget, resource)
-        }
+        similar_contributions_status_budget_investment_path(resource.budget, resource)
       else
-        {
-          status: "processing",
-          status_url: similar_contributions_status_proposal_path(resource),
-          publish_url: publish_draft_proposal_path(resource)
-        }
+        similar_contributions_status_proposal_path(resource)
       end
     end
 

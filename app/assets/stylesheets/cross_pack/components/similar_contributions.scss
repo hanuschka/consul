@@ -10,7 +10,7 @@
   max-width: 90vw;
   // unquote() because libsass evaluates min() itself and rejects mixed units;
   // the browser has to be the one comparing vh against dvh.
-  max-height: unquote("min(90vh, 90dvh)");
+  max-height: unquote("min(95vh, 95dvh)");
   overflow: hidden;
 }
 
@@ -218,20 +218,24 @@
   color: #6a6a6a;
 }
 
+// button_to wraps the kern button in a form; the form only has to place it.
 .similar-contributions-match--exclude {
   margin-top: 10px;
 }
 
-.similar-contributions-match--exclude input[type="submit"] {
-  margin: 0;
-  padding: 4px 12px;
-  border: 1px solid #d9d9d9;
-  border-radius: 999px;
-  background: transparent;
-  color: #4a4a4a;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
+// .kern-btn ships gap: 0, so the icon would otherwise touch the label.
+.similar-contributions-match--exclude .kern-btn {
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 var(--kern-metric-space-x-small, 8px);
+
+  .kern-label {
+    font-size: 0.875rem;
+  }
+
+  .material-symbols-outlined {
+    font-size: 1rem;
+  }
 }
 
 .similar-contributions-match--support {
@@ -286,6 +290,35 @@
 
 .similar-contributions-match.-list .similar-contributions-match--excerpt {
   font-size: 14px;
+}
+
+// The citizen's modal shows every match at once above a fixed action row, so
+// the notice rows are tightened by about a fifth against the base scale.
+.similar-contributions-match.-notice {
+  gap: 10px;
+  padding: 13px 0;
+
+  @media (min-width: 600px) {
+    gap: 16px;
+  }
+}
+
+.similar-contributions-match.-notice .similar-contributions-match--tags {
+  margin-bottom: 6px;
+}
+
+.similar-contributions-match.-notice .similar-contributions-match--title {
+  margin-bottom: 6px;
+  font-size: 17px;
+}
+
+.similar-contributions-match.-notice .similar-contributions-match--excerpt {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.similar-contributions-match.-notice .similar-contributions-match--support {
+  margin-top: 11px;
 }
 
 .similar-contributions-match.-popup {
@@ -363,6 +396,7 @@
 
 .similar-contributions-list {
   margin-bottom: 24px;
+  scroll-margin-top: 24px;
 }
 
 .similar-contributions-list--title {
@@ -404,6 +438,21 @@
   line-height: 1.5;
   white-space: nowrap;
   cursor: default;
+}
+
+// On the index the badge is a link to the matching section of the
+// contribution's own page, so it has to shed the surrounding link styling.
+a.similar-contributions-badge {
+  color: #1b5e20;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a.similar-contributions-badge:hover,
+a.similar-contributions-badge:focus-visible {
+  background: #dce8dc;
+  color: #14471a;
+  text-decoration: none;
 }
 
 .similar-contributions-badge .material-symbols-outlined {

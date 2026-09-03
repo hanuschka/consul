@@ -1,14 +1,11 @@
 module SimilarContributionsHelper
-  def similar_contributions_badge(count, popup_url: nil)
+  def similar_contributions_badge(count, popup_url: nil, url: nil)
     return if count.to_i.zero?
 
     label = t("components.similar_contributions.badge", count: count)
 
     tag.span(class: "similar-contributions-badge-wrapper", data: popup_data(popup_url)) do
-      badge = tag.span(class: "similar-contributions-badge", tabindex: 0) do
-        tag.span("difference", class: "material-symbols-outlined", aria: { hidden: true }) +
-          tag.span(label)
-      end
+      badge = similar_contributions_badge_body(label, url)
 
       next badge if popup_url.blank?
 
@@ -43,6 +40,18 @@ module SimilarContributionsHelper
   end
 
   private
+
+    # The index badge is a link wherever the contribution has an admin page to
+    # jump to, so the hover panel is a preview rather than the only way in.
+    def similar_contributions_badge_body(label, url)
+      content = tag.span("difference", class: "material-symbols-outlined", aria: { hidden: true }) +
+        tag.span(label)
+
+      return tag.span(content, class: "similar-contributions-badge", tabindex: 0) if url.blank?
+
+      link_to content, url, class: "similar-contributions-badge",
+                            data: { turbo_frame: "_top" }
+    end
 
     def popup_data(popup_url)
       return {} if popup_url.blank?

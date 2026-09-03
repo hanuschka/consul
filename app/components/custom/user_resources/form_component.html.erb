@@ -6,7 +6,7 @@
     ) %>
   <% end %>
 
-  <%= translatable_form_for(resource, url: @url, html: { class: "js-rich-text-form user-resource-form", id: dom_id(resource, :form) }) do |f| %>
+  <%= translatable_form_for(resource, url: @url, html: { class: form_css_class, id: dom_id(resource, :form) }) do |f| %>
     <% if show_back_button? %>
       <%= back_link %>
     <% end %>

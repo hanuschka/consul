@@ -8,7 +8,11 @@ module Budgets
 
     respond_to :js, only: [:stats]
 
-    skip_load_and_authorize_resource only: [:similar_contributions_status, :publish_draft]
+    # The core controller names this resource, so a nameless skip never matches
+    # it and CanCan keeps loading the investment through the default scope --
+    # which hides the citizen's own draft and turns both actions into a 404.
+    skip_load_and_authorize_resource :investment,
+                                     only: [:similar_contributions_status, :publish_draft]
     skip_authorization_check only: [:similar_contributions_status, :publish_draft]
     before_action :load_own_similarity_draft,
                   only: [:similar_contributions_status, :publish_draft]
@@ -120,7 +124,12 @@ module Budgets
       def respond_with_started_check
         respond_to do |format|
           format.html { render_new_form }
-          format.json { render json: similar_contributions_check_started_payload(@investment) }
+          format.json do
+            render json: similar_contributions_check_started_payload(
+              @investment,
+              publish_url: publish_draft_budget_investment_path(@budget, @investment)
+            )
+          end
         end
       end
 

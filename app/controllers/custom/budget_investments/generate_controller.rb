@@ -21,55 +21,10 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
     redirect_to generate_budget_investment_new_path(projekt_phase_id: @projekt_phase.id, idea_text: params[:idea_text])
   end
 
-  def edit_draft
-    @generate_image_url = ai_generate_image_and_assign_to_resource_path
-    @update_draft_url   = generate_budget_investment_update_draft_path(@draft_resource)
-    @back_to_new_url    = generate_budget_investment_new_path(
-      projekt_phase_id: @draft_resource.projekt_phase.id,
-      idea_text: @draft_resource.ai_idea_text
-    )
-
-    render "ai_proposal_flow/edit_draft"
-  end
-
-  def update_draft
-    params_with_image_user = draft_resource_params_with_image_user
-    @draft_resource.update!(params_with_image_user)
-
-    if @draft_resource.projekt_phase.user_resource_criteria.exists?
-      ProposalAiDraft::EvaluateTwoTierService.call(resource: @draft_resource)
-
-      redirect_to generate_budget_investment_evaluation_path(@draft_resource)
-    else
-      @draft_resource.update!(draft: false, published_at: Time.current)
-
-      redirect_to generate_budget_investment_success_path(@draft_resource)
-    end
-
-  rescue StandardError => e
-    Rails.logger.error("[AiProposalFlow] update_draft failed: #{e.message}")
-
-    flash[:error] = I18n.t("ai_proposal_flow.evaluate_error")
-
-    @generate_image_url = ai_generate_image_and_assign_to_resource_path
-    @update_draft_url   = generate_budget_investment_update_draft_path(@draft_resource)
-    @back_to_new_url    = generate_budget_investment_new_path(
-      projekt_phase_id: @draft_resource.projekt_phase.id,
-      idea_text: @draft_resource.ai_idea_text
-    )
-
-    render "ai_proposal_flow/edit_draft"
-  end
-
   def evaluation
     @back_to_edit_url = generate_budget_investment_edit_draft_path(@draft_resource)
     @publish_url      = generate_budget_investment_publish_path(@draft_resource)
     render "ai_proposal_flow/evaluation"
-  end
-
-  def publish
-    @draft_resource.update!(draft: false, published_at: Time.current)
-    redirect_to generate_budget_investment_success_path(@draft_resource)
   end
 
   def success
@@ -81,6 +36,20 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
   private
 
     def resource_class = Budget::Investment
+
+    def assign_edit_draft_urls
+      @generate_image_url = ai_generate_image_and_assign_to_resource_path
+      @update_draft_url   = generate_budget_investment_update_draft_path(@draft_resource)
+      @back_to_new_url    = generate_budget_investment_new_path(
+        projekt_phase_id: @draft_resource.projekt_phase.id,
+        idea_text: @draft_resource.ai_idea_text
+      )
+    end
+
+    def edit_draft_step_path      = generate_budget_investment_edit_draft_path(@draft_resource)
+    def publish_checked_step_path = generate_budget_investment_publish_checked_path(@draft_resource)
+    def evaluation_step_path      = generate_budget_investment_evaluation_path(@draft_resource)
+    def success_step_path         = generate_budget_investment_success_path(@draft_resource)
 
     def new_flow_redirect_path
       generate_budget_investment_new_path(projekt_phase_id: @draft_resource.projekt_phase.id)
@@ -104,16 +73,6 @@ class BudgetInvestments::GenerateController < AiProposalFlowBaseController
       assign_generated_taxonomy(investment, draft_data, @projekt_phase)
       investment.save!(validate: false)
       investment
-    end
-
-    def draft_resource_params_with_image_user
-      params_hash = draft_resource_params.to_h
-
-      if params_hash[:image_attributes].present?
-        params_hash[:image_attributes][:user_id] = current_user.id
-      end
-
-      params_hash
     end
 
     def draft_resource_params

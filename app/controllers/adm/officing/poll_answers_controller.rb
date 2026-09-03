@@ -1,5 +1,6 @@
 class Adm::Officing::PollAnswersController < Adm::Officing::BaseController
   include Adm::Officing::VotingPhaseScoped
+  include ResolvesSubmittedQuestionAnswer
 
   before_action :load_voting_phase
   before_action :verify_assignment
@@ -9,7 +10,7 @@ class Adm::Officing::PollAnswersController < Adm::Officing::BaseController
   def create
     authorize :base, policy_class: Adm::Officing::BasePolicy
 
-    @answer = @question.find_or_initialize_user_answer(@offline_user, params[:answer])
+    @answer = @question.find_or_initialize_user_answer(@offline_user, submitted_question_answer)
     @answer.answer_weight = validated_answer_weight
     @answer.officing_manager_id = @officing_manager.id
 
@@ -24,7 +25,7 @@ class Adm::Officing::PollAnswersController < Adm::Officing::BaseController
   def update_open_answer
     authorize :base, policy_class: Adm::Officing::BasePolicy
 
-    @answer = @question.find_or_initialize_user_answer(@offline_user, params[:answer])
+    @answer = @question.find_or_initialize_user_answer(@offline_user, @question.open_question_answer)
     @answer.officing_manager_id = @officing_manager.id
     @answer.answer_weight = 1 if @answer.new_record?
     @answer.open_answer_text = params[:open_answer_text]

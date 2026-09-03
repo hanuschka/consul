@@ -12,7 +12,7 @@ class PollQuestionDetailsQuery < ApplicationQuery
   end
 
   def crossectional_for_answer(answer)
-    { answer: answer.title, groups: crossectional_groups(voter_ids_by_answer[answer.title] || []) }
+    { answer: answer.title, groups: crossectional_groups(voter_ids_by_answer[answer.id] || []) }
   end
 
   private
@@ -33,8 +33,8 @@ class PollQuestionDetailsQuery < ApplicationQuery
 
     def voter_ids_by_answer
       @voter_ids_by_answer ||= question.answers
-        .pluck(:author_id, :answer)
-        .group_by { |(_author_id, answer)| answer }
+        .pluck(:author_id, :question_answer_id)
+        .group_by { |(_author_id, question_answer_id)| question_answer_id }
         .transform_values { |pairs| pairs.map(&:first).uniq }
     end
 
@@ -46,7 +46,7 @@ class PollQuestionDetailsQuery < ApplicationQuery
         total = question_counts.values.sum
 
         rows = other_question.question_answers.sort_by(&:given_order).map do |answer|
-          count = question_counts[answer.title].to_i
+          count = question_counts[answer.id].to_i
 
           {
             title: answer.title,
@@ -64,11 +64,11 @@ class PollQuestionDetailsQuery < ApplicationQuery
 
       Poll::Answer
         .where(question_id: other_questions.map(&:id), author_id: voter_ids)
-        .where.not(answer: nil)
-        .group(:question_id, :answer)
+        .where.not(question_answer_id: nil)
+        .group(:question_id, :question_answer_id)
         .count
-        .each_with_object({}) do |((question_id, answer), count), acc|
-          (acc[question_id] ||= {})[answer] = count
+        .each_with_object({}) do |((question_id, question_answer_id), count), acc|
+          (acc[question_id] ||= {})[question_answer_id] = count
         end
     end
 end

@@ -20,8 +20,10 @@ class Polls::Questions::OpenAnswerComponent < ApplicationComponent
 
   def open_answer
     @open_answer ||=
-      user_answers.find { |answer| answer.answer == question.open_question_answer&.title } ||
-      question.answers.new(author: current_user, answer: question.open_question_answer&.title)
+      user_answers.find { |answer| answer.question_answer_id == question.open_question_answer&.id } ||
+      question.answers.new(author: current_user,
+                           answer: question.open_question_answer&.title,
+                           question_answer: question.open_question_answer)
   end
 
   def additional_form_class

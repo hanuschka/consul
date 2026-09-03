@@ -21,12 +21,12 @@ class Poll::Question::Answer < ApplicationRecord
   def all_open_answers
     return [] unless open_answer?
 
-    Poll::Answer.where(question_id: question, answer: title).where.not(open_answer_text: [nil, ""])
+    Poll::Answer.where(question_answer_id: id).where.not(open_answer_text: [nil, ""])
   end
 
   def all_open_answers_connected_to(base_question_answer)
     answered_base_question_answer_user_ids = Poll::Answer
-      .where(question_id: base_question_answer.question, answer: base_question_answer.title)
+      .where(question_answer_id: base_question_answer.id)
       .pluck(:author_id)
     all_open_answers.where(author_id: answered_base_question_answer_user_ids)
   end
@@ -34,10 +34,10 @@ class Poll::Question::Answer < ApplicationRecord
   def total_votes
     if open_answer?
       all_open_answers.count +
-        ::Poll::PartialResult.where(question: question).where(answer: title).count
+        ::Poll::PartialResult.where(question_answer_id: id).count
     else
-      Poll::Answer.where(question_id: question, answer: title).sum(:answer_weight) +
-        ::Poll::PartialResult.where(question: question).where(answer: title).sum(:amount)
+      Poll::Answer.where(question_answer_id: id).sum(:answer_weight) +
+        ::Poll::PartialResult.where(question_answer_id: id).sum(:amount)
     end
   end
 
@@ -46,25 +46,25 @@ class Poll::Question::Answer < ApplicationRecord
   end
 
   def total_voters
-    Poll::Answer.where(question_id: question, answer: title).distinct.count(:author_id)
+    Poll::Answer.where(question_answer_id: id).distinct.count(:author_id)
   end
 
   def weight_distribution
-    Poll::Answer.where(question_id: question, answer: title).group(:answer_weight).count
+    Poll::Answer.where(question_answer_id: id).group(:answer_weight).count
   end
 
   def total_connected_votes_to(base_question_answer)
     answered_base_question_answer_user_ids = Poll::Answer
-      .where(question_id: base_question_answer.question, answer: base_question_answer.title)
+      .where(question_answer_id: base_question_answer.id)
       .pluck(:author_id)
     Poll::Answer
-      .where(question_id: question, answer: title, author_id: answered_base_question_answer_user_ids)
+      .where(question_answer_id: id, author_id: answered_base_question_answer_user_ids)
       .sum(:answer_weight)
   end
 
   def total_connected_votes_inner_share(base_question_answer)
     answered_base_question_answer_user_ids = Poll::Answer
-      .where(question_id: base_question_answer.question, answer: base_question_answer.title)
+      .where(question_answer_id: base_question_answer.id)
       .pluck(:author_id)
 
     all_connected_answers_count = Poll::Answer

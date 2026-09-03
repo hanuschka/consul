@@ -10,7 +10,7 @@
 
   <% question.nested_questions.each do |nested_question| %>
     <% nested_answers = (user_answers_by_question[nested_question.id] || []) %>
-    <% nested_answers_by_title = nested_answers.index_by(&:answer) %>
+    <% nested_answers_by_question_answer_id = nested_answers.index_by(&:question_answer_id) %>
     <% nested_used_weight = nested_answers.sum(&:answer_weight) %>
     <% nested_votes_exhausted = nested_question.max_votes.present? && nested_used_weight >= nested_question.max_votes %>
 
@@ -29,7 +29,7 @@
 
       <% nested_question.question_answers.each do |question_answer| %>
         <% next if question_answer.open_answer? %>
-        <% existing_answer = nested_answers_by_title[question_answer.title] %>
+        <% existing_answer = nested_answers_by_question_answer_id[question_answer.id] %>
 
         <div class="mb-4">
           <div class="kern-title kern-title--small mb-2"><%= question_answer.title %></div>
@@ -53,7 +53,7 @@
             <%= form_with(
               url: adm_officing_voting_phase_poll_answers_path(voting_phase,
                 offline_user_id: offline_user.id, question_id: nested_question.id,
-                answer: question_answer.title),
+                answer: question_answer.title, question_answer_id: question_answer.id),
               method: :post) do |f| %>
 
               <div class="d-flex align-items-center gap-2">
@@ -76,13 +76,13 @@
 
       <% if nested_question.open_question_answer.present? %>
         <% open_qa = nested_question.open_question_answer %>
-        <% existing_open = nested_answers_by_title[open_qa.title] %>
+        <% existing_open = nested_answers_by_question_answer_id[open_qa.id] %>
         <div class="mb-4">
           <div class="kern-title kern-title--small mb-2"><%= open_qa.title %></div>
           <%= form_with(
             url: update_open_answer_adm_officing_voting_phase_poll_answers_path(voting_phase,
               offline_user_id: offline_user.id, question_id: nested_question.id,
-              answer: open_qa.title),
+              answer: open_qa.title, question_answer_id: open_qa.id),
             method: :post) do |f| %>
             <%= f.text_area :open_answer_text, value: existing_open&.open_answer_text, label: false, placeholder: open_qa.title, "aria-label" => open_qa.title, class: "mb-3" %>
             <%= kern_button(
@@ -95,7 +95,7 @@
   <% end %>
 
 <% else %>
-  <% answers_by_title = user_answers.index_by(&:answer) %>
+  <% answers_by_question_answer_id = user_answers.index_by(&:question_answer_id) %>
   <% used_weight = user_answers.sum(&:answer_weight) %>
   <% votes_exhausted = question.max_votes.present? && used_weight >= question.max_votes %>
 
@@ -117,7 +117,7 @@
 
     <% question.question_answers.each do |question_answer| %>
       <% next if question_answer.open_answer? %>
-      <% existing_answer = answers_by_title[question_answer.title] %>
+      <% existing_answer = answers_by_question_answer_id[question_answer.id] %>
 
       <div class="mb-4">
         <div class="kern-title kern-title--small mb-2"><%= question_answer.title %></div>
@@ -141,7 +141,7 @@
           <%= form_with(
             url: adm_officing_voting_phase_poll_answers_path(voting_phase,
               offline_user_id: offline_user.id, question_id: question.id,
-              answer: question_answer.title),
+              answer: question_answer.title, question_answer_id: question_answer.id),
             method: :post) do |f| %>
 
             <div class="d-flex align-items-center gap-2">
@@ -164,13 +164,13 @@
 
     <% if question.open_question_answer.present? %>
       <% open_qa = question.open_question_answer %>
-      <% existing_open = answers_by_title[open_qa.title] %>
+      <% existing_open = answers_by_question_answer_id[open_qa.id] %>
       <div class="mb-4">
         <div class="kern-title kern-title--small mb-2"><%= open_qa.title %></div>
         <%= form_with(
           url: update_open_answer_adm_officing_voting_phase_poll_answers_path(voting_phase,
             offline_user_id: offline_user.id, question_id: question.id,
-            answer: open_qa.title),
+            answer: open_qa.title, question_answer_id: open_qa.id),
           method: :post) do |f| %>
           <%= f.text_area :open_answer_text, value: existing_open&.open_answer_text, label: false, placeholder: open_qa.title, "aria-label" => open_qa.title, class: "mb-3" %>
           <%= kern_button(

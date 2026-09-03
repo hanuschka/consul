@@ -63,14 +63,21 @@ class AiProposalFlowBaseController < ApplicationController
       end
     end
 
-    # The ordinary controllers enqueue these on publication, so an AI-flow
-    # contribution needs them too -- without the embedding it can never be
-    # found by anyone else's similarity check.
     def publish_ai_draft
-      @draft_resource.update!(draft: false, published_at: Time.current)
+      hold_for_moderation
 
-      SimilarContributions::RecordGroupJob.perform_later(@draft_resource)
-      SimilarContributions::EmbedJob.perform_later(@draft_resource)
+      UserResources::PublishService.call(@draft_resource)
+    end
+
+    # proposals.admin_accepted defaults to true, so a draft the LLM wrote is
+    # accepted unless the flow says otherwise -- which would let the AI flow
+    # publish straight past a phase that moderates every submission. Investments
+    # have no such column and the budget flows publish them outright.
+    def hold_for_moderation
+      return if !@draft_resource.is_a?(::Proposal)
+      return if !@draft_resource.projekt_phase.feature?("general.require_admin_acceptance")
+
+      @draft_resource.admin_accepted = false
     end
 
     def respond_with_next_step(url)

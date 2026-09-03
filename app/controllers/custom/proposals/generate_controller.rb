@@ -18,53 +18,11 @@ class Proposals::GenerateController < AiProposalFlowBaseController
     redirect_to generate_proposal_new_path(projekt_phase_id: @projekt_phase.id, idea_text: params[:idea_text])
   end
 
-  def edit_draft
-    @generate_image_url = ai_generate_image_and_assign_to_resource_path
-    @update_draft_url   = generate_proposal_update_draft_path(@draft_resource)
-    @back_to_new_url    = generate_proposal_new_path(projekt_phase_id: @draft_resource.projekt_phase_id,
-idea_text: @draft_resource.ai_idea_text)
-
-    render "ai_proposal_flow/edit_draft"
-  end
-
-  def update_draft
-    params_with_image_user = draft_resource_params_with_image_user
-    @draft_resource.update!(params_with_image_user)
-
-    if @draft_resource.projekt_phase.user_resource_criteria.exists?
-      ProposalAiDraft::EvaluateTwoTierService.call(resource: @draft_resource)
-
-      redirect_to generate_proposal_evaluation_path(@draft_resource)
-    else
-      @draft_resource.update!(draft: false, published_at: Time.current)
-
-      redirect_to generate_proposal_success_path(@draft_resource)
-    end
-
-  rescue StandardError => e
-    Rails.logger.error("[AiProposalFlow] update_draft failed: #{e.message}")
-
-    flash[:error] = I18n.t("ai_proposal_flow.evaluate_error")
-
-    @generate_image_url = ai_generate_image_and_assign_to_resource_path
-    @update_draft_url   = generate_proposal_update_draft_path(@draft_resource)
-    @back_to_new_url    = generate_proposal_new_path(projekt_phase_id: @draft_resource.projekt_phase_id,
-idea_text: @draft_resource.ai_idea_text)
-
-    render "ai_proposal_flow/edit_draft"
-  end
-
   def evaluation
     @back_to_edit_url = generate_proposal_edit_draft_path(@draft_resource)
     @publish_url      = generate_proposal_publish_path(@draft_resource)
 
     render "ai_proposal_flow/evaluation"
-  end
-
-  def publish
-    @draft_resource.update!(draft: false, published_at: Time.current)
-
-    redirect_to generate_proposal_success_path(@draft_resource)
   end
 
   def success
@@ -76,15 +34,21 @@ idea_text: @draft_resource.ai_idea_text)
 
   private
 
-    def draft_resource_params_with_image_user
-      params_hash = draft_resource_params.to_h
-      if params_hash[:image_attributes].present?
-        params_hash[:image_attributes][:user_id] = current_user.id
-      end
-      params_hash
+    def resource_class = Proposal
+
+    def assign_edit_draft_urls
+      @generate_image_url = ai_generate_image_and_assign_to_resource_path
+      @update_draft_url   = generate_proposal_update_draft_path(@draft_resource)
+      @back_to_new_url    = generate_proposal_new_path(
+        projekt_phase_id: @draft_resource.projekt_phase_id,
+        idea_text: @draft_resource.ai_idea_text
+      )
     end
 
-    def resource_class = Proposal
+    def edit_draft_step_path      = generate_proposal_edit_draft_path(@draft_resource)
+    def publish_checked_step_path = generate_proposal_publish_checked_path(@draft_resource)
+    def evaluation_step_path      = generate_proposal_evaluation_path(@draft_resource)
+    def success_step_path         = generate_proposal_success_path(@draft_resource)
 
     def new_flow_redirect_path
       generate_proposal_new_path(projekt_phase_id: @draft_resource.projekt_phase_id)

@@ -13,6 +13,7 @@
       this.pollTimeout = parseInt(section.dataset.pollTimeout, 10);
       this.statusUrl = section.dataset.statusUrl;
       this.publishUrl = section.dataset.publishUrl;
+      this.aiFlow = section.dataset.aiFlow === "true";
       this.submitting = false;
       this.publishing = false;
 
@@ -40,10 +41,11 @@
       return document.getElementById(this.getSection().dataset.formId);
     },
 
+    // The AI flow's submit button sits outside the form it drives, tied to it by
+    // the form attribute, so the button is looked up on the document rather
+    // than inside the form.
     getSubmitButton: function() {
-      const form = this.getForm();
-
-      return form && form.querySelector(".js-user-resource-submit");
+      return document.querySelector(".js-user-resource-submit");
     },
 
     getProgress: function() {
@@ -163,10 +165,51 @@
 
       this.hideDecisionActions();
       this.showProgress();
-      this.openModal();
+      this.showWaitingState();
       this.clearEditorPlaceholders();
       this.syncRichTextEditors();
       this.submitForm();
+    },
+
+    // The AI flow already covers its step with its own loader the moment the
+    // citizen submits, so a second spinner would stack on top of it: there the
+    // modal waits until it has matches to show.
+    showWaitingState: function() {
+      if (this.aiFlow) {
+        return;
+      }
+
+      this.openModal();
+    },
+
+    hideAiFlowLoader: function() {
+      if (App.AiProposalFlow) {
+        App.AiProposalFlow.hideLoader();
+      }
+    },
+
+    // Whichever surface carried the wait has to come down before the citizen
+    // can act again: the modal on the ordinary form, the flow's own loader in
+    // the AI flow.
+    clearWaitingState: function() {
+      if (this.aiFlow) {
+        this.hideAiFlowLoader();
+
+        return;
+      }
+
+      this.closeModal();
+    },
+
+    // In the AI flow the modal has been waiting for something to show, so this
+    // is where it opens -- and where the loader it was hiding behind goes.
+    revealMatches: function() {
+      if (!this.aiFlow) {
+        return;
+      }
+
+      this.hideAiFlowLoader();
+      this.openModal();
     },
 
     clearEditorPlaceholders: function() {
@@ -332,8 +375,10 @@
         .catch((request) => this.handleCreateError(request));
     },
 
+    // A response that names where to go next is the end of it, whether that is
+    // the published contribution or the AI flow's following step.
     handleCreateResponse: function(response) {
-      if (response.status === "published") {
+      if (response.redirect_url) {
         this.redirect(response.redirect_url);
         return;
       }
@@ -354,7 +399,7 @@
 
       console.error("[SimilarContributionsCheck] create request failed", request);
 
-      this.closeModal();
+      this.clearWaitingState();
       this.restoreSubmitButton();
     },
 
@@ -365,7 +410,7 @@
     showFormErrors: function(errorsHtml) {
       const errorsContainer = this.getErrorsContainer();
 
-      this.closeModal();
+      this.clearWaitingState();
       this.restoreSubmitButton();
 
       if (errorsContainer) {
@@ -441,6 +486,8 @@
 
       this.getResultContainer().innerHTML = response.html;
       this.getModalProgress().hidden = true;
+
+      this.revealMatches();
     },
 
     handlePublishClick: function(publishButton) {
@@ -476,7 +523,7 @@
         return;
       }
 
-      this.closeModal();
+      this.clearWaitingState();
       this.restoreSubmitButton();
     },
 

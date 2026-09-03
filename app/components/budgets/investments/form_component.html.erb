@@ -8,7 +8,7 @@
       ) %>
     <% end %>
 
-    <%= translatable_form_for(investment, url: url, html: { class: "budget-investment-form", id: dom_id(investment, :form) }) do |f| %>
+    <%= translatable_form_for(investment, url: url, html: { class: form_css_class, id: dom_id(investment, :form) }) do |f| %>
       <%= resources_back_link(fallback_path: url_to_footer_tab) %>
 
       <div class="flex-layout">

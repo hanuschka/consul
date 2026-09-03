@@ -406,7 +406,12 @@ class ProposalsController
     def respond_with_started_check
       respond_to do |format|
         format.html { render_new_form }
-        format.json { render json: similar_contributions_check_started_payload(@proposal) }
+        format.json do
+          render json: similar_contributions_check_started_payload(
+            @proposal,
+            publish_url: publish_draft_proposal_path(@proposal)
+          )
+        end
       end
     end
 

@@ -1,4 +1,4 @@
-<section class="similar-contributions-list">
+<section id="similar-contributions" class="similar-contributions-list">
   <h2 class="similar-contributions-list--title"><%= t(".title") %></h2>
 
   <% if matches.empty? %>
@@ -31,12 +31,17 @@
               <p class="similar-contributions-match--no-answer"><%= t(".no_answer") %></p>
             <% end %>
 
-            <%= button_to t(".not_a_duplicate"),
-                  exclude_path_for(match.resource),
+            <%= button_to exclude_path_for(match.resource),
                   method: :delete,
-                  class: "similar-contributions-match--exclude",
-                  form: { data: { turbo_confirm: t(".not_a_duplicate_confirm") } },
-                  data: { confirm: t(".not_a_duplicate_confirm") } %>
+                  class: "kern-btn kern-btn--secondary kern-btn--danger",
+                  form: {
+                    class: "similar-contributions-match--exclude",
+                    data: { turbo_confirm: t(".not_a_duplicate_confirm") }
+                  },
+                  data: { confirm: t(".not_a_duplicate_confirm") } do %>
+              <span class="kern-label material-symbols-outlined" aria-hidden="true">link_off</span>
+              <span class="kern-label"><%= t(".not_a_duplicate") %></span>
+            <% end %>
           <% end %>
         <% end %>
       <% end %>

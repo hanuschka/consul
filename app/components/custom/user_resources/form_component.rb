@@ -13,6 +13,15 @@ class UserResources::FormComponent < ApplicationComponent
     @embbeded_in_ai_flow = embbeded_in_ai_flow
   end
 
+  # The AI flow's step-2 loader hangs off the form it wraps, so the hook only
+  # exists on the embedded render.
+  def form_css_class
+    classes = ["js-rich-text-form", "user-resource-form"]
+    classes << "js-ai-flow-step2-form" if @embbeded_in_ai_flow
+
+    classes.join(" ")
+  end
+
   def similar_contributions_check_running?
     resource.persisted? && resource.similar_contributions_check_processing?
   end

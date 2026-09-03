@@ -1,5 +1,5 @@
 class SimilarContributions::ListComponent < ApplicationComponent
-  ANSWER_EXCERPT_LENGTH = 300
+  include SimilarContributionsMatchStatus
 
   attr_reader :matches, :resource
 
@@ -16,25 +16,8 @@ class SimilarContributions::ListComponent < ApplicationComponent
     resource.projekt_phase&.title
   end
 
-  def processing_status_for(resource)
-    if resource.is_a?(::Budget::Investment)
-      investment_status(resource)
-    else
-      proposal_status(resource)
-    end
-  end
-
   def created_at_for(resource)
     l(resource.created_at, format: :long)
-  end
-
-  def answer_excerpt_for(resource)
-    attribute = SimilarContributions::Scopes.answer_attribute(resource)
-    answer = resource.public_send(attribute)
-
-    return if answer.blank?
-
-    SimilarContributions::SearchTerms.strip_html(answer).squish.truncate(ANSWER_EXCERPT_LENGTH)
   end
 
   def path_for(resource)
@@ -54,20 +37,4 @@ class SimilarContributions::ListComponent < ApplicationComponent
       )
     end
   end
-
-  private
-
-    def investment_status(investment)
-      return t(".status.unfeasible") if investment.unfeasible?
-      return t(".status.answered") if investment.valuation_finished?
-
-      t(".status.open")
-    end
-
-    def proposal_status(proposal)
-      return t(".status.retired") if proposal.retired?
-      return t(".status.answered") if proposal.official_answer.present?
-
-      t(".status.open")
-    end
 end

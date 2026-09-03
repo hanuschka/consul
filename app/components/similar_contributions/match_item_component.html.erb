@@ -17,6 +17,10 @@
   <div class="similar-contributions-match--body">
     <%= meta %>
 
+    <% if processing_status.present? %>
+      <p class="similar-contributions-match--status"><%= processing_status %></p>
+    <% end %>
+
     <% if resource.sentiment.present? || labels.any? %>
       <div class="similar-contributions-match--tags">
         <% if resource.sentiment.present? %>
@@ -43,6 +47,14 @@
     </p>
 
     <p class="similar-contributions-match--excerpt"><%= excerpt %></p>
+
+    <% if answer? %>
+      <% if answer_excerpt.present? %>
+        <blockquote class="similar-contributions-match--answer"><%= answer_excerpt %></blockquote>
+      <% else %>
+        <p class="similar-contributions-match--no-answer"><%= t(".no_answer") %></p>
+      <% end %>
+    <% end %>
 
     <%= footer %>
   </div>

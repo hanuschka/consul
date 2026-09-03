@@ -24,13 +24,6 @@
           <% end %>
 
           <% item.with_footer do %>
-            <% answer_excerpt = answer_excerpt_for(match.resource) %>
-            <% if answer_excerpt.present? %>
-              <blockquote class="similar-contributions-match--answer"><%= answer_excerpt %></blockquote>
-            <% else %>
-              <p class="similar-contributions-match--no-answer"><%= t(".no_answer") %></p>
-            <% end %>
-
             <%= button_to exclude_path_for(match.resource),
                   method: :delete,
                   class: "kern-btn kern-btn--secondary kern-btn--danger",

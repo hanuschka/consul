@@ -13,10 +13,12 @@ export default class extends Controller {
     this.loaded = false
     this.loading = false
     this.closeTimeout = null
+    this.resizeObserver = null
   }
 
   disconnect() {
     this.cancelClose()
+    this.stopWatchingSize()
   }
 
   open() {
@@ -47,6 +49,24 @@ export default class extends Controller {
     } else {
       popup.style.top = `${badge.bottom + gap}px`
     }
+  }
+
+  // Each row carries a status line, an answer excerpt and a lazily loaded
+  // thumbnail, so the panel is still growing when the markup lands: the height
+  // it has at that moment would leave it placed below a badge it no longer
+  // fits under. Watching its box keeps the flip honest as the rows fill in.
+  watchSize() {
+    if (this.resizeObserver || !window.ResizeObserver) return
+
+    this.resizeObserver = new ResizeObserver(() => this.position())
+    this.resizeObserver.observe(this.popupTarget)
+  }
+
+  stopWatchingSize() {
+    if (!this.resizeObserver) return
+
+    this.resizeObserver.disconnect()
+    this.resizeObserver = null
   }
 
   // The gap between the badge and the panel is outside both, so the pointer
@@ -89,6 +109,7 @@ export default class extends Controller {
       this.popupTarget.innerHTML = await response.text()
       this.loaded = true
       this.position()
+      this.watchSize()
     } catch (error) {
       console.error("[SimilarContributionsPopup]", error)
       this.popupTarget.hidden = true

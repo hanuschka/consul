@@ -56,7 +56,9 @@ module SimilarContributions::Scopes
     end
   end
 
-  def answer_attribute(resource)
-    resource.is_a?(::Budget::Investment) ? :valuator_explanation : :official_answer
+  # A budget investment is answered by its valuator, a proposal by an admin, so
+  # the text a match was already given comes from a different column per class.
+  def answer_of(resource)
+    resource.is_a?(::Budget::Investment) ? resource.valuator_explanation : resource.official_answer
   end
 end

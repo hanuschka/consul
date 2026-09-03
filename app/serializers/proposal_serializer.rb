@@ -122,7 +122,7 @@ class ProposalSerializer < BaseSerializer
   end
 
   def self.serialize_collection(proposals)
-    counts = SimilarContributions::CandidateCounts.call(proposals)
+    counts = SimilarContributions::StoredCounts.call(proposals)
 
     proposals.map do |proposal|
       new(proposal, similar_contributions_count: counts.fetch(proposal.id, 0)).serialize
@@ -133,7 +133,7 @@ class ProposalSerializer < BaseSerializer
 
     def similar_contributions_count
       @similar_contributions_count ||=
-        SimilarContributions::CandidateCounts.call([proposal]).fetch(proposal.id, 0)
+        SimilarContributions::StoredCounts.call([proposal]).fetch(proposal.id, 0)
     end
 end
 

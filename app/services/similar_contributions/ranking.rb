@@ -62,7 +62,7 @@ class SimilarContributions::Ranking < ApplicationService
     end
 
     # Ranking picks from a list Postgres already narrowed down, so the cheapest
-    # tier is enough — see Ai::Settings::ULTRAFAST_MODEL.
+    # tier is enough — see Ai::Settings.ultrafast_model.
     def request_ranking
       response =
         Ai::RubyLlmFactory

@@ -202,7 +202,7 @@ class BudgetInvestmentSerializer < BaseSerializer
   end
 
   def self.serialize_collection(budget_investments)
-    counts = SimilarContributions::CandidateCounts.call(budget_investments)
+    counts = SimilarContributions::StoredCounts.call(budget_investments)
 
     budget_investments.map do |budget_investment|
       new(budget_investment,
@@ -214,7 +214,7 @@ class BudgetInvestmentSerializer < BaseSerializer
 
     def similar_contributions_count
       @similar_contributions_count ||=
-        SimilarContributions::CandidateCounts
+        SimilarContributions::StoredCounts
           .call([budget_investment])
           .fetch(budget_investment.id, 0)
     end

@@ -62,16 +62,16 @@ class SimilarContributions::Ranking < ApplicationService
     end
 
     # Ranking picks from a list Postgres already narrowed down, so the cheapest
-    # tier is enough — see Ai::Settings.ultrafast_model.
+    # tier is enough — see Ai::ModelProfile.ultrafast.
     def request_ranking
       response =
         Ai::RubyLlmFactory
-          .chat_with_json_output(
-            output_schema,
+          .chat_for(
+            Ai::ModelProfile.ultrafast,
             feature: feature,
-            request_timeout: REQUEST_TIMEOUT,
-            gpt_model: Ai::Settings.ultrafast_model
+            request_timeout: REQUEST_TIMEOUT
           )
+          .with_schema(output_schema)
           .with_instructions(system_instructions)
           .ask(user_prompt)
 

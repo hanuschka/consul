@@ -91,7 +91,8 @@ module SimilarContributionsCheck
 
       payload.merge(
         matches_count: matches.size,
-        html: similar_contributions_notice_html(matches, resource)
+        html: similar_contributions_notice_html(matches, resource),
+        decision_html: similar_contributions_decision_html(matches, resource)
       )
     end
 
@@ -100,6 +101,18 @@ module SimilarContributionsCheck
 
       render_to_string(
         SimilarContributions::NoticeComponent.new(matches, resource: resource),
+        layout: false
+      )
+    end
+
+    # The decision block on the form is rendered on page load without any
+    # matches, because the check has not run yet. It is re-rendered here so the
+    # citizen keeps the matches next to the form after leaving the modal.
+    def similar_contributions_decision_html(matches, resource)
+      return "" if matches.empty?
+
+      render_to_string(
+        SimilarContributions::DecisionComponent.new(resource, matches: matches),
         layout: false
       )
     end

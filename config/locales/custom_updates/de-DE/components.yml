@@ -26,7 +26,9 @@ de:
       progress_component:
         checking: "Beitrag wird geprüft …"
       decision_component:
+        intro: "Bitte prüfen Sie, ob Ihr Anliegen dort schon aufgegriffen wurde, bevor Sie Ihren Beitrag einreichen."
         show_duplicates: "Ähnliche Beiträge anzeigen"
+        hide_duplicates: "Ähnliche Beiträge ausblenden"
         submit_anyway: "Beitrag trotzdem einreichen"
       notice_component:
         title:

@@ -38,6 +38,8 @@
       </div>
     <% end %>
 
+    <%= render Adm::AiSettings::ResolvedProfileComponent.new %>
+
     <% if @evaluation_context_setting.present? %>
       <%= render Kern::FormFieldComponent.new(
             label: t("custom.settings.#{@evaluation_context_setting.key}"),

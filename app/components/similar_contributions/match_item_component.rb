@@ -1,8 +1,9 @@
 class SimilarContributions::MatchItemComponent < ApplicationComponent
-  # One row of a match wherever it is shown: the citizen's modal, the admin
-  # detail page and the admin badge popup. They differ in how large the picture
-  # is, how much of the description is worth reading and what is offered
-  # underneath -- not in what a match is made of.
+  # One row of a match wherever it is shown: the citizen's modal, the compact
+  # list on the admin detail page and on the citizen's form, and the admin badge
+  # popup. They differ in how large the picture is, how much of the description
+  # is worth reading and what is offered underneath -- not in what a match is
+  # made of.
   VARIANTS = {
     notice: { thumb_size: [360, 270], excerpt_words: 40 },
     list: { thumb_size: [360, 360], excerpt_words: 25 },

@@ -9,19 +9,21 @@ module Ai::SingleTurn
     schema:, instructions:, input:, timeout_seconds:,
     feature: ::AiUsageRecord::UNKNOWN_FEATURE
   )
-    if ::OpenaiApi::Transport.enabled?
+    profile = ::Ai::ModelProfile.fast
+
+    if profile.responses?
       return ::OpenaiApi::Responses.json(
         schema: schema,
         instructions: instructions,
         input: input,
-        model: ::Ai::Settings.fast_model,
+        model: profile.model,
         feature: feature,
         timeout_seconds: timeout_seconds
       )
     end
 
     ::Ai::RubyLlmFactory
-      .fast_chat(timeout_seconds, feature: feature)
+      .chat_for(profile, feature: feature, request_timeout: timeout_seconds)
       .with_schema(schema)
       .with_instructions(instructions)
       .ask(input)
@@ -33,18 +35,21 @@ module Ai::SingleTurn
     schema:, instructions:, input:,
     feature: ::AiUsageRecord::UNKNOWN_FEATURE
   )
-    if ::OpenaiApi::Transport.enabled?
+    profile = ::Ai::ModelProfile.default
+
+    if profile.responses?
       return ::OpenaiApi::Responses.json(
         schema: schema,
         instructions: instructions,
         input: input,
-        model: ::Ai::Settings.current_llm_model,
+        model: profile.model,
         feature: feature
       )
     end
 
     ::Ai::RubyLlmFactory
-      .chat_with_json_output(schema, feature: feature)
+      .chat_for(profile, feature: feature)
+      .with_schema(schema)
       .with_instructions(instructions)
       .ask(input)
       .content
@@ -55,17 +60,21 @@ module Ai::SingleTurn
     instructions:, input:, timeout_seconds:,
     feature: ::AiUsageRecord::UNKNOWN_FEATURE
   )
-    if ::OpenaiApi::Transport.enabled?
+    profile = ::Ai::ModelProfile.fast
+
+    if profile.responses?
       return ::OpenaiApi::Responses.text(
         instructions: instructions,
         input: input,
-        model: ::Ai::Settings.fast_model,
+        model: profile.model,
         feature: feature,
         timeout_seconds: timeout_seconds
       )
     end
 
-    chat = ::Ai::RubyLlmFactory.fast_chat(timeout_seconds, feature: feature)
+    chat = ::Ai::RubyLlmFactory.chat_for(
+      profile, feature: feature, request_timeout: timeout_seconds
+    )
 
     chat.with_instructions(instructions)
 

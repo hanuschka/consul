@@ -88,8 +88,10 @@
           return;
         }
 
-        if (event.target.closest(".js-similar-contributions-show-duplicates")) {
-          this.openModal();
+        const duplicatesToggle = event.target.closest(".js-similar-contributions-show-duplicates");
+
+        if (duplicatesToggle) {
+          this.toggleDecisionMatches(duplicatesToggle);
           return;
         }
 
@@ -219,9 +221,9 @@
       App.SharedModal.closeById(this.getModal().id);
     },
 
-    // Back to the form: the matches stay in the modal so the citizen can open
-    // them again, and the form swaps its plain submit button for the two ways
-    // out of the decision -- look again, or submit anyway.
+    // Back to the form: the form swaps its plain submit button for the two ways
+    // out of the decision -- read the matches again, now listed on the form
+    // itself, or submit anyway.
     dismissModal: function() {
       this.closeModal();
       this.showDecisionActions();
@@ -229,6 +231,37 @@
 
     getDecisionActions: function() {
       return document.querySelector(".js-similar-contributions-decision");
+    },
+
+    // The decision block on the form is the one the server rendered before the
+    // check ran, so it holds no matches. Swapping in the re-rendered one puts
+    // them under the form, where the citizen decides.
+    replaceDecisionActions: function(decisionHtml) {
+      const decisionActions = this.getDecisionActions();
+
+      if (!decisionActions || !decisionHtml) {
+        return;
+      }
+
+      decisionActions.outerHTML = decisionHtml;
+    },
+
+    toggleDecisionMatches: function(toggle) {
+      const matches = document.getElementById(toggle.getAttribute("aria-controls"));
+
+      if (!matches) {
+        return;
+      }
+
+      const shouldExpand = matches.hidden;
+      const label = toggle.querySelector(".js-similar-contributions-toggle-label");
+
+      matches.hidden = !shouldExpand;
+      toggle.setAttribute("aria-expanded", shouldExpand);
+
+      if (label) {
+        label.textContent = shouldExpand ? toggle.dataset.labelExpanded : toggle.dataset.labelCollapsed;
+      }
     },
 
     showDecisionActions: function() {
@@ -382,7 +415,7 @@
       }
 
       if (response.matches_count > 0) {
-        this.showMatches(response.html);
+        this.showMatches(response);
       } else {
         this.publish(this.publishUrl);
       }
@@ -393,10 +426,11 @@
     // the restored submit button cannot be clicked while the decision is open,
     // and it is already there whichever way the citizen dismisses the modal --
     // no dependency on the dialog "close" event.
-    showMatches: function(html) {
+    showMatches: function(response) {
       this.restoreSubmitButton();
+      this.replaceDecisionActions(response.decision_html);
 
-      this.getResultContainer().innerHTML = html;
+      this.getResultContainer().innerHTML = response.html;
       this.getModalProgress().hidden = true;
     },
 

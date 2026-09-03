@@ -238,10 +238,10 @@
       }
     },
 
-    // rails-ujs disables every data-disable-with control on the submit event
+    // jquery-ujs disables every data-disable-with control on the submit event
     // and only re-enables them for forms it submits itself. This form is
-    // submitted by hand, so without enableElement the button stays dead after
-    // a validation error and the citizen cannot resubmit at all.
+    // submitted by hand, so without enableFormElements the button stays dead
+    // after a validation error and the citizen cannot resubmit at all.
     restoreSubmitButton: function() {
       const submitButton = this.getSubmitButton();
       const progress = this.getProgress();
@@ -255,8 +255,8 @@
         submitButton.hidden = false;
       }
 
-      if (window.Rails && form) {
-        window.Rails.enableElement(form);
+      if ($.rails && form) {
+        $.rails.enableFormElements($(form));
       }
 
       this.submitting = false;

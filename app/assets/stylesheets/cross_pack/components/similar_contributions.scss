@@ -608,12 +608,7 @@ a.similar-contributions-badge:focus-visible {
   transform: rotate(180deg);
 }
 
-// The list is opened inside a form column that may already be long, so it
-// scrolls on its own rather than pushing the two actions off the screen.
 .similar-contributions-decision--matches {
-  max-height: 420px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
   margin-top: 16px;
   padding: 14px 16px;
   border: 1px solid #ecdcb4;

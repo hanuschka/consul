@@ -12,7 +12,7 @@ class ProjektImports::ChatResponseService < ApplicationService
 
     chat = Ai::RubyLlmFactory.chat(feature: "projekt_imports.chat_response")
       .with_instructions(prompt_result.data[:prompt])
-    chat.with_tools(*edit_tools)
+    Ai::RubyLlmFactory.attach_tools(chat, *edit_tools)
     history = build_history
 
     history[0..-2].each do |msg|

@@ -1,4 +1,10 @@
 module Ai::RubyLlmFactory
+  # Chat Completions refuses function tools from the GPT-5.5 generation onward
+  # unless reasoning is explicitly switched off, and a chat that never names an
+  # effort gets the model's own default rather than nothing — so on that
+  # transport the tools have to travel with the one value that makes them legal.
+  TOOL_REASONING_EFFORT = "none".freeze
+
   def self.chat(feature: AiUsageRecord::UNKNOWN_FEATURE)
     build_chat(init, feature: feature)
   end
@@ -29,6 +35,18 @@ module Ai::RubyLlmFactory
       feature: feature,
       gpt_model: Ai::Settings::FAST_MODEL
     )
+  end
+
+  # The place tools get attached, rather than each caller reaching for
+  # with_tools: the effort above is a property of asking OpenAI for tools at
+  # all, and a caller that forgets it only finds out from a 400 in production.
+  # Every other provider rejects the key, so they keep the chat unchanged.
+  def self.attach_tools(chat, *tools)
+    chat.with_tools(*tools)
+
+    return chat if Ai::Settings.current_llm_provider != "openai"
+
+    chat.with_thinking(effort: TOOL_REASONING_EFFORT)
   end
 
   def self.build_chat(context, feature:, gpt_model: nil)

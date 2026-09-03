@@ -110,6 +110,27 @@ describe Poll::Question do
     end
   end
 
+  describe "#regenerate_contexted_clones" do
+    let(:target_locale) { (I18n.available_locales - [MachineTranslation.source_locale]).first }
+    let(:source) { create(:poll_question, poll: poll) }
+    let!(:template) do
+      create(:poll_question, poll: poll, contextualize_by_poll_question_id: source.id)
+    end
+
+    it "writes the clone's answers in the source locale, whatever locale the admin is browsing" do
+      answer = create(:poll_question_answer, question: template, title: "Source title")
+      Globalize.with_locale(target_locale) { answer.update!(title: "Translated title") }
+      create(:poll_question_answer, question: source)
+
+      I18n.with_locale(target_locale) { template.regenerate_contexted_clones }
+
+      clone_answer = template.contexted_clones.reload.first.question_answers.first
+      titles = clone_answer.translations.pluck(:locale, :title)
+
+      expect(titles).to include([MachineTranslation.source_locale.to_s, "Source title"])
+    end
+  end
+
   describe ".in_configured_order" do
     let!(:first) { create(:poll_question, poll: poll, given_order: 1) }
     let!(:source) { create(:poll_question, poll: poll, given_order: 2) }

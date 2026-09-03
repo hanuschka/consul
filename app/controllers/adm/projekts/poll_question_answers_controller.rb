@@ -43,6 +43,14 @@ class Adm::Projekts::PollQuestionAnswersController < Adm::Projekts::BaseControll
   def update
     authorize [:adm, :projekts, @question], :update?, policy_class: Adm::Projekts::PollQuestionPolicy
 
+    if locked_title_change?
+      @answer.assign_attributes(answer_params)
+      flash.now[:error] = t(".error")
+      @breadcrumbs = breadcrumbs_for_action(t("adm.projekts.poll_question_answers.edit.title"))
+
+      return render :edit, status: :unprocessable_entity
+    end
+
     if @answer.update(answer_params)
       regenerate_contexted_clones_for(@question, *@question.contextualized_dependents)
 
@@ -94,6 +102,14 @@ class Adm::Projekts::PollQuestionAnswersController < Adm::Projekts::BaseControll
 
     def set_answer
       @answer = @question.question_answers.find(params[:id])
+    end
+
+    def locked_title_change?
+      return false if @question.poll.safe_to_delete_answer?
+
+      submitted_title = answer_params[:title]
+
+      submitted_title.present? && submitted_title != @answer.title
     end
 
     def answer_params

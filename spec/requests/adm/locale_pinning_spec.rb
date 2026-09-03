@@ -5,13 +5,6 @@ describe "Locale handling in /adm", type: :request do
   let(:adm_locale) { SupportedLocales::ADM.keys.first }
   let(:foreign_locale) { :fr }
 
-  around do |example|
-    available_locales = I18n.available_locales
-    I18n.available_locales = available_locales | [foreign_locale]
-    example.run
-    I18n.available_locales = available_locales
-  end
-
   before do
     allow_any_instance_of(ActionView::Base).to receive(:stylesheet_link_tag).and_return("".html_safe)
     allow_any_instance_of(ActionView::Base).to receive(:javascript_include_tag).and_return("".html_safe)

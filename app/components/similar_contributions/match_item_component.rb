@@ -69,23 +69,34 @@ class SimilarContributions::MatchItemComponent < ApplicationComponent
     helpers.sentiment_color_style(resource.sentiment)
   end
 
-  # Whether the variant carries an answer at all, so the template can tell an
+  # Whether the variant shows answers at all, so the template can tell an
   # unanswered contribution from one whose surface never shows answers.
-  def answer?
+  def shows_answer?
     admin? && settings[:answer_excerpt_length].present?
   end
 
+  # An answer of nothing but an image or an embed has no text to excerpt, so
+  # whether one exists is a separate question from whether it reads as one.
+  def answer_present?
+    answer.present?
+  end
+
   def answer_excerpt
-    return unless answer?
-
-    answer = SimilarContributions::Scopes.answer_of(resource)
-
     return if answer.blank?
 
-    SimilarContributions::SearchTerms
+    @answer_excerpt ||= SimilarContributions::SearchTerms
       .strip_html(answer)
       .squish
       .truncate(settings[:answer_excerpt_length])
+  end
+
+  # What the copy button puts on the clipboard: the answer exactly as the
+  # answer editor is handed it (admin/proposals/show.html.erb), so pasting it
+  # there keeps the formatting the excerpt above has stripped off.
+  def answer_html
+    return if answer.blank?
+
+    AdminWYSIWYGSanitizer.new.sanitize(answer)
   end
 
   def processing_status
@@ -100,5 +111,11 @@ class SimilarContributions::MatchItemComponent < ApplicationComponent
 
     def admin?
       settings[:audience] == :admin
+    end
+
+    def answer
+      return unless shows_answer?
+
+      @answer ||= SimilarContributions::Scopes.answer_of(resource)
     end
 end

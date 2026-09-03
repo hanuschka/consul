@@ -211,8 +211,19 @@
   color: #4a4a4a;
 }
 
+// The excerpt and the copy button share a row: the button belongs beside the
+// quote rather than under it, because the popup has no height to spare.
+.similar-contributions-match--answer-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+}
+
 .similar-contributions-match--answer {
-  margin: 8px 0 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
   padding-left: 12px;
   border-left: 3px solid #d9d9d9;
   font-size: 14px;
@@ -225,6 +236,36 @@
   font-size: 14px;
   font-style: italic;
   color: #6a6a6a;
+}
+
+// The stand-in for a textless answer takes the quote's place in the row, so it
+// has to behave like the quote rather than like the no-answer line above.
+.similar-contributions-match--answer-without-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  font-style: italic;
+  color: #6a6a6a;
+}
+
+// .kern-btn is sized for form actions, so the icon-only copy button has to be
+// brought down to something that sits next to a 14px quote.
+.similar-contributions-match--copy-answer.kern-btn {
+  flex: 0 0 auto;
+  min-height: 24px;
+  padding: 0 4px;
+
+  .material-symbols-outlined {
+    font-size: 1rem;
+  }
+}
+
+// The icon carries the confirmation because the label is screen-reader only.
+// The kern token is only defined in the admin pack, where this button lives.
+.similar-contributions-match--answer-row.-copied
+  .similar-contributions-match--copy-answer .material-symbols-outlined {
+  color: var(--kern-color-feedback-success, #157a3d);
 }
 
 // button_to wraps the kern button in a form; the form only has to place it.
@@ -371,7 +412,7 @@
   margin-bottom: 6px;
 }
 
-.similar-contributions-match.-popup .similar-contributions-match--answer,
+.similar-contributions-match.-popup .similar-contributions-match--answer-row,
 .similar-contributions-match.-popup .similar-contributions-match--no-answer {
   margin-top: 6px;
 }

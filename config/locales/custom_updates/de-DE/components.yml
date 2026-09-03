@@ -47,6 +47,8 @@ de:
         empty: "Es wurden keine inhaltlich ähnlichen Beiträge gefunden."
       match_item_component:
         no_answer: "Noch keine veröffentlichte Antwort."
+        copy_answer: "Diese Antwort kopieren"
+        answer_without_text: "Antwort ohne Text — nur ein Bild oder eine Einbettung."
       match_status:
         answered: "Beantwortet"
         open: "In Bearbeitung"

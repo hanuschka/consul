@@ -100,6 +100,8 @@ module Budgets
       def publish_checked_investment
         @investment.update!(draft: false, published_at: Time.current)
 
+        SimilarContributions::RecordGroupJob.perform_later(@investment)
+
         Mailer.budget_investment_created(@investment).deliver_later
         NotificationServices::NewBudgetInvestmentNotifier.call(@investment.id) #custom
       end

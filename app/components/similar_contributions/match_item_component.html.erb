@@ -1,0 +1,49 @@
+<li class="<%= css_class %>">
+  <div class="similar-contributions-match--thumb">
+    <%# aria-hidden and out of the tab order: the title beside it is the same
+        link, and a second one only lengthens the path through each match. %>
+    <%= link_to path, target: "_blank", data: { turbo: false },
+          tabindex: -1, aria: { hidden: true } do %>
+      <% if image_attached? %>
+        <%= image_tag image_url, alt: resource.title, loading: "lazy" %>
+      <% else %>
+        <span class="similar-contributions-match--thumb-placeholder">
+          <i class="fas <%= PLACEHOLDER_ICON_CLASS %>"></i>
+        </span>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="similar-contributions-match--body">
+    <%= meta %>
+
+    <% if resource.sentiment.present? || labels.any? %>
+      <div class="similar-contributions-match--tags">
+        <% if resource.sentiment.present? %>
+          <span class="similar-contributions-match--sentiment" style="<%= sentiment_style %>">
+            <%= resource.sentiment.name %>
+          </span>
+        <% end %>
+
+        <% labels.each do |label| %>
+          <span class="similar-contributions-match--label">
+            <i class="fas fa-<%= label.icon %>" aria-hidden="true"></i>
+            <%= label.name %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <p class="similar-contributions-match--title">
+      <%= link_to path, target: "_blank", data: { turbo: false },
+            title: t("shared.target_blank") do %>
+        <%= resource.title %>
+        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+      <% end %>
+    </p>
+
+    <p class="similar-contributions-match--excerpt"><%= excerpt %></p>
+
+    <%= footer %>
+  </div>
+</li>

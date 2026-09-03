@@ -1,6 +1,10 @@
 module SimilarContributions::Scopes
   SETTING_KEY = "general.similar_contributions_check".freeze
 
+  # Everything the admin list renders per match is preloaded here, because the
+  # matches reach the component as records this relation already loaded.
+  PRESENTATION_INCLUDES = [:sentiment, :projekt_labels, { image: { attachment_attachment: :blob } }].freeze
+
   module_function
 
   def enabled_for?(projekt_phase)
@@ -42,11 +46,11 @@ module SimilarContributions::Scopes
       ::Proposal
         .where(projekt_phase_id: projekt.projekt_phases.select(:id))
         .base_selection
-        .includes(:projekt_phase)
+        .includes(:projekt_phase, *PRESENTATION_INCLUDES)
     when ::Budget::Investment
       ::Budget::Investment
         .where(budget_id: projekt.budgets.select(:id))
-        .includes(budget: :projekt_phase)
+        .includes({ budget: :projekt_phase }, *PRESENTATION_INCLUDES)
     else
       resource.class.none
     end

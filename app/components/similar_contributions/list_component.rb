@@ -24,6 +24,10 @@ class SimilarContributions::ListComponent < ApplicationComponent
     end
   end
 
+  def created_at_for(resource)
+    l(resource.created_at, format: :long)
+  end
+
   def answer_excerpt_for(resource)
     attribute = SimilarContributions::Scopes.answer_attribute(resource)
     answer = resource.public_send(attribute)
@@ -34,10 +38,20 @@ class SimilarContributions::ListComponent < ApplicationComponent
   end
 
   def path_for(resource)
+    helpers.similar_contributions_path_for(resource)
+  end
+
+  def exclude_path_for(match_resource)
+    projekt_phase = SimilarContributions::Scopes.projekt_phase_of(resource)
+
     if resource.is_a?(::Budget::Investment)
-      budget_investment_path(resource.budget, resource)
+      exclude_similar_contribution_adm_projekts_phase_budget_investment_path(
+        projekt_phase, resource, excluded_id: match_resource.id
+      )
     else
-      proposal_path(resource)
+      exclude_similar_contribution_adm_projekts_phase_proposal_path(
+        projekt_phase, resource, excluded_id: match_resource.id
+      )
     end
   end
 

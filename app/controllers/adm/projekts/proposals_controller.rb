@@ -18,13 +18,30 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
           format: "jpeg"
         )
 
-        @similar_contributions = ::SimilarContributions::FindForProjekt.call(@proposal)
+        @similar_contributions = ::SimilarContributions::StoredGroup.call(@proposal)
       end
       format.pdf do
         pdf_content = PdfServices::ProposalExporter.call(@proposal, request.host)
         send_data pdf_content.render, filename: "proposal_#{@proposal.id}.pdf", type: "application/pdf", disposition: "inline"
       end
     end
+  end
+
+  def similar_contributions
+    authorize [:adm, @proposal], :show?
+
+    render partial: "adm/projekts/similar_contributions/popup",
+           locals: { matches: ::SimilarContributions::StoredGroup.call(@proposal) }
+  end
+
+  def exclude_similar_contribution
+    authorize [:adm, @proposal], :update?
+
+    excluded = @projekt_phase.projekt.proposals.find(params[:excluded_id])
+    ::SimilarContributions::ExcludeFromGroup.call(@proposal, excluded, admin: current_user)
+
+    redirect_to adm_projekts_phase_proposal_path(@projekt_phase, @proposal),
+                notice: t("adm.projekts.similar_contributions.excluded")
   end
 
   def hide

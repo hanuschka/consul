@@ -1,15 +1,40 @@
 // One width for both states, so the dialog does not resize under the citizen
 // when the spinner gives way to the matches. .shared-modal's own 90vw cap is
 // restated here because the desktop width below replaces it.
-.shared-modal.-similar-contributions {
+// [open] only: a closed <dialog> is hidden by the UA's display: none, which a
+// bare display: flex here would override into a permanently visible panel.
+.shared-modal.-similar-contributions[open] {
+  display: flex;
+  flex-direction: column;
   width: 90vw;
   max-width: 90vw;
+  // unquote() because libsass evaluates min() itself and rejects mixed units;
+  // the browser has to be the one comparing vh against dvh.
+  max-height: unquote("min(90vh, 90dvh)");
+  overflow: hidden;
+}
+
+// The title and the action row stay put while only the match list scrolls, so
+// every wrapper between the dialog and the list has to pass the remaining
+// height on. min-height: 0 is what lets the list shrink below its own content
+// instead of pushing the actions out of the dialog.
+.shared-modal.-similar-contributions[open] .shared-modal--content,
+.shared-modal.-similar-contributions[open] .similar-contributions-check--result:not(:empty) {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.shared-modal.-similar-contributions[open] .modern-modal--header,
+.shared-modal.-similar-contributions[open] .similar-contributions-notice--actions {
+  flex: 0 0 auto;
 }
 
 @media (min-width: 980px) {
-  .shared-modal.-similar-contributions {
-    width: 880px;
-    max-width: 880px;
+  .shared-modal.-similar-contributions[open] {
+    width: 760px;
+    max-width: 760px;
   }
 }
 
@@ -46,40 +71,23 @@
   border-top-color: #1b5e20;
 }
 
-// Many matches must not push the actions out of a 90vh dialog.
-.similar-contributions-notice {
-  max-height: 55vh;
-  overflow-y: auto;
-}
+// ---------------------------------------------------------------------------
+// One match, wherever it is shown. The variants below change only the picture
+// size and the type scale -- never the structure.
+// ---------------------------------------------------------------------------
 
-.similar-contributions-notice--intro {
-  margin: 0 0 20px;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #4a4a4a;
-}
-
-.similar-contributions-notice--list {
+.similar-contributions-matches {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.similar-contributions-notice--item {
+.similar-contributions-match {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 20px 0;
+  padding: 16px 0;
   border-top: 1px solid #e2e2e2;
-
-  &:first-child {
-    padding-top: 0;
-    border-top: none;
-  }
-
-  &:last-child {
-    padding-bottom: 0;
-  }
 
   @media (min-width: 600px) {
     flex-direction: row;
@@ -87,51 +95,82 @@
   }
 }
 
-.similar-contributions-notice--item-image {
+.similar-contributions-match:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.similar-contributions-match:last-child {
+  padding-bottom: 0;
+}
+
+.similar-contributions-match--thumb {
   flex: 0 0 auto;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 6px;
-  overflow: hidden;
 
   @media (min-width: 600px) {
     width: 200px;
   }
 }
 
-// The shared placeholder is drawn for a card-sized image; at thumbnail size
-// its 80px icon leaves no room for anything else.
-.similar-contributions-notice--item-image .resource-image--missing-image-placeholder-icon {
-  margin-top: 0;
-  font-size: 40px;
+.similar-contributions-match--thumb a {
+  display: block;
+  line-height: 0;
 }
 
-.similar-contributions-notice--item-body {
+.similar-contributions-match--thumb img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+
+.similar-contributions-match--thumb-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #f3f4f6;
+  color: #888;
+  font-size: 36px;
+  line-height: 1;
+}
+
+.similar-contributions-match--body {
   flex: 1 1 auto;
   min-width: 0;
 }
 
-.similar-contributions-notice--item-meta {
+.similar-contributions-match--meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 6px;
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: #6a6a6a;
+}
+
+.similar-contributions-match--meta .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.similar-contributions-match--tags {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 8px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-.similar-contributions-notice--item-meta .projekt-labels {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 8px;
-}
-
-.similar-contributions-notice--item-meta .projekt-label {
-  margin: 0;
-}
-
-.similar-contributions-notice--item-sentiment {
+.similar-contributions-match--sentiment,
+.similar-contributions-match--label {
   display: inline-flex;
   align-items: center;
+  gap: 5px;
   padding: 3px 10px;
   border-radius: 5px;
   font-size: 14px;
@@ -139,33 +178,70 @@
   line-height: 1.5;
 }
 
-.similar-contributions-notice--item-title {
+.similar-contributions-match--label {
+  background: #eef1f4;
+  color: #3a3a3a;
+}
+
+.similar-contributions-match--title {
   margin: 0 0 8px;
   font-size: 18px;
   font-weight: 600;
   line-height: 1.3;
 }
 
-.similar-contributions-notice--item-title i {
+.similar-contributions-match--title i {
   margin-left: 4px;
   font-size: 14px;
 }
 
-.similar-contributions-notice--item-excerpt {
+.similar-contributions-match--excerpt {
   margin: 0;
   font-size: 16px;
   line-height: 1.5;
   color: #4a4a4a;
 }
 
-.similar-contributions-notice--item-support {
+.similar-contributions-match--answer {
+  margin: 8px 0 0;
+  padding-left: 12px;
+  border-left: 3px solid #d9d9d9;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+.similar-contributions-match--no-answer {
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-style: italic;
+  color: #6a6a6a;
+}
+
+.similar-contributions-match--exclude {
+  margin-top: 10px;
+}
+
+.similar-contributions-match--exclude input[type="submit"] {
+  margin: 0;
+  padding: 4px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 999px;
+  background: transparent;
+  color: #4a4a4a;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.similar-contributions-match--support {
   margin-top: 14px;
 }
 
 // The shared votes markup is built for a centered sidebar column: here it has
 // to read as one compact row, with the quorum bar and any permission notice
 // still spanning the full width above it.
-.similar-contributions-notice--item-support .supports {
+.similar-contributions-match--support .supports {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -175,24 +251,82 @@
   text-align: left;
 }
 
-.similar-contributions-notice--item-support .supports > *:not(.in-favor):not(.votes):not(.total-supports) {
+.similar-contributions-match--support .supports > *:not(.in-favor):not(.votes):not(.total-supports) {
   flex: 0 0 100%;
 }
 
-.similar-contributions-notice--item-support .supports .in-favor,
-.similar-contributions-notice--item-support .supports .votes,
-.similar-contributions-notice--item-support .supports form {
+.similar-contributions-match--support .supports .in-favor,
+.similar-contributions-match--support .supports .votes,
+.similar-contributions-match--support .supports form {
   margin: 0;
 }
 
-.similar-contributions-notice--item-support .supports .button {
+.similar-contributions-match--support .supports .button {
   margin: 0;
   width: auto;
 }
 
-.similar-contributions-notice--item-support .supports .total-supports {
+.similar-contributions-match--support .supports .total-supports {
   font-size: 14px;
   color: #6a6a6a;
+}
+
+// Variants: the admin detail page reads at a smaller scale than the citizen's
+// modal, and the badge popup smaller still.
+.similar-contributions-match.-list .similar-contributions-match--thumb {
+  @media (min-width: 600px) {
+    width: 120px;
+  }
+}
+
+.similar-contributions-match.-list .similar-contributions-match--title {
+  font-size: 15px;
+}
+
+.similar-contributions-match.-list .similar-contributions-match--excerpt {
+  font-size: 14px;
+}
+
+.similar-contributions-match.-popup {
+  flex-direction: row;
+  gap: 12px;
+  padding: 10px 0;
+  border-top-color: #ededed;
+}
+
+.similar-contributions-match.-popup .similar-contributions-match--thumb {
+  width: 72px;
+}
+
+.similar-contributions-match.-popup .similar-contributions-match--thumb-placeholder {
+  font-size: 24px;
+}
+
+.similar-contributions-match.-popup .similar-contributions-match--title {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.similar-contributions-match.-popup .similar-contributions-match--excerpt {
+  font-size: 14px;
+}
+
+// ---------------------------------------------------------------------------
+// The citizen's modal
+// ---------------------------------------------------------------------------
+
+.similar-contributions-notice {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.similar-contributions-notice--intro {
+  margin: 0 0 20px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #4a4a4a;
 }
 
 .similar-contributions-notice--actions {
@@ -222,6 +356,10 @@
   display: none;
 }
 
+// ---------------------------------------------------------------------------
+// The admin detail page
+// ---------------------------------------------------------------------------
+
 .similar-contributions-list {
   margin-bottom: 24px;
 }
@@ -239,59 +377,72 @@
   color: #4a4a4a;
 }
 
-.similar-contributions-list--items {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
+// ---------------------------------------------------------------------------
+// The admin index badge and its hover panel
+// ---------------------------------------------------------------------------
 
-.similar-contributions-list--item {
-  padding: 12px 0;
-  border-top: 1px solid #e2e2e2;
-}
-
-.similar-contributions-list--item-title {
-  margin: 0 0 4px;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.similar-contributions-list--item-meta {
-  margin: 0 0 8px;
-  font-size: 13px;
-  color: #6a6a6a;
-}
-
-.similar-contributions-list--item-answer {
-  margin: 0;
-  padding-left: 12px;
-  border-left: 3px solid #d9d9d9;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #4a4a4a;
-}
-
-.similar-contributions-list--item-no-answer {
-  margin: 0;
-  font-size: 13px;
-  font-style: italic;
-  color: #6a6a6a;
+// Sits inline after a table title, so it aligns to the title's text rather
+// than to the row box, and keeps its own left margin off the link.
+.similar-contributions-badge-wrapper {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 8px;
 }
 
 .similar-contributions-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
+  gap: 5px;
+  padding: 3px 10px;
   border-radius: 999px;
   background: #eef3ee;
   color: #1b5e20;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
-  line-height: 1.6;
+  line-height: 1.5;
   white-space: nowrap;
+  cursor: default;
 }
+
+.similar-contributions-badge .material-symbols-outlined {
+  font-size: 18px;
+}
+
+// Fixed rather than absolute, and positioned from the badge's own rect by the
+// Stimulus controller: the index table sits in .kern-table-responsive, whose
+// overflow-x makes the block axis scrollable too, so an absolutely positioned
+// panel would be clipped inside the table instead of overlaying it.
+.similar-contributions-badge--popup {
+  position: fixed;
+  z-index: 20;
+  width: 420px;
+  max-width: 80vw;
+  max-height: 420px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px 14px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  white-space: normal;
+  text-align: left;
+}
+
+.similar-contributions-badge--popup.is-loading {
+  min-height: 56px;
+}
+
+.similar-contributions-popup--empty {
+  margin: 0;
+  font-size: 14px;
+  color: #6a6a6a;
+}
+
+// ---------------------------------------------------------------------------
+// The check's own chrome on the form
+// ---------------------------------------------------------------------------
 
 .similar-contributions-check {
   margin: 0;
@@ -299,10 +450,6 @@
 }
 
 .similar-contributions-check--result:empty {
-  display: none;
-}
-
-.similar-contributions-progress[hidden] {
   display: none;
 }
 
@@ -316,6 +463,10 @@
   background: #f6f9f6;
 }
 
+.similar-contributions-progress[hidden] {
+  display: none;
+}
+
 .similar-contributions-progress .shared-loading-spinner {
   border-top-color: #1b5e20;
 }
@@ -325,4 +476,21 @@
   line-height: 1.4;
   color: #4a4a4a;
   text-align: left;
+}
+
+.similar-contributions-decision {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+// .button beats the UA rule for [hidden], so the closed state needs its own
+// declaration.
+.similar-contributions-decision[hidden] {
+  display: none;
+}
+
+.similar-contributions-decision .button {
+  margin: 0;
 }

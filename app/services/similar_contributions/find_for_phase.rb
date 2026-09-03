@@ -31,11 +31,6 @@ class SimilarContributions::FindForPhase < ApplicationService
     def fetch_candidates
       relation = SimilarContributions::Scopes.phase_relation(resource, projekt_phase)
 
-      SimilarContributions::CandidateQuery.call(
-        relation,
-        title: resource.title,
-        description: resource.description,
-        excluded_id: resource.id
-      ).to_a
+      SimilarContributions::CandidateQuery.call(relation, resource).to_a
     end
 end

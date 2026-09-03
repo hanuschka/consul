@@ -3,6 +3,10 @@ class SimilarContributions::CheckJob < ApplicationJob
 
   discard_on ActiveJob::DeserializationError
 
+  # The status is written before the exception goes on, so the citizen waiting
+  # on the modal is released -- but the failure still reaches the worker, where
+  # it is retried and recorded in delayed_jobs.last_error. Swallowing it here
+  # made a broken check indistinguishable from one that found nothing.
   def perform(resource)
     matches = SimilarContributions::FindForPhase.call(resource)
 
@@ -10,11 +14,10 @@ class SimilarContributions::CheckJob < ApplicationJob
       similar_contributions_matches: matches.map { |match| serialized(match) },
       similar_contributions_check_status: "completed"
     )
-  rescue StandardError => e
-    Rails.logger.error("[SimilarContributions] check failed for " \
-                       "#{resource.class}##{resource.id}: #{e.class} - #{e.message}")
-
+  rescue StandardError
     resource.update_columns(similar_contributions_check_status: "failed")
+
+    raise
   end
 
   private

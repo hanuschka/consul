@@ -163,7 +163,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
                              { projekt_phase: [:settings, :projekt] },
                              image: { attachment_attachment: :blob })
         )
-        @similar_contributions_counts = ::SimilarContributions::CandidateCounts.call(@proposals)
+        @similar_contributions_counts = ::SimilarContributions::StoredCounts.call(@proposals)
 
         @title_header_options = { search: true }
         @moderation_header_options = { filter_options: moderation_filter_options }
@@ -326,7 +326,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
                              { budget: { projekt_phase: [:settings, :projekt] } },
                              image: { attachment_attachment: :blob })
         )
-        @similar_contributions_counts = ::SimilarContributions::CandidateCounts.call(@investments)
+        @similar_contributions_counts = ::SimilarContributions::StoredCounts.call(@investments)
 
         boolean_filter_options = [[true, t("shared.true")], [false, t("shared.false")]]
 

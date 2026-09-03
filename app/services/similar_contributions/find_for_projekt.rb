@@ -32,11 +32,6 @@ class SimilarContributions::FindForProjekt < ApplicationService
     def fetch_candidates
       relation = SimilarContributions::Scopes.projekt_relation(resource, projekt)
 
-      SimilarContributions::CandidateQuery.call(
-        relation,
-        title: resource.title,
-        description: resource.description,
-        excluded_id: resource.id
-      ).to_a
+      SimilarContributions::CandidateQuery.call(relation, resource).to_a
     end
 end

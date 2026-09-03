@@ -1,0 +1,11 @@
+<% if matches.empty? %>
+  <p class="similar-contributions-popup--empty">
+    <%= t("adm.projekts.similar_contributions.popup.empty") %>
+  </p>
+<% else %>
+  <ul class="similar-contributions-matches">
+    <% matches.each do |match| %>
+      <%= render SimilarContributions::MatchItemComponent.new(match.resource, variant: :popup) %>
+    <% end %>
+  </ul>
+<% end %>

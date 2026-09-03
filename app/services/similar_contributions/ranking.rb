@@ -34,13 +34,12 @@ class SimilarContributions::Ranking < ApplicationService
     @projekt_phase = projekt_phase
   end
 
+  # A provider error is not an empty answer: it goes on to the caller, which is
+  # a job that records it and retries.
   def call
     return [] if candidates.empty?
 
     build_matches(cached_ranking)
-  rescue StandardError => e
-    Rails.logger.error("[SimilarContributions] #{feature} failed: #{e.class} - #{e.message}")
-    []
   end
 
   private

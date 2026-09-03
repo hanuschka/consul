@@ -1,53 +1,22 @@
 <div class="modern-modal--header">
-  <h3><%= t(".title") %></h3>
+  <h3><%= t(".title", count: matches.size) %></h3>
 </div>
 
 <div class="similar-contributions-notice">
   <p class="similar-contributions-notice--intro"><%= t(".intro", count: matches.size) %></p>
 
-  <ul class="similar-contributions-notice--list">
+  <ul class="similar-contributions-matches">
     <% matches.each do |match| %>
-      <li class="similar-contributions-notice--item">
-        <% if image_visible_for?(match.resource) %>
-          <div class="similar-contributions-notice--item-image">
-            <%= render image_component_for(match.resource) %>
-          </div>
-        <% end %>
-
-        <div class="similar-contributions-notice--item-body">
-          <% if match.resource.sentiment.present? || match.resource.labels_available? %>
-            <div class="similar-contributions-notice--item-meta">
-              <% if match.resource.sentiment.present? %>
-                <span class="similar-contributions-notice--item-sentiment"
-                      style="<%= sentiment_style_for(match.resource) %>">
-                  <%= match.resource.sentiment.name %>
-                </span>
-              <% end %>
-
-              <% if match.resource.labels_available? %>
-                <%= render Shared::ProjektLabelsComponent.new(resource: match.resource) %>
-              <% end %>
-            </div>
-          <% end %>
-
-          <h4 class="similar-contributions-notice--item-title">
-            <%= link_to path_for(match.resource), target: "_blank",
-                  title: t("shared.target_blank") do %>
-              <%= match.resource.title %>
-              <i class="fas fa-external-link-alt" aria-hidden="true"></i>
-            <% end %>
-          </h4>
-
-          <p class="similar-contributions-notice--item-excerpt"><%= excerpt_for(match.resource) %></p>
-
-          <% if supporting_available?(match.resource) %>
-            <div class="similar-contributions-notice--item-support"
+      <%= render SimilarContributions::MatchItemComponent.new(match.resource, variant: :notice) do |item| %>
+        <% if supporting_available?(match.resource) %>
+          <% item.with_footer do %>
+            <div class="similar-contributions-match--support"
                  id="<%= votes_container_id(match.resource) %>">
               <%= render votes_component_for(match.resource) %>
             </div>
           <% end %>
-        </div>
-      </li>
+        <% end %>
+      <% end %>
     <% end %>
   </ul>
 </div>

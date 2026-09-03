@@ -23,9 +23,12 @@
       ) %>
     </td>
   <% end %>
-  <th scope="row" class="kern-table__header" data-field="title"><%= link_to adm_projekts_phase_proposal_path(projekt_phase, proposal), class: "kern-link", data: { turbo_frame: "_top" } do %><%= proposal.title %><% end %><%= similar_contributions_badge(similar_contributions_count_for(local_assigns[:similar_contributions_counts], proposal)) %></th>
+  <th scope="row" class="kern-table__header" data-field="title"><%= link_to adm_projekts_phase_proposal_path(projekt_phase, proposal), class: "kern-link", data: { turbo_frame: "_top" } do %><%= proposal.title %><% end %><%= similar_contributions_badge(
+    similar_contributions_count_for(local_assigns[:similar_contributions_counts], proposal),
+    popup_url: similar_contributions_adm_projekts_phase_proposal_path(projekt_phase, proposal)
+  ) %></th>
   <td class="kern-table__cell" data-field="moderation_status"><%= moderation_status(proposal) %></td>
-  <td class="kern-table__cell" data-field="author"><%= proposal.author.username %></td>
+  <td class="kern-table__cell" data-field="author"><%= proposal.author&.username %></td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
       <% actions.with_action(label: t("adm.projekts.phases.proposals.table.view"), url: adm_projekts_phase_proposal_path(projekt_phase, proposal), icon: "visibility", data: { turbo_frame: "_top" }) %>

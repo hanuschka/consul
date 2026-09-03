@@ -28,6 +28,9 @@ application.register("adm--ai-question-row", AdmAiQuestionRowController)
 import AdmMenuPopoverController from "./adm/menu_popover_controller"
 application.register("adm--menu-popover", AdmMenuPopoverController)
 
+import AdmSimilarContributionsPopupController from "./adm/similar_contributions_popup_controller"
+application.register("adm--similar-contributions-popup", AdmSimilarContributionsPopupController)
+
 
 import AdmVisibilityGroupController from "./adm/visibility_group_controller"
 application.register("adm--visibility-group", AdmVisibilityGroupController)

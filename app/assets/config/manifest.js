@@ -20,5 +20,8 @@
 
 //= link packs/studio.js
 //= link packs/studio_vendor.js
+//= link packs/charts_vendor.js
 
 //= link cross_pack.css
+//= link ckeditor5.css
+//= link font_awesome.css

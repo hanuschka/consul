@@ -28,14 +28,6 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
                       "can plausibly happen next from here. If there is genuinely no next " \
                       "step, answer in plain text again.".freeze
 
-  # The reason this service can be worth moving to the Responses API at all:
-  # from GPT-5.4 onward Chat Completions will not call tools with reasoning
-  # switched off, so on that transport every routing decision — which of these
-  # tools answers this sentence — pays for reasoning nobody asked for while a
-  # citizen waits. Raise this to "low" if the routing gets worse; that is a far
-  # cheaper move than going back.
-  REASONING_EFFORT = "none".freeze
-
   # One turn, whichever transport answered it. `chat` is set on the ruby_llm
   # path and `chain_turn` on the Responses one, and the state writer picks by
   # which of the two it was handed — everything between the request and the
@@ -86,9 +78,16 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # Which transport answers is a setting, so that a turn that goes wrong on the
     # newer one is a setting away from the older rather than a deploy away.
     def ask
-      return openai_api_turn if ::OpenaiApi::Transport.enabled?
+      return openai_api_turn if profile.responses?
 
       ruby_llm_turn
+    end
+
+    # Read once per turn so the transport that answers, the model it is asked
+    # for and the effort it is asked with cannot disagree with each other
+    # mid-conversation when the settings change under a running worker.
+    def profile
+      @profile ||= ::Ai::ModelProfile.fast
     end
 
     def ruby_llm_turn
@@ -101,10 +100,11 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     end
 
     def build_chat
-      chat = ::Ai::RubyLlmFactory.fast_chat(REQUEST_TIMEOUT_SECONDS)
+      chat = ::Ai::RubyLlmFactory.chat_for(
+        profile, request_timeout: REQUEST_TIMEOUT_SECONDS, tools: tools
+      )
 
       chat.with_instructions(instructions)
-      ::Ai::RubyLlmFactory.attach_tools(chat, *tools)
       chat.on_tool_call { |tool_call| track_tool_call(tool_call) }
 
       state.replay_into(chat)
@@ -139,13 +139,13 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       tool_loop = ::OpenaiApi::ToolLoop.new(
         tools: tools,
         tool_definitions: tool_definitions,
-        model: ::Ai::Settings.fast_model,
+        model: profile.model,
         instructions: instructions,
         input: chain.input_for(@inbound_text),
         feature: ::AiUsageRecord::UNKNOWN_FEATURE,
         timeout_seconds: REQUEST_TIMEOUT_SECONDS,
         previous_response_id: chain.previous_response_id,
-        reasoning_effort: REASONING_EFFORT
+        reasoning_effort: profile.reasoning_effort
       ) { |function_call| track_tool_call(function_call) }
 
       tool_loop.call

@@ -25,6 +25,40 @@ en:
             No custom API key is stored. The default API key from demokratie.today does not work with a custom API endpoint or a provider other than the default. Please store your own API key.
           inline: >
             Required because a custom API endpoint or a provider other than the default is used. Please store your own API key.
+      resolved_profile:
+        title: Active configuration
+        intro: >
+          How the settings below currently resolve. These values apply immediately to every AI feature on the platform.
+        provider: Provider
+        endpoint: API endpoint
+        endpoint_direct: Directly at the provider
+        transport: Interface
+        transports:
+          responses: OpenAI Responses
+          ruby_llm: Chat Completions
+        reasoning: Reasoning effort
+        reasoning_unset: Not sent
+        model_missing: Not configured
+        table_caption: Model per tier
+        columns:
+          tier: Tier
+          used_for: Used for
+          model: Model
+          tools: Function calls
+        tiers:
+          default:
+            name: Standard
+            used_for: Evaluations, drafted text and content blocks
+          fast:
+            name: Fast
+            used_for: WhatsApp assistant and short answers
+          ultrafast:
+            name: Ultra fast
+            used_for: Similarity checks on contributions
+        tools_supported: Supported
+        tools_unsupported: Not supported
+        one_model_note: >
+          All three tiers run on the same model because a custom provider, endpoint or model is configured. Without those, the platform would pick between three models depending on the task.
       index:
         title: AI settings
         default_model_info:

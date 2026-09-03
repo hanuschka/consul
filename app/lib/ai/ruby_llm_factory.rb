@@ -1,52 +1,61 @@
 module Ai::RubyLlmFactory
-  # Chat Completions refuses function tools from the GPT-5.5 generation onward
-  # unless reasoning is explicitly switched off, and a chat that never names an
-  # effort gets the model's own default rather than nothing — so on that
-  # transport the tools have to travel with the one value that makes them legal.
-  TOOL_REASONING_EFFORT = "none".freeze
+  # The one builder. A chat is pinned to the model its profile chose and carries
+  # the tools it was asked for in the same call, so the model it talks to and the
+  # effort those tools are named with are always answers from the same profile —
+  # a caller holding the two apart is a caller that can let them drift.
+  def self.chat_for(
+    profile, feature: AiUsageRecord::UNKNOWN_FEATURE, request_timeout: nil, tools: []
+  )
+    chat = build_chat(
+      context_for(request_timeout), feature: feature, gpt_model: profile.model
+    )
+
+    return chat if tools.blank?
+
+    attach_tools(chat, tools, profile)
+  end
 
   def self.chat(feature: AiUsageRecord::UNKNOWN_FEATURE)
-    build_chat(init, feature: feature)
+    chat_for(::Ai::ModelProfile.default, feature: feature)
   end
 
-  def self.chat_with_request_timeout(seconds, feature: AiUsageRecord::UNKNOWN_FEATURE, gpt_model: nil)
-    build_chat(context_with_request_timeout(seconds), feature: feature, gpt_model: gpt_model)
+  def self.chat_with_json_output(
+    output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE, request_timeout: nil
+  )
+    chat_for(::Ai::ModelProfile.default, feature: feature, request_timeout: request_timeout)
+      .with_schema(output_schema)
   end
 
-  def self.chat_with_json_output(output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE,
-                                 request_timeout: nil, gpt_model: nil)
-    base =
-      if request_timeout.present?
-        chat_with_request_timeout(request_timeout, feature: feature, gpt_model: gpt_model)
-      else
-        build_chat(init, feature: feature, gpt_model: gpt_model)
-      end
+  def self.context_for(request_timeout)
+    return init if request_timeout.blank?
 
-    base.with_schema(output_schema)
+    context_with_request_timeout(request_timeout)
   end
 
-  # The cheap model on a bounded clock, for the short judgements made while
-  # someone is waiting on the other end of a chat — routing a message, ranking
-  # a handful of titles, rewording one line. Three callers asked for exactly
-  # this pairing by hand before it had a name.
-  def self.fast_chat(timeout_seconds, feature: AiUsageRecord::UNKNOWN_FEATURE)
-    chat_with_request_timeout(
-      timeout_seconds,
-      feature: feature,
-      gpt_model: Ai::Settings.fast_model
-    )
-  end
+  # Kept apart from chat_for only because the warning below belongs next to the
+  # attachment rather than in the middle of building a chat: whether an effort
+  # may be named alongside tools is the profile's answer, not the caller's, and
+  # a caller that got it wrong only found out from a 400 in production.
+  def self.attach_tools(chat, tools, profile)
+    warn_unsupported_tools(profile)
 
-  # The place tools get attached, rather than each caller reaching for
-  # with_tools: the effort above is a property of asking OpenAI for tools at
-  # all, and a caller that forgets it only finds out from a 400 in production.
-  # Every other provider rejects the key, so they keep the chat unchanged.
-  def self.attach_tools(chat, *tools)
     chat.with_tools(*tools)
 
-    return chat if Ai::Settings.current_llm_provider != "openai"
+    return chat if profile.reasoning_effort.blank?
 
-    chat.with_thinking(effort: TOOL_REASONING_EFFORT)
+    chat.with_thinking(effort: profile.reasoning_effort)
+  end
+
+  # Logged rather than enforced: the registry is a snapshot shipped with the
+  # gem, so a model missing from it is far likelier to be newer than the
+  # snapshot than to be one that cannot call tools at all.
+  def self.warn_unsupported_tools(profile)
+    return if profile.tools_supported?
+
+    Rails.logger.warn(
+      "[Ai::RubyLlmFactory] #{profile.model} is listed without function " \
+      "calling; attaching tools anyway"
+    )
   end
 
   # Embeddings are a provider call like any other, so they are wired here too

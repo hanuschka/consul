@@ -1,9 +1,12 @@
 class SimilarContributions::DecisionComponent < ApplicationComponent
   include SimilarContributionsCheckState
 
-  attr_reader :resource
+  MATCHES_ID = "similar-contributions-decision-matches".freeze
 
-  def initialize(resource)
+  attr_reader :resource, :matches
+
+  def initialize(resource, matches: [])
     @resource = resource
+    @matches = Array(matches)
   end
 end

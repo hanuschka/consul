@@ -26,7 +26,9 @@ en:
       progress_component:
         checking: "Checking proposal …"
       decision_component:
+        intro: "Please check whether your concern is already covered there before submitting your contribution."
         show_duplicates: "Show similar contributions"
+        hide_duplicates: "Hide similar contributions"
         submit_anyway: "Submit anyway"
       notice_component:
         title:

@@ -25,6 +25,40 @@ de:
             Es ist kein eigener API-Schlüssel hinterlegt. Der Standard-API-Schlüssel von demokratie.today funktioniert nicht mit einem benutzerdefinierten API-Endpunkt oder einem anderen Anbieter als dem Standard. Bitte hinterlegen Sie Ihren eigenen API-Schlüssel.
           inline: >
             Erforderlich, da ein benutzerdefinierter API-Endpunkt oder ein anderer Anbieter als der Standard verwendet wird. Bitte hinterlegen Sie Ihren eigenen API-Schlüssel.
+      resolved_profile:
+        title: Aktive Konfiguration
+        intro: >
+          So werden die Einstellungen unten derzeit aufgelöst. Diese Werte gelten sofort für alle KI-Funktionen der Plattform.
+        provider: Anbieter
+        endpoint: API-Endpunkt
+        endpoint_direct: Direkt beim Anbieter
+        transport: Schnittstelle
+        transports:
+          responses: OpenAI Responses
+          ruby_llm: Chat Completions
+        reasoning: Reasoning-Aufwand
+        reasoning_unset: Wird nicht gesendet
+        model_missing: Nicht konfiguriert
+        table_caption: Modell je Stufe
+        columns:
+          tier: Stufe
+          used_for: Verwendet für
+          model: Modell
+          tools: Funktionsaufrufe
+        tiers:
+          default:
+            name: Standard
+            used_for: Auswertungen, Textentwürfe und Inhaltsblöcke
+          fast:
+            name: Schnell
+            used_for: WhatsApp-Assistent und kurze Antworten
+          ultrafast:
+            name: Ultraschnell
+            used_for: Ähnlichkeitsprüfung von Beiträgen
+        tools_supported: Unterstützt
+        tools_unsupported: Nicht unterstützt
+        one_model_note: >
+          Alle drei Stufen laufen auf demselben Modell, weil ein eigener Anbieter, Endpunkt oder ein eigenes Modell konfiguriert ist. Ohne diese Angaben würde die Plattform je Aufgabe zwischen drei Modellen wählen.
       index:
         title: KI-Einstellungen
         default_model_info:

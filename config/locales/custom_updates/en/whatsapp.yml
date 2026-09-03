@@ -86,6 +86,9 @@ en:
       compliance:
         disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
         opted_out: Understood, you won't receive any more messages from us.
+        opted_out_reminder: >-
+          You unsubscribed from our messages, so I can't help you here. Write %{keyword}
+          if you would like to receive messages again.
       # The block Whatsapp::DraftPreview puts in front of a citizen before they
       # confirm a contribution and again once it is online. Only the labels are
       # here: the title and the text are the citizen's own and are copied out of

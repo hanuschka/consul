@@ -167,6 +167,30 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       }
     end
 
+    # A message WhatsApp refused. It is recorded as a failed row and comes back
+    # like a delivered one, so a tool that halts on it ends the turn on
+    # something the citizen never saw — and the stored history then says the bot
+    # answered, which the next turn reads back as fact.
+    #
+    # Handed to the model rather than to the citizen because it is the model
+    # that can act on it: the body it wrote is the part that has to change, and
+    # it has one more call to say the same thing in less. A closed service
+    # window is not this case and never reaches here — nothing can be delivered
+    # until the citizen writes again, so there is nothing to retry.
+    def send_refused_error
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :send_refused, conversation: conversation, step: conversation.step
+      )
+
+      {
+        error: "WhatsApp refused that message, so the citizen has not seen it. The likeliest " \
+               "reason is length: a message with buttons holds " \
+               "#{::Whatsapp::MAX_INTERACTIVE_BODY_LENGTH} characters. Say the same thing in " \
+               "markedly fewer words and send it once more. Do not add anything to it, and do " \
+               "not tell the citizen a message failed."
+      }
+    end
+
     def unknown_phase_error
       { error: "No open participation phase with that id. Call list_open_phases first." }
     end

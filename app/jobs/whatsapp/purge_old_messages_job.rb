@@ -1,5 +1,6 @@
 class Whatsapp::PurgeOldMessagesJob < ApplicationJob
   queue_as :default
+  queue_with_priority ::Whatsapp::BULK_PRIORITY
 
   def perform
     purge_messages

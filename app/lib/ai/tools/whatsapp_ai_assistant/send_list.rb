@@ -53,13 +53,15 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
 
     return unusable_rows_error if listed.empty?
 
-    ::Whatsapp::Send.list(
+    message = ::Whatsapp::Send.list(
       account: account,
       body: body.strip,
       button_label: ::Whatsapp::AssistantActions.truncated(button_label).presence ||
                     I18n.t("whatsapp.bot.buttons.choose"),
       rows: listed
     )
+
+    return send_refused_error if ::Whatsapp::Send.refused?(message)
 
     halt("Sent a list of #{listed.size} rows: #{listed.map { |row| row[:id] }.join(", ")}.")
   end

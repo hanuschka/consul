@@ -87,12 +87,35 @@ class Whatsapp::Inbound::IngestWebhookService < ApplicationService
       # the citizen is still inside it, silently dropping every reply.
       account.update!(last_inbound_at: latest_inbound_at(account, message))
 
+      return if unanswerable?(inbound_message)
+
       Whatsapp::ProcessInboundMessageJob.perform_later(inbound_message.id, message)
     rescue ActiveRecord::RecordNotUnique
       Rails.logger.info("[Whatsapp] duplicate delivery for #{message['id']} ignored")
     rescue StandardError => e
       Rails.logger.error("[Whatsapp] ingest failed for #{message['id']}: #{e.class} - #{e.message}")
       Sentry.capture_exception(e, extra: { wa_message_id: message["id"] })
+    end
+
+    # A delivery retried for longer than the service window is recorded and then
+    # left alone. WhatsApp measures the window from when the citizen sent the
+    # message, so every free-form reply to this one would be refused: the turn
+    # would run, spend a model call, and have each of its sends return nil from
+    # `deliver_within_service_window` in turn. Said once here, where it is a
+    # fact about the delivery, rather than as an invisible skip inside a reply
+    # nobody can receive.
+    def unanswerable?(inbound_message)
+      sent_at = inbound_message.sent_at
+
+      return false if sent_at.blank?
+      return false if sent_at > ::Whatsapp::SERVICE_WINDOW.ago
+
+      Rails.logger.warn(
+        "[Whatsapp] not answering #{inbound_message.wa_message_id}: it was sent " \
+        "#{sent_at.iso8601}, past the service window, so no reply can be delivered"
+      )
+
+      true
     end
 
     def find_or_create_account(wa_id, contacts)

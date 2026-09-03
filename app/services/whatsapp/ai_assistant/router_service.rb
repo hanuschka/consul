@@ -19,6 +19,12 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
   EMPTY_ANSWER_ERROR = "assistant produced no reply".freeze
 
+  # Its own wording rather than the empty one's: the model answered and the
+  # provider was fine, and what failed was WhatsApp taking the message. Sharing
+  # a string with a blank completion would have the two indistinguishable in
+  # Sentry and in the log, which is the whole reason this turn is reported.
+  REFUSED_MESSAGE_ERROR = "whatsapp refused the assistant's reply".freeze
+
   # Deliberately says what to do and not why: it is stored in the conversation like
   # any other line, so the next turn reads it too, and a paragraph of reasoning here
   # would be a paragraph the model re-reads on every message for the rest of the
@@ -63,6 +69,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # retry asking on top of the inbound and the empty answer it is replacing —
     # which is why the rescue below returns without persisting either.
     return ServiceResult.failure(error: EMPTY_ANSWER_ERROR) if outcome == :empty
+    return ServiceResult.failure(error: REFUSED_MESSAGE_ERROR) if outcome == :refused
 
     persist(turn)
 
@@ -232,9 +239,15 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       # Whatsapp::Send puts the main menu on every interactive message, so this is
       # what makes "every reply has something to tap" true of the one path that
       # composes no buttons at all.
-      ::Whatsapp::Send.buttons(
+      message = ::Whatsapp::Send.buttons(
         account: @conversation.whatsapp_account, body: body, buttons: []
       )
+
+      # A refused send is not an answer. Reported as its own failure so the
+      # caller says so and offers the retry pill, and — because the failure
+      # comes back before the turn is persisted — the stored history does not
+      # end on a reply the citizen never saw.
+      return :refused if ::Whatsapp::Send.refused?(message)
 
       :answered
     end

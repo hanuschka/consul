@@ -1,5 +1,6 @@
 class Whatsapp::ConfirmLinkReplyJob < ApplicationJob
   queue_as :default
+  queue_with_priority ::Whatsapp::REPLY_PRIORITY
 
   # The messages that follow a link attempt, sent out of the request that made
   # it. Both are Graph API calls behind a 20-second timeout and three retries,

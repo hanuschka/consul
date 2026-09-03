@@ -65,12 +65,14 @@ module Whatsapp::Send
   end
 
   def deliver_buttons(account:, body:, offered:, header_image_url:)
+    fitting = within_interactive_body(account: account, body: body)
+
     deliver_within_service_window(
-      account: account, kind: "interactive", body: body
+      account: account, kind: "interactive", body: fitting
     ) do |messages|
       messages.send_buttons(
         to: account.wa_id,
-        body: body,
+        body: fitting,
         buttons: offered,
         header_image_url: header_image_url
       )
@@ -83,12 +85,14 @@ module Whatsapp::Send
   def buttons_with_media_header(account:, body:, buttons:, header_media_id:)
     offered = with_main_menu(account: account, buttons: buttons)
 
+    fitting = within_interactive_body(account: account, body: body)
+
     message = deliver_within_service_window(
-      account: account, kind: "interactive", body: body
+      account: account, kind: "interactive", body: fitting
     ) do |messages|
       messages.send_buttons_with_media_header(
         to: account.wa_id,
-        body: body,
+        body: fitting,
         buttons: offered,
         header_media_id: header_media_id
       )
@@ -170,13 +174,25 @@ module Whatsapp::Send
     message.present? && message.status != "failed"
   end
 
+  # A message WhatsApp rejected, as distinct from one that was never attempted:
+  # a refused send is recorded as a failed row and returns like any other, so a
+  # caller that does not ask reports a reply the citizen never saw. A closed
+  # service window returns nil instead and is not a refusal — nothing can be
+  # delivered at all until the citizen writes again, so there is nothing for a
+  # caller to do differently.
+  def refused?(message)
+    message.present? && message.status == "failed"
+  end
+
   def list(account:, body:, button_label:, rows:)
     listed = with_main_menu_row(account: account, rows: rows)
 
+    fitting = within_interactive_body(account: account, body: body)
+
     message = deliver_within_service_window(
-      account: account, kind: "interactive", body: body
+      account: account, kind: "interactive", body: fitting
     ) do |messages|
-      messages.send_list(to: account.wa_id, body: body, button_label: button_label, rows: listed)
+      messages.send_list(to: account.wa_id, body: fitting, button_label: button_label, rows: listed)
     end
 
     remember_confirmations(account: account, entries: listed, message: message)
@@ -187,11 +203,13 @@ module Whatsapp::Send
   def sectioned_list(account:, body:, button_label:, sections:)
     listed = with_main_menu_section(account: account, sections: sections)
 
+    fitting = within_interactive_body(account: account, body: body)
+
     message = deliver_within_service_window(
-      account: account, kind: "interactive", body: body
+      account: account, kind: "interactive", body: fitting
     ) do |messages|
       messages.send_sectioned_list(
-        to: account.wa_id, body: body, button_label: button_label, sections: listed
+        to: account.wa_id, body: fitting, button_label: button_label, sections: listed
       )
     end
 
@@ -205,14 +223,22 @@ module Whatsapp::Send
   # The native location picker. Recorded as an interactive message like every
   # other tappable one, so the dialog history in /adm reads in order.
   def location_request(account:, body:)
-    deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
-      messages.send_location_request(to: account.wa_id, body: body)
+    fitting = within_interactive_body(account: account, body: body)
+
+    deliver_within_service_window(
+      account: account, kind: "interactive", body: fitting
+    ) do |messages|
+      messages.send_location_request(to: account.wa_id, body: fitting)
     end
   end
 
   def cta_url(account:, body:, button_label:, url:)
-    deliver_within_service_window(account: account, kind: "interactive", body: body) do |messages|
-      messages.send_cta_url(to: account.wa_id, body: body, button_label: button_label, url: url)
+    fitting = within_interactive_body(account: account, body: body)
+
+    deliver_within_service_window(
+      account: account, kind: "interactive", body: fitting
+    ) do |messages|
+      messages.send_cta_url(to: account.wa_id, body: fitting, button_label: button_label, url: url)
     end
   end
 
@@ -465,6 +491,29 @@ module Whatsapp::Send
     end
   end
 
+  # ── A body too long for one interactive message ─────────────────────────
+  # An interactive message is one bubble with its buttons attached, so a body
+  # WhatsApp will not take cannot be split the way a text message can: what
+  # does not fit goes ahead of it as ordinary text and the interactive message
+  # keeps the tail, which is where the buttons belong.
+  #
+  # Nothing is cut. The alternative is not a shorter message — it is WhatsApp
+  # refusing the whole send over its 1024-character body limit, which is
+  # recorded as a failed row and reaches the citizen as no reply at all.
+  #
+  # Placed here rather than at each caller for the same reason the main-menu
+  # pill is: it is a property of the transport, so a tool added next month
+  # inherits it without knowing it exists.
+  def within_interactive_body(account:, body:)
+    chunks = ::Whatsapp::MessageBlock.chunks(
+      body.to_s, limit: ::Whatsapp::MAX_INTERACTIVE_BODY_LENGTH
+    )
+
+    chunks[..-2].to_a.each { |chunk| text(account: account, body: chunk) }
+
+    chunks.last.to_s
+  end
+
   def deliver_within_service_window(account:, kind:, body:, &block)
     return if !Whatsapp::ServiceWindow.deliverable?(account, kind)
 
@@ -486,5 +535,6 @@ module Whatsapp::Send
   private_class_method :recovery_buttons, :deliver_within_service_window, :deliver
   private_class_method :with_main_menu, :with_main_menu_row, :with_main_menu_section
   private_class_method :trimmed_sections, :main_menu_pill, :main_menu_button?
-  private_class_method :deliver_buttons, :remember_confirmations, :irreversible_ids, :delivered?
+  private_class_method :deliver_buttons, :remember_confirmations, :irreversible_ids
+  private_class_method :within_interactive_body, :delivered?
 end

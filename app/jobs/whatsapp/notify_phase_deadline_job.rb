@@ -1,5 +1,6 @@
 class Whatsapp::NotifyPhaseDeadlineJob < ApplicationJob
   queue_as :default
+  queue_with_priority ::Whatsapp::BULK_PRIORITY
 
   # Catalog B10 and B11. Runs daily and asks the same question twice: which
   # proposal phases end soon, and which ended yesterday.

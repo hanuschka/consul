@@ -39,6 +39,12 @@ module Whatsapp::AiAssistant::DecisionLog
   # `card_repeat_refused` is a projekt card refused because the citizen had just
   # tapped that card's own "view projekt" pill — the loop the pill used to produce,
   # now counted instead of sent.
+  #
+  # `send_refused` is a reply WhatsApp rejected outright. It is the one failure
+  # that used to leave no trace anywhere: the send is recorded as a failed row,
+  # the turn was stored as though it had answered, and the citizen saw nothing —
+  # so a rate here is how a body the model writes too long for one message, or a
+  # number that has blocked us, becomes visible at all.
   EVENTS = %i[
     tool_called
     action_dropped
@@ -50,6 +56,7 @@ module Whatsapp::AiAssistant::DecisionLog
     start_over
     assistant_unavailable
     card_repeat_refused
+    send_refused
   ].freeze
 
   COUNTER_TTL = 40.days

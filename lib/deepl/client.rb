@@ -25,6 +25,11 @@ class Deepl::Client
     OpenSSL::SSL::SSLError
   ].freeze
 
+  def initialize(open_timeout: nil, read_timeout: nil)
+    @open_timeout = open_timeout
+    @read_timeout = read_timeout
+  end
+
   def translate(texts, target_locale:, source_locale: nil, **options)
     values = Array(texts)
     pending = values.each_with_index.reject { |text, _index| text.to_s.blank? }
@@ -138,6 +143,8 @@ class Deepl::Client
     def execute(verb, path, body:)
       request_options = { headers: headers }
       request_options[:body] = body unless body.nil?
+      request_options[:open_timeout] = @open_timeout if @open_timeout
+      request_options[:read_timeout] = @read_timeout if @read_timeout
 
       self.class.public_send(verb, "#{Deepl.host}#{path}", **request_options)
     end

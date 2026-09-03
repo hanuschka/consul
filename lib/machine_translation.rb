@@ -23,6 +23,30 @@ module MachineTranslation
     target_locales.select { |locale| Deepl::Languages.supported?(locale) }
   end
 
+  def self.placeholders_intact?(source, output)
+    return false if source.scan(INTERPOLATION).sort != output.scan(INTERPOLATION).sort
+
+    glued(output).subset?(glued(source))
+  end
+
+  def self.glued(text)
+    text.enum_for(:scan, /(#{INTERPOLATION})(?=[[:alnum:]])/)
+      .map { Regexp.last_match(1) }.to_set
+  end
+
+  def self.store_content(key, value, locale)
+    content = find_or_create_content(key)
+    return true if content.translations.exists?(locale: locale.to_s)
+
+    Globalize.with_locale(locale) { content.update!(value: value) }
+  end
+
+  def self.find_or_create_content(key)
+    I18nContent.find_or_create_by!(key: key)
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
+    I18nContent.find_by!(key: key)
+  end
+
   PLURAL_CATEGORIES = %i[zero one two few many other].freeze
   SETTING_KEY = "extended_feature.general.machine_translation".freeze
   SUPPRESSION_KEY = :machine_translation_suppressed

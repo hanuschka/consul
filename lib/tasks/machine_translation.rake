@@ -95,4 +95,13 @@ namespace :machine_translation do
     Rails.cache.clear
     puts "  cache cleared"
   end
+
+  desc "Delete stored setting translations whose source value has since changed"
+  task setting_cleanup: :environment do
+    keys = MachineTranslation::SettingText.stale_content_keys
+    I18nContent.where(key: keys).destroy_all
+    MachineTranslation::ChromeStore.reset!
+
+    puts "  deleted #{keys.size} orphaned setting translations"
+  end
 end

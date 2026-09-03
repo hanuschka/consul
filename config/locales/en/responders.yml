@@ -30,6 +30,7 @@ en:
         topic: "Topic updated successfully."
         valuator_group: "Valuator group updated successfully"
         translation: "Translation updated successfully"
+        translation_locked: "Machine translation is active, so the translations for %{locales} were kept."
       destroy:
         budget_investment: "Investment project deleted succesfully."
         error: "Could not delete"

@@ -26,7 +26,19 @@ module MachineTranslation
     end
 
     def chrome_rows_per_locale
-      I18nContent.translation_class.unscoped.group(:locale).count.transform_keys(&:to_s)
+      I18nContent.translation_class.unscoped
+        .where.not(i18n_content_id: setting_content_ids)
+        .group(:locale).count.transform_keys(&:to_s)
+    end
+
+    def setting_rows_per_locale
+      I18nContent.translation_class.unscoped
+        .where(i18n_content_id: setting_content_ids)
+        .group(:locale).count.transform_keys(&:to_s)
+    end
+
+    def setting_content_ids
+      I18nContent.where("key LIKE ?", "#{SettingText::NAMESPACE}.%").select(:id)
     end
 
     def pending_count

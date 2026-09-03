@@ -44,6 +44,7 @@ en:
           locale: Language
           rows: Content
           chrome_rows: Interface text
+          setting_rows: Settings text
           actions: Actions
           purge: Delete
           purge_confirm: Delete all machine translations for %{language}? Human-written content is kept.

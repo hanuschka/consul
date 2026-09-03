@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_26_120000) do
+ActiveRecord::Schema.define(version: 2026_09_03_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1241,12 +1241,14 @@ ActiveRecord::Schema.define(version: 2026_08_26_120000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "value"
+    t.index ["i18n_content_id", "locale"], name: "index_i18n_content_translations_on_content_and_locale", unique: true
     t.index ["i18n_content_id"], name: "index_i18n_content_translations_on_i18n_content_id"
     t.index ["locale"], name: "index_i18n_content_translations_on_locale"
   end
 
   create_table "i18n_contents", id: :serial, force: :cascade do |t|
     t.string "key"
+    t.index ["key"], name: "index_i18n_contents_on_key", unique: true
   end
 
   create_table "idea_categories", force: :cascade do |t|

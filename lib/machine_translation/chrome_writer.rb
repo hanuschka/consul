@@ -1,7 +1,5 @@
 class MachineTranslation::ChromeWriter
   MAX_COUNT_PROBE = 200
-  MARKUP = %r{<[a-zA-Z/!]}
-  RETRY_MODE = { plain: :xml }.freeze
 
   attr_reader :locale, :limit
 
@@ -26,7 +24,7 @@ class MachineTranslation::ChromeWriter
   end
 
   def mode_for(entry)
-    entry[:html] || entry[:source].match?(MARKUP) ? :html : :plain
+    MachineTranslation::TextMode.mode_for(entry[:source], html: entry[:html])
   end
 
   def call
@@ -68,20 +66,20 @@ class MachineTranslation::ChromeWriter
     def accept(entry, raw, mode)
       return if raw.blank?
 
-      value = restore(raw, mode)
+      value = MachineTranslation::TextMode.restore(raw, mode)
 
-      value if placeholders_intact?(entry[:source], value)
+      value if MachineTranslation.placeholders_intact?(entry[:source], value)
     end
 
     def retry_entry(entry, mode)
-      fallback = RETRY_MODE[mode]
+      fallback = MachineTranslation::TextMode.fallback_for(mode)
       return if fallback.nil?
 
       accept(entry, translate([entry[:source]], fallback).first, fallback)
     end
 
     def translate(texts, mode)
-      prepared = texts.map { |text| prepare(text, mode) }
+      prepared = texts.map { |text| MachineTranslation::TextMode.prepare(text, mode) }
 
       send_texts(prepared, mode)
     rescue Deepl::Error
@@ -98,38 +96,11 @@ class MachineTranslation::ChromeWriter
       Deepl::Client.new.translate(texts,
                                   target_locale: locale,
                                   source_locale: MachineTranslation.source_locale,
-                                  **translate_options(mode))
-    end
-
-    def translate_options(mode)
-      case mode
-      when :html then { tag_handling: "html", ignore_tags: "x" }
-      when :xml then { tag_handling: "xml", ignore_tags: "x" }
-      else {}
-      end
-    end
-
-    def prepare(text, mode)
-      case mode
-      when :html then wrap(text)
-      when :xml then wrap(CGI.escapeHTML(text))
-      else text
-      end
-    end
-
-    def restore(text, mode)
-      case mode
-      when :html then unwrap(text)
-      when :xml then CGI.unescapeHTML(unwrap(text))
-      else text
-      end
+                                  **MachineTranslation::TextMode.options(mode))
     end
 
     def store(key, value)
-      content = I18nContent.find_or_create_by!(key: key)
-      return if content.translations.exists?(locale: locale.to_s)
-
-      Globalize.with_locale(locale) { content.update!(value: value) }
+      MachineTranslation.store_content(key, value, locale)
     end
 
     def missing_plural_entries
@@ -175,26 +146,6 @@ class MachineTranslation::ChromeWriter
 
     def html_key?(key)
       key.match?(/_html(\.|\z)/)
-    end
-
-    def wrap(text)
-      text.gsub(MachineTranslation::INTERPOLATION) { |match| "<x>#{match}</x>" }
-    end
-
-    def unwrap(text)
-      text.gsub(%r{</?x>}, "")
-    end
-
-    def placeholders_intact?(source, output)
-      return false if source.scan(MachineTranslation::INTERPOLATION).sort !=
-                      output.scan(MachineTranslation::INTERPOLATION).sort
-
-      glued(output).subset?(glued(source))
-    end
-
-    def glued(text)
-      text.enum_for(:scan, /(#{MachineTranslation::INTERPOLATION})(?=[[:alnum:]])/)
-        .map { Regexp.last_match(1) }.to_set
     end
 
     class << self

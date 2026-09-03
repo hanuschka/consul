@@ -80,6 +80,7 @@
             <th scope="col" class="kern-table__header"><%= t(".locales.locale") %></th>
             <th scope="col" class="kern-table__header"><%= t(".locales.rows") %></th>
             <th scope="col" class="kern-table__header"><%= t(".locales.chrome_rows") %></th>
+            <th scope="col" class="kern-table__header"><%= t(".locales.setting_rows") %></th>
             <th scope="col" class="kern-table__header"><%= t(".locales.actions") %></th>
           </tr>
         </thead>
@@ -91,6 +92,7 @@
               </td>
               <td class="kern-table__cell"><%= number_with_delimiter(@rows_per_locale[locale.to_s].to_i) %></td>
               <td class="kern-table__cell"><%= number_with_delimiter(@chrome_rows_per_locale[locale.to_s].to_i) %></td>
+              <td class="kern-table__cell"><%= number_with_delimiter(@setting_rows_per_locale[locale.to_s].to_i) %></td>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
                   <% actions.with_action(

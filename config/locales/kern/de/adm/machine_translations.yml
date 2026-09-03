@@ -45,6 +45,7 @@ de:
           locale: Sprache
           rows: Inhalte
           chrome_rows: Oberflächentexte
+          setting_rows: Einstellungstexte
           actions: Aktionen
           purge: Löschen
           purge_confirm: >

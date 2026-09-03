@@ -16,7 +16,7 @@
       <div class="flex-layout">
         <div class="main-column">
           <h1 class="user-resources-form--title">
-            <%= Setting["deficiency_reports.new_form_title"].presence || t("custom.deficiency_reports.new.start_new") %>
+            <%= setting_text("deficiency_reports.new_form_title").presence || t("custom.deficiency_reports.new.start_new") %>
           </h1>
 
           <div class="hide-on-mobile">
@@ -37,7 +37,7 @@
                 <%= translations_form.text_area :title,
                   label: false,
                   class: "user-resources-form--banner-editor-title js-user-resource-form-title",
-                  placeholder: Setting["deficiency_reports.new_form_title_placeholder"].presence || t("custom.deficiency_reports.form.title_placeholder"),
+                  placeholder: setting_text("deficiency_reports.new_form_title_placeholder").presence || t("custom.deficiency_reports.form.title_placeholder"),
                   autocomplete: "off" %>
               </div>
 

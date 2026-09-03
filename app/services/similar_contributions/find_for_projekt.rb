@@ -4,21 +4,13 @@ class SimilarContributions::FindForProjekt < ApplicationService
 
   def initialize(resource)
     @resource = resource
-    @projekt_phase = resource.projekt_phase
-    @projekt = @projekt_phase&.projekt
+    @projekt_phase = SimilarContributions::Scopes.projekt_phase_of(resource)
   end
 
   def call
-    return [] unless SimilarContributions::Scopes.enabled_for?(projekt_phase)
-    return [] unless Ai::Settings.ai_available?
-
-    candidates = fetch_candidates
-    return [] if candidates.empty?
-
-    SimilarContributions::Ranking.call(
-      candidates,
-      title: resource.title,
-      description: resource.description,
+    SimilarContributions::Find.call(
+      resource,
+      relation: SimilarContributions::Scopes.projekt_relation(resource, projekt_phase&.projekt),
       limit: MATCH_LIMIT,
       feature: USAGE_FEATURE,
       projekt_phase: projekt_phase
@@ -27,11 +19,5 @@ class SimilarContributions::FindForProjekt < ApplicationService
 
   private
 
-    attr_reader :resource, :projekt_phase, :projekt
-
-    def fetch_candidates
-      relation = SimilarContributions::Scopes.projekt_relation(resource, projekt)
-
-      SimilarContributions::CandidateQuery.call(relation, resource).to_a
-    end
+    attr_reader :resource, :projekt_phase
 end

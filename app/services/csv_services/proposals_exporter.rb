@@ -16,7 +16,7 @@ module CsvServices
           .includes(:image)
           .preload(projekt_phase: [:projekt, :settings])
           .to_a.each_slice(COUNT_BATCH_SIZE) do |batch|
-          @similar_contributions_counts = SimilarContributions::CandidateCounts.call(batch)
+          @similar_contributions_counts = SimilarContributions::StoredCounts.call(batch)
 
           batch.each { |proposal| csv << row(proposal) }
         end

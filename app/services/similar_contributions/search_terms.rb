@@ -21,10 +21,6 @@ module SimilarContributions::SearchTerms
     extract(title, description).join(" ")
   end
 
-  def tsquery_string(title, description)
-    extract(title, description).join(" | ")
-  end
-
   def strip_html(value)
     ActionController::Base.helpers.sanitize(value.to_s, tags: [])
   end

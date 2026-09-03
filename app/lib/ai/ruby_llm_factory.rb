@@ -33,7 +33,7 @@ module Ai::RubyLlmFactory
     chat_with_request_timeout(
       timeout_seconds,
       feature: feature,
-      gpt_model: Ai::Settings::FAST_MODEL
+      gpt_model: Ai::Settings.fast_model
     )
   end
 
@@ -47,6 +47,34 @@ module Ai::RubyLlmFactory
     return chat if Ai::Settings.current_llm_provider != "openai"
 
     chat.with_thinking(effort: TOOL_REASONING_EFFORT)
+  end
+
+  # Embeddings are a provider call like any other, so they are wired here too
+  # rather than in a caller: only openai is configured with an embedding model,
+  # and embeddable? is what retrieval checks before relying on vectors.
+  def self.embed(input, model:, dimensions:, feature: AiUsageRecord::UNKNOWN_FEATURE)
+    provider = Ai::Settings.current_llm_provider
+
+    embedding = init.embed(
+      input,
+      model: model,
+      provider: provider.to_sym,
+      assume_model_exists: true,
+      dimensions: dimensions
+    )
+
+    AiUsageRecords::RecordEmbeddingUsage.call(
+      embedding: embedding,
+      feature: feature,
+      provider: provider,
+      requested_model: model
+    )
+
+    embedding
+  end
+
+  def self.embeddable?
+    Ai::Settings.current_llm_provider == "openai"
   end
 
   def self.build_chat(context, feature:, gpt_model: nil)
@@ -77,11 +105,13 @@ module Ai::RubyLlmFactory
     chat
   end
 
-  # A model id named for one provider means nothing to another, so a caller's
-  # preference holds only while OpenAI is the configured provider.
+  # A model id named for one provider means nothing to another, and an
+  # OpenAI-compatible endpoint serves its own catalogue under its own names, so
+  # a caller's preference holds only on OpenAI itself. Everywhere else the
+  # configured model is the only one the instance is known to be able to reach.
   def self.model_for(gpt_model)
     return Ai::Settings.current_llm_model if gpt_model.blank?
-    return Ai::Settings.current_llm_model if Ai::Settings.current_llm_provider != "openai"
+    return Ai::Settings.current_llm_model if !Ai::Settings.standard_openai?
 
     gpt_model
   end

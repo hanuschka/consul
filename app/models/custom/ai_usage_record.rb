@@ -27,6 +27,7 @@ class AiUsageRecord < ApplicationRecord
     proposal_ai_draft.hard_criteria
     proposal_ai_draft.soft_criteria
     whatsapp.bot_copy
+    similar_contributions.embed
     similar_contributions.find_for_phase
     similar_contributions.find_for_projekt
   ].push(UNKNOWN_FEATURE).freeze

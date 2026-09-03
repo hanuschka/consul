@@ -6,6 +6,7 @@ module Ai::Settings
   # ultrafast_model, never directly: the names exist only on OpenAI itself.
   FAST_MODEL = "gpt-5.6-terra".freeze
   ULTRAFAST_MODEL = "gpt-5.6-luna".freeze
+  private_constant :FAST_MODEL, :ULTRAFAST_MODEL
 
   def self.feature_enabled?
     Rails.application.secrets.dig(:ai, :enabled) == true

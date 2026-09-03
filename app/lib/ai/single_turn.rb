@@ -14,7 +14,7 @@ module Ai::SingleTurn
         schema: schema,
         instructions: instructions,
         input: input,
-        model: ::Ai::Settings::FAST_MODEL,
+        model: ::Ai::Settings.fast_model,
         feature: feature,
         timeout_seconds: timeout_seconds
       )
@@ -59,7 +59,7 @@ module Ai::SingleTurn
       return ::OpenaiApi::Responses.text(
         instructions: instructions,
         input: input,
-        model: ::Ai::Settings::FAST_MODEL,
+        model: ::Ai::Settings.fast_model,
         feature: feature,
         timeout_seconds: timeout_seconds
       )

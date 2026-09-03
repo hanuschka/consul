@@ -388,6 +388,7 @@ class ProposalsController
       @proposal.publish
 
       SimilarContributions::RecordGroupJob.perform_later(@proposal)
+      SimilarContributions::EmbedJob.perform_later(@proposal)
 
       Mailer.proposal_created(@proposal).deliver_later
     end

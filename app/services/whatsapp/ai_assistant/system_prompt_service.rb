@@ -129,9 +129,23 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           list_open_projekts, named in your sentence and tappable. Phases come after that, and
           only for the projekt they picked. Someone who has already named a projekt, or the topic
           they want to say something about, has picked their way in: answer that, and do not open
-          with the overview on the way to it. A projekt
-          the list says is not open for a submission is one to tell them about and offer the link
-          for, saying plainly that nothing can be contributed to it right now.
+          with the overview on the way to it. A projekt the list says is not open for a
+          submission is one to tell them about and offer the link for, saying plainly that
+          nothing can be contributed to it right now.
+        - A projekt they pick is answered with its card, and the card is the whole answer. One
+          message: the picture, what the projekt collects, which phase takes contributions and
+          until when, and the link — send_projekt_card, written from describe_projekt. Never a
+          reply that only says the card is coming, never the same facts again underneath it, and
+          never a step in between that offers to tell them more about the projekt they just
+          chose. What follows the card is taking part, which the card itself offers.
+        - Say, where the state below says it is due, that a question can simply be typed. Only
+          on a message that puts a projekt, a choice between projekts or phases, or one specific
+          open phase in front of them: add one short sentence of your own saying they can also
+          just write what they want to know instead of tapping. It belongs with the rest of what
+          you are saying rather than under it as a footnote, it never argues against the buttons
+          or suggests they are the slower way, and it is never the whole reply. Where the state
+          does not say it is due, say nothing about typing at all — it has been said recently
+          enough.
         - Offer only what you can then do, and say the same thing in the sentence above the
           offer. Three buttons fit in a message and ten rows in a list: where more applies than
           fits, name the few that fit this moment, say how many there are altogether, and offer
@@ -221,6 +235,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Active participation phase: #{active_phase_description}",
         "- Contribution this conversation is about: #{active_proposal_description}",
         "- Projekts running portal-wide: #{open_projekts_count}",
+        typing_hint_line,
         confirmation_line,
         transcript_section
       ].compact.join("\n")
@@ -278,6 +293,16 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       return if @conversation.shared_location.blank?
 
       "- A location the citizen just shared is waiting to be attached to their draft"
+    end
+
+    # Permission to say it, not an instruction to: whether this particular message
+    # presents a projekt or a phase is the model's to judge, because it is the model
+    # that decides what the message is. Absent on every other turn, so nothing has
+    # to be said about a cooldown that has not run out.
+    def typing_hint_line
+      return if !@conversation.typing_hint_due?
+
+      "- Saying a question can simply be typed is due: it has not been said recently"
     end
 
     def confirmation_line

@@ -178,6 +178,19 @@ class Whatsapp::Conversation < ApplicationRecord
     update!(projekt_phase_id: nil)
   end
 
+  # ── How often the bot says a question can simply be typed ───────────────
+  # Every message the bot sends ends in something tappable, so the chat reads as a
+  # closed menu and a citizen who wants what the buttons do not cover has no cue
+  # that writing works. The cue is one sentence, and this is how much of the chat
+  # has to pass before it is said again.
+  #
+  # Counted in the citizen's own messages, because that is what a turn is from
+  # their side: a card, the list under it and the reply after it are one exchange
+  # rather than three. Four of them is chosen so someone tapping their way through
+  # a submission — projekt, phase, idea, photo, confirm — is not told twice inside
+  # it, while someone who comes back to browse hears it again.
+  TYPING_HINT_COOLDOWN_TURNS = 4
+
   # ── Draft context schema ────────────────────────────────────────────────
   # Every key the `context` jsonb holds, as named accessors — the one place that
   # answers what a key means, who writes it, who reads it, and when it is
@@ -509,18 +522,13 @@ class Whatsapp::Conversation < ApplicationRecord
   # Inbound::ProcessMessageService when a turn fails, read by its retry gate, and
   # cleared by the next turn that succeeds; a cancel wipes it with the rest of the
   # context. One snapshot only: a retry that fails again overwrites it with itself.
-  #
-  # The tap travels with the text because the note alone does not carry it: the
-  # tools that must not answer a tap with the message it sat under read
-  # #inbound_tap, and a retry that replayed the words without it would send the
-  # card the tap was asking to move past.
   def retry_inbound
     context["retry_inbound"]
   end
 
-  def store_retry_inbound!(text:, message_id:, tap: nil)
+  def store_retry_inbound!(text:, message_id:)
     merge_context!(
-      retry_inbound: { "text" => text, "message_id" => message_id, "tap" => tap }.compact
+      retry_inbound: { "text" => text, "message_id" => message_id }.compact
     )
   end
 
@@ -532,22 +540,37 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(retry_inbound: nil)
   end
 
-  # The catalog pill the citizen tapped to start the current turn, held in memory
-  # rather than written down — the same arrangement as the held confirmations and
-  # the start-over note above, and for the same reason: it is true for the reply
-  # being composed and meaningless by the next message. The router hands the tools
-  # the very object the inbound chain noted it on, so there is nothing for a
-  # context key to carry.
+  # The id of the citizen's newest message at the moment the bot last said a
+  # question can simply be typed. An id rather than a tally or a timestamp: it is
+  # monotonic, it is already in the database wherever the hint is sent, and how many
+  # turns have passed since is then one indexed count — where a stored tally would
+  # cost an UPDATE on every single message to keep.
   #
-  # Persisting it was a leak: a turn that ended before the clear — AI switched off,
-  # an exception out of the router — left the tap in the record, and every later
-  # turn read it as though the citizen had just tapped.
-  def inbound_tap
-    @inbound_tap
+  # Zero when the hint was said before the citizen had written anything, which a
+  # conversation the bot opened itself can be. Zero rather than nil on purpose: nil
+  # is "never said" and would offer the hint again on the next message.
+  #
+  # Written by the tools whose message presents a projekt or a phase and read by the
+  # system prompt, which turns it into the one line telling the model whether the
+  # hint is due. Kept by retained_context, because a hint already given must not be
+  # said again merely because a submission started.
+  def typing_hint_at_message_id
+    context["typing_hint_at_message_id"]
   end
 
-  def note_inbound_tap!(action:, param:)
-    @inbound_tap = { "action" => action.to_s, "param" => param.to_s }
+  def stamp_typing_hint!
+    merge_context!(typing_hint_at_message_id: inbound_messages.maximum(:id).to_i)
+  end
+
+  # Never said, or enough of the citizen's own messages have gone by since it was.
+  # Deliberately not memoized: a tool stamps it part-way through a turn and the next
+  # tool in the same turn has to see that it is no longer due.
+  def typing_hint_due?
+    stamped = typing_hint_at_message_id
+
+    return true if stamped.blank?
+
+    inbound_messages.where(id: (stamped.to_i + 1)..).count >= TYPING_HINT_COOLDOWN_TURNS
   end
 
   # The ruby_llm message history. Written and read only through
@@ -587,6 +610,13 @@ class Whatsapp::Conversation < ApplicationRecord
 
   private
 
+    # Every message the citizen has sent on this number, which is what the typing
+    # hint's cooldown is measured in. Counted rather than loaded, and narrowed by
+    # the account's own index.
+    def inbound_messages
+      whatsapp_account.whatsapp_messages.inbound
+    end
+
     # Private on purpose: every context write goes through a named accessor above,
     # so a new key cannot be introduced without declaring what it means, who reads
     # it, and when it clears.
@@ -595,8 +625,14 @@ class Whatsapp::Conversation < ApplicationRecord
     end
 
     # What outlives a submission: the assistant's history, whichever transport
-    # wrote it. Everything else in the context belongs to one draft.
+    # wrote it, and when the bot last said a question can simply be typed.
+    # Everything else in the context belongs to one draft.
+    #
+    # The typing hint is here because it is a fact about the whole chat rather than
+    # about a draft in it — dropped with the rest, a citizen would be told again the
+    # moment they started a submission, which is the one point in the conversation
+    # where they are least in need of it.
     def retained_context
-      context.slice("ai_chat", "ai_chain")
+      context.slice("ai_chat", "ai_chain", "typing_hint_at_message_id")
     end
 end

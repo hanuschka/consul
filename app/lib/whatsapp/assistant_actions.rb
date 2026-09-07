@@ -33,15 +33,21 @@ module Whatsapp::AssistantActions
   # The parameterised ones are listed by shape rather than enumerated: the records
   # behind them arrive from whichever tool the model just called, and enumerating a
   # portal's projekts here would be the whole portal in every prompt.
+  # The retired ids are subtracted from both lists rather than from ACTIONS: they
+  # are still dispatched, so the vocabulary the assistant reads is the only place
+  # they may be absent from.
   def offerable_action_names
     (
-      (HANDLED_ACTIONS - ::Whatsapp::FlowActions::PARAMETERISED_ACTIONS) +
+      (HANDLED_ACTIONS - ::Whatsapp::FlowActions::PARAMETERISED_ACTIONS -
+        ::Whatsapp::FlowActions::RETIRED_ACTIONS) +
         ::Whatsapp::Send::RECOVERY_ACTION_IDS.keys
     ).map(&:to_s)
   end
 
   def parameterised_action_names
-    ::Whatsapp::FlowActions::PARAMETERISED_ACTIONS.map(&:to_s)
+    (
+      ::Whatsapp::FlowActions::PARAMETERISED_ACTIONS - ::Whatsapp::FlowActions::RETIRED_ACTIONS
+    ).map(&:to_s)
   end
 
   # One tappable button from the action id and the label the model wrote, or nil
@@ -53,6 +59,7 @@ module Whatsapp::AssistantActions
 
     return dropped(spec, conversation, :unparseable) if action.blank?
     return dropped(spec, conversation, :unknown_action) if !::Whatsapp::FlowActions.known?(action)
+    return dropped(spec, conversation, :retired_action) if ::Whatsapp::FlowActions.retired?(action)
     return dropped(spec, conversation, :unknown_scope) if !known_scope?(action, param)
     return dropped(spec, conversation, :nothing_to_tell) if !tells_more?(action, param)
 
@@ -178,7 +185,7 @@ module Whatsapp::AssistantActions
     return if param.blank?
 
     case action
-    when :view_projekt, :participate_projekt then projekt_label(param)
+    when :view_projekt then projekt_label(param)
     when :idea_start then phase_projekt_label(param)
     when :support then proposal_label(param)
     when :category

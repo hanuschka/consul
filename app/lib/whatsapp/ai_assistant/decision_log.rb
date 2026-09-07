@@ -36,10 +36,6 @@ module Whatsapp::AiAssistant::DecisionLog
   # is one nobody has to escape from, so this rising is the readable sign that
   # they are being led somewhere they did not want to go.
   #
-  # `card_repeat_refused` is a projekt card refused because the citizen had just
-  # tapped that card's own "view projekt" pill — the loop the pill used to produce,
-  # now counted instead of sent.
-  #
   # `send_refused` is a reply WhatsApp rejected outright. It is the one failure
   # that used to leave no trace anywhere: the send is recorded as a failed row,
   # the turn was stored as though it had answered, and the citizen saw nothing —
@@ -55,7 +51,6 @@ module Whatsapp::AiAssistant::DecisionLog
     tap_unhandled
     start_over
     assistant_unavailable
-    card_repeat_refused
     send_refused
   ].freeze
 

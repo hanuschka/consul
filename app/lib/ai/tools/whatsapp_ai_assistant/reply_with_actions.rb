@@ -44,7 +44,11 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
     return send_refused_error if ::Whatsapp::Send.refused?(message)
 
-    halt("Replied to the citizen with buttons: #{offerable.map { |button| button[:id] }.join(", ")}.")
+    button_ids = offerable.map { |button| button[:id] }
+
+    note_typing_hint_offered! if ::Whatsapp::FlowActions.projekt_choice?(button_ids)
+
+    halt("Replied to the citizen with buttons: #{button_ids.join(", ")}.")
   end
 
   private

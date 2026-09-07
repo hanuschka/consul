@@ -94,6 +94,25 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       all_open_projekt_phases.find { |phase| phase.projekt_id == projekt.id }
     end
 
+    # That the citizen has now been told a question can simply be typed. Called by
+    # the tools whose message presents a projekt or a phase — the card, a list of
+    # projekts or phases, and a reply whose pills offer one.
+    #
+    # Only where the hint was due, because that is the only turn the prompt asked
+    # for one: stamping on every card would push the cooldown forward for a
+    # sentence that was never written.
+    #
+    # The line itself is the model's, so what this records is that it was asked
+    # for rather than that it arrived. A turn where it was due and the model left
+    # it out costs the citizen one cooldown's wait for the next offer, which is
+    # the harmless direction for this to be wrong in — the alternative is reading
+    # the model's own sentence back in a language Ruby does not know it is in.
+    def note_typing_hint_offered!
+      return if !conversation.typing_hint_due?
+
+      conversation.stamp_typing_hint!
+    end
+
     def projekt_title(projekt)
       ::Whatsapp::ProjektLink.title(projekt)
     end

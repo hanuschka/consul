@@ -1,0 +1,12 @@
+<div class="adm-detail-action-row d-flex align-items-center flex-wrap gap-2 mb-4">
+  <%= kern_link_button(proposal_path(proposal),
+        text: t("adm.projekts.proposals.show.view_on_site"), icon: "open_in_new", style: :secondary,
+        target: "_blank", rel: "noopener", data: { turbo: false }) %>
+
+  <%= render Adm::DownloadPdfButtonComponent.new(
+        url: adm_projekts_phase_proposal_path(projekt_phase, proposal, format: :pdf),
+        label: t("adm.projekts.proposals.show.pdf"),
+        map_location: proposal.map_location,
+        map_container_id: dom_id(proposal, "map")
+      ) %>
+</div>

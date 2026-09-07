@@ -10,10 +10,9 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
               "well as running ones. Returns facts for you to answer in your own words — it " \
               "sends nothing to the citizen. Answer from what it returned and nothing else; a " \
               "projekt with no text here is one to offer the link for rather than to describe. " \
-              "It is also the answer to a tapped view_projekt button: tell them in your own " \
-              "words what the projekt is about, which phases are open and until when, as a " \
-              "plain reply that leaves room for follow-up questions — never by sending the card " \
-              "they tapped on again."
+              "It is also what you write a projekt card from: a citizen who picks a projekt is " \
+              "answered by send_projekt_card, and the phases and deadlines this returns are " \
+              "what its summary carries."
 
   params do
     string :projekt_name, description: "The projekt name as the citizen wrote it"

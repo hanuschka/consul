@@ -86,7 +86,7 @@ describe Whatsapp::Inbound::ProcessMessageService do
     let(:raw_message) do
       {
         "interactive" => {
-          "button_reply" => { "id" => "menu", "title" => "Hauptmenü" }
+          "button_reply" => { "id" => "menu", "title" => "Von vorne loslegen" }
         }
       }
     end
@@ -135,7 +135,7 @@ describe Whatsapp::Inbound::ProcessMessageService do
   # contribution to it in the same breath as saying they were back at the start.
   describe "the pills that mean back to the beginning" do
     let(:main_menu_tap) do
-      tap_of(id: Whatsapp::FlowActions.id_for(action: :main_menu), title: "Hauptmenü")
+      tap_of(id: Whatsapp::FlowActions.id_for(action: :main_menu), title: "Von vorne loslegen")
     end
 
     let(:help_tap) do

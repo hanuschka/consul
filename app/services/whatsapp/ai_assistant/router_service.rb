@@ -248,7 +248,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       record_missed_actions
 
       # Through buttons rather than text, even with nothing of its own to offer:
-      # Whatsapp::Send puts the main menu on every interactive message, so this is
+      # Whatsapp::Send puts the start-over pill on every interactive message, so this is
       # what makes "every reply has something to tap" true of the one path that
       # composes no buttons at all.
       message = ::Whatsapp::Send.buttons(
@@ -276,7 +276,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # history. The Responses chain advances only when this turn is persisted, which
     # happens after delivery — re-entering the tool loop before that would have the
     # retry answering from a state that does not exist yet. There it falls through to
-    # the send above, which still carries the main menu.
+    # the send above, which still carries the start-over pill.
     #
     # The halt is written back onto the turn so persistence sees it: the state writer
     # records a halted turn's note, and without this the retry's tool call would be

@@ -53,7 +53,7 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
     # notices above them are: the citizen must always be able to decline a picture,
     # and a set of options the model writes fresh each turn is a set it can also write
     # its way out of. Three of them, because this message gives its last slot to the
-    # third answer rather than to the main menu, and the phase either collects
+    # third answer rather than to starting over, and the phase either collects
     # pictures or this tool has already refused, so all three always apply.
     #
     # The ask is the assistant's and already in the citizen's language; the notices and

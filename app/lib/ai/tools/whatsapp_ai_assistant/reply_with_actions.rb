@@ -9,14 +9,15 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
   description "Answers the citizen with a short text of your own and up to two tappable " \
               "buttons whose labels you write yourself — the message carries a third of its own, " \
-              "the way to the main menu, which you never write and never mention. Prefer it over a plain text reply " \
-              "whenever there is an obvious next step: it saves them typing and it says what " \
-              "can happen next. Each button needs an action_id from the list below and a label " \
-              "of at most 20 characters in the citizen's language. Name a record-backed action " \
-              "as \"action-id\" using an id a tool in this conversation returned " \
-              "(\"view_projekt-482\", \"notify_toggle-new_comments\"); leave its label empty to " \
-              "use the record's own name, which is usually better than a paraphrase of it. " \
-              "A button whose action is unknown or whose record no longer exists is dropped. " \
+              "the way to start over, which you never write and never mention. Prefer it over a " \
+              "plain text reply whenever there is an obvious next step: it saves them typing and " \
+              "it says what can happen next. Each button needs an action_id from the list below " \
+              "and a label of at most 20 characters in the citizen's language. Name a " \
+              "record-backed action as \"action-id\" using an id a tool in this conversation " \
+              "returned (\"view_projekt-482\", \"notify_toggle-new_comments\"); leave its label " \
+              "empty to use the record's own name, which is usually better than a paraphrase of " \
+              "it. A button whose action is unknown or whose record no longer exists is " \
+              "dropped. " \
               "For an action that cannot be undone — publishing, commenting, unlinking — the " \
               "label must say what it does (\"Jetzt einreichen\", not \"Weiter\"). This sends " \
               "the message itself: do not write one as well, and do not put a link in it when a " \

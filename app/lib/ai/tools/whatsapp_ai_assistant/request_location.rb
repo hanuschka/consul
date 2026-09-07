@@ -40,7 +40,7 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
     #
     # Its own send rather than a line appended above the picker, because the picker's
     # body is the assistant's question and this is the answer to it. Send puts the
-    # main menu beside location_skip, so the second message carries two.
+    # start-over pill beside location_skip, so the second message carries two.
     #
     # The sentence and the label go through one translation call, not two and not one
     # of each: a body in the citizen's language over a button in the portal's is the

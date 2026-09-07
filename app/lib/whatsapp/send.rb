@@ -67,16 +67,16 @@ module Whatsapp::Send
   end
 
   # The send for a message that spends its last slot on an answer instead of the way
-  # out. The menu pill goes on every interactive message because a citizen who has
-  # lost the thread needs one — but a question with three answers of its own has
-  # nowhere to put it, and dropping one of the answers to keep the menu leaves the
+  # out. The start-over pill goes on every interactive message because a citizen who
+  # has lost the thread needs one — but a question with three answers of its own has
+  # nowhere to put it, and dropping one of the answers to keep the pill leaves the
   # citizen reading a message that names fewer ways on than it has.
   #
   # Which message that is belongs to the caller: it is the one that knows its
-  # question has three answers and that the citizen is part-way through something the
-  # menu would abandon. A rule here recognising particular messages would be the
-  # transport deciding what a flow's question means. Typing for the menu still works,
-  # so what is given up is the pill rather than the way back.
+  # question has three answers and that the citizen is part-way through something
+  # starting over would abandon. A rule here recognising particular messages would be
+  # the transport deciding what a flow's question means. Asking to start over in
+  # words still works, so what is given up is the pill rather than the way back.
   def buttons_without_main_menu(account:, body:, buttons:)
     offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
     message = deliver_buttons(
@@ -369,13 +369,13 @@ module Whatsapp::Send
   # It costs the last slot, so a caller may fill only MAX_OFFERED_BUTTONS of the
   # three — trimming its list here instead would drop whichever pill it thought
   # least important without saying so. The trim below is the backstop for a caller
-  # that ignores the cap, and it keeps the caller's own pills: the menu is the least
-  # of what a message offers, so it is what gives way when there is no room.
+  # that ignores the cap, and it keeps the caller's own pills: starting over is the
+  # least of what a message offers, so it is what gives way when there is no room.
   #
   # The label is read at the account's own locale rather than translated through
   # BotCopyService. Two reasons: this runs on the path that must survive the model
   # being unreachable, and it is one fixed word — a citizen writing a language the
-  # portal has no copy for reads the menu pill in the portal's language and every
+  # portal has no copy for reads the start-over pill in the portal's language and every
   # other line of the message in their own, which is the cheap half of the trade.
   def with_main_menu(account:, buttons:)
     offered = Array(buttons).compact
@@ -437,8 +437,8 @@ module Whatsapp::Send
     }
   end
 
-  # Matched on the id rather than the label, because a caller that offered the menu
-  # in the model's own words must not have a second one stacked under it.
+  # Matched on the id rather than the label, because a caller that offered the way
+  # back in the model's own words must not have a second one stacked under it.
   def main_menu_button?(button)
     button.is_a?(Hash) &&
       button[:id].to_s == ::Whatsapp::FlowActions.id_for(action: :main_menu)

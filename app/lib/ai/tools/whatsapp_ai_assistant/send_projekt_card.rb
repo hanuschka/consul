@@ -64,7 +64,7 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
 
     # The one pill the card offers, and only where a phase is actually open —
     # offering a submission into a closed projekt is the one thing the ticket's rule
-    # about reachability forbids. Send reserves the last slot for the main menu, so a
+    # about reachability forbids. Send reserves the last slot for starting over, so a
     # projekt with an open phase arrives with two buttons and one without with the
     # way back alone.
     #

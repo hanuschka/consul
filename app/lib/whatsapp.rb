@@ -28,7 +28,7 @@ module Whatsapp
   # edge, where it truncates and warns.
   MAX_LIST_ROWS = 10
 
-  # The same reservation on a list: its last row is the way to the main menu.
+  # The same reservation on a list: its last row is the way to start over.
   MAX_OFFERED_LIST_ROWS = MAX_LIST_ROWS - 1
 
   # A WhatsApp interactive message holds three reply buttons; anything longer
@@ -37,7 +37,7 @@ module Whatsapp
   MAX_BUTTONS = 3
 
   # What a caller may fill of those, because Whatsapp::Send reserves the last slot
-  # for the main-menu pill on every interactive message it sends through `buttons`.
+  # for the start-over pill on every interactive message it sends through `buttons`.
   # Declared here so a tool reports the number it actually sent rather than the
   # number it composed — trimming a fourth button silently is how a halt line comes
   # to name a pill the citizen never saw. A caller that needs all three slots for

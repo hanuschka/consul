@@ -6,7 +6,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
   #
   # A list earns a tool over buttons on two counts: it holds nine rows rather than
   # two, and each row carries a description, which is what lets nine options be
-  # named without a sentence above each. The tenth row, the way to the main menu,
+  # named without a sentence above each. The tenth row, the way to start over,
   # is Whatsapp::Send's and arrives on every list without this tool composing it.
   MAX_ROWS = ::Whatsapp::MAX_OFFERED_LIST_ROWS
 

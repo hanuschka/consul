@@ -10,7 +10,7 @@ describe Whatsapp::AiAssistant::RouterService do
   let(:service) do
     Whatsapp::AiAssistant::RouterService.new(
       conversation: conversation,
-      inbound_text: "The citizen tapped the button \"Hauptmenü\" (action menu).",
+      inbound_text: "The citizen tapped the button \"Von vorne loslegen\" (action menu).",
       inbound_message_id: inbound_message_id
     )
   end

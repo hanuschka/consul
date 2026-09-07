@@ -420,7 +420,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # not be reached. Both mean the same thing and so are read the same way: it
     # used to be neither, and a tap on either left the conversation exactly where
     # it was — the phase still active, the state block still naming the projekt,
-    # and so a reply that said "back in the main menu" and offered a contribution
+    # and so a reply that said "back at the beginning" and offered a contribution
     # to that projekt in the next sentence.
     #
     # The phase is all it clears. Everything else in the context belongs to one
@@ -450,8 +450,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       end
     end
 
-    # One id from each namespace, which is why both are read here: the menu pill is
-    # built from the catalog and keeps its catalog id, because every one already
+    # One id from each namespace, which is why both are read here: the start-over pill
+    # is built from the catalog and keeps its catalog id, because every one already
     # sent is still sitting in a chat history and still tappable.
     START_OVER_ACTIONS = %i[main_menu help].freeze
 

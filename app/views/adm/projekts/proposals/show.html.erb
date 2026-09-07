@@ -11,6 +11,8 @@
   <%= render "adm/projekts/proposals/action_row", proposal: @proposal, projekt_phase: @projekt_phase %>
 
   <%# === Section 1: Interne Notizen === %>
+  <%= render "adm/memos/memoable_title", memoable: @proposal %>
+
   <section class="adm-detail-section">
     <%= render "adm/memos/memos", memoable: @proposal %>
   </section>

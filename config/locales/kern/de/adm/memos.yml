@@ -3,6 +3,7 @@ de:
     memos:
       title: Interne Notizen
       hint: Nur für Admins und Projektmanager sichtbar. Über die Glocke können Kollegen per E-Mail benachrichtigt werden.
+      context: "Zu: %{title}"
       count:
         one: 1 Notiz
         other: "%{count} Notizen"

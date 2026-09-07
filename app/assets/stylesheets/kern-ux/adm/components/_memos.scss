@@ -1,3 +1,11 @@
+.adm-memos-context {
+  margin: 0 0 var(--kern-12);
+  font-size: var(--kern-font-size-16);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--kern-color-layout-text-default);
+}
+
 .adm-memos {
   --adm-memo-avatar-size: 2rem;
   --adm-memo-rail-gap: var(--kern-12);

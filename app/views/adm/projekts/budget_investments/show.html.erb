@@ -43,6 +43,8 @@
   </section>
 
   <%# === Section 4: Interne Notizen === %>
+  <%= render "adm/memos/memoable_title", memoable: @investment %>
+
   <section class="adm-detail-section">
     <%= render "adm/memos/memos", memoable: @investment %>
   </section>

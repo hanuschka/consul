@@ -40,6 +40,13 @@ class Images::MarkAiGeneratedService < ApplicationService
   AI_SYSTEM_TAG = "XMP-iptcExt:AISystemUsed".freeze
   AI_SYSTEM_VERSION_TAG = "XMP-iptcExt:AISystemVersionUsed".freeze
 
+  # The same fact in prose, in the one field every picture viewer shows under
+  # "Description". It documents the file for a person opening its properties;
+  # verification tools key on the source type above, so this line is never what
+  # marking succeeds or fails on. English, because the field has no language.
+  IMAGE_DESCRIPTION_TAG = "EXIF:ImageDescription".freeze
+  AI_DESCRIPTION = "AI-generated image.".freeze
+
   def initialize(image:, data:, filename:, content_type:, ai_system: nil, ai_system_version: nil)
     @image = image
     @data = data
@@ -87,17 +94,28 @@ class Images::MarkAiGeneratedService < ApplicationService
       raise MarkingFailedError.new("marking runtime unavailable (#{status})", reason: status)
     end
 
-    def marking_arguments
-      arguments = [
+    def mandatory_arguments
+      [
         "-overwrite_original",
         "-jumbf:all=",
-        "-#{DIGITAL_SOURCE_TYPE_TAG}=#{TRAINED_ALGORITHMIC_MEDIA}"
+        "-#{DIGITAL_SOURCE_TYPE_TAG}=#{TRAINED_ALGORITHMIC_MEDIA}",
+        "-#{IMAGE_DESCRIPTION_TAG}=#{AI_DESCRIPTION}"
       ]
+    end
+
+    # Carried in an invocation of their own, so a tag exiftool does not know
+    # costs only the answer to "by what". Inside the mandatory list an unknown
+    # tag either takes the marker down with it or -- what actually happens --
+    # warns, exits 0, and reports a write that never landed.
+    def optional_arguments
+      arguments = []
 
       arguments << "-#{AI_SYSTEM_TAG}=#{@ai_system}" if @ai_system.present?
       arguments << "-#{AI_SYSTEM_VERSION_TAG}=#{@ai_system_version}" if @ai_system_version.present?
 
-      arguments
+      return arguments if arguments.empty?
+
+      arguments.unshift("-overwrite_original")
     end
 
     def mark
@@ -107,16 +125,9 @@ class Images::MarkAiGeneratedService < ApplicationService
         file.write(@data)
         file.flush
 
-        result = ::ExiftoolCommand.run(*marking_arguments, file.path)
+        return nil if !write_mandatory_tags(file.path)
 
-        if !result.success?
-          Rails.logger.warn(
-            "[Images::MarkAiGeneratedService] exiftool #{result.failure_reason}: " \
-            "#{result.stderr.to_s.strip.truncate(200)}"
-          )
-
-          return nil
-        end
+        write_optional_tags(file.path)
 
         # Read back before reporting success: a marker that did not survive the
         # write is indistinguishable from an unmarked image to every later
@@ -130,5 +141,36 @@ class Images::MarkAiGeneratedService < ApplicationService
         file.close
         file.unlink
       end
+    end
+
+    def write_mandatory_tags(path)
+      result = ::ExiftoolCommand.run(*mandatory_arguments, path)
+
+      return true if result.success?
+
+      Rails.logger.warn(
+        "[Images::MarkAiGeneratedService] exiftool #{result.failure_reason}: " \
+        "#{result.stderr.to_s.strip.truncate(200)}"
+      )
+
+      false
+    end
+
+    # A failure here leaves a fully marked picture that does not name its
+    # generator, which is worth a log line and nothing more -- refusing to
+    # publish over it would trade the mandatory marker for the optional one.
+    def write_optional_tags(path)
+      arguments = optional_arguments
+
+      return if arguments.empty?
+
+      result = ::ExiftoolCommand.run(*arguments, path)
+
+      return if result.success?
+
+      Rails.logger.warn(
+        "[Images::MarkAiGeneratedService] AI system tags not written " \
+        "(#{result.failure_reason}): #{result.stderr.to_s.strip.truncate(200)}"
+      )
     end
 end

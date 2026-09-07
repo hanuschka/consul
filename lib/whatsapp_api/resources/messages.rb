@@ -99,7 +99,7 @@ class WhatsappApi::Resources::Messages
           type: "list",
           body: { text: body },
           action: {
-            button: button_label.to_s.truncate(MAX_BUTTON_TITLE_LENGTH),
+            button: fitted_button_title(button_label, field: "list button"),
             sections: list_sections(sections)
           }
         }
@@ -138,7 +138,7 @@ class WhatsappApi::Resources::Messages
           action: {
             name: "cta_url",
             parameters: {
-              display_text: button_label.to_s.truncate(MAX_BUTTON_TITLE_LENGTH),
+              display_text: fitted_button_title(button_label, field: "link button"),
               url: url
             }
           }
@@ -226,6 +226,27 @@ class WhatsappApi::Resources::Messages
       kept
     end
 
+    # A button label is the one capped string that is written to fit: locale copy or
+    # the model's own words, both chosen against the twenty characters WhatsApp
+    # allows. So one that overruns is a mistake in the wording rather than content
+    # too long to show, and it is reported — a row title or a description quoted from
+    # the portal overruns as a matter of course and stays a silent cut.
+    #
+    # Cut anyway rather than raised on: the citizen is waiting on the message, and a
+    # label short of its last word is better than no reply at all.
+    def fitted_button_title(text, field:)
+      value = text.to_s
+
+      return value if value.length <= MAX_BUTTON_TITLE_LENGTH
+
+      Rails.logger.warn(
+        "[Whatsapp] #{field} \"#{value}\" is #{value.length} characters, " \
+        "cut to #{MAX_BUTTON_TITLE_LENGTH}"
+      )
+
+      value.truncate(MAX_BUTTON_TITLE_LENGTH)
+    end
+
     def log_dropped_rows(sections)
       total = sections.sum { |section| Array(section[:rows]).size }
 
@@ -298,7 +319,7 @@ class WhatsappApi::Resources::Messages
           type: "reply",
           reply: {
             id: button[:id],
-            title: button[:title].to_s.truncate(MAX_BUTTON_TITLE_LENGTH)
+            title: fitted_button_title(button[:title], field: "reply button")
           }
         }
       end

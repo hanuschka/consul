@@ -85,14 +85,21 @@ class ProjektPhase < ApplicationRecord
 
   # Phase types the AI drafting flow exists for override this with their own
   # feature key. Nil means the type has no such flow, which is what every
-  # caller — the new-proposal button, the /adm toggle, the WhatsApp bot — has
-  # to branch on, so the branch lives here rather than once per caller.
+  # caller — the new-proposal button and the /adm toggle — has to branch on, so
+  # the branch lives here rather than once per caller.
   def ai_flow_feature_key
     nil
   end
 
-  def ai_flow_enabled?
-    ai_flow_feature_key.present? && feature?(ai_flow_feature_key)
+  # Whether the WhatsApp bot may carry a submission into this phase, which is a
+  # decision of its own: the phase types that have a bot flow override this, and
+  # a type that has none answers false here rather than being listed elsewhere.
+  #
+  # Deliberately unrelated to #ai_flow_feature_key above. That flag is the
+  # projekt page's own AI drafting button, and reading it here left a phase
+  # openly taking proposals on the website invisible to the bot.
+  def whatsapp_submissions_enabled?
+    false
   end
 
   PHASE_FA_ICONS = {

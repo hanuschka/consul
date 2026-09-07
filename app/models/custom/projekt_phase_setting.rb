@@ -82,6 +82,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.public_kpi_stats": "",
           "feature.general.public_ai_stats": "",
           "feature.general.similar_contributions_check": "",
+          "feature.general.whatsapp_submissions": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -139,6 +140,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.public_kpi_stats": "",
           "feature.general.public_ai_stats": "",
           "feature.general.similar_contributions_check": "",
+          "feature.general.whatsapp_submissions": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",

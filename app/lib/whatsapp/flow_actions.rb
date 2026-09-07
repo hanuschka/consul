@@ -32,7 +32,7 @@ module Whatsapp::FlowActions
   # layer clears the active phase on it, because a way back to the beginning that
   # needs a model to be reachable is not one — and yet it keeps its id here rather
   # than moving to the recovery namespace beside `help`, which now behaves the same.
-  # Moving it would change the id, and every menu pill the bot has ever sent is
+  # Moving it would change the id, and every start-over pill the bot has ever sent is
   # still sitting in a chat history and still tappable.
   ACTIONS = %i[
     main_menu

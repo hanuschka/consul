@@ -19,7 +19,7 @@ module Whatsapp::ParticipationRules
     phase_not_supported: "This kind of phase cannot be contributed to from WhatsApp.",
     budget_heading_missing: "The budget behind this phase is not fully set up yet.",
     creation_disabled: "This phase does not accept new contributions.",
-    ai_flow_disabled: "This phase does not accept contributions written with assistance.",
+    whatsapp_submissions_disabled: "This phase does not accept contributions sent from WhatsApp.",
     phase_not_active: "This phase is not running.",
     phase_expired: "This phase has already ended.",
     phase_not_current: "This phase is not the one currently running in its projekt.",

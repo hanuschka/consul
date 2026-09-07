@@ -28,7 +28,7 @@ class Whatsapp::NotifyPhaseDeadlineJob < ApplicationJob
       ProjektPhase
         .where(type: Whatsapp::EligiblePhasesQuery::PHASE_CLASSES.map(&:name))
         .where(end_date: date)
-        .includes(projekt: :page)
+        .includes(:settings, projekt: :page)
     end
 
     def notify(projekt_phases, kind)
@@ -36,9 +36,18 @@ class Whatsapp::NotifyPhaseDeadlineJob < ApplicationJob
 
       projekt_phases.find_each do |projekt_phase|
         next if !Whatsapp::EligiblePhasesQuery.projekt_visible?(projekt_phase.projekt)
+        next if !accepts_bot_submissions?(projekt_phase)
 
         notify_phase(projekt_phase, kind)
       end
+    end
+
+    # The same two switches Whatsapp::EligiblePhasesQuery reads, minus the phase
+    # lifecycle it also checks: the "deadline_passed" reminder is about a phase
+    # that ended yesterday, so asking .eligible? — which requires #current? —
+    # would silence that notification entirely.
+    def accepts_bot_submissions?(projekt_phase)
+      projekt_phase.selectable_by_users? && projekt_phase.whatsapp_submissions_enabled?
     end
 
     def notify_phase(projekt_phase, kind)

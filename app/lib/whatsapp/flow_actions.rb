@@ -60,6 +60,7 @@ module Whatsapp::FlowActions
     submit_anyway
     support
     support_prompt
+    support_toggle
     comment_prompt
     comment_post
     category
@@ -94,7 +95,7 @@ module Whatsapp::FlowActions
   # paraphrase of it.
   PARAMETERISED_ACTIONS = %i[
     view_projekt participate_projekt idea_start category sentiment notify_toggle
-    discover_category support show_more
+    discover_category support support_toggle show_more
   ].freeze
 
   # The ids another action has taken over. They stay in ACTIONS because every pill
@@ -106,7 +107,14 @@ module Whatsapp::FlowActions
   # want" and were answered the same way — that projekt's card. Two ids for one
   # intent is what let a guard written against one of them fire on the other, so
   # only `view_projekt` is offered now.
-  RETIRED_ACTIONS = %i[participate_projekt].freeze
+  #
+  # `support` and `support_prompt` were the two halves of an offer and a
+  # confirmation: the first asked, the second acted, and a support needed both. It
+  # takes one tap now, and which way that tap goes depends on the vote as it stands
+  # when it arrives — so the pill is `support_toggle` and neither of the old pair can
+  # be offered again. A tap on one still registers, because it still means the one
+  # thing it ever meant.
+  RETIRED_ACTIONS = %i[participate_projekt support support_prompt].freeze
 
   # The pills that put a projekt or a participation phase in front of the citizen,
   # as against the ones that act on a draft, a comment or a setting. Two things read

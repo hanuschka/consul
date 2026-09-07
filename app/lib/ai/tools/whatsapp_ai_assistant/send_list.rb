@@ -26,7 +26,9 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
               "one as well."
 
   params do
-    string :body, description: "The sentence above the list, in the citizen's language."
+    string :body,
+      description: "The sentence above the list, in the citizen's language, laid out as the " \
+                   "style rules require."
     string :button_label,
       description: "What the button that opens the list says, at most 20 characters " \
                    "(\"Projekt wählen\", \"Auswählen\")."

@@ -278,7 +278,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       record_tap(flow_action[:action], flow_action[:param])
       settle_slot_for(flow_action[:action])
 
-      tapped_line(action: flow_action[:action], param: flow_action[:param])
+      support_toggle_note(action: flow_action[:action], param: flow_action[:param]) ||
+        tapped_line(action: flow_action[:action], param: flow_action[:param])
     end
 
     # The label the citizen actually read, taken from the webhook rather than from
@@ -290,6 +291,128 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       "The citizen tapped the button#{named} (action #{action}#{identified})."
     end
+
+    # ── A support given or taken back on the tap itself ─────────────────────
+    # The one write left on this side of the assistant, and it is here for the same
+    # reason cancelling is: what it acts on arrives from WhatsApp rather than from a
+    # model. That is also what pays for the ceremony a support used to carry. Asked
+    # to support proposal 4821, a tool had only the model's word that 4821 was ever
+    # put in front of the citizen, so the offer had to be recorded in one turn and
+    # the act allowed only in the next — two taps for one support. A tapped id needs
+    # none of that: it is the id of a button the citizen was looking at.
+    #
+    # Which way it goes is read here rather than carried in the id. One pill toggles,
+    # and the citizen's vote as it stands when the tap arrives is the only thing that
+    # can say whether tapping gives a support or takes one back. The label was built
+    # from the same reading a message earlier, which is what keeps the two in step —
+    # and where they disagree, because the vote moved on the projekt page in between,
+    # it is this reading that is right.
+    #
+    # The retired `support` id comes through here too. Every support pill the bot has
+    # ever sent is still sitting in a chat history and still tappable, and it only
+    # ever meant the one thing.
+    SUPPORT_TOGGLE_ACTIONS = %i[support_toggle support].freeze
+
+    def support_toggle_note(action:, param:)
+      return if !SUPPORT_TOGGLE_ACTIONS.include?(action)
+      return if param.blank?
+      return NOT_LINKED_NOTE if account.user.blank?
+
+      proposal = ::Proposal.not_retired.find_by(id: param.to_i)
+
+      return SUPPORT_GONE_NOTE if proposal.blank?
+      return withdrawn_support_note(proposal) if proposal.voted_up_by?(account.user)
+
+      registered_support_note(proposal)
+    end
+
+    def registered_support_note(proposal)
+      supports = ::Whatsapp::Contributions::RegisterSupportService.call(
+        proposal_id: proposal.id, user: account.user
+      )
+
+      return support_refusal_note(supports, proposal) if supports.is_a?(Symbol)
+
+      ::Whatsapp::Send.message_block(
+        account: account,
+        block: ::Whatsapp::SupportRecap.registered_block(
+          account: account, proposal: proposal, supports: supports
+        )
+      )
+
+      REGISTERED_NOTE
+    end
+
+    def withdrawn_support_note(proposal)
+      supports = ::Whatsapp::Contributions::WithdrawSupportService.call(
+        proposal_id: proposal.id, user: account.user
+      )
+
+      return support_refusal_note(supports, proposal) if supports.is_a?(Symbol)
+
+      ::Whatsapp::Send.message_block(
+        account: account,
+        block: ::Whatsapp::SupportRecap.withdrawn_block(
+          account: account, proposal: proposal, supports: supports
+        )
+      )
+
+      WITHDRAWN_NOTE
+    end
+
+    # The rule underneath rather than the sentence, the same way a tool reports a
+    # refusal: the sentence is the assistant's to write for the question they
+    # actually asked, in their language. Nothing has been sent on any of these paths,
+    # so unlike the two notes above there is nothing to tell it not to repeat.
+    #
+    # The two "already" answers are races rather than mistakes — the vote read a
+    # moment ago moved on the projekt page or in another chat before the write
+    # landed. Both are the state the citizen wanted, so neither is reported as a
+    # failure.
+    def support_refusal_note(reason, proposal)
+      return ALREADY_SUPPORTED_NOTE if reason == :already_supported
+      return NOT_SUPPORTED_NOTE if reason == :not_supported
+      return WRITE_FAILED_NOTE if reason == :not_registered || reason == :not_withdrawn
+      return SUPPORT_GONE_NOTE if reason == :gone
+      return NOT_LINKED_NOTE if reason == :not_linked
+
+      rule = ::Whatsapp::ParticipationRules.explain(
+        reason: reason, projekt_phase: proposal.projekt_phase
+      )
+
+      "The citizen tapped the support button and their support could not be registered, so " \
+        "nothing changed. The reason: #{rule}"
+    end
+
+    REGISTERED_NOTE = "The citizen tapped the support button and their support is registered. " \
+                      "The contribution, its new count and its address have already been sent " \
+                      "to them, so repeat none of it: say in one line that it is registered. Do " \
+                      "not invite them to support anything else, and do not say it is final or " \
+                      "cannot be taken back — the same button now takes it back.".freeze
+
+    WITHDRAWN_NOTE = "The citizen tapped the support button on a contribution they already " \
+                     "supported, so the support has been taken back. The contribution, the " \
+                     "count as it now stands and its address have already been sent to them, so " \
+                     "repeat none of it: say in one line that it is withdrawn. Do not ask why " \
+                     "and do not talk them back into it — the same button supports it again.".freeze
+
+    ALREADY_SUPPORTED_NOTE = "They already support that contribution, and nothing changed. Say " \
+                             "so plainly rather than as a failure.".freeze
+
+    NOT_SUPPORTED_NOTE = "They do not support that contribution, so there was nothing to take " \
+                         "back and nothing changed. Say so plainly rather than as a failure.".freeze
+
+    WRITE_FAILED_NOTE = "The tap did not take: nothing was written and the count is unchanged. " \
+                        "Tell the citizen it did not go through and that the button is still " \
+                        "there to try again. Do not say it worked.".freeze
+
+    SUPPORT_GONE_NOTE = "The contribution behind that button no longer has a public page — it " \
+                        "may have been retired since it was mentioned. Tell the citizen so; " \
+                        "nothing was changed.".freeze
+
+    NOT_LINKED_NOTE = "This number is not linked to an account, so a support cannot be " \
+                      "registered or taken back. Tell the citizen an account is needed and call " \
+                      "send_login_link when they want one.".freeze
 
     # ── Back to the beginning ───────────────────────────────────────────────
     # The pill that sits on every interactive message the bot sends, and the one

@@ -98,23 +98,30 @@ de:
           Sie haben sich von unseren Nachrichten abgemeldet, deshalb kann ich Ihnen hier
           nicht weiterhelfen. Schreiben Sie %{keyword}, wenn Sie wieder Nachrichten
           erhalten möchten.
-      # The block Whatsapp::DraftPreview puts in front of a citizen before they
-      # confirm a contribution and again once it is online. Only the labels are
-      # here: the title and the text are the citizen's own and are copied out of
-      # the record untouched.
       # The block Whatsapp::CommentPreview puts in front of a citizen before their
-      # comment goes on a public page, and again once it is there. The comment
-      # itself is their own and is never translated.
+      # comment goes on a public page, and the single sentence that follows once it
+      # is there. The comment itself is their own and is never translated.
+      # online and awaiting_review each stand alone as that whole second message,
+      # so both have to read as a full sentence with nothing above them.
       comment:
         on_proposal: "Kommentar zu"
         online: "Ihr Kommentar steht jetzt auf der Seite:"
         awaiting_review: >-
           Ihr Kommentar ist eingegangen und wird noch geprüft. Sobald er freigegeben ist,
           erscheint er auf der Seite — einen Link dazu gibt es deshalb noch nicht.
-      # The block Whatsapp::SupportRecap sends once a support has been registered.
+      # The block Whatsapp::SupportRecap sends once a support has been registered or
+      # taken back again. Both directions are the same three lines with the number
+      # moved, so they share the count label.
       support:
         registered: Unterstützt
+        withdrawn: Unterstützung zurückgenommen
         supports: Unterstützungen
+      # The block Whatsapp::DraftPreview puts in front of a citizen before they
+      # confirm a contribution, and the single sentence that follows once it has
+      # gone in. Only the labels are here: the title and the text are the
+      # citizen's own and are copied out of the record untouched.
+      # online and awaiting_review each stand alone as that whole second message,
+      # so both have to read as a full sentence with nothing above them.
       preview:
         projekt: Projekt
         phase: Beteiligung
@@ -178,6 +185,14 @@ de:
         show_more: Weitere anzeigen
         image_upload: Foto hinzufügen
         image_generate: Bild erzeugen
+        # The two faces of one pill, and the only labels the assistant is not allowed
+        # to write itself: the same button gives a support or takes it back depending
+        # on the vote, so words it chose a message ago could say the opposite of what
+        # tapping it does. Both have to stay inside the 20 characters WhatsApp allows
+        # a button title — it truncates mid-word and without an ellipsis past that,
+        # which is why the fuller phrase lives on the message and not on the button.
+        support: Jetzt unterstützen
+        support_withdraw: Zurücknehmen
         image_skip: Ohne Foto weiter
       notifications:
         follow_up:

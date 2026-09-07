@@ -27,6 +27,10 @@ module Whatsapp::ParticipationRules
     no_open_phase: "Nothing is open for contributions in this projekt right now.",
     submissions_limit_exceeded:
       "The citizen has already submitted as many contributions as this phase allows.",
+    archived: "This contribution has been archived, and an archived one takes no more supports.",
+    supports_limit_exceeded:
+      "The citizen has already supported as many contributions as this phase allows. Taking one " \
+      "of those supports back frees a place.",
     not_logged_in: "This phase requires a linked account; guests cannot contribute to it.",
     guest_not_logged_in: "This phase requires a linked account; guests cannot contribute to it.",
     missing_user_data: "The citizen's account is missing details this phase requires.",

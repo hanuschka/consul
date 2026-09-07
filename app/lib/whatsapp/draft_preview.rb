@@ -9,42 +9,54 @@ module Whatsapp::DraftPreview
   # either: they are the citizen's own words, already in the citizen's own
   # language.
   #
-  # The same block is sent twice — before publishing and after it — for the reason
-  # the ticket exists: two renderings of one record are two chances for the second
-  # to differ from the first. Whatsapp::MessageBlock owns the composition rules
-  # this shares with the comment and support blocks.
+  # The whole contribution is composed once, for the message that asks whether it
+  # may go in. What follows a publish is a single sentence, because the citizen
+  # has just read that message and answered it: repeating the contribution under
+  # their own confirmation buries the one fact the second message carries.
+  # Whatsapp::MessageBlock owns the composition rules this shares with the comment
+  # and support blocks.
 
   SCOPE = "whatsapp.bot.preview".freeze
 
-  LABEL_KEYS = %w[
-    projekt
-    phase
-    attachments
-    photo
-    location
-    online
-    awaiting_review
-  ].freeze
+  CONFIRMATION_LABEL_KEYS = %w[projekt phase attachments photo location].freeze
 
   module_function
 
   # The draft as it stands, for the message that asks whether it may go in.
   def confirmation_block(conversation:)
-    compose(conversation: conversation, closing_keys: [])
+    resource = conversation.draft_resource
+
+    return if resource.blank?
+
+    labels = ::Whatsapp::MessageBlock.labels(
+      account: conversation.whatsapp_account, scope: SCOPE, keys: CONFIRMATION_LABEL_KEYS
+    )
+
+    ::Whatsapp::MessageBlock.compose(
+      [
+        "*#{resource.title}*",
+        description_text(resource),
+        meta_lines(conversation: conversation, resource: resource, labels: labels)
+      ]
+    )
   end
 
-  # The same block once it is online, with the address written out. WhatsApp makes
-  # a written-out address tappable, so it needs no button of its own — and a button
-  # would be the only thing on the message it sat on.
-  def published_block(conversation:, url:)
-    compose(conversation: conversation, closing_keys: ["online"], closing_value: url)
+  # Once it is online: the sentence and the address, and nothing they have already
+  # read. WhatsApp makes a written-out address tappable, so it needs no button of
+  # its own — and a button would be the only thing on the message it sat on.
+  def published_confirmation(conversation:, url:)
+    ::Whatsapp::MessageBlock.closing_line(
+      account: conversation.whatsapp_account, scope: SCOPE, key: "online", value: url
+    )
   end
 
-  # A contribution held for review has no public page, so this block deliberately
+  # A contribution held for review has no public page, so this deliberately
   # carries no address at all: a link onto a login wall or an error page is worse
   # than being told plainly that there is nothing to open yet.
-  def awaiting_review_block(conversation:)
-    compose(conversation: conversation, closing_keys: ["awaiting_review"])
+  def awaiting_review_confirmation(conversation:)
+    ::Whatsapp::MessageBlock.closing_line(
+      account: conversation.whatsapp_account, scope: SCOPE, key: "awaiting_review"
+    )
   end
 
   # What the citizen was shown, reduced to the facts the block displays.
@@ -60,25 +72,6 @@ module Whatsapp::DraftPreview
         conversation.projekt_phase_id,
         image_blob_id(resource),
         pin_coordinates(resource)
-      ]
-    )
-  end
-
-  def compose(conversation:, closing_keys:, closing_value: nil)
-    resource = conversation.draft_resource
-
-    return if resource.blank?
-
-    labels = ::Whatsapp::MessageBlock.labels(
-      account: conversation.whatsapp_account, scope: SCOPE, keys: LABEL_KEYS
-    )
-
-    ::Whatsapp::MessageBlock.compose(
-      [
-        "*#{resource.title}*",
-        description_text(resource),
-        meta_lines(conversation: conversation, resource: resource, labels: labels),
-        closing_line(keys: closing_keys, labels: labels, value: closing_value)
       ]
     )
   end
@@ -106,14 +99,6 @@ module Whatsapp::DraftPreview
     ].compact_blank.join(", ").presence
   end
 
-  def closing_line(keys:, labels:, value:)
-    line = keys.map { |key| labels[key] }.compact_blank.join(" ")
-
-    return if line.blank?
-
-    [line, value].compact_blank.join("\n")
-  end
-
   def description_text(resource)
     ::Whatsapp::MessageBlock.verbatim(resource.description)
   end
@@ -130,6 +115,6 @@ module Whatsapp::DraftPreview
     [pin.latitude, pin.longitude].join(",")
   end
 
-  private_class_method :compose, :meta_lines, :attached_names, :closing_line
+  private_class_method :meta_lines, :attached_names
   private_class_method :description_text, :image_blob_id, :pin_coordinates
 end

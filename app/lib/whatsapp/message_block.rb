@@ -60,6 +60,18 @@ module Whatsapp::MessageBlock
       .presence
   end
 
+  # The last line of a block, or the whole of a message that carries nothing else:
+  # one fixed sentence and, when there is one, the address it is about on the line
+  # below. Kept here rather than in each renderer because the two rules in it are
+  # the ones that would drift — the sentence is translated like every other label,
+  # and the address goes underneath it rather than beside it so a long sentence
+  # cannot push the link into the middle of a wrapped line.
+  def closing_line(account:, scope:, key:, value: nil)
+    sentence = labels(account: account, scope: scope, keys: [key])[key]
+
+    [sentence, value].compact_blank.join(LINE_BREAK).presence
+  end
+
   # A block longer than one message, split rather than cut: the one thing these
   # blocks exist to guarantee is that nothing the citizen reads has been
   # shortened. Paragraph boundaries first, because they are where the block's

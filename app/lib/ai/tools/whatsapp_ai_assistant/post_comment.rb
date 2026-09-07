@@ -9,9 +9,9 @@ class Ai::Tools::WhatsappAiAssistant::PostComment < Ai::Tools::WhatsappAiAssista
               "Call it only once they have clearly said that comment should go on the page. It " \
               "refuses when nothing has been written down, when the bot's previous message did " \
               "not offer the comment_post button, and when the words have changed since they were " \
-              "shown; each refusal says what would resolve it. On success the comment and its " \
-              "address, or the sentence that it is waiting to be looked at, are sent to them for " \
-              "you — so do not write either out again."
+              "shown; each refusal says what would resolve it. On success the citizen is told " \
+              "for you that it is on the page, with its address, or that it is waiting to be " \
+              "looked at — so do not say either yourself and never offer a link of your own."
 
   def diagnostic_step
     ::Whatsapp::Conversation::Step::IDLE
@@ -84,13 +84,10 @@ class Ai::Tools::WhatsappAiAssistant::PostComment < Ai::Tools::WhatsappAiAssista
     # them afterwards, so telling everyone their comment is "being reviewed" would be
     # false — but where a moderation rule does hide it on creation, that is the true
     # answer, so the row is asked.
-    #
-    # The block is sent before the stash is cleared, because the renderer reads the
-    # words out of it.
     def posted_answer(comment)
       url = ::Whatsapp::PublishedResourceUrl.call(comment)
 
-      send_recap(url: url)
+      send_confirmation(url: url)
 
       conversation.clear_pending_comment!
 
@@ -102,28 +99,28 @@ class Ai::Tools::WhatsappAiAssistant::PostComment < Ai::Tools::WhatsappAiAssista
       }.compact
     end
 
-    def send_recap(url:)
+    # The outcome and nothing else. They have just read their own words and answered
+    # the question under them, so the only thing this message can add is where those
+    # words went — and sending it from here rather than leaving it to the model is
+    # what keeps the address the platform's own rather than one the model recalled.
+    def send_confirmation(url:)
       block =
         if url.present?
-          ::Whatsapp::CommentPreview.posted_block(conversation: conversation, url: url)
+          ::Whatsapp::CommentPreview.posted_confirmation(conversation: conversation, url: url)
         else
-          ::Whatsapp::CommentPreview.awaiting_review_block(conversation: conversation)
+          ::Whatsapp::CommentPreview.awaiting_review_confirmation(conversation: conversation)
         end
 
-      return if block.blank?
-
-      ::Whatsapp::MessageBlock.chunks(block).each do |part|
-        ::Whatsapp::Send.text(account: account, body: part)
-      end
+      ::Whatsapp::Send.message_block(account: account, block: block)
     end
 
-    PENDING_HINT = "It is in but waiting to be looked at before it appears. The comment and that " \
-                   "sentence have already been sent to them, so do not repeat either and do not " \
+    PENDING_HINT = "It is in but waiting to be looked at before it appears. They have already " \
+                   "been told that, so do not say it again, do not repeat the comment and do not " \
                    "offer a link.".freeze
 
-    PUBLISHED_HINT = "The comment and its address have already been sent to them, so do not " \
-                     "repeat either and do not write a link. Say briefly that it is on the page " \
-                     "now.".freeze
+    PUBLISHED_HINT = "They have already been told that it is on the page, and its address has " \
+                     "already been sent to them, so do not say either again and do not repeat " \
+                     "the comment.".freeze
 
     def nothing_written_error
       { error: "No comment has been written down in this conversation, so there is nothing to " \

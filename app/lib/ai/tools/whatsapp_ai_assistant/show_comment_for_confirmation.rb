@@ -71,9 +71,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
     end
 
     def send_block(block)
-      ::Whatsapp::MessageBlock.chunks(block).each do |part|
-        ::Whatsapp::Send.text(account: account, body: part)
-      end
+      ::Whatsapp::Send.message_block(account: account, block: block)
     end
 
     def offerable_buttons(buttons)

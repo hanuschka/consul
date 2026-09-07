@@ -1,12 +1,19 @@
 class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAssistant::BaseTool
-  description "Registers the citizen's support for one proposal. Support cannot be withdrawn, so " \
-              "it refuses unless the bot's previous message actually offered the support button " \
-              "for this same proposal — show them the proposal with reply_with_actions carrying " \
-              "support-<id>, and call this once they have tapped or clearly said yes to that one. " \
-              "Pass the id find_contribution returned; never guess one. The proposal is " \
-              "re-checked here, so a phase that has since closed or a proposal that has been " \
-              "retired refuses rather than acting. On success the proposal, its new count and its " \
-              "address are sent to them for you — do not write them out again."
+  # The way a support goes in when the citizen asked for one in words. A tap does not
+  # come through here at all: the inbound side registers that itself, because the id
+  # on a tapped button is one the citizen was looking at and needs nothing checked
+  # about it.
+  #
+  # What that leaves this tool is the case with no button behind it — "das unterstütze
+  # ich" about a contribution found a message ago — which is why the id still has to
+  # be one find_contribution returned rather than one the model liked the look of.
+  description "Registers the citizen's support for one proposal, which they can take back " \
+              "again afterwards. Call it when they have asked for it in words; a tap on a " \
+              "support button is already registered before you are asked, so never call this " \
+              "for one. Pass the id find_contribution returned; never guess one. The proposal " \
+              "is re-checked here, so a phase that has since closed or a proposal that has " \
+              "been retired refuses rather than acting. On success the proposal, its new count " \
+              "and its address are sent to them for you — do not write them out again."
 
   params do
     integer :contribution_id,
@@ -15,10 +22,6 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
 
   def execute(contribution_id:)
     return not_linked_error("support a proposal") if user.blank?
-
-    refusal = refuse_without_confirmation(contribution_id)
-
-    return refusal if refusal.present?
 
     outcome = ::Whatsapp::Contributions::RegisterSupportService.call(
       proposal_id: contribution_id, user: user
@@ -30,28 +33,6 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
   end
 
   private
-
-    # The offer has to name this proposal, not merely be an offer. Whatsapp::Send
-    # records an irreversible pill with its parameter for exactly this: a support
-    # button shown for one proposal used to satisfy a call made with another, and the
-    # citizen would have supported something they were never shown — which cannot be
-    # undone from a chat.
-    #
-    # Read off the value held at inbound, so a tool cannot offer the pill and act on
-    # it inside the same turn.
-    def refuse_without_confirmation(contribution_id)
-      offered = [:support, contribution_id].join(::Whatsapp::FlowActions::SEPARATOR)
-
-      return if conversation.confirmation_offered?(offered)
-
-      {
-        error: "The bot's last message did not offer the support button for proposal " \
-               "#{contribution_id}, so nothing was registered.",
-        hint: "Show them that proposal — its title and its address — with a support-" \
-              "#{contribution_id} button whose label says it supports, and call this again once " \
-              "they have answered."
-      }
-    end
 
     # The block is composed from the proposal rather than described to the model, for
     # the same reason a published contribution is: the count in the chat has to be
@@ -66,26 +47,24 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
         supported: true,
         supports: supports,
         hint: "The proposal, its new count and its address have already been sent to them, so do " \
-              "not repeat any of it. Say briefly that it is registered. Do not invite them to " \
-              "support anything else."
+              "not repeat any of it. Say briefly that it is registered, and offer no reassurance " \
+              "about it being final — it is not. Do not invite them to support anything else."
       }
     end
 
     def send_recap(proposal:, supports:)
-      block = ::Whatsapp::SupportRecap.block(
-        account: account, proposal: proposal, supports: supports
+      ::Whatsapp::Send.message_block(
+        account: account,
+        block: ::Whatsapp::SupportRecap.registered_block(
+          account: account, proposal: proposal, supports: supports
+        )
       )
-
-      return if block.blank?
-
-      ::Whatsapp::MessageBlock.chunks(block).each do |part|
-        ::Whatsapp::Send.text(account: account, body: part)
-      end
     end
 
     def refusal_for(outcome)
       return gone_error if outcome == :gone
       return already_supported_answer if outcome == :already_supported
+      return not_registered_error if outcome == :not_registered
       return not_linked_error("support a proposal") if outcome == :not_linked
 
       {
@@ -100,11 +79,20 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
                "was mentioned. Tell the citizen so; nothing was registered." }
     end
 
+    # The refusal with no rule behind it: the phase allowed the support and the write
+    # still did not take. Nothing to explain, so nothing is invented — say it failed
+    # and let them try again rather than confirming something that did not happen.
+    def not_registered_error
+      { error: "The support did not go through, and the count is unchanged. Tell the citizen it " \
+               "could not be registered and that they can try again; do not say it worked." }
+    end
+
     def already_supported_answer
       {
         supported: false,
         already: true,
-        hint: "They had already supported it. Say so plainly rather than as a failure."
+        hint: "They had already supported it. Say so plainly rather than as a failure, and offer " \
+              "them the way back: withdraw_support takes it back again."
       }
     end
 end

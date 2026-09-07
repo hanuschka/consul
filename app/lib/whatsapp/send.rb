@@ -29,6 +29,23 @@ module Whatsapp::Send
     end
   end
 
+  # A block composed from a record — a draft, a comment, a support — on its way out
+  # as however many messages it needs. Every caller that sends one did exactly this
+  # by hand, the blank guard included, and the guard is not optional: a block
+  # composes to nil whenever the record behind it has nothing to show, and a blank
+  # body is the one value WhatsApp refuses the whole send over.
+  #
+  # Here rather than beside the splitting in MessageBlock, which composes and knows
+  # nothing about delivery — and already gets called from this side for the
+  # interactive limit.
+  def message_block(account:, block:)
+    return if block.blank?
+
+    ::Whatsapp::MessageBlock.chunks(block).each do |part|
+      text(account: account, body: part)
+    end
+  end
+
   # The bot's own locale copy, put into the citizen's language on its way out. Only
   # ever for the fixed lines: what the assistant writes is already in the language it
   # was asked to answer in, and a round trip through a second model could only lose
@@ -482,7 +499,7 @@ module Whatsapp::Send
   end
 
   # Which of an interactive message's buttons offered something that cannot be taken
-  # back — publishing, registering support, severing the account link. Written onto
+  # back — publishing, posting a comment, severing the account link. Written onto
   # the conversation for every interactive send, so the tools that must not act
   # without having asked first can tell whether they asked: an assistant is
   # perfectly capable of deciding it has already confirmed something it never

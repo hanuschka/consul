@@ -19,6 +19,10 @@ en:
         model_required:
           inline: >
             Required because a provider other than the default is selected. Please choose a model for this provider.
+        image_marking_unavailable:
+          title: Image marking unavailable
+          body: >
+            exiftool is missing on this server. A generated picture has to be marked as AI-generated before it is published — without exiftool every image generation fails instead of publishing an unmarked picture. Please install the package:
         api_key_required:
           title: API key required
           body: >

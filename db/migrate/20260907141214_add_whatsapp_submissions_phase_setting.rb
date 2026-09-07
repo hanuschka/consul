@@ -13,11 +13,13 @@ class AddWhatsappSubmissionsPhaseSetting < ActiveRecord::Migration[6.1]
   # of the two goes first, that one creates the row with the "off" default.
   def up
     PHASE_CLASSES.each do |phase_class|
-      phase_class.find_each do |projekt_phase|
-        ai_flow_setting =
-          projekt_phase.settings.find_by(key: "feature.#{projekt_phase.ai_flow_feature_key}")
+      phase_class.includes(:settings).find_each do |projekt_phase|
+        ai_flow_key = "feature.#{projekt_phase.ai_flow_feature_key}"
+        ai_flow_setting = projekt_phase.settings.detect { |setting| setting.key == ai_flow_key }
 
-        setting = projekt_phase.settings.find_or_initialize_by(key: NEW_KEY)
+        setting =
+          projekt_phase.settings.detect { |candidate| candidate.key == NEW_KEY } ||
+          projekt_phase.settings.build(key: NEW_KEY)
         setting.value = ai_flow_setting&.value.present? ? "active" : ""
 
         setting.save!

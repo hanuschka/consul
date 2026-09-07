@@ -65,7 +65,7 @@
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
       <%= link_to adm_deficiency_reports_root_path, class: "flyout-item--link" do %>
         <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["deficiency_reports"]) %>
-        <%= Setting["deficiency_reports.feature_name"].presence || t("custom.layouts.header.deficiency_report_management") %>
+        <%= setting_text("deficiency_reports.feature_name").presence || t("custom.layouts.header.deficiency_report_management") %>
       <% end %>
     </li>
   <% end %>

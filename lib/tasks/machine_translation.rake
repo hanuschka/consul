@@ -86,6 +86,7 @@ namespace :machine_translation do
     end
 
     MachineTranslation::ChromeStore.reset!
+    MachineTranslation::Stats.expire_usage
   end
 
   desc "Clear the fragment cache after a backfill (backfill writes skip the parent touch)"

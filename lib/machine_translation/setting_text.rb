@@ -66,7 +66,7 @@ module MachineTranslation
         end
 
         def cached(locale, content_key)
-          ChromeStore.lookup(locale, content_key).presence
+          MachineTranslation::ChromeStore.lookup(locale, content_key).presence
         end
 
         def stored(locale, content_key)
@@ -104,23 +104,24 @@ module MachineTranslation
         end
 
         def translate(value, locale)
-          mode = TextMode.mode_for(value)
+          mode = MachineTranslation::TextMode.mode_for(value)
 
           attempt(value, locale, mode) || retry_attempt(value, locale, mode)
         end
 
         def retry_attempt(value, locale, mode)
-          fallback = TextMode.fallback_for(mode)
+          fallback = MachineTranslation::TextMode.fallback_for(mode)
           return if fallback.nil?
 
           attempt(value, locale, fallback)
         end
 
         def attempt(value, locale, mode)
-          raw = request(TextMode.prepare(value, mode), locale, TextMode.options(mode))
+          text_mode = MachineTranslation::TextMode
+          raw = request(text_mode.prepare(value, mode), locale, text_mode.options(mode))
           return if raw.blank?
 
-          output = TextMode.restore(raw, mode)
+          output = text_mode.restore(raw, mode)
           output if MachineTranslation.placeholders_intact?(value, output)
         end
 

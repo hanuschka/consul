@@ -16,11 +16,6 @@ de:
             body: >
               In der Serverkonfiguration ist kein DeepL-API-Schlüssel hinterlegt. Es werden keine
               Inhalte übersetzt, bis der Schlüssel eingetragen ist.
-          feature_disabled:
-            title: Funktion nicht aktiviert
-            body: >
-              Ein DeepL-Schlüssel ist vorhanden, die Funktion "Maschinelle Übersetzung" ist aber
-              abgeschaltet. Neue Inhalte werden nicht übersetzt.
           circuit_open:
             title: Verbindung zu DeepL unterbrochen
             body: >

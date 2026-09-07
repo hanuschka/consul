@@ -28,8 +28,7 @@ namespace :machine_translation do
     locale = MachineTranslation::Tasks.validate_locale!(args[:locale])
 
     unless MachineTranslation.enabled?
-      abort "machine translation is disabled (needs a DeepL key and " \
-            "#{MachineTranslation::SETTING_KEY})"
+      abort "machine translation is disabled (no DeepL API key configured)"
     end
 
     limit = args[:limit].presence&.to_i
@@ -74,8 +73,7 @@ namespace :machine_translation do
     locale = MachineTranslation::Tasks.validate_locale!(args[:locale])
 
     unless MachineTranslation.enabled?
-      abort "machine translation is disabled (needs a DeepL key and " \
-            "#{MachineTranslation::SETTING_KEY})"
+      abort "machine translation is disabled (no DeepL API key configured)"
     end
 
     result = MachineTranslation::ChromeWriter.new(locale, limit: args[:limit].presence&.to_i).call

@@ -15,14 +15,6 @@
     </div>
   <% end %>
 
-  <% if configured? && !feature_enabled? %>
-    <div class="mb-3">
-      <%= kern_alert(title: t(".warnings.feature_disabled.title"), style: :info) do %>
-        <p class="kern-body"><%= t(".warnings.feature_disabled.body") %></p>
-      <% end %>
-    </div>
-  <% end %>
-
   <% if @circuit_open %>
     <div class="mb-3">
       <%= kern_alert(title: t(".warnings.circuit_open.title"), style: :error) do %>

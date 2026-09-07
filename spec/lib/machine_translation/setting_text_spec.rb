@@ -12,7 +12,6 @@ describe MachineTranslation::SettingText do
 
   before do
     write_setting(key, "Beteiligung der Stadt")
-    write_setting(MachineTranslation::SETTING_KEY, true)
     allow(Deepl).to receive(:configured?).and_return(true)
     allow(Deepl::Client).to receive(:new).and_return(client)
     allow(client).to receive(:translate).and_return(["Participation de la ville"])
@@ -27,7 +26,7 @@ describe MachineTranslation::SettingText do
 
   describe "when it must not translate" do
     it "returns the raw value while machine translation is disabled" do
-      write_setting(MachineTranslation::SETTING_KEY, nil)
+      allow(Deepl).to receive(:configured?).and_return(false)
 
       expect(I18n.with_locale(target) { described_class.call(key) }).to eq "Beteiligung der Stadt"
       expect(client).not_to have_received(:translate)

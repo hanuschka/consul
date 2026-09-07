@@ -1,5 +1,5 @@
 class Adm::MachineTranslationsController < Adm::BaseController
-  helper_method :feature_enabled?, :configured?
+  helper_method :configured?
 
   def index
     authorize [:adm, RemoteTranslation], :index?, policy_class: Adm::MachineTranslationPolicy
@@ -38,10 +38,6 @@ class Adm::MachineTranslationsController < Adm::BaseController
   end
 
   private
-
-    def feature_enabled?
-      MachineTranslation.enabled?
-    end
 
     def configured?
       Deepl.configured?

@@ -15,11 +15,6 @@ en:
             body: >
               No DeepL API key is present in the server configuration. Nothing will be translated
               until the key is added.
-          feature_disabled:
-            title: Feature is switched off
-            body: >
-              A DeepL key is present, but machine translation is switched off. New content will not
-              be translated.
           circuit_open:
             title: DeepL connection paused
             body: >

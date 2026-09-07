@@ -32,7 +32,10 @@ export default class extends Controller {
 
   // The panel is fixed, so it is placed from the viewport rect of the cell it
   // belongs to: its right edge meets the cell's, and it flips above the badge
-  // when it would run past the bottom edge.
+  // when it would run past the bottom edge. A panel at its full height fits
+  // neither side once the badge sits mid-viewport, so whichever side is
+  // chosen is finally pulled back inside the viewport -- the panel scrolls
+  // its own rows, and a row hanging off the bottom edge cannot be reached.
   position() {
     const badge = this.element.getBoundingClientRect()
     const anchor = (this.element.closest("th, td") || this.element).getBoundingClientRect()
@@ -43,12 +46,12 @@ export default class extends Controller {
     popup.style.left = `${Math.max(gap, right - popup.offsetWidth)}px`
 
     const spaceBelow = window.innerHeight - badge.bottom
+    const spaceNeeded = popup.offsetHeight + gap
+    const flipsAbove = spaceBelow < spaceNeeded && badge.top > spaceNeeded
+    const top = flipsAbove ? badge.top - spaceNeeded : badge.bottom + gap
+    const lowestTop = window.innerHeight - popup.offsetHeight - gap
 
-    if (spaceBelow < popup.offsetHeight + gap && badge.top > popup.offsetHeight + gap) {
-      popup.style.top = `${badge.top - popup.offsetHeight - gap}px`
-    } else {
-      popup.style.top = `${badge.bottom + gap}px`
-    }
+    popup.style.top = `${Math.max(gap, Math.min(top, lowestTop))}px`
   }
 
   // Each row carries a status line, an answer excerpt and a lazily loaded

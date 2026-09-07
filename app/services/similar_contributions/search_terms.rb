@@ -21,7 +21,16 @@ module SimilarContributions::SearchTerms
     extract(title, description).join(" ")
   end
 
+  # Plain text, decoded: pruning drops script and style bodies with their
+  # elements instead of flattening them into readable words, and asking the
+  # fragment for its text -- rather than serialising it back to markup --
+  # leaves &amp; and &lt; as the characters they stand for. A serialised string
+  # still carries them encoded, and every caller here goes on to squish or
+  # truncate it, which loses the html_safe flag and hands the entity to the
+  # escaper a second time.
   def strip_html(value)
-    ActionController::Base.helpers.sanitize(value.to_s, tags: [])
+    fragment = Loofah.fragment(value.to_s)
+    fragment.scrub!(:prune)
+    fragment.text(encode_special_chars: false)
   end
 end

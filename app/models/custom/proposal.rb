@@ -32,7 +32,7 @@ class Proposal < ApplicationRecord
   scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
   scope :user_created, -> { where(masterportal_pin_id: nil) }
   scope :with_index_card_associations, -> {
-    includes(
+    preload(
       :translations,
       :image,
       :sentiment,

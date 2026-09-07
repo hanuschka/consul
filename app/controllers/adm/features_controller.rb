@@ -1,6 +1,7 @@
 module Adm
   class FeaturesController < Adm::BaseController
     GENERAL_SETTING_KEYS = %w[
+      extended_feature.general.language_switcher_in_menu
       extended_feature.general.enable_google_translate
       extended_feature.general.show_guest_login_links
     ].freeze

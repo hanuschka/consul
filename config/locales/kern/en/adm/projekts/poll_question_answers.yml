@@ -8,6 +8,8 @@ en:
           title: Edit answer option
         create:
           success: Answer created successfully.
+        update:
+          error: The answer text cannot be changed because votes have already been cast.
         destroy:
           success: Answer deleted successfully.
           error: Answers cannot be deleted because votes have already been cast.

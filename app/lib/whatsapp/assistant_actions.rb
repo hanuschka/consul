@@ -18,10 +18,28 @@ module Whatsapp::AssistantActions
 
   # The actions whose consequence cannot be taken back from a chat. Their labels
   # are the model's like every other, but the offer is recorded as its own event:
-  # a pill that publishes or registers support has to be findable afterwards, and
-  # "the assistant offered this" is not otherwise distinguishable from "the
-  # citizen asked for it".
-  IRREVERSIBLE_ACTIONS = %i[draft_publish submit_final support comment_post unlink_confirm].freeze
+  # a pill that publishes a contribution has to be findable afterwards, and "the
+  # assistant offered this" is not otherwise distinguishable from "the citizen
+  # asked for it".
+  #
+  # Four, and supporting is not among them: a support can be taken back, on the
+  # projekt page and now from the chat as well, so the ceremony that made it cost
+  # two taps was protecting against a consequence that does not exist. What is left
+  # here has no undo anywhere — a published contribution, a submitted one, a comment
+  # on a public page, a severed account link.
+  IRREVERSIBLE_ACTIONS = %i[draft_publish submit_final comment_post unlink_confirm].freeze
+
+  # The one pill whose words are not the model's. Every other label is a sentence it
+  # wrote, checked for length and nothing else, because the dispatcher re-resolves the
+  # id on the tap and a poor label costs a badly-worded button.
+  #
+  # The support toggle is the exception because the same id does opposite things: it
+  # gives support or takes it back depending on the vote as it stands when the tap
+  # arrives. A label the model wrote a message earlier can therefore say the precise
+  # opposite of what tapping it does, and the citizen has no way to tell. Read from
+  # the vote instead, and the model's own words for this one are discarded rather
+  # than preferred.
+  FORCED_LABEL_ACTIONS = %i[support_toggle].freeze
 
   module_function
 
@@ -123,6 +141,10 @@ module Whatsapp::AssistantActions
   # unlabelled — a projekt's title as the portal writes it is better than a
   # paraphrase, and it is also what proves the record exists.
   def title_for(action:, param:, label:, conversation:)
+    if FORCED_LABEL_ACTIONS.include?(action)
+      return truncated(record_label(action: action, param: param, conversation: conversation))
+    end
+
     written = truncated(label)
 
     return written if written.present?
@@ -188,6 +210,7 @@ module Whatsapp::AssistantActions
     when :view_projekt then projekt_label(param)
     when :idea_start then phase_projekt_label(param)
     when :support then proposal_label(param)
+    when :support_toggle then support_toggle_label(param, conversation)
     when :category
       taxonomy_label(::Whatsapp::DraftTaxonomy.category(conversation.projekt_phase), param)
     when :sentiment
@@ -216,6 +239,27 @@ module Whatsapp::AssistantActions
 
   def proposal_label(param)
     ::Proposal.not_retired.find_by(id: param.to_i)&.title
+  end
+
+  # Which way the toggle goes, read off the citizen's own vote at the moment the
+  # message is composed rather than carried in the id. The vote is the only thing
+  # that can say whether tapping this gives a support or takes one back, and the
+  # inbound side reads it again on the tap — so a label built from anything else is
+  # a label that can disagree with what happens.
+  #
+  # Blank for a proposal that is gone, which drops the pill: the same rule every
+  # other record-backed label follows.
+  def support_toggle_label(param, conversation)
+    proposal = ::Proposal.not_retired.find_by(id: param.to_i)
+
+    return if proposal.blank?
+
+    user = conversation.user
+    supported = user.present? && proposal.voted_up_by?(user)
+
+    return I18n.t("whatsapp.bot.buttons.support_withdraw") if supported
+
+    I18n.t("whatsapp.bot.buttons.support")
   end
 
   # Only the options the phase on the table actually offers. This is the check
@@ -265,7 +309,7 @@ module Whatsapp::AssistantActions
   end
 
   # Its own event rather than a line in the reply log. A pill that publishes a
-  # draft or registers support cannot be undone from the chat, so a mis-offer has
+  # draft or posts a comment cannot be undone from the chat, so a mis-offer has
   # to be findable after the fact — and the reply it sat under reads perfectly
   # reasonably either way.
   def record_irreversible_offer(action, conversation)

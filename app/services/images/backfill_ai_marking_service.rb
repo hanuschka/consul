@@ -46,7 +46,7 @@ class Images::BackfillAiMarkingService < ApplicationService
           .where(imageable_id: resource_class.unscoped.where(generated_image: true).select(:id))
       end
 
-      resource_conditions.reduce { |scope, condition| scope.or(condition) }.with_attached_attachment
+      resource_conditions.reduce { |scope, condition| scope.or(condition) }
     end
 
     def process(image)
@@ -54,7 +54,7 @@ class Images::BackfillAiMarkingService < ApplicationService
 
       bytes = image.attachment.download
 
-      return already_marked(image) if marker_in?(bytes, image)
+      return already_marked(image) if ::Images::AiMarker.marker_in?(bytes, extension: extension_of(image))
 
       mark_and_reattach(image, bytes)
     rescue ::Images::MarkAiGeneratedService::MarkingFailedError => e
@@ -90,6 +90,10 @@ class Images::BackfillAiMarkingService < ApplicationService
       @logger.info("[Images::BackfillAiMarkingService] marked image #{image.id}")
     end
 
+    def extension_of(image)
+      File.extname(image.attachment.filename.to_s).presence || ".jpg"
+    end
+
     def uploaded_file(data, filename:, content_type:)
       file = Tempfile.new(["ai_marking_backfill", File.extname(filename)], binmode: true)
       file.write(data)
@@ -98,26 +102,6 @@ class Images::BackfillAiMarkingService < ApplicationService
       ActionDispatch::Http::UploadedFile.new(
         tempfile: file, filename: filename, type: content_type
       )
-    end
-
-    # The bytes are the authority on whether a picture is already marked, not the
-    # flags: a record can carry ai_generated over a file that was never marked,
-    # which is the state this backfill exists to end.
-    def marker_in?(bytes, image)
-      file = Tempfile.new(["ai_marking_check", File.extname(image.attachment.filename.to_s)],
-                          binmode: true)
-
-      begin
-        file.write(bytes)
-        file.flush
-
-        ::ExiftoolCommand.read_tag(
-          file.path, ::Images::MarkAiGeneratedService::DIGITAL_SOURCE_TYPE_TAG
-        ) == ::Images::MarkAiGeneratedService::TRAINED_ALGORITHMIC_MEDIA
-      ensure
-        file.close
-        file.unlink
-      end
     end
 
     # A file that already carries the marker still needs the flags, which is the

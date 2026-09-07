@@ -17,8 +17,8 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
               "phase's criteria reject the text; each refusal says what would resolve it. It also " \
               "refuses when the citizen has not been shown the contribution as it now stands: " \
               "call show_draft_for_confirmation, and call it again after any change to the draft. " \
-              "On success the contribution is repeated to them for you, with its address or with " \
-              "the sentence that it is waiting to be reviewed — so do not write it out again and " \
+              "On success the citizen is told for you that it went in, with its address or with " \
+              "the sentence that it is waiting to be reviewed — so do not say either yourself and " \
               "never offer a link of your own."
 
   def diagnostic_step
@@ -112,14 +112,13 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     # The phase id is reported because the reply is asked to offer taking part in the
     # same phase again, and that pill is parameterised: without the id here the model
     # has nothing to build it from and the offer is dropped as a record that does not
-    # exist. Read before complete_draft! for the same reason the comment below gives —
-    # the phase survives, but nothing else about the draft does.
+    # exist. So it is read before complete_draft! drops it.
     def published_answer(resource)
       url = ::Whatsapp::PublishedResourceUrl.call(resource)
       awaiting_review = resource.is_a?(::Proposal) && !resource.admin_accepted?
       projekt_phase_id = conversation.projekt_phase_id
 
-      send_recap(url: awaiting_review ? nil : url)
+      send_confirmation(url: awaiting_review ? nil : url)
 
       conversation.complete_draft!
 
@@ -132,31 +131,26 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       }.compact
     end
 
-    # The contribution shown once more, composed from the record by the same renderer
-    # that showed it before it went in — which is the point: a recap the model writes
-    # is a recap that can differ from the preview it is meant to repeat, and the
-    # citizen would have no way to tell which of the two the platform holds.
-    #
-    # Sent before complete_draft!, which drops the draft the renderer reads.
-    def send_recap(url:)
+    # The outcome and nothing else. The citizen has just read the contribution and
+    # answered the question under it, so the only thing this message can add is where
+    # it went — and sending it from here rather than leaving it to the model is what
+    # keeps the address the platform's own rather than one the model recalled.
+    def send_confirmation(url:)
       block =
         if url.present?
-          ::Whatsapp::DraftPreview.published_block(conversation: conversation, url: url)
+          ::Whatsapp::DraftPreview.published_confirmation(conversation: conversation, url: url)
         else
-          ::Whatsapp::DraftPreview.awaiting_review_block(conversation: conversation)
+          ::Whatsapp::DraftPreview.awaiting_review_confirmation(conversation: conversation)
         end
 
-      return if block.blank?
-
-      ::Whatsapp::MessageBlock.chunks(block).each do |part|
-        ::Whatsapp::Send.text(account: account, body: part)
-      end
+      ::Whatsapp::Send.message_block(account: account, block: block)
     end
 
-    AWAITING_REVIEW_HINT = "It is in, but held for review. The contribution and the sentence " \
-                           "saying it is waiting have already been sent to them, so do not " \
-                           "repeat either and do not offer a link. Offer what follows: taking " \
-                           "part in this same phase again, and their own contributions.".freeze
+    AWAITING_REVIEW_HINT = "It is in, but held for review. They have already been told that it " \
+                           "arrived and is with the administration, so do not say it again, do " \
+                           "not repeat the contribution and do not offer a link. Offer what " \
+                           "follows: taking part in this same phase again, and their own " \
+                           "contributions.".freeze
 
     # What plausibly follows a submission, which is not the same as an invitation to
     # submit again: the contribution they just made, the phase they made it in, and
@@ -164,15 +158,20 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     # and the alternative is a citizen reading "it is online" with nothing to do but
     # type. What stays out is anything unrelated to the thing they just did.
     #
-    # The address has already gone out written into the recap rather than on a button
-    # of its own, because a URL button is the only thing on the message it sits on:
-    # taking it would cost the other two offers. WhatsApp makes a written-out address
-    # tappable anyway.
-    PUBLISHED_HINT = "The contribution and its address have already been sent to them, so do not " \
-                     "repeat either and do not write a link. Say briefly that it is online and " \
-                     "offer what follows from what they just did — taking part in this same " \
-                     "phase again, and their own contributions — as buttons. Do not invite them " \
-                     "to anything unrelated to the contribution they just submitted.".freeze
+    # That it is online is said once, in the message this tool has already sent, and
+    # a model that says it again turns one fact into two messages carrying it. So the
+    # buttons arrive under the offers alone.
+    #
+    # The address went out written into that message rather than on a button of its
+    # own, because a URL button is the only thing on the message it sits on: taking it
+    # would cost the other two offers. WhatsApp makes a written-out address tappable
+    # anyway.
+    PUBLISHED_HINT = "They have already been told that it is online, and its address has already " \
+                     "been sent to them, so do not say either again and do not repeat the " \
+                     "contribution. Offer what follows from what they just did — taking part in " \
+                     "this same phase again, and their own contributions — as buttons. Do not " \
+                     "invite them to anything unrelated to the contribution they just " \
+                     "submitted.".freeze
 
     def draft_errors
       conversation.draft_resource&.errors&.full_messages

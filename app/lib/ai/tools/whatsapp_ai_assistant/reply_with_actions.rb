@@ -17,13 +17,15 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
               "(\"view_projekt-482\", \"notify_toggle-new_comments\"); leave its label empty to " \
               "use the record's own name, which is usually better than a paraphrase of it. " \
               "A button whose action is unknown or whose record no longer exists is dropped. " \
-              "For an action that cannot be undone — publishing, supporting, unlinking — the " \
+              "For an action that cannot be undone — publishing, commenting, unlinking — the " \
               "label must say what it does (\"Jetzt einreichen\", not \"Weiter\"). This sends " \
               "the message itself: do not write one as well, and do not put a link in it when a " \
               "button already leads there."
 
   params do
-    string :body, description: "The reply text, in the citizen's language. A few short sentences."
+    string :body,
+      description: "The reply text, in the citizen's language, laid out as the style rules " \
+                   "require."
     array :buttons,
       of: :object,
       description: "Up to two buttons, most useful first. Each is " \

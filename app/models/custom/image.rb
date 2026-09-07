@@ -69,13 +69,13 @@ class Image
     def generated_marker?(attachable)
       case attachable
       when ActionDispatch::Http::UploadedFile
-        marker_at?(attachable.tempfile.path)
+        ::Images::AiMarker.marker_at?(attachable.tempfile.path)
       when ActiveStorage::Blob
-        marker_in?(attachable.download)
+        ::Images::AiMarker.marker_in?(attachable.download)
       when String
         blob = ActiveStorage::Blob.find_signed(attachable)
 
-        blob.present? && marker_in?(blob.download)
+        blob.present? && ::Images::AiMarker.marker_in?(blob.download)
       else
         false
       end
@@ -83,27 +83,6 @@ class Image
       Rails.logger.warn("[Image] marker check failed: #{e.message}")
 
       false
-    end
-
-    def marker_in?(bytes)
-      file = Tempfile.new(["marker_check", ".jpg"], binmode: true)
-
-      begin
-        file.write(bytes)
-        file.flush
-
-        marker_at?(file.path)
-      ensure
-        file.close
-        file.unlink
-      end
-    end
-
-    def marker_at?(path)
-      ::ExiftoolCommand.read_tag(
-        path,
-        ::Images::MarkAiGeneratedService::DIGITAL_SOURCE_TYPE_TAG
-      ) == ::Images::MarkAiGeneratedService::TRAINED_ALGORITHMIC_MEDIA
     end
 
     def clear_generated_flags_on_replaced_attachment

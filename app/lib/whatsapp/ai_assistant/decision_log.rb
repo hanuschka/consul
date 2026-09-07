@@ -15,7 +15,7 @@ module Whatsapp::AiAssistant::DecisionLog
   # at ten thousand.
   #
   # `irreversible_offered` is the one event that exists for the record rather
-  # than for a rate. Publishing a draft, registering support and confirming an
+  # than for a rate. Publishing a draft, posting a comment and confirming an
   # unlink cannot be taken back from a chat, and the reply that offered the pill
   # reads perfectly reasonably whether the offer was right or wrong — so a
   # mis-offer is only findable if the offer itself was written down.

@@ -151,7 +151,7 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
           title: proposal.title,
           supports: proposal.cached_votes_up,
           url: ::Whatsapp::PublishedResourceUrl.call(proposal),
-          action_id: "support-#{proposal.id}"
+          action_id: "support_toggle-#{proposal.id}"
         }.compact
       end
     end

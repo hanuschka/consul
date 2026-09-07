@@ -1,6 +1,13 @@
-<div id="memos-container">
-  <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+<% memo_count = memoable.memos.size %>
+
+<div id="memos-container" class="adm-memos">
+  <div class="adm-memos__head">
     <h2 class="adm-detail-section-title m-0"><%= t("adm.memos.title") %></h2>
+
+    <% if memo_count.positive? %>
+      <span class="adm-memos__count"><%= t("adm.memos.count", count: memo_count) %></span>
+    <% end %>
+
     <%= render Adm::HintComponent.new do %>
       <%= t("adm.memos.hint") %>
     <% end %>
@@ -12,5 +19,11 @@
 
   <div class="adm-memos-timeline">
     <%= render "adm/memos/memos_tree", memos: memoable.memos.roots.order(created_at: :desc), memoable: memoable %>
+
+    <div class="adm-memos-empty">
+      <span class="adm-memos-empty__icon material-symbols-outlined" aria-hidden="true">sticky_note_2</span>
+      <p class="adm-memos-empty__title"><%= t("adm.memos.empty.title") %></p>
+      <p class="adm-memos-empty__text"><%= t("adm.memos.empty.text") %></p>
+    </div>
   </div>
 </div>

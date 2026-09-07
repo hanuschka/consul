@@ -133,6 +133,13 @@ de:
         image_rights_notice: >-
           Bitte senden Sie nur Bilder, für die Sie die Rechte haben und auf denen keine
           Personen erkennbar sind, die damit nicht einverstanden sind.
+        # The counterpart for the generated answer, appended to the same request: the
+        # picture the portal makes is published under the citizen's name like their own
+        # would be, so they are told it is machine-made before they choose that answer
+        # rather than after they see the picture.
+        image_generation_notice: >-
+          Ein erzeugtes Bild wird von einer KI erstellt und nicht von einem Menschen
+          aufgenommen.
         location_optional: Ein Ort ist freiwillig. Sie können auch ohne weitermachen.
       onboarding:
         welcome_greeting: 👋 Schön, dass Sie hier sind!

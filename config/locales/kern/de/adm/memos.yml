@@ -3,13 +3,22 @@ de:
     memos:
       title: Interne Notizen
       hint: Nur für Admins und Projektmanager sichtbar. Über die Glocke können Kollegen per E-Mail benachrichtigt werden.
+      count:
+        one: 1 Notiz
+        other: "%{count} Notizen"
+      empty:
+        title: Noch keine internen Notizen
+        text: Halten Sie hier Rückfragen, Absprachen und Entscheidungen zu diesem Beitrag fest.
       form:
         submit: Notiz erstellen
+        submit_reply: Antwort senden
         placeholder: Interne Notiz schreiben...
         placeholder_reply: Antwort schreiben...
+        keyboard_hint: Strg/Cmd + Enter zum Senden
       memo:
         reply: Antworten
         send_notification: Benachrichtigung senden
+        notification_sent: Benachrichtigt
         last_notification: "Letzte Benachrichtigung gesendet am %{datetime}"
         delete: Löschen
         delete_confirm: Möchten Sie diese Notiz wirklich löschen?

@@ -6,25 +6,17 @@ class ResourceImages::AttachService < ApplicationService
   #
   # Extracted when WhatsApp became a second consumer alongside the web editor,
   # so the two cannot end up disagreeing about which of those branches applies.
-  def self.from_base64(resource:, user:, base64:)
-    tempfile = Base64ImageUtils.decode_to_tempfile(base64)
 
-    return if tempfile.blank?
-
-    new(
-      resource: resource,
-      user: user,
-      tempfile: tempfile,
-      filename: "ai_generated_#{Time.current.to_i}.jpg",
-      content_type: "image/jpeg"
-    ).call
-  end
-
-  # A generated picture reaches the same place by a different route. The mark is
-  # mandatory and has to be written before the bytes are attached, and the
-  # marking service stages the in-app flag onto the Image record — which is why
-  # the record is prepared here and saved once, at the end, rather than built
-  # inside `call`.
+  # A base64 payload only ever arrives here from an image generator, and a
+  # generated picture must be marked, so this is the only entry point that takes
+  # one. The unmarked route it replaces named its file "ai_generated_…" while
+  # writing neither the marker nor the flag, which is how the WhatsApp bot came
+  # to publish generated pictures a reader could not tell from photographs.
+  #
+  # The mark is mandatory and has to be written before the bytes are attached,
+  # and the marking service stages the in-app flag onto the Image record — which
+  # is why the record is prepared here and saved once, at the end, rather than
+  # built inside `call`.
   def self.from_generated_base64(resource:, user:, base64:, ai_system: nil, ai_system_version: nil)
     return if resource.blank? || user.blank?
 

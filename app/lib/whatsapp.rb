@@ -37,10 +37,12 @@ module Whatsapp
   MAX_BUTTONS = 3
 
   # What a caller may fill of those, because Whatsapp::Send reserves the last slot
-  # for the main-menu pill it puts on every interactive message. Declared here so a
-  # tool reports the number it actually sent rather than the number it composed —
-  # trimming a fourth button silently is how a halt line comes to name a pill the
-  # citizen never saw.
+  # for the main-menu pill on every interactive message it sends through `buttons`.
+  # Declared here so a tool reports the number it actually sent rather than the
+  # number it composed — trimming a fourth button silently is how a halt line comes
+  # to name a pill the citizen never saw. A caller that needs all three slots for
+  # answers of its own sends through `buttons_without_main_menu` and counts to
+  # MAX_BUTTONS instead.
   MAX_OFFERED_BUTTONS = MAX_BUTTONS - 1
 
   # What one message will hold, which the preview has to answer to rather than

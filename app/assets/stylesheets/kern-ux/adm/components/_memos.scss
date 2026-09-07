@@ -1,216 +1,267 @@
-// Memo input field
-.adm-memo-input {
-  position: relative;
+.adm-memos {
+  --adm-memo-avatar-size: 2rem;
+  --adm-memo-rail-gap: var(--kern-12);
+  --adm-memo-measure: 56rem;
+  --adm-memo-radius: 8px;
+}
+
+.adm-memos__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kern-8);
+  margin-bottom: var(--kern-16);
+}
+
+.adm-memos__count {
+  font-size: var(--kern-font-size-14);
+  font-variant-numeric: tabular-nums;
+  color: var(--er-text-secondary);
+}
+
+// Author initial, shared by the composer and every note in the thread
+.adm-memo-avatar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--adm-memo-avatar-size, 2rem);
+  height: var(--adm-memo-avatar-size, 2rem);
+  font-size: var(--kern-font-size-14);
+  font-weight: 600;
+  color: var(--kern-custom-white, #fff);
+  background: var(--kern-color-action-default);
+  border-radius: 6px;
+  user-select: none;
+}
+
+// --- Composer ---
+.adm-memo-composer {
   display: flex;
   align-items: flex-start;
+  gap: var(--adm-memo-rail-gap, 0.75rem);
+  max-width: var(--adm-memo-measure, 56rem);
+}
+
+.adm-memo-composer__field {
+  flex: 1;
+  min-width: 0;
+  background: var(--kern-color-layout-background-default);
   border: 1px solid var(--kern-color-layout-border);
-  border-radius: var(--kern-metric-border-radius-default);
-  background: var(--kern-color-layout-background-default, #fff);
-  transition: border-color 0.15s ease;
+  border-radius: var(--adm-memo-radius, 8px);
+  transition: border-color 150ms ease-out;
 
   &:focus-within {
     border-color: var(--kern-color-action-default);
   }
+}
 
-  &__textarea {
-    flex: 1;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    resize: none;
-    overflow: hidden;
-    padding: 10px 40px 10px 12px;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    height: auto !important;
-    min-height: unset !important;
-    max-height: none !important;
-    margin: 0;
-    font-family: inherit;
-    color: var(--kern-color-content-default);
+.adm-memo-composer__textarea {
+  display: block;
+  width: 100%;
+  margin: 0;
+  // Beats the global `textarea` rule, which forces both with !important and
+  // would otherwise leave the field 96px tall with no room for autogrow.
+  padding: var(--kern-12) !important;
+  min-height: 0 !important;
+  overflow: hidden;
+  resize: none;
+  font-family: inherit;
+  font-size: var(--kern-font-size-16);
+  line-height: 1.5;
+  color: var(--kern-color-layout-text-default);
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 
-    &::placeholder {
-      color: var(--kern-grey-400);
-    }
-  }
-
-  &__send {
-    position: absolute;
-    right: 6px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    padding: 6px;
-    cursor: pointer;
-    color: var(--kern-grey-400);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--kern-metric-border-radius-default);
-    transition: color 0.15s ease;
-
-    &:hover {
-      color: var(--kern-color-action-default);
-    }
-
-    .material-symbols-outlined {
-      font-size: 18px;
-    }
+  &::placeholder {
+    color: var(--er-text-placeholder);
   }
 }
 
-// Timeline container
+.adm-memo-composer__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kern-12);
+  padding: var(--kern-8) var(--kern-8) var(--kern-8) var(--kern-12);
+  border-top: 1px solid var(--kern-color-layout-border);
+}
+
+.adm-memo-composer__hint {
+  margin: 0;
+  font-size: var(--kern-font-size-14);
+  color: var(--er-text-secondary);
+}
+
+// --- Thread ---
 .adm-memos-timeline {
-  margin-top: 12px;
+  max-width: var(--adm-memo-measure, 56rem);
+  margin-top: var(--kern-24);
 }
 
-// Single memo entry
 .adm-memo {
   display: flex;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--kern-metric-border-radius-default);
-  transition: background-color 0.1s ease;
+  gap: var(--adm-memo-rail-gap, 0.75rem);
+}
 
-  & + .adm-memo {
-    margin-top: 2px;
-  }
+.adm-memo + .adm-memo {
+  margin-top: var(--kern-16);
+  padding-top: var(--kern-16);
+  border-top: 1px solid var(--kern-color-layout-border);
+}
+
+.adm-memo__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.adm-memo__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--kern-8);
+}
+
+.adm-memo__author {
+  font-size: var(--kern-font-size-16);
+  font-weight: 600;
+  color: var(--kern-color-layout-text-default);
+  text-decoration: none;
 
   &:hover {
-    background: var(--kern-grey-50, #f9fafb);
+    text-decoration: underline;
+  }
+}
+
+.adm-memo__timestamp {
+  font-size: var(--kern-font-size-14);
+  font-variant-numeric: tabular-nums;
+  color: var(--er-text-secondary);
+}
+
+.adm-memo__text {
+  margin-top: var(--kern-4);
+  font-size: var(--kern-font-size-16);
+  line-height: 1.5;
+  color: var(--kern-color-layout-text-default);
+  overflow-wrap: break-word;
+
+  p {
+    margin: 0;
   }
 
-  &__avatar {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--kern-color-action-default, #3f51b5);
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2px;
-    user-select: none;
+  p + p {
+    margin-top: var(--kern-8);
+  }
+}
+
+.adm-memo__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kern-4);
+  margin-top: var(--kern-8);
+  margin-left: calc(var(--kern-8) * -1);
+}
+
+.adm-memo__action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kern-6);
+  min-height: 2rem;
+  padding: var(--kern-4) var(--kern-8);
+  font-family: inherit;
+  font-size: var(--kern-font-size-16);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--er-text-secondary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+
+  &:hover {
+    color: var(--kern-color-layout-text-default);
+    background: var(--kern-grey-100);
   }
 
-  &__content {
-    flex: 1;
-    min-width: 0;
+  &:active {
+    color: var(--kern-color-layout-text-default);
+    background: color-mix(in srgb, var(--kern-grey-100), var(--kern-grey-350) 35%);
   }
 
-  &__header {
-    font-size: 0.8125rem;
-    line-height: 1.4;
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-
-    a {
-      color: var(--kern-color-content-default);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.875rem;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
   }
+}
 
-  &__separator {
-    color: var(--kern-grey-300);
-    font-size: 0.5rem;
-    line-height: 1;
+.adm-memo__action .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.adm-memo__action.-danger {
+  &:hover {
+    color: var(--kern-color-feedback-danger);
+    background: color-mix(in srgb, var(--kern-color-feedback-danger) 8%, transparent);
   }
+}
 
-  &__timestamp {
-    color: var(--kern-grey-400);
-    font-size: 0.75rem;
-  }
+.adm-memo__action.-sent {
+  color: var(--kern-color-feedback-success);
+  cursor: default;
 
-  &__text {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--kern-color-content-default);
-    margin-top: 2px;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  &__actions {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    margin-top: 4px;
-  }
-
-  &__action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--kern-grey-400);
-    cursor: pointer;
+  &:hover {
+    color: var(--kern-color-feedback-success);
     background: none;
-    border: none;
-    padding: 4px;
-    border-radius: var(--kern-metric-border-radius-default);
-    text-decoration: none;
-    transition: color 0.1s ease, background-color 0.1s ease;
-
-    &:hover {
-      color: var(--kern-grey-700);
-      background: var(--kern-grey-100);
-    }
-
-    .material-symbols-outlined {
-      font-size: 16px;
-    }
-
-    &--danger:hover {
-      color: var(--kern-color-feedback-danger, #BD0F09);
-      background: color-mix(in srgb, var(--kern-color-feedback-danger, #BD0F09) 8%, transparent);
-    }
-
-    &--sent {
-      color: var(--kern-color-feedback-success, #2e7d32);
-      cursor: default;
-
-      &:hover {
-        background: none;
-        color: var(--kern-color-feedback-success, #2e7d32);
-      }
-    }
   }
+}
 
-  &__notification-info {
-    font-size: 0.6875rem;
-    color: var(--kern-grey-400);
-    margin-left: 2px;
-  }
+.adm-memo__reply-form {
+  margin-top: var(--kern-16);
+}
 
-  // Reply form (full width below actions)
-  &__reply-form {
-    margin-top: 8px;
-    margin-bottom: 4px;
-  }
+// Nested reply threads
+.adm-memo__replies:has(> .adm-memo) {
+  margin-top: var(--kern-16);
+  padding-left: var(--kern-16);
+  border-left: 1px solid var(--kern-color-layout-border);
+}
 
-  // Nested reply threads
-  &__replies {
-    margin-top: 2px;
-    margin-left: 4px;
-    padding-left: 14px;
-    border-left: 2px solid var(--kern-grey-200);
+// --- Empty state (hidden as soon as the thread holds a note) ---
+.adm-memos-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kern-8);
+  padding: var(--kern-24) var(--kern-16);
+  text-align: center;
+}
 
-    .adm-memo {
-      padding: 8px 10px;
-    }
-  }
+.adm-memos-timeline:has(.adm-memo) .adm-memos-empty {
+  display: none;
+}
+
+.adm-memos-empty__icon {
+  font-size: 32px !important;
+  color: var(--kern-grey-350);
+}
+
+.adm-memos-empty__title {
+  margin: 0;
+  font-size: var(--kern-font-size-16);
+  font-weight: 600;
+  color: var(--kern-grey-700);
+}
+
+.adm-memos-empty__text {
+  max-width: 34rem;
+  margin: 0;
+  font-size: var(--kern-font-size-14);
+  line-height: 1.5;
+  color: var(--er-text-secondary);
 }

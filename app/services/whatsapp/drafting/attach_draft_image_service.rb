@@ -4,10 +4,12 @@ class Whatsapp::Drafting::AttachDraftImageService < ApplicationService
   # in the same ResourceImages::AttachService the web upload form uses, so a
   # picture attached by chat is indistinguishable from one attached on the site.
   #
-  # Two entry points rather than one with a mode, because the two share only their
-  # last line: an upload is a download from WhatsApp bounded by the portal's own
-  # image limit, and a generation is an external call whose result also sets the
-  # column that records where the picture came from.
+  # Two entry points rather than one with a mode, because the two share almost
+  # nothing: an upload is a download from WhatsApp bounded by the portal's own
+  # image limit and attached as it arrived, and a generation is an external call
+  # whose result has the AI marker written into it, sets the flags that put the
+  # disclosure label on the page, and sets the column that records where the
+  # picture came from.
   #
   # Returns true when a picture was attached. Failures are reported and answered
   # false rather than raised: the picture is optional, and losing the whole
@@ -61,7 +63,11 @@ class Whatsapp::Drafting::AttachDraftImageService < ApplicationService
 
     return false if !response&.success?
 
-    attach_generated(response.parsed_response["image"])
+    attach_generated(response.parsed_response)
+  rescue ::Images::MarkAiGeneratedService::MarkingFailedError => e
+    report(e, "image marking")
+
+    false
   rescue StandardError => e
     report(e, "image generation")
 
@@ -80,11 +86,27 @@ class Whatsapp::Drafting::AttachDraftImageService < ApplicationService
       @resource.ai_image_prompt.presence || @resource.title
     end
 
-    def attach_generated(base64_image)
-      return false if base64_image.blank?
+    # Through from_generated_base64 rather than from_base64, which is the difference
+    # between a marked picture and one that only looks like it. The marked route
+    # writes the IPTC source type into the bytes and sets ai_generated on the Image,
+    # which is what puts the disclosure label on the public page — a picture attached
+    # the plain way carries neither, and a citizen reading the page has no way to
+    # tell it from a photograph.
+    #
+    # A marking failure is left to rise out of here: Images::MarkAiGeneratedService
+    # raises it so a caller has to decide, and from_generation answers it the same way
+    # a failed generation is answered — no picture, and the assistant says so.
+    # Publishing an unmarked generated picture is the one outcome worse than
+    # publishing none.
+    def attach_generated(response_body)
+      return false if response_body["image"].blank?
 
-      ::ResourceImages::AttachService.from_base64(
-        resource: @resource, user: @user, base64: base64_image
+      ::ResourceImages::AttachService.from_generated_base64(
+        resource: @resource,
+        user: @user,
+        base64: response_body["image"],
+        ai_system: ::DtApi::Resources::Ai.reported_provider(response_body),
+        ai_system_version: ::DtApi::Resources::Ai.reported_model(response_body)
       )
 
       # The same column the web editor sets, so a picture's origin reads the same

@@ -17,9 +17,9 @@ class Brevo::ApiClient
     end
   end
 
-  # Brevo caps this endpoint at 500 contacts per call. MAX_PAGES only exists so a paging bug on
-  # either side cannot turn a nightly job into an endless loop; 200 pages is far above any
-  # plausible member list.
+  # 500 per call stays inside Brevo's page cap. MAX_PAGES only exists so a paging bug on either
+  # side cannot turn a nightly job into an endless loop; 200 pages is far above any plausible
+  # member segment.
   PAGE_SIZE = 500
   MAX_PAGES = 200
   MAX_ATTEMPTS = 3
@@ -41,16 +41,16 @@ class Brevo::ApiClient
     @api_key = api_key
   end
 
-  # Every contact of a list, following Brevo's offset paging. Returns an array of the raw contact
-  # hashes: { "id" => 42, "email" => "...", "emailBlacklisted" => false, "attributes" => {...} }.
-  def contacts_in_list(list_id)
-    raise ConfigurationError, "No Brevo list configured" if list_id.blank?
+  # Every contact of a segment, following Brevo's offset paging. Returns an array of the raw
+  # contact hashes: { "id" => 42, "email" => "...", "emailBlacklisted" => false, "attributes" => {} }.
+  def contacts_in_segment(segment_id)
+    raise ConfigurationError, "No Brevo segment configured" if segment_id.blank?
 
     contacts = []
 
     MAX_PAGES.times do |page|
-      batch = get("/contacts/lists/#{list_id}/contacts",
-                  limit: PAGE_SIZE, offset: page * PAGE_SIZE)["contacts"]
+      batch = get("/contacts",
+                  segmentId: segment_id, limit: PAGE_SIZE, offset: page * PAGE_SIZE)["contacts"]
 
       break if batch.blank?
 
@@ -59,18 +59,6 @@ class Brevo::ApiClient
     end
 
     contacts
-  end
-
-  # A single contact, looked up by email or by Brevo id. Returns nil when Brevo does not know it —
-  # the normal answer for a webhook that fires after the contact was deleted.
-  def contact(identifier)
-    return if identifier.blank?
-
-    get("/contacts/#{CGI.escape(identifier.to_s)}")
-  rescue ResponseError => e
-    raise unless e.code == 404
-
-    nil
   end
 
   private

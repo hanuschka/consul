@@ -17,12 +17,13 @@ en:
       show:
         title: Member sync
         intro_text_p1: >
-          Access to this platform is taken from a Brevo member list. New contacts get an account and
-          an invitation email automatically; removed contacts are deleted automatically in line with
-          GDPR.
+          Access to this platform is taken from a Brevo member segment. New contacts get an account
+          and an invitation email automatically; removed contacts are deleted automatically in line
+          with GDPR.
         intro_text_p2: >
-          The reconciliation runs every night, and immediately whenever Brevo reports a change. This
-          page shows the status and lets you start a sync by hand.
+          The reconciliation runs every night. Brevo sends no notification when a contact enters or
+          leaves a segment, so changes in between are picked up by the next run or by starting a
+          sync by hand here.
         status:
           sync: Sync
           configured: Configured
@@ -30,30 +31,20 @@ en:
           member_instance: Platform access
           closed: Members only
           open: Public
-          member_list_id: Brevo list ID
+          member_segment_id: Brevo segment ID
           member_count: Linked member accounts
           last_completed_run: Last successful sync
           never: Never
           unset: Not set
           configuration_hint: >
-            The credentials and the list ID are maintained in the server configuration
+            The credentials and the segment ID are maintained in the server configuration
             (config/secrets.yml) and cannot be changed here.
         manual:
           title: Start a sync by hand
           explanation: >
-            Runs a full reconciliation against the Brevo member list in the background. The result
-            appears in the list of syncs afterwards.
+            Runs a full reconciliation against the Brevo member segment in the background. The
+            result appears in the list of syncs afterwards.
           submit: Sync now
-        webhook:
-          title: Webhook
-          explanation: >
-            Add this address as a webhook in Brevo so changes are picked up immediately. Without a
-            webhook, the nightly reconciliation catches them.
-          url: Webhook address
-          not_configured: No webhook token configured
-          events_hint: >
-            Events needed: contact added to list, contact removed from list, contact deleted.
-            Unsubscribing from the newsletter never deletes an account.
         runs:
           title: Recent syncs
           started_at: Time
@@ -71,7 +62,7 @@ en:
             Once the first sync has run it is listed here with everything it changed.
       create:
         enqueued: The sync has been started. The result will appear in the list of syncs shortly.
-        not_configured: The Brevo sync is not configured. Please add the API key and the list ID to the server configuration first.
+        not_configured: The Brevo sync is not configured. Please add the API key and the segment ID to the server configuration first.
       log:
         title: Sync details
         status: Status

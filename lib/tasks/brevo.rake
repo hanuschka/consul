@@ -1,5 +1,5 @@
 namespace :brevo do
-  desc "Reconcile Consul member accounts with the Brevo member list"
+  desc "Reconcile Consul member accounts with the Brevo member segment"
   task sync_members: :environment do
     # Silent no-op where the integration is not set up, so the nightly cron does not leave a failed
     # run behind on every installation that has no Brevo secrets. A manual sync from /adm reports
@@ -9,7 +9,7 @@ namespace :brevo do
       next
     end
 
-    ApplicationLogger.new.info "Reconciling members with the Brevo member list"
+    ApplicationLogger.new.info "Reconciling members with the Brevo member segment"
     log = Brevo::MemberSync.call
 
     ApplicationLogger.new.info(

@@ -8,12 +8,8 @@ module Brevo::Settings
     secret(:api_key)
   end
 
-  def self.member_list_id
-    secret(:member_list_id)
-  end
-
-  def self.webhook_token
-    secret(:webhook_token)
+  def self.member_segment_id
+    secret(:member_segment_id)
   end
 
   # The site-wide gate (AP1) and the account lifecycle sync (AP2-AP4) are deliberately separate:
@@ -24,11 +20,7 @@ module Brevo::Settings
   end
 
   def self.sync_enabled?
-    api_key.present? && member_list_id.present?
-  end
-
-  def self.webhook_enabled?
-    sync_enabled? && webhook_token.present?
+    api_key.present? && member_segment_id.present?
   end
 
   def self.secret(key)

@@ -7,9 +7,10 @@ class Brevo::MemberSync < ApplicationService
   # Brevo does not rewrite the Consul login: the email is the credential here, and silently
   # repointing it from a marketing tool would lock people out of their own account.
   #
-  # Deletions are the dangerous half, so they are bounded. An empty contact list — a wrong list id,
-  # a partial API answer — must never be read as "every member left", and even a well-formed answer
-  # that would erase most of the instance is refused and reported instead of executed.
+  # Deletions are the dangerous half, so they are bounded. An empty contact list — a wrong segment
+  # id, a partial API answer, an edited segment filter — must never be read as "every member left",
+  # and even a well-formed answer that would erase most of the instance is refused and reported
+  # instead of executed.
   DELETION_SAFETY_RATIO = 0.5
   DELETION_SAFETY_FLOOR = 10
 
@@ -22,11 +23,11 @@ class Brevo::MemberSync < ApplicationService
     log = BrevoSyncLog.start!(source: @source, triggered_by: @triggered_by)
 
     unless Brevo::Settings.sync_enabled?
-      log.fail!("Brevo member sync is not configured: api_key and member_list_id are required.")
+      log.fail!("Brevo member sync is not configured: api_key and member_segment_id are required.")
       return log
     end
 
-    contacts = client.contacts_in_list(Brevo::Settings.member_list_id)
+    contacts = client.contacts_in_segment(Brevo::Settings.member_segment_id)
     log.contacts_count = contacts.size
     log.save!
 
@@ -87,8 +88,8 @@ class Brevo::MemberSync < ApplicationService
 
       if contact_ids.empty?
         log.record(action: "failed",
-                   message: "Brevo returned no contacts for the configured list — " \
-                            "no account was erased. Check the list id and the API key.")
+                   message: "Brevo returned no contacts for the configured segment — " \
+                            "no account was erased. Check the segment id and the API key.")
         return log.save!
       end
 
@@ -107,7 +108,7 @@ class Brevo::MemberSync < ApplicationService
       if result.erased?
         log.erased_count += 1
         log.record(action: "erased", email: result.email, contact_id: contact_id,
-                   message: "Contact is no longer in the Brevo member list")
+                   message: "Contact is no longer in the Brevo member segment")
       elsif result.skipped_reason == :staff
         log.skipped_count += 1
         log.record(action: "linked", email: result.email, contact_id: contact_id,
@@ -126,7 +127,7 @@ class Brevo::MemberSync < ApplicationService
 
       log.record(action: "failed",
                  message: "Refused to erase #{candidates_count} of #{members_count} member " \
-                          "accounts in one run. Nothing was erased — verify the Brevo list, " \
+                          "accounts in one run. Nothing was erased — verify the Brevo segment, " \
                           "then re-run the sync.")
       true
     end
@@ -138,7 +139,7 @@ class Brevo::MemberSync < ApplicationService
     end
 
     def erase_reason
-      "Brevo-Mitgliedersynchronisation: Kontakt nicht mehr in der Mitgliederliste"
+      "Brevo-Mitgliedersynchronisation: Kontakt nicht mehr im Mitglieder-Segment"
     end
 
     def client

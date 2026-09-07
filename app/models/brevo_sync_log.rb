@@ -1,12 +1,13 @@
 class BrevoSyncLog < ApplicationRecord
-  # One row per sync run — the nightly reconcile, an admin pressing "sync now", or a single
-  # webhook event. It is the record the client relies on: how many contacts the run saw, which
-  # accounts it created or erased, and what went wrong when it failed.
+  # One row per sync run — the nightly reconcile or an admin pressing "sync now". It is the record
+  # the client relies on: how many contacts the run saw, which accounts it created or erased, and
+  # what went wrong when it failed. The `webhook` source is retained for rows written before
+  # membership moved from a Brevo list to a segment; nothing produces it any more.
   #
-  # `error_message` holds a run-level failure (the API was unreachable, no list configured) while
+  # `error_message` holds a run-level failure (the API was unreachable, no segment configured) while
   # `details` holds one entry per contact that actually changed something or could not be
   # processed. No-ops are counted in `skipped_count` and deliberately left out of `details`, so a
-  # nightly run over a settled member list stays a single small row.
+  # nightly run over a settled member segment stays a single small row.
   MAX_ERROR_MESSAGE_LENGTH = 10_000
   MAX_DETAILS = 1_000
 

@@ -17,12 +17,13 @@ de:
       show:
         title: Mitglieder-Synchronisation
         intro_text_p1: >
-          Die Zugänge dieser Plattform werden aus einer Brevo-Mitgliederliste übernommen. Neue
+          Die Zugänge dieser Plattform werden aus einem Brevo-Mitglieder-Segment übernommen. Neue
           Kontakte erhalten automatisch ein Konto und eine Einladungs-E-Mail, entfernte Kontakte
           werden automatisch DSGVO-konform gelöscht.
         intro_text_p2: >
-          Der Abgleich läuft jede Nacht und zusätzlich sofort, sobald Brevo eine Änderung meldet.
-          Hier sehen Sie den Status und können den Abgleich manuell auslösen.
+          Der Abgleich läuft jede Nacht. Brevo meldet nicht, wenn ein Kontakt in ein Segment
+          aufgenommen wird oder es verlässt. Änderungen dazwischen übernimmt daher der nächste Lauf
+          oder ein hier manuell ausgelöster Abgleich.
         status:
           sync: Synchronisation
           configured: Eingerichtet
@@ -30,30 +31,20 @@ de:
           member_instance: Zugang zur Plattform
           closed: Nur für Mitglieder
           open: Öffentlich
-          member_list_id: Brevo-Listen-ID
+          member_segment_id: Brevo-Segment-ID
           member_count: Verknüpfte Mitgliedskonten
           last_completed_run: Letzter erfolgreicher Abgleich
           never: Noch nie
           unset: Nicht gesetzt
           configuration_hint: >
-            Die Zugangsdaten und die Listen-ID werden in der Serverkonfiguration
+            Die Zugangsdaten und die Segment-ID werden in der Serverkonfiguration
             (config/secrets.yml) gepflegt und können hier nicht geändert werden.
         manual:
           title: Abgleich manuell auslösen
           explanation: >
-            Startet einen vollständigen Abgleich mit der Brevo-Mitgliederliste im Hintergrund. Das
-            Ergebnis erscheint anschließend in der Liste der Abgleiche.
+            Startet einen vollständigen Abgleich mit dem Brevo-Mitglieder-Segment im Hintergrund.
+            Das Ergebnis erscheint anschließend in der Liste der Abgleiche.
           submit: Jetzt synchronisieren
-        webhook:
-          title: Webhook
-          explanation: >
-            Diese Adresse in Brevo als Webhook hinterlegen, damit Änderungen sofort übernommen
-            werden. Ohne Webhook greift der nächtliche Abgleich.
-          url: Webhook-Adresse
-          not_configured: Kein Webhook-Token hinterlegt
-          events_hint: >
-            Benötigte Ereignisse: Kontakt zu Liste hinzugefügt, Kontakt aus Liste entfernt,
-            Kontakt gelöscht. Eine Abmeldung vom Newsletter löscht kein Konto.
         runs:
           title: Letzte Abgleiche
           started_at: Zeitpunkt
@@ -71,7 +62,7 @@ de:
             Sobald der erste Abgleich gelaufen ist, wird er hier mit allen Änderungen aufgeführt.
       create:
         enqueued: Der Abgleich wurde gestartet. Das Ergebnis erscheint in wenigen Momenten in der Liste der Abgleiche.
-        not_configured: Die Brevo-Synchronisation ist nicht eingerichtet. Bitte zuerst API-Schlüssel und Listen-ID in der Serverkonfiguration hinterlegen.
+        not_configured: Die Brevo-Synchronisation ist nicht eingerichtet. Bitte zuerst API-Schlüssel und Segment-ID in der Serverkonfiguration hinterlegen.
       log:
         title: Abgleich im Detail
         status: Status

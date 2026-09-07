@@ -32,8 +32,8 @@
     </p>
 
     <p class="mb-3">
-      <strong><%= t(".status.member_list_id") %></strong><br>
-      <%= Brevo::Settings.member_list_id.presence || t(".status.unset") %>
+      <strong><%= t(".status.member_segment_id") %></strong><br>
+      <%= Brevo::Settings.member_segment_id.presence || t(".status.unset") %>
     </p>
 
     <p class="mb-3">
@@ -62,25 +62,6 @@
     <%= form_with url: adm_brevo_member_sync_path, method: :post do %>
       <%= form_submit_button(text: t(".manual.submit"), icon: "sync",
                              disabled: !Brevo::Settings.sync_enabled?) %>
-    <% end %>
-  </div>
-
-  <div class="kern-card p-4 mb-5">
-    <p class="mb-2"><strong><%= t(".webhook.title") %></strong></p>
-    <p class="fs-2 text-muted"><%= t(".webhook.explanation") %></p>
-
-    <% if Brevo::Settings.webhook_enabled? %>
-      <p class="mb-2"><strong><%= t(".webhook.url") %></strong></p>
-      <div class="mb-3" style="height: 55px;">
-        <%= render Adm::HiddenTokenWidgetComponent.new(
-              token: webhooks_brevo_member_events_url(token: Brevo::Settings.webhook_token)
-            ) %>
-      </div>
-      <div class="kern-hint">
-        <p class="mb-1 fs-2"><%= t(".webhook.events_hint") %></p>
-      </div>
-    <% else %>
-      <span class="kern-badge kern-badge--danger"><%= t(".webhook.not_configured") %></span>
     <% end %>
   </div>
 </div>

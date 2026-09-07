@@ -1,7 +1,7 @@
 class Whatsapp::EligiblePhasesQuery < ApplicationQuery
   # The phase types the bot has a submission flow for. Which flags each of them
   # reads is the phase's own business — #selectable_by_users? and
-  # #ai_flow_feature_key — so adding a third type here is the only edit.
+  # #whatsapp_submissions_enabled? — so adding a third type here is the only edit.
   PHASE_CLASSES = [ProjektPhase::ProposalPhase, ProjektPhase::BudgetPhase].freeze
 
   # The single-phase question, asked without loading the portal. A phase whose
@@ -9,14 +9,16 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
   # website either, so the bot must not take a submission into it.
   #
   # Both flags have to be on: the one that lets citizens create the resource at
-  # all, and the one that enables the AI flow the bot is a channel for.
+  # all, and the phase's own switch for the bot as a submission channel. The
+  # projekt page's AI drafting button has no say here — a phase that openly takes
+  # proposals on the website was invisible to the bot while it did.
   def self.eligible?(projekt_phase)
     return false if projekt_phase.blank?
     return false if !PHASE_CLASSES.include?(projekt_phase.class)
     return false if !projekt_phase.current?
     return false if !projekt_visible?(projekt_phase.projekt)
     return false if !projekt_phase.selectable_by_users?
-    return false if !projekt_phase.ai_flow_enabled?
+    return false if !projekt_phase.whatsapp_submissions_enabled?
 
     # An investment is built from the budget's heading, so a budget phase
     # without one set up cannot take a submission yet.

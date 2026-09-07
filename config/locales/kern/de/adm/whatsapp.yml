@@ -624,7 +624,7 @@ de:
         whatsapp:
           title: WhatsApp
           hint_text: >-
-            QR-Code für dieses gesamte Projekt. Läuft genau eine Vorschlagsphase mit KI-Einreichung,
+            QR-Code für dieses gesamte Projekt. Läuft genau eine Phase mit WhatsApp-Einreichungen,
             landen Bürger:innen direkt dort. Laufen mehrere, fragt der Bot nach.
           qr_title: Projekt-QR-Code
           qr_subline: Für Plakate und Flyer zu diesem Projekt.
@@ -635,7 +635,7 @@ de:
               ist.'
           no_eligible_phases_title: Derzeit keine Phase für WhatsApp-Einreichungen
           no_eligible_phases_body: >-
-            Es läuft keine Vorschlagsphase mit aktivierter KI-Einreichung. Wer diesen QR-Code scannt,
+            Es läuft keine Phase mit aktivierten WhatsApp-Einreichungen. Wer diesen QR-Code scannt,
             kann seine Nummer verbinden, aber keinen Vorschlag einreichen.
       phases:
         projekt_phase:
@@ -644,7 +644,7 @@ de:
           title: WhatsApp
           qr_title: Phasen-QR-Code
           qr_subline: Führt direkt in diese Phase – ohne Rückfrage. Am besten für Plakate vor Ort.
-          ai_flow_disabled_title: KI-Einreichung ist für diese Phase deaktiviert
-          ai_flow_disabled_body: Wer diesen QR-Code scannt, erhält derzeit eine Absage. Aktiviere
-            die KI-Einreichung unter
-          ai_flow_disabled_link: KI-Nutzerfluss
+          submissions_disabled_title: WhatsApp-Einreichungen sind für diese Phase deaktiviert
+          submissions_disabled_body: Wer diesen QR-Code scannt, erhält derzeit eine Absage.
+            Aktivieren Sie die Einstellung oben, damit die Phase Einreichungen über den Bot
+            annimmt.

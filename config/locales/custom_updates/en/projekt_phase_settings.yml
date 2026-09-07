@@ -22,6 +22,8 @@ en:
             public_kpi_stats_description: Shows key performance indicators (KPI) to non-administrative users
             public_ai_stats: Show AI analysis for public
             public_ai_stats_description: Shows AI analysis to non-administrative users
+            whatsapp_submissions: "WhatsApp bot: allow submissions"
+            whatsapp_submissions_description: "Allows citizens to submit contributions to this phase through the WhatsApp bot. The bot offers the phase in its selection lists and accepts submissions into it. This setting is independent of AI submission on the projekt page. Disable it when contributions to this phase should only be submitted through the website."
             similar_contributions_check: Check for similar contributions
             similar_contributions_check_description: Checks newly submitted contributions in this phase against existing contributions with similar content, and shows administrators matching contributions from the same projekt while they work. In the frontend a notice with up to three similar contributions, which can be supported instead, appears before submitting. Enable this feature to avoid duplicate submissions and to speed up processing through references to contributions that have already been answered.
           resource:
@@ -48,6 +50,8 @@ en:
             public_kpi_stats_description: Shows key performance indicators (KPI) to non-administrative users
             public_ai_stats: Show AI analysis for public
             public_ai_stats_description: Shows AI analysis to non-administrative users
+            whatsapp_submissions: "WhatsApp bot: allow submissions"
+            whatsapp_submissions_description: "Allows citizens to submit contributions to this phase through the WhatsApp bot. The bot offers the phase in its selection lists and accepts submissions into it. This setting is independent of AI submission on the projekt page. Disable it when contributions to this phase should only be submitted through the website."
             similar_contributions_check: Check for similar contributions
             similar_contributions_check_description: Checks newly submitted contributions in this phase against existing contributions with similar content, and shows administrators matching contributions from the same projekt while they work. In the frontend a notice with up to three similar contributions, which can be supported instead, appears before submitting. Enable this feature to avoid duplicate submissions and to speed up processing through references to contributions that have already been answered.
           resource:

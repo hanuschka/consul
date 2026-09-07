@@ -9,7 +9,7 @@ class Whatsapp::Drafting::ResourceCreationValidationService < ApplicationService
     return :not_logged_in if @user.blank?
     return :phase_not_supported if !supported_phase?
     return :creation_disabled if !@projekt_phase.selectable_by_users?
-    return :ai_flow_disabled if !@projekt_phase.ai_flow_enabled?
+    return :whatsapp_submissions_disabled if !@projekt_phase.whatsapp_submissions_enabled?
     return :budget_heading_missing if budget_heading_missing?
 
     # :whatsapp_bot is exempt from the guest waiver, so a guest phase answers

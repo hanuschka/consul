@@ -94,6 +94,10 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     "resource.create_proposal_with_ai"
   end
 
+  def whatsapp_submissions_enabled?
+    feature?("general.whatsapp_submissions")
+  end
+
   def selectable_by_admins_only?
     !selectable_by_users?
   end

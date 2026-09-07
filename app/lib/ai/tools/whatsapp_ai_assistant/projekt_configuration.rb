@@ -19,6 +19,7 @@ class Ai::Tools::WhatsappAiAssistant::ProjektConfiguration <
     feature.general.newest_first
     feature.general.reverse_order_for_incoming_events
     feature.general.show_questions_list
+    feature.general.whatsapp_submissions
     feature.resource.create_proposal_with_ai
     feature.resource.create_investment_with_ai
     feature.resource.evaluation_enabled

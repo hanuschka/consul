@@ -213,7 +213,8 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
     @phase_token = ::Whatsapp::QrToken.for_projekt_phase(@projekt_phase)
 
-    @ai_flow_enabled = @projekt_phase.ai_flow_enabled?
+    @whatsapp_submissions_setting =
+      @projekt_phase.settings.find_by(key: "feature.general.whatsapp_submissions")
 
     @breadcrumbs = [
       { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },

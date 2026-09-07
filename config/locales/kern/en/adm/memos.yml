@@ -3,6 +3,7 @@ en:
     memos:
       title: Internal notes
       hint: Visible only to admins and project managers. Use the bell to notify colleagues by email.
+      context: "Re: %{title}"
       count:
         one: 1 note
         other: "%{count} notes"

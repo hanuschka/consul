@@ -599,7 +599,7 @@ en:
         whatsapp:
           title: WhatsApp
           hint_text: >-
-            QR code for this whole project. With exactly one proposal phase accepting AI submissions,
+            QR code for this whole project. With exactly one phase accepting WhatsApp submissions,
             citizens land there directly. With several, the bot asks which one.
           qr_title: Project QR code
           qr_subline: For posters and flyers about this project.
@@ -609,7 +609,7 @@ en:
             other: '%{count} phases accept WhatsApp proposals — the bot will ask which one.'
           no_eligible_phases_title: No phase currently accepts WhatsApp submissions
           no_eligible_phases_body: >-
-            No proposal phase with AI submission enabled is running. Anyone scanning this QR code
+            No phase with WhatsApp submissions enabled is running. Anyone scanning this QR code
             can link their number but cannot submit a proposal.
       phases:
         projekt_phase:
@@ -618,7 +618,6 @@ en:
           title: WhatsApp
           qr_title: Phase QR code
           qr_subline: Leads straight into this phase, no questions asked. Best for on-site posters.
-          ai_flow_disabled_title: AI submission is disabled for this phase
-          ai_flow_disabled_body: Anyone scanning this QR code is currently turned away. Enable AI
-            submission under
-          ai_flow_disabled_link: AI user flow
+          submissions_disabled_title: WhatsApp submissions are disabled for this phase
+          submissions_disabled_body: Anyone scanning this QR code is currently turned away. Switch
+            the setting above on so the phase accepts submissions through the bot.

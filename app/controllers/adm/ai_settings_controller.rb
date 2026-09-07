@@ -4,7 +4,7 @@ class Adm::AiSettingsController < Adm::BaseController
     :default_llm_model_in_use?, :effective_llm_model,
     :non_default_provider?, :default_api_key_in_use?,
     :highlight_llm_model?, :highlight_api_key?, :image_marking_unavailable?,
-    :image_marking_install_command
+    :image_marking_recovery_command
 
   def index
     authorize [:adm, Setting], :index?, policy_class: Adm::AiSettingPolicy
@@ -120,16 +120,16 @@ class Adm::AiSettingsController < Adm::BaseController
     end
 
     # Generated pictures are marked by shelling out to exiftool, and marking is
-    # mandatory — a box without the binary answers every generation with "it did
-    # not work" and puts the reason in the log only. Surfaced here rather than
-    # left to a Sentry event, because the people who notice generation failing
-    # are the ones on this page.
+    # mandatory — a box that cannot reach the binary answers every generation
+    # with "it did not work" and puts the reason in the log only. Surfaced here
+    # rather than left to a Sentry event, because the people who notice
+    # generation failing are the ones on this page.
     def image_marking_unavailable?
       !::ExiftoolCommand.available?
     end
 
-    def image_marking_install_command
-      ::ExiftoolCommand::INSTALL_COMMAND
+    def image_marking_recovery_command
+      ::ExiftoolCommand::RECOVERY_COMMAND
     end
 
     def clearing_required_custom_model?

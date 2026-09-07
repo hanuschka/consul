@@ -68,15 +68,15 @@ class Admin::AiFeaturesService < ApplicationService
     }
   end
 
-  # Marking generated images is mandatory, so a box without exiftool cannot
-  # generate AI images at all -- unlike the other tool checks here, this one
-  # reports a hard outage rather than a degraded feature.
+  # Marking generated images is mandatory, so a box that cannot reach exiftool
+  # cannot generate AI images at all -- unlike the other tool checks here, this
+  # one reports a hard outage rather than a degraded feature.
   def image_ai_marking
     {
       status: ::ExiftoolCommand.runtime_status,
       binary_path: ::ExiftoolCommand.binary_path,
       all_installed: ::ExiftoolCommand.available?,
-      install_command: ::ExiftoolCommand::INSTALL_COMMAND
+      install_command: ::ExiftoolCommand::RECOVERY_COMMAND
     }
   end
 

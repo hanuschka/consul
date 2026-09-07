@@ -22,7 +22,7 @@ en:
         image_marking_unavailable:
           title: Image marking unavailable
           body: >
-            exiftool is missing on this server. A generated picture has to be marked as AI-generated before it is published — without exiftool every image generation fails instead of publishing an unmarked picture. Please install the package:
+            The exiftool binary that ships with the application bundle was not found on this server. A generated picture has to be marked as AI-generated before it is published — without exiftool every image generation fails instead of publishing an unmarked picture. Reinstalling the bundle or redeploying the application restores it:
         api_key_required:
           title: API key required
           body: >

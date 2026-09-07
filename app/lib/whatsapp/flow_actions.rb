@@ -97,6 +97,17 @@ module Whatsapp::FlowActions
     discover_category support show_more
   ].freeze
 
+  # The ids another action has taken over. They stay in ACTIONS because every pill
+  # the bot has ever sent is still sitting in a chat history and still tappable, so
+  # a tap on one is still answered; what they lose is their place in the vocabulary
+  # the assistant is offered, which is where the duplication did the damage.
+  #
+  # `participate_projekt` and `view_projekt` both meant "this is the projekt I
+  # want" and were answered the same way — that projekt's card. Two ids for one
+  # intent is what let a guard written against one of them fire on the other, so
+  # only `view_projekt` is offered now.
+  RETIRED_ACTIONS = %i[participate_projekt].freeze
+
   # `show_more`'s parameter names a list rather than a record: which of the capped
   # lists the citizen wants the rest of. Every list the bot can send is capped at
   # ten rows and none of them could say what was left out, so this is the one
@@ -149,5 +160,11 @@ module Whatsapp::FlowActions
   # a record that could not be found.
   def known?(action)
     ACTIONS.include?(action)
+  end
+
+  # Still honoured on a tap, never offered again. Asked where a pill is composed
+  # rather than where one is dispatched, which is the whole point of the set.
+  def retired?(action)
+    RETIRED_ACTIONS.include?(action)
   end
 end

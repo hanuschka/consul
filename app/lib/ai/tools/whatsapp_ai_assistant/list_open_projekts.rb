@@ -2,9 +2,10 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenProjekts < Ai::Tools::WhatsappAiAs
   description "Lists the projekts the portal is currently running, the same ones its own overview " \
               "page shows. This is the answer to a general wish to take part — \"ich möchte mich " \
               "beteiligen\" — because a phase named on its own says nothing about what it is " \
-              "for. Name the projekts in your sentence and offer them as view_projekt or " \
-              "participate_projekt pills; go into phases with describe_projekt, which returns " \
-              "them for one projekt, only for the one the citizen then picks. A citizen who " \
+              "for. Name the projekts in your sentence and offer them as view_projekt pills; a " \
+              "tap on one of those is answered with describe_projekt and then " \
+              "send_projekt_card for that projekt, which carries its phases and deadlines in " \
+              "the summary. A citizen who " \
               "already named a projekt has picked one, so answer about that projekt instead of " \
               "listing these. Ten at a time: say how many there are altogether and offer " \
               "more_action_id as a button so the rest are one tap away rather than absent."

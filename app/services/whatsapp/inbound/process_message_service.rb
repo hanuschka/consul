@@ -90,6 +90,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     #
     # The message id travels separately because a retry puts the failed inbound back
     # under its own id, not under the tap that asked for it.
+    #
+    # The bubble does not follow it. Whatever is being answered, the citizen is
+    # watching the message they have just sent, and that is the only one WhatsApp
+    # will hang a typing indicator on — so the turn re-arms on the live inbound
+    # while the assistant is asked about the snapshotted one.
     def answer(inbound_text, inbound_message_id:)
       return send_unavailable_line if !::Ai::Settings.ai_available?
 
@@ -97,19 +102,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         conversation: conversation,
         inbound_text: inbound_text,
         inbound_message_id: inbound_message_id,
+        typing_message_id: reading.message_id,
         previous_inbound_at: previous_inbound_at
       )
 
       return conversation.clear_retry_inbound! if result.success?
 
-      # The tap is snapshotted beside the note describing it: the note says what was
-      # tapped in words, and the tools that refuse to answer a tap with the message
-      # it sat under read the tap itself.
-      conversation.store_retry_inbound!(
-        text: inbound_text,
-        message_id: inbound_message_id,
-        tap: conversation.inbound_tap
-      )
+      # The note describing a tap is snapshotted as the text it is: what the retry
+      # replays is the sentence the assistant was given, which already says which
+      # button was pressed.
+      conversation.store_retry_inbound!(text: inbound_text, message_id: inbound_message_id)
 
       send_retryable_unavailable_line
     end
@@ -275,7 +277,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(flow_action[:action], flow_action[:param])
       settle_slot_for(flow_action[:action])
-      conversation.note_inbound_tap!(action: flow_action[:action], param: flow_action[:param])
 
       tapped_line(action: flow_action[:action], param: flow_action[:param])
     end
@@ -407,20 +408,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return false if snapshot["text"].blank?
 
       record_tap(:retry, nil)
-      restore_snapshotted_tap(snapshot["tap"])
 
       answer(snapshot["text"], inbound_message_id: snapshot["message_id"])
 
       true
-    end
-
-    # The retry is a tap on the retry pill, so nothing has noted the tap the failed
-    # turn was answering. Put back before the assistant is asked, because that is
-    # when the tools read it.
-    def restore_snapshotted_tap(tap)
-      return if tap.blank?
-
-      conversation.note_inbound_tap!(action: tap["action"], param: tap["param"])
     end
 
     def send_bot_line(body)

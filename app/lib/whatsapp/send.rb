@@ -436,10 +436,25 @@ module Whatsapp::Send
   #
   # Never raises. The bubble is cosmetic: someone who does not see it waits
   # exactly as long, whereas an exception here would cost them the reply itself.
+  #
+  # The refusal is read rather than discarded. A rejected indicator comes back as
+  # a plain non-success — the client reports it, but under the path every send
+  # shares, so a bubble that never appears is otherwise indistinguishable from
+  # any other failed message. This line names the indicator and the inbound it
+  # was asked for, which is what a report of "no bubble after tapping" needs.
   def typing(message_id:)
     return if message_id.blank?
 
-    WhatsappApi::Client.new.messages.send_typing_indicator(message_id: message_id)
+    response = WhatsappApi::Client.new.messages.send_typing_indicator(message_id: message_id)
+
+    if !response.success?
+      Rails.logger.warn(
+        "[Whatsapp] typing indicator refused for #{message_id}: " \
+        "#{response.code} - #{response.body.to_s.first(500)}"
+      )
+    end
+
+    response
   rescue StandardError => e
     Rails.logger.info("[Whatsapp] typing indicator failed: #{e.class} - #{e.message}")
 

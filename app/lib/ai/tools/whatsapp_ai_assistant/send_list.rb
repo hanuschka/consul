@@ -17,7 +17,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
   # under a projekt's title says nothing that helps the citizen choose between
   # two projekts, and it is repeated back in their own reply. Enforced here
   # rather than asked for in the description, so the model cannot write one.
-  NAME_ONLY_ACTIONS = %i[view_projekt participate_projekt idea_start discover_category].freeze
+  NAME_ONLY_ACTIONS = %i[view_projekt idea_start discover_category].freeze
 
   description "Sends the citizen a selectable list — up to nine rows, each with a label you write " \
               "and an optional one-line description. Use it instead of buttons whenever there " \

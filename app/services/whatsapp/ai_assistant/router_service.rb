@@ -48,12 +48,24 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   # one thing this turn cannot measure for itself: how long the citizen has been
   # away. The inbound chain overwrites the conversation's clock before anything can
   # read it, so it has to travel.
+  #
+  # The two message ids carry the same wamid on every turn but a retry, which is
+  # why they are two. `inbound_message_id` names the message being answered, and
+  # the prompt leaves that one out of the dialog it replays. `typing_message_id`
+  # names the message the citizen is sitting under, and WhatsApp hangs the bubble
+  # on that one alone. A retry replays an older inbound while the citizen watches
+  # the pill they have just tapped, so re-arming on the answered id would keep
+  # asking for a bubble on a message that has been read for minutes. Required
+  # rather than defaulted to nil: a turn with no bubble is the defect this
+  # separation exists to prevent, and it must not be reachable by omission.
   def initialize(
-    conversation:, inbound_text:, inbound_message_id: nil, previous_inbound_at: nil
+    conversation:, inbound_text:, typing_message_id:, inbound_message_id: nil,
+    previous_inbound_at: nil
   )
     @conversation = conversation
     @inbound_text = inbound_text
     @inbound_message_id = inbound_message_id
+    @typing_message_id = typing_message_id
     @previous_inbound_at = previous_inbound_at
     @tool_calls_made = 0
   end
@@ -194,7 +206,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # purpose — MAX_TOOL_CALLS bounds it, and `typing` swallows its own failures, so
     # the cost of asking once too often is a log line the citizen never sees.
     def keep_waiting_visible
-      ::Whatsapp::Send.typing(message_id: @inbound_message_id)
+      ::Whatsapp::Send.typing(message_id: @typing_message_id)
     end
 
     # The step column's whole remaining job: a diagnostic saying what the conversation

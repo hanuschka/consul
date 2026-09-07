@@ -108,6 +108,17 @@ module Whatsapp::FlowActions
   # only `view_projekt` is offered now.
   RETIRED_ACTIONS = %i[participate_projekt].freeze
 
+  # The pills that put a projekt or a participation phase in front of the citizen,
+  # as against the ones that act on a draft, a comment or a setting. Two things read
+  # it, and both are asking the same question about a message that has already been
+  # composed: which rows carry a name that needs no line under it, and whether this
+  # was a message on which the bot may say a question can simply be typed.
+  #
+  # Answered from the pill ids rather than from the body, because the body is the
+  # model's own sentence in whatever language the citizen wrote in — there is nothing
+  # in it Ruby can match on.
+  PROJEKT_CHOICE_ACTIONS = %i[view_projekt idea_start discover_category].freeze
+
   # `show_more`'s parameter names a list rather than a record: which of the capped
   # lists the citizen wants the rest of. Every list the bot can send is capped at
   # ten rows and none of them could say what was left out, so this is the one
@@ -149,6 +160,15 @@ module Whatsapp::FlowActions
     return if !ACTIONS.include?(action)
 
     { action: action, param: match[:param] }
+  end
+
+  # Whether any of these pill ids offered a projekt or a phase. Takes the whole set
+  # because the question is about the message rather than about one button: a reply
+  # whose second pill is the projekt still presented one.
+  def projekt_choice?(reply_ids)
+    Array(reply_ids).any? do |reply_id|
+      PROJEKT_CHOICE_ACTIONS.include?(parse(reply_id)&.dig(:action))
+    end
   end
 
   def parameterised?(action)

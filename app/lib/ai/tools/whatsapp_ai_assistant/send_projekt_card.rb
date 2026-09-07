@@ -34,6 +34,7 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     return unknown_projekt_error(projekt_name) if projekt.blank?
 
     send_card(projekt, summary)
+    note_typing_hint_offered!
 
     # Halts like every tool that sends its own message: the card already carries
     # the title, the summary, the picture and the link, so a further completion

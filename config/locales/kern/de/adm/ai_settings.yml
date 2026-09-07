@@ -19,6 +19,10 @@ de:
         model_required:
           inline: >
             Erforderlich, da ein anderer Anbieter als der Standard gewählt ist. Bitte wählen Sie ein Modell für diesen Anbieter.
+        image_marking_unavailable:
+          title: Bildkennzeichnung nicht verfügbar
+          body: >
+            Auf diesem Server fehlt exiftool. Erzeugte Bilder müssen als KI-erzeugt gekennzeichnet werden, bevor sie veröffentlicht werden — ohne exiftool schlägt jede Bilderzeugung fehl, statt ein ungekennzeichnetes Bild zu veröffentlichen. Bitte installieren Sie das Paket:
         api_key_required:
           title: API-Schlüssel erforderlich
           body: >

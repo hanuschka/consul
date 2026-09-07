@@ -199,6 +199,12 @@ application.register("adm-dashboard-notice", AdmDashboardNoticeController)
 import AdmAutogrowController from "./adm/autogrow_controller"
 application.register("adm-autogrow", AdmAutogrowController)
 
+import AdmMemoController from "./adm/memo_controller"
+application.register("adm--memo", AdmMemoController)
+
+import AdmMemoFormController from "./adm/memo_form_controller"
+application.register("adm--memo-form", AdmMemoFormController)
+
 import AdmUserSelectController from "./adm/user_select_controller"
 application.register("adm-user-select", AdmUserSelectController)
 

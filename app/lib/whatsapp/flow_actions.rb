@@ -80,13 +80,13 @@ module Whatsapp::FlowActions
   # pairs each id with its label, and a set built twice is a set that can pair them
   # differently.
   #
-  # Two, not three: Whatsapp::Send keeps the last of a message's three slots for the
-  # main menu. Sending a photo and going on without one are the two answers the
-  # citizen must be able to give by tapping — a photo is always optional, and that
-  # is the pill that makes it so. Having one generated is offered in words instead,
-  # which the generate tool's own description already asks for when they say they
-  # have no picture of their own.
-  IMAGE_ANSWERS = %i[image_upload image_skip].freeze
+  # Three, which is every slot the message has: the photo question is the one place
+  # the main-menu pill gives way, so the tool sends it through
+  # Whatsapp::Send.buttons_without_main_menu. Generation was offered in words before
+  # and only once the citizen said they had no photo of their own, so a citizen who
+  # did not already know it existed read a message naming two ways out and took one
+  # of them. The middle answer is the whole reason the menu is dropped here.
+  IMAGE_ANSWERS = %i[image_upload image_generate image_skip].freeze
 
   # The ids that point at one record or setting. Their parameter is what the
   # dispatcher re-resolves, and it is also what names the pill when the assistant

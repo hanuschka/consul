@@ -1,23 +1,26 @@
 class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssistant::BaseTool
   # Asking for a photo is a sentence, so by every rule here it should not be a tool.
-  # It is one for a single reason: what the citizen sends becomes a picture on a
-  # public civic page under their name, and they have to be told they must hold its
-  # rights *before* they send it. That line is a legal notice rather than the bot's
-  # voice, so it is appended here from the locale copy — the model writes the ask and
-  # cannot paraphrase the notice away or forget it.
+  # It is one for a single reason: whichever picture is chosen becomes a picture on a
+  # public civic page under the citizen's name, and what they have to know about it
+  # they have to know *before* they choose — that they must hold the rights to a photo
+  # of their own, and that the alternative is drawn by a machine. Both lines are legal
+  # notices rather than the bot's voice, so they are appended here from the locale
+  # copy: the model writes the ask and cannot paraphrase them away or forget them.
   #
-  # The scripted flow made the same guarantee by construction, joining the notice onto
-  # every upload prompt so the ask, the re-ask and the failure all carried it. This is
-  # that guarantee, kept.
+  # The scripted flow made the same guarantee by construction, joining the rights
+  # notice onto every upload prompt so the ask, the re-ask and the failure all carried
+  # it. This is that guarantee, kept, and extended to the answer the flow did not
+  # offer.
   description "Asks the citizen to send a photo for their draft, in your own words, and appends " \
-              "the notice about picture rights that has to accompany the request. Use it whenever " \
-              "you ask for a photo — never write the request yourself, because the notice would " \
-              "be missing. draft_status says whether this phase takes pictures at all and whether " \
-              "the citizen has already declined one; do not ask again if they have. A photo is " \
-              "always optional, and the two answers — send one, or go on without — arrive as " \
-              "buttons of their own, so do not offer them again in your sentence. Having a " \
-              "picture generated is not one of them: offer that in words when they say they " \
-              "have none of their own. This sends the message itself."
+              "the notices about picture rights and generated pictures that have to accompany " \
+              "the request. Use it whenever you ask for a photo — never write the request " \
+              "yourself, because the notices would be missing. draft_status says whether this " \
+              "phase takes pictures at all and whether the citizen has already declined one; do " \
+              "not ask again if they have. A photo is always optional, and all three answers — " \
+              "send one, have one generated, or go on without — arrive as buttons of their own, " \
+              "so do not offer them again in your sentence. A tap on the generate button comes " \
+              "back to you as a message, and generate_draft_image is what you answer it with. " \
+              "This sends the message itself."
 
   params do
     string :body,
@@ -33,27 +36,27 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
     return not_collected_error if !conversation.image_question_available?
     return blank_body_error if body.to_s.strip.blank?
 
-    ask, notice, *labels = translated_lines(body.strip)
+    ask, rights_notice, generation_notice, *labels = translated_lines(body.strip)
 
-    ::Whatsapp::Send.buttons(
+    ::Whatsapp::Send.buttons_without_main_menu(
       account: account,
-      body: [ask, notice].join("\n\n"),
+      body: [ask, rights_notice, generation_notice].join("\n\n"),
       buttons: image_answer_buttons(labels)
     )
 
-    halt("Asked for a photo, with the picture-rights notice and the two ways to answer.")
+    halt("Asked for a photo, with both notices and the three ways to answer.")
   end
 
   private
 
     # The labels are locale copy rather than the model's, for the same reason the
-    # notice below them is: the citizen must always be able to decline a picture, and
-    # a set of options the model writes fresh each turn is a set it can also write its
-    # way out of. Two of them, because the message's third slot is the main menu's,
-    # and the phase either collects pictures or this tool has already refused, so
-    # both always apply.
+    # notices above them are: the citizen must always be able to decline a picture,
+    # and a set of options the model writes fresh each turn is a set it can also write
+    # its way out of. Three of them, because this message gives its last slot to the
+    # third answer rather than to the main menu, and the phase either collects
+    # pictures or this tool has already refused, so all three always apply.
     #
-    # The ask is the assistant's and already in the citizen's language; the notice and
+    # The ask is the assistant's and already in the citizen's language; the notices and
     # the labels are the locale copy's and have to be brought to the same one, or a
     # Turkish request for a photo carries a German declaration about who owns it. One
     # call for the whole message, because a body and the labels under it are one thing
@@ -62,8 +65,15 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
     def translated_lines(body)
       ::Whatsapp::AiAssistant::BotCopyService.call(
         account: account,
-        lines: [body, I18n.t("whatsapp.bot.proposal.image_rights_notice"), *written_labels]
+        lines: [body, *written_notices, *written_labels]
       )
+    end
+
+    def written_notices
+      [
+        I18n.t("whatsapp.bot.proposal.image_rights_notice"),
+        I18n.t("whatsapp.bot.proposal.image_generation_notice")
+      ]
     end
 
     # The fit is decided after the translation, because the length that fits is a

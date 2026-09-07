@@ -49,6 +49,26 @@ module Whatsapp::Send
     remember_confirmations(account: account, entries: offered, message: message)
   end
 
+  # The send for a message that spends its last slot on an answer instead of the way
+  # out. The menu pill goes on every interactive message because a citizen who has
+  # lost the thread needs one — but a question with three answers of its own has
+  # nowhere to put it, and dropping one of the answers to keep the menu leaves the
+  # citizen reading a message that names fewer ways on than it has.
+  #
+  # Which message that is belongs to the caller: it is the one that knows its
+  # question has three answers and that the citizen is part-way through something the
+  # menu would abandon. A rule here recognising particular messages would be the
+  # transport deciding what a flow's question means. Typing for the menu still works,
+  # so what is given up is the pill rather than the way back.
+  def buttons_without_main_menu(account:, body:, buttons:)
+    offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
+    message = deliver_buttons(
+      account: account, body: body, offered: offered, header_image_url: nil
+    )
+
+    remember_confirmations(account: account, entries: offered, message: message)
+  end
+
   # The same send without the confirmation record, for the recovery lines. Their
   # pills are locale copy from a fixed list and never irreversible, so there is
   # nothing here to remember — but going through `buttons` would still overwrite

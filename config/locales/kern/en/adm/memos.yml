@@ -3,13 +3,22 @@ en:
     memos:
       title: Internal notes
       hint: Visible only to admins and project managers. Use the bell to notify colleagues by email.
+      count:
+        one: 1 note
+        other: "%{count} notes"
+      empty:
+        title: No internal notes yet
+        text: Use this space to record questions, agreements and decisions about this contribution.
       form:
         submit: Create note
+        submit_reply: Send reply
         placeholder: Write an internal note...
         placeholder_reply: Write a reply...
+        keyboard_hint: Ctrl/Cmd + Enter to send
       memo:
         reply: Reply
         send_notification: Send notification
+        notification_sent: Notified
         last_notification: "Last notification sent at %{datetime}"
         delete: Delete
         delete_confirm: Are you sure you want to delete this note?

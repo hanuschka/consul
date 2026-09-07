@@ -123,6 +123,12 @@ en:
         image_rights_notice: >-
           Please only send pictures you hold the rights to, and none showing people who
           have not agreed to it.
+        # The counterpart for the generated answer, appended to the same request: the
+        # picture the portal makes is published under the citizen's name like their own
+        # would be, so they are told it is machine-made before they choose that answer
+        # rather than after they see the picture.
+        image_generation_notice: >-
+          A generated picture is created by an AI rather than taken by a person.
         location_optional: A location is optional. You can also carry on without one.
       onboarding:
         welcome_greeting: 👋 Good to have you here!

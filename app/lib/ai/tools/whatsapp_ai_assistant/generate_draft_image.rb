@@ -1,10 +1,12 @@
 class Ai::Tools::WhatsappAiAssistant::GenerateDraftImage <
   Ai::Tools::WhatsappAiAssistant::BaseTool
   description "Has the portal generate a picture for the draft, from the description the draft " \
-              "already carries. Offer it as an alternative when the citizen has no photo of " \
-              "their own and this phase takes pictures. It is a slow external call, so tell them " \
-              "it is being made before you call this. A failure is not a problem worth stopping " \
-              "for: the picture is optional, so say it did not work and go on to publishing."
+              "already carries. It is one of the three buttons request_photo offers, so a tap on " \
+              "that button is what usually leads here — answer it by calling this. Ask for it in " \
+              "words only where the citizen says they have no photo of their own without having " \
+              "tapped. It is a slow external call, so tell them it is being made before you call " \
+              "this. A failure is not a problem worth stopping for: the picture is optional, so " \
+              "say it did not work and go on to publishing."
 
   def diagnostic_step
     ::Whatsapp::Conversation::Step::AWAITING_IMAGE_CHOICE

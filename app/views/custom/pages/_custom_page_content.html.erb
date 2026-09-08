@@ -41,10 +41,10 @@
             class: "button -red",
             tabindex: "-1",
             form: { data: { turbolinks: false } },
-            data: { confirm: "Sind Sie sicher, dass Sie alle Inhaltsblöcke löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden." }
+            data: { confirm: t("custom.studio.delete_all_content_blocks.confirm") }
           ) do %>
             <i class="fas fa-trash"></i>
-            Alle Inhaltsblöcke löschen
+            <%= t("custom.studio.delete_all_content_blocks.button_label") %>
           <% end %>
         <% end %>
       </div>

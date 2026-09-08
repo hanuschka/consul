@@ -40,7 +40,7 @@
     <h1>403</h1>
     <h2 style="margin-top:20px;">Sie sind nicht berechtigt diese Seite aufzurufen.</h2>
     <% if @individual_group_value_names.any? %>
-      <h4 style="margin-top:5px"><%= "Die Sichtbarkeit ist beschränkt auf: #{@individual_group_value_names.join(", ")}" %></h4>
+      <h4 style="margin-top:5px"><%= t("custom.pages.forbidden.visibility_restricted_to", groups: @individual_group_value_names.join(", ")) %></h4>
     <% end %>
     <h3 style="margin-top:30px">
       <a href="/users/sign_in">Anmelden</a> oder <a href="/users/sign_up">Registrieren</a> um Zugriff zu erhalten.

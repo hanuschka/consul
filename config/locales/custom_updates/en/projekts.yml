@@ -213,6 +213,7 @@ en:
           incoming: Incoming
           past: Past
       projekt_questions:
+        no_question_available: There is currently no question
         comments_button: Publish answer
         comments_count: "%{count} open answers"
         comment_votes_count: "%{count} up- & downvotes"

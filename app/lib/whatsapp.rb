@@ -308,6 +308,12 @@ module Whatsapp
     "#{Rails.application.routes.url_helpers.projekts_url(**UrlOptions.default.to_h)}/"
   end
 
+  # Baked into the voting notification's URL button at approval time, with the
+  # poll id appended at send time — so it has to match `poll_url` minus the id.
+  def self.poll_url_prefix
+    "#{Rails.application.routes.url_helpers.polls_url(**UrlOptions.default.to_h)}/"
+  end
+
   # Whether a broadcast can be sent at all. Asked by the projekt details page
   # before it offers the button and by the action before it enqueues, so the two
   # cannot disagree about what "configured" means.

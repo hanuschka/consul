@@ -369,16 +369,28 @@ de:
           muss fester Text stehen.
         notification_templates_title: Push-Benachrichtigungen
         notification_templates_intro: >-
-          Die drei Nachrichten, die die Plattform von selbst verschickt: zweimal rund um das Ende
-          einer Vorschlagsphase und einmal, wenn sich beim eigenen Vorschlag etwas tut. Jede braucht
-          eine eigene freigegebene Vorlage, eingereicht auf %{language} mit dem Wortlaut unten.
-          Solange eine Vorlage hier nicht eingereicht und aktiviert ist, erreicht diese
-          Benachrichtigung niemanden.
+          Die Nachrichten, die die Plattform von selbst verschickt: rund um das Ende einer
+          Vorschlagsphase, wenn sich beim eigenen Vorschlag etwas tut und rund um eine Abstimmung.
+          Jede braucht eine eigene freigegebene Vorlage, eingereicht auf %{language} mit dem
+          Wortlaut unten. Solange eine Vorlage hier nicht eingereicht und aktiviert ist, erreicht
+          diese Benachrichtigung niemanden.
+        notification_templates_voting_intro: >-
+          Zu einer Abstimmung gibt es drei Varianten pro Zeitpunkt. Ist die Variante mit dem Button
+          „Jetzt abstimmen“ aktiv, kann direkt im Chat abgestimmt werden — sofern die Umfrage sich
+          im Chat stellen lässt. Ist sie es nicht, wird die Variante mit dem Button
+          „Abstimmung öffnen“ verschickt, und ohne beide die Variante ohne Button.
         notification_template_column: Benachrichtigung
         notification_template_kinds:
           deadline_approaching: Frist läuft ab
           deadline_passed: Frist abgelaufen
           status_change: Update zum eigenen Vorschlag
+          voting_started: Abstimmung gestartet
+          voting_started_action: Abstimmung gestartet (Button, Abstimmen im Chat)
+          voting_started_link: Abstimmung gestartet (Button, Abstimmung öffnen)
+          voting_ending: Abstimmung endet bald
+          voting_ending_action: Abstimmung endet bald (Button, Abstimmen im Chat)
+          voting_ending_link: Abstimmung endet bald (Button, Abstimmung öffnen)
+        notification_template_button: 'Button: %{label}'
         notification_template_not_submitted: noch nicht eingereicht
         notification_template_submit: Einreichen
         notification_template_other_in_use: 'aktiv: %{name}'

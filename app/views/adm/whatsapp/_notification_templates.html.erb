@@ -1,6 +1,6 @@
-<%# The three pushes the bot sends on its own, each bound to one setting the
-    jobs read. Nothing to fill in here: body, name and language all follow from
-    the kind, so the only choice left is which of the three to run. %>
+<%# The pushes the bot sends on its own, each bound to one setting the jobs
+    read. Nothing to fill in here: body, name, language and button label all
+    follow from the kind, so the only choice left is which of them to run. %>
 <section class="mt-5">
   <h2 class="kern-title kern-title--small mb-2">
     <%= t("adm.whatsapp.show.notification_templates_title") %>
@@ -9,6 +9,13 @@
   <p class="kern-body adm-whatsapp-page--explanation mb-3">
     <%= t("adm.whatsapp.show.notification_templates_intro",
       language: ::Whatsapp.broadcast_template_language) %>
+  </p>
+
+  <%# The voting rows are three per moment where every other push is one, so what
+      picks between them is said here rather than left to be inferred from the
+      row labels. %>
+  <p class="kern-body adm-whatsapp-page--explanation mb-3">
+    <%= t("adm.whatsapp.show.notification_templates_voting_intro") %>
   </p>
 
   <table class="kern-table">

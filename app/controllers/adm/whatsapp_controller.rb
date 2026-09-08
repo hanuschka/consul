@@ -166,7 +166,7 @@ module Adm
     # The push counterpart of create_template. Nothing to fill in: the body is
     # the catalog's, the name follows from the kind and the language from the
     # broadcast setting the sending code reads, so the only decision left is
-    # which of the three to submit.
+    # which of them to submit — including which button shape, for a voting push.
     def create_notification_template
       kind = notification_template_kind
 
@@ -184,7 +184,7 @@ module Adm
       redirect_to templates_adm_whatsapp_path
     end
 
-    # Arms one of the three pushes. The name is derived from the kind rather
+    # Arms one of the pushes. The name is derived from the kind rather
     # than taken from the request: this writes a Setting, and the only template
     # the tab can vouch for is the one it submitted itself.
     def use_notification_template
@@ -220,9 +220,8 @@ module Adm
         authorize [:adm, Setting], :update?
       end
 
-      # No default here, unlike the broadcast kinds: the three pushes have no
-      # obvious fallback, and guessing one would submit or arm the wrong
-      # notification.
+      # No default here, unlike the broadcast kinds: the pushes have no obvious
+      # fallback, and guessing one would submit or arm the wrong notification.
       def notification_template_kind
         kind = params[:kind].to_s
 

@@ -23,6 +23,12 @@ class Setting < ApplicationRecord
     whatsapp.deadline_approaching_template
     whatsapp.deadline_passed_template
     whatsapp.status_change_template
+    whatsapp.voting_started_template
+    whatsapp.voting_started_action_template
+    whatsapp.voting_started_link_template
+    whatsapp.voting_ending_template
+    whatsapp.voting_ending_action_template
+    whatsapp.voting_ending_link_template
   ].freeze
 
   def validate_whatsapp_template_name
@@ -290,6 +296,12 @@ class Setting < ApplicationRecord
         "whatsapp.deadline_approaching_template": nil,
         "whatsapp.deadline_passed_template": nil,
         "whatsapp.status_change_template": nil,
+        "whatsapp.voting_started_template": nil,
+        "whatsapp.voting_started_action_template": nil,
+        "whatsapp.voting_started_link_template": nil,
+        "whatsapp.voting_ending_template": nil,
+        "whatsapp.voting_ending_action_template": nil,
+        "whatsapp.voting_ending_link_template": nil,
         "whatsapp.deadline_notifications_enabled": false,
         "whatsapp.broadcast_template_language": "de",
         "whatsapp.auto_broadcast_new_projekts": false,

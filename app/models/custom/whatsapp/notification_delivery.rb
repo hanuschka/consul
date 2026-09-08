@@ -5,7 +5,7 @@ class Whatsapp::NotificationDelivery < ApplicationRecord
   belongs_to :whatsapp_account, class_name: "Whatsapp::Account"
   belongs_to :projekt_phase, class_name: "::ProjektPhase", optional: true
 
-  KINDS = %w[deadline_approaching deadline_passed].freeze
+  KINDS = %w[deadline_approaching deadline_passed voting_started voting_ending].freeze
 
   validates :kind, inclusion: { in: KINDS }
 

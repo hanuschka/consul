@@ -50,6 +50,49 @@ class WhatsappApi::Resources::Templates
     )
   end
 
+  # A template whose approved shape is a text body and one quick-reply button —
+  # the push that offers an action the chat itself carries out. The button's
+  # payload travels at send time rather than being baked in, which is what lets
+  # one approved template point at whichever phase the push is about.
+  def create_reply_button(
+    name:, language:, body:, button_label:, example_variables: [],
+    category: DEFAULT_CATEGORY
+  )
+    @client.post(
+      BASE_PATH,
+      body: {
+        name: name,
+        language: language,
+        category: category,
+        components: [
+          body_component(body, example_variables),
+          quick_reply_button_component(button_label)
+        ]
+      }
+    )
+  end
+
+  # The same body with a URL button instead, for the push whose action is a page
+  # rather than a reply. Distinct from create_card because that one forces an
+  # image header, and a notification carries no picture.
+  def create_link_button(
+    name:, language:, body:, button_label:, button_url_prefix:,
+    example_variables: [], example_button_variable: "1", category: DEFAULT_CATEGORY
+  )
+    @client.post(
+      BASE_PATH,
+      body: {
+        name: name,
+        language: language,
+        category: category,
+        components: [
+          body_component(body, example_variables),
+          url_button_component(button_label, button_url_prefix, example_button_variable)
+        ]
+      }
+    )
+  end
+
   private
 
     def header_image_component(example_image_url)
@@ -73,6 +116,15 @@ class WhatsappApi::Resources::Templates
             example: ["#{button_url_prefix}#{example_button_variable}"]
           }
         ]
+      }
+    end
+
+    # A quick-reply button carries no URL and no example: what the tap sends is
+    # the payload the send fills in, and Meta approves only the label here.
+    def quick_reply_button_component(button_label)
+      {
+        type: "BUTTONS",
+        buttons: [{ type: "QUICK_REPLY", text: button_label }]
       }
     end
 

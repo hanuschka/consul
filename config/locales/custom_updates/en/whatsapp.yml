@@ -273,3 +273,18 @@ en:
           status_change: |-
             🔔 There's an update on your contribution.
             %{url}
+          voting_started: |-
+            🗳️ A new vote has started.
+            %{url}
+          voting_ending: |-
+            ⏳ Only a few days left: the vote closes soon.
+            %{url}
+          # The two button templates carry the link in the button, so they carry
+          # no variable in the text.
+          voting_started_action: "🗳️ A new vote has started. You can vote right here in the chat."
+          voting_started_link: "🗳️ A new vote has started."
+          voting_ending_action: "⏳ Only a few days left: the vote closes soon. You can vote right here in the chat."
+          voting_ending_link: "⏳ Only a few days left: the vote closes soon."
+          buttons:
+            vote_now: Vote now
+            open_ballot: Open the ballot

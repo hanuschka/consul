@@ -1,24 +1,62 @@
 module Whatsapp::NotificationTemplates
-  # The three pushes the catalog adds beyond the projekt announcement. All are
-  # sent outside the 24-hour service window, so all have to be approved Meta
-  # templates rather than freeform text.
+  # The pushes the catalog adds beyond the projekt announcement. All are sent
+  # outside the 24-hour service window, so all have to be approved Meta templates
+  # rather than freeform text.
   #
-  # One variable each, and that variable is a URL. This is the catalog's
-  # privacy-by-design line and it is a constraint, not a style choice: the
-  # message body may not carry the projekt's name, the proposal's title or a
-  # support count, because a push arrives on a lock screen someone else can
-  # read. What it is about becomes visible only after tapping through.
+  # None of them names what it is about. This is the catalog's privacy-by-design
+  # line and it is a constraint, not a style choice: the message body may not
+  # carry the projekt's name, the proposal's title or a support count, because a
+  # push arrives on a lock screen someone else can read. What it is about becomes
+  # visible only after tapping through, whether that tap is a link in the body or
+  # the template's own button.
   #
   # UTILITY rather than MARKETING: these follow from something the citizen
   # already engaged with. Submitting them as MARKETING gets them reclassified,
   # and repeated misclassification costs the number its quality rating.
   CATEGORY = "UTILITY".freeze
 
-  KINDS = %w[deadline_approaching deadline_passed status_change].freeze
+  # What shape each push is approved in, and so which submission it takes.
+  #
+  # `body` is the original form: one variable, and it is the URL. The two button
+  # shapes carry no variable in the body at all — the push says what it is for and
+  # the template's own button is the way in, which is what a vote needs: an
+  # `action` button is a quick-reply whose tap comes back to us and is answered in
+  # the chat, and a `link` button is a URL that opens the ballot.
+  #
+  # Both variants exist per voting kind rather than one template deciding at send
+  # time, because a button's kind is approved with the template: a poll the chat
+  # can carry gets the action template, and one it cannot gets the link.
+  BODY_SHAPE = :body
+  ACTION_SHAPE = :action
+  LINK_SHAPE = :link
+
+  SHAPES = {
+    "deadline_approaching" => BODY_SHAPE,
+    "deadline_passed" => BODY_SHAPE,
+    "status_change" => BODY_SHAPE,
+    "voting_started" => BODY_SHAPE,
+    "voting_started_action" => ACTION_SHAPE,
+    "voting_started_link" => LINK_SHAPE,
+    "voting_ending" => BODY_SHAPE,
+    "voting_ending_action" => ACTION_SHAPE,
+    "voting_ending_link" => LINK_SHAPE
+  }.freeze
+
+  KINDS = SHAPES.keys.freeze
+
+  # The voting kinds in the order the job tries them: the button templates first,
+  # and the plain one as what still goes out before Meta has approved either.
+  VOTING_VARIANTS_BY_KIND = {
+    "voting_started" => %w[voting_started_action voting_started_link voting_started],
+    "voting_ending" => %w[voting_ending_action voting_ending_link voting_ending]
+  }.freeze
 
   SETTING_KEYS_BY_KIND = KINDS.index_with { |kind| "whatsapp.#{kind}_template" }.freeze
 
   EXAMPLE_VARIABLES = ["https://example.org/p/482"].freeze
+
+  # The id a poll's ballot is reached by, for the URL button's approval example.
+  EXAMPLE_BUTTON_VARIABLE = "482".freeze
 
   module_function
 
@@ -55,18 +93,65 @@ module Whatsapp::NotificationTemplates
     end
   end
 
+  def shape(kind)
+    SHAPES[kind.to_s]
+  end
+
+  # The label the button is approved with, read in the template's own language
+  # for the same reason the body is: Meta stores the two together.
+  def button_label(kind, language: nil)
+    label = shape(kind) == ACTION_SHAPE ? "vote_now" : "open_ballot"
+
+    I18n.with_locale(body_locale(language)) do
+      I18n.t("whatsapp.bot.notifications.push.buttons.#{label}")
+    end
+  end
+
+  # The first variant of a voting push this portal can actually send, or nil while
+  # none of the three is armed. The action template is preferred only where the
+  # poll is one the chat can carry to the end — everywhere else its button would
+  # start a ballot the bot then has to abandon.
+  def voting_variant(kind, votable:)
+    variants = VOTING_VARIANTS_BY_KIND.fetch(kind.to_s)
+    variants = variants.drop(1) if !votable
+
+    variants.find { |variant| configured?(variant) }
+  end
+
   def create(kind:, language: nil)
     return if !::Whatsapp.configured?
 
     language = language.presence || ::Whatsapp.broadcast_template_language
+    templates = WhatsappApi::Client.new.templates
 
-    WhatsappApi::Client.new.templates.create(
-      name: submission_name(kind),
-      language: language,
-      body: default_body(kind, language: language),
-      example_variables: EXAMPLE_VARIABLES,
-      category: CATEGORY
-    )
+    case shape(kind)
+    when ACTION_SHAPE
+      templates.create_reply_button(
+        name: submission_name(kind),
+        language: language,
+        body: default_body(kind, language: language),
+        button_label: button_label(kind, language: language),
+        category: CATEGORY
+      )
+    when LINK_SHAPE
+      templates.create_link_button(
+        name: submission_name(kind),
+        language: language,
+        body: default_body(kind, language: language),
+        button_label: button_label(kind, language: language),
+        button_url_prefix: ::Whatsapp.poll_url_prefix,
+        example_button_variable: EXAMPLE_BUTTON_VARIABLE,
+        category: CATEGORY
+      )
+    else
+      templates.create(
+        name: submission_name(kind),
+        language: language,
+        body: default_body(kind, language: language),
+        example_variables: EXAMPLE_VARIABLES,
+        category: CATEGORY
+      )
+    end
   end
 
   # One row per kind for the templates tab: the body that would be submitted,
@@ -93,6 +178,7 @@ module Whatsapp::NotificationTemplates
       name: name,
       language: language,
       body: default_body(kind, language: language),
+      button: shape(kind) == BODY_SHAPE ? nil : button_label(kind, language: language),
       configured_name: name_for(kind),
       submitted: listed.present?,
       status: listed&.fetch(:status),

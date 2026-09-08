@@ -331,3 +331,18 @@ de:
           status_change: |-
             🔔 Es gibt eine Neuigkeit zu Ihrem Beitrag.
             %{url}
+          voting_started: |-
+            🗳️ Eine neue Abstimmung ist gestartet.
+            %{url}
+          voting_ending: |-
+            ⏳ Nur noch wenige Tage: Die Abstimmung endet bald.
+            %{url}
+          # Die beiden Vorlagen mit Button tragen den Link im Button und deshalb
+          # keine Variable im Text.
+          voting_started_action: "🗳️ Eine neue Abstimmung ist gestartet. Sie können direkt hier im Chat abstimmen."
+          voting_started_link: "🗳️ Eine neue Abstimmung ist gestartet."
+          voting_ending_action: "⏳ Nur noch wenige Tage: Die Abstimmung endet bald. Sie können direkt hier im Chat abstimmen."
+          voting_ending_link: "⏳ Nur noch wenige Tage: Die Abstimmung endet bald."
+          buttons:
+            vote_now: Jetzt abstimmen
+            open_ballot: Abstimmung öffnen

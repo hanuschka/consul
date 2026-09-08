@@ -275,6 +275,45 @@ module Whatsapp::Send
     end
   end
 
+  # A notification whose action is a tap the bot then answers. Same no-guard
+  # reasoning as `template`: the button is part of the approved shape, so this is
+  # still the only thing WhatsApp accepts outside the service window — and the tap
+  # arrives as an inbound message, which is what opens the window the reply needs.
+  #
+  # The payload is a Whatsapp::FlowActions id, so what the tap does is decided by
+  # the same parser every pill goes through rather than by a branch of its own.
+  def reply_button_template(account:, name:, payload:, language: nil, projekt_id: nil)
+    language ||= ::Whatsapp.broadcast_template_language
+
+    deliver(
+      account: account,
+      kind: "template",
+      body: "#{name}: #{payload}",
+      projekt_id: projekt_id
+    ) do |messages|
+      messages.send_reply_button_template(
+        to: account.wa_id, name: name, language: language, payload: payload
+      )
+    end
+  end
+
+  # The same notification where the action is a page: the button variable is
+  # appended to the fixed URL prefix the template was approved with.
+  def link_button_template(account:, name:, button_variable:, language: nil, projekt_id: nil)
+    language ||= ::Whatsapp.broadcast_template_language
+
+    deliver(
+      account: account,
+      kind: "template",
+      body: "#{name}: #{button_variable}",
+      projekt_id: projekt_id
+    ) do |messages|
+      messages.send_link_button_template(
+        to: account.wa_id, name: name, language: language, button_variable: button_variable
+      )
+    end
+  end
+
   # The projekt card: same no-guard reasoning as `template`, plus an image the
   # recipient's phone fetches from us and a button variable the template appends
   # to its own fixed URL prefix.

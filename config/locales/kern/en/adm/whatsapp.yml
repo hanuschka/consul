@@ -362,15 +362,27 @@ en:
           after {{2}}.
         notification_templates_title: Push notifications
         notification_templates_intro: >-
-          The three messages the platform sends by itself: twice around the end of a proposal phase,
-          and once when something happens on someone's own proposal. Each needs its own approved
-          template, submitted in %{language} with the wording below. Until one is submitted and
-          activated here, that notification reaches nobody.
+          The messages the platform sends by itself: around the end of a proposal phase, when
+          something happens on someone's own proposal, and around a vote. Each needs its own
+          approved template, submitted in %{language} with the wording below. Until one is
+          submitted and activated here, that notification reaches nobody.
+        notification_templates_voting_intro: >-
+          A vote has three variants per moment. With the "Vote now" button variant active, citizens
+          vote right in the chat wherever the poll is one a chat can ask; where it is not, the
+          "Open the ballot" variant goes out instead, and with neither approved, the variant
+          without a button.
         notification_template_column: Notification
         notification_template_kinds:
           deadline_approaching: Deadline approaching
           deadline_passed: Deadline passed
           status_change: Update on own proposal
+          voting_started: Vote started
+          voting_started_action: Vote started (button, vote in the chat)
+          voting_started_link: Vote started (button, open the ballot)
+          voting_ending: Vote closing soon
+          voting_ending_action: Vote closing soon (button, vote in the chat)
+          voting_ending_link: Vote closing soon (button, open the ballot)
+        notification_template_button: 'Button: %{label}'
         notification_template_not_submitted: not submitted yet
         notification_template_submit: Submit
         notification_template_other_in_use: 'currently active: %{name}'

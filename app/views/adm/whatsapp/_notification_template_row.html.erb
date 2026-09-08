@@ -8,6 +8,14 @@
     <p class="kern-body"><%= t("adm.whatsapp.show.notification_template_kinds.#{notification_template[:kind]}") %></p>
 
     <p class="kern-body kern-body--small adm-whatsapp-page--template-body"><%= notification_template[:body] %></p>
+
+    <%# The button is approved with the template, so the row has to show what it
+        says: two rows differ only in their button and would otherwise read the same. %>
+    <% if notification_template[:button].present? %>
+      <p class="kern-body kern-body--small adm-whatsapp-page--template-body">
+        <%= t("adm.whatsapp.show.notification_template_button", label: notification_template[:button]) %>
+      </p>
+    <% end %>
   </td>
 
   <td><%= notification_template[:name] %></td>

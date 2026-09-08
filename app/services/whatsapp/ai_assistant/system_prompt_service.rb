@@ -239,6 +239,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Terms and privacy accepted: #{@conversation.whatsapp_account.terms_accepted?}",
         "- Time since their previous message: #{gap_instruction_line}",
         "- Draft on the table: #{draft_description}",
+        empty_draft_line,
         picture_waiting_line,
         location_waiting_line,
         start_over_line,
@@ -329,10 +330,39 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     # presents a projekt or a phase is the model's to judge, because it is the model
     # that decides what the message is. Absent on every other turn, so nothing has
     # to be said about a cooldown that has not run out.
+    #
+    # Silent where the draft is open and unwritten, because the line above already
+    # says writing is the step and says it about the one thing the citizen is here
+    # to write. Both at once is two cues in one message, and the weaker of them is
+    # about typing in general.
     def typing_hint_line
+      return if draft_open_and_unwritten?
       return if !@conversation.typing_hint_due?
 
       "- Saying a question can simply be typed is due: it has not been said recently"
+    end
+
+    # The one state where writing outranks tapping, and the state itself is what was
+    # missing: a phase entered for a contribution with nothing written into it reads
+    # off "- Draft on the table: none" exactly like a conversation that never entered
+    # one, so the message that opens a draft was composed as if it opened nothing.
+    #
+    # Every turn it holds rather than on a cooldown, because unlike the typing hint
+    # this is not a cue that can be said too often — it stops being true the moment
+    # the citizen writes a word, and until then it is the situation. Whether it needs
+    # saying this turn, and in what words, stays the model's.
+    def empty_draft_line
+      return if !draft_open_and_unwritten?
+
+      "- The draft is open and still empty: writing the contribution as a message is the step " \
+        "here, and the buttons under your message are the detour"
+    end
+
+    # Only #start_draft! ever sets the phase, so a phase on the conversation is a
+    # contribution entered rather than a projekt browsed or a ballot begun; the draft
+    # predicate is the model's own, covering the record and the stash before it.
+    def draft_open_and_unwritten?
+      @conversation.projekt_phase.present? && !@conversation.unsaved_submission?
     end
 
     def confirmation_line

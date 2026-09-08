@@ -29,6 +29,11 @@ class Polls::BallotTraversalQuery < ApplicationQuery
   # question is — while the chat has to stop at the first one still owed, and a
   # question of a bundle is owed there in its own right. Each consumer reads #path
   # and applies its own reading.
+  #
+  # A map-point question is on the path like any other even though it carries no
+  # options. It was dropped when the option-less case was read as a bundle heading
+  # alone, which took it off the page's own wizard as well — the browser's map, which
+  # this replaced, was built from every root question the portal configured.
   class Position
     attr_reader :question, :number, :total
 
@@ -126,7 +131,7 @@ class Polls::BallotTraversalQuery < ApplicationQuery
       asked += 1
 
       next if declined.include?(question.id)
-      next if chosen_options(question).any? && question.id != still_choosing
+      next if answered?(question) && question.id != still_choosing
 
       return Position.new(question: question, number: asked, total: total)
     end
@@ -158,9 +163,7 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     # ordinary question.
     #
     def sequence
-      @sequence ||= participant_ordered_roots.reject do |question|
-        question.question_answers.empty?
-      end
+      @sequence ||= participant_ordered_roots.select { |question| asks_something?(question) }
     end
 
     def participant_ordered_roots
@@ -173,11 +176,10 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     end
 
     # A root followed by its own nested sub-questions, which is the granularity a
-    # chat asks at. A question with no options is passed over — that is the heading
-    # half of a bundle, which has nothing to ask and nothing to record.
+    # chat asks at, with anything that asks nothing dropped (#asks_something?).
     def expanded(roots)
       roots.flat_map { |root| [root] + root.nested_questions.to_a }
-        .reject { |question| question.question_answers.empty? }
+        .select { |question| asks_something?(question) }
     end
 
     def expanded_path
@@ -186,6 +188,49 @@ class Polls::BallotTraversalQuery < ApplicationQuery
 
     def expanded_sequence
       @expanded_sequence ||= expanded(sequence)
+    end
+
+    # Whether there is anything here to put to the citizen. A question with no
+    # options is the heading half of a bundle, which has nothing to ask and nothing
+    # to record — except a map-point question, which never has options at all: what
+    # it asks for is a position, and what it records is Poll::Answer::MapPoint rows
+    # under an answer whose own `answer` column stays null.
+    def asks_something?(question)
+      question.question_answers.any? || question.map_points?
+    end
+
+    # Whether this citizen has answered, which for every question but one is whether
+    # any of its options carries their name. A map-point question is answered by the
+    # points it asked for, and it is answered only once it has all of them: the
+    # portal's page keeps its map open until the last one is placed, and a chat that
+    # moved on after the first would take one point for a question that asked for
+    # three.
+    def answered?(question)
+      return map_points_placed(question) >= question.max_map_points if question.map_points?
+
+      chosen_options(question).any?
+    end
+
+    def map_points_placed(question)
+      map_point_counts.fetch(question.id, 0)
+    end
+
+    # One query for every map question of the ballot, keyed the way #answered_titles
+    # is: a count asked per question would be one round trip per step of a walk that
+    # already costs a fixed handful.
+    def map_point_counts
+      return @map_point_counts if defined?(@map_point_counts)
+
+      @map_point_counts =
+        if @user.blank?
+          {}
+        else
+          ::Poll::Answer::MapPoint
+            .joins(:answer)
+            .where(poll_answers: { question_id: @poll.question_ids, author_id: @user.id })
+            .group("poll_answers.question_id")
+            .count
+        end
     end
 
     # A contexted clone belongs to one option of the question that contextualises

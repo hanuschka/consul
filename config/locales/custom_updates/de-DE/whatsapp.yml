@@ -210,6 +210,26 @@ de:
           abschließen.
         open_prompt: "Bitte schreiben Sie Ihre Antwort als Nachricht."
         maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Antworten möglich."
+        # Was die beiden Enden einer Skala bedeuten. Auf der Seite steht die Beschriftung
+        # links und rechts neben der Reihe der Stufen; im Chat kommen die Stufen als
+        # Spalte, an der nichts links oder rechts steht — also darüber. Die Beschriftungen
+        # selbst sind die Formulierung des Portals und werden nicht übersetzt.
+        scale: "Von „%{minimum}“ bis „%{maximum}“."
+        weight_prompt: >-
+          Wie viel Gewicht soll diese Antwort bekommen? Möglich sind 0 bis %{maximum}.
+        weight_maximum_reached: >-
+          So viel Gewicht ist hier nicht mehr frei — für diese Antwort sind es noch
+          %{remaining}.
+        location_prompt: "Bitte senden Sie den Ort als Standort."
+        location_prompt_remaining: >-
+          Bitte senden Sie den Ort als Standort. Sie können noch %{remaining} Orte angeben.
+        location_optional: "Wenn Sie keinen Ort angeben möchten, hier tippen."
+        location_recorded: "✅ Ort gespeichert."
+        location_remaining: "Sie können noch %{remaining} Orte angeben."
+        location_outside_area: >-
+          Dieser Ort liegt außerhalb des Gebiets, das für diese Frage festgelegt wurde.
+          Bitte senden Sie einen Ort innerhalb des Gebiets.
+        location_maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Orte möglich."
         completed: "Vielen Dank — Ihre Stimmen bei „%{poll}“ sind gezählt."
       onboarding:
         welcome_greeting: 👋 Schön, dass Sie hier sind!

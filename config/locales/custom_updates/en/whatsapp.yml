@@ -170,6 +170,25 @@ en:
           You can pick up to %{maximum} answers, then finish your selection.
         open_prompt: "Please write your answer as a message."
         maximum_reached: "This question takes at most %{maximum} answers."
+        # What the two ends of a scale mean. On the page the wording sits to the left and
+        # the right of the row of steps; in a chat the steps arrive as a column with
+        # nothing to either side of them, so it goes above. The labels themselves are the
+        # portal's own wording and are never translated.
+        scale: "From “%{minimum}” to “%{maximum}”."
+        weight_prompt: >-
+          How much weight should this answer carry? Anything from 0 to %{maximum}.
+        weight_maximum_reached: >-
+          That much weight is no longer free — this answer can still take %{remaining}.
+        location_prompt: "Please send the place as a location."
+        location_prompt_remaining: >-
+          Please send the place as a location. You can still give %{remaining} places.
+        location_optional: "Tap here if you would rather not give a place."
+        location_recorded: "✅ Place saved."
+        location_remaining: "You can still give %{remaining} places."
+        location_outside_area: >-
+          That place is outside the area set for this question. Please send a place inside
+          the area.
+        location_maximum_reached: "This question takes at most %{maximum} places."
         completed: "Thank you — your votes in “%{poll}” are counted."
       onboarding:
         welcome_greeting: 👋 Good to have you here!

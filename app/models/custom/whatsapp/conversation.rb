@@ -460,7 +460,7 @@ class Whatsapp::Conversation < ApplicationRecord
 
   # ── The ballot in flight ────────────────────────────────────────────────
   # A ballot is asked one question at a time over as many messages as it has
-  # questions, and none of the three keys below is a position in it: the answers
+  # questions, and none of the keys below is a position in it: the answers
   # already recorded are what says where the citizen has got to
   # (Polls::BallotTraversalQuery). What is written down is only what cannot be read
   # back off them.
@@ -514,6 +514,24 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(pending_open_question_id: nil)
   end
 
+  # The map-point question whose answer is expected as the citizen's next shared
+  # location. Written down for the same reason the free-text question is: a pin
+  # dropped into a chat is indistinguishable from one meant for a contribution until
+  # something says it was asked for, and the drafting flow asks for pins too.
+  def pending_map_question_id
+    context["pending_map_question_id"]
+  end
+
+  def store_pending_map_question!(question_id)
+    merge_context!(pending_map_question_id: question_id)
+  end
+
+  def clear_pending_map_question!
+    return if context["pending_map_question_id"].blank?
+
+    merge_context!(pending_map_question_id: nil)
+  end
+
   # The questions of this ballot the citizen has declined to answer. The one piece of
   # ballot state the recorded answers genuinely cannot hold: a free-text question
   # that was skipped has no answer row and never will, so without this the cursor
@@ -535,9 +553,9 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(declined_poll_question_ids: declined_poll_question_ids + [question_id])
   end
 
-  # All four in one write, for the end of a ballot and for starting over. Separate
-  # clears would leave a window in which the poll was gone and a question of it was
-  # still expecting an answer.
+  # All of them in one write, for the end of a ballot and for starting over.
+  # Separate clears would leave a window in which the poll was gone and a question
+  # of it was still expecting an answer.
   def clear_ballot!
     return if ballot_keys.all? { |key| context[key].blank? }
 
@@ -545,6 +563,7 @@ class Whatsapp::Conversation < ApplicationRecord
       active_poll_id: nil,
       open_multiple_question_id: nil,
       pending_open_question_id: nil,
+      pending_map_question_id: nil,
       declined_poll_question_ids: nil
     )
   end
@@ -761,7 +780,7 @@ class Whatsapp::Conversation < ApplicationRecord
     def ballot_keys
       %w[
         active_poll_id open_multiple_question_id pending_open_question_id
-        declined_poll_question_ids
+        pending_map_question_id declined_poll_question_ids
       ]
     end
 

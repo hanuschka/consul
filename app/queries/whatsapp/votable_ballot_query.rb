@@ -20,12 +20,26 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
   #   row a `multiple` question spends on saying it is finished. Below two there is
   #   nothing to choose; above, the list cannot hold them and the portal page is
   #   where the whole question is legible anyway.
+  # - a rating scale, whose steps are ordinary options and are offered as pills like
+  #   any others, with the portal's own wording for the lowest and the highest step
+  #   above them. It records like a `unique` question: one row, replaced.
+  # - a weighted vote, asked one choice at a time — how much of the question's
+  #   budget that choice carries — because a chat has no way to show a budget being
+  #   split across a list. Its options are not a list to pick from, so their number
+  #   is not what has to fit; the weight picker is.
+  # - a map point, which is the one question answered by something other than a
+  #   tap or a sentence: WhatsApp's own location message. It carries no options at
+  #   all.
   #
-  # What does not, and sends the citizen to the ballot page instead: rating scales,
-  # weighted votes and map points. All three are answered by a control a chat has
-  # no equivalent of — a slider, a budget split across options, a pin on a map —
-  # and one of them anywhere in the poll disqualifies the poll, not the question.
-  ANSWERABLE_VOTE_TYPES = ["unique", "multiple", nil].freeze
+  # What still does not fit, and sends the citizen to the ballot page instead: a
+  # scale with more steps than a list holds, a weighted question whose widest
+  # picker does not fit one, two options a button's twenty characters cannot tell
+  # apart. One of them anywhere in the poll disqualifies the poll, not the question:
+  # a ballot half-answered in a chat and half on the page is not one the citizen
+  # meant to cast.
+  ANSWERABLE_VOTE_TYPES = [
+    "unique", "multiple", "multiple_with_weight", "rating_scale", "map_points", nil
+  ].freeze
 
   MIN_OPTIONS = 2
 
@@ -80,14 +94,55 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
   # disagree about what can be asked.
   def self.answerable?(question)
     return false if !ANSWERABLE_VOTE_TYPES.include?(question.vote_type)
+    return map_points_answerable?(question) if question.map_points?
 
     options = question.question_answers.to_a
 
     return false if options.empty?
     return true if free_text_only?(options)
+    return weighted_answerable?(question, options) if weighted?(question)
     return false if !distinct_labels?(options)
 
     options.size.between?(MIN_OPTIONS, rows_available(question))
+  end
+
+  # A map-point question has nothing to fit into a list and nothing to tell apart —
+  # it carries no options at all — so the only thing that can rule it out is an area
+  # the portal drew that cannot be tested. Polls::MapPointBoundary needs the GEOS
+  # extension for that, and without it a point can be neither accepted nor refused:
+  # the question is better left to the page than answered against an area nobody
+  # checked.
+  def self.map_points_answerable?(question)
+    ::Polls::MapPointBoundary.new(question).usable?
+  end
+
+  # A weighted question is asked one choice at a time, so however many choices it
+  # holds they are never one list — what has to fit a list is the numbers offered
+  # beside a single choice. The choices' own labels are not on the buttons either:
+  # they are named in the message above the numbers, at full length, so two of them
+  # alike past twenty characters is not the problem it is elsewhere.
+  def self.weighted_answerable?(question, options)
+    return false if options.size < MIN_OPTIONS
+
+    max_weight_steps(question).between?(MIN_OPTIONS, ::Whatsapp::MAX_OFFERED_LIST_ROWS)
+  end
+
+  # How many numbers the widest weight picker of a question carries: nothing up to
+  # the whole budget, or up to the per-choice cap where the portal set one. The
+  # citizen is offered what is still free rather than this, which can only be
+  # smaller — so a question whose widest picker fits a list is one every picker of
+  # which fits.
+  def self.max_weight_steps(question)
+    cap = [question.max_votes, question.votation_type&.max_votes_per_answer].compact.min
+
+    cap.to_i + 1
+  end
+
+  # Read off the votation type rather than the question: Questionable delegates
+  # #multiple?, #map_points?, #rating_scale? and #vote_type and stops there, so
+  # #multiple_with_weight? on a question raises rather than answering false.
+  def self.weighted?(question)
+    question.votation_type&.multiple_with_weight?
   end
 
   # A question whose only option is the open one: nothing to choose between, so it
@@ -121,23 +176,35 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
   # The options are preloaded without naming their translations:
   # Poll::Question::Answer carries a default scope that includes them, so asking
   # again here would only repeat it.
+  #
+  # The map location is preloaded for the area a map-point question is tested
+  # against. It belongs to a handful of questions across the whole portal and to
+  # none of the other types, and left out it is one query per map question of every
+  # poll this is asked about.
   def self.askable_questions_of(polls)
     ::Poll::Question
       .where(poll_id: polls.map(&:id), contextualize_by_poll_question_id: nil)
-      .includes(:votation_type, :question_answers)
+      .includes(:votation_type, :map_location, :question_answers)
       .group_by(&:poll_id)
   end
 
   # Every question of a ballot has to be one a chat can ask, and a ballot with no
   # questions at all is not one either. A question with no options is passed over —
   # that is the heading half of a bundle, which has nothing to ask and nothing to
-  # record.
+  # record — except a map-point question, which has no options by its nature and is
+  # answered by a position rather than by one of them.
   def self.all_answerable?(questions)
-    askable = Array(questions).reject { |question| question.question_answers.empty? }
+    askable = Array(questions).select { |question| asks_something?(question) }
 
     return false if askable.empty?
 
     askable.all? { |question| answerable?(question) }
+  end
+
+  # The same reading Polls::BallotTraversalQuery walks by, asked here of the
+  # questions the gate has already loaded.
+  def self.asks_something?(question)
+    question.question_answers.any? || question.map_points?
   end
 
   def initialize(projekt_phase:)

@@ -90,8 +90,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return if handle_phase_tap
     return if handle_contribution_tap
     return if handle_poll_answer_tap
+    return if handle_poll_weight_tap
     return if handle_poll_done_tap
     return if handle_poll_skip_tap
+    return if handle_poll_location
     return if handle_open_answer_text
 
     apply_start_over_tap
@@ -681,17 +683,71 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       advance_ballot
     end
 
-    # "I would rather not write this one." Nothing is recorded and anything recorded
+    # A tap on one of the numbers offered beside one choice of a weighted question.
+    # Its parameter names the option and the weight together, and it is the one pill
+    # that carries two things: the label is a digit, which says nothing at all about
+    # what it is a weight for.
+    def handle_poll_weight_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+
+      return false if flow_action&.fetch(:action) != :poll_weight
+
+      answer_id, weight = flow_action[:param].to_s.split("_")
+      question_answer = ::Poll::Question::Answer.find_by(id: answer_id.to_i)
+
+      return false if question_answer.blank? || weight.blank?
+
+      record_tap(:poll_weight, flow_action[:param])
+
+      ::Whatsapp::Polls::RecordWeightedAnswerService.call(
+        conversation: conversation, question_answer: question_answer, weight: weight.to_i
+      )
+    end
+
+    # "I would rather not answer this one." Nothing is recorded and anything recorded
     # before is removed, which is what the page does with an open answer left empty.
+    #
+    # The same pill ends a map-point question, which has the same problem and one
+    # more: WhatsApp's location picker carries no buttons at all, so the way past the
+    # question travels in a message of its own. Which of the two questions is being
+    # declined is decided by the marker that names it, never by the pill — both sit in
+    # the chat history forever and either marker may be the one holding.
     def handle_poll_skip_tap
       flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
 
       return false if flow_action&.fetch(:action) != :poll_skip
-      return false if conversation.pending_open_question_id.to_i != flow_action[:param].to_i
+
+      question_id = flow_action[:param].to_i
+
+      if conversation.pending_open_question_id.to_i == question_id
+        record_tap(:poll_skip, flow_action[:param])
+
+        return ::Whatsapp::Polls::RecordOpenAnswerService.skip(conversation: conversation)
+      end
+
+      return false if conversation.pending_map_question_id.to_i != question_id
 
       record_tap(:poll_skip, flow_action[:param])
 
-      ::Whatsapp::Polls::RecordOpenAnswerService.skip(conversation: conversation)
+      ::Whatsapp::Polls::RecordMapPointService.skip(conversation: conversation)
+    end
+
+    # A shared location while a map-point question is open. It runs before the pin is
+    # parked for a draft (#park_media): a citizen half-way through a ballot is
+    # answering the ballot, and the drafting flow's own question for a place is not
+    # the one that was asked.
+    def handle_poll_location
+      return false if conversation.pending_map_question_id.blank?
+
+      location = reading.location
+
+      return false if location.blank?
+
+      ::Whatsapp::Polls::RecordMapPointService.call(
+        conversation: conversation,
+        latitude: location["latitude"],
+        longitude: location["longitude"]
+      )
     end
 
     # The one place a plain message is not a question for the assistant: the bot has

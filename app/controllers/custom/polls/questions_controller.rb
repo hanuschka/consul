@@ -46,6 +46,14 @@ class Polls::QuestionsController < ApplicationController
       return render json: { error: "missing_coordinates" }, status: :unprocessable_entity
     end
 
+    # An area the portal drew but this host cannot test — Polls::MapPointBoundary
+    # needs the GEOS extension for that, and #contains? raises without it rather than
+    # answering. Refused as a request that cannot be served instead of raising: a 500
+    # here is a map that stops responding to clicks with nothing said about why.
+    if !boundary.usable?
+      return render json: { error: "boundary_unavailable" }, status: :unprocessable_entity
+    end
+
     unless boundary.contains?(latitude, longitude)
       return render json: { error: "outside_boundary" }, status: :unprocessable_entity
     end
@@ -120,18 +128,6 @@ class Polls::QuestionsController < ApplicationController
     end
   end
 
-  def wizard_step
-    @question = Poll::Question.with_wizard_associations.find(@question.id)
-
-    if !wizard_navigable?(@question)
-      return head(:not_found)
-    end
-
-    return head(:forbidden) if !wizard_readable?(@question)
-
-    render partial: "polls/wizard_item", layout: false, locals: { question: @question }
-  end
-
   # Which question follows this one, decided here rather than in the browser. The
   # order, the contexted clones, the branching and the answer that ends a ballot are
   # all Polls::BallotTraversalQuery's, so the page and the WhatsApp bot walk one
@@ -151,11 +147,15 @@ class Polls::QuestionsController < ApplicationController
 
     return render(json: { question_id: nil }) if following.blank?
 
+    has_next = traversal.next_after?(following)
+
     render json: {
       question_id: following.id,
-      has_next: traversal.next_after?(following),
+      has_next: has_next,
       html: render_to_string(
-        partial: "polls/wizard_item", layout: false, locals: { question: following }
+        partial: "polls/wizard_item",
+        layout: false,
+        locals: { question: following, has_next: has_next }
       )
     }
   end

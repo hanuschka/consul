@@ -24,6 +24,15 @@ module Adm
       whatsapp.max_voice_megabytes
     ].freeze
 
+    # Mirrored from the templates tab, which is the only place that can vouch
+    # for a name Meta has approved. Typing one here made every broadcast fail,
+    # so the page shows them and links onwards instead of offering an input.
+    READ_ONLY_TEMPLATE_SETTING_KEYS = %w[
+      whatsapp.broadcast_template
+      whatsapp.broadcast_card_template
+      whatsapp.broadcast_template_language
+    ].freeze
+
     DIALOGS_PER_PAGE = 20
     DIALOGS_FRAME_ID = "whatsapp_dialogs".freeze
 

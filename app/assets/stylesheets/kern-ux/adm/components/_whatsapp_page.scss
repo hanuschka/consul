@@ -43,3 +43,19 @@
   white-space: pre-wrap;
 }
 
+
+// The three template settings are mirrored from the templates tab rather than
+// edited here, so their value reads as a stored fact and not as an empty input.
+.adm-whatsapp-page--mirrored-value {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--kern-grey-350);
+  border-radius: 4px;
+  background: var(--kern-grey-050);
+  overflow-wrap: anywhere;
+}
+
+.adm-whatsapp-page--mirrored-value--empty {
+  border-style: dashed;
+  background: none;
+  color: var(--kern-color-layout-text-muted);
+}

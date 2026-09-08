@@ -81,6 +81,10 @@ en:
                 must be a language code, e.g. "de" or "de_DE"
               whatsapp_address_form_invalid: >-
                 must be "sie" or "du"
+              whatsapp_locale_unavailable: >-
+                must be a language code the platform offers, e.g. "de" or "en"
+              whatsapp_positive_integer_invalid: >-
+                must be a whole number greater than zero
         deficiency_report:
           attributes:
             map_location:

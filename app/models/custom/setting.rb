@@ -16,6 +16,8 @@ class Setting < ApplicationRecord
   validate :validate_whatsapp_template_name
   validate :validate_whatsapp_template_language
   validate :validate_whatsapp_address_form
+  validate :validate_whatsapp_default_locale
+  validate :validate_whatsapp_positive_integer
 
   WHATSAPP_TEMPLATE_NAME_KEYS = %w[
     whatsapp.broadcast_template
@@ -56,6 +58,31 @@ class Setting < ApplicationRecord
     return if ::Whatsapp::ADDRESS_FORMS.include?(value.to_s.downcase)
 
     errors.add(:value, :whatsapp_address_form_invalid)
+  end
+
+  # An unavailable code leaves the bot on the platform default, so the value
+  # reads as saved while nothing about the bot changes. Refused here instead.
+  def validate_whatsapp_default_locale
+    return if key != "whatsapp.default_locale"
+    return if value.blank?
+    return if ::Whatsapp.available_locale?(value.to_s)
+
+    errors.add(:value, :whatsapp_locale_unavailable)
+  end
+
+  WHATSAPP_POSITIVE_INTEGER_KEYS = %w[
+    whatsapp.message_retention_days
+    whatsapp.max_voice_megabytes
+  ].freeze
+
+  # Both are read through a to_i that discards anything below one, so "drei
+  # Monate" and "0" leave the built-in default in place without saying so.
+  def validate_whatsapp_positive_integer
+    return if !WHATSAPP_POSITIVE_INTEGER_KEYS.include?(key)
+    return if value.blank?
+    return if value.to_s.match?(/\A[1-9][0-9]*\z/)
+
+    errors.add(:value, :whatsapp_positive_integer_invalid)
   end
 
   def ai_gated?

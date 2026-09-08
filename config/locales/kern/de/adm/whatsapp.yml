@@ -253,6 +253,8 @@ de:
         settings_title: Einstellungen
         settings_intro: Vorlage, Sprachmodell und Aufbewahrung für den WhatsApp-Bot. Änderungen wirken
           sofort.
+        settings_mirrored_value_empty: Keine Vorlage aktiv
+        settings_templates_link: Vorlagen verwalten
         auto_broadcast_title: Automatische Projekt-Benachrichtigung
         auto_broadcast_intro: >-
           Ist dies aktiv, versendet die Plattform die WhatsApp-Benachrichtigung von selbst, sobald
@@ -261,9 +263,8 @@ de:
           diese steht die Schaltfläche auf der Projektseite weiterhin zur Verfügung.
         auto_broadcast_missing_template_title: Automatischer Versand ohne Wirkung
         auto_broadcast_missing_template_body: >-
-          Solange keine freigegebene Nachrichtenvorlage hinterlegt ist, wird auch bei aktivem Schalter
-          nichts versendet. Vorlage oben unter „Name der WhatsApp-Nachrichtenvorlage“ eintragen oder
-          im Reiter „Vorlagen“ einreichen.
+          Solange keine freigegebene Nachrichtenvorlage aktiv ist, wird auch bei aktivem Schalter
+          nichts versendet. Vorlage im Reiter „Vorlagen“ einreichen und dort aktivieren.
         draft_evaluation_title: KI-Beitragsprüfung
         draft_evaluation_body: >-
           Definiert eine Projektphase Bewertungskriterien, prüft der Bot jeden Entwurf in einem
@@ -276,7 +277,7 @@ de:
         template_missing_title: Keine Nachrichtenvorlage hinterlegt
         template_missing_body: >-
           Ohne freigegebene 360dialog-Vorlage können keine Projekt-Benachrichtigungen versendet werden.
-          Vorlage unten einreichen oder oben unter „Name der WhatsApp-Nachrichtenvorlage“ eintragen.
+          Vorlage unten einreichen und anschließend aktivieren.
         qr_title: Allgemeiner QR-Code
         qr_subline: Öffnet einen allgemeinen Consul-Chat.
         webhook_title: Webhook

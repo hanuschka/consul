@@ -102,6 +102,10 @@ de:
                 muss ein Sprachcode sein, z. B. „de“ oder „de_DE“
               whatsapp_address_form_invalid: >-
                 muss „sie“ oder „du“ sein
+              whatsapp_locale_unavailable: >-
+                muss ein Sprachkürzel sein, das die Plattform anbietet, z. B. „de“ oder „en“
+              whatsapp_positive_integer_invalid: >-
+                muss eine ganze Zahl größer als Null sein
         deficiency_report:
           attributes:
             map_location:

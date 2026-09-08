@@ -8,8 +8,18 @@
     <p class="kern-body mb-3"><%= t("adm.whatsapp.show.settings_intro") %></p>
 
     <% @text_settings.each do |setting| %>
-      <%= render Adm::AttributeEditorComponent.new(setting, :value, :string) %>
+      <% if Adm::WhatsappController::READ_ONLY_TEMPLATE_SETTING_KEYS.include?(setting.key) %>
+        <%= render "adm/whatsapp/read_only_setting", setting: setting %>
+      <% else %>
+        <%= render Adm::AttributeEditorComponent.new(setting, :value, :string) %>
+      <% end %>
     <% end %>
+
+    <%= kern_link_button(
+      templates_adm_whatsapp_path,
+      icon: "description",
+      text: t("adm.whatsapp.show.settings_templates_link")
+    ) %>
   </section>
 
   <% if @auto_broadcast_setting.present? %>

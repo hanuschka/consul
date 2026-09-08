@@ -249,6 +249,8 @@ en:
         settings_title: Settings
         settings_intro: Template, speech model and retention for the WhatsApp bot. Changes take effect
           immediately.
+        settings_mirrored_value_empty: No template active
+        settings_templates_link: Manage templates
         auto_broadcast_title: Automatic project notification
         auto_broadcast_intro: >-
           When this is on, the platform sends the WhatsApp notification by itself as soon as a projekt
@@ -256,9 +258,8 @@ en:
           to individual districts are skipped; for those the button on the projekt page remains available.
         auto_broadcast_missing_template_title: Automatic sending has no effect
         auto_broadcast_missing_template_body: >-
-          As long as no approved message template is configured, nothing is sent even with the switch
-          on. Enter the template above under "WhatsApp message template name" or submit one in the
-          "Templates" tab.
+          As long as no approved message template is active, nothing is sent even with the switch
+          on. Submit a template in the "Templates" tab and activate it there.
         draft_evaluation_title: AI draft check
         draft_evaluation_body: >-
           When a projekt phase defines evaluation criteria, the bot checks every draft against all
@@ -270,7 +271,7 @@ en:
         template_missing_title: No message template configured
         template_missing_body: >-
           Without an approved 360dialog template no project notifications can be sent. Submit a template
-          below or enter its name above under "Name of the WhatsApp message template".
+          below and activate it afterwards.
         qr_title: General QR code
         qr_subline: Opens a general Consul chat.
         webhook_title: Webhook

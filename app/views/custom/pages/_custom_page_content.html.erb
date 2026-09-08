@@ -31,8 +31,8 @@
       <% namespace = current_user.present? && current_user.administrator? ? :admin : :projekt_management %>
       <div class="js-delete-all-content-blocks custom-content-blocks-delete-section js-studio-hide-on-preview">
         <%= studio_rich_tooltip(
-          title: "Alle Inhaltsblöcke löschen",
-          text: "Entfernt sämtliche Inhaltsblöcke dieser Seite auf einmal. Diese Aktion kann nicht rückgängig gemacht werden — die Inhalte müssen anschließend neu erstellt werden.",
+          title: t("custom.studio.delete_all_content_blocks.title"),
+          text: t("custom.studio.delete_all_content_blocks.text"),
           delay: 1200
         ) do %>
           <%= button_to(

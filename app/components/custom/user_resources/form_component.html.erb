@@ -19,7 +19,7 @@
 
           <% if show_documents_input? %>
             <%= render(Shared::SidebarCardComponent.new(
-              title: "Dokumente hinzufügen",
+              title: t("custom.user_resources.form.documents_card_title"),
               icon_name: "file")) do %>
               <div class="documents" id="attach-documents">
                 <%= render "documents/nested_documents", f: f %>
@@ -41,7 +41,7 @@
 
           <% if show_external_video_input? %>
             <%= render(Shared::SidebarCardComponent.new(
-              title: "Video hinzufügen",
+              title: t("custom.user_resources.form.video_card_title"),
               opened_on_mobile: true,
               icon_name: "video")) do %>
               <p>
@@ -56,7 +56,7 @@
 
           <% if helpers.allowed_to_post_on_behalf_of?(current_user, resource) %>
             <%= render(Shared::SidebarCardComponent.new(
-              title: "Veröffentlichen für",
+              title: t("custom.user_resources.form.on_behalf_of_card_title"),
               opened_on_mobile: true,
               icon_name: "user")) do %>
               <p>

@@ -151,6 +151,7 @@ de:
         admin_actions:
           title: Admin
         submit_official_answer_button: Antwort speichern
+        officer_notification_title: "Benachrichtigung für Sachbearbeiter*in"
       feedback_form:
         new:
           already_submitted: Sie haben bereits eine Rückmeldung zu diesem Anliegen abgegeben.

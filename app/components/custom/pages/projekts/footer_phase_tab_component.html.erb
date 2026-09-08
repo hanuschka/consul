@@ -123,9 +123,9 @@
         <% end %>
 
         <%= studio_rich_tooltip(
-          title: "Phase löschen",
-          text: phase.safe_to_destroy? ? "Entfernt diese Phase dauerhaft." : t('custom.admin.projekt_phases.notice.not_destroyed'),
-          note: phase.safe_to_destroy? ? "Diese Aktion kann nicht rückgängig gemacht werden." : nil,
+          title: t("custom.studio.delete_phase.title"),
+          text: phase.safe_to_destroy? ? t("custom.studio.delete_phase.text") : t('custom.admin.projekt_phases.notice.not_destroyed'),
+          note: phase.safe_to_destroy? ? t("custom.studio.delete_phase.note") : nil,
           delay: 1200
         ) do %>
           <button

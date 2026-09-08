@@ -1,13 +1,19 @@
 (function() {
   "use strict";
 
+  // Which question follows which is the server's answer, not this file's. The order,
+  // the contexted clones, the branching and the answer that ends a ballot all live in
+  // Polls::BallotTraversalQuery, which the WhatsApp bot walks too; this used to carry
+  // a map of the whole poll and work them out again from it, so every rule about
+  // which questions a citizen is ever shown existed in two places.
+  //
+  // What is left here is presentation: which node is visible, where the citizen has
+  // been, and how far along the bar sits.
   App.QuestionWizard = {
-    map: [],
-    byId: {},
-    indexById: {},
-    hiddenIds: {},
+    questionIds: [],
     visited: [],
-    inFlight: {},
+    step: 1,
+    inFlight: false,
 
     initialize() {
       const $wizard = $(".js-question-wizard");
@@ -18,10 +24,10 @@
 
       if ($wizard.length === 0) return;
 
-      this.parseMap();
-      this.hiddenIds = {};
-      this.inFlight = {};
+      this.parseQuestionIds();
       this.visited = [];
+      this.step = 1;
+      this.inFlight = false;
 
       $wizard.off(".questionWizard");
       $wizard.on("click.questionWizard", ".js-question-wizard-prev", this.navigateToPrevQuestion.bind(this));
@@ -31,28 +37,24 @@
       const first = this.currentQuestion();
       if (!first) return;
 
-      this.updateProgress(first);
+      this.updateProgress();
       this.updateNavButtons();
       this.mandatoryQuestionActions();
     },
 
-    parseMap() {
+    // The ids the citizen's path held when the page was rendered, for the progress
+    // bar and for going back to the start. Not a traversal: branching can make the
+    // real walk shorter and a revealed question is not in it at all, which is why
+    // the bar is capped rather than trusted.
+    parseQuestionIds() {
       const wizard = document.querySelector(".js-question-wizard");
-      const serializedMap = wizard ? wizard.dataset.wizardMap : null;
+      const serialized = wizard ? wizard.dataset.wizardQuestionIds : null;
 
       try {
-        this.map = serializedMap ? JSON.parse(serializedMap) : [];
+        this.questionIds = serialized ? JSON.parse(serialized) : [];
       } catch (error) {
-        this.map = [];
+        this.questionIds = [];
       }
-
-      this.byId = {};
-      this.indexById = {};
-
-      this.map.forEach((entry, index) => {
-        this.byId[entry.id] = entry;
-        this.indexById[entry.id] = index;
-      });
     },
 
     nextButton() { return $(".js-question-wizard-next"); },
@@ -74,30 +76,70 @@
 
     navigateToNextQuestion() {
       const current = this.currentQuestion();
-      if (!current) return;
+      if (!current || this.inFlight) return;
 
-      const currentId = this.questionIdOf(current);
-      this.applyContextHiding(currentId, current);
+      const url = current.dataset.nextUrl;
+      if (!url) return;
 
-      const nextId = this.resolveNextId(currentId, current);
+      this.inFlight = true;
+      this.nextButton().prop("disabled", true);
 
-      if (!nextId) {
-        this.updateNavButtons();
-        return;
-      }
-
-      this.ensureLoaded(nextId, (node) => this.advanceTo(currentId, node));
+      App.Ajax
+        .request({ method: "GET", url: url, dataType: "json" })
+        .done((response) => this.advanceTo(this.questionIdOf(current), response))
+        .fail(() => this.onFetchFailed())
+        .always(() => { this.inFlight = false; });
     },
 
-    advanceTo(fromId, node) {
-      if (!node) {
-        this.mandatoryQuestionActions();
+    // No question back means the ballot ends here — the last one on the path, or one
+    // whose answer terminated it. The button changes to say so rather than the
+    // citizen being left tapping a "next" that does nothing.
+    advanceTo(fromId, response) {
+      if (!response || !response.question_id) {
+        this.setHasNext(fromId, false);
         return;
       }
 
+      const node = this.getQuestionNode(response.question_id) ||
+        this.insertQuestion(response.html);
+
+      if (!node) {
+        this.onFetchFailed();
+        return;
+      }
+
+      node.dataset.hasNext = response.has_next ? "true" : "false";
+
       this.visited.push(fromId);
+      this.step += 1;
       this.showNode(node);
       this.scrollToWizardTop();
+    },
+
+    // Appended rather than slotted into a configured order: the order is the order
+    // the citizen was walked through, and that is the order they go back through.
+    insertQuestion(html) {
+      const container = document.querySelector(".question-wizard--questions");
+      if (!container || !html) return null;
+
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = html.trim();
+      const node = wrapper.firstElementChild;
+      if (!node) return null;
+
+      container.appendChild(node);
+      return node;
+    },
+
+    // Called from polls/questions/answers.js.erb after every recorded answer,
+    // because an answer is what can change it: it may branch, it may end the ballot,
+    // and it may reveal a question contextualised by the option just chosen.
+    setHasNext(questionId, hasNext) {
+      const node = this.getQuestionNode(questionId);
+      if (!node) return;
+
+      node.dataset.hasNext = hasNext ? "true" : "false";
+      this.updateNavButtons();
     },
 
     navigateToPrevQuestion() {
@@ -107,17 +149,19 @@
       const node = this.getQuestionNode(this.visited.pop());
       if (!node) return;
 
+      this.step = Math.max(1, this.step - 1);
       this.showNode(node);
       this.scrollToWizardTop();
     },
 
     goToStart() {
-      if (this.map.length === 0) return;
+      if (this.questionIds.length === 0) return;
 
-      const first = this.getQuestionNode(this.map[0].id);
+      const first = this.getQuestionNode(this.questionIds[0]);
       if (!first) return;
 
       this.visited = [];
+      this.step = 1;
       $("#closing-note").hide();
       this.showNode(first);
       this.scrollToWizardTop();
@@ -130,101 +174,9 @@
       App.PollMapPoints.initialize();
     },
 
-    nextVisibleIdAfter(id) {
-      for (let i = this.indexById[id] + 1; i < this.map.length; i++) {
-        if (!this.hiddenIds[this.map[i].id]) return this.map[i].id;
-      }
-
-      return null;
-    },
-
-    resolveNextId(currentId, currentNode) {
-      const answered = currentNode.querySelector(".js-question-answered[data-next-question-id]");
-      if (answered && answered.dataset.nextQuestionId) {
-        const branchId = parseInt(answered.dataset.nextQuestionId, 10);
-        if (this.byId[branchId] && !this.hiddenIds[branchId]) return branchId;
-      }
-
-      return this.nextVisibleIdAfter(currentId);
-    },
-
-    applyContextHiding(currentId, currentNode) {
-      const entry = this.byId[currentId];
-      if (!entry || !entry.is_context_source) return;
-
-      const sourceAnswerIds = {};
-      const unselectedIds = {};
-      currentNode.querySelectorAll(".js-question-answer").forEach((answer) => {
-        const answerId = parseInt(answer.dataset.answerId, 10);
-        sourceAnswerIds[answerId] = true;
-        if (!answer.classList.contains("js-question-answered")) unselectedIds[answerId] = true;
-      });
-
-      this.map.forEach((candidate) => {
-        if (!candidate.context_answer_id || !sourceAnswerIds[candidate.context_answer_id]) return;
-
-        if (unselectedIds[candidate.context_answer_id]) this.hiddenIds[candidate.id] = true;
-        else delete this.hiddenIds[candidate.id];
-      });
-    },
-
-    ensureLoaded(id, callback) {
-      const node = this.getQuestionNode(id);
-      if (node) {
-        callback(node);
-        return;
-      }
-
-      if (this.inFlight[id]) return;
-
-      const entry = this.byId[id];
-      if (!entry || !entry.url) {
-        callback(null);
-        return;
-      }
-
-      this.inFlight[id] = true;
-      this.nextButton().prop("disabled", true);
-
-      App.Ajax
-        .request({ method: "GET", url: entry.url, dataType: "html" })
-        .done((html) => this.onQuestionFetched(id, html, callback))
-        .fail(() => this.onFetchFailed(callback))
-        .always(() => { delete this.inFlight[id]; });
-    },
-
-    onQuestionFetched(id, html, callback) {
-      this.insertInOrder(id, html);
-      callback(this.getQuestionNode(id));
-    },
-
-    onFetchFailed(callback) {
+    onFetchFailed() {
       alert("Die nächste Frage konnte nicht geladen werden. Bitte versuchen Sie es erneut.");
-      callback(null);
-    },
-
-    insertInOrder(id, html) {
-      const container = document.querySelector(".question-wizard--questions");
-      if (!container || this.getQuestionNode(id)) return;
-
-      const wrapper = document.createElement("div");
-      wrapper.innerHTML = html.trim();
-      const newNode = wrapper.firstElementChild;
-      if (!newNode) return;
-
-      const myIndex = this.indexById[id];
-      const loaded = container.querySelectorAll(".js-question-wizard-item");
-      let before = null;
-
-      for (let i = 0; i < loaded.length; i++) {
-        if (this.indexById[this.questionIdOf(loaded[i])] > myIndex) {
-          before = loaded[i];
-          break;
-        }
-      }
-
-      if (before) container.insertBefore(newNode, before);
-      else container.appendChild(newNode);
+      this.mandatoryQuestionActions();
     },
 
     showNode(node) {
@@ -234,7 +186,7 @@
       node.classList.add("-visible");
       node.classList.remove("-disabled");
 
-      this.updateProgress(node);
+      this.updateProgress();
       this.updateNavButtons();
       this.mandatoryQuestionActions();
       this.formatRatingScales();
@@ -245,7 +197,7 @@
       const node = this.currentQuestion();
       if (!node) return;
 
-      if (this.nextVisibleIdAfter(this.questionIdOf(node))) {
+      if (node.dataset.hasNext === "true") {
         this.nextButton().show();
         this.closingNoteButton().hide();
       } else {
@@ -262,13 +214,17 @@
       }
     },
 
-    updateProgress(node) {
-      const total = this.map.length;
+    // Counted in steps taken rather than read off a position in a list: a branching
+    // ballot skips questions, and a contextualised one adds a question the list
+    // rendered with the page never held. Capped at full for the same reason — the
+    // total is what the path held at load, so the walk can outrun it.
+    updateProgress() {
+      const total = this.questionIds.length;
       if (total === 0) return;
 
-      const number = this.indexById[this.questionIdOf(node)] + 1;
       const progressbarWidth = $(".js-question-wizard--progress").width();
-      $(".js-question-wizard .js-question-wizard--progress-bar").css("width", progressbarWidth * (number / total));
+      const share = Math.min(this.step / total, 1);
+      $(".js-question-wizard .js-question-wizard--progress-bar").css("width", progressbarWidth * share);
     },
 
     mandatoryQuestionActions() {

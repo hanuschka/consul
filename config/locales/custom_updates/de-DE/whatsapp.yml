@@ -154,7 +154,30 @@ de:
       # a model asked what the tap meant is the selection step the card removed.
       phase:
         open: "Hier können Sie bei „%{phase}“ mitmachen:"
-        contributions: "Das ist bisher bei „%{phase}“ eingegangen:"
+        # What the message naming a phase's entries opens with, keyed by the phase's
+        # own type name the way the card's buttons are. "Eingegangen" is the
+        # proposal box talking: a milestone phase answering with it has the bot
+        # calling its own timeline a pile of submissions, and an event phase
+        # describing next month's dates as something that has arrived. Read with the
+        # fallback below rather than a nil default — a phase type nobody wrote a line
+        # for still needs a sentence over its entries.
+        contributions_intro:
+          proposal_phase: "Das ist bisher bei „%{phase}“ eingegangen"
+          budget_phase: "Das ist bisher bei „%{phase}“ eingegangen"
+          voting_phase: "Darüber wird bei „%{phase}“ abgestimmt"
+          event_phase: "Das steht bei „%{phase}“ an"
+          milestone_phase: "Das ist bei „%{phase}“ bisher passiert"
+          projekt_notification_phase: "Das wurde bei „%{phase}“ mitgeteilt"
+        contributions_intro_fallback: "Das ist bisher bei „%{phase}“ eingegangen"
+        # The intro either closes its own sentence or accounts for what the message
+        # leaves out. Named only where there is a remainder: naming three of three
+        # and saying so reads as an apology for a complete answer.
+        contributions_all: "%{intro}:"
+        contributions_newest: "%{intro} — hier die %{shown} neuesten von insgesamt %{total}:"
+        contributions_page: "Hier finden Sie alles dazu:"
+        contributions_hint: >-
+          Einen einzelnen Beitrag öffnen Sie über „Beitrag auswählen“ — oder Sie fragen mich
+          einfach danach.
         results: "Die Ergebnisse zu „%{phase}“:"
       # The two ways a row naming one of the citizen's own contributions is
       # answered. A proposal submitted into a moderated phase has no public page
@@ -162,6 +185,9 @@ de:
       # be sayable.
       contribution:
         open: "Ihr Beitrag „%{contribution}“:"
+        # The same pill is offered by a phase's list of everyone's contributions,
+        # where the citizen is the reader rather than the author.
+        open_other: "Der Beitrag „%{contribution}“:"
         in_review: >-
           „%{contribution}“ wird noch geprüft und hat deshalb noch keine öffentliche Seite.
           Sobald der Beitrag freigegeben ist, können Sie ihn öffnen.
@@ -172,10 +198,39 @@ de:
       poll:
         login_prompt: >-
           Zum Abstimmen bei „%{poll}“ brauchen Sie ein Konto. Zum Anmelden hier tippen —
-          danach stelle ich Ihnen die Frage gleich noch einmal. Mit dem Öffnen des Links
+          danach geht es mit der Abstimmung gleich weiter. Mit dem Öffnen des Links
           willigen Sie in die Verarbeitung Ihrer Telefonnummer gemäß unserer
           Datenschutzerklärung ein: %{privacy_url}
-        recorded: "Ihre Stimme bei „%{poll}“ ist gezählt: %{answer}."
+        # Wo in der Abstimmung die Bürgerin gerade steht. Auf der Seite macht das der
+        # Fortschrittsbalken; im Chat kommt jede Frage als eigene Nachricht, und ohne
+        # diese Zeile ist die Länge des Stimmzettels nicht zu erkennen.
+        progress: "Frage %{number} von %{total}"
+        choices: >-
+          Sie können bis zu %{maximum} Antworten auswählen und die Auswahl danach
+          abschließen.
+        open_prompt: "Bitte schreiben Sie Ihre Antwort als Nachricht."
+        maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Antworten möglich."
+        # Was die beiden Enden einer Skala bedeuten. Auf der Seite steht die Beschriftung
+        # links und rechts neben der Reihe der Stufen; im Chat kommen die Stufen als
+        # Spalte, an der nichts links oder rechts steht — also darüber. Die Beschriftungen
+        # selbst sind die Formulierung des Portals und werden nicht übersetzt.
+        scale: "Von „%{minimum}“ bis „%{maximum}“."
+        weight_prompt: >-
+          Wie viel Gewicht soll diese Antwort bekommen? Möglich sind 0 bis %{maximum}.
+        weight_maximum_reached: >-
+          So viel Gewicht ist hier nicht mehr frei — für diese Antwort sind es noch
+          %{remaining}.
+        location_prompt: "Bitte senden Sie den Ort als Standort."
+        location_prompt_remaining: >-
+          Bitte senden Sie den Ort als Standort. Sie können noch %{remaining} Orte angeben.
+        location_optional: "Wenn Sie keinen Ort angeben möchten, hier tippen."
+        location_recorded: "✅ Ort gespeichert."
+        location_remaining: "Sie können noch %{remaining} Orte angeben."
+        location_outside_area: >-
+          Dieser Ort liegt außerhalb des Gebiets, das für diese Frage festgelegt wurde.
+          Bitte senden Sie einen Ort innerhalb des Gebiets.
+        location_maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Orte möglich."
+        completed: "Vielen Dank — Ihre Stimmen bei „%{poll}“ sind gezählt."
       onboarding:
         welcome_greeting: 👋 Schön, dass Sie hier sind!
         login_prompt: >-
@@ -206,6 +261,8 @@ de:
         open_page: Seite öffnen
         choose: Auswählen
         take_part: Jetzt mitmachen
+        poll_done: Fertig
+        poll_skip: Überspringen
         # What each of a projekt's open phases is called on the card, worded as the
         # action rather than as the phase. Keyed by the phase's own type name and not
         # read from its title: a portal renaming a phase renames what it is called,
@@ -220,6 +277,7 @@ de:
           formular_phase: Formular ausfüllen
           point_of_interest_phase: Mangel melden
         phase_contributions: Beiträge ansehen
+        contribution_choose: Beitrag auswählen
         view_projekt: Projekt ansehen
         my_contributions: Meine Beiträge
         location_skip: Ohne Ort weiter

@@ -137,19 +137,59 @@ en:
         location_optional: A location is optional. You can also carry on without one.
       phase:
         open: "Here is where you can take part in “%{phase}”:"
-        contributions: "Here is what has come in for “%{phase}” so far:"
+        contributions_intro:
+          proposal_phase: "Here is what has come in for “%{phase}” so far"
+          budget_phase: "Here is what has come in for “%{phase}” so far"
+          voting_phase: "Here is what “%{phase}” has to vote on"
+          event_phase: "Here is what is coming up in “%{phase}”"
+          milestone_phase: "Here is what has happened in “%{phase}” so far"
+          projekt_notification_phase: "Here is what has been announced in “%{phase}”"
+        contributions_intro_fallback: "Here is what has come in for “%{phase}” so far"
+        contributions_all: "%{intro}:"
+        contributions_newest: "%{intro} — the %{shown} newest of %{total} altogether:"
+        contributions_page: "You can find everything about it here:"
+        contributions_hint: >-
+          To open a single contribution, use “Choose contribution” — or simply ask me about it.
         results: "The results for “%{phase}”:"
       contribution:
         open: "Your contribution “%{contribution}”:"
+        open_other: "The contribution “%{contribution}”:"
         in_review: >-
           “%{contribution}” is still being reviewed, so it has no public page yet. You will be
           able to open it once it has been approved.
       poll:
         login_prompt: >-
-          Voting in “%{poll}” needs an account. Tap here to log in — I'll put the question
-          to you again straight afterwards. Opening the link means agreeing to your phone
+          Voting in “%{poll}” needs an account. Tap here to log in — I'll pick the vote up
+          again straight afterwards. Opening the link means agreeing to your phone
           number being processed under our privacy policy: %{privacy_url}
-        recorded: "Your vote in “%{poll}” is counted: %{answer}."
+        # Where in the ballot the citizen has got to. On the page that is what the
+        # progress bar says; in a chat each question is its own message, and without
+        # this line the length of the ballot cannot be seen at all.
+        progress: "Question %{number} of %{total}"
+        choices: >-
+          You can pick up to %{maximum} answers, then finish your selection.
+        open_prompt: "Please write your answer as a message."
+        maximum_reached: "This question takes at most %{maximum} answers."
+        # What the two ends of a scale mean. On the page the wording sits to the left and
+        # the right of the row of steps; in a chat the steps arrive as a column with
+        # nothing to either side of them, so it goes above. The labels themselves are the
+        # portal's own wording and are never translated.
+        scale: "From “%{minimum}” to “%{maximum}”."
+        weight_prompt: >-
+          How much weight should this answer carry? Anything from 0 to %{maximum}.
+        weight_maximum_reached: >-
+          That much weight is no longer free — this answer can still take %{remaining}.
+        location_prompt: "Please send the place as a location."
+        location_prompt_remaining: >-
+          Please send the place as a location. You can still give %{remaining} places.
+        location_optional: "Tap here if you would rather not give a place."
+        location_recorded: "✅ Place saved."
+        location_remaining: "You can still give %{remaining} places."
+        location_outside_area: >-
+          That place is outside the area set for this question. Please send a place inside
+          the area.
+        location_maximum_reached: "This question takes at most %{maximum} places."
+        completed: "Thank you — your votes in “%{poll}” are counted."
       onboarding:
         welcome_greeting: 👋 Good to have you here!
         login_prompt: >-
@@ -176,6 +216,8 @@ en:
         open_page: Open page
         choose: Choose
         take_part: Take part now
+        poll_done: Done
+        poll_skip: Skip
         phase_action:
           proposal_phase: Submit an idea
           budget_phase: Submit an idea
@@ -183,6 +225,7 @@ en:
           formular_phase: Fill in the form
           point_of_interest_phase: Report a defect
         phase_contributions: See what's in
+        contribution_choose: Choose contribution
         view_projekt: View project
         my_contributions: My contributions
         location_skip: Continue without

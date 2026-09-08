@@ -46,6 +46,20 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   # read this is Ruby.
   OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
 
+  # How many of a phase's contributions the reply names in words. Fewer than the nine
+  # a list holds, and deliberately: each one is named over two lines with its own
+  # address, and past five of those the body outgrows the 1024 characters an
+  # interactive message allows — which Whatsapp::Send does not truncate but splits,
+  # sending everything but the last chunk as a separate plain message and leaving the
+  # list attached to whatever the sentence above it had become.
+  MAX_NAMED_CONTRIBUTIONS = 5
+
+  # Keyed by the phase's own type name, the way the projekt card's buttons are:
+  # what a phase holds is named differently for a milestone than for a proposal, and
+  # a register kept per type is the only one that cannot describe next month's events
+  # as something that has already come in.
+  CONTRIBUTIONS_INTRO_SCOPE = "whatsapp.bot.phase.contributions_intro".freeze
+
   def initialize(whatsapp_message:, raw_message: {})
     @whatsapp_message = whatsapp_message
     @raw_message = raw_message || {}
@@ -76,6 +90,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return if handle_phase_tap
     return if handle_contribution_tap
     return if handle_poll_answer_tap
+    return if handle_poll_weight_tap
+    return if handle_poll_done_tap
+    return if handle_poll_skip_tap
+    return if handle_poll_location
+    return if handle_open_answer_text
 
     apply_start_over_tap
 
@@ -87,7 +106,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     inbound_note = tap_note || entry_note(entry) || reading.text.presence || media_note
 
+    # Read before the turn, because the turn is what may end the ballot: a citizen
+    # who asks to submit something instead has left it, and start_draft! replaces the
+    # whole context with the assistant's own history, markers included.
+    ballot_in_flight = conversation.active_poll_id
+
     answer(inbound_note, inbound_message_id: reading.message_id)
+
+    resume_ballot(ballot_in_flight)
   end
 
   private
@@ -154,6 +180,29 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       ::Whatsapp::Send.recovery_without_assistant(
         conversation: conversation, body: body, actions: actions
       )
+    end
+
+    # A citizen asked question two of five and wrote something else instead. The
+    # something else is answered first — it is what they asked, and a bot that
+    # ignores a question because a ballot is open is a form, not a chat — and then
+    # the question is put again, because the ballot is the thing they were doing.
+    #
+    # Nothing is ever dropped either way: every answer is recorded as it is given, so
+    # a ballot that is abandoned here keeps what was already said.
+    #
+    # Held back where the turn moved the conversation somewhere else. A citizen who
+    # asked to submit a contribution is now drafting one, and re-asking a poll
+    # question on top of that is the bot talking over itself.
+    def resume_ballot(poll_id)
+      return if poll_id.blank?
+      return if conversation.reload.active_poll_id != poll_id
+      return if conversation.unsaved_submission?
+
+      poll = ::Poll.find_by(id: poll_id)
+
+      return if poll.blank?
+
+      ::Whatsapp::Polls::AdvanceBallotService.call(conversation: conversation, poll: poll)
     end
 
     def reading
@@ -451,6 +500,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       conversation.note_start_over!
+      conversation.clear_ballot!
 
       if conversation.unsaved_submission?
         conversation.request_start_over!
@@ -567,15 +617,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # a chat history for as long as the chat does, and what it points at is only what
     # it pointed at when it was sent.
     def tapped_phase(param)
-      return if param.blank?
-
-      projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
-
-      return if projekt_phase.blank?
-      return if !projekt_phase.current?
-      return if !::Whatsapp::EligiblePhasesQuery.projekt_visible?(projekt_phase.projekt)
-
-      projekt_phase
+      ::Whatsapp::EligiblePhasesQuery.reachable(param)
     end
 
     # A voting phase is asked first whether its poll is one the chat can carry to the
@@ -583,14 +625,21 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # tapping it should be voting. Every other phase, and every poll the chat cannot
     # finish, gets the link — which is the fallback the whole voting flow is built
     # around rather than an afterthought.
+    #
+    # A voting phase's link is the ballot, not the projekt page: the citizen has
+    # already said which phase they want by tapping its pill, and the page they used
+    # to land on answered that with a list containing the one poll it holds. The page
+    # is still what everything else opens, and what a voting phase falls back to when
+    # its poll has not been published.
     def open_phase(projekt_phase)
-      return true if ::Whatsapp::Polls::OfferQuestionService.call(
+      return true if ::Whatsapp::Polls::OfferBallotService.call(
         conversation: conversation, projekt_phase: projekt_phase
       )
 
       send_line_with_link(
         line: I18n.t("whatsapp.bot.phase.open", phase: projekt_phase.title),
-        url: ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+        url: ::Whatsapp::ProjektLink.ballot_url(projekt_phase) ||
+          ::Whatsapp::ProjektLink.phase_url(projekt_phase)
       )
     end
 
@@ -614,9 +663,127 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
     end
 
-    # The results where the phase has published any, and what has come in otherwise.
-    # One link either way: the portal page is what lists the contributions properly,
-    # and a chat message repeating ten titles is a list the citizen cannot open.
+    # "I have picked everything I want" on a multiple-choice question. It settles the
+    # question rather than answering it — whatever was chosen is already recorded,
+    # each choice as it was made — so all it does is let the ballot move on.
+    #
+    # Honoured only for the question the bot is actually in the middle of asking. The
+    # pill sits in the chat history like every other, and tapped a day later it would
+    # otherwise reopen a ballot that has been finished and closed off.
+    def handle_poll_done_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+
+      return false if flow_action&.fetch(:action) != :poll_done
+      return false if conversation.open_multiple_question_id.to_i != flow_action[:param].to_i
+
+      record_tap(:poll_done, flow_action[:param])
+
+      conversation.clear_open_multiple_question!
+
+      advance_ballot
+    end
+
+    # A tap on one of the numbers offered beside one choice of a weighted question.
+    # Its parameter names the option and the weight together, and it is the one pill
+    # that carries two things: the label is a digit, which says nothing at all about
+    # what it is a weight for.
+    def handle_poll_weight_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+
+      return false if flow_action&.fetch(:action) != :poll_weight
+
+      answer_id, weight = flow_action[:param].to_s.split("_")
+      question_answer = ::Poll::Question::Answer.find_by(id: answer_id.to_i)
+
+      return false if question_answer.blank? || weight.blank?
+
+      record_tap(:poll_weight, flow_action[:param])
+
+      ::Whatsapp::Polls::RecordWeightedAnswerService.call(
+        conversation: conversation, question_answer: question_answer, weight: weight.to_i
+      )
+    end
+
+    # "I would rather not answer this one." Nothing is recorded and anything recorded
+    # before is removed, which is what the page does with an open answer left empty.
+    #
+    # The same pill ends a map-point question, which has the same problem and one
+    # more: WhatsApp's location picker carries no buttons at all, so the way past the
+    # question travels in a message of its own. Which of the two questions is being
+    # declined is decided by the marker that names it, never by the pill — both sit in
+    # the chat history forever and either marker may be the one holding.
+    def handle_poll_skip_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+
+      return false if flow_action&.fetch(:action) != :poll_skip
+
+      question_id = flow_action[:param].to_i
+
+      if conversation.pending_open_question_id.to_i == question_id
+        record_tap(:poll_skip, flow_action[:param])
+
+        return ::Whatsapp::Polls::RecordOpenAnswerService.skip(conversation: conversation)
+      end
+
+      return false if conversation.pending_map_question_id.to_i != question_id
+
+      record_tap(:poll_skip, flow_action[:param])
+
+      ::Whatsapp::Polls::RecordMapPointService.skip(conversation: conversation)
+    end
+
+    # A shared location while a map-point question is open. It runs before the pin is
+    # parked for a draft (#park_media): a citizen half-way through a ballot is
+    # answering the ballot, and the drafting flow's own question for a place is not
+    # the one that was asked.
+    def handle_poll_location
+      return false if conversation.pending_map_question_id.blank?
+
+      location = reading.location
+
+      return false if location.blank?
+
+      ::Whatsapp::Polls::RecordMapPointService.call(
+        conversation: conversation,
+        latitude: location["latitude"],
+        longitude: location["longitude"]
+      )
+    end
+
+    # The one place a plain message is not a question for the assistant: the bot has
+    # asked a free-text poll question and written down that it did, so the next words
+    # the citizen sends are the answer to it.
+    #
+    # A tapped pill is never taken as text — its label is not something the citizen
+    # wrote — and neither is a photo or a shared pin, which carry no words at all.
+    def handle_open_answer_text
+      return false if conversation.pending_open_question_id.blank?
+      return false if reading.tapped_reply_id.present?
+      return false if reading.text.blank?
+      return false if ::Whatsapp::QrToken.carried_in?(reading.text)
+
+      ::Whatsapp::Polls::RecordOpenAnswerService.call(
+        conversation: conversation, text: reading.text
+      )
+    end
+
+    # Where the ballot goes after a pill that settled a question without answering
+    # one. Re-resolves the poll rather than trusting the marker, because the marker
+    # outlives the poll it names.
+    def advance_ballot
+      poll = ::Poll.find_by(id: conversation.active_poll_id)
+
+      return false if poll.blank?
+
+      ::Whatsapp::Polls::AdvanceBallotService.call(conversation: conversation, poll: poll)
+    end
+
+    # The results where the phase has published any — one link, because a published
+    # evaluation is a document rather than a set of entries. Everything else names the
+    # newest contributions themselves: their titles, how old they are and their own
+    # addresses, so reading what is in a phase no longer means leaving the chat. The
+    # phase page closes the message off for everything the five named entries leave
+    # out.
     def open_phase_contributions(projekt_phase)
       section = ::Whatsapp::PublishedResultsQuery.public_section_for(projekt_phase)
 
@@ -625,9 +792,155 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         url: ::Whatsapp::ProjektLink.evaluation_url(projekt_phase)
       ) if section.present?
 
-      send_line_with_link(
-        line: I18n.t("whatsapp.bot.phase.contributions", phase: projekt_phase.title),
+      query = ::Whatsapp::PhaseContributionsQuery.new(projekt_phase: projekt_phase)
+      named = query.call.first(MAX_NAMED_CONTRIBUTIONS)
+
+      return send_line_with_link(
+        line: phase_contributions_intro(projekt_phase: projekt_phase, shown: 0, total: 0),
         url: ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+      ) if named.empty?
+
+      send_phase_contributions(projekt_phase: projekt_phase, named: named, total: query.total)
+    end
+
+    # A list wherever any of the named entries can be opened in the chat, and plain
+    # text where none can. Only proposals and budget investments carry a pill — an
+    # event, a poll, a milestone or a notification is named with its link and left out
+    # of the list rather than offered as a choice that would answer with nothing.
+    def send_phase_contributions(projekt_phase:, named:, total:)
+      phase_url = ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+      offered = named.each_with_index.filter_map do |entry, index|
+        contribution_row(entry: entry, position: index + 1)
+      end
+      copy = phase_contributions_copy(projekt_phase: projekt_phase, named: named, total: total)
+
+      body = phase_contributions_body(
+        named: named, copy: copy, phase_url: phase_url, offered: offered.any?
+      )
+
+      return send_phase_contributions_list(body: body, copy: copy, offered: offered) if offered.any?
+
+      ::Whatsapp::Send.text(account: account, body: body)
+
+      true
+    end
+
+    def send_phase_contributions_list(body:, copy:, offered:)
+      ::Whatsapp::Send.list(
+        account: account,
+        body: body,
+        button_label: copy[:button_label].presence ||
+                      I18n.t("whatsapp.bot.buttons.contribution_choose"),
+        rows: offered
+      )
+
+      true
+    end
+
+    # Every fixed line of the message in one translation call, the entries' own dates
+    # included: they are the bot's copy like the sentences around them, and a body in
+    # the citizen's language carrying five German dates reads as two messages.
+    # Deliberately not the titles or the addresses — a title is what its author wrote
+    # and a URL a model rewrites is a dead end with no symptom until it is tapped.
+    #
+    # An entry may have no date at all, which is why the call has to be the one that
+    # puts a blank line back where it found it: everything here is read back by
+    # position.
+    def phase_contributions_copy(projekt_phase:, named:, total:)
+      fixed = [
+        phase_contributions_intro(projekt_phase: projekt_phase, shown: named.size, total: total),
+        I18n.t("whatsapp.bot.phase.contributions_page"),
+        I18n.t("whatsapp.bot.phase.contributions_hint"),
+        I18n.t("whatsapp.bot.buttons.contribution_choose")
+      ]
+
+      lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+        account: account, lines: fixed + named.map { |entry| entry[:description] }
+      )
+
+      {
+        intro: lines[0], page: lines[1], hint: lines[2], button_label: lines[3],
+        dates: lines.drop(fixed.size)
+      }
+    end
+
+    # The phase type's own opening sentence, either closed off or extended to account
+    # for what the message leaves unnamed.
+    def phase_contributions_intro(projekt_phase:, shown:, total:)
+      intro = phase_contributions_opening(projekt_phase)
+
+      return I18n.t("whatsapp.bot.phase.contributions_all", intro: intro) if total <= shown
+
+      I18n.t(
+        "whatsapp.bot.phase.contributions_newest", intro: intro, shown: shown, total: total
+      )
+    end
+
+    def phase_contributions_opening(projekt_phase)
+      I18n.t(
+        "#{CONTRIBUTIONS_INTRO_SCOPE}.#{projekt_phase.name}",
+        phase: projekt_phase.title,
+        default: I18n.t(
+          "whatsapp.bot.phase.contributions_intro_fallback", phase: projekt_phase.title
+        )
+      )
+    end
+
+    def phase_contributions_body(named:, copy:, phase_url:, offered:)
+      entries = named.zip(copy[:dates]).each_with_index.map do |(entry, date), index|
+        contribution_entry(entry: entry, date: date, phase_url: phase_url, position: index + 1)
+      end
+
+      closing = phase_contributions_closing(page_line: copy[:page], phase_url: phase_url)
+      hint = offered ? copy[:hint] : nil
+
+      [copy[:intro], *entries, closing, hint].compact_blank.join("\n\n")
+    end
+
+    # Nothing at all where the projekt has no page: Whatsapp::ProjektLink answers nil
+    # for one, and a closing sentence promising the rest of the contributions with no
+    # address under it is a promise the message cannot keep.
+    def phase_contributions_closing(page_line:, phase_url:)
+      return if phase_url.blank?
+
+      [page_line, phase_url].compact_blank.join("\n")
+    end
+
+    # The entry's own address is dropped where it is the phase page's: a milestone and
+    # a projekt notification have no page of their own, so printing theirs would put
+    # the same URL in the message twice — once as the way to one entry and once as the
+    # way to everything.
+    def contribution_entry(entry:, date:, phase_url:, position:)
+      own_url = entry[:url] == phase_url ? nil : entry[:url]
+      detail = [date, own_url].compact_blank.join("\n")
+
+      ["#{position}. *#{entry[:title]}*", detail.presence].compact.join("\n")
+    end
+
+    # Through the same gate the assistant's rows go through rather than composed here:
+    # it re-checks that the action is one that may be offered and that the record it
+    # names still exists, which is the whole reason a row can be trusted to answer
+    # with what it says.
+    #
+    # Numbered with the same position the entry carries in the message above, and not
+    # for decoration: a row title holds twenty characters, so two proposals whose
+    # titles agree for that long arrive as two rows reading identically, with the same
+    # date under both and nothing on either saying which is which. The number is also
+    # what lets the citizen pick the third one they just read about.
+    def contribution_row(entry:, position:)
+      return if entry[:action_id].blank?
+
+      button = ::Whatsapp::AssistantActions.offered_button(
+        spec: entry[:action_id], label: "#{position}. #{entry[:title]}", conversation: conversation
+      )
+
+      return if button.blank?
+      return button if entry[:description].blank?
+
+      button.merge(
+        description: entry[:description].truncate(
+          ::Ai::Tools::WhatsappAiAssistant::SendList::MAX_DESCRIPTION_LENGTH
+        )
       )
     end
 
@@ -661,7 +974,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       url = ::Whatsapp::PublishedResourceUrl.call(contribution)
 
       return send_line_with_link(
-        line: I18n.t("whatsapp.bot.contribution.open", contribution: contribution.title),
+        line: I18n.t(contribution_opening_key(contribution), contribution: contribution.title),
         url: url
       ) if url.present?
 
@@ -674,6 +987,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       true
+    end
+
+    # Whose contribution it is decides the wording. The same pill is offered by the
+    # citizen's own history and by a phase's list of what everyone has submitted, so
+    # the line that greeted every one of them as "Ihr Beitrag" was calling a stranger's
+    # proposal the citizen's own. Answered from the author rather than from which list
+    # the pill came out of: a pill carries no memory of where it was offered, and a
+    # citizen's own contribution reached through the phase list is still theirs.
+    def contribution_opening_key(contribution)
+      return "whatsapp.bot.contribution.open_other" if account.user_id.blank?
+      return "whatsapp.bot.contribution.open_other" if contribution.author_id != account.user_id
+
+      "whatsapp.bot.contribution.open"
     end
 
     # The sentence goes through the copy service and the address does not. Everything

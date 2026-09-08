@@ -23,6 +23,14 @@ module Whatsapp::QrToken
     build(PROJEKT_PREFIX, PROJEKT_SCOPE, projekt.id)
   end
 
+  # Whether a message is a scanned QR code rather than something the citizen wrote.
+  # Asked by the one path that would otherwise consume the text as an answer: a
+  # citizen who scans a code in the middle of a ballot has changed subject, and
+  # taking the token as their vote loses both the token and the answer.
+  def carried_in?(text)
+    projekt_phase_id_from(text).present? || projekt_id_from(text).present?
+  end
+
   def projekt_phase_id_from(text)
     record_id_from(text, PROJEKT_PHASE_PATTERN, PROJEKT_PHASE_SCOPE)
   end

@@ -395,7 +395,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::PostComment,
       ::Ai::Tools::WhatsappAiAssistant::ManageSubscription,
-      ::Ai::Tools::WhatsappAiAssistant::UnlinkAccount
+      ::Ai::Tools::WhatsappAiAssistant::UnlinkAccount,
+      ::Ai::Tools::WhatsappAiAssistant::StartPollVote
     ].freeze
 
     # Withheld from a linked number, because it is the one tool whose whole subject
@@ -447,7 +448,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::ToggleNotification,
       ::Ai::Tools::WhatsappAiAssistant::SendLoginLink,
       ::Ai::Tools::WhatsappAiAssistant::UnlinkAccount,
-      ::Ai::Tools::WhatsappAiAssistant::StopMessages
+      ::Ai::Tools::WhatsappAiAssistant::StopMessages,
+      ::Ai::Tools::WhatsappAiAssistant::StartPollVote
     ].freeze
 
     # The submission, which used to be a machine of twenty-two steps. What was the

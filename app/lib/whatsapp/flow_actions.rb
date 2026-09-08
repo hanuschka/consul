@@ -5,6 +5,7 @@ module Whatsapp::FlowActions
   #
   #   whatsapp_flow_link_yes                   no parameter
   #   whatsapp_flow_support-4821               proposal 4821
+  #   whatsapp_flow_poll_weight-4821_3          option 4821, three of the budget
   #   whatsapp_flow_notify_toggle-new_supports the notification type
   #
   # The separator is a dash rather than an underscore because the action itself
@@ -43,6 +44,9 @@ module Whatsapp::FlowActions
     phase_open
     phase_contributions
     poll_answer
+    poll_weight
+    poll_done
+    poll_skip
     discover
     discover_category
     discover_public
@@ -98,6 +102,7 @@ module Whatsapp::FlowActions
   # paraphrase of it.
   PARAMETERISED_ACTIONS = %i[
     view_projekt participate_projekt idea_start phase_open phase_contributions poll_answer
+    poll_weight poll_done poll_skip
     category sentiment notify_toggle discover_category support support_toggle show_more
     view_contribution
   ].freeze
@@ -105,10 +110,18 @@ module Whatsapp::FlowActions
   # Ids the bot composes itself and the assistant may never write. Distinct from the
   # retired ones, which are ids nothing offers because something else took them over:
   # these are current, and the reason they are withheld is the label rather than the
-  # action. `poll_answer` carries one option of a ballot, and its words have to be
-  # that option's own as the poll records them — a model writing a label here is a
-  # vote filed under wording nobody was shown.
-  BOT_ONLY_ACTIONS = %i[poll_answer].freeze
+  # action — a model writing a label here is a vote filed under wording nobody was
+  # shown, or a way out of a question that is not being asked.
+  # `poll_answer` carries one option of a ballot, and its words have to be that
+  # option's own as the poll records them. `poll_weight` carries an option and a
+  # number together — how much of a weighted question's budget that option is to
+  # take — and its label is the number, which is nothing a model has anything to add
+  # to. `poll_done` and `poll_skip` are the two ways out of a question the bot is in
+  # the middle of asking — one says the citizen has picked everything they want from
+  # a multiple-choice question, the other declines a free-text or a map one — and
+  # all of them are meaningless outside a ballot in flight. A model offering one of
+  # them mid-conversation is a pill that answers a question nobody was asked.
+  BOT_ONLY_ACTIONS = %i[poll_answer poll_weight poll_done poll_skip].freeze
 
   # The two pills that answer a tap on this side rather than by asking the assistant,
   # and the reason they are separated from the rest: the projekt card offers a phase's

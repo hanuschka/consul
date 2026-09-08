@@ -104,7 +104,7 @@ class Whatsapp::AiAssistant::BotCopyService < ApplicationService
   end
 
   def call
-    return @lines if @lines.empty?
+    return @lines if translatable.empty?
     return @lines if reference_text.blank?
 
     remembered = remembered_lines
@@ -121,6 +121,23 @@ class Whatsapp::AiAssistant::BotCopyService < ApplicationService
 
   private
 
+    # The positions of the lines there is anything to translate, and only those go to
+    # the model. A blank one comes back dropped rather than empty, which makes the
+    # answer one line short of what was sent and rejects the whole of it below — so a
+    # caller composing a message from a set of lines, one of which happens to be
+    # empty, had every other line arrive in the language it was written in. Blanks are
+    # put back where they were on the way out, so a caller may still hand this a
+    # fixed-length set and read it back by position.
+    def translatable
+      @translatable ||= @lines.each_index.select { |index| @lines[index].strip.present? }
+    end
+
+    def merged(rewritten)
+      @lines.dup.tap do |lines|
+        translatable.each_with_index { |index, position| lines[index] = rewritten[position] }
+      end
+    end
+
     # Nothing at all until the turn knows which language it is in: without one there
     # is no key to read the lines under, and the call that would produce the key
     # produces the lines with it.
@@ -129,11 +146,11 @@ class Whatsapp::AiAssistant::BotCopyService < ApplicationService
 
       return if language.blank?
 
-      lines = @lines.map { |line| Rails.cache.read(line_cache_key(line, language)) }
+      lines = translatable.map { |index| Rails.cache.read(line_cache_key(@lines[index], language)) }
 
       return if lines.any?(&:blank?)
 
-      lines
+      merged(lines)
     end
 
     def rewritten_lines
@@ -151,11 +168,11 @@ class Whatsapp::AiAssistant::BotCopyService < ApplicationService
       # falls back rather than half of it: a body carrying a button's label is worse
       # than a body in the wrong language. Nothing is remembered from an answer that
       # did not hold together either.
-      return @lines if lines.size != @lines.size
+      return @lines if lines.size != translatable.size
 
       remember(language_from(answer), lines)
 
-      lines
+      merged(lines)
     end
 
     def language_from(answer)
@@ -167,8 +184,10 @@ class Whatsapp::AiAssistant::BotCopyService < ApplicationService
 
       Rails.cache.write(language_cache_key, language, expires_in: LANGUAGE_CACHE_TTL)
 
-      @lines.zip(lines).each do |original, rewritten|
-        Rails.cache.write(line_cache_key(original, language), rewritten, expires_in: LINE_CACHE_TTL)
+      translatable.each_with_index do |index, position|
+        Rails.cache.write(
+          line_cache_key(@lines[index], language), lines[position], expires_in: LINE_CACHE_TTL
+        )
       end
     end
 
@@ -192,7 +211,7 @@ class Whatsapp::AiAssistant::BotCopyService < ApplicationService
     end
 
     def input
-      { citizen_message: reference_text, lines: @lines }.to_json
+      { citizen_message: reference_text, lines: translatable.map { |index| @lines[index] }}.to_json
     end
 
     # The last thing the citizen typed, and only that. A tapped button's label is the

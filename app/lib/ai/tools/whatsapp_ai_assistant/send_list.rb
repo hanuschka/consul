@@ -19,8 +19,15 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
               "explaining it. The list carries a tenth row of its own, the way to the main " \
               "menu, which you never write and never mention. Every row needs an action_id " \
               "from the same vocabulary as " \
-              "reply_with_actions; a row whose action is unknown or whose record no longer " \
-              "exists is dropped. A list carries no buttons beside it, so any way out of the " \
+              "reply_with_actions. Nothing is sent unless every row can be: a row whose " \
+              "action is unknown, whose record no longer exists, whose action id repeats " \
+              "another row's, or which reads exactly like another row without a description " \
+              "to tell the two apart refuses the whole list, because the sentence you wrote " \
+              "above it " \
+              "names a number of rows and a list that quietly held fewer would contradict it. " \
+              "That sentence names how many rows the list holds — not how many there are " \
+              "altogether, which belongs in the same sentence in words. A list carries no " \
+              "buttons beside it, so any way out of the " \
               "question has to be a row of its own. Rows cannot hold links or markup — put a URL " \
               "in the body above if one is needed. This sends the message itself: do not write " \
               "one as well."
@@ -45,9 +52,11 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
   def execute(body:, button_label:, rows:)
     return blank_body_error if body.to_s.strip.blank?
 
-    listed = listable_rows(rows)
+    offered = Array(rows)
+    listed = listable_rows(offered)
 
     return unusable_rows_error if listed.empty?
+    return partial_rows_error(offered: offered, listed: listed) if listed.size < offered.size
 
     message = ::Whatsapp::Send.list(
       account: account,
@@ -69,11 +78,21 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
   private
 
     def listable_rows(rows)
-      Array(rows)
-        .filter_map { |row| build(row) }
-        .uniq { |row| row[:id] }
-        .uniq { |row| row[:title].downcase }
-        .first(MAX_ROWS)
+      built = Array(rows).filter_map { |row| build(row) }.uniq { |row| row[:id] }
+
+      distinguishable(built).first(MAX_ROWS)
+    end
+
+    # Told apart by everything the citizen can read on them, which is the label and
+    # the line under it. Two rows may carry the same label: a citizen's own history
+    # holds whatever they titled their contributions, and two proposals called
+    # "Spielplatz" are two proposals — de-duplicating by label alone left one of them
+    # out of the list that is meant to be their complete history and named it nowhere
+    # else. What the two must not share is both lines at once, because then there is
+    # nothing on the screen that says which is which; the caller refuses the whole
+    # list over that rather than sending one of them, so nothing is lost quietly.
+    def distinguishable(rows)
+      rows.uniq { |row| [row[:title].to_s.downcase, row[:description].to_s.downcase] }
     end
 
     def build(row)
@@ -81,14 +100,17 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       label = row_value(row, "label")
 
       button =
-        ::Whatsapp::AssistantActions.recovery_button(spec: spec, label: label) ||
-        ::Whatsapp::AssistantActions.button(spec: spec, label: label, conversation: conversation)
+        ::Whatsapp::AssistantActions.offered_button(
+          spec: spec, label: label, conversation: conversation
+        )
 
       return if button.blank?
 
       return button if name_only?(button)
 
-      description = row_value(row, "description").to_s.squish
+      description =
+        row_value(row, "description").to_s.squish.presence ||
+        ::Whatsapp::AssistantActions.row_description(spec: spec)
 
       return button if description.blank?
 
@@ -113,15 +135,32 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       { error: "The list needs a sentence above it. Write it and call this again." }
     end
 
+    # Refused rather than sent short, which is the whole reason the de-duplication
+    # above no longer drops anything quietly: the sentence over the list is already
+    # written by the time this runs, so a list carrying fewer rows than it was given
+    # is one message whose two halves disagree on the same screen. The rows that can
+    # be sent are named, so the second attempt is this call without the others.
+    def partial_rows_error(offered:, listed:)
+      {
+        error: "Only #{listed.size} of those #{offered.size} rows can be offered — an unknown " \
+               "action id, a record that no longer exists, a missing label, an id that repeats " \
+               "another row's, two rows reading the same with no description to tell them " \
+               "apart, or more than #{MAX_ROWS} rows. Nothing was sent. These are the ones " \
+               "that can be: #{listed.map { |row| row[:id] }.join(", ")}. Call this again with " \
+               "exactly those — or with a description on each row that needs one — and a " \
+               "sentence naming how many you send."
+      }
+    end
+
     def unusable_rows_error
       ::Whatsapp::AiAssistant::DecisionLog.record(
         event: :actions_unusable, conversation: conversation, step: conversation.step
       )
 
       {
-        error: "None of those rows can be offered: an unknown action id, a missing label, or a " \
-               "record id that does not exist. Answer with plain text instead, or name " \
-               "different actions."
+        error: "None of those rows can be offered: an unknown action id, a missing label, a " \
+               "record id that does not exist, or #{UNOFFERABLE_RECOVERY_REASON} Answer with " \
+               "plain text instead, or name different actions."
       }
     end
 end

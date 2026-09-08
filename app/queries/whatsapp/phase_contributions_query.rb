@@ -7,6 +7,22 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
   #
   # The six mapped types cover the large majority of live phases; the others are
   # reachable through their page instead.
+  # The same six as the branches below, named so a caller can ask whether this has
+  # anything to say about a phase without running the query to find out. The projekt
+  # card asks it for every phase of every projekt the bot names, where a count each is
+  # a query each — for a button whose page says so itself when there is nothing there.
+  # Beside the branches rather than anywhere else, because two lists of the same six
+  # in two files is how one of them comes to be missing a type.
+  SHOWN_PHASE_CLASSES = [
+    ProjektPhase::ProposalPhase, ProjektPhase::BudgetPhase, ProjektPhase::VotingPhase,
+    ProjektPhase::EventPhase, ProjektPhase::MilestonePhase,
+    ProjektPhase::ProjektNotificationPhase
+  ].freeze
+
+  def self.shows_for?(projekt_phase)
+    SHOWN_PHASE_CLASSES.include?(projekt_phase.class)
+  end
+
   def initialize(projekt_phase:)
     @projekt_phase = projekt_phase
   end
@@ -22,7 +38,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
            else []
            end
 
-    rows.first(::Whatsapp::MAX_LIST_ROWS)
+    rows.first(::Whatsapp::MAX_OFFERED_LIST_ROWS)
   end
 
   private
@@ -36,7 +52,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .base_selection
         .where(projekt_phase_id: @projekt_phase.id)
         .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |proposal| row(proposal.title, Whatsapp::PublishedResourceUrl.call(proposal)) }
     end
 
@@ -50,7 +66,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .where(budget_id: budget.id)
         .includes(:budget)
         .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |investment| row(investment.title, Whatsapp::PublishedResourceUrl.call(investment)) }
     end
 
@@ -58,7 +74,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
       Poll
         .where(projekt_phase_id: @projekt_phase.id)
         .order(:ends_at)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |poll| row(poll.name, poll_url(poll)) }
     end
 
@@ -67,7 +83,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .where(projekt_phase_id: @projekt_phase.id)
         .where("projekt_events.datetime >= ?", Time.current)
         .order(:datetime)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |event| row(event.title, event_url(event), Whatsapp::DatePhrase.absolute(event.datetime)) }
     end
 
@@ -78,7 +94,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .where("milestones.publication_date <= ?", Time.zone.today)
         .includes(:translations)
         .order(publication_date: :desc)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |milestone| milestone_row(milestone) }
     end
 
@@ -86,7 +102,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
       ProjektNotification
         .where(projekt_phase_id: @projekt_phase.id)
         .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |notification| row(notification.title, phase_url) }
     end
 

@@ -5,7 +5,7 @@ class Whatsapp::Conversation < ApplicationRecord
   # Every tool needs the account, and most of them only need the citizen behind
   # it. Nil until the number is linked, which is the state each caller already has
   # to answer for.
-  delegate :user, to: :whatsapp_account
+  delegate :user, :awaiting_link?, to: :whatsapp_account
 
   # A proposal in a proposal phase, a Budget::Investment in a budget phase. The
   # submission works the same either way, so the draft it is working on is held in
@@ -103,6 +103,15 @@ class Whatsapp::Conversation < ApplicationRecord
   # record exists, the record itself afterwards.
   def unsaved_submission?
     draft_resource.present? || draft_data.present?
+  end
+
+  # The wider question the same reset asks: everything the citizen has written and
+  # not yet sent, a comment waiting on its confirmation included. The write tools
+  # keep guarding on the submission alone — a comment is not a draft and none of
+  # them can act on one — but whether there is anything to discard is not a question
+  # about drafts, and a citizen who has just written a comment loses it too.
+  def unsaved_work?
+    unsaved_submission? || pending_comment.present?
   end
 
   # What this phase collects besides the text, asked of the conversation because
@@ -426,6 +435,27 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(pending_comment: nil, comment_preview_digest: nil)
   end
 
+  # The poll question a citizen was about to be asked when it turned out they had no
+  # account yet. Held over the login link so the vote resumes where it stopped rather
+  # than asking them to find the projekt again — the one moment they were ready to act
+  # is the worst one to send them back to the beginning of.
+  #
+  # The id alone, and re-resolved when they return: linking takes as long as it takes,
+  # and a poll can close while a citizen is registering.
+  def pending_poll_question_id
+    context["pending_poll_question_id"]
+  end
+
+  def store_pending_poll_question!(question_id)
+    merge_context!(pending_poll_question_id: question_id)
+  end
+
+  def clear_pending_poll_question!
+    return if context["pending_poll_question_id"].blank?
+
+    merge_context!(pending_poll_question_id: nil)
+  end
+
   # The comment as it stood in the block the citizen was last shown. Its own key
   # rather than the draft's, because a citizen can perfectly well have a
   # contribution half-written and be commenting on someone else's at the same
@@ -524,6 +554,17 @@ class Whatsapp::Conversation < ApplicationRecord
   # context. One snapshot only: a retry that fails again overwrites it with itself.
   def retry_inbound
     context["retry_inbound"]
+  end
+
+  # Whether tapping "try again" would actually replay something. The snapshot is
+  # stored only by a transient failure and cleared by the next turn that succeeds,
+  # so without it the tap reaches the assistant as a bare note about a button press
+  # and the citizen is answered by improvisation rather than by their own message.
+  #
+  # Reads the text rather than the key, the same way the tap handler does: an
+  # entry whose text went missing replays nothing either.
+  def replayable_turn?
+    retry_inbound.to_h["text"].present?
   end
 
   def store_retry_inbound!(text:, message_id:)

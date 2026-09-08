@@ -28,6 +28,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   as well, and theirs is the one gate that does not halt: clearing the phase is
   #   only half of what the citizen asked for, and the other half is the reply,
   #   which is the overview of what applies now and so the assistant's to write.
+  # - The projekt card's phase pills are answered here rather than described to the
+  #   assistant, and theirs is the one gate that is about the reply rather than about
+  #   surviving without a model: the card names an action, so tapping it has to be that
+  #   action and not a question about it. A pill that can no longer be honoured falls
+  #   through to the assistant, which is what says why. A vote cast on one of a poll's
+  #   answer pills is the same gate for the same reason, one below it.
   # - The AI disclosure precedes any reply the assistant could make. It is a legal
   #   declaration rather than a sentence the bot chooses, which is why it is here and
   #   on the locale copy.
@@ -67,6 +73,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     return if handle_cancel_tap
     return if handle_retry_tap
+    return if handle_phase_tap
+    return if handle_contribution_tap
+    return if handle_poll_answer_tap
 
     apply_start_over_tap
 
@@ -523,6 +532,166 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     #
     # Without a snapshot the tap falls through to the note path, where the assistant
     # is the one that knows what "again" means.
+    # The projekt card's own pills, and the one gate here that exists to answer rather
+    # than to survive an outage. The card names each open phase's action — vote, fill
+    # in the form, report a defect, see what is already there — and the point of
+    # naming it is that tapping it does that thing. Describing the tap to the assistant
+    # instead would put a model between the citizen and the action they just chose,
+    # which is the selection step the card was rebuilt to remove.
+    #
+    # Only the actions with nowhere else to go arrive here. A phase the bot can take a
+    # submission into carries `idea_start`, which enters the drafting flow through the
+    # assistant like it always has.
+    #
+    # Falls through rather than answering wherever the pill can no longer be honoured —
+    # the phase closed, the projekt was deactivated, the page unpublished since the card
+    # was sent. The assistant is what says so, and it says it better than a fixed line.
+    def handle_phase_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+      action = flow_action&.fetch(:action)
+
+      return false if !::Whatsapp::FlowActions.direct_phase?(action)
+
+      projekt_phase = tapped_phase(flow_action[:param])
+
+      return false if projekt_phase.blank?
+
+      record_tap(action, flow_action[:param])
+
+      return open_phase(projekt_phase) if action == :phase_open
+
+      open_phase_contributions(projekt_phase)
+    end
+
+    # Re-resolved and re-checked on arrival, never trusted from the id: a pill sits in
+    # a chat history for as long as the chat does, and what it points at is only what
+    # it pointed at when it was sent.
+    def tapped_phase(param)
+      return if param.blank?
+
+      projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+
+      return if projekt_phase.blank?
+      return if !projekt_phase.current?
+      return if !::Whatsapp::EligiblePhasesQuery.projekt_visible?(projekt_phase.projekt)
+
+      projekt_phase
+    end
+
+    # A voting phase is asked first whether its poll is one the chat can carry to the
+    # end, because for that shape of poll the action the button names is a vote and
+    # tapping it should be voting. Every other phase, and every poll the chat cannot
+    # finish, gets the link — which is the fallback the whole voting flow is built
+    # around rather than an afterthought.
+    def open_phase(projekt_phase)
+      return true if ::Whatsapp::Polls::OfferQuestionService.call(
+        conversation: conversation, projekt_phase: projekt_phase
+      )
+
+      send_line_with_link(
+        line: I18n.t("whatsapp.bot.phase.open", phase: projekt_phase.title),
+        url: ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+      )
+    end
+
+    # A tap on one of a poll's answer pills. Its parameter is an answer id rather than
+    # a phase id, which is why it is not the gate above: everything else about it is
+    # the same rule — resolved on arrival, re-checked against the poll as it stands
+    # now, and handed to the assistant when it can no longer be honoured.
+    def handle_poll_answer_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+
+      return false if flow_action&.fetch(:action) != :poll_answer
+
+      question_answer = ::Poll::Question::Answer.find_by(id: flow_action[:param].to_i)
+
+      return false if question_answer.blank?
+
+      record_tap(:poll_answer, flow_action[:param])
+
+      ::Whatsapp::Polls::RecordAnswerService.call(
+        conversation: conversation, question_answer: question_answer
+      )
+    end
+
+    # The results where the phase has published any, and what has come in otherwise.
+    # One link either way: the portal page is what lists the contributions properly,
+    # and a chat message repeating ten titles is a list the citizen cannot open.
+    def open_phase_contributions(projekt_phase)
+      section = ::Whatsapp::PublishedResultsQuery.public_section_for(projekt_phase)
+
+      return send_line_with_link(
+        line: I18n.t("whatsapp.bot.phase.results", phase: projekt_phase.title),
+        url: ::Whatsapp::ProjektLink.evaluation_url(projekt_phase)
+      ) if section.present?
+
+      send_line_with_link(
+        line: I18n.t("whatsapp.bot.phase.contributions", phase: projekt_phase.title),
+        url: ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+      )
+    end
+
+    # A row naming one contribution, answered on this side for the same reason a
+    # phase's is: the row said which contribution it opens, so a note asking a model
+    # which tool to reach for is a chance to open a different one. Falls through
+    # wherever the pill can no longer be honoured — withdrawn, hidden or retired since
+    # it was sent — and the assistant says so better than a fixed line would.
+    def handle_contribution_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+      action = flow_action&.fetch(:action)
+
+      return false if action != ::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION
+
+      contribution = ::Whatsapp::ContributionPill.resolve(flow_action[:param])
+
+      return false if contribution.blank?
+
+      record_tap(action, flow_action[:param])
+
+      open_contribution(contribution)
+    end
+
+    # The page where there is one, and the reason in words where there is none: a
+    # proposal submitted into a moderated phase has no public page until it is
+    # accepted, and the link it would otherwise be given is an error page. Saying so
+    # is what lets the row be offered at all — every row of a list is selectable, so
+    # the alternative was leaving the contribution out of the list that is meant to
+    # be the citizen's complete history.
+    def open_contribution(contribution)
+      url = ::Whatsapp::PublishedResourceUrl.call(contribution)
+
+      return send_line_with_link(
+        line: I18n.t("whatsapp.bot.contribution.open", contribution: contribution.title),
+        url: url
+      ) if url.present?
+
+      ::Whatsapp::Send.text(
+        account: account,
+        body: ::Whatsapp::AiAssistant::BotCopyService.line(
+          account: account,
+          body: I18n.t("whatsapp.bot.contribution.in_review", contribution: contribution.title)
+        )
+      )
+
+      true
+    end
+
+    # The sentence goes through the copy service and the address does not. Everything
+    # the bot says is put into the citizen's language on its way out, but a URL handed
+    # to a model is a URL a model can rewrite — and a mangled one is a dead end with no
+    # symptom until it is tapped.
+    def send_line_with_link(line:, url:)
+      return false if url.blank?
+
+      ::Whatsapp::Send.text(
+        account: account,
+        body: [::Whatsapp::AiAssistant::BotCopyService.line(account: account, body: line), url]
+          .join("\n\n")
+      )
+
+      true
+    end
+
     def handle_retry_tap
       return false if ::Whatsapp::Send.recovery_action_from(reading.tapped_reply_id) != :retry
 

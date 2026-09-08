@@ -4,7 +4,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
   # the only thing that lets post_comment write anything. Composed from what
   # draft_comment wrote down, so what they read is what will be posted — nothing
   # about this tool takes the comment's text.
-  MAX_ACTIONS = ::Whatsapp::MAX_OFFERED_BUTTONS
+  MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
   description "Shows the citizen the comment written down for them — their words as they wrote " \
               "them, and which proposal it goes on — and then asks your question with up to three " \
@@ -80,10 +80,9 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
           spec = button["action_id"] || button[:action_id]
           label = button["label"] || button[:label]
 
-          ::Whatsapp::AssistantActions.recovery_button(spec: spec, label: label) ||
-            ::Whatsapp::AssistantActions.button(
-              spec: spec, label: label, conversation: conversation
-            )
+          ::Whatsapp::AssistantActions.offered_button(
+            spec: spec, label: label, conversation: conversation
+          )
         end
         .uniq { |button| button[:id] }
         .uniq { |button| button[:title].downcase }

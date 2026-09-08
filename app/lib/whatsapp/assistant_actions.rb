@@ -51,21 +51,37 @@ module Whatsapp::AssistantActions
   # The parameterised ones are listed by shape rather than enumerated: the records
   # behind them arrive from whichever tool the model just called, and enumerating a
   # portal's projekts here would be the whole portal in every prompt.
-  # The retired ids are subtracted from both lists rather than from ACTIONS: they
-  # are still dispatched, so the vocabulary the assistant reads is the only place
-  # they may be absent from.
+  # The retired and bot-only ids are subtracted from both lists rather than from
+  # ACTIONS: they are still dispatched, so the vocabulary the assistant reads is the
+  # only place they may be absent from.
   def offerable_action_names
     (
       (HANDLED_ACTIONS - ::Whatsapp::FlowActions::PARAMETERISED_ACTIONS -
-        ::Whatsapp::FlowActions::RETIRED_ACTIONS) +
+        ::Whatsapp::FlowActions.unofferable) +
         ::Whatsapp::Send::RECOVERY_ACTION_IDS.keys
     ).map(&:to_s)
   end
 
   def parameterised_action_names
     (
-      ::Whatsapp::FlowActions::PARAMETERISED_ACTIONS - ::Whatsapp::FlowActions::RETIRED_ACTIONS
+      ::Whatsapp::FlowActions::PARAMETERISED_ACTIONS - ::Whatsapp::FlowActions.unofferable
     ).map(&:to_s)
+  end
+
+  # The one entry point the tools build a model-written pill through. Which of the
+  # two namespaces a spec belongs to is not the caller's business, and it stopped
+  # being expressible as a fallback the moment a recovery pill could be refused on
+  # state: five call sites read a nil from the recovery side as "not a recovery id"
+  # and asked the catalog for it, which answered nil again and logged the drop a
+  # second time under the wrong reason.
+  def offered_button(spec:, label:, conversation:)
+    action, = parse(spec)
+
+    if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
+      return recovery_button(spec: spec, label: label, conversation: conversation)
+    end
+
+    button(spec: spec, label: label, conversation: conversation)
   end
 
   # One tappable button from the action id and the label the model wrote, or nil
@@ -77,7 +93,7 @@ module Whatsapp::AssistantActions
 
     return dropped(spec, conversation, :unparseable) if action.blank?
     return dropped(spec, conversation, :unknown_action) if !::Whatsapp::FlowActions.known?(action)
-    return dropped(spec, conversation, :retired_action) if ::Whatsapp::FlowActions.retired?(action)
+    return dropped(spec, conversation, :unofferable) if ::Whatsapp::FlowActions.unofferable?(action)
     return dropped(spec, conversation, :unknown_scope) if !known_scope?(action, param)
     return dropped(spec, conversation, :nothing_to_tell) if !tells_more?(action, param)
 
@@ -117,20 +133,73 @@ module Whatsapp::AssistantActions
     ::Whatsapp::ProjektCard.tells_more?(projekt)
   end
 
+  # The recovery pills whose offer depends on the state rather than on the id being
+  # known, each beside the question that decides it. Three of the four: `help` is the
+  # one way out that is always true, which is why it is what a dead end falls back to.
+  #
+  # They share a shape. Each promises to act on something the conversation may not
+  # have, and each degrades quietly rather than loudly when it does not: cancelling
+  # with nothing written drops the phase exactly as starting over does, so the reply
+  # carries two ways out of a message that needs one — and the worse of the two, since
+  # it answers with a closing line where the other shows what is open. Trying again
+  # with no failed turn stored reaches the tap handler, which declines it and lets it
+  # fall through as a bare note about a button press. Opening the login link again
+  # with none outstanding has no handler at all and is answered by improvisation.
+  #
+  # In every case the citizen taps a button that says it will do something and is
+  # answered by the assistant guessing. Once the state is there the pill means what it
+  # says, and all three belong under the message.
+  STATEFUL_RECOVERY_ACTIONS = {
+    cancel: ->(conversation) { conversation.unsaved_work? },
+    retry: ->(conversation) { conversation.replayable_turn? },
+    link_retry: ->(conversation) { conversation.awaiting_link? }
+  }.freeze
+
   # A recovery pill keeps its own id namespace — the inbound side reads those
   # before the catalog's, and that ordering is what lets a "cancel" beside two
   # ordinary pills be understood without anything else knowing about it.
-  def recovery_button(spec:, label:)
+  #
+  # Dropped rather than relabelled when the state does not support it, and dropped
+  # here rather than trusted to the prompt: the vocabulary the model reads is built
+  # once per process, so the conversation is the only place the rule can actually be
+  # enforced. The slot it frees is not backfilled — Whatsapp::Send.with_main_menu
+  # fills a message that is under the cap on its own.
+  def recovery_button(spec:, label:, conversation:)
     action, = parse(spec)
     recovery_id = ::Whatsapp::Send::RECOVERY_ACTION_IDS[action]
 
     return if recovery_id.blank?
+
+    if !offerable_recovery?(action, conversation)
+      return dropped(spec, conversation, :recovery_unavailable)
+    end
 
     title = truncated(label)
 
     return if title.blank?
 
     { id: recovery_id, title: title }
+  end
+
+  # Asked of the conversation as it stands when the message is built, which is when
+  # the pill is sent: a draft that appears later in the same turn belongs to the
+  # message after this one.
+  def offerable_recovery?(action, conversation)
+    available = STATEFUL_RECOVERY_ACTIONS[action]
+
+    return true if available.blank?
+
+    available.call(conversation)
+  end
+
+  # The same question asked ahead of the reply rather than of one pill in it, for the
+  # prompt line that keeps the refusal rare. Enforcement does not depend on it — the
+  # gate above runs whatever the model was told — so this is allowed to be advice.
+  def unavailable_recovery_actions(conversation)
+    STATEFUL_RECOVERY_ACTIONS
+      .reject { |_, available| available.call(conversation) }
+      .keys
+      .map(&:to_s)
   end
 
   # The model's own words, cut on a word boundary. WhatsApp's own truncation is
@@ -208,7 +277,10 @@ module Whatsapp::AssistantActions
 
     case action
     when :view_projekt then projekt_label(param)
+    when :view_contribution then contribution_label(param)
     when :idea_start then phase_projekt_label(param)
+    when :phase_open then phase_action_label(param)
+    when :phase_contributions then I18n.t("whatsapp.bot.buttons.phase_contributions")
     when :support then proposal_label(param)
     when :support_toggle then support_toggle_label(param, conversation)
     when :category
@@ -229,6 +301,65 @@ module Whatsapp::AssistantActions
     ::Whatsapp::ProjektLink.title(projekt)
   end
 
+  # The same wording the projekt card puts on the phase, so the assistant offering a
+  # phase without labelling it says what the card would have said. Blank for a phase
+  # type the card has no action for, which drops the pill: an unlabelled button
+  # pointing at a phase nothing can be done in is a tap that leads nowhere.
+  def phase_action_label(param)
+    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+
+    return if projekt_phase.blank?
+
+    ::Whatsapp::ProjektCardActions.label_for(projekt_phase)
+  end
+
+  # The line under a row, for the rows whose twenty-character label cannot say which
+  # record they point at. The phase pills are named after what tapping them does —
+  # "Vorschlag erstellen", "Beiträge ansehen" — so every phase on the portal reads
+  # the same, and a contribution's title rarely fits a label at all.
+  #
+  # Read from the record rather than asked of the model, because the row it forgot
+  # to describe is the row the citizen cannot tell from the one above it — and a
+  # list refuses to be sent at all where two of its rows read alike. Only a fallback:
+  # a description the model wrote wins, since it knows what the citizen just asked.
+  #
+  # The label keeps the action's own words either way. Which record a row points at
+  # is worth a second line, not the twenty characters that say what tapping it does.
+  def row_description(spec:)
+    action, param = parse(spec)
+
+    return phase_row_description(param) if ::Whatsapp::FlowActions.direct_phase?(action)
+    return if action != ::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION
+
+    contribution_row_description(param)
+  end
+
+  def phase_row_description(param)
+    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+
+    return if projekt_phase.blank?
+
+    [::Whatsapp::ProjektLink.title(projekt_phase.projekt), projekt_phase.title]
+      .compact_blank
+      .join(" · ")
+      .presence
+  end
+
+  # A contribution's own title, which twenty characters of label cannot hold: the
+  # row above says roughly what it is and this line says which one it is. Dated
+  # because a citizen's history is where the same title turns up twice — a Beitrag
+  # they sent in twice, or two of them named after the same street.
+  def contribution_row_description(param)
+    contribution = ::Whatsapp::ContributionPill.resolve(param)
+
+    return if contribution.blank?
+
+    [contribution.title, ::Whatsapp::DatePhrase.relative(contribution.created_at)]
+      .compact_blank
+      .join(" · ")
+      .presence
+  end
+
   def phase_projekt_label(param)
     projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
 
@@ -239,6 +370,14 @@ module Whatsapp::AssistantActions
 
   def proposal_label(param)
     ::Proposal.not_retired.find_by(id: param.to_i)&.title
+  end
+
+  # A contribution's own title, which is the fallback rather than the rule here:
+  # twenty characters name a projekt but rarely a proposal, so the row the citizen
+  # reads carries the title in its description and the model writes something
+  # shorter above it. Blank for a contribution that is gone, which drops the row.
+  def contribution_label(param)
+    ::Whatsapp::ContributionPill.resolve(param)&.title
   end
 
   # Which way the toggle goes, read off the citizen's own vote at the moment the

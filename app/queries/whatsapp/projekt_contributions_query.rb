@@ -10,7 +10,10 @@ class Whatsapp::ProjektContributionsQuery < ApplicationQuery
     rows = proposals_scope.map { |proposal| row(proposal) } +
            investments_scope.includes(:budget).map { |investment| row(investment) }
 
-    rows.sort_by { |contribution| contribution[:created_at] }.reverse.first(::Whatsapp::MAX_LIST_ROWS)
+    rows
+      .sort_by { |contribution| contribution[:created_at] }
+      .reverse
+      .first(::Whatsapp::MAX_OFFERED_LIST_ROWS)
   end
 
   def exists?
@@ -27,7 +30,7 @@ class Whatsapp::ProjektContributionsQuery < ApplicationQuery
         .base_selection
         .where(projekt_phase_id: @projekt.projekt_phases.select(:id))
         .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
     end
 
     def investments_scope
@@ -37,18 +40,25 @@ class Whatsapp::ProjektContributionsQuery < ApplicationQuery
         .not_unfeasible
         .where(budget_id: budget_ids)
         .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
     end
 
     # created_at travels as the timestamp rather than as a formatted date: it is
     # what the rows are sorted on, and the message that shows them states the
     # age relative to today instead of the date. A German absolute date is
     # rendered by WhatsApp as a tappable phone number.
+    #
+    # The pill id travels with the row for the same reason the citizen's own
+    # contributions carry one: which of the two kinds a row is is exactly what a
+    # model reading titles cannot see, and without it the only pill it can reach
+    # for is the projekt's — one id for every row of a list that de-duplicates by
+    # id.
     def row(resource)
       {
         title: resource.title.to_s,
         url: Whatsapp::PublishedResourceUrl.call(resource),
-        created_at: resource.created_at
+        created_at: resource.created_at,
+        action_id: Whatsapp::ContributionPill.id_for(resource)
       }
     end
 end

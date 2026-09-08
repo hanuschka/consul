@@ -17,8 +17,10 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
               "what describe_projekt returned, in the citizen's language, and do not repeat it " \
               "or the link in a reply afterwards. The summary itself says what the projekt is " \
               "about — never send the citizen to the link to find that out. Naming several " \
-              "projekts at once is send_list, not a card each. The card carries its own button " \
-              "for taking part where its phase is open, so do not offer that again yourself."
+              "projekts at once is send_list, not a card each. The card carries a button of its " \
+              "own for each of the projekt's open phases, worded as the action it starts, and " \
+              "one that opens what has already been contributed — so never offer taking part, a " \
+              "phase to choose from or the existing contributions yourself alongside it."
 
   params do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
@@ -53,42 +55,47 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     # Routed through buttons_with_picture rather than image, so the picture and the
     # pills arrive on one message and the ladder that gives the picture up when
     # WhatsApp will not take it is the transport's rather than this tool's.
+    #
+    # Which actions the card offers is Whatsapp::ProjektCardActions': one per open
+    # phase, worded as the action itself. There used to be one pill here for all of
+    # them, which only opened a further step where the citizen picked which phase they
+    # meant — a question the card had already answered by being about this projekt.
+    #
+    # Telling more about the projekt used to be a pill as well. It sat between the
+    # citizen picking a projekt and doing anything with it, and what it delivered was
+    # the card's own three facts worded differently — so the detail is in the summary
+    # now and the step is gone.
     def send_card(projekt, summary)
+      actions = ::Whatsapp::ProjektCardActions.call(projekt)
+
+      return send_action_list(projekt, summary, actions) if actions.size > ::Whatsapp::MAX_BUTTONS
+
       ::Whatsapp::Send.buttons_with_picture(
         account: account,
         body: card_body(projekt, summary),
-        buttons: card_buttons(projekt),
+        buttons: actions,
         image_url: ::Whatsapp::ProjektCard.image_url(projekt)
       )
     end
 
-    # The one pill the card offers, and only where a phase is actually open —
-    # offering a submission into a closed projekt is the one thing the ticket's rule
-    # about reachability forbids. Send reserves the last slot for starting over, so a
-    # projekt with an open phase arrives with two buttons and one without with the
-    # way back alone.
-    #
-    # Telling more about the projekt used to be a pill here as well. It sat between
-    # the citizen picking a projekt and doing anything with it, and what it delivered
-    # was the card's own three facts worded differently — so the detail is in the
-    # summary now and the step is gone.
-    #
-    # Labelled from the locale copy rather than the record: the title is already the
-    # first line of the card, so a pill repeating it says nothing, and the projekt's
-    # own name is routinely longer than a label holds.
-    def card_buttons(projekt)
-      open_phase = ::Whatsapp::EligiblePhasesQuery.new(projekt: projekt).call.first
+    # Past three actions the card has to become a list, because three is every reply
+    # button a WhatsApp message holds. The picture goes as a message of its own ahead
+    # of it rather than being dropped: a list message takes no header at all, and the
+    # picture is the half of a card a citizen recognises the projekt by. It is sent
+    # first so the two arrive in the order they would have been read in, and its
+    # absence costs nothing — Whatsapp::Send.picture answers nil for a projekt with no
+    # showable one and the list follows either way.
+    def send_action_list(projekt, summary, actions)
+      ::Whatsapp::Send.picture(
+        account: account, image_url: ::Whatsapp::ProjektCard.image_url(projekt)
+      )
 
-      return [] if open_phase.blank?
-
-      [pill(:idea_start, open_phase.id, "take_part")]
-    end
-
-    def pill(action, param, label)
-      {
-        id: ::Whatsapp::FlowActions.id_for(action: action, param: param),
-        title: I18n.t("whatsapp.bot.buttons.#{label}")
-      }
+      ::Whatsapp::Send.list(
+        account: account,
+        body: card_body(projekt, summary),
+        button_label: I18n.t("whatsapp.bot.buttons.choose"),
+        rows: actions
+      )
     end
 
     # The summary is what gives when the budget runs out, never the link: a projekt

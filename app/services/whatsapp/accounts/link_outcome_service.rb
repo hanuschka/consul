@@ -26,6 +26,8 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
 
   def confirmed
     send_bot_line(I18n.t("whatsapp.bot.onboarding.linked"), actions: [:help])
+
+    resume_pending_poll
   end
 
   def error(reason)
@@ -40,6 +42,30 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
   end
 
   private
+
+    # The vote the citizen was in the middle of when it turned out they needed an
+    # account. Asked again here, under the line saying the link worked, because the
+    # link was only ever in the way of it — sending them back to find the projekt
+    # again would spend the one moment they were already decided.
+    #
+    # Cleared before the question is re-asked rather than after, and the poll
+    # re-checked from scratch: registering takes as long as it takes, and a poll that
+    # closed in between must leave nothing behind to be resumed on the next link.
+    def resume_pending_poll
+      question_id = @conversation.pending_poll_question_id
+
+      return if question_id.blank?
+
+      @conversation.clear_pending_poll_question!
+
+      question = ::Poll::Question.find_by(id: question_id)
+
+      return if question.blank?
+
+      ::Whatsapp::Polls::OfferQuestionService.call(
+        conversation: @conversation, projekt_phase: question.poll&.projekt_phase
+      )
+    end
 
     # No inbound message is being answered here, but there is a conversation behind the
     # number and it has a language: someone who has only ever written Turkish to this

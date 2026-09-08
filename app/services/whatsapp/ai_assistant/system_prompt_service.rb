@@ -242,6 +242,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         picture_waiting_line,
         location_waiting_line,
         start_over_line,
+        unavailable_recovery_line,
         "- Active participation phase: #{active_phase_description}",
         "- Contribution this conversation is about: #{active_proposal_description}",
         "- Projekts running portal-wide: #{open_projekts_count}",
@@ -297,6 +298,25 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
       "- The citizen has just asked to start over: nothing is selected any more, and no " \
         "projekt named earlier in this conversation applies to what follows"
+    end
+
+    # The recovery pills that have nothing behind them this turn — cancelling with
+    # nothing written, trying again with no failed turn, reopening a login link that
+    # was never sent. Each is a button promising to act on something that is not
+    # there, and the citizen who taps one is answered by the assistant guessing.
+    #
+    # Named rather than explained, because the lines above already carry the facts
+    # the names follow from: the draft on the table, the login link outstanding. And
+    # the pills are refused on the way out regardless of what this says — the line is
+    # here so the refusal is rare rather than routine, since a refused button set
+    # costs the citizen a turn while the model is told to answer again.
+    def unavailable_recovery_line
+      unavailable = ::Whatsapp::AssistantActions.unavailable_recovery_actions(@conversation)
+
+      return if unavailable.empty?
+
+      "- Do not offer these buttons this turn, there is nothing behind them: " \
+        "#{unavailable.join(", ")}"
     end
 
     def location_waiting_line

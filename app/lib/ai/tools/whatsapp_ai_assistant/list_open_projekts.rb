@@ -7,14 +7,15 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenProjekts < Ai::Tools::WhatsappAiAs
               "send_projekt_card for that projekt, which carries its phases and deadlines in " \
               "the summary. A citizen who " \
               "already named a projekt has picked one, so answer about that projekt instead of " \
-              "listing these. Ten at a time: say how many there are altogether and offer " \
+              "listing these. #{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: say how many there " \
+              "are altogether and offer " \
               "more_action_id as a button so the rest are one tap away rather than absent."
 
   MORE_SCOPE = "open_projekts".freeze
 
   # A card's subtitle budget is written for one projekt filling a whole message.
-  # Ten of them at that length is a page of prompt spent on text the model only
-  # needs enough of to tell the projekts apart in one line each.
+  # A full list of them at that length is a page of prompt spent on text the model
+  # only needs enough of to tell the projekts apart in one line each.
   SUBTITLE_LENGTH = 160
 
   params do

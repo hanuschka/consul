@@ -22,28 +22,26 @@ module Whatsapp
   REPLY_PRIORITY = -10
   BULK_PRIORITY = 20
 
-  # A WhatsApp list holds ten rows, and the bot has nowhere to paginate to, so
-  # every query that fills one is capped here rather than per query object.
-  # WhatsappApi::Resources::Messages enforces the same number at the protocol
-  # edge, where it truncates and warns.
+  # A WhatsApp list holds ten rows. WhatsappApi::Resources::Messages enforces the
+  # same number at the protocol edge, where it truncates and warns.
   MAX_LIST_ROWS = 10
 
-  # The same reservation on a list: its last row is the way to start over.
+  # What a list can actually offer: its last row is the way to start over, and
+  # Whatsapp::Send puts it on every list. This is the number every query that fills
+  # a list is capped at and the size of a Whatsapp::ListWindow page — a query
+  # answering with ten handed the model a tenth row no list could carry, and a
+  # window counting ten as shown paged straight past it.
   MAX_OFFERED_LIST_ROWS = MAX_LIST_ROWS - 1
 
   # A WhatsApp interactive message holds three reply buttons; anything longer
   # becomes a list instead. Declared beside the row cap for the same reason —
   # WhatsappApi::Resources::Messages enforces it again at the protocol edge.
+  #
+  # A caller may fill all three. Whatsapp::Send appends the start-over pill only
+  # into a slot no answer wants, so composing three costs the way back rather than
+  # one of the three — which is what keeps a halt line from naming a pill the
+  # citizen never saw.
   MAX_BUTTONS = 3
-
-  # What a caller may fill of those, because Whatsapp::Send reserves the last slot
-  # for the start-over pill on every interactive message it sends through `buttons`.
-  # Declared here so a tool reports the number it actually sent rather than the
-  # number it composed — trimming a fourth button silently is how a halt line comes
-  # to name a pill the citizen never saw. A caller that needs all three slots for
-  # answers of its own sends through `buttons_without_main_menu` and counts to
-  # MAX_BUTTONS instead.
-  MAX_OFFERED_BUTTONS = MAX_BUTTONS - 1
 
   # What one message will hold, which the preview has to answer to rather than
   # truncate: a plain text message takes far more than a picture's caption or an

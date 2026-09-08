@@ -9,7 +9,7 @@ class Whatsapp::PublishedMilestonesQuery < ApplicationQuery
   end
 
   def call
-    scope.includes(:translations).limit(::Whatsapp::MAX_LIST_ROWS).to_a
+    scope.includes(:translations).limit(::Whatsapp::MAX_OFFERED_LIST_ROWS).to_a
   end
 
   def exists?

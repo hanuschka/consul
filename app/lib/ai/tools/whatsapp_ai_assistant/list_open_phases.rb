@@ -6,7 +6,8 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPhases < Ai::Tools::WhatsappAiAssi
               "portal-wide — \"was ist gerade überall offen?\" — and for the phases of a projekt " \
               "already picked, where describe_projekt is the narrower answer. Returns the " \
               "projekt_phase_id that describe_projekt, check_participation_eligibility and " \
-              "start_draft expect. Ten at a time: say how many there are altogether, name " \
+              "start_draft expect. #{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: say how many " \
+              "there are altogether, name " \
               "the ones that fit this moment, and offer more_action_id as a button so the rest " \
               "are one tap away rather than absent."
 

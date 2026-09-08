@@ -25,7 +25,11 @@ module CsvServices
     private
 
       def headers
-        @formular.formular_fields.map(&:name) + ["Submitter ID", "Submitter Email", "Submitted At"]
+        field_names = Globalize.with_locale(I18n.default_locale) do
+          @formular.formular_fields.map(&:name)
+        end
+
+        field_names + ["Submitter ID", "Submitter Email", "Submitted At"]
       end
 
       def row(formular_answer)

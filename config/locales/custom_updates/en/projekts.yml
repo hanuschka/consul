@@ -34,6 +34,8 @@ en:
       backlink: To the project overview
       errors:
         presence: Please select a project
+      list_item:
+        ongoing: Ongoing projekt
       index:
         current_projekts: Current projekts
         expired_projekts: Expired projekts

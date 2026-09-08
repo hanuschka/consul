@@ -47,10 +47,10 @@
         <div class="projekt-event-item-new-body--details">
           <% if projekt_event.projekt.page.published? %>
             <div class="projekt-event-item-new-body--details-row">
-              <i class="fa fa-code-branch" aria-label="<%= t('custom.accessibility.events.projekt-aria-label', projekt_name: projekt_event.projekt.name) %>"></i>
+              <i class="fa fa-code-branch" aria-label="<%= t('custom.accessibility.events.projekt-aria-label', projekt_name: projekt_event.projekt.title) %>"></i>
               <span>
                 <%= link_to projekt_event.projekt.page.url, data: { turbolinks: "false"}, aria: { hidden: true }, tabindex: "-1" do %>
-                  <%= projekt_event.projekt.name %>
+                  <%= projekt_event.projekt.title %>
                 <% end %>
               </span>
             </div>

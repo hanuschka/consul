@@ -15,13 +15,6 @@ class RemoteTranslation < ApplicationRecord
                              .delay.call
   end
 
-  def self.remote_translation_enqueued?(remote_translation)
-    where(remote_translatable_id: remote_translation["remote_translatable_id"],
-          remote_translatable_type: remote_translation["remote_translatable_type"],
-          locale: remote_translation["locale"],
-          error_message: nil).any?
-  end
-
   def translating_into_source_locale
     return if source_locale.blank?
 

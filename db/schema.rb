@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_03_150000) do
+ActiveRecord::Schema.define(version: 2026_09_08_130000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1157,11 +1157,21 @@ ActiveRecord::Schema.define(version: 2026_09_03_150000) do
     t.index ["formular_id"], name: "index_formular_answers_on_formular_id"
   end
 
+  create_table "formular_field_translations", force: :cascade do |t|
+    t.integer "formular_field_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.text "description"
+    t.index ["formular_field_id", "locale"], name: "index_formular_field_translations_on_field_id_and_locale", unique: true
+    t.index ["formular_field_id"], name: "index_formular_field_translations_on_formular_field_id"
+    t.index ["locale"], name: "index_formular_field_translations_on_locale"
+  end
+
   create_table "formular_fields", force: :cascade do |t|
     t.integer "given_order", default: 1
     t.boolean "required", default: false, null: false
-    t.string "name"
-    t.string "description"
     t.string "key"
     t.string "kind"
     t.jsonb "options", default: {}, null: false
@@ -1171,7 +1181,6 @@ ActiveRecord::Schema.define(version: 2026_09_03_150000) do
     t.boolean "follow_up", default: false
     t.index ["formular_id"], name: "index_formular_fields_on_formular_id"
     t.index ["key", "formular_id"], name: "index_formular_fields_on_key_and_formular_id", unique: true
-    t.index ["name", "formular_id"], name: "index_formular_fields_on_name_and_formular_id", unique: true
   end
 
   create_table "formular_follow_up_letter_recipients", force: :cascade do |t|
@@ -2303,15 +2312,25 @@ ActiveRecord::Schema.define(version: 2026_09_03_150000) do
     t.index ["user_id"], name: "index_projekt_event_registrations_on_user_id"
   end
 
-  create_table "projekt_events", force: :cascade do |t|
+  create_table "projekt_event_translations", force: :cascade do |t|
+    t.integer "projekt_event_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "title"
+    t.text "description"
     t.string "location"
+    t.index ["locale"], name: "index_projekt_event_translations_on_locale"
+    t.index ["projekt_event_id", "locale"], name: "index_projekt_event_translations_on_event_id_and_locale", unique: true
+    t.index ["projekt_event_id"], name: "index_projekt_event_translations_on_projekt_event_id"
+  end
+
+  create_table "projekt_events", force: :cascade do |t|
     t.datetime "datetime"
     t.string "weblink"
     t.integer "projekt_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "description"
     t.datetime "end_datetime"
     t.string "summary"
     t.bigint "projekt_phase_id"

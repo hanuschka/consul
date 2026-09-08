@@ -22,13 +22,15 @@ module Whatsapp
   REPLY_PRIORITY = -10
   BULK_PRIORITY = 20
 
-  # A WhatsApp list holds ten rows, and the bot has nowhere to paginate to, so
-  # every query that fills one is capped here rather than per query object.
-  # WhatsappApi::Resources::Messages enforces the same number at the protocol
-  # edge, where it truncates and warns.
+  # A WhatsApp list holds ten rows. WhatsappApi::Resources::Messages enforces the
+  # same number at the protocol edge, where it truncates and warns.
   MAX_LIST_ROWS = 10
 
-  # The same reservation on a list: its last row is the way to start over.
+  # What a list can actually offer: its last row is the way to start over, and
+  # Whatsapp::Send puts it on every list. This is the number every query that fills
+  # a list is capped at and the size of a Whatsapp::ListWindow page — a query
+  # answering with ten handed the model a tenth row no list could carry, and a
+  # window counting ten as shown paged straight past it.
   MAX_OFFERED_LIST_ROWS = MAX_LIST_ROWS - 1
 
   # A WhatsApp interactive message holds three reply buttons; anything longer

@@ -127,7 +127,7 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
     #
     # Translations because every caller that lists these phases names them, and
     # ProjektPhase#title reads the translated phase_tab_name — one query per row
-    # of a list that holds up to Whatsapp::MAX_LIST_ROWS.
+    # of a list that holds up to Whatsapp::MAX_OFFERED_LIST_ROWS.
     def preloads_for(phase_class)
       preloads = [:settings, :translations, { projekt: { page: :translations } }]
 

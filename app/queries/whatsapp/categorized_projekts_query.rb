@@ -41,7 +41,7 @@ class Whatsapp::CategorizedProjektsQuery < ApplicationQuery
   def category
     return if !CATEGORY_SCOPES.key?(@key)
 
-    groups([window(@key, limit: ::Whatsapp::MAX_LIST_ROWS, offset: MAX_PER_CATEGORY)]).first
+    groups([window(@key, limit: ::Whatsapp::MAX_OFFERED_LIST_ROWS, offset: MAX_PER_CATEGORY)]).first
   end
 
   private

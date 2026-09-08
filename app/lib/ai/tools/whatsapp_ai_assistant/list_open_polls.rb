@@ -3,7 +3,8 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
               "closes. Name a project for its own, or pass null for the whole portal. The link is " \
               "how a citizen votes: you cannot cast a vote for them and there is no tool that " \
               "does. Returns facts for you to answer in your own words — it sends nothing to the " \
-              "citizen itself. Ten at a time: where there are more, say how many and offer " \
+              "citizen itself. #{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: where there are " \
+              "more, say how many and offer " \
               "more_action_id as a button."
 
   MORE_SCOPE = "polls".freeze

@@ -208,6 +208,7 @@ module Whatsapp::AssistantActions
 
     case action
     when :view_projekt then projekt_label(param)
+    when :view_contribution then contribution_label(param)
     when :idea_start then phase_projekt_label(param)
     when :phase_open then phase_action_label(param)
     when :phase_contributions then I18n.t("whatsapp.bot.buttons.phase_contributions")
@@ -243,6 +244,53 @@ module Whatsapp::AssistantActions
     ::Whatsapp::ProjektCardActions.label_for(projekt_phase)
   end
 
+  # The line under a row, for the rows whose twenty-character label cannot say which
+  # record they point at. The phase pills are named after what tapping them does —
+  # "Vorschlag erstellen", "Beiträge ansehen" — so every phase on the portal reads
+  # the same, and a contribution's title rarely fits a label at all.
+  #
+  # Read from the record rather than asked of the model, because the row it forgot
+  # to describe is the row the citizen cannot tell from the one above it — and a
+  # list refuses to be sent at all where two of its rows read alike. Only a fallback:
+  # a description the model wrote wins, since it knows what the citizen just asked.
+  #
+  # The label keeps the action's own words either way. Which record a row points at
+  # is worth a second line, not the twenty characters that say what tapping it does.
+  def row_description(spec:)
+    action, param = parse(spec)
+
+    return phase_row_description(param) if ::Whatsapp::FlowActions.direct_phase?(action)
+    return if action != ::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION
+
+    contribution_row_description(param)
+  end
+
+  def phase_row_description(param)
+    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+
+    return if projekt_phase.blank?
+
+    [::Whatsapp::ProjektLink.title(projekt_phase.projekt), projekt_phase.title]
+      .compact_blank
+      .join(" · ")
+      .presence
+  end
+
+  # A contribution's own title, which twenty characters of label cannot hold: the
+  # row above says roughly what it is and this line says which one it is. Dated
+  # because a citizen's history is where the same title turns up twice — a Beitrag
+  # they sent in twice, or two of them named after the same street.
+  def contribution_row_description(param)
+    contribution = ::Whatsapp::ContributionPill.resolve(param)
+
+    return if contribution.blank?
+
+    [contribution.title, ::Whatsapp::DatePhrase.relative(contribution.created_at)]
+      .compact_blank
+      .join(" · ")
+      .presence
+  end
+
   def phase_projekt_label(param)
     projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
 
@@ -253,6 +301,14 @@ module Whatsapp::AssistantActions
 
   def proposal_label(param)
     ::Proposal.not_retired.find_by(id: param.to_i)&.title
+  end
+
+  # A contribution's own title, which is the fallback rather than the rule here:
+  # twenty characters name a projekt but rarely a proposal, so the row the citizen
+  # reads carries the title in its description and the model writes something
+  # shorter above it. Blank for a contribution that is gone, which drops the row.
+  def contribution_label(param)
+    ::Whatsapp::ContributionPill.resolve(param)&.title
   end
 
   # Which way the toggle goes, read off the citizen's own vote at the moment the

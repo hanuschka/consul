@@ -156,6 +156,15 @@ de:
         open: "Hier können Sie bei „%{phase}“ mitmachen:"
         contributions: "Das ist bisher bei „%{phase}“ eingegangen:"
         results: "Die Ergebnisse zu „%{phase}“:"
+      # The two ways a row naming one of the citizen's own contributions is
+      # answered. A proposal submitted into a moderated phase has no public page
+      # until it is accepted, and the row is still offered — so the reason has to
+      # be sayable.
+      contribution:
+        open: "Ihr Beitrag „%{contribution}“:"
+        in_review: >-
+          „%{contribution}“ wird noch geprüft und hat deshalb noch keine öffentliche Seite.
+          Sobald der Beitrag freigegeben ist, können Sie ihn öffnen.
       # The two lines around a vote cast in the chat. The question itself and the
       # answer options are not here and never will be: they are the ballot as the
       # portal published it, and a ballot answered in a paraphrase of itself is not

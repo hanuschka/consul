@@ -74,6 +74,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return if handle_cancel_tap
     return if handle_retry_tap
     return if handle_phase_tap
+    return if handle_contribution_tap
     return if handle_poll_answer_tap
 
     apply_start_over_tap
@@ -587,7 +588,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         conversation: conversation, projekt_phase: projekt_phase
       )
 
-      send_phase_link(
+      send_line_with_link(
         line: I18n.t("whatsapp.bot.phase.open", phase: projekt_phase.title),
         url: ::Whatsapp::ProjektLink.phase_url(projekt_phase)
       )
@@ -619,22 +620,67 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def open_phase_contributions(projekt_phase)
       section = ::Whatsapp::PublishedResultsQuery.public_section_for(projekt_phase)
 
-      return send_phase_link(
+      return send_line_with_link(
         line: I18n.t("whatsapp.bot.phase.results", phase: projekt_phase.title),
         url: ::Whatsapp::ProjektLink.evaluation_url(projekt_phase)
       ) if section.present?
 
-      send_phase_link(
+      send_line_with_link(
         line: I18n.t("whatsapp.bot.phase.contributions", phase: projekt_phase.title),
         url: ::Whatsapp::ProjektLink.phase_url(projekt_phase)
       )
+    end
+
+    # A row naming one contribution, answered on this side for the same reason a
+    # phase's is: the row said which contribution it opens, so a note asking a model
+    # which tool to reach for is a chance to open a different one. Falls through
+    # wherever the pill can no longer be honoured — withdrawn, hidden or retired since
+    # it was sent — and the assistant says so better than a fixed line would.
+    def handle_contribution_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+      action = flow_action&.fetch(:action)
+
+      return false if action != ::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION
+
+      contribution = ::Whatsapp::ContributionPill.resolve(flow_action[:param])
+
+      return false if contribution.blank?
+
+      record_tap(action, flow_action[:param])
+
+      open_contribution(contribution)
+    end
+
+    # The page where there is one, and the reason in words where there is none: a
+    # proposal submitted into a moderated phase has no public page until it is
+    # accepted, and the link it would otherwise be given is an error page. Saying so
+    # is what lets the row be offered at all — every row of a list is selectable, so
+    # the alternative was leaving the contribution out of the list that is meant to
+    # be the citizen's complete history.
+    def open_contribution(contribution)
+      url = ::Whatsapp::PublishedResourceUrl.call(contribution)
+
+      return send_line_with_link(
+        line: I18n.t("whatsapp.bot.contribution.open", contribution: contribution.title),
+        url: url
+      ) if url.present?
+
+      ::Whatsapp::Send.text(
+        account: account,
+        body: ::Whatsapp::AiAssistant::BotCopyService.line(
+          account: account,
+          body: I18n.t("whatsapp.bot.contribution.in_review", contribution: contribution.title)
+        )
+      )
+
+      true
     end
 
     # The sentence goes through the copy service and the address does not. Everything
     # the bot says is put into the citizen's language on its way out, but a URL handed
     # to a model is a URL a model can rewrite — and a mangled one is a dead end with no
     # symptom until it is tapped.
-    def send_phase_link(line:, url:)
+    def send_line_with_link(line:, url:)
       return false if url.blank?
 
       ::Whatsapp::Send.text(

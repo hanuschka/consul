@@ -38,7 +38,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
            else []
            end
 
-    rows.first(::Whatsapp::MAX_LIST_ROWS)
+    rows.first(::Whatsapp::MAX_OFFERED_LIST_ROWS)
   end
 
   private
@@ -52,7 +52,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .base_selection
         .where(projekt_phase_id: @projekt_phase.id)
         .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |proposal| row(proposal.title, Whatsapp::PublishedResourceUrl.call(proposal)) }
     end
 
@@ -66,7 +66,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .where(budget_id: budget.id)
         .includes(:budget)
         .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |investment| row(investment.title, Whatsapp::PublishedResourceUrl.call(investment)) }
     end
 
@@ -74,7 +74,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
       Poll
         .where(projekt_phase_id: @projekt_phase.id)
         .order(:ends_at)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |poll| row(poll.name, poll_url(poll)) }
     end
 
@@ -83,7 +83,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .where(projekt_phase_id: @projekt_phase.id)
         .where("projekt_events.datetime >= ?", Time.current)
         .order(:datetime)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |event| row(event.title, event_url(event), Whatsapp::DatePhrase.absolute(event.datetime)) }
     end
 
@@ -94,7 +94,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .where("milestones.publication_date <= ?", Time.zone.today)
         .includes(:translations)
         .order(publication_date: :desc)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |milestone| milestone_row(milestone) }
     end
 
@@ -102,7 +102,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
       ProjektNotification
         .where(projekt_phase_id: @projekt_phase.id)
         .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_LIST_ROWS)
+        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
         .map { |notification| row(notification.title, phase_url) }
     end
 

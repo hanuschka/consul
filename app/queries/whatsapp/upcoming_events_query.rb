@@ -7,7 +7,7 @@ class Whatsapp::UpcomingEventsQuery < ApplicationQuery
   end
 
   def call
-    scope.includes(projekt_phase: { projekt: :page }).limit(::Whatsapp::MAX_LIST_ROWS).to_a
+    scope.includes(projekt_phase: { projekt: :page }).limit(::Whatsapp::MAX_OFFERED_LIST_ROWS).to_a
   end
 
   def exists?

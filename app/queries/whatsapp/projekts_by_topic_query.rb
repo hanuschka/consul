@@ -20,7 +20,7 @@ class Whatsapp::ProjektsByTopicQuery < ApplicationQuery
   # the subtitle is matched by containment and never by similarity.
   MINIMUM_SCORE = ::Whatsapp::ProjektByNameQuery::MINIMUM_SCORE
 
-  MAX_RESULTS = ::Whatsapp::MAX_LIST_ROWS
+  MAX_RESULTS = ::Whatsapp::MAX_OFFERED_LIST_ROWS
 
   # Named rather than numbered at the sort, because the order is the answer's
   # shape: a projekt whose title is the topic comes before one that merely

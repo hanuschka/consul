@@ -139,6 +139,11 @@ en:
         open: "Here is where you can take part in “%{phase}”:"
         contributions: "Here is what has come in for “%{phase}” so far:"
         results: "The results for “%{phase}”:"
+      contribution:
+        open: "Your contribution “%{contribution}”:"
+        in_review: >-
+          “%{contribution}” is still being reviewed, so it has no public page yet. You will be
+          able to open it once it has been approved.
       poll:
         login_prompt: >-
           Voting in “%{poll}” needs an account. Tap here to log in — I'll put the question

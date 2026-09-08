@@ -3,7 +3,8 @@ class Ai::Tools::WhatsappAiAssistant::ListProjektResults < Ai::Tools::WhatsappAi
               "out of them — each with the link that opens the result. Name a project to get only " \
               "its results, or pass null for the whole portal. Use it for questions like what " \
               "came of this, what was decided, or what the outcome was. Returns facts for you to " \
-              "answer in your own words — it sends nothing to the citizen itself. Ten at a time: " \
+              "answer in your own words — it sends nothing to the citizen itself. " \
+              "#{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: " \
               "where there are more, say how many and offer more_action_id as a button."
 
   MORE_SCOPE = "results".freeze

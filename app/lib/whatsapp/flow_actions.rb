@@ -48,6 +48,7 @@ module Whatsapp::FlowActions
     discover_public
     view_projekt
     my_contributions
+    view_contribution
     notifications_open
     notifications_done
     notify_toggle
@@ -98,6 +99,7 @@ module Whatsapp::FlowActions
   PARAMETERISED_ACTIONS = %i[
     view_projekt participate_projekt idea_start phase_open phase_contributions poll_answer
     category sentiment notify_toggle discover_category support support_toggle show_more
+    view_contribution
   ].freeze
 
   # Ids the bot composes itself and the assistant may never write. Distinct from the
@@ -120,6 +122,13 @@ module Whatsapp::FlowActions
   # is where the action lives; the pill is still worth offering, since naming the
   # action is what tells the citizen the phase is open at all.
   DIRECT_PHASE_ACTIONS = %i[phase_open phase_contributions].freeze
+
+  # Answered on this side too, and for a reason of its own: a row naming one
+  # contribution has to answer with that contribution, and a note handed to the
+  # assistant is a model choosing which of several tools opens it. Its parameter
+  # names a kind and an id together, which is why it is not one of the two above —
+  # Whatsapp::ContributionPill is what reads it.
+  DIRECT_CONTRIBUTION_ACTION = :view_contribution
 
   # The ids another action has taken over. They stay in ACTIONS because every pill
   # the bot has ever sent is still sitting in a chat history and still tappable, so

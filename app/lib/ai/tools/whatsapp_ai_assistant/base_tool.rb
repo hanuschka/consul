@@ -5,6 +5,14 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
   FROM_DESCRIPTION = "Which ten of the list to return: leave empty for the first ten, or pass " \
                      "the next_from a previous call returned for the ten after those.".freeze
 
+  # Named in the "none of these can be offered" answer of the two tools whose set can
+  # actually be emptied by it. Without the reason spelled out the model reads the
+  # refusal as a bad id and offers the same pill again on the next turn, spending a
+  # second call on the same refusal.
+  UNOFFERABLE_RECOVERY_REASON = "a recovery button with nothing behind it — cancelling with " \
+                                "nothing written, trying again with no failed turn, or " \
+                                "reopening a login link that is not outstanding.".freeze
+
   def initialize(conversation:)
     @conversation = conversation
   end

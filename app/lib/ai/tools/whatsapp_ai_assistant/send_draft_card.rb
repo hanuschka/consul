@@ -64,10 +64,9 @@ class Ai::Tools::WhatsappAiAssistant::SendDraftCard < Ai::Tools::WhatsappAiAssis
           spec = button["action_id"] || button[:action_id]
           label = button["label"] || button[:label]
 
-          ::Whatsapp::AssistantActions.recovery_button(spec: spec, label: label) ||
-            ::Whatsapp::AssistantActions.button(
-              spec: spec, label: label, conversation: conversation
-            )
+          ::Whatsapp::AssistantActions.offered_button(
+            spec: spec, label: label, conversation: conversation
+          )
         end
         .uniq { |button| button[:id] }
         .uniq { |button| button[:title].downcase }

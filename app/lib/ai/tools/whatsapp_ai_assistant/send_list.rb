@@ -100,8 +100,9 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       label = row_value(row, "label")
 
       button =
-        ::Whatsapp::AssistantActions.recovery_button(spec: spec, label: label) ||
-        ::Whatsapp::AssistantActions.button(spec: spec, label: label, conversation: conversation)
+        ::Whatsapp::AssistantActions.offered_button(
+          spec: spec, label: label, conversation: conversation
+        )
 
       return if button.blank?
 
@@ -157,9 +158,9 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       )
 
       {
-        error: "None of those rows can be offered: an unknown action id, a missing label, or a " \
-               "record id that does not exist. Answer with plain text instead, or name " \
-               "different actions."
+        error: "None of those rows can be offered: an unknown action id, a missing label, a " \
+               "record id that does not exist, or #{UNOFFERABLE_RECOVERY_REASON} Answer with " \
+               "plain text instead, or name different actions."
       }
     end
 end

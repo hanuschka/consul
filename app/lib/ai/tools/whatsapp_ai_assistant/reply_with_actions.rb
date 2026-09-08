@@ -76,11 +76,9 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
       spec = button_value(button, "action_id")
       label = button_value(button, "label")
 
-      recovery = ::Whatsapp::AssistantActions.recovery_button(spec: spec, label: label)
-
-      return recovery if recovery.present?
-
-      ::Whatsapp::AssistantActions.button(spec: spec, label: label, conversation: conversation)
+      ::Whatsapp::AssistantActions.offered_button(
+        spec: spec, label: label, conversation: conversation
+      )
     end
 
     # Providers disagree on whether an object array arrives with string or symbol
@@ -109,9 +107,9 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
       )
 
       {
-        error: "None of those buttons can be offered: an unknown action id, a missing label, or " \
-               "a record id that does not exist. Answer with plain text instead, or name a " \
-               "different action."
+        error: "None of those buttons can be offered: an unknown action id, a missing label, " \
+               "a record id that does not exist, or #{UNOFFERABLE_RECOVERY_REASON} Answer with " \
+               "plain text instead, or name a different action."
       }
     end
 end

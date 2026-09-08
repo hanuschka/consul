@@ -68,6 +68,22 @@ module Whatsapp::AssistantActions
     ).map(&:to_s)
   end
 
+  # The one entry point the tools build a model-written pill through. Which of the
+  # two namespaces a spec belongs to is not the caller's business, and it stopped
+  # being expressible as a fallback the moment a recovery pill could be refused on
+  # state: five call sites read a nil from the recovery side as "not a recovery id"
+  # and asked the catalog for it, which answered nil again and logged the drop a
+  # second time under the wrong reason.
+  def offered_button(spec:, label:, conversation:)
+    action, = parse(spec)
+
+    if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
+      return recovery_button(spec: spec, label: label, conversation: conversation)
+    end
+
+    button(spec: spec, label: label, conversation: conversation)
+  end
+
   # One tappable button from the action id and the label the model wrote, or nil
   # when that is not something it may offer. Nil rather than an exception on
   # purpose: one unusable pill in a set of three should cost that pill, not the
@@ -117,20 +133,73 @@ module Whatsapp::AssistantActions
     ::Whatsapp::ProjektCard.tells_more?(projekt)
   end
 
+  # The recovery pills whose offer depends on the state rather than on the id being
+  # known, each beside the question that decides it. Three of the four: `help` is the
+  # one way out that is always true, which is why it is what a dead end falls back to.
+  #
+  # They share a shape. Each promises to act on something the conversation may not
+  # have, and each degrades quietly rather than loudly when it does not: cancelling
+  # with nothing written drops the phase exactly as starting over does, so the reply
+  # carries two ways out of a message that needs one — and the worse of the two, since
+  # it answers with a closing line where the other shows what is open. Trying again
+  # with no failed turn stored reaches the tap handler, which declines it and lets it
+  # fall through as a bare note about a button press. Opening the login link again
+  # with none outstanding has no handler at all and is answered by improvisation.
+  #
+  # In every case the citizen taps a button that says it will do something and is
+  # answered by the assistant guessing. Once the state is there the pill means what it
+  # says, and all three belong under the message.
+  STATEFUL_RECOVERY_ACTIONS = {
+    cancel: ->(conversation) { conversation.unsaved_work? },
+    retry: ->(conversation) { conversation.replayable_turn? },
+    link_retry: ->(conversation) { conversation.awaiting_link? }
+  }.freeze
+
   # A recovery pill keeps its own id namespace — the inbound side reads those
   # before the catalog's, and that ordering is what lets a "cancel" beside two
   # ordinary pills be understood without anything else knowing about it.
-  def recovery_button(spec:, label:)
+  #
+  # Dropped rather than relabelled when the state does not support it, and dropped
+  # here rather than trusted to the prompt: the vocabulary the model reads is built
+  # once per process, so the conversation is the only place the rule can actually be
+  # enforced. The slot it frees is not backfilled — Whatsapp::Send.with_main_menu
+  # fills a message that is under the cap on its own.
+  def recovery_button(spec:, label:, conversation:)
     action, = parse(spec)
     recovery_id = ::Whatsapp::Send::RECOVERY_ACTION_IDS[action]
 
     return if recovery_id.blank?
+
+    if !offerable_recovery?(action, conversation)
+      return dropped(spec, conversation, :recovery_unavailable)
+    end
 
     title = truncated(label)
 
     return if title.blank?
 
     { id: recovery_id, title: title }
+  end
+
+  # Asked of the conversation as it stands when the message is built, which is when
+  # the pill is sent: a draft that appears later in the same turn belongs to the
+  # message after this one.
+  def offerable_recovery?(action, conversation)
+    available = STATEFUL_RECOVERY_ACTIONS[action]
+
+    return true if available.blank?
+
+    available.call(conversation)
+  end
+
+  # The same question asked ahead of the reply rather than of one pill in it, for the
+  # prompt line that keeps the refusal rare. Enforcement does not depend on it — the
+  # gate above runs whatever the model was told — so this is allowed to be advice.
+  def unavailable_recovery_actions(conversation)
+    STATEFUL_RECOVERY_ACTIONS
+      .reject { |_, available| available.call(conversation) }
+      .keys
+      .map(&:to_s)
   end
 
   # The model's own words, cut on a word boundary. WhatsApp's own truncation is

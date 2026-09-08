@@ -63,6 +63,7 @@ include MachineTranslatable
   before_validation :normalize_subtitle
   validate :subtitle_within_limits
   before_save :capture_old_title
+  before_validation :force_published_for_projekt_page
   before_save :set_published_at
   after_update :sync_projekt_name
   after_update :sync_projekt_for_global_overview
@@ -134,6 +135,17 @@ include MachineTranslatable
     if MultilineSubtitleNormalizer.line_break_count(subtitle) > MultilineSubtitleNormalizer::MAX_LINE_BREAKS
       errors.add(:subtitle, :too_many_lines, count: MultilineSubtitleNormalizer::MAX_LINE_BREAKS + 1)
     end
+  end
+
+  # A projekt page is never a draft: whether the projekt is visible is decided
+  # by its own activation and visibility switches. An unpublished projekt page
+  # hides the projekt everywhere while every visible setting says it is public,
+  # so no path -- the copier, the old admin's status radio -- may leave one
+  # behind. Landing and footer pages keep their own draft/published state.
+  def force_published_for_projekt_page
+    return if projekt_id.blank? || landing?
+
+    self.status = "published"
   end
 
   def set_published_at

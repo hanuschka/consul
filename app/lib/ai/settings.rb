@@ -117,4 +117,12 @@ module Ai::Settings
   def self.current_llm_provider
     Setting["ai.llm_provider"].presence || "openai"
   end
+
+  # Model ids belong to one provider only, so a value chosen for the previous
+  # provider would be sent to an API that has never heard of it — and since the
+  # setting now wins over DEFAULT_GPT_MODEL, that would break every AI call
+  # instead of being quietly ignored as it was before.
+  def self.reset_llm_model!
+    Setting["ai.llm_model"] = nil
+  end
 end

@@ -27,7 +27,10 @@ class Adm::AiSettingsController < Adm::BaseController
       return
     end
 
+    provider_change = changing_llm_provider?
+
     @setting.update!(settings_params)
+    Ai::Settings.reset_llm_model! if provider_change
 
     redirect_to adm_ai_settings_path, notice: t("adm.ai_settings.flash.updated")
   end
@@ -120,6 +123,10 @@ class Adm::AiSettingsController < Adm::BaseController
       return false if custom_api_key_present?
 
       non_default_provider? || Setting["ai.llm_api_endpoint"].present?
+    end
+
+    def changing_llm_provider?
+      @setting.key == "ai.llm_provider" && @setting.value != settings_params[:value]
     end
 
     def clearing_required_custom_model?

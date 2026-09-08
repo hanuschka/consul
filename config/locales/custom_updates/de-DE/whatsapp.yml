@@ -148,6 +148,25 @@ de:
           Ein erzeugtes Bild wird von einer KI erstellt und nicht von einem Menschen
           aufgenommen.
         location_optional: Ein Ort ist freiwillig. Sie können auch ohne weitermachen.
+      # The lines under a tap on one of the projekt card's phase pills. They are sent
+      # from Whatsapp::Inbound::ProcessMessageService rather than written by the
+      # assistant, because a card that names an action has to perform it on the tap —
+      # a model asked what the tap meant is the selection step the card removed.
+      phase:
+        open: "Hier können Sie bei „%{phase}“ mitmachen:"
+        contributions: "Das ist bisher bei „%{phase}“ eingegangen:"
+        results: "Die Ergebnisse zu „%{phase}“:"
+      # The two lines around a vote cast in the chat. The question itself and the
+      # answer options are not here and never will be: they are the ballot as the
+      # portal published it, and a ballot answered in a paraphrase of itself is not
+      # the one that was published.
+      poll:
+        login_prompt: >-
+          Zum Abstimmen bei „%{poll}“ brauchen Sie ein Konto. Zum Anmelden hier tippen —
+          danach stelle ich Ihnen die Frage gleich noch einmal. Mit dem Öffnen des Links
+          willigen Sie in die Verarbeitung Ihrer Telefonnummer gemäß unserer
+          Datenschutzerklärung ein: %{privacy_url}
+        recorded: "Ihre Stimme bei „%{poll}“ ist gezählt: %{answer}."
       onboarding:
         welcome_greeting: 👋 Schön, dass Sie hier sind!
         login_prompt: >-
@@ -178,6 +197,20 @@ de:
         open_page: Seite öffnen
         choose: Auswählen
         take_part: Jetzt mitmachen
+        # What each of a projekt's open phases is called on the card, worded as the
+        # action rather than as the phase. Keyed by the phase's own type name and not
+        # read from its title: a portal renaming a phase renames what it is called,
+        # never what taking part in it does — and a title is a noun where a button has
+        # to be an instruction. Every one of them has to stay inside the 20 characters
+        # WhatsApp allows a button title, which it truncates mid-word and without an
+        # ellipsis past.
+        phase_action:
+          proposal_phase: Vorschlag erstellen
+          budget_phase: Vorschlag erstellen
+          voting_phase: Jetzt abstimmen
+          formular_phase: Formular ausfüllen
+          point_of_interest_phase: Mangel melden
+        phase_contributions: Beiträge ansehen
         view_projekt: Projekt ansehen
         my_contributions: Meine Beiträge
         location_skip: Ohne Ort weiter

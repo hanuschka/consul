@@ -13,7 +13,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
   # Two messages rather than one, because an interactive message's body is a
   # quarter of what a plain text message holds and a contribution longer than that
   # would have to be cut to fit — which is the whole thing this exists to prevent.
-  MAX_ACTIONS = ::Whatsapp::MAX_OFFERED_BUTTONS
+  MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
   description "Shows the citizen their contribution exactly as it will be stored — its title and " \
               "text, which projekt and which participation phase it goes into, and whether a " \

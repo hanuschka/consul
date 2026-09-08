@@ -7,6 +7,22 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
   #
   # The six mapped types cover the large majority of live phases; the others are
   # reachable through their page instead.
+  # The same six as the branches below, named so a caller can ask whether this has
+  # anything to say about a phase without running the query to find out. The projekt
+  # card asks it for every phase of every projekt the bot names, where a count each is
+  # a query each — for a button whose page says so itself when there is nothing there.
+  # Beside the branches rather than anywhere else, because two lists of the same six
+  # in two files is how one of them comes to be missing a type.
+  SHOWN_PHASE_CLASSES = [
+    ProjektPhase::ProposalPhase, ProjektPhase::BudgetPhase, ProjektPhase::VotingPhase,
+    ProjektPhase::EventPhase, ProjektPhase::MilestonePhase,
+    ProjektPhase::ProjektNotificationPhase
+  ].freeze
+
+  def self.shows_for?(projekt_phase)
+    SHOWN_PHASE_CLASSES.include?(projekt_phase.class)
+  end
+
   def initialize(projekt_phase:)
     @projekt_phase = projekt_phase
   end

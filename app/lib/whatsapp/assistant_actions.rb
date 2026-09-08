@@ -51,20 +51,20 @@ module Whatsapp::AssistantActions
   # The parameterised ones are listed by shape rather than enumerated: the records
   # behind them arrive from whichever tool the model just called, and enumerating a
   # portal's projekts here would be the whole portal in every prompt.
-  # The retired ids are subtracted from both lists rather than from ACTIONS: they
-  # are still dispatched, so the vocabulary the assistant reads is the only place
-  # they may be absent from.
+  # The retired and bot-only ids are subtracted from both lists rather than from
+  # ACTIONS: they are still dispatched, so the vocabulary the assistant reads is the
+  # only place they may be absent from.
   def offerable_action_names
     (
       (HANDLED_ACTIONS - ::Whatsapp::FlowActions::PARAMETERISED_ACTIONS -
-        ::Whatsapp::FlowActions::RETIRED_ACTIONS) +
+        ::Whatsapp::FlowActions.unofferable) +
         ::Whatsapp::Send::RECOVERY_ACTION_IDS.keys
     ).map(&:to_s)
   end
 
   def parameterised_action_names
     (
-      ::Whatsapp::FlowActions::PARAMETERISED_ACTIONS - ::Whatsapp::FlowActions::RETIRED_ACTIONS
+      ::Whatsapp::FlowActions::PARAMETERISED_ACTIONS - ::Whatsapp::FlowActions.unofferable
     ).map(&:to_s)
   end
 
@@ -77,7 +77,7 @@ module Whatsapp::AssistantActions
 
     return dropped(spec, conversation, :unparseable) if action.blank?
     return dropped(spec, conversation, :unknown_action) if !::Whatsapp::FlowActions.known?(action)
-    return dropped(spec, conversation, :retired_action) if ::Whatsapp::FlowActions.retired?(action)
+    return dropped(spec, conversation, :unofferable) if ::Whatsapp::FlowActions.unofferable?(action)
     return dropped(spec, conversation, :unknown_scope) if !known_scope?(action, param)
     return dropped(spec, conversation, :nothing_to_tell) if !tells_more?(action, param)
 
@@ -209,6 +209,8 @@ module Whatsapp::AssistantActions
     case action
     when :view_projekt then projekt_label(param)
     when :idea_start then phase_projekt_label(param)
+    when :phase_open then phase_action_label(param)
+    when :phase_contributions then I18n.t("whatsapp.bot.buttons.phase_contributions")
     when :support then proposal_label(param)
     when :support_toggle then support_toggle_label(param, conversation)
     when :category
@@ -227,6 +229,18 @@ module Whatsapp::AssistantActions
     return if projekt.blank?
 
     ::Whatsapp::ProjektLink.title(projekt)
+  end
+
+  # The same wording the projekt card puts on the phase, so the assistant offering a
+  # phase without labelling it says what the card would have said. Blank for a phase
+  # type the card has no action for, which drops the pill: an unlabelled button
+  # pointing at a phase nothing can be done in is a tap that leads nowhere.
+  def phase_action_label(param)
+    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+
+    return if projekt_phase.blank?
+
+    ::Whatsapp::ProjektCardActions.label_for(projekt_phase)
   end
 
   def phase_projekt_label(param)

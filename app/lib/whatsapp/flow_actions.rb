@@ -40,6 +40,9 @@ module Whatsapp::FlowActions
     participate_projekt
     submit_proposal
     idea_start
+    phase_open
+    phase_contributions
+    poll_answer
     discover
     discover_category
     discover_public
@@ -81,12 +84,11 @@ module Whatsapp::FlowActions
   # pairs each id with its label, and a set built twice is a set that can pair them
   # differently.
   #
-  # Three, which is every slot the message has: the photo question is the one place
-  # the main-menu pill gives way, so the tool sends it through
-  # Whatsapp::Send.buttons_without_main_menu. Generation was offered in words before
+  # Three, which is every slot the message has, so the photo question is one of the
+  # messages that carries no start-over pill. Generation was offered in words before
   # and only once the citizen said they had no photo of their own, so a citizen who
   # did not already know it existed read a message naming two ways out and took one
-  # of them. The middle answer is the whole reason the menu is dropped here.
+  # of them. The middle answer is the whole reason the third slot is spent.
   IMAGE_ANSWERS = %i[image_upload image_generate image_skip].freeze
 
   # The ids that point at one record or setting. Their parameter is what the
@@ -94,9 +96,30 @@ module Whatsapp::FlowActions
   # offers one without a label of its own — a projekt's own title beats a
   # paraphrase of it.
   PARAMETERISED_ACTIONS = %i[
-    view_projekt participate_projekt idea_start category sentiment notify_toggle
-    discover_category support support_toggle show_more
+    view_projekt participate_projekt idea_start phase_open phase_contributions poll_answer
+    category sentiment notify_toggle discover_category support support_toggle show_more
   ].freeze
+
+  # Ids the bot composes itself and the assistant may never write. Distinct from the
+  # retired ones, which are ids nothing offers because something else took them over:
+  # these are current, and the reason they are withheld is the label rather than the
+  # action. `poll_answer` carries one option of a ballot, and its words have to be
+  # that option's own as the poll records them — a model writing a label here is a
+  # vote filed under wording nobody was shown.
+  BOT_ONLY_ACTIONS = %i[poll_answer].freeze
+
+  # The two pills that answer a tap on this side rather than by asking the assistant,
+  # and the reason they are separated from the rest: the projekt card offers a phase's
+  # own action, and the action has to begin on the tap — a note saying which button was
+  # pressed is a model being asked to choose a tool, which is the selection step the
+  # card exists to remove. Their parameter is a phase id, re-resolved on arrival like
+  # every other.
+  #
+  # `phase_open` is for the phase types the bot has no submission flow for — voting, a
+  # form, a point of interest. What it starts is the phase on the portal, because that
+  # is where the action lives; the pill is still worth offering, since naming the
+  # action is what tells the citizen the phase is open at all.
+  DIRECT_PHASE_ACTIONS = %i[phase_open phase_contributions].freeze
 
   # The ids another action has taken over. They stay in ACTIONS because every pill
   # the bot has ever sent is still sitting in a chat history and still tappable, so
@@ -183,6 +206,12 @@ module Whatsapp::FlowActions
     PARAMETERISED_ACTIONS.include?(action)
   end
 
+  # Answered on this side rather than by the assistant. Asked where a tap is
+  # dispatched, before the note describing it would be composed.
+  def direct_phase?(action)
+    DIRECT_PHASE_ACTIONS.include?(action)
+  end
+
   # Whether the id belongs to this vocabulary at all, either shape of it. Asked
   # before a label is built so an invented name is reported as one rather than as
   # a record that could not be found.
@@ -194,5 +223,16 @@ module Whatsapp::FlowActions
   # rather than where one is dispatched, which is the whole point of the set.
   def retired?(action)
     RETIRED_ACTIONS.include?(action)
+  end
+
+  # Everything the assistant may not compose, for whichever of the two reasons. One
+  # answer because every caller asking has the same question — may the model put this
+  # on a button — and none of them cares which list said no.
+  def unofferable
+    RETIRED_ACTIONS + BOT_ONLY_ACTIONS
+  end
+
+  def unofferable?(action)
+    unofferable.include?(action)
   end
 end

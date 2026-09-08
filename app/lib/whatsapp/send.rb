@@ -17,9 +17,9 @@ module Whatsapp::Send
     help: "whatsapp_help"
   }.freeze
 
-  # The reservation applies here too: with_main_menu trims past it, so building
-  # three recovery pills would silently lose the last one.
-  MAX_RECOVERY_BUTTONS = ::Whatsapp::MAX_OFFERED_BUTTONS
+  # The protocol cap applies here too: with_main_menu trims past it, so building a
+  # fourth recovery pill would silently lose it.
+  MAX_RECOVERY_BUTTONS = ::Whatsapp::MAX_BUTTONS
 
   module_function
 
@@ -61,26 +61,6 @@ module Whatsapp::Send
     offered = with_main_menu(account: account, buttons: buttons)
     message = deliver_buttons(
       account: account, body: body, offered: offered, header_image_url: header_image_url
-    )
-
-    remember_confirmations(account: account, entries: offered, message: message)
-  end
-
-  # The send for a message that spends its last slot on an answer instead of the way
-  # out. The start-over pill goes on every interactive message because a citizen who
-  # has lost the thread needs one — but a question with three answers of its own has
-  # nowhere to put it, and dropping one of the answers to keep the pill leaves the
-  # citizen reading a message that names fewer ways on than it has.
-  #
-  # Which message that is belongs to the caller: it is the one that knows its
-  # question has three answers and that the citizen is part-way through something
-  # starting over would abandon. A rule here recognising particular messages would be
-  # the transport deciding what a flow's question means. Asking to start over in
-  # words still works, so what is given up is the pill rather than the way back.
-  def buttons_without_main_menu(account:, body:, buttons:)
-    offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
-    message = deliver_buttons(
-      account: account, body: body, offered: offered, header_image_url: nil
     )
 
     remember_confirmations(account: account, entries: offered, message: message)
@@ -366,11 +346,12 @@ module Whatsapp::Send
   # append one is nine chances for the one message a citizen is stuck on to be the
   # one that forgot.
   #
-  # It costs the last slot, so a caller may fill only MAX_OFFERED_BUTTONS of the
-  # three — trimming its list here instead would drop whichever pill it thought
-  # least important without saying so. The trim below is the backstop for a caller
-  # that ignores the cap, and it keeps the caller's own pills: starting over is the
-  # least of what a message offers, so it is what gives way when there is no room.
+  # It fills a slot no answer needs rather than reserving one. A caller may use all
+  # three, and a message that does gets no pill at all: dropping one of its answers
+  # to keep the way back leaves the citizen reading a message that names fewer ways
+  # on than it has, and asking to start over in words still works — so what is given
+  # up is the pill, never an answer. Which is also why the trim keeps the caller's
+  # own pills: starting over is the least of what a message offers.
   #
   # The label is read at the account's own locale rather than translated through
   # BotCopyService. Two reasons: this runs on the path that must survive the model
@@ -378,11 +359,12 @@ module Whatsapp::Send
   # portal has no copy for reads the start-over pill in the portal's language and every
   # other line of the message in their own, which is the cheap half of the trade.
   def with_main_menu(account:, buttons:)
-    offered = Array(buttons).compact
+    offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
 
+    return offered if offered.size >= ::Whatsapp::MAX_BUTTONS
     return offered if offered.any? { |button| main_menu_button?(button) }
 
-    offered.first(::Whatsapp::MAX_OFFERED_BUTTONS) + [main_menu_pill(account)]
+    offered + [main_menu_pill(account)]
   end
 
   def with_main_menu_row(account:, rows:)

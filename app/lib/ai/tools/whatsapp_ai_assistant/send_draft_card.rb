@@ -1,7 +1,7 @@
 class Ai::Tools::WhatsappAiAssistant::SendDraftCard < Ai::Tools::WhatsappAiAssistant::BaseTool
-  MAX_ACTIONS = ::Whatsapp::MAX_OFFERED_BUTTONS
+  MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
-  description "Shows the citizen their draft with its picture attached, and up to two buttons " \
+  description "Shows the citizen their draft with its picture attached, and up to three buttons " \
               "whose labels you write — the message carries a third of its own, the way to " \
               "start over, which you never write and never mention. This is the only way to " \
               "show them a picture that only exists on an unpublished draft, so use it for the " \
@@ -20,7 +20,7 @@ class Ai::Tools::WhatsappAiAssistant::SendDraftCard < Ai::Tools::WhatsappAiAssis
                    "plus your question. At most 1000 characters."
     array :buttons,
       of: :object,
-      description: "Up to two buttons, most useful first — the one that submits before any " \
+      description: "Up to three buttons, most useful first — the one that submits before any " \
                    "other. Each is {\"action_id\": ..., \"label\": ...}. " \
                    "Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}."

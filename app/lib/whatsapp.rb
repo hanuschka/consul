@@ -34,16 +34,12 @@ module Whatsapp
   # A WhatsApp interactive message holds three reply buttons; anything longer
   # becomes a list instead. Declared beside the row cap for the same reason —
   # WhatsappApi::Resources::Messages enforces it again at the protocol edge.
+  #
+  # A caller may fill all three. Whatsapp::Send appends the start-over pill only
+  # into a slot no answer wants, so composing three costs the way back rather than
+  # one of the three — which is what keeps a halt line from naming a pill the
+  # citizen never saw.
   MAX_BUTTONS = 3
-
-  # What a caller may fill of those, because Whatsapp::Send reserves the last slot
-  # for the start-over pill on every interactive message it sends through `buttons`.
-  # Declared here so a tool reports the number it actually sent rather than the
-  # number it composed — trimming a fourth button silently is how a halt line comes
-  # to name a pill the citizen never saw. A caller that needs all three slots for
-  # answers of its own sends through `buttons_without_main_menu` and counts to
-  # MAX_BUTTONS instead.
-  MAX_OFFERED_BUTTONS = MAX_BUTTONS - 1
 
   # What one message will hold, which the preview has to answer to rather than
   # truncate: a plain text message takes far more than a picture's caption or an

@@ -426,6 +426,27 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(pending_comment: nil, comment_preview_digest: nil)
   end
 
+  # The poll question a citizen was about to be asked when it turned out they had no
+  # account yet. Held over the login link so the vote resumes where it stopped rather
+  # than asking them to find the projekt again — the one moment they were ready to act
+  # is the worst one to send them back to the beginning of.
+  #
+  # The id alone, and re-resolved when they return: linking takes as long as it takes,
+  # and a poll can close while a citizen is registering.
+  def pending_poll_question_id
+    context["pending_poll_question_id"]
+  end
+
+  def store_pending_poll_question!(question_id)
+    merge_context!(pending_poll_question_id: question_id)
+  end
+
+  def clear_pending_poll_question!
+    return if context["pending_poll_question_id"].blank?
+
+    merge_context!(pending_poll_question_id: nil)
+  end
+
   # The comment as it stood in the block the citizen was last shown. Its own key
   # rather than the draft's, because a citizen can perfectly well have a
   # contribution half-written and be commenting on someone else's at the same

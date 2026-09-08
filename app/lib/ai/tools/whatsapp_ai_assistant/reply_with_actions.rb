@@ -5,9 +5,9 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
   # the inbound side is what turns one back into an action — an invented id has
   # nothing behind it, so the citizen taps and nothing happens, with no error
   # anywhere.
-  MAX_ACTIONS = ::Whatsapp::MAX_OFFERED_BUTTONS
+  MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
-  description "Answers the citizen with a short text of your own and up to two tappable " \
+  description "Answers the citizen with a short text of your own and up to three tappable " \
               "buttons whose labels you write yourself — the message carries a third of its own, " \
               "the way to start over, which you never write and never mention. Prefer it over a " \
               "plain text reply whenever there is an obvious next step: it saves them typing and " \
@@ -29,7 +29,7 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
                    "require."
     array :buttons,
       of: :object,
-      description: "Up to two buttons, most useful first. Each is " \
+      description: "Up to three buttons, most useful first. Each is " \
                    "{\"action_id\": ..., \"label\": ...}. Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}. " \
                    "With a record id after a dash: " \

@@ -13,6 +13,28 @@ module Whatsapp::ProjektLink
     Rails.application.routes.url_helpers.projekt_url(projekt, **UrlOptions.default.to_h)
   end
 
+  # The ballot itself, for a voting phase the chat is handing off. The projekt page
+  # with the phase's tab open lists the poll rather than showing it, so a citizen
+  # who had already said they wanted to vote spent two more taps getting to the
+  # question. Nil for anything that is not a voting phase and for one whose poll has
+  # not been published, which leaves the caller with #phase_url and the page that at
+  # least says what the phase is.
+  def ballot_url(projekt_phase)
+    return if !projekt_phase.is_a?(ProjektPhase::VotingPhase)
+
+    poll_ballot_url(projekt_phase.poll)
+  end
+
+  # The same address for a poll already in hand, which is what a list of them has.
+  # Nothing the bot links to is reached through a request, so the host comes from
+  # the app's canonical URL options rather than from the caller.
+  def poll_ballot_url(poll)
+    return if poll.blank?
+    return if !poll.published?
+
+    Rails.application.routes.url_helpers.poll_url(poll, **UrlOptions.default.to_h)
+  end
+
   # Built from the page slug rather than from #url, whose route redirects and
   # would drop the query string the projekt page reads to open the tab.
   def evaluation_url(projekt_phase)

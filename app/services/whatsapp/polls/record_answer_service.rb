@@ -13,7 +13,15 @@ class Whatsapp::Polls::RecordAnswerService < ApplicationService
   #
   # A vote already cast is replaced rather than refused, which is what a `unique`
   # question does on the portal too: one answer per citizen, and the last one given
-  # is it.
+  # is it. A `multiple` question accumulates instead, one row per chosen option, and
+  # tapping the same option twice finds the row it already wrote — the pill for a
+  # choice already made is dropped from the next message, so a second tap on one can
+  # only come from a message further up the chat.
+  #
+  # The maximum a `multiple` question allows is enforced here rather than delegated
+  # with the write. On the page the cap lives in the view — the button for a choice
+  # past it is rendered disabled — and Polls::QuestionsController#answer records
+  # whatever it is handed, so there is nothing underneath to inherit it from.
   def initialize(conversation:, question_answer:)
     @conversation = conversation
     @question_answer = question_answer
@@ -23,18 +31,63 @@ class Whatsapp::Polls::RecordAnswerService < ApplicationService
     return false if user.blank?
     return false if !votable?
 
-    record!
-    confirm
+    return ask_for_text if @question_answer.open_answer?
+    return refuse_over_maximum if !room_for_this_choice?
 
-    true
+    record!
+    settle_question!
+
+    advance
   end
 
   private
 
+    # The tap is honoured for any question of a ballot the chat can still carry,
+    # not only the one last asked: a citizen scrolling back to change an answer they
+    # already gave is doing what the page lets them do, and the cursor moves on from
+    # wherever the answers now stand.
     def votable?
-      projekt_phase.present? &&
-        ::Whatsapp::VotableQuestionQuery.for(projekt_phase) == question &&
+      poll.present? &&
+        question.poll_id == poll.id &&
         projekt_phase.permission_problem(user).blank?
+    end
+
+    def poll
+      return @poll if defined?(@poll)
+
+      @poll = ::Whatsapp::VotableBallotQuery.for(projekt_phase)
+    end
+
+    # An option flagged open_answer records nothing on its own — what it stands for
+    # is the citizen's own words, and they have not been written yet. The tap arms
+    # the question for the next message and asks for them.
+    def ask_for_text
+      ::Whatsapp::Polls::AskQuestionService.for_open_answer(
+        conversation: @conversation, question: question
+      )
+    end
+
+    # Only a `multiple` question has a maximum to run out of. A choice already made
+    # costs nothing to make again — the write finds the row it wrote before — so it
+    # is never what the cap refuses.
+    def room_for_this_choice?
+      return true if !question.multiple?
+      return true if chosen_titles.include?(@question_answer.title)
+
+      chosen_titles.size < question.max_votes
+    end
+
+    # Reached only from a pill further up the chat: the current message drops every
+    # option already chosen and stops offering any once the maximum is spent. Said
+    # rather than silently ignored, because a tap that produces nothing reads as a
+    # bot that has died.
+    def refuse_over_maximum
+      ::Whatsapp::Send.locale_text(
+        account: @conversation.whatsapp_account,
+        body: I18n.t("whatsapp.bot.poll.maximum_reached", maximum: question.max_votes)
+      )
+
+      true
     end
 
     # The title read off the record rather than off the button the citizen tapped:
@@ -47,14 +100,30 @@ class Whatsapp::Polls::RecordAnswerService < ApplicationService
       answer.save_and_record_voter_participation
     end
 
-    def confirm
-      ::Whatsapp::Send.locale_text(
-        account: @conversation.whatsapp_account,
-        body: I18n.t(
-          "whatsapp.bot.poll.recorded",
-          poll: question.poll.name, answer: @question_answer.title
-        )
-      )
+    # A `multiple` question stops being the one the citizen is choosing from when
+    # their last allowed choice is spent, or when there is nothing left to choose.
+    # Until then the marker holds it open, because the recorded answers alone would
+    # have the cursor move past a question after its first choice.
+    def settle_question!
+      return if !question.multiple?
+
+      chosen = ::Poll::Answer.where(question_id: question.id, author: user).count
+
+      return if chosen < question.max_votes && chosen < question.question_answers.size
+
+      @conversation.clear_open_multiple_question!
+    end
+
+    def advance
+      @conversation.store_active_poll!(poll.id)
+
+      ::Whatsapp::Polls::AdvanceBallotService.call(conversation: @conversation, poll: poll)
+    end
+
+    def chosen_titles
+      @chosen_titles ||= ::Poll::Answer
+        .where(question_id: question.id, author: user)
+        .pluck(:answer)
     end
 
     def question

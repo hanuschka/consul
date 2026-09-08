@@ -435,25 +435,118 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(pending_comment: nil, comment_preview_digest: nil)
   end
 
-  # The poll question a citizen was about to be asked when it turned out they had no
-  # account yet. Held over the login link so the vote resumes where it stopped rather
-  # than asking them to find the projekt again — the one moment they were ready to act
-  # is the worst one to send them back to the beginning of.
+  # The ballot a citizen was about to be given when it turned out they had no account
+  # yet. Held over the login link so the vote resumes where it stopped rather than
+  # asking them to find the projekt again — the one moment they were ready to act is
+  # the worst one to send them back to the beginning of.
   #
-  # The id alone, and re-resolved when they return: linking takes as long as it takes,
-  # and a poll can close while a citizen is registering.
-  def pending_poll_question_id
-    context["pending_poll_question_id"]
+  # The poll's id rather than a question's, and re-resolved when they return: linking
+  # takes as long as it takes, a poll can close while a citizen is registering, and
+  # which question they are owed is read off the answers they have given rather than
+  # off whichever one they happened to be looking at.
+  def pending_poll_id
+    context["pending_poll_id"]
   end
 
-  def store_pending_poll_question!(question_id)
-    merge_context!(pending_poll_question_id: question_id)
+  def store_pending_poll!(poll_id)
+    merge_context!(pending_poll_id: poll_id)
   end
 
-  def clear_pending_poll_question!
-    return if context["pending_poll_question_id"].blank?
+  def clear_pending_poll!
+    return if context["pending_poll_id"].blank?
 
-    merge_context!(pending_poll_question_id: nil)
+    merge_context!(pending_poll_id: nil)
+  end
+
+  # ── The ballot in flight ────────────────────────────────────────────────
+  # A ballot is asked one question at a time over as many messages as it has
+  # questions, and none of the three keys below is a position in it: the answers
+  # already recorded are what says where the citizen has got to
+  # (Whatsapp::BallotCursorQuery). What is written down is only what cannot be read
+  # back off them.
+  #
+  # Which poll is being voted on, so a question asked in the middle of a ballot can
+  # be answered and the ballot picked up again afterwards rather than dropped. Kept
+  # until the last question is answered, the poll closes, or the citizen starts over.
+  def active_poll_id
+    context["active_poll_id"]
+  end
+
+  def store_active_poll!(poll_id)
+    merge_context!(active_poll_id: poll_id)
+  end
+
+  # The multiple-choice question the citizen is still picking from. Its own key
+  # because "has at least one answer" is what the cursor reads, and a question that
+  # allows several answers is not finished by its first one — without this, a second
+  # message would move past a question the citizen was half-way through choosing on.
+  # Cleared by the pill that says they are done and by reaching the portal's maximum.
+  def open_multiple_question_id
+    context["open_multiple_question_id"]
+  end
+
+  def store_open_multiple_question!(question_id)
+    merge_context!(open_multiple_question_id: question_id)
+  end
+
+  def clear_open_multiple_question!
+    return if context["open_multiple_question_id"].blank?
+
+    merge_context!(open_multiple_question_id: nil)
+  end
+
+  # The free-text question whose answer is expected as the citizen's next words. The
+  # one place the bot takes a plain message as something other than a question for
+  # the assistant, which is why it is written down rather than inferred: a sentence
+  # typed into a chat is indistinguishable from any other until something says it
+  # was asked for.
+  def pending_open_question_id
+    context["pending_open_question_id"]
+  end
+
+  def store_pending_open_question!(question_id)
+    merge_context!(pending_open_question_id: question_id)
+  end
+
+  def clear_pending_open_question!
+    return if context["pending_open_question_id"].blank?
+
+    merge_context!(pending_open_question_id: nil)
+  end
+
+  # The questions of this ballot the citizen has declined to answer. The one piece of
+  # ballot state the recorded answers genuinely cannot hold: a free-text question
+  # that was skipped has no answer row and never will, so without this the cursor
+  # would find it unanswered and ask it again on every message for the rest of the
+  # chat. Recording an empty answer instead is what the page reaps on confirmation
+  # (PollsController#remove_answers_to_open_questions_with_blank_body) — a blank vote
+  # row is a vote nobody cast.
+  #
+  # Scoped to the ballot rather than to the citizen: it goes with the other markers
+  # when the ballot ends, so a poll answered again another day starts from a clean
+  # slate the way the page does.
+  def declined_poll_question_ids
+    Array(context["declined_poll_question_ids"])
+  end
+
+  def decline_poll_question!(question_id)
+    return if declined_poll_question_ids.include?(question_id)
+
+    merge_context!(declined_poll_question_ids: declined_poll_question_ids + [question_id])
+  end
+
+  # All four in one write, for the end of a ballot and for starting over. Separate
+  # clears would leave a window in which the poll was gone and a question of it was
+  # still expecting an answer.
+  def clear_ballot!
+    return if ballot_keys.all? { |key| context[key].blank? }
+
+    merge_context!(
+      active_poll_id: nil,
+      open_multiple_question_id: nil,
+      pending_open_question_id: nil,
+      declined_poll_question_ids: nil
+    )
   end
 
   # The comment as it stood in the block the citizen was last shown. Its own key
@@ -663,6 +756,13 @@ class Whatsapp::Conversation < ApplicationRecord
     # it, and when it clears.
     def merge_context!(attributes)
       update!(context: context.merge(attributes.stringify_keys))
+    end
+
+    def ballot_keys
+      %w[
+        active_poll_id open_multiple_question_id pending_open_question_id
+        declined_poll_question_ids
+      ]
     end
 
     # What outlives a submission: the assistant's history, whichever transport

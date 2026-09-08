@@ -44,26 +44,31 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
   private
 
     # The vote the citizen was in the middle of when it turned out they needed an
-    # account. Asked again here, under the line saying the link worked, because the
+    # account. Begun again here, under the line saying the link worked, because the
     # link was only ever in the way of it — sending them back to find the projekt
     # again would spend the one moment they were already decided.
     #
-    # Cleared before the question is re-asked rather than after, and the poll
-    # re-checked from scratch: registering takes as long as it takes, and a poll that
-    # closed in between must leave nothing behind to be resumed on the next link.
+    # The ballot rather than one question of it, and where it resumes is read off the
+    # answers now recorded against the account they have just linked: a citizen who
+    # had already voted on the page picks up where that left them rather than at the
+    # first question again.
+    #
+    # Cleared before the ballot is offered rather than after, and the poll re-checked
+    # from scratch: registering takes as long as it takes, and a poll that closed in
+    # between must leave nothing behind to be resumed on the next link.
     def resume_pending_poll
-      question_id = @conversation.pending_poll_question_id
+      poll_id = @conversation.pending_poll_id
 
-      return if question_id.blank?
+      return if poll_id.blank?
 
-      @conversation.clear_pending_poll_question!
+      @conversation.clear_pending_poll!
 
-      question = ::Poll::Question.find_by(id: question_id)
+      poll = ::Poll.find_by(id: poll_id)
 
-      return if question.blank?
+      return if poll.blank?
 
-      ::Whatsapp::Polls::OfferQuestionService.call(
-        conversation: @conversation, projekt_phase: question.poll&.projekt_phase
+      ::Whatsapp::Polls::OfferBallotService.call(
+        conversation: @conversation, projekt_phase: poll.projekt_phase
       )
     end
 

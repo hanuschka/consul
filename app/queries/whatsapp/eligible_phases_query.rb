@@ -27,6 +27,27 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
     true
   end
 
+  # A phase a citizen may be pointed at, which is a wider set than one the bot may
+  # take a submission into: a vote, a form, a point of interest and a milestone are
+  # all reachable and none of them has a drafting flow. Only what makes a phase
+  # unreachable is checked — gone, over, or belonging to a projekt that is not
+  # published — because what may then be done inside it is the phase's own rule and
+  # is asked where it is acted on.
+  #
+  # The id is resolved here rather than by each caller so a pill tapped a week later
+  # and an id the assistant passed are checked by the same three rules.
+  def self.reachable(projekt_phase_id)
+    return if projekt_phase_id.blank?
+
+    projekt_phase = ::ProjektPhase.find_by(id: projekt_phase_id.to_i)
+
+    return if projekt_phase.blank?
+    return if !projekt_phase.current?
+    return if !projekt_visible?(projekt_phase.projekt)
+
+    projekt_phase
+  end
+
   # Read off the already-loaded projekt rather than asked of the database: the
   # collection path eager-loads it, and both stores behind Projekt.activated are
   # kept in sync, so the column is current whichever one the scope reads.

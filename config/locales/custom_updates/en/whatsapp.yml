@@ -159,10 +159,18 @@ en:
           able to open it once it has been approved.
       poll:
         login_prompt: >-
-          Voting in “%{poll}” needs an account. Tap here to log in — I'll put the question
-          to you again straight afterwards. Opening the link means agreeing to your phone
+          Voting in “%{poll}” needs an account. Tap here to log in — I'll pick the vote up
+          again straight afterwards. Opening the link means agreeing to your phone
           number being processed under our privacy policy: %{privacy_url}
-        recorded: "Your vote in “%{poll}” is counted: %{answer}."
+        # Where in the ballot the citizen has got to. On the page that is what the
+        # progress bar says; in a chat each question is its own message, and without
+        # this line the length of the ballot cannot be seen at all.
+        progress: "Question %{number} of %{total}"
+        choices: >-
+          You can pick up to %{maximum} answers, then finish your selection.
+        open_prompt: "Please write your answer as a message."
+        maximum_reached: "This question takes at most %{maximum} answers."
+        completed: "Thank you — your votes in “%{poll}” are counted."
       onboarding:
         welcome_greeting: 👋 Good to have you here!
         login_prompt: >-
@@ -189,6 +197,8 @@ en:
         open_page: Open page
         choose: Choose
         take_part: Take part now
+        poll_done: Done
+        poll_skip: Skip
         phase_action:
           proposal_phase: Submit an idea
           budget_phase: Submit an idea

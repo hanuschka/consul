@@ -90,6 +90,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return if handle_phase_tap
     return if handle_contribution_tap
     return if handle_poll_answer_tap
+    return if handle_poll_done_tap
+    return if handle_poll_skip_tap
+    return if handle_open_answer_text
 
     apply_start_over_tap
 
@@ -101,7 +104,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     inbound_note = tap_note || entry_note(entry) || reading.text.presence || media_note
 
+    # Read before the turn, because the turn is what may end the ballot: a citizen
+    # who asks to submit something instead has left it, and start_draft! replaces the
+    # whole context with the assistant's own history, markers included.
+    ballot_in_flight = conversation.active_poll_id
+
     answer(inbound_note, inbound_message_id: reading.message_id)
+
+    resume_ballot(ballot_in_flight)
   end
 
   private
@@ -168,6 +178,29 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       ::Whatsapp::Send.recovery_without_assistant(
         conversation: conversation, body: body, actions: actions
       )
+    end
+
+    # A citizen asked question two of five and wrote something else instead. The
+    # something else is answered first — it is what they asked, and a bot that
+    # ignores a question because a ballot is open is a form, not a chat — and then
+    # the question is put again, because the ballot is the thing they were doing.
+    #
+    # Nothing is ever dropped either way: every answer is recorded as it is given, so
+    # a ballot that is abandoned here keeps what was already said.
+    #
+    # Held back where the turn moved the conversation somewhere else. A citizen who
+    # asked to submit a contribution is now drafting one, and re-asking a poll
+    # question on top of that is the bot talking over itself.
+    def resume_ballot(poll_id)
+      return if poll_id.blank?
+      return if conversation.reload.active_poll_id != poll_id
+      return if conversation.unsaved_submission?
+
+      poll = ::Poll.find_by(id: poll_id)
+
+      return if poll.blank?
+
+      ::Whatsapp::Polls::AdvanceBallotService.call(conversation: conversation, poll: poll)
     end
 
     def reading
@@ -465,6 +498,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       conversation.note_start_over!
+      conversation.clear_ballot!
 
       if conversation.unsaved_submission?
         conversation.request_start_over!
@@ -581,15 +615,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # a chat history for as long as the chat does, and what it points at is only what
     # it pointed at when it was sent.
     def tapped_phase(param)
-      return if param.blank?
-
-      projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
-
-      return if projekt_phase.blank?
-      return if !projekt_phase.current?
-      return if !::Whatsapp::EligiblePhasesQuery.projekt_visible?(projekt_phase.projekt)
-
-      projekt_phase
+      ::Whatsapp::EligiblePhasesQuery.reachable(param)
     end
 
     # A voting phase is asked first whether its poll is one the chat can carry to the
@@ -597,14 +623,21 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # tapping it should be voting. Every other phase, and every poll the chat cannot
     # finish, gets the link — which is the fallback the whole voting flow is built
     # around rather than an afterthought.
+    #
+    # A voting phase's link is the ballot, not the projekt page: the citizen has
+    # already said which phase they want by tapping its pill, and the page they used
+    # to land on answered that with a list containing the one poll it holds. The page
+    # is still what everything else opens, and what a voting phase falls back to when
+    # its poll has not been published.
     def open_phase(projekt_phase)
-      return true if ::Whatsapp::Polls::OfferQuestionService.call(
+      return true if ::Whatsapp::Polls::OfferBallotService.call(
         conversation: conversation, projekt_phase: projekt_phase
       )
 
       send_line_with_link(
         line: I18n.t("whatsapp.bot.phase.open", phase: projekt_phase.title),
-        url: ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+        url: ::Whatsapp::ProjektLink.ballot_url(projekt_phase) ||
+          ::Whatsapp::ProjektLink.phase_url(projekt_phase)
       )
     end
 
@@ -626,6 +659,67 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       ::Whatsapp::Polls::RecordAnswerService.call(
         conversation: conversation, question_answer: question_answer
       )
+    end
+
+    # "I have picked everything I want" on a multiple-choice question. It settles the
+    # question rather than answering it — whatever was chosen is already recorded,
+    # each choice as it was made — so all it does is let the ballot move on.
+    #
+    # Honoured only for the question the bot is actually in the middle of asking. The
+    # pill sits in the chat history like every other, and tapped a day later it would
+    # otherwise reopen a ballot that has been finished and closed off.
+    def handle_poll_done_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+
+      return false if flow_action&.fetch(:action) != :poll_done
+      return false if conversation.open_multiple_question_id.to_i != flow_action[:param].to_i
+
+      record_tap(:poll_done, flow_action[:param])
+
+      conversation.clear_open_multiple_question!
+
+      advance_ballot
+    end
+
+    # "I would rather not write this one." Nothing is recorded and anything recorded
+    # before is removed, which is what the page does with an open answer left empty.
+    def handle_poll_skip_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+
+      return false if flow_action&.fetch(:action) != :poll_skip
+      return false if conversation.pending_open_question_id.to_i != flow_action[:param].to_i
+
+      record_tap(:poll_skip, flow_action[:param])
+
+      ::Whatsapp::Polls::RecordOpenAnswerService.skip(conversation: conversation)
+    end
+
+    # The one place a plain message is not a question for the assistant: the bot has
+    # asked a free-text poll question and written down that it did, so the next words
+    # the citizen sends are the answer to it.
+    #
+    # A tapped pill is never taken as text — its label is not something the citizen
+    # wrote — and neither is a photo or a shared pin, which carry no words at all.
+    def handle_open_answer_text
+      return false if conversation.pending_open_question_id.blank?
+      return false if reading.tapped_reply_id.present?
+      return false if reading.text.blank?
+      return false if ::Whatsapp::QrToken.carried_in?(reading.text)
+
+      ::Whatsapp::Polls::RecordOpenAnswerService.call(
+        conversation: conversation, text: reading.text
+      )
+    end
+
+    # Where the ballot goes after a pill that settled a question without answering
+    # one. Re-resolves the poll rather than trusting the marker, because the marker
+    # outlives the poll it names.
+    def advance_ballot
+      poll = ::Poll.find_by(id: conversation.active_poll_id)
+
+      return false if poll.blank?
+
+      ::Whatsapp::Polls::AdvanceBallotService.call(conversation: conversation, poll: poll)
     end
 
     # The results where the phase has published any — one link, because a published

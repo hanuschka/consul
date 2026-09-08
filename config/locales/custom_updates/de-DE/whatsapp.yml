@@ -198,10 +198,19 @@ de:
       poll:
         login_prompt: >-
           Zum Abstimmen bei „%{poll}“ brauchen Sie ein Konto. Zum Anmelden hier tippen —
-          danach stelle ich Ihnen die Frage gleich noch einmal. Mit dem Öffnen des Links
+          danach geht es mit der Abstimmung gleich weiter. Mit dem Öffnen des Links
           willigen Sie in die Verarbeitung Ihrer Telefonnummer gemäß unserer
           Datenschutzerklärung ein: %{privacy_url}
-        recorded: "Ihre Stimme bei „%{poll}“ ist gezählt: %{answer}."
+        # Wo in der Abstimmung die Bürgerin gerade steht. Auf der Seite macht das der
+        # Fortschrittsbalken; im Chat kommt jede Frage als eigene Nachricht, und ohne
+        # diese Zeile ist die Länge des Stimmzettels nicht zu erkennen.
+        progress: "Frage %{number} von %{total}"
+        choices: >-
+          Sie können bis zu %{maximum} Antworten auswählen und die Auswahl danach
+          abschließen.
+        open_prompt: "Bitte schreiben Sie Ihre Antwort als Nachricht."
+        maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Antworten möglich."
+        completed: "Vielen Dank — Ihre Stimmen bei „%{poll}“ sind gezählt."
       onboarding:
         welcome_greeting: 👋 Schön, dass Sie hier sind!
         login_prompt: >-
@@ -232,6 +241,8 @@ de:
         open_page: Seite öffnen
         choose: Auswählen
         take_part: Jetzt mitmachen
+        poll_done: Fertig
+        poll_skip: Überspringen
         # What each of a projekt's open phases is called on the card, worded as the
         # action rather than as the phase. Keyed by the phase's own type name and not
         # read from its title: a portal renaming a phase renames what it is called,

@@ -125,16 +125,6 @@
             <% end %>
           <% end %>
 
-          <% if translations_interface_enabled? %>
-            <%= render Shared::SidebarCardComponent.new(
-                          title: t("custom.deficiency_reports.form.languages.title"),
-                          description: t("custom.deficiency_reports.form.languages.description"),
-                          icon_name: "language"
-                       ) do |c| %>
-                <%= render "shared/globalize_locales", resource: deficiency_report %>
-            <% end %>
-          <% end %>
-
           <%= f.invisible_captcha :subtitle %>
         </aside>
       </div>

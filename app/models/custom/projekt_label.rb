@@ -3,6 +3,7 @@ class ProjektLabel < ApplicationRecord
 
   translates :name, touch: true
   include Globalizable
+  include MachineTranslatable
 
   belongs_to :projekt_phase
   belongs_to :masterportal_collection, optional: true

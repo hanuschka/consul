@@ -14,7 +14,6 @@ de:
         video_card_title: "Video hinzufügen"
         video_card_hint: "Gibt es Videos, die Ihre Argumentation und Sichtweise stützen? Dann fügen Sie diese über einen Link hinzu."
         video_url_placeholder: "YouTube oder Vimeo-Link eingeben"
-        languages_hint: "Wählen Sie aus, in welcher Sprache/welchen Sprachen Ihre Diskussion stattfinden soll:"
         on_behalf_of_card_title: "Veröffentlichen für"
       image_upload:
         top_line_default: Wählen Sie ein passendes Bild für Ihren Beitrag. Beiträge mit Bild erhalten meistens mehr Unterstützung.

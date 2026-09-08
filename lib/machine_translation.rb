@@ -23,6 +23,14 @@ module MachineTranslation
     target_locales.select { |locale| Deepl::Languages.supported?(locale) }
   end
 
+  def self.deepl_locales
+    I18n.available_locales.map(&:to_sym).select { |locale| Deepl::Languages.supported?(locale) }
+  end
+
+  def self.translatable_locales_from(source)
+    deepl_locales - [source.to_sym]
+  end
+
   def self.placeholders_intact?(source, output)
     return false if source.scan(INTERPOLATION).sort != output.scan(INTERPOLATION).sort
 

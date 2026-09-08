@@ -53,10 +53,14 @@ class Admin::AiSettingsController < Admin::BaseController
       ["openai", "ollama", "gemini"].include?(provider)
     end
 
+    # OpenAI is included even though it has a built-in default: when the provider
+    # changes what a model accepts, the instance must be able to move off the
+    # default here rather than wait for a deploy. Leaving the field empty keeps
+    # Ai::Settings::DEFAULT_GPT_MODEL.
     def show_model_field?
       provider = Setting["ai.llm_provider"].to_s.downcase
 
-      !provider.in?(["ollama", "openai"]) && Setting["ai.llm_api_endpoint"].blank?
+      provider != "ollama" && Setting["ai.llm_api_endpoint"].blank?
     end
 
     def show_custom_model_field?

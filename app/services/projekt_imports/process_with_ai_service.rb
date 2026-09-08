@@ -45,10 +45,14 @@ class ProjektImports::ProcessWithAiService < ApplicationService
       analyzed_text_length: @analyzed_text_length
     )
   rescue StandardError => e
-    Rails.logger.error("[ProjektImports::ProcessWithAiService] failed: #{e.message}")
-    Sentry.capture_exception(e, extra: { stage: "ai_processing", input_text_length: text.to_s.length }) if defined?(Sentry)
     ServiceResult.failure(
-      error: I18n.t("adm.projekts.imports.errors.ai_processing_failed", message: e.message),
+      error: ProjektImports::FailureReporter.error_message(
+        e,
+        source: self.class.name,
+        stage: "ai_processing",
+        key: "ai_processing_failed",
+        sentry_context: { input_text_length: text.to_s.length }
+      ),
       error_details: {
         "failure_reason" => "exception",
         "error_class" => e.class.name,

@@ -3,7 +3,6 @@ class Adm::BaseController < ActionController::Base
   include Adm::PolicyLookup
   include Pagy::Backend
   include LocaleSwitching
-  include GlobalizeFallbacks
 
   default_form_builder KernFormBuilder
 
@@ -33,6 +32,22 @@ class Adm::BaseController < ActionController::Base
   }.freeze
 
   private
+
+    def current_locale
+      locale = super
+
+      adm_locale?(locale) ? locale : I18n.default_locale
+    end
+
+    def explicit_locale_param
+      locale = super
+
+      locale if adm_locale?(locale)
+    end
+
+    def adm_locale?(locale)
+      SupportedLocales.adm?(locale)
+    end
 
     def handle_not_authorized(exception, fallback_path)
       Sentry.capture_exception(exception, level: :warning)

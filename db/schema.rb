@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_27_150000) do
+ActiveRecord::Schema.define(version: 2026_09_03_150000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1241,12 +1241,14 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "value"
+    t.index ["i18n_content_id", "locale"], name: "index_i18n_content_translations_on_content_and_locale", unique: true
     t.index ["i18n_content_id"], name: "index_i18n_content_translations_on_i18n_content_id"
     t.index ["locale"], name: "index_i18n_content_translations_on_locale"
   end
 
   create_table "i18n_contents", id: :serial, force: :cascade do |t|
     t.string "key"
+    t.index ["key"], name: "index_i18n_contents_on_key", unique: true
   end
 
   create_table "idea_categories", force: :cascade do |t|
@@ -1958,8 +1960,10 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.string "open_answer_text"
     t.integer "answer_weight", default: 1
     t.bigint "officing_manager_id"
+    t.integer "question_answer_id"
     t.index ["author_id"], name: "index_poll_answers_on_author_id"
     t.index ["officing_manager_id"], name: "index_poll_answers_on_officing_manager_id"
+    t.index ["question_answer_id"], name: "index_poll_answers_on_question_answer_id"
     t.index ["question_id", "answer"], name: "index_poll_answers_on_question_id_and_answer"
     t.index ["question_id", "author_id"], name: "index_poll_answers_unique_map_point_answer", unique: true, where: "(answer IS NULL)"
     t.index ["question_id"], name: "index_poll_answers_on_question_id"
@@ -2027,10 +2031,12 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.text "amount_log", default: ""
     t.text "officer_assignment_id_log", default: ""
     t.text "author_id_log", default: ""
+    t.integer "question_answer_id"
     t.index ["answer"], name: "index_poll_partial_results_on_answer"
     t.index ["author_id"], name: "index_poll_partial_results_on_author_id"
     t.index ["booth_assignment_id", "date"], name: "index_poll_partial_results_on_booth_assignment_id_and_date"
     t.index ["origin"], name: "index_poll_partial_results_on_origin"
+    t.index ["question_answer_id"], name: "index_poll_partial_results_on_question_answer_id"
     t.index ["question_id"], name: "index_poll_partial_results_on_question_id"
   end
 
@@ -3163,10 +3169,20 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.string "postal_code"
   end
 
+  create_table "site_customization_content_block_translations", force: :cascade do |t|
+    t.integer "site_customization_content_block_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "body"
+    t.index ["locale"], name: "index_scb_translations_on_locale"
+    t.index ["site_customization_content_block_id", "locale"], name: "index_scb_translations_on_content_block_id_and_locale", unique: true
+    t.index ["site_customization_content_block_id"], name: "index_scb_translations_on_content_block_id"
+  end
+
   create_table "site_customization_content_blocks", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "locale"
-    t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "key"
@@ -3802,11 +3818,13 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
   add_foreign_key "pending_role_assignments", "users", column: "created_by_id"
   add_foreign_key "poll_answer_map_points", "poll_answers", on_delete: :cascade
   add_foreign_key "poll_answers", "officing_managers"
+  add_foreign_key "poll_answers", "poll_question_answers", column: "question_answer_id", on_delete: :nullify
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"
   add_foreign_key "poll_officer_assignments", "poll_booth_assignments", column: "booth_assignment_id"
   add_foreign_key "poll_partial_results", "poll_booth_assignments", column: "booth_assignment_id"
   add_foreign_key "poll_partial_results", "poll_officer_assignments", column: "officer_assignment_id"
+  add_foreign_key "poll_partial_results", "poll_question_answers", column: "question_answer_id", on_delete: :nullify
   add_foreign_key "poll_partial_results", "poll_questions", column: "question_id"
   add_foreign_key "poll_partial_results", "users", column: "author_id"
   add_foreign_key "poll_question_answer_videos", "poll_question_answers", column: "answer_id"

@@ -1,5 +1,6 @@
 class Officing::PollsController < Officing::BaseController
   include OfficingActions
+  include ResolvesSubmittedQuestionAnswer
 
   def officing_desk
     @poll = Poll.find(params[:id])
@@ -11,7 +12,7 @@ class Officing::PollsController < Officing::BaseController
     @poll = @question.poll
     @offline_user = User.find(params["offline_user_id"])
 
-    @answer = @question.find_or_initialize_user_answer(@offline_user, params[:answer])
+    @answer = @question.find_or_initialize_user_answer(@offline_user, submitted_question_answer)
     @answer.answer_weight = params[:answer_weight].presence || 1
     @answer.officing_manager_id = current_user.officing_manager.id
 
@@ -48,7 +49,7 @@ class Officing::PollsController < Officing::BaseController
     if @question.vote_type == "multiple_with_weight" &&
          updated_weight > 0 &&
          params[:button] != "remove_answer"
-      answer = @question.find_or_initialize_user_answer(@offline_user, @answer.answer)
+      answer = @question.find_or_initialize_user_answer(@offline_user, @answer.question_answer)
       answer.answer_weight = updated_weight
       answer.save!
 

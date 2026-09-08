@@ -1,6 +1,7 @@
 require_dependency Rails.root.join("app", "models", "site_customization", "page").to_s
 
 class SiteCustomization::Page < ApplicationRecord
+include MachineTranslatable
   include ActionView::Helpers::SanitizeHelper
 
   self.inheritance_column = nil

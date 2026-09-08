@@ -1,4 +1,6 @@
 class Officing::OfflinePollVotersController < Officing::BaseController
+  include ResolvesSubmittedQuestionAnswer
+
   def verify_user; end
 
   def find_or_create_user
@@ -70,7 +72,7 @@ class Officing::OfflinePollVotersController < Officing::BaseController
     @poll = @question.poll
     @responding_user = User.find(params["responding_user_id"])
 
-    @answer = @question.find_or_initialize_user_answer(@responding_user, params[:answer])
+    @answer = @question.find_or_initialize_user_answer(@responding_user, submitted_question_answer)
     @answer.answer_weight = params[:answer_weight].presence || 1
     @answer.officing_manager_id = current_user.officing_manager.id
 
@@ -107,7 +109,7 @@ class Officing::OfflinePollVotersController < Officing::BaseController
     if @question.vote_type == "multiple_with_weight" &&
          updated_weight > 0 &&
          params[:button] != "remove_answer"
-      answer = @question.find_or_initialize_user_answer(@responding_user, @answer.answer)
+      answer = @question.find_or_initialize_user_answer(@responding_user, @answer.question_answer)
       answer.answer_weight = updated_weight
       answer.save!
 

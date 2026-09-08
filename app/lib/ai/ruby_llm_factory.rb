@@ -1,4 +1,6 @@
 module Ai::RubyLlmFactory
+  NO_REASONING_EFFORT = "none".freeze
+
   def self.chat(feature: AiUsageRecord::UNKNOWN_FEATURE)
     model = Ai::Settings.current_llm_model
     provider = Ai::Settings.current_llm_provider
@@ -14,6 +16,26 @@ module Ai::RubyLlmFactory
 
   def self.chat_with_json_output(output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE)
     chat(feature: feature).with_schema(output_schema)
+  end
+
+  # OpenAI rejects a chat/completions request that carries function tools while
+  # reasoning is on, so the two settings have to be made together. Attaching
+  # tools through here rather than calling RubyLLM's with_tools directly is what
+  # keeps a new call site from pairing them wrongly again.
+  #
+  # Only for OpenAI: the same thinking config is read as a thinking budget by
+  # Anthropic and as a reasoning toggle by Mistral, where nothing is broken.
+  def self.attach_tools(chat, *tools)
+    return chat if tools.empty?
+
+    chat.with_tools(*tools)
+    chat.with_thinking(effort: NO_REASONING_EFFORT) if current_provider_is_openai?
+
+    chat
+  end
+
+  def self.current_provider_is_openai?
+    Ai::Settings.current_llm_provider == "openai"
   end
 
   def self.record_usage_from(chat, feature:, provider:, model:)

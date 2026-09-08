@@ -35,12 +35,12 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
 
   # The same question asked of many polls at once, for the tool that lists what is
   # open. It costs the same handful of queries whether the page holds one poll or
-  # nine, where asking #for per row cost that handful each: the phase's own poll is
-  # the lowest id per phase, which one grouped query gives for every phase together,
-  # and the questions of every candidate come back in one pass.
+  # nine, where asking #for per row cost that handful each: which poll is a phase's
+  # ballot comes back for every phase in one query, and the questions of every
+  # candidate come back in one pass.
   def self.votable_poll_ids(polls)
-    own_ids = own_poll_ids(polls)
-    candidates = polls.select { |poll| candidate?(poll, own_ids) }
+    ballots = ::Polls::PhaseBallotQuery.by_phase(polls.map(&:projekt_phase_id))
+    candidates = polls.select { |poll| candidate?(poll, ballots) }
 
     return [] if candidates.empty?
 
@@ -110,27 +110,12 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
     labels.size == options.size && labels.uniq.size == options.size
   end
 
-  # Whether a poll could be one at all: its phase running, the poll published, and
-  # the poll being the phase's own. Everything before its questions are looked at.
-  def self.candidate?(poll, own_poll_ids)
+  # Whether a poll could be one at all: its phase running, and the poll being that
+  # phase's ballot. Everything before its questions are looked at.
+  def self.candidate?(poll, ballots)
     projekt_phase = poll.projekt_phase
 
-    projekt_phase.is_a?(ProjektPhase::VotingPhase) &&
-      projekt_phase.current? &&
-      poll.published? &&
-      own_poll_ids.include?(poll.id)
-  end
-
-  # The lowest poll id per phase, which is what ProjektPhase::VotingPhase#poll
-  # answers one phase at a time. Read fresh on every call rather than memoised on
-  # the class: this runs in a long-lived worker, and a phase's polls can change
-  # under it.
-  def self.own_poll_ids(polls)
-    ::Poll
-      .where(projekt_phase_id: polls.map(&:projekt_phase_id))
-      .group(:projekt_phase_id)
-      .minimum(:id)
-      .values
+    projekt_phase.current? && ballots[poll.projekt_phase_id] == poll
   end
 
   # The options are preloaded without naming their translations:
@@ -160,10 +145,9 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
   end
 
   def call
-    return if !@projekt_phase.is_a?(ProjektPhase::VotingPhase)
     return if !@projekt_phase.current?
 
-    poll = published_poll
+    poll = ballot
 
     return if poll.blank?
 
@@ -174,12 +158,8 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
 
   private
 
-    # The phase's own poll, which is the one created with the phase itself. Read
-    # through ProjektPhase::VotingPhase#poll rather than by counting the
-    # association: a voting phase is meant to hold exactly one, but `polls` is a
-    # has_many with nothing stopping the API or a nested-attributes form from
-    # adding a second — and the phase already answers every other question about
-    # itself, its own permission rules included, from that one poll.
+    # Which poll a voting phase's ballot is belongs to Polls::PhaseBallotQuery,
+    # which also carries why it cannot be ProjektPhase::VotingPhase#poll.
     #
     # The phase is asked for its own currency rather than the poll being run
     # through Poll.current, which is the same question in SQL and answers it
@@ -188,13 +168,8 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
     # date as "no bound". Half the portal's voting phases have one — an open-ended
     # vote is an ordinary thing to run — and every one of them is excluded by the
     # scope while being open in every other part of the app.
-    def published_poll
-      poll = @projekt_phase.poll
-
-      return if poll.blank?
-      return if !poll.published?
-
-      poll
+    def ballot
+      ::Polls::PhaseBallotQuery.for(@projekt_phase)
     end
 
     # Every question the citizen owes an answer to, nested ones included: a

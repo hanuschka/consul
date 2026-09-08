@@ -6,14 +6,30 @@ class Polls::QuestionsController < ApplicationController
   def answer
     return head(:bad_request) if @question.map_points?
 
-    @answer = @question.find_or_initialize_user_answer(current_user, params[:answer])
-    @answer.answer_weight = params[:answer_weight].presence || 1
-    @answer.save_and_record_voter_participation
     @question_answer = @question.question_answers.find(params[:question_answer_id])
+    weight = params[:answer_weight].presence || 1
+
+    # The maximum the question allows, checked before the write rather than only in
+    # the button that would have been disabled. A repeated POST, a form left open in
+    # a second tab or any other client reached this action and was recorded, and an
+    # extra row is indistinguishable from a vote once it is in.
+    #
+    # Answered by re-rendering rather than by an error: the citizen is looking at
+    # buttons that do not match the state they are refused against, and the partial
+    # is what corrects them.
+    if !answer_allowed?(weight)
+      return respond_to { |format| format.js { render "polls/questions/answers" } }
+    end
+
+    @answer = @question.find_or_initialize_user_answer(current_user, params[:answer])
+    @answer.answer_weight = weight
+    @answer.save_and_record_voter_participation
 
     unless providing_an_open_answer?(@answer)
       @answer_updated = "answered"
     end
+
+    resolve_wizard_has_next
 
     respond_to do |format|
       format.js { render "polls/questions/answers" }
@@ -77,6 +93,14 @@ class Polls::QuestionsController < ApplicationController
   end
 
   def update_open_answer
+    # The free-text option counts against a multiple question's maximum like any
+    # other, and this action writes a row like any other. The box is not offered past
+    # the maximum, so reaching here is a stale form or a second client.
+    if open_answer_params[:open_answer_text].present? &&
+        !answer_allowed_for?(open_answer_params[:answer])
+      return respond_to { |format| format.js { render "polls/questions/answers" } }
+    end
+
     if open_answer_params[:open_answer_text].present?
       @answer = @question.find_or_initialize_user_answer(current_user, open_answer_params[:answer])
       @answer.save_and_record_voter_participation if @answer.new_record?
@@ -88,6 +112,8 @@ class Polls::QuestionsController < ApplicationController
       @answer = @question.answers.find_by(author: current_user, answer: open_answer_params[:answer])
       @answer.destroy_and_remove_voter_participation if @answer.present?
     end
+
+    resolve_wizard_has_next
 
     respond_to do |format|
       format.js { render "polls/questions/answers" }
@@ -101,13 +127,37 @@ class Polls::QuestionsController < ApplicationController
       return head(:not_found)
     end
 
-    projekt = @question.poll.projekt
-
-    if projekt.blank? || !projekt.visible_for?(current_user)
-      return head(:forbidden)
-    end
+    return head(:forbidden) if !wizard_readable?(@question)
 
     render partial: "polls/wizard_item", layout: false, locals: { question: @question }
+  end
+
+  # Which question follows this one, decided here rather than in the browser. The
+  # order, the contexted clones, the branching and the answer that ends a ballot are
+  # all Polls::BallotTraversalQuery's, so the page and the WhatsApp bot walk one
+  # implementation of them instead of two — the JS worked them out from a map of the
+  # whole poll, which meant every rule about which questions a citizen is shown
+  # existed twice.
+  #
+  # Answers with the question's own markup as well as its id, so a step costs one
+  # request rather than one to ask and another to fetch. `has_next` travels with it
+  # because the button under it says either "next question" or "finish", and only
+  # this side can tell which.
+  def wizard_next
+    return head(:not_found) if !wizard_navigable?(@question)
+    return head(:forbidden) if !wizard_readable?(@question)
+
+    following = traversal.next_after(@question)
+
+    return render(json: { question_id: nil }) if following.blank?
+
+    render json: {
+      question_id: following.id,
+      has_next: traversal.next_after?(following),
+      html: render_to_string(
+        partial: "polls/wizard_item", layout: false, locals: { question: following }
+      )
+    }
   end
 
   def csv_answers_streets
@@ -170,11 +220,50 @@ class Polls::QuestionsController < ApplicationController
       params.require(:poll_answer).permit(:answer, :open_answer_text)
     end
 
+    def answer_allowed?(weight)
+      answer_allowed_for?(params[:answer], weight: weight)
+    end
+
+    def answer_allowed_for?(title, weight: 1)
+      ::Polls::AnswerAllowanceQuery.call(
+        question: @question, user: current_user, title: title, weight: weight
+      )
+    end
+
     def providing_an_open_answer?(answer)
       @question.open_question_answer.present? && @question.open_question_answer.title == answer.answer
     end
 
     def wizard_navigable?(question)
       question.parent_question_id.nil? && question.contextualize_by_poll_question_id.nil?
+    end
+
+    # Whether the question just answered is still followed by another, for the button
+    # under it. Asked after every recorded answer because an answer is what changes
+    # it: it may branch past the rest, end the ballot, or reveal a question
+    # contextualised by the option chosen. Nil outside a wizard, and for a nested
+    # sub-question, which is not a step of its own on the page.
+    def resolve_wizard_has_next
+      return if !@question.poll.in_wizard_mode?
+      return if !wizard_navigable?(@question)
+
+      @wizard_has_next = traversal.next_after?(@question)
+    end
+
+    def wizard_readable?(question)
+      projekt = question.poll.projekt
+
+      projekt.present? && projekt.visible_for?(current_user)
+    end
+
+    # Guest users answer polls too, and a guest is a User like any other by the time
+    # this runs — GuestUsers signs one in on the poll page — so the traversal reads
+    # their answers the same way it reads anyone's.
+    def traversal
+      @traversal ||= ::Polls::BallotTraversalQuery.for(
+        poll: @question.poll,
+        user: current_user,
+        order_seed: helpers.poll_participant_order_seed
+      )
     end
 end

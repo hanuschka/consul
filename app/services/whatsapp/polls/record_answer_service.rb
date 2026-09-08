@@ -67,14 +67,14 @@ class Whatsapp::Polls::RecordAnswerService < ApplicationService
       )
     end
 
-    # Only a `multiple` question has a maximum to run out of. A choice already made
-    # costs nothing to make again — the write finds the row it wrote before — so it
-    # is never what the cap refuses.
+    # The portal's own reading of its own maximum, which Polls::AnswerAllowanceQuery
+    # owns and Polls::QuestionsController#answer refuses a write against. It used to
+    # be counted here as well, because the page enforced the cap only by disabling a
+    # button and there was nothing underneath to inherit it from.
     def room_for_this_choice?
-      return true if !question.multiple?
-      return true if chosen_titles.include?(@question_answer.title)
-
-      chosen_titles.size < question.max_votes
+      ::Polls::AnswerAllowanceQuery.call(
+        question: question, user: user, title: @question_answer.title
+      )
     end
 
     # Reached only from a pill further up the chat: the current message drops every
@@ -118,12 +118,6 @@ class Whatsapp::Polls::RecordAnswerService < ApplicationService
       @conversation.store_active_poll!(poll.id)
 
       ::Whatsapp::Polls::AdvanceBallotService.call(conversation: @conversation, poll: poll)
-    end
-
-    def chosen_titles
-      @chosen_titles ||= ::Poll::Answer
-        .where(question_id: question.id, author: user)
-        .pluck(:answer)
     end
 
     def question

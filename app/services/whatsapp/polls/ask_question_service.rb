@@ -28,7 +28,7 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
   def self.for_open_answer(conversation:, question:)
     new(
       conversation: conversation,
-      position: ::Whatsapp::BallotCursorQuery::Position.new(question: question)
+      position: ::Polls::BallotTraversalQuery::Position.new(question: question)
     ).ask_for_text
   end
 

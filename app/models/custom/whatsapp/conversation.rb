@@ -462,7 +462,7 @@ class Whatsapp::Conversation < ApplicationRecord
   # A ballot is asked one question at a time over as many messages as it has
   # questions, and none of the three keys below is a position in it: the answers
   # already recorded are what says where the citizen has got to
-  # (Whatsapp::BallotCursorQuery). What is written down is only what cannot be read
+  # (Polls::BallotTraversalQuery). What is written down is only what cannot be read
   # back off them.
   #
   # Which poll is being voted on, so a question asked in the middle of a ballot can

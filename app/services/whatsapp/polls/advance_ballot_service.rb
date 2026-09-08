@@ -19,12 +19,12 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
     return abandon if !still_votable?
     return abandon if @conversation.user.blank?
 
-    position = ::Whatsapp::BallotCursorQuery.for(
-      poll: @poll,
-      user: @conversation.user,
-      still_choosing_question_id: @conversation.open_multiple_question_id,
-      declined_question_ids: @conversation.declined_poll_question_ids
-    )
+    position = ::Polls::BallotTraversalQuery
+      .for(poll: @poll, user: @conversation.user)
+      .first_owed(
+        still_choosing_question_id: @conversation.open_multiple_question_id,
+        declined_question_ids: @conversation.declined_poll_question_ids
+      )
 
     return complete if position.blank?
 

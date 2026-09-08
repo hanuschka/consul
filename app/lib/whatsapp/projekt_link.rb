@@ -16,13 +16,11 @@ module Whatsapp::ProjektLink
   # The ballot itself, for a voting phase the chat is handing off. The projekt page
   # with the phase's tab open lists the poll rather than showing it, so a citizen
   # who had already said they wanted to vote spent two more taps getting to the
-  # question. Nil for anything that is not a voting phase and for one whose poll has
-  # not been published, which leaves the caller with #phase_url and the page that at
-  # least says what the phase is.
+  # question. Nil for anything that is not a voting phase, for one with nothing
+  # published, and for one carrying several published ballots — which leaves the
+  # caller with #phase_url and the page that asks which of them the citizen meant.
   def ballot_url(projekt_phase)
-    return if !projekt_phase.is_a?(ProjektPhase::VotingPhase)
-
-    poll_ballot_url(projekt_phase.poll)
+    poll_ballot_url(Polls::PhaseBallotQuery.for(projekt_phase))
   end
 
   # The same address for a poll already in hand, which is what a list of them has.

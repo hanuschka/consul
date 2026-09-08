@@ -17,6 +17,7 @@ resources :polls, only: [:show, :index] do
     post :add_map_point, on: :member
     delete :remove_map_point, on: :member
     get :wizard_step, on: :member
+    get :wizard_next, on: :member
     # resources :answers, controller: "polls/answers", only: :destroy, shallow: false
   end
 end

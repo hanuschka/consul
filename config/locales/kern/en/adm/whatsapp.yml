@@ -81,6 +81,17 @@ en:
         template: Notification template
         welcome: Chat opened
         unsupported: Unsupported
+      phase_codes:
+        title: Codes for single phases
+        intro: >-
+          Every running phase that accepts contributions by chat, each with its own code. A scan
+          leads straight into that phase's submission flow with no menu in between.
+        card_subline: 'Projekt: %{projekt}'
+        empty_title: There are no phase codes right now
+        empty_body: >-
+          A code appears here as soon as a proposal or budget phase is running whose projekt is
+          published and which has the "WhatsApp bot: allow submissions" setting switched on. If a
+          phase you expect is missing, one of those conditions is the reason and not a fault.
       reach:
         contacts_title: Contacts
         contacts_intro: >-
@@ -93,6 +104,7 @@ en:
         verified: Verified numbers
         link_pending: Link pending
         unlinked: Without account
+        contacts_breakdown_title: By link status
         activity_title: Activity
         activity_intro: How many contacts wrote recently and how many were added over the last 30
           days.
@@ -114,7 +126,6 @@ en:
           Template messages sent per project. Failed deliveries point to expired numbers or a template
           that is not approved.
         projekt: Project
-        phase: Phase
         sent: Delivered
         failed: Failed
         last_sent_at: Last sent
@@ -122,11 +133,6 @@ en:
         flows_title: Flows in progress
         flows_intro: Contacts currently in the middle of a bot flow, by step.
         no_flows: Nobody is in an active flow right now.
-        phases_title: Phases accepting WhatsApp submissions
-        phases_intro: Running proposal phases that accept submissions via chat.
-        qr_code: QR code
-        open_phase_qr: Open QR code
-        no_phases: No phase currently accepts proposals via WhatsApp.
       dialogs:
         title: Dialogs
         intro: >-
@@ -462,7 +468,9 @@ en:
             a placeholder, two placeholders next to each other, or example values that do not match
             the number of parameters in the text.
         qr_code:
-          hint: The portal-wide code and link that open a chat with the bot.
+          hint: >-
+            Every code in one place: the portal-wide one, plus one per running phase that accepts
+            chat submissions.
           description_title: What this page is for
           description:
           - >-
@@ -475,11 +483,11 @@ en:
             carries no projekt and no phase, which makes it the right code for a poster in a town
             hall, a footer on a printed newsletter, or a sticker somewhere permanent.
           - >-
-            Codes that point at one specific projekt or one participation phase are generated on that
-            projekt's own page instead of here. Those carry a signed token, so a scan drops the citizen
-            straight into the submission flow for that phase with no menu in between. Use them for
-            signage at the place a projekt is actually about — a construction hoarding, a park noticeboard,
-            a public meeting.
+            Below it, every running phase that accepts contributions by chat has its own code. Those
+            carry a signed token, so a scan drops the citizen straight into the submission flow for
+            that phase with no menu in between. Use them for signage at the place a projekt is
+            actually about — a construction hoarding, a park noticeboard, a public meeting. The
+            projekt-wide code for one projekt still lives on that projekt's own WhatsApp page.
           - >-
             The link beneath the code is the same address in text form. It works everywhere a printed
             code cannot: an email, a button on the website, a post on social media. Both go through
@@ -516,11 +524,9 @@ en:
             worth investigating: it usually means citizens are abandoning at one particular step rather
             than that many people happen to be mid-submission at once.
           - >-
-            The list at the bottom shows which participation phases currently accept a submission
-            through the bot. A phase appears only when its projekt is published, the phase is running,
-            and both the create and AI-flow switches are on. If a phase you expect is missing, one
-            of those three is the reason — the bot deliberately never offers a submission it would
-            then have to refuse.
+            Which participation phases currently accept a submission through the bot is not answered
+            here but on the QR code page, where each of them is listed with its own code. Reach says
+            how many people this channel gets to; which codes exist is a different question.
         dialogs:
           hint: Every conversation the bot has had, with filters and a way to reply.
           description_title: What this page is for
@@ -591,6 +597,7 @@ en:
           qr_title: Project QR code
           qr_subline: For posters and flyers about this project.
           eligible_phases_title: Phases accepting submissions
+          all_phase_codes_link: See every phase QR code on the QR code page
           eligible_phases_intro:
             one: One phase accepts WhatsApp proposals — submissions go straight there.
             other: '%{count} phases accept WhatsApp proposals — the bot will ask which one.'

@@ -7,4 +7,23 @@
     title: t("adm.whatsapp.show.qr_title"),
     subline: t("adm.whatsapp.show.qr_subline")
   ) %>
+
+  <% if @configured %>
+    <section class="mt-5">
+      <h2 class="kern-title mb-1"><%= t("adm.whatsapp.phase_codes.title") %></h2>
+      <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.phase_codes.intro") %></p>
+
+      <% if @eligible_projekt_phases.any? %>
+        <%= render partial: "adm/whatsapp/phase_qr_card",
+              collection: @eligible_projekt_phases,
+              as: :projekt_phase %>
+      <% else %>
+        <%= empty_state(
+          title: t("adm.whatsapp.phase_codes.empty_title"),
+          description: t("adm.whatsapp.phase_codes.empty_body"),
+          icon: "qr_code_2"
+        ) %>
+      <% end %>
+    </section>
+  <% end %>
 </div>

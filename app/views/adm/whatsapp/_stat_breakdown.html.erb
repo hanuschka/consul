@@ -1,0 +1,12 @@
+<div class="adm-whatsapp-breakdown mt-3">
+  <h3 class="kern-label adm-whatsapp-breakdown--title"><%= title %></h3>
+
+  <dl class="adm-whatsapp-breakdown--list">
+    <% rows.each do |row| %>
+      <div class="adm-whatsapp-breakdown--row">
+        <dt class="adm-whatsapp-breakdown--key"><%= row[:label] %></dt>
+        <dd class="adm-whatsapp-breakdown--value"><%= number_with_delimiter(row[:value].to_i) %></dd>
+      </div>
+    <% end %>
+  </dl>
+</div>

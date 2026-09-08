@@ -4,7 +4,7 @@
   <%= render "adm/whatsapp/page_description", key: "connection" %>
 
   <section class="mb-5">
-    <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.feature_title") %></h2>
+    <h2 class="kern-title mb-2"><%= t("adm.whatsapp.show.feature_title") %></h2>
 
     <% @feature_settings.each do |setting| %>
       <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
@@ -12,7 +12,7 @@
   </section>
 
   <section class="mb-5">
-    <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.webhook_title") %></h2>
+    <h2 class="kern-title mb-2"><%= t("adm.whatsapp.show.webhook_title") %></h2>
 
     <% if !@webhook_status[:reachable] %>
       <%= kern_alert(title: t("adm.whatsapp.show.webhook_unreachable_title"), style: :danger) do %>

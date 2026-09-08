@@ -81,6 +81,18 @@ de:
         template: Benachrichtigungsvorlage
         welcome: Chat geöffnet
         unsupported: Nicht unterstützt
+      phase_codes:
+        title: QR-Codes einzelner Phasen
+        intro: >-
+          Jede laufende Phase, die Beiträge per Chat annimmt, mit ihrem eigenen Code. Ein Scan führt
+          direkt in den Einreichungsablauf dieser Phase, ohne Menü dazwischen.
+        card_subline: 'Projekt: %{projekt}'
+        empty_title: Derzeit gibt es keine Phasen-Codes
+        empty_body: >-
+          Ein Code erscheint hier, sobald eine Vorschlags- oder Budgetphase läuft, deren Projekt
+          veröffentlicht ist und in der die Einstellung „WhatsApp-Bot: Einreichungen erlauben“
+          eingeschaltet ist. Fehlt eine erwartete Phase, liegt es an einer dieser Bedingungen und
+          nicht an einem Fehler.
       reach:
         contacts_title: Kontakte
         contacts_intro: >-
@@ -93,6 +105,7 @@ de:
         verified: Bestätigte Nummern
         link_pending: Verknüpfung offen
         unlinked: Ohne Konto
+        contacts_breakdown_title: Nach Verknüpfungsstatus
         activity_title: Aktivität
         activity_intro: >-
           Wie viele Kontakte zuletzt geschrieben haben und wie viele in den letzten 30 Tagen dazugekommen
@@ -115,7 +128,6 @@ de:
           Versendete Vorlagen-Nachrichten je Projekt. Fehlgeschlagene Zustellungen deuten auf abgelaufene
           Nummern oder eine nicht freigegebene Vorlage hin.
         projekt: Projekt
-        phase: Phase
         sent: Zugestellt
         failed: Fehlgeschlagen
         last_sent_at: Zuletzt versendet
@@ -123,11 +135,6 @@ de:
         flows_title: Laufende Vorgänge
         flows_intro: Kontakte, die gerade mitten in einem Bot-Dialog stecken – nach Schritt.
         no_flows: Derzeit steckt niemand in einem laufenden Vorgang.
-        phases_title: Phasen mit WhatsApp-Einreichung
-        phases_intro: Laufende Vorschlagsphasen, in die per Chat eingereicht werden kann.
-        qr_code: QR-Code
-        open_phase_qr: QR-Code öffnen
-        no_phases: Derzeit nimmt keine Phase Vorschläge per WhatsApp an.
       dialogs:
         title: Dialoge
         intro: >-
@@ -479,7 +486,9 @@ de:
             der mit einem Platzhalter beginnt oder endet, zwei unmittelbar aufeinanderfolgende Platzhalter,
             oder Beispielwerte, die nicht zur Anzahl der Platzhalter passen.
         qr_code:
-          hint: Der portalweite Code und Link, die einen Chat mit dem Bot öffnen.
+          hint: >-
+            Alle Codes an einer Stelle: der portalweite und je einer für jede laufende Phase mit
+            Chat-Einreichung.
           description_title: Wofür diese Seite da ist
           description:
           - >-
@@ -493,11 +502,12 @@ de:
             ein Plakat im Rathaus, eine Fußzeile im gedruckten Mitteilungsblatt oder einen Aufkleber
             an einem dauerhaften Ort.
           - >-
-            Codes, die auf ein bestimmtes Projekt oder eine bestimmte Beteiligungsphase zeigen, entstehen
-            auf der Seite des jeweiligen Projekts und nicht hier. Sie tragen ein signiertes Merkmal,
-            sodass ein Scan direkt in den Einreichungsablauf dieser Phase führt, ohne Menü dazwischen.
-            Nutzen Sie diese für Beschilderung genau dort, worum es im Projekt geht: an einem Bauzaun,
-            an einer Tafel im Park, bei einer Bürgerversammlung.
+            Darunter steht für jede laufende Phase, die Beiträge per Chat annimmt, ihr eigener Code.
+            Diese tragen ein signiertes Merkmal, sodass ein Scan direkt in den Einreichungsablauf
+            dieser Phase führt, ohne Menü dazwischen. Nutzen Sie sie für Beschilderung genau dort,
+            worum es im Projekt geht: an einem Bauzaun, an einer Tafel im Park, bei einer
+            Bürgerversammlung. Den projektweiten Code eines einzelnen Projekts finden Sie weiterhin
+            auf der WhatsApp-Seite dieses Projekts.
           - >-
             Der Link unter dem Code ist dieselbe Adresse in Textform. Er wirkt überall dort, wo ein
             gedruckter Code nicht hinkommt: in einer E-Mail, als Schaltfläche auf der Website, in
@@ -536,11 +546,10 @@ de:
             Stelle abbrechen, und nicht, dass gerade viele gleichzeitig mitten in einer Einreichung
             sind.
           - >-
-            Die Liste am Ende zeigt, welche Beteiligungsphasen derzeit eine Einreichung über den Bot
-            annehmen. Eine Phase erscheint nur, wenn ihr Projekt veröffentlicht ist, die Phase läuft
-            und sowohl das Einreichen als auch der KI-Ablauf eingeschaltet sind. Fehlt eine erwartete
-            Phase, liegt es an einer dieser drei Bedingungen — der Bot bietet bewusst nie eine Einreichung
-            an, die er anschließend ablehnen müsste.
+            Welche Beteiligungsphasen derzeit eine Einreichung über den Bot annehmen, beantwortet
+            nicht diese Seite, sondern die Seite QR-Code: dort steht jede dieser Phasen mit ihrem
+            eigenen Code. Reichweite sagt, wie viele Menschen der Kanal erreicht; welche Codes es
+            gibt, ist eine andere Frage.
         dialogs:
           hint: Alle Gespräche des Bots, mit Filtern und einer Antwortmöglichkeit.
           description_title: Wofür diese Seite da ist
@@ -616,6 +625,7 @@ de:
           qr_title: Projekt-QR-Code
           qr_subline: Für Plakate und Flyer zu diesem Projekt.
           eligible_phases_title: Phasen, die Einreichungen annehmen
+          all_phase_codes_link: Alle Phasen-QR-Codes auf der Seite QR-Code ansehen
           eligible_phases_intro:
             one: Eine Phase nimmt Vorschläge per WhatsApp an – Einreichungen gehen direkt dorthin.
             other: '%{count} Phasen nehmen Vorschläge per WhatsApp an – der Bot fragt, welche gemeint

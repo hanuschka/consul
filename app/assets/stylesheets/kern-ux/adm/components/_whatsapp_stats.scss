@@ -1,11 +1,26 @@
 // Stat tiles for the /adm WhatsApp "Reichweite" tab. Plain figure cards: the
 // number carries the hierarchy, tone only recolors the number — no accent
 // stripes, no hover affordance (the tiles are not interactive).
+//
+// The column count is fixed rather than fitted to the tile count, so a group of
+// three and a group of four keep the same tile width and line up down the page.
 
 .adm-whatsapp-stat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
+}
+
+@media (max-width: 991px) {
+  .adm-whatsapp-stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 575px) {
+  .adm-whatsapp-stat-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .adm-whatsapp-stat {
@@ -32,15 +47,14 @@
   color: var(--kern-color-layout-text-default);
 }
 
+// Kept in the flow even with nothing to say, so every tile in a row ends on the
+// same baseline whether or not it carries a second line.
 .adm-whatsapp-stat--hint {
   margin: 0.375rem 0 0;
+  min-height: 1.35em;
   font-size: 0.875rem;
   line-height: 1.35;
   color: var(--kern-color-layout-text-muted);
-}
-
-.adm-whatsapp-stat.-accent .adm-whatsapp-stat--value {
-  color: var(--kern-color-action-default);
 }
 
 .adm-whatsapp-stat.-success .adm-whatsapp-stat--value {
@@ -49,4 +63,55 @@
 
 .adm-whatsapp-stat.-danger .adm-whatsapp-stat--value {
   color: var(--kern-color-feedback-danger);
+}
+
+// The breakdown that belongs to a group of tiles. Framed and set on the hued
+// surface so it reads as subordinate to the tiles rather than as a second,
+// unrelated block beneath them.
+.adm-whatsapp-breakdown {
+  padding: 1rem 1.25rem;
+  background: var(--kern-color-layout-background-hued);
+  border: 1px solid var(--kern-color-layout-border);
+  border-radius: 4px;
+}
+
+.adm-whatsapp-breakdown--title {
+  margin: 0 0 0.5rem;
+  color: var(--kern-color-layout-text-muted);
+}
+
+.adm-whatsapp-breakdown--list {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  margin: 0;
+}
+
+.adm-whatsapp-breakdown--row {
+  display: contents;
+}
+
+.adm-whatsapp-breakdown--key,
+.adm-whatsapp-breakdown--value {
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--kern-color-layout-border);
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.adm-whatsapp-breakdown--row:first-child .adm-whatsapp-breakdown--key,
+.adm-whatsapp-breakdown--row:first-child .adm-whatsapp-breakdown--value {
+  border-top: 0;
+}
+
+.adm-whatsapp-breakdown--key {
+  color: var(--kern-color-layout-text-default);
+}
+
+.adm-whatsapp-breakdown--value {
+  margin: 0;
+  padding-left: 1.5rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--kern-color-layout-text-default);
 }

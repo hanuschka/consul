@@ -75,11 +75,11 @@ module Adm
 
     def qr_code
       load_page_chrome
+      load_eligible_phases
     end
 
     def reach
       load_page_chrome
-      load_eligible_phases
       load_reach_stats
     end
 
@@ -325,8 +325,11 @@ module Adm
         FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS + [AUTO_BROADCAST_SETTING_KEY]
       end
 
+      # Uncapped on purpose: the cap #call applies is how many rows fit in one
+      # WhatsApp list message, so reading it here would drop the eleventh open
+      # phase from a page whose whole point is that every code is on it.
       def load_eligible_phases
-        @eligible_projekt_phases = ::Whatsapp::EligiblePhasesQuery.call
+        @eligible_projekt_phases = ::Whatsapp::EligiblePhasesQuery.uncapped
       end
 
       # Two 360dialog round-trips, each retried three times with a sleep at a
@@ -379,6 +382,7 @@ module Adm
 
       def load_reach_stats
         @reach_stats = ::Whatsapp::Platform::ReachStatsService.call
+        @reach_tiles = ::Whatsapp::Platform::ReachTilesService.call(@reach_stats)
       end
 
       def load_dialogs

@@ -1,7 +1,7 @@
 <div class="adm-whatsapp-stat<%= " -#{tile[:tone]}" if tile[:tone].present? %>">
   <p class="adm-whatsapp-stat--value"><%= number_with_delimiter(tile[:value].to_i) %></p>
   <p class="adm-whatsapp-stat--label"><%= tile[:label] %></p>
-  <% if tile[:hint].present? %>
-    <p class="adm-whatsapp-stat--hint"><%= tile[:hint] %></p>
-  <% end %>
+  <%# Rendered even when empty: the reserved line keeps the baselines of a row
+      even when only some of its tiles have a second line to show. %>
+  <p class="adm-whatsapp-stat--hint"><%= tile[:hint] %></p>
 </div>

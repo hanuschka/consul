@@ -88,6 +88,13 @@ include MachineTranslatable
     status == 'published'
   end
 
+  # A projekt's own page, as opposed to a landing page or a footer page. Its
+  # publish state is not an admin decision: see
+  # #force_published_for_projekt_page.
+  def projekt_page?
+    projekt_id.present? && !landing?
+  end
+
   def comments_count
     comments.count
   end
@@ -140,10 +147,10 @@ include MachineTranslatable
   # A projekt page is never a draft: whether the projekt is visible is decided
   # by its own activation and visibility switches. An unpublished projekt page
   # hides the projekt everywhere while every visible setting says it is public,
-  # so no path -- the copier, the old admin's status radio -- may leave one
-  # behind. Landing and footer pages keep their own draft/published state.
+  # so no path may leave one behind. Landing and footer pages keep their own
+  # draft/published state.
   def force_published_for_projekt_page
-    return if projekt_id.blank? || landing?
+    return unless projekt_page?
 
     self.status = "published"
   end

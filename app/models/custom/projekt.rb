@@ -561,8 +561,7 @@ class Projekt < ApplicationRecord
   def meets_publish_criteria?
     !special? &&
       activated? &&
-      hard_individual_group_values.none? &&
-      page&.published?
+      hard_individual_group_values.none?
   end
 
   def activated_children
@@ -830,7 +829,6 @@ class Projekt < ApplicationRecord
 
   def acceptable_to_be_exported_for_global_overview?
     !special &&
-      page&.published? &&
       activated? &&
       feature?("general.show_in_overview_page")
   end

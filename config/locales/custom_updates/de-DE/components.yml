@@ -7,6 +7,9 @@ de:
         success: "Heruntergeladen"
       image_with_lightbox_component:
         download_original: "Original herunterladen"
+    common_notifications:
+      list_item_component:
+        destroy_confirmation: "Möchten Sie die Benachrichtigung wirklich löschen?"
     images:
       ai_generated_field_component:
         label: "Dieses Bild wurde mit KI erstellt oder bearbeitet"

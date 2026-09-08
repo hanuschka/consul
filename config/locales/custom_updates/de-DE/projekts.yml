@@ -218,6 +218,7 @@ de:
           incoming: Kommende
           past: Vergangene
       projekt_questions:
+        no_question_available: Aktuell ist keine Frage vorhanden
         back_to_question_list: 'Zurück zur Fragenliste'
         comments_button: Antwort veröffentlichen
         comments_count: "%{count} offene Antworten"

@@ -55,13 +55,13 @@
     <div class="projekt-phase--actions">
       <div class="projekt-phase--actions-first-block d-flex">
         <%
-          hide_phase_title = "Phase ausblenden"
-          show_phase_title = "Phase einblenden"
+          hide_phase_title = t("custom.studio.toggle_phase_visibility.hide_title")
+          show_phase_title = t("custom.studio.toggle_phase_visibility.show_title")
         %>
         <%= studio_rich_tooltip(
           title: phase.active? ? hide_phase_title : show_phase_title,
-          text: "Steuert die Sichtbarkeit dieser Phase im öffentlichen Footer.",
-          note: "Versteckte Phasen sehen nur Administratoren.",
+          text: t("custom.studio.toggle_phase_visibility.text"),
+          note: t("custom.studio.toggle_phase_visibility.note"),
           delay: 1200
         ) do %>
           <button
@@ -75,13 +75,13 @@
           </button>
         <% end %>
         <%
-          make_default = "Als Standardphase festlegen"
-          unset_default_title = "Standardphase aufheben"
+          make_default = t("custom.studio.toggle_default_phase.make_default_title")
+          unset_default_title = t("custom.studio.toggle_default_phase.unset_default_title")
         %>
         <%= studio_rich_tooltip(
           title: phase == @default_projekt_phase ? unset_default_title : make_default,
-          text: "Diese Phase wird beim Öffnen des Projekts zuerst angezeigt.",
-          note: "Es kann nur eine Standardphase geben.",
+          text: t("custom.studio.toggle_default_phase.text"),
+          note: t("custom.studio.toggle_default_phase.note"),
           delay: 1200
         ) do %>
           <button
@@ -96,8 +96,8 @@
         <% end %>
         <% if show_send_notification_button? %>
           <%= studio_rich_tooltip(
-            title: "Benachrichtigung senden",
-            text: "Informiert die Abonnenten dieser Phase per Benachrichtigung.",
+            title: t("custom.studio.send_notification.title"),
+            text: t("custom.studio.send_notification.text"),
             delay: 1200
           ) do %>
             <button
@@ -112,9 +112,9 @@
           <% end %>
         <% end %>
         <%= studio_rich_tooltip(
-          title: "Phase bearbeiten",
-          text: "Öffnet die Einstellungen dieser Phase.",
-          note: "Wird in einem neuen Tab geöffnet.",
+          title: t("custom.studio.edit_phase.title"),
+          text: t("custom.studio.edit_phase.text"),
+          note: t("custom.studio.edit_phase.note"),
           delay: 1200
         ) do %>
           <%= link_to adm_phase_action_path(phase), class: "studio-icon-button", target: "_blank", tabindex: "-1" do %>

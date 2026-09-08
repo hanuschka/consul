@@ -12,6 +12,9 @@ en:
         map_location_instructions_optional: "Please place a pin on the map (optional)."
         documents_card_title: "Add documents"
         video_card_title: "Add video"
+        video_card_hint: "Are there videos that back up your reasoning and point of view? Then add them via a link."
+        video_url_placeholder: "Enter a YouTube or Vimeo link"
+        languages_hint: "Choose which language or languages your discussion should take place in:"
         on_behalf_of_card_title: "Publish on behalf of"
       image_upload:
         top_line_default: Choose a fitting image for your contribution. Contributions with an image usually receive more support.

@@ -33,7 +33,7 @@
               opened_on_mobile: true,
               icon_name: "language")) do %>
               <p>
-              Wählen Sie aus, in welcher Sprache/welchen Sprachen Ihre Diskussion stattfinden soll:
+              <%= t("custom.user_resources.form.languages_hint") %>
               </p>
               <%= render "shared/globalize_locales", resource: resource %>
             <% end %>
@@ -45,10 +45,9 @@
               opened_on_mobile: true,
               icon_name: "video")) do %>
               <p>
-              Gibt es Videos, die Ihre Argumentation und Sichtweise stützen?
-              Dann fügen Sie diese über einen Link hinzu.
+              <%= t("custom.user_resources.form.video_card_hint") %>
               </p>
-              <%= f.text_field :video_url, label: false, placeholder: "YouTube oder Vimeo-Link eingeben", class: "light-input" %>
+              <%= f.text_field :video_url, label: false, placeholder: t("custom.user_resources.form.video_url_placeholder"), class: "light-input" %>
             <% end %>
           <% end %>
 

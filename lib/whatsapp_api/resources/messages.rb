@@ -84,6 +84,39 @@ class WhatsappApi::Resources::Messages
     )
   end
 
+  # A template whose approved shape is a body and one quick-reply button. The
+  # payload is what the tap sends back to us, so it is the send that decides what
+  # the button means — one approved template serves every phase.
+  def send_reply_button_template(to:, name:, language:, payload:, variables: [])
+    @client.post(
+      BASE_PATH,
+      body: envelope(to).merge(
+        type: "template",
+        template: {
+          name: name,
+          language: { code: language },
+          components: template_components(variables) + [quick_reply_button_parameters(payload)]
+        }
+      )
+    )
+  end
+
+  # The same shape with a URL button, whose variable is appended to the fixed
+  # prefix baked into the template — the record's id, and nothing else, travels.
+  def send_link_button_template(to:, name:, language:, button_variable:, variables: [])
+    @client.post(
+      BASE_PATH,
+      body: envelope(to).merge(
+        type: "template",
+        template: {
+          name: name,
+          language: { code: language },
+          components: template_components(variables) + [url_button_parameters(button_variable)]
+        }
+      )
+    )
+  end
+
   def send_list(to:, body:, button_label:, rows:)
     send_sectioned_list(to: to, body: body, button_label: button_label, sections: [{ rows: rows }])
   end
@@ -183,19 +216,35 @@ class WhatsappApi::Resources::Messages
       [body_parameters(variables)]
     end
 
-    # Component order is not significant to the API, but the button index is:
-    # "0" is the first button declared on the approved template.
     def card_template_components(image_url, variables, button_variable)
       [
         { type: "header", parameters: [{ type: "image", image: { link: image_url }}] },
         body_parameters(variables),
-        {
-          type: "button",
-          sub_type: "url",
-          index: "0",
-          parameters: [{ type: "text", text: button_variable.to_s }]
-        }
+        url_button_parameters(button_variable)
       ]
+    end
+
+    # Component order is not significant to the API, but the button index is:
+    # "0" is the first button declared on the approved template.
+    def url_button_parameters(button_variable)
+      {
+        type: "button",
+        sub_type: "url",
+        index: "0",
+        parameters: [{ type: "text", text: button_variable.to_s }]
+      }
+    end
+
+    # What the citizen's tap sends back, capped at what WhatsApp allows a payload.
+    # Every payload here is a Whatsapp::FlowActions id, which is far shorter, so an
+    # overrun would be a new id shape rather than content too long to send.
+    def quick_reply_button_parameters(payload)
+      {
+        type: "button",
+        sub_type: "quick_reply",
+        index: "0",
+        parameters: [{ type: "payload", payload: payload.to_s }]
+      }
     end
 
     def body_parameters(variables)

@@ -50,9 +50,6 @@ de:
         placeholder_position: >-
           Meta akzeptiert keine Vorlage, deren Text mit einem Platzhalter beginnt oder endet. Vor
           {{1}} und nach {{2}} muss fester Text stehen.
-      conversational_components:
-        applied: Chat-Einstieg übertragen. Bis er in WhatsApp erscheint, können einige Minuten vergehen.
-        failed: 'Chat-Einstieg konnte nicht übertragen werden: %{error}'
       steps:
         idle: Kein laufender Vorgang
         awaiting_link: Wartet auf Verknüpfung
@@ -244,15 +241,11 @@ de:
           dialogs: Dialoge
           test_message: Testnachricht
         feature_title: WhatsApp-Bot
-        feature_intro: >-
-          Nach der Aktivierung können Bürger:innen ihre WhatsApp-Nummer mit ihrem Konto verbinden
-          – genauso, wie sie sich auch auf der Website anmelden würden. Von dort aus können sie per
-          Chat-Nachricht einen neuen Vorschlag oder einen Kommentar einreichen, ganz ohne den Browser
-          zu öffnen. Außerdem erhalten sie eine kurze WhatsApp-Nachricht mit direktem Link, sobald
-          ein neues Beteiligungsprojekt startet, damit sie sofort mitmachen können.
         settings_title: Einstellungen
         settings_intro: Vorlage, Sprachmodell und Aufbewahrung für den WhatsApp-Bot. Änderungen wirken
           sofort.
+        settings_mirrored_value_empty: Keine Vorlage aktiv
+        settings_templates_link: Vorlagen verwalten
         auto_broadcast_title: Automatische Projekt-Benachrichtigung
         auto_broadcast_intro: >-
           Ist dies aktiv, versendet die Plattform die WhatsApp-Benachrichtigung von selbst, sobald
@@ -261,9 +254,8 @@ de:
           diese steht die Schaltfläche auf der Projektseite weiterhin zur Verfügung.
         auto_broadcast_missing_template_title: Automatischer Versand ohne Wirkung
         auto_broadcast_missing_template_body: >-
-          Solange keine freigegebene Nachrichtenvorlage hinterlegt ist, wird auch bei aktivem Schalter
-          nichts versendet. Vorlage oben unter „Name der WhatsApp-Nachrichtenvorlage“ eintragen oder
-          im Reiter „Vorlagen“ einreichen.
+          Solange keine freigegebene Nachrichtenvorlage aktiv ist, wird auch bei aktivem Schalter
+          nichts versendet. Vorlage im Reiter „Vorlagen“ einreichen und dort aktivieren.
         draft_evaluation_title: KI-Beitragsprüfung
         draft_evaluation_body: >-
           Definiert eine Projektphase Bewertungskriterien, prüft der Bot jeden Entwurf in einem
@@ -276,7 +268,7 @@ de:
         template_missing_title: Keine Nachrichtenvorlage hinterlegt
         template_missing_body: >-
           Ohne freigegebene 360dialog-Vorlage können keine Projekt-Benachrichtigungen versendet werden.
-          Vorlage unten einreichen oder oben unter „Name der WhatsApp-Nachrichtenvorlage“ eintragen.
+          Vorlage unten einreichen und anschließend aktivieren.
         qr_title: Allgemeiner QR-Code
         qr_subline: Öffnet einen allgemeinen Consul-Chat.
         webhook_title: Webhook
@@ -291,28 +283,11 @@ de:
           Die Konfiguration konnte nicht von 360dialog gelesen werden. Prüfe den API-Schlüssel in
           config/secrets.yml.
         webhook_none: kein Webhook registriert
-        webhook_registered_url: Registrierte Adresse
-        webhook_header: Sicherheits-Header
-        webhook_header_ok:
-          one: gesetzt (1 Zeichen, passt)
-          other: gesetzt (%{count} Zeichen, passt)
-        webhook_header_bad:
+        webhook_summary: 'Registriert: %{url} · Header: %{header} · geprüft %{checked_at}'
+        webhook_header_chars:
           zero: nicht gesetzt
-          one: gesetzt, passt aber nicht (1 Zeichen)
-          other: gesetzt, passt aber nicht (%{count} Zeichen)
-        webhook_checked_at: Zuletzt geprüft
-        webhook_auto_hint: >-
-          Der Webhook wird automatisch registriert, sobald der WhatsApp-Bot oben eingeschaltet wird
-          – mit der Adresse, unter der du gerade arbeitest.
-        entry_title: Chat-Einstieg
-        entry_intro: >-
-          Wer einen QR-Code scannt, landet in einem leeren Chat mit einer vorbereiteten Nachricht,
-          die noch abgeschickt werden muss. Diese Einstellungen setzen dort stattdessen antippbare
-          Optionen und eine Begrüßung ein, sodass der erste Schritt ein Tippen ist.
-        entry_apply: An WhatsApp übertragen
-        entry_apply_hint: >-
-          Die Vorschläge und Befehle liegen bei WhatsApp, nicht auf dieser Plattform. Änderungen oben
-          erreichen Bürger:innen erst, wenn du sie hier überträgst.
+          one: 1 Zeichen
+          other: "%{count} Zeichen"
         test_title: Testnachricht
         test_intro: >-
           Sendet eine kurze Nachricht an eine Nummer. Freie Textnachrichten erreichen nur Personen,
@@ -369,16 +344,28 @@ de:
           muss fester Text stehen.
         notification_templates_title: Push-Benachrichtigungen
         notification_templates_intro: >-
-          Die drei Nachrichten, die die Plattform von selbst verschickt: zweimal rund um das Ende
-          einer Vorschlagsphase und einmal, wenn sich beim eigenen Vorschlag etwas tut. Jede braucht
-          eine eigene freigegebene Vorlage, eingereicht auf %{language} mit dem Wortlaut unten.
-          Solange eine Vorlage hier nicht eingereicht und aktiviert ist, erreicht diese
-          Benachrichtigung niemanden.
+          Die Nachrichten, die die Plattform von selbst verschickt: rund um das Ende einer
+          Vorschlagsphase, wenn sich beim eigenen Vorschlag etwas tut und rund um eine Abstimmung.
+          Jede braucht eine eigene freigegebene Vorlage, eingereicht auf %{language} mit dem
+          Wortlaut unten. Solange eine Vorlage hier nicht eingereicht und aktiviert ist, erreicht
+          diese Benachrichtigung niemanden.
+        notification_templates_voting_intro: >-
+          Zu einer Abstimmung gibt es drei Varianten pro Zeitpunkt. Ist die Variante mit dem Button
+          „Jetzt abstimmen“ aktiv, kann direkt im Chat abgestimmt werden — sofern die Umfrage sich
+          im Chat stellen lässt. Ist sie es nicht, wird die Variante mit dem Button
+          „Abstimmung öffnen“ verschickt, und ohne beide die Variante ohne Button.
         notification_template_column: Benachrichtigung
         notification_template_kinds:
           deadline_approaching: Frist läuft ab
           deadline_passed: Frist abgelaufen
           status_change: Update zum eigenen Vorschlag
+          voting_started: Abstimmung gestartet
+          voting_started_action: Abstimmung gestartet (Button, Abstimmen im Chat)
+          voting_started_link: Abstimmung gestartet (Button, Abstimmung öffnen)
+          voting_ending: Abstimmung endet bald
+          voting_ending_action: Abstimmung endet bald (Button, Abstimmen im Chat)
+          voting_ending_link: Abstimmung endet bald (Button, Abstimmung öffnen)
+        notification_template_button: 'Button: %{label}'
         notification_template_not_submitted: noch nicht eingereicht
         notification_template_submit: Einreichen
         notification_template_other_in_use: 'aktiv: %{name}'

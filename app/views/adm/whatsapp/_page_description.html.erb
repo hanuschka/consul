@@ -2,16 +2,23 @@
     default: an admin who already knows the page should not have to scroll past
     three hundred words of it on every visit. %>
 <% page_scope = "adm.whatsapp.pages.#{key}" %>
+<%# A view t() returns its missing-translation span even when handed a default,
+    so the key is checked before it is read — a page whose explanation is not
+    written yet drops the accordion instead of crashing on .each. %>
+<% description_key = "#{page_scope}.description" %>
+<% paragraphs = I18n.exists?(description_key) ? Array(t(description_key)) : [] %>
 
-<div class="kern-accordion-group adm-whatsapp-page--description mb-4">
-  <details class="kern-accordion">
-    <summary class="kern-accordion__header">
-      <span class="kern-title"><%= t("#{page_scope}.description_title") %></span>
-    </summary>
-    <section class="kern-accordion__body">
-      <% t("#{page_scope}.description").each do |paragraph| %>
-        <p class="kern-body"><%= paragraph %></p>
-      <% end %>
-    </section>
-  </details>
-</div>
+<% if paragraphs.any? %>
+  <div class="kern-accordion-group adm-whatsapp-page--description mb-4">
+    <details class="kern-accordion">
+      <summary class="kern-accordion__header">
+        <span class="kern-title"><%= t("#{page_scope}.description_title") %></span>
+      </summary>
+      <section class="kern-accordion__body">
+        <% paragraphs.each do |paragraph| %>
+          <p class="kern-body"><%= paragraph %></p>
+        <% end %>
+      </section>
+    </details>
+  </div>
+<% end %>

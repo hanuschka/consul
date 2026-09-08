@@ -20,6 +20,25 @@ de:
       kobil_address_verification_description: "Übernimmt die Adresse aus dem KOBIL-Konto (Straße, PLZ, Ort) in das Nutzerprofil, ohne sie mit dem Adressregister zu verknüpfen. Gebietsbeschränkte Phasen schaltet sie nicht frei. Aktivieren Sie es, um Tipparbeit zu ersparen."
       whatsapp_bot: "WhatsApp-Bot aktivieren"
       whatsapp_bot_description: "Schaltet den WhatsApp-Bot für Bürger:innen frei. Wirkt erst, wenn euer technisches Team das WhatsApp-Geschäftskonto auf dem Server eingerichtet hat."
+    whatsapp:
+      default_locale: "Standardsprache des Bots"
+      default_locale_description: "Bestimmt, in welcher Sprache der Bot mit Nummern spricht, die noch kein Konto verknüpft haben. Sobald eine Nummer mit einem Konto verbunden ist, folgt der Bot stattdessen der Spracheinstellung dieser Person. Tragen Sie ein Sprachkürzel ein, das die Plattform anbietet, etwa de oder en. Leer oder ein unbekanntes Kürzel bedeutet die Standardsprache der Plattform."
+      address_form: "Anrede des Bots"
+      address_form_description: "Legt fest, ob der Bot duzt oder siezt. Erlaubt sind genau zwei Werte: sie oder du. Die Einstellung wirkt auf alle Texte, die die KI selbst formuliert — im Chat und ebenso in der zweistufigen Bewertung von Vorschlägen; die festen Textbausteine der Plattform sind siezend geschrieben und bleiben es. Setzen Sie du für Jugendbeteiligung, sie für eine Stadtverwaltung. Leer oder ein anderer Wert bedeutet sie."
+      broadcast_template: "Aktive Vorlage für Projekt-Rundnachrichten"
+      broadcast_template_description: "Zeigt, welche von Meta freigegebene Vorlage eine Rundnachricht versendet. Ist das Feld leer, kann keine Rundnachricht hinausgehen und die Schaltfläche dazu erscheint auf der Projektseite nicht. Wählen Sie die Vorlage auf der Seite Bot-Nachrichtenvorlagen aus, statt hier einen Namen einzutippen: Ein Name, den Meta nicht freigegeben hat, lässt jeden Versand scheitern."
+      broadcast_card_template: "Aktive Kartenvorlage für Projekt-Rundnachrichten"
+      broadcast_card_template_description: "Die Variante mit Projektbild und Link auf einer Schaltfläche. Sie ist optional: Ist das Feld leer, geht jede Rundnachricht als reiner Text hinaus, und Projekte ohne Bild nutzen die Textvariante ohnehin. Die Auswahl läuft ebenfalls über die Seite Bot-Nachrichtenvorlagen."
+      broadcast_template_language: "Sprache der Vorlagen"
+      broadcast_template_language_description: "Muss zu der Sprache passen, in der Meta die Vorlage freigegeben hat. Eine Abweichung fällt erst beim Senden auf und wird dort abgewiesen. Beim Aktivieren einer Vorlage wird dieser Wert automatisch mitgeschrieben, damit Name und Sprache nicht auseinanderlaufen. Leer bedeutet de."
+      transcription_model: "Modell für Sprachnachrichten"
+      transcription_model_description: "Wandelt eingehende Sprachnachrichten in Text um, bevor der Bot sie verarbeitet. Bürgerinnen und Bürger senden sie häufig, und jede kostet einen Aufruf. Leer bedeutet gpt-4o-mini-transcribe, das günstigste Modell, das Deutsch zuverlässig verarbeitet. Ändern Sie den Wert nur, wenn ein anderes Modell nachweislich besser transkribiert."
+      message_retention_days: "Aufbewahrung der Nachrichten in Tagen"
+      message_retention_days_description: "Nachrichten, die älter sind als diese Frist, werden nächtlich um 3:15 Uhr gelöscht. Das ist eine datenschutzrechtliche Pflicht und keine Frage der Ordnung. Tragen Sie eine ganze Zahl größer als Null ein; leer, Null oder eine Eingabe, die keine Zahl ist, bedeutet neunzig Tage. Verkürzen Sie die Frist, wenn Ihr Löschkonzept das verlangt — die Liste auf der Seite Dialoge dünnt sich entsprechend aus."
+      max_voice_megabytes: "Größengrenze für Sprachnachrichten in MB"
+      max_voice_megabytes_description: "Wird geprüft, bevor eine Sprachnachricht von WhatsApp heruntergeladen wird. Ein höherer Wert erlaubt längere Nachrichten; ein zu niedriger lässt sie scheitern, ohne dass der Grund sichtbar wird — die Person erhält lediglich die Bitte, ihre Idee als Text zu schreiben. Leer, Null oder keine Zahl bedeutet 16."
+      auto_broadcast_new_projekts: "Rundnachricht bei jeder Projektveröffentlichung"
+      auto_broadcast_new_projekts_description: "Schickt bei jeder Veröffentlichung eines Projekts automatisch eine Nachricht an alle angemeldeten Nummern. Standardmäßig aus, und die einzige Einstellung dieser Seite, die durch einen einzigen Klick an anderer Stelle Tausende Menschen erreicht. Aktivieren Sie sie nur, wenn Ihre Veröffentlichungen bewusst gesetzt sind und eine Vorlage aktiv ist."
     projekt_option:
       general:
         external_participation_link: Alternativen Link in den Projektressourcen verwenden

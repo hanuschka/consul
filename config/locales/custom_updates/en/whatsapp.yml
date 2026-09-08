@@ -62,17 +62,6 @@ en:
           years:
             one: in 1 year
             other: in %{count} years
-      commands:
-        default: |-
-          help|What this chat can do
-          projects|Current participation projects
-          notifications|Choose what you hear about
-          stop|Stop receiving messages
-      ice_breakers:
-        default_1: Which projects are running right now?
-        default_2: I have an idea for my city
-        default_3: How does submitting a contribution work?
-        default_4: Stop receiving messages
       portal_fallback_name: the participation portal
       transcription_failed: I could not understand the voice message. Please write your idea as text.
       assistant_unavailable: >-
@@ -191,7 +180,6 @@ en:
         location_maximum_reached: "This question takes at most %{maximum} places."
         completed: "Thank you — your votes in “%{poll}” are counted."
       onboarding:
-        welcome_greeting: 👋 Good to have you here!
         login_prompt: >-
           Tap below to log in. By opening the link you consent to the processing of your phone
           number under our privacy policy: %{privacy_url}
@@ -273,3 +261,18 @@ en:
           status_change: |-
             🔔 There's an update on your contribution.
             %{url}
+          voting_started: |-
+            🗳️ A new vote has started.
+            %{url}
+          voting_ending: |-
+            ⏳ Only a few days left: the vote closes soon.
+            %{url}
+          # The two button templates carry the link in the button, so they carry
+          # no variable in the text.
+          voting_started_action: "🗳️ A new vote has started. You can vote right here in the chat."
+          voting_started_link: "🗳️ A new vote has started."
+          voting_ending_action: "⏳ Only a few days left: the vote closes soon. You can vote right here in the chat."
+          voting_ending_link: "⏳ Only a few days left: the vote closes soon."
+          buttons:
+            vote_now: Vote now
+            open_ballot: Open the ballot

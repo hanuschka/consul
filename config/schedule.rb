@@ -118,3 +118,10 @@ every 1.day, at: "9:00 am", roles: [:cron] do
   runner "Whatsapp::NotifyPhaseDeadlineJob.perform_later"
 end
 
+# Afternoon rather than beside the morning deadline pushes, which also keeps two
+# jobs off the same subscriber list: a projekt whose proposal phase closes on the
+# day its vote opens would otherwise have both walking it at once.
+every 1.day, at: "4:15 pm", roles: [:cron] do
+  runner "Whatsapp::NotifyVotingPhaseJob.perform_later"
+end
+

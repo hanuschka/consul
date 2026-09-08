@@ -50,9 +50,6 @@ en:
         placeholder_position: >-
           Meta does not accept a template whose text begins or ends with a placeholder. Put static
           words before {{1}} and after {{2}}.
-      conversational_components:
-        applied: Chat start applied. It can take a few minutes to appear in WhatsApp.
-        failed: 'Chat start could not be applied: %{error}'
       steps:
         idle: No active flow
         awaiting_link: Waiting for account link
@@ -240,15 +237,11 @@ en:
           dialogs: Dialogs
           test_message: Test message
         feature_title: WhatsApp bot
-        feature_intro: >-
-          Once switched on, citizens can connect their WhatsApp number to their account, the same
-          way they would sign in on the website. From there they can send a chat message to submit
-          a new proposal or a comment, without ever having to open a browser. They also receive a
-          short WhatsApp message with a direct link whenever a new participation project starts, so
-          they can join in right away.
         settings_title: Settings
         settings_intro: Template, speech model and retention for the WhatsApp bot. Changes take effect
           immediately.
+        settings_mirrored_value_empty: No template active
+        settings_templates_link: Manage templates
         auto_broadcast_title: Automatic project notification
         auto_broadcast_intro: >-
           When this is on, the platform sends the WhatsApp notification by itself as soon as a projekt
@@ -256,9 +249,8 @@ en:
           to individual districts are skipped; for those the button on the projekt page remains available.
         auto_broadcast_missing_template_title: Automatic sending has no effect
         auto_broadcast_missing_template_body: >-
-          As long as no approved message template is configured, nothing is sent even with the switch
-          on. Enter the template above under "WhatsApp message template name" or submit one in the
-          "Templates" tab.
+          As long as no approved message template is active, nothing is sent even with the switch
+          on. Submit a template in the "Templates" tab and activate it there.
         draft_evaluation_title: AI draft check
         draft_evaluation_body: >-
           When a projekt phase defines evaluation criteria, the bot checks every draft against all
@@ -270,7 +262,7 @@ en:
         template_missing_title: No message template configured
         template_missing_body: >-
           Without an approved 360dialog template no project notifications can be sent. Submit a template
-          below or enter its name above under "Name of the WhatsApp message template".
+          below and activate it afterwards.
         qr_title: General QR code
         qr_subline: Opens a general Consul chat.
         webhook_title: Webhook
@@ -284,28 +276,11 @@ en:
         webhook_unreachable_body: The configuration could not be read from 360dialog. Check the API
           key in config/secrets.yml.
         webhook_none: no webhook registered
-        webhook_registered_url: Registered URL
-        webhook_header: Security header
-        webhook_header_ok:
-          one: set (1 character, matches)
-          other: set (%{count} characters, matches)
-        webhook_header_bad:
+        webhook_summary: 'Registered: %{url} · Header: %{header} · checked %{checked_at}'
+        webhook_header_chars:
           zero: not set
-          one: set but does not match (1 character)
-          other: set but does not match (%{count} characters)
-        webhook_checked_at: Last checked
-        webhook_auto_hint: >-
-          The webhook is registered automatically as soon as the WhatsApp bot above is switched on,
-          using the host you are working on.
-        entry_title: Chat start
-        entry_intro: >-
-          Someone who scans a QR code lands in an empty chat with a prepared message they still have
-          to send. These settings put tappable options and a greeting there instead, so the first
-          step takes one tap.
-        entry_apply: Apply to WhatsApp
-        entry_apply_hint: >-
-          The suggestions and commands are stored at WhatsApp, not on this platform. Changes above
-          only reach citizens after you apply them here.
+          one: 1 character
+          other: "%{count} characters"
         test_title: Test message
         test_intro: >-
           Sends a short message to a number. Free-text messages only reach people who wrote in the
@@ -362,15 +337,27 @@ en:
           after {{2}}.
         notification_templates_title: Push notifications
         notification_templates_intro: >-
-          The three messages the platform sends by itself: twice around the end of a proposal phase,
-          and once when something happens on someone's own proposal. Each needs its own approved
-          template, submitted in %{language} with the wording below. Until one is submitted and
-          activated here, that notification reaches nobody.
+          The messages the platform sends by itself: around the end of a proposal phase, when
+          something happens on someone's own proposal, and around a vote. Each needs its own
+          approved template, submitted in %{language} with the wording below. Until one is
+          submitted and activated here, that notification reaches nobody.
+        notification_templates_voting_intro: >-
+          A vote has three variants per moment. With the "Vote now" button variant active, citizens
+          vote right in the chat wherever the poll is one a chat can ask; where it is not, the
+          "Open the ballot" variant goes out instead, and with neither approved, the variant
+          without a button.
         notification_template_column: Notification
         notification_template_kinds:
           deadline_approaching: Deadline approaching
           deadline_passed: Deadline passed
           status_change: Update on own proposal
+          voting_started: Vote started
+          voting_started_action: Vote started (button, vote in the chat)
+          voting_started_link: Vote started (button, open the ballot)
+          voting_ending: Vote closing soon
+          voting_ending_action: Vote closing soon (button, vote in the chat)
+          voting_ending_link: Vote closing soon (button, open the ballot)
+        notification_template_button: 'Button: %{label}'
         notification_template_not_submitted: not submitted yet
         notification_template_submit: Submit
         notification_template_other_in_use: 'currently active: %{name}'

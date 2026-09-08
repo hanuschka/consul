@@ -1,0 +1,16 @@
+en:
+  custom:
+    studio:
+      delete_all_content_blocks:
+        title: "Delete all content blocks"
+        text: "Removes every content block on this page at once. This cannot be undone — the content has to be recreated afterwards."
+      add_phase:
+        title: "Add phase"
+        text: "Opens phase management in a new tab so you can add another phase to this project."
+      delete_phase:
+        title: "Delete phase"
+        text: "Permanently removes this phase."
+        note: "This cannot be undone."
+      change_banner:
+        title: "Change banner image"
+        text: "Uploads a new banner image for this page. A wide landscape image in high resolution works best."

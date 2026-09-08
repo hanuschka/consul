@@ -141,6 +141,7 @@ en:
         admin_actions:
           title: Admin
         submit_official_answer_button: Save reply
+        officer_notification_title: "Case officer notification"
       feedback_form:
         new:
           already_submitted: You have already submitted feedback for this request.

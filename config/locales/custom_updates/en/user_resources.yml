@@ -10,6 +10,9 @@ en:
         map_location_instructions: "Where should your contribution be implemented? Place a “pin” to bring others into the picture."
         map_location_instructions_mandatory: "Please place a pin on the map (mandatory)."
         map_location_instructions_optional: "Please place a pin on the map (optional)."
+        documents_card_title: "Add documents"
+        video_card_title: "Add video"
+        on_behalf_of_card_title: "Publish on behalf of"
       image_upload:
         top_line_default: Choose a fitting image for your contribution. Contributions with an image usually receive more support.
         title_default: Add an image (optional)

@@ -1,0 +1,16 @@
+de:
+  custom:
+    studio:
+      delete_all_content_blocks:
+        title: "Alle Inhaltsblöcke löschen"
+        text: "Entfernt sämtliche Inhaltsblöcke dieser Seite auf einmal. Diese Aktion kann nicht rückgängig gemacht werden — die Inhalte müssen anschließend neu erstellt werden."
+      add_phase:
+        title: "Phase hinzufügen"
+        text: "Öffnet die Phasenverwaltung in einem neuen Tab, um diesem Projekt eine weitere Phase hinzuzufügen."
+      delete_phase:
+        title: "Phase löschen"
+        text: "Entfernt diese Phase dauerhaft."
+        note: "Diese Aktion kann nicht rückgängig gemacht werden."
+      change_banner:
+        title: "Titelbild ändern"
+        text: "Lädt ein neues Titelbild für diese Seite hoch. Empfohlen wird ein breites Querformat in hoher Auflösung."

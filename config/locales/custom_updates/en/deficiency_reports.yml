@@ -26,9 +26,6 @@ en:
           placeholder: Please select
         documents:
           title: Add documents
-        languages:
-          title: Language
-          description: "Select which language(s) you would like your discussion to take place in:"
         video:
           title: Add video
           description: Are there videos that support your argument and point of view? Then add a link here.

@@ -27,18 +27,6 @@
             <% end %>
           <% end %>
 
-          <% if translations_interface_enabled? %>
-            <%= render(Shared::SidebarCardComponent.new(
-              title: "Sprachen",
-              opened_on_mobile: true,
-              icon_name: "language")) do %>
-              <p>
-              <%= t("custom.user_resources.form.languages_hint") %>
-              </p>
-              <%= render "shared/globalize_locales", resource: resource %>
-            <% end %>
-          <% end %>
-
           <% if show_external_video_input? %>
             <%= render(Shared::SidebarCardComponent.new(
               title: t("custom.user_resources.form.video_card_title"),

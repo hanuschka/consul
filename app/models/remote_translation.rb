@@ -4,7 +4,7 @@ class RemoteTranslation < ApplicationRecord
   validates :remote_translatable_id, presence: true
   validates :remote_translatable_type, presence: true
   validates :locale, presence: true
-  validates :locale, inclusion: { in: ->(_) { MachineTranslation.translatable_locales.map(&:to_s) }}
+  validates :locale, inclusion: { in: ->(_) { MachineTranslation.deepl_locales.map(&:to_s) }}
   validate :translating_into_source_locale
   after_create :enqueue_remote_translation
 

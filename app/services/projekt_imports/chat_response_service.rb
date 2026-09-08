@@ -33,9 +33,15 @@ class ProjektImports::ChatResponseService < ApplicationService
 
     ServiceResult.success(content: text)
   rescue StandardError => e
-    Rails.logger.error("[ProjektImports::ChatResponseService] failed: #{e.message}")
-    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "chat" }) if defined?(Sentry)
-    ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.ai_chat_failed", message: e.message))
+    ServiceResult.failure(
+      error: ProjektImports::FailureReporter.error_message(
+        e,
+        source: self.class.name,
+        stage: "chat",
+        key: "ai_chat_failed",
+        sentry_context: { projekt_import_id: projekt_import.id }
+      )
+    )
   end
 
   private

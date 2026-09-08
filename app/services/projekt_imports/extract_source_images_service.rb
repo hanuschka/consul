@@ -50,12 +50,11 @@ class ProjektImports::ExtractSourceImagesService < ApplicationService
   end
 
   def report(error, filename: nil)
-    Rails.logger.error("[ProjektImports::ExtractSourceImagesService] failed: #{error.message}")
-    return if !defined?(Sentry)
-
-    Sentry.capture_exception(
+    ProjektImports::FailureReporter.record(
       error,
-      extra: { projekt_import_id: projekt_import.id, stage: "source_images", filename: filename }.compact
+      source: self.class.name,
+      stage: "source_images",
+      sentry_context: { projekt_import_id: projekt_import.id, filename: filename }.compact
     )
   end
 
@@ -94,7 +93,7 @@ class ProjektImports::ExtractSourceImagesService < ApplicationService
     descriptor_for(image, filename)
   rescue StandardError => e
     report(e, filename: filename)
-    add_analysis_warning("source_image_store_failed", image: image[:filename], message: e.message)
+    add_analysis_warning("source_image_store_failed", image: image[:filename])
 
     nil
   end

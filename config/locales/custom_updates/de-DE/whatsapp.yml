@@ -154,7 +154,30 @@ de:
       # a model asked what the tap meant is the selection step the card removed.
       phase:
         open: "Hier können Sie bei „%{phase}“ mitmachen:"
-        contributions: "Das ist bisher bei „%{phase}“ eingegangen:"
+        # What the message naming a phase's entries opens with, keyed by the phase's
+        # own type name the way the card's buttons are. "Eingegangen" is the
+        # proposal box talking: a milestone phase answering with it has the bot
+        # calling its own timeline a pile of submissions, and an event phase
+        # describing next month's dates as something that has arrived. Read with the
+        # fallback below rather than a nil default — a phase type nobody wrote a line
+        # for still needs a sentence over its entries.
+        contributions_intro:
+          proposal_phase: "Das ist bisher bei „%{phase}“ eingegangen"
+          budget_phase: "Das ist bisher bei „%{phase}“ eingegangen"
+          voting_phase: "Darüber wird bei „%{phase}“ abgestimmt"
+          event_phase: "Das steht bei „%{phase}“ an"
+          milestone_phase: "Das ist bei „%{phase}“ bisher passiert"
+          projekt_notification_phase: "Das wurde bei „%{phase}“ mitgeteilt"
+        contributions_intro_fallback: "Das ist bisher bei „%{phase}“ eingegangen"
+        # The intro either closes its own sentence or accounts for what the message
+        # leaves out. Named only where there is a remainder: naming three of three
+        # and saying so reads as an apology for a complete answer.
+        contributions_all: "%{intro}:"
+        contributions_newest: "%{intro} — hier die %{shown} neuesten von insgesamt %{total}:"
+        contributions_page: "Hier finden Sie alles dazu:"
+        contributions_hint: >-
+          Einen einzelnen Beitrag öffnen Sie über „Beitrag auswählen“ — oder Sie fragen mich
+          einfach danach.
         results: "Die Ergebnisse zu „%{phase}“:"
       # The two ways a row naming one of the citizen's own contributions is
       # answered. A proposal submitted into a moderated phase has no public page
@@ -162,6 +185,9 @@ de:
       # be sayable.
       contribution:
         open: "Ihr Beitrag „%{contribution}“:"
+        # The same pill is offered by a phase's list of everyone's contributions,
+        # where the citizen is the reader rather than the author.
+        open_other: "Der Beitrag „%{contribution}“:"
         in_review: >-
           „%{contribution}“ wird noch geprüft und hat deshalb noch keine öffentliche Seite.
           Sobald der Beitrag freigegeben ist, können Sie ihn öffnen.
@@ -220,6 +246,7 @@ de:
           formular_phase: Formular ausfüllen
           point_of_interest_phase: Mangel melden
         phase_contributions: Beiträge ansehen
+        contribution_choose: Beitrag auswählen
         view_projekt: Projekt ansehen
         my_contributions: Meine Beiträge
         location_skip: Ohne Ort weiter

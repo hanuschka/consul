@@ -137,10 +137,23 @@ en:
         location_optional: A location is optional. You can also carry on without one.
       phase:
         open: "Here is where you can take part in “%{phase}”:"
-        contributions: "Here is what has come in for “%{phase}” so far:"
+        contributions_intro:
+          proposal_phase: "Here is what has come in for “%{phase}” so far"
+          budget_phase: "Here is what has come in for “%{phase}” so far"
+          voting_phase: "Here is what “%{phase}” has to vote on"
+          event_phase: "Here is what is coming up in “%{phase}”"
+          milestone_phase: "Here is what has happened in “%{phase}” so far"
+          projekt_notification_phase: "Here is what has been announced in “%{phase}”"
+        contributions_intro_fallback: "Here is what has come in for “%{phase}” so far"
+        contributions_all: "%{intro}:"
+        contributions_newest: "%{intro} — the %{shown} newest of %{total} altogether:"
+        contributions_page: "You can find everything about it here:"
+        contributions_hint: >-
+          To open a single contribution, use “Choose contribution” — or simply ask me about it.
         results: "The results for “%{phase}”:"
       contribution:
         open: "Your contribution “%{contribution}”:"
+        open_other: "The contribution “%{contribution}”:"
         in_review: >-
           “%{contribution}” is still being reviewed, so it has no public page yet. You will be
           able to open it once it has been approved.
@@ -183,6 +196,7 @@ en:
           formular_phase: Fill in the form
           point_of_interest_phase: Report a defect
         phase_contributions: See what's in
+        contribution_choose: Choose contribution
         view_projekt: View project
         my_contributions: My contributions
         location_skip: Continue without

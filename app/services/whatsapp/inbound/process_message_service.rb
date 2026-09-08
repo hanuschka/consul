@@ -46,6 +46,20 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   # read this is Ruby.
   OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
 
+  # How many of a phase's contributions the reply names in words. Fewer than the nine
+  # a list holds, and deliberately: each one is named over two lines with its own
+  # address, and past five of those the body outgrows the 1024 characters an
+  # interactive message allows — which Whatsapp::Send does not truncate but splits,
+  # sending everything but the last chunk as a separate plain message and leaving the
+  # list attached to whatever the sentence above it had become.
+  MAX_NAMED_CONTRIBUTIONS = 5
+
+  # Keyed by the phase's own type name, the way the projekt card's buttons are:
+  # what a phase holds is named differently for a milestone than for a proposal, and
+  # a register kept per type is the only one that cannot describe next month's events
+  # as something that has already come in.
+  CONTRIBUTIONS_INTRO_SCOPE = "whatsapp.bot.phase.contributions_intro".freeze
+
   def initialize(whatsapp_message:, raw_message: {})
     @whatsapp_message = whatsapp_message
     @raw_message = raw_message || {}
@@ -614,9 +628,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
     end
 
-    # The results where the phase has published any, and what has come in otherwise.
-    # One link either way: the portal page is what lists the contributions properly,
-    # and a chat message repeating ten titles is a list the citizen cannot open.
+    # The results where the phase has published any — one link, because a published
+    # evaluation is a document rather than a set of entries. Everything else names the
+    # newest contributions themselves: their titles, how old they are and their own
+    # addresses, so reading what is in a phase no longer means leaving the chat. The
+    # phase page closes the message off for everything the five named entries leave
+    # out.
     def open_phase_contributions(projekt_phase)
       section = ::Whatsapp::PublishedResultsQuery.public_section_for(projekt_phase)
 
@@ -625,9 +642,155 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         url: ::Whatsapp::ProjektLink.evaluation_url(projekt_phase)
       ) if section.present?
 
-      send_line_with_link(
-        line: I18n.t("whatsapp.bot.phase.contributions", phase: projekt_phase.title),
+      query = ::Whatsapp::PhaseContributionsQuery.new(projekt_phase: projekt_phase)
+      named = query.call.first(MAX_NAMED_CONTRIBUTIONS)
+
+      return send_line_with_link(
+        line: phase_contributions_intro(projekt_phase: projekt_phase, shown: 0, total: 0),
         url: ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+      ) if named.empty?
+
+      send_phase_contributions(projekt_phase: projekt_phase, named: named, total: query.total)
+    end
+
+    # A list wherever any of the named entries can be opened in the chat, and plain
+    # text where none can. Only proposals and budget investments carry a pill — an
+    # event, a poll, a milestone or a notification is named with its link and left out
+    # of the list rather than offered as a choice that would answer with nothing.
+    def send_phase_contributions(projekt_phase:, named:, total:)
+      phase_url = ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+      offered = named.each_with_index.filter_map do |entry, index|
+        contribution_row(entry: entry, position: index + 1)
+      end
+      copy = phase_contributions_copy(projekt_phase: projekt_phase, named: named, total: total)
+
+      body = phase_contributions_body(
+        named: named, copy: copy, phase_url: phase_url, offered: offered.any?
+      )
+
+      return send_phase_contributions_list(body: body, copy: copy, offered: offered) if offered.any?
+
+      ::Whatsapp::Send.text(account: account, body: body)
+
+      true
+    end
+
+    def send_phase_contributions_list(body:, copy:, offered:)
+      ::Whatsapp::Send.list(
+        account: account,
+        body: body,
+        button_label: copy[:button_label].presence ||
+                      I18n.t("whatsapp.bot.buttons.contribution_choose"),
+        rows: offered
+      )
+
+      true
+    end
+
+    # Every fixed line of the message in one translation call, the entries' own dates
+    # included: they are the bot's copy like the sentences around them, and a body in
+    # the citizen's language carrying five German dates reads as two messages.
+    # Deliberately not the titles or the addresses — a title is what its author wrote
+    # and a URL a model rewrites is a dead end with no symptom until it is tapped.
+    #
+    # An entry may have no date at all, which is why the call has to be the one that
+    # puts a blank line back where it found it: everything here is read back by
+    # position.
+    def phase_contributions_copy(projekt_phase:, named:, total:)
+      fixed = [
+        phase_contributions_intro(projekt_phase: projekt_phase, shown: named.size, total: total),
+        I18n.t("whatsapp.bot.phase.contributions_page"),
+        I18n.t("whatsapp.bot.phase.contributions_hint"),
+        I18n.t("whatsapp.bot.buttons.contribution_choose")
+      ]
+
+      lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+        account: account, lines: fixed + named.map { |entry| entry[:description] }
+      )
+
+      {
+        intro: lines[0], page: lines[1], hint: lines[2], button_label: lines[3],
+        dates: lines.drop(fixed.size)
+      }
+    end
+
+    # The phase type's own opening sentence, either closed off or extended to account
+    # for what the message leaves unnamed.
+    def phase_contributions_intro(projekt_phase:, shown:, total:)
+      intro = phase_contributions_opening(projekt_phase)
+
+      return I18n.t("whatsapp.bot.phase.contributions_all", intro: intro) if total <= shown
+
+      I18n.t(
+        "whatsapp.bot.phase.contributions_newest", intro: intro, shown: shown, total: total
+      )
+    end
+
+    def phase_contributions_opening(projekt_phase)
+      I18n.t(
+        "#{CONTRIBUTIONS_INTRO_SCOPE}.#{projekt_phase.name}",
+        phase: projekt_phase.title,
+        default: I18n.t(
+          "whatsapp.bot.phase.contributions_intro_fallback", phase: projekt_phase.title
+        )
+      )
+    end
+
+    def phase_contributions_body(named:, copy:, phase_url:, offered:)
+      entries = named.zip(copy[:dates]).each_with_index.map do |(entry, date), index|
+        contribution_entry(entry: entry, date: date, phase_url: phase_url, position: index + 1)
+      end
+
+      closing = phase_contributions_closing(page_line: copy[:page], phase_url: phase_url)
+      hint = offered ? copy[:hint] : nil
+
+      [copy[:intro], *entries, closing, hint].compact_blank.join("\n\n")
+    end
+
+    # Nothing at all where the projekt has no page: Whatsapp::ProjektLink answers nil
+    # for one, and a closing sentence promising the rest of the contributions with no
+    # address under it is a promise the message cannot keep.
+    def phase_contributions_closing(page_line:, phase_url:)
+      return if phase_url.blank?
+
+      [page_line, phase_url].compact_blank.join("\n")
+    end
+
+    # The entry's own address is dropped where it is the phase page's: a milestone and
+    # a projekt notification have no page of their own, so printing theirs would put
+    # the same URL in the message twice — once as the way to one entry and once as the
+    # way to everything.
+    def contribution_entry(entry:, date:, phase_url:, position:)
+      own_url = entry[:url] == phase_url ? nil : entry[:url]
+      detail = [date, own_url].compact_blank.join("\n")
+
+      ["#{position}. *#{entry[:title]}*", detail.presence].compact.join("\n")
+    end
+
+    # Through the same gate the assistant's rows go through rather than composed here:
+    # it re-checks that the action is one that may be offered and that the record it
+    # names still exists, which is the whole reason a row can be trusted to answer
+    # with what it says.
+    #
+    # Numbered with the same position the entry carries in the message above, and not
+    # for decoration: a row title holds twenty characters, so two proposals whose
+    # titles agree for that long arrive as two rows reading identically, with the same
+    # date under both and nothing on either saying which is which. The number is also
+    # what lets the citizen pick the third one they just read about.
+    def contribution_row(entry:, position:)
+      return if entry[:action_id].blank?
+
+      button = ::Whatsapp::AssistantActions.offered_button(
+        spec: entry[:action_id], label: "#{position}. #{entry[:title]}", conversation: conversation
+      )
+
+      return if button.blank?
+      return button if entry[:description].blank?
+
+      button.merge(
+        description: entry[:description].truncate(
+          ::Ai::Tools::WhatsappAiAssistant::SendList::MAX_DESCRIPTION_LENGTH
+        )
       )
     end
 
@@ -661,7 +824,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       url = ::Whatsapp::PublishedResourceUrl.call(contribution)
 
       return send_line_with_link(
-        line: I18n.t("whatsapp.bot.contribution.open", contribution: contribution.title),
+        line: I18n.t(contribution_opening_key(contribution), contribution: contribution.title),
         url: url
       ) if url.present?
 
@@ -674,6 +837,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       true
+    end
+
+    # Whose contribution it is decides the wording. The same pill is offered by the
+    # citizen's own history and by a phase's list of what everyone has submitted, so
+    # the line that greeted every one of them as "Ihr Beitrag" was calling a stranger's
+    # proposal the citizen's own. Answered from the author rather than from which list
+    # the pill came out of: a pill carries no memory of where it was offered, and a
+    # citizen's own contribution reached through the phase list is still theirs.
+    def contribution_opening_key(contribution)
+      return "whatsapp.bot.contribution.open_other" if account.user_id.blank?
+      return "whatsapp.bot.contribution.open_other" if contribution.author_id != account.user_id
+
+      "whatsapp.bot.contribution.open"
     end
 
     # The sentence goes through the copy service and the address does not. Everything

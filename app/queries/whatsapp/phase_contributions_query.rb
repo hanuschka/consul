@@ -28,20 +28,37 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
   end
 
   def call
-    rows = case @projekt_phase
-           when ProjektPhase::ProposalPhase then proposals
-           when ProjektPhase::BudgetPhase then investments
-           when ProjektPhase::VotingPhase then polls
-           when ProjektPhase::EventPhase then events
-           when ProjektPhase::MilestonePhase then milestones
-           when ProjektPhase::ProjektNotificationPhase then notifications
-           else []
-           end
+    return [] if relation.blank?
 
-    rows.first(::Whatsapp::MAX_OFFERED_LIST_ROWS)
+    relation.limit(::Whatsapp::MAX_OFFERED_LIST_ROWS).map { |record| row_for(record) }.compact
+  end
+
+  # Counted rather than measured off the rows, which are capped: the reply says how
+  # many of the total it names, and a number read off a capped list would say nine
+  # of nine on a phase holding two hundred.
+  def total
+    return 0 if relation.blank?
+
+    relation.count
   end
 
   private
+
+    # The scope alone, unlimited and unmapped, because the reply needs both the rows
+    # and the number they were taken from — and a branch that mapped as it went could
+    # only be counted by running it twice.
+    def relation
+      return @relation if defined?(@relation)
+
+      @relation = case @projekt_phase
+                  when ProjektPhase::ProposalPhase then proposals
+                  when ProjektPhase::BudgetPhase then investments
+                  when ProjektPhase::VotingPhase then polls
+                  when ProjektPhase::EventPhase then events
+                  when ProjektPhase::MilestonePhase then milestones
+                  when ProjektPhase::ProjektNotificationPhase then notifications
+                  end
+    end
 
     # base_selection is the portal's own definition of a publicly listed
     # proposal: published, not archived, not retired, admin-accepted. The bot
@@ -52,30 +69,22 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .base_selection
         .where(projekt_phase_id: @projekt_phase.id)
         .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
-        .map { |proposal| row(proposal.title, Whatsapp::PublishedResourceUrl.call(proposal)) }
     end
 
     def investments
       budget = @projekt_phase.budget
 
-      return [] if budget.blank?
+      return if budget.blank?
 
       Budget::Investment
         .not_unfeasible
         .where(budget_id: budget.id)
         .includes(:budget)
         .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
-        .map { |investment| row(investment.title, Whatsapp::PublishedResourceUrl.call(investment)) }
     end
 
     def polls
-      Poll
-        .where(projekt_phase_id: @projekt_phase.id)
-        .order(:ends_at)
-        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
-        .map { |poll| row(poll.name, poll_url(poll)) }
+      Poll.where(projekt_phase_id: @projekt_phase.id).order(:ends_at)
     end
 
     def events
@@ -83,8 +92,6 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .where(projekt_phase_id: @projekt_phase.id)
         .where("projekt_events.datetime >= ?", Time.current)
         .order(:datetime)
-        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
-        .map { |event| row(event.title, event_url(event), Whatsapp::DatePhrase.absolute(event.datetime)) }
     end
 
     def milestones
@@ -94,26 +101,55 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
         .where("milestones.publication_date <= ?", Time.zone.today)
         .includes(:translations)
         .order(publication_date: :desc)
-        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
-        .map { |milestone| milestone_row(milestone) }
     end
 
     def notifications
-      ProjektNotification
-        .where(projekt_phase_id: @projekt_phase.id)
-        .order(created_at: :desc)
-        .limit(::Whatsapp::MAX_OFFERED_LIST_ROWS)
-        .map { |notification| row(notification.title, phase_url) }
+      ProjektNotification.where(projekt_phase_id: @projekt_phase.id).order(created_at: :desc)
+    end
+
+    # Dispatched on the record rather than on the phase a second time, so each type
+    # names its own title column, its own date and its own way of being opened in one
+    # place.
+    def row_for(record)
+      case record
+      when ::Proposal, ::Budget::Investment then contribution_row(record)
+      when ::Poll then row(title: record.name, url: poll_url(record), description: relative(record.ends_at))
+      when ::ProjektEvent
+        row(title: record.title, url: event_url(record), description: absolute(record.datetime))
+      when ::Milestone then milestone_row(record)
+      when ::ProjektNotification
+        row(title: record.title, url: phase_url, description: relative(record.created_at))
+      end
+    end
+
+    # The only two kinds a row can also be tapped for. Whatsapp::ContributionPill
+    # answers nil for anything else, which is what keeps a poll or an event out of the
+    # selectable list while it is still named in the message.
+    def contribution_row(record)
+      row(
+        title: record.title,
+        url: ::Whatsapp::PublishedResourceUrl.call(record),
+        description: relative(record.created_at),
+        action_id: ::Whatsapp::ContributionPill.id_for(record)
+      )
     end
 
     def milestone_row(milestone)
-      published_on = Whatsapp::DatePhrase.absolute(milestone.publication_date)
+      published_on = absolute(milestone.publication_date)
 
-      row(milestone.title.presence || published_on, phase_url, published_on)
+      row(title: milestone.title.presence || published_on, url: phase_url, description: published_on)
     end
 
-    def row(title, url, description = nil)
-      { title: title.to_s, url: url, description: description }.compact
+    def row(title:, url:, description: nil, action_id: nil)
+      { title: title.to_s, url: url, description: description, action_id: action_id }.compact
+    end
+
+    def relative(value)
+      ::Whatsapp::DatePhrase.relative(value)
+    end
+
+    def absolute(value)
+      ::Whatsapp::DatePhrase.absolute(value)
     end
 
     def poll_url(poll)

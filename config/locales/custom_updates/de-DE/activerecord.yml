@@ -95,17 +95,21 @@ de:
         setting:
           attributes:
             value:
+              # Every setting stores its value in the same "value" column, so the
+              # attribute name prefixes each message with a word that identifies
+              # nothing. The messages name their own field instead.
+              format: "%{message}"
               whatsapp_template_name_invalid: >-
-                muss dem Namen der Vorlage bei 360dialog entsprechen: nur Kleinbuchstaben,
-                Zahlen und Unterstriche, keine Leerzeichen
+                %{field} muss dem Namen der Vorlage bei 360dialog entsprechen: nur
+                Kleinbuchstaben, Zahlen und Unterstriche, keine Leerzeichen
               whatsapp_template_language_invalid: >-
-                muss ein Sprachcode sein, z. B. „de“ oder „de_DE“
+                %{field} muss ein Sprachcode sein, z. B. „de“ oder „de_DE“
               whatsapp_address_form_invalid: >-
-                muss „sie“ oder „du“ sein
+                %{field} muss „sie“ oder „du“ sein
               whatsapp_locale_unavailable: >-
-                muss ein Sprachkürzel sein, das die Plattform anbietet, z. B. „de“ oder „en“
+                %{field} muss ein Sprachkürzel sein, das die Plattform anbietet, z. B. „de“ oder „en“
               whatsapp_positive_integer_invalid: >-
-                muss eine ganze Zahl größer als Null sein
+                %{field} muss eine ganze Zahl größer als Null sein
         deficiency_report:
           attributes:
             map_location:

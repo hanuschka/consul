@@ -62,17 +62,6 @@ en:
           years:
             one: in 1 year
             other: in %{count} years
-      commands:
-        default: |-
-          help|What this chat can do
-          projects|Current participation projects
-          notifications|Choose what you hear about
-          stop|Stop receiving messages
-      ice_breakers:
-        default_1: Which projects are running right now?
-        default_2: I have an idea for my city
-        default_3: How does submitting a contribution work?
-        default_4: Stop receiving messages
       portal_fallback_name: the participation portal
       transcription_failed: I could not understand the voice message. Please write your idea as text.
       assistant_unavailable: >-
@@ -191,7 +180,6 @@ en:
         location_maximum_reached: "This question takes at most %{maximum} places."
         completed: "Thank you — your votes in “%{poll}” are counted."
       onboarding:
-        welcome_greeting: 👋 Good to have you here!
         login_prompt: >-
           Tap below to log in. By opening the link you consent to the processing of your phone
           number under our privacy policy: %{privacy_url}

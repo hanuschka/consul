@@ -50,9 +50,6 @@ en:
         placeholder_position: >-
           Meta does not accept a template whose text begins or ends with a placeholder. Put static
           words before {{1}} and after {{2}}.
-      conversational_components:
-        applied: Chat start applied. It can take a few minutes to appear in WhatsApp.
-        failed: 'Chat start could not be applied: %{error}'
       steps:
         idle: No active flow
         awaiting_link: Waiting for account link
@@ -240,12 +237,6 @@ en:
           dialogs: Dialogs
           test_message: Test message
         feature_title: WhatsApp bot
-        feature_intro: >-
-          Once switched on, citizens can connect their WhatsApp number to their account, the same
-          way they would sign in on the website. From there they can send a chat message to submit
-          a new proposal or a comment, without ever having to open a browser. They also receive a
-          short WhatsApp message with a direct link whenever a new participation project starts, so
-          they can join in right away.
         settings_title: Settings
         settings_intro: Template, speech model and retention for the WhatsApp bot. Changes take effect
           immediately.
@@ -285,28 +276,11 @@ en:
         webhook_unreachable_body: The configuration could not be read from 360dialog. Check the API
           key in config/secrets.yml.
         webhook_none: no webhook registered
-        webhook_registered_url: Registered URL
-        webhook_header: Security header
-        webhook_header_ok:
-          one: set (1 character, matches)
-          other: set (%{count} characters, matches)
-        webhook_header_bad:
+        webhook_summary: 'Registered: %{url} · Header: %{header} · checked %{checked_at}'
+        webhook_header_chars:
           zero: not set
-          one: set but does not match (1 character)
-          other: set but does not match (%{count} characters)
-        webhook_checked_at: Last checked
-        webhook_auto_hint: >-
-          The webhook is registered automatically as soon as the WhatsApp bot above is switched on,
-          using the host you are working on.
-        entry_title: Chat start
-        entry_intro: >-
-          Someone who scans a QR code lands in an empty chat with a prepared message they still have
-          to send. These settings put tappable options and a greeting there instead, so the first
-          step takes one tap.
-        entry_apply: Apply to WhatsApp
-        entry_apply_hint: >-
-          The suggestions and commands are stored at WhatsApp, not on this platform. Changes above
-          only reach citizens after you apply them here.
+          one: 1 character
+          other: "%{count} characters"
         test_title: Test message
         test_intro: >-
           Sends a short message to a number. Free-text messages only reach people who wrote in the

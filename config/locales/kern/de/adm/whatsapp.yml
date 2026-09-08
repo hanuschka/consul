@@ -50,9 +50,6 @@ de:
         placeholder_position: >-
           Meta akzeptiert keine Vorlage, deren Text mit einem Platzhalter beginnt oder endet. Vor
           {{1}} und nach {{2}} muss fester Text stehen.
-      conversational_components:
-        applied: Chat-Einstieg übertragen. Bis er in WhatsApp erscheint, können einige Minuten vergehen.
-        failed: 'Chat-Einstieg konnte nicht übertragen werden: %{error}'
       steps:
         idle: Kein laufender Vorgang
         awaiting_link: Wartet auf Verknüpfung
@@ -244,12 +241,6 @@ de:
           dialogs: Dialoge
           test_message: Testnachricht
         feature_title: WhatsApp-Bot
-        feature_intro: >-
-          Nach der Aktivierung können Bürger:innen ihre WhatsApp-Nummer mit ihrem Konto verbinden
-          – genauso, wie sie sich auch auf der Website anmelden würden. Von dort aus können sie per
-          Chat-Nachricht einen neuen Vorschlag oder einen Kommentar einreichen, ganz ohne den Browser
-          zu öffnen. Außerdem erhalten sie eine kurze WhatsApp-Nachricht mit direktem Link, sobald
-          ein neues Beteiligungsprojekt startet, damit sie sofort mitmachen können.
         settings_title: Einstellungen
         settings_intro: Vorlage, Sprachmodell und Aufbewahrung für den WhatsApp-Bot. Änderungen wirken
           sofort.
@@ -292,28 +283,11 @@ de:
           Die Konfiguration konnte nicht von 360dialog gelesen werden. Prüfe den API-Schlüssel in
           config/secrets.yml.
         webhook_none: kein Webhook registriert
-        webhook_registered_url: Registrierte Adresse
-        webhook_header: Sicherheits-Header
-        webhook_header_ok:
-          one: gesetzt (1 Zeichen, passt)
-          other: gesetzt (%{count} Zeichen, passt)
-        webhook_header_bad:
+        webhook_summary: 'Registriert: %{url} · Header: %{header} · geprüft %{checked_at}'
+        webhook_header_chars:
           zero: nicht gesetzt
-          one: gesetzt, passt aber nicht (1 Zeichen)
-          other: gesetzt, passt aber nicht (%{count} Zeichen)
-        webhook_checked_at: Zuletzt geprüft
-        webhook_auto_hint: >-
-          Der Webhook wird automatisch registriert, sobald der WhatsApp-Bot oben eingeschaltet wird
-          – mit der Adresse, unter der du gerade arbeitest.
-        entry_title: Chat-Einstieg
-        entry_intro: >-
-          Wer einen QR-Code scannt, landet in einem leeren Chat mit einer vorbereiteten Nachricht,
-          die noch abgeschickt werden muss. Diese Einstellungen setzen dort stattdessen antippbare
-          Optionen und eine Begrüßung ein, sodass der erste Schritt ein Tippen ist.
-        entry_apply: An WhatsApp übertragen
-        entry_apply_hint: >-
-          Die Vorschläge und Befehle liegen bei WhatsApp, nicht auf dieser Plattform. Änderungen oben
-          erreichen Bürger:innen erst, wenn du sie hier überträgst.
+          one: 1 Zeichen
+          other: "%{count} Zeichen"
         test_title: Testnachricht
         test_intro: >-
           Sendet eine kurze Nachricht an eine Nummer. Freie Textnachrichten erreichen nur Personen,

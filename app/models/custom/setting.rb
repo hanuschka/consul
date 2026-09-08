@@ -38,7 +38,7 @@ class Setting < ApplicationRecord
     return if value.blank?
     return if value.match?(WHATSAPP_TEMPLATE_NAME_FORMAT)
 
-    errors.add(:value, :whatsapp_template_name_invalid)
+    errors.add(:value, :whatsapp_template_name_invalid, field: whatsapp_field_name)
   end
 
   def validate_whatsapp_template_language
@@ -46,7 +46,7 @@ class Setting < ApplicationRecord
     return if value.blank?
     return if value.match?(WHATSAPP_TEMPLATE_LANGUAGE_FORMAT)
 
-    errors.add(:value, :whatsapp_template_language_invalid)
+    errors.add(:value, :whatsapp_template_language_invalid, field: whatsapp_field_name)
   end
 
   # The field is free text in /adm, and anything the bot does not recognise
@@ -57,7 +57,7 @@ class Setting < ApplicationRecord
     return if value.blank?
     return if ::Whatsapp::ADDRESS_FORMS.include?(value.to_s.downcase)
 
-    errors.add(:value, :whatsapp_address_form_invalid)
+    errors.add(:value, :whatsapp_address_form_invalid, field: whatsapp_field_name)
   end
 
   # An unavailable code leaves the bot on the platform default, so the value
@@ -67,7 +67,7 @@ class Setting < ApplicationRecord
     return if value.blank?
     return if ::Whatsapp.available_locale?(value.to_s)
 
-    errors.add(:value, :whatsapp_locale_unavailable)
+    errors.add(:value, :whatsapp_locale_unavailable, field: whatsapp_field_name)
   end
 
   WHATSAPP_POSITIVE_INTEGER_KEYS = %w[
@@ -82,8 +82,16 @@ class Setting < ApplicationRecord
     return if value.blank?
     return if value.to_s.match?(/\A[1-9][0-9]*\z/)
 
-    errors.add(:value, :whatsapp_positive_integer_invalid)
+    errors.add(:value, :whatsapp_positive_integer_invalid, field: whatsapp_field_name)
   end
+
+  # Every one of these errors reaches the admin as a standalone sentence — in
+  # the field's own error line and in the flash — so it has to name the field
+  # itself. The column is called "value" for all of them, which names nothing.
+  def whatsapp_field_name
+    I18n.t("setting.#{key}", default: key)
+  end
+  private :whatsapp_field_name
 
   def ai_gated?
     AI_GATED_KEYS.include?(key)
@@ -311,13 +319,6 @@ class Setting < ApplicationRecord
 
         "whatsapp.default_locale": nil,
         "whatsapp.address_form": "sie",
-        "whatsapp.welcome_message_enabled": true,
-        "whatsapp.welcome_greeting": nil,
-        "whatsapp.ice_breaker_1": nil,
-        "whatsapp.ice_breaker_2": nil,
-        "whatsapp.ice_breaker_3": nil,
-        "whatsapp.ice_breaker_4": nil,
-        "whatsapp.commands": nil,
         "whatsapp.broadcast_template": nil,
         "whatsapp.broadcast_card_template": nil,
         "whatsapp.deadline_approaching_template": nil,

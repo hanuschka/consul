@@ -4,13 +4,6 @@ module Adm
       feature.whatsapp_bot
     ].freeze
 
-    WELCOME_SETTING_KEY = "whatsapp.welcome_message_enabled".freeze
-    GREETING_SETTING_KEY = "whatsapp.welcome_greeting".freeze
-    COMMANDS_SETTING_KEY = "whatsapp.commands".freeze
-
-    ICE_BREAKER_SETTING_KEYS =
-      (1..::Whatsapp::MAX_ICE_BREAKERS).map { |position| "whatsapp.ice_breaker_#{position}" }.freeze
-
     AUTO_BROADCAST_SETTING_KEY = "whatsapp.auto_broadcast_new_projekts".freeze
 
     TEXT_SETTING_KEYS = %w[
@@ -130,21 +123,6 @@ module Adm
     #     type: "application/pdf",
     #     disposition: "attachment"
     # end
-
-    def configure_conversational_components
-      return head :forbidden if !@configured
-
-      response = ::Whatsapp::Platform::ConfigureConversationalComponentsService.call
-
-      if response&.success?
-        flash[:success] = t("adm.whatsapp.conversational_components.applied")
-      else
-        flash[:error] = t("adm.whatsapp.conversational_components.failed",
-          error: response&.admin_error_message || t("adm.whatsapp.not_configured"))
-      end
-
-      redirect_to connection_adm_whatsapp_path
-    end
 
     def create_template
       @template_form = ::Whatsapp::TemplateForm.new(template_params)
@@ -341,26 +319,10 @@ module Adm
         @feature_settings = FEATURE_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
         @text_settings = TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
         @auto_broadcast_setting = settings_by_key[AUTO_BROADCAST_SETTING_KEY]
-        @entry_settings = entry_settings(settings_by_key)
-      end
-
-      # Editor kind varies per field, so the tab renders pairs rather than one
-      # uniform list: a switch, free text, four short lines and a command block.
-      def entry_settings(settings_by_key)
-        pairs = [
-          [settings_by_key[WELCOME_SETTING_KEY], :boolean],
-          [settings_by_key[GREETING_SETTING_KEY], :text],
-          *ICE_BREAKER_SETTING_KEYS.map { |key| [settings_by_key[key], :string] },
-          [settings_by_key[COMMANDS_SETTING_KEY], :text]
-        ]
-
-        pairs.select { |setting, _kind| setting.present? }
       end
 
       def all_setting_keys
-        FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS + ICE_BREAKER_SETTING_KEYS +
-          [WELCOME_SETTING_KEY, GREETING_SETTING_KEY, COMMANDS_SETTING_KEY,
-           AUTO_BROADCAST_SETTING_KEY]
+        FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS + [AUTO_BROADCAST_SETTING_KEY]
       end
 
       def load_eligible_phases

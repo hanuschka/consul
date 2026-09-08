@@ -71,10 +71,6 @@ class Whatsapp::Inbound::MessageReading
     @whatsapp_message.audio?
   end
 
-  def welcome?
-    @whatsapp_message.welcome?
-  end
-
   def sent_at
     @whatsapp_message.sent_at
   end

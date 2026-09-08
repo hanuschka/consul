@@ -5,8 +5,6 @@ module Whatsapp
   SERVICE_WINDOW = 24.hours
   WEBHOOK_EVENT_RETENTION = 7.days
   PUBLICATION_BROADCAST_DELAY = 20.minutes
-  MAX_ICE_BREAKERS = 4
-  COMMAND_SEPARATOR = "|".freeze
 
   # ── Where the bot's jobs sit in the shared queue ────────────────────────
   # Everything in this app runs on one Delayed Job queue at the default
@@ -246,51 +244,6 @@ module Whatsapp
 
     'formally, with "Sie" (or the equivalent in other languages)'
   end
-
-  def self.welcome_message_enabled?
-    Setting["whatsapp.welcome_message_enabled"].present?
-  end
-
-  # The greeting an admin writes per portal. It heads the WhatsApp welcome message
-  # the phone number itself sends before any conversation exists, which is why it
-  # is a setting rather than something the assistant writes: nothing has been said
-  # yet for it to be written in answer to.
-  def self.welcome_greeting
-    Setting["whatsapp.welcome_greeting"].presence ||
-      I18n.t("whatsapp.bot.onboarding.welcome_greeting")
-  end
-
-  def self.ice_breakers
-    (1..MAX_ICE_BREAKERS).filter_map { |position| ice_breaker(position) }
-  end
-
-  def self.ice_breaker(position)
-    Setting["whatsapp.ice_breaker_#{position}"].presence ||
-      I18n.t("whatsapp.bot.ice_breakers.default_#{position}", default: nil).presence
-  end
-
-  # One command per line, "name|hint". The leading slash WhatsApp displays is
-  # not part of the name, so it is dropped if an admin types it.
-  #
-  # Falls back to the translation the way ice breakers do. Unset, the number's
-  # command menu is empty — and unlike the ice breakers, which vanish after the
-  # first message, that menu is the one entry point still there weeks later.
-  def self.commands
-    configured = Setting["whatsapp.commands"].presence ||
-                 I18n.t("whatsapp.bot.commands.default", default: nil).to_s
-
-    configured.lines.filter_map { |line| command_from(line) }
-  end
-
-  def self.command_from(line)
-    name, description = line.split(COMMAND_SEPARATOR, 2)
-    name = name.to_s.strip.delete_prefix("/")
-
-    return if name.blank?
-
-    { command_name: name, command_description: description.to_s.strip }
-  end
-  private_class_method :command_from
 
   def self.broadcast_template_name
     Setting["whatsapp.broadcast_template"].presence

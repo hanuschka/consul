@@ -69,17 +69,6 @@ de:
           years:
             one: in einem Jahr
             other: in %{count} Jahren
-      commands:
-        default: |-
-          hilfe|Was dieser Chat kann
-          projekte|Laufende Beteiligungsprojekte
-          benachrichtigungen|Auswählen, worüber Sie informiert werden
-          stopp|Keine Nachrichten mehr erhalten
-      ice_breakers:
-        default_1: Welche Projekte laufen gerade?
-        default_2: Ich habe eine Idee für meine Stadt
-        default_3: Wie funktioniert das Einreichen?
-        default_4: Keine Nachrichten mehr erhalten
       portal_fallback_name: das Beteiligungsportal
       transcription_failed: >-
         Ich konnte die Sprachnachricht nicht verstehen. Schreiben Sie Ihre Idee bitte als Text.
@@ -232,7 +221,6 @@ de:
         location_maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Orte möglich."
         completed: "Vielen Dank — Ihre Stimmen bei „%{poll}“ sind gezählt."
       onboarding:
-        welcome_greeting: 👋 Schön, dass Sie hier sind!
         login_prompt: >-
           Zum Anmelden hier tippen. Mit dem Öffnen des Links willigen Sie in die Verarbeitung
           Ihrer Telefonnummer gemäß unserer Datenschutzerklärung ein: %{privacy_url}

@@ -262,7 +262,6 @@ de:
           qr_code: QR-Code
           reach: Reichweite
           dialogs: Dialoge
-          test_message: Testnachricht
         feature_title: WhatsApp-Bot
         model_tier_title: Sprachmodell des Bots (vorübergehend)
         settings_title: Einstellungen
@@ -459,19 +458,19 @@ de:
             läuft gegen den Host, den Sie gerade aufgerufen haben — auf einer Staging-Adresse meldet
             sie deshalb Staging und nicht die Produktivumgebung.
           - >-
-            Die übrigen Felder gestalten den Erstkontakt. Die Willkommensnachricht sendet der Bot,
-            wenn jemand den Chat öffnet, ohne etwas zu schreiben, was in der Regel über einen gescannten
-            QR-Code geschieht. Die Begrüßung ersetzt den Standardtext überall dort, wo der Bot sich
-            vorstellt. Die vier Gesprächseinstiege sind die antippbaren Vorschläge, die WhatsApp über
-            einem leeren Chat anzeigt; sie verschwinden nach der ersten Nachricht und sind deshalb
-            ein Angebot zum Einstieg, kein Menü. Die Befehlsliste ist das Schrägstrich-Menü, das während
-            des gesamten Gesprächs verfügbar bleibt, geschrieben als eine Zeile je Befehl im Format
-            Name|Beschreibung.
+            Darunter sendet der Nachrichtentest eine echte WhatsApp-Nachricht an eine Nummer, die
+            Sie eingeben, und zwar über denselben Weg wie alles andere, was der Bot versendet. Ein
+            Fehlschlag nennt die von Meta gemeldete Ursache, und eine davon überrascht die meisten:
+            An eine Nummer, die dem Portal noch nie geschrieben hat, lässt sich überhaupt keine freie
+            Nachricht senden. Testen Sie mit Ihrem eigenen Telefon und haben von diesem Gerät nie
+            an die Nummer des Portals geschrieben, scheitert der Versand also, gleich wie richtig
+            alles eingerichtet ist. Schreiben Sie der Nummer einmal von diesem Telefon aus und starten
+            Sie den Test dann erneut.
           - >-
-            Begrüßung, Gesprächseinstiege und Befehle werden hier gespeichert, erreichen WhatsApp
-            aber erst, wenn Sie sie übertragen. Meta hält eine eigene Kopie dieser Bestandteile vor,
-            und die Schaltfläche unter den Feldern schickt Ihre Fassung dorthin. Das Übertragen können
-            Sie beliebig oft wiederholen.
+            Der Test legt einen Gesprächseintrag für die Nummer an, falls noch keiner besteht; eine
+            getestete Nummer erscheint danach also in der Gesprächsliste. Das ist so gewollt und
+            zugleich der schnellste Weg, auch den eingehenden Weg zu prüfen: Antworten Sie auf die
+            Testnachricht und sehen Sie zu, wie sie ankommt.
         settings:
           hint: Werte, die der Bot im Betrieb liest. Jedes leere Feld greift auf einen Standard zurück.
           description_title: Wofür diese Seite da ist
@@ -643,38 +642,6 @@ de:
             Seite Einstellungen festgelegte Aufbewahrungsfrist, werden nächtlich gelöscht; diese Liste
             dünnt sich also planmäßig aus. Sichern Sie alles, was Sie als Nachweis benötigen, bevor
             es verfällt.
-        test_message:
-          hint: Eine echte Nachricht an eine Nummer senden, um die Zustellung zu prüfen.
-          description_title: Wofür diese Seite da ist
-          description:
-          - >-
-            Diese Seite sendet eine echte WhatsApp-Nachricht an eine Nummer, die Sie eingeben, und
-            zwar über denselben Weg wie alles andere, was der Bot versendet. Sie beantwortet eine
-            einzige Frage, bevor sich jemand auf den Kanal verlässt: Stellt diese Installation tatsächlich
-            zu?
-          - >-
-            Geben Sie die Nummer im internationalen Format ein, mit Ländervorwahl, ohne Leerzeichen
-            und ohne führende Null. Es kommt ein kurzer, fester Text an. Ändern lässt er sich hier
-            nicht, denn geprüft werden soll der Transportweg und nicht die Formulierung.
-          - >-
-            Das Ergebnis erscheint unter der Schaltfläche und verdient es, gelesen und nicht überflogen
-            zu werden. Erfolg bedeutet, dass Meta die Nachricht angenommen hat, nicht dass sie zugestellt
-            wurde; die Zustellung erscheint anschließend in der Gesprächsliste als Status dieser Nachricht.
-            Ein Fehlschlag nennt die von Meta gemeldete Ursache, und zwei davon sollte man auf den
-            ersten Blick erkennen: An eine Nummer, die diesem Unternehmen noch nie geschrieben hat,
-            lässt sich überhaupt keine freie Nachricht senden, und eine Nummer außerhalb des Vierundzwanzig-Stunden-Fensters
-            ist nur über eine freigegebene Vorlage erreichbar.
-          - >-
-            Der erste Fall überrascht die meisten. Wenn Sie mit Ihrem eigenen Telefon testen und von
-            diesem Gerät nie an die Nummer des Portals geschrieben haben, scheitert der Versand, gleich
-            wie richtig alles eingerichtet ist. Schreiben Sie der Nummer einmal von diesem Telefon
-            aus und starten Sie den Test dann erneut.
-          - >-
-            Nichts von hier ist eine Rundnachricht, und nichts wird einem Projekt zugerechnet. Der
-            Test legt allerdings einen Gesprächseintrag für die Nummer an, falls noch keiner besteht;
-            eine hier getestete Nummer erscheint danach also in der Gesprächsliste. Das ist so gewollt
-            und zugleich der schnellste Weg, auch den eingehenden Weg zu prüfen: Antworten Sie auf
-            die Testnachricht und sehen Sie zu, wie sie ankommt.
     projekts:
       projekts:
         tabs:

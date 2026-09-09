@@ -93,8 +93,12 @@ module Adm
       load_dialogs
     end
 
+    # The test message now lives as a section of the connection page, next to
+    # the webhook status: one asks whether Meta can reach this installation,
+    # the other whether it actually delivers. The route stays so a bookmark
+    # from when this was a tab of its own still arrives somewhere useful.
     def test_message
-      load_page_chrome
+      redirect_to connection_adm_whatsapp_path
     end
 
     def send_test_message

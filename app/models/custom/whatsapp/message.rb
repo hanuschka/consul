@@ -35,6 +35,21 @@ class Whatsapp::Message < ApplicationRecord
     exists?(wa_message_id: wa_message_id, direction: "inbound")
   end
 
+  # The id of the last message this number sent us, which is the only message WhatsApp
+  # will hang a typing indicator on. Asked for where a reply is owed without an inbound
+  # message having triggered it — a vote that finished on a tap two services down, a
+  # login link followed in a browser — so the bubble goes on the message the citizen is
+  # actually looking at.
+  #
+  # Ordered by id rather than by created_at: the rows are written as the messages
+  # arrive, so the newest is the highest id, and the primary key is an index the
+  # timestamp ordering would not use.
+  def self.latest_inbound_id(account:)
+    where(whatsapp_account_id: account.id, direction: "inbound")
+      .order(id: :desc)
+      .pick(:wa_message_id)
+  end
+
   def self.record_outbound!(account:, kind:, body:, response:, projekt_id: nil)
     create!(
       whatsapp_account: account,

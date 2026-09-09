@@ -73,7 +73,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   def call
     return ServiceResult.failure(error: BLANK_MESSAGE_ERROR) if @inbound_text.blank?
 
-    turn = ask
+    turn = within_turn { ask }
     outcome = deliver(turn)
 
     # Written down only for a turn that answered. A blank reply is a failure the
@@ -93,6 +93,24 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   end
 
   private
+
+    # Marks the turn for the depth of the tool loop, so a completion reached from
+    # inside a tool can tell that it is being asked from within an answer already
+    # being written and must not start a second one
+    # (Whatsapp::AiAssistant::ContinueConversationService).
+    #
+    # Around `ask` alone rather than the whole method: the tools run inside it, and
+    # delivery and persistence afterwards call nothing that could re-enter. Restored
+    # rather than cleared, so this cannot be the thing that makes nesting look allowed
+    # once it has been refused.
+    def within_turn
+      running_before = ::Current.whatsapp_assistant_turn_running
+      ::Current.whatsapp_assistant_turn_running = true
+
+      yield
+    ensure
+      ::Current.whatsapp_assistant_turn_running = running_before
+    end
 
     # Which transport answers is a setting, so that a turn that goes wrong on the
     # newer one is a setting away from the older rather than a deploy away.

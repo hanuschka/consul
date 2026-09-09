@@ -53,15 +53,35 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
 
     # The last question is answered, so the ballot is closed off explicitly. A ballot
     # that simply stops sending questions is indistinguishable from a bot that has
-    # died mid-vote, which is the reading this one line exists to prevent.
+    # died mid-vote, which is the reading this exists to prevent.
+    #
+    # Handed to the assistant rather than said in one fixed line, because closing the
+    # ballot off and closing the conversation are two different things and the line did
+    # both: it confirmed the vote with nothing under it to tap, which reads as the bot
+    # being finished with the citizen. What the assistant says instead is the
+    # confirmation and whatever plausibly follows it in this projekt.
+    #
+    # The fixed line stays as the answer for a model that cannot be reached: the
+    # confirmation is the half of this that must arrive whatever else fails.
     def complete
       @conversation.clear_ballot!
 
+      send_completed_line if !carried_on?
+
+      true
+    end
+
+    def carried_on?
+      ::Whatsapp::AiAssistant::ContinueConversationService.call(
+        conversation: @conversation,
+        note: ::Whatsapp::CompletionNotes.ballot_finished(poll: @poll)
+      )
+    end
+
+    def send_completed_line
       ::Whatsapp::Send.locale_text(
         account: @conversation.whatsapp_account,
         body: I18n.t("whatsapp.bot.poll.completed", poll: @poll.name)
       )
-
-      true
     end
 end

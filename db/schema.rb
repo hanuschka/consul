@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_08_140017) do
+ActiveRecord::Schema.define(version: 2026_09_09_151725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2488,6 +2488,15 @@ ActiveRecord::Schema.define(version: 2026_09_08_140017) do
     t.index ["projekt_phase_id"], name: "index_projekt_phase_settings_on_projekt_phase_id"
   end
 
+  create_table "projekt_phase_similar_search_projekts", force: :cascade do |t|
+    t.integer "projekt_phase_id"
+    t.integer "projekt_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_id"], name: "index_projekt_phase_similar_search_projekts_on_projekt_id"
+    t.index ["projekt_phase_id", "projekt_id"], name: "index_projekt_phase_similar_search_projekts_on_pair", unique: true
+  end
+
   create_table "projekt_phase_stat_questions", force: :cascade do |t|
     t.bigint "projekt_phase_id", null: false
     t.text "question", null: false
@@ -2562,6 +2571,8 @@ ActiveRecord::Schema.define(version: 2026_09_08_140017) do
     t.string "masterportal_destroy_status"
     t.text "masterportal_destroy_error"
     t.string "mitmachbox_survey_id"
+    t.string "similar_search_recheck_status"
+    t.datetime "similar_search_recheck_finished_at"
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -3197,6 +3208,18 @@ ActiveRecord::Schema.define(version: 2026_09_08_140017) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["contribution_type", "contribution_id"], name: "index_similar_contribution_memberships_on_contribution", unique: true
     t.index ["similar_contribution_group_id"], name: "index_similar_contribution_memberships_on_group_id"
+  end
+
+  create_table "similar_contribution_references", force: :cascade do |t|
+    t.integer "similar_contribution_group_id"
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.integer "relevance"
+    t.string "reason"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id"], name: "index_similar_contribution_references_on_contribution"
+    t.index ["similar_contribution_group_id", "contribution_type", "contribution_id"], name: "index_similar_contribution_references_on_group_and_contribution", unique: true
   end
 
   create_table "site_customization_content_blocks", id: :serial, force: :cascade do |t|

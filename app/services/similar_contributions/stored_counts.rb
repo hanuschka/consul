@@ -3,14 +3,17 @@ class SimilarContributions::StoredCounts < ApplicationService
     @resources = Array(resources)
   end
 
-  # How many other contributions share each one's stored duplicate set. Two
-  # queries for the whole page rather than one per row, because the admin
-  # tables render this beside every title.
+  # How many other contributions share each one's stored duplicate set, the
+  # matches from further projekts included. Three queries for the whole page
+  # rather than one per row, because the admin tables render this beside every
+  # title.
   def call
     return {} if memberships.empty?
 
     memberships.to_h do |membership|
-      [membership.contribution_id, group_sizes.fetch(membership.similar_contribution_group_id, 1) - 1]
+      group_id = membership.similar_contribution_group_id
+
+      [membership.contribution_id, peers_in(group_id) + references_in(group_id)]
     end
   end
 
@@ -30,10 +33,30 @@ class SimilarContributions::StoredCounts < ApplicationService
         end
     end
 
+    def peers_in(group_id)
+      group_sizes.fetch(group_id, 1) - 1
+    end
+
+    def references_in(group_id)
+      reference_counts.fetch(group_id, 0)
+    end
+
+    def group_ids
+      @group_ids ||= memberships.map(&:similar_contribution_group_id).uniq
+    end
+
     def group_sizes
       @group_sizes ||=
         SimilarContributionMembership
-          .where(similar_contribution_group_id: memberships.map(&:similar_contribution_group_id).uniq)
+          .where(similar_contribution_group_id: group_ids)
+          .group(:similar_contribution_group_id)
+          .count
+    end
+
+    def reference_counts
+      @reference_counts ||=
+        SimilarContributionReference
+          .where(similar_contribution_group_id: group_ids)
           .group(:similar_contribution_group_id)
           .count
     end

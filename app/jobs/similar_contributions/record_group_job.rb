@@ -11,6 +11,10 @@ class SimilarContributions::RecordGroupJob < ApplicationJob
   # is retried and visible, not in a log line beside an empty result.
   def perform(resource)
     SimilarContributions::RecordGroup.call(resource, matches_for(resource))
+
+    SimilarContributions::RecordReferences.call(
+      resource, SimilarContributions::FindForAdditionalProjekts.call(resource)
+    )
   end
 
   private

@@ -26,6 +26,19 @@ module SimilarContributionsHelper
     resource.similar_contributions_peers_count
   end
 
+  # The projekt a match comes from, named only when it is not the projekt being
+  # read: a stored set can now reach into the further projekts the phase has
+  # selected, and a row from an earlier round means nothing without its round
+  # named. A row of the current projekt says so by carrying no name.
+  def similar_contributions_projekt_name_for(match_resource, viewed_resource)
+    match_projekt = SimilarContributions::Scopes.projekt_phase_of(match_resource)&.projekt
+
+    return if match_projekt.blank?
+    return if match_projekt.id == viewed_projekt_id_for(viewed_resource)
+
+    match_projekt.name
+  end
+
   def similar_contributions_path_for(resource)
     return budget_investment_path(resource.budget, resource) if resource.is_a?(::Budget::Investment)
 
@@ -75,6 +88,12 @@ module SimilarContributionsHelper
   end
 
   private
+
+    def viewed_projekt_id_for(viewed_resource)
+      return if viewed_resource.blank?
+
+      SimilarContributions::Scopes.projekt_phase_of(viewed_resource)&.projekt&.id
+    end
 
     # The adm pages authorise a budget investment through the projekt's budget
     # policy and a proposal through its own, so the class a row belongs to also

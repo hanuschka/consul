@@ -174,6 +174,14 @@ class ProjektPhase < ApplicationRecord
   has_many :registered_address_street_projekt_phase, dependent: :destroy
   has_many :registered_address_streets, through: :registered_address_street_projekt_phase
 
+  # The further projekts whose contributions the similarity check searches as
+  # well. The selection is kept as the admin made it -- what the search reads is
+  # #published_similar_search_projekts, so a projekt unpublished after the fact
+  # drops out of the search without the next form save discarding the choice.
+  has_many :projekt_phase_similar_search_projekts, dependent: :destroy
+  has_many :similar_search_projekts,
+           through: :projekt_phase_similar_search_projekts, source: :projekt
+
   has_many :subscriptions, class_name: "ProjektPhaseSubscription", dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
 
@@ -207,6 +215,14 @@ class ProjektPhase < ApplicationRecord
     completed: "completed",
     failed: "failed"
   }, _prefix: :ai_stats_refresh
+
+  # Nil is the fourth state and the one every phase starts in: no re-check of
+  # the already published contributions has ever been asked for.
+  enum similar_search_recheck_status: {
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :similar_search_recheck
 
   enum masterportal_import_status: {
     pending: "pending",
@@ -488,6 +504,14 @@ class ProjektPhase < ApplicationRecord
 
   def feature?(key)
     settings_by_key["feature.#{key}"].present?
+  end
+
+  # What the similarity check may actually search beyond this phase: a selected
+  # projekt that has since been unpublished or deleted is no longer something
+  # staff should be shown matches from, and dropping it here keeps every caller
+  # -- the find, the badge, the re-check -- from repeating the filter.
+  def published_similar_search_projekts
+    similar_search_projekts.with_published_custom_page
   end
 
   # Mirrors the footer partials' map gate: proposal/budget phases render their

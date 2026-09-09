@@ -241,6 +241,9 @@ application.register("poll-question-imports--preview", PollQuestionImportsPrevie
 import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
 application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
 
+import AdmCheckboxFilterController from "./adm/checkbox_filter_controller"
+application.register("adm--checkbox-filter", AdmCheckboxFilterController)
+
 import AdmEvaluationPdfDownloadController from "./adm/evaluation_pdf_download_controller"
 application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadController)
 

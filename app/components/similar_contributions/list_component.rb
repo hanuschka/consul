@@ -16,6 +16,10 @@ class SimilarContributions::ListComponent < ApplicationComponent
     resource.projekt_phase&.title
   end
 
+  def projekt_name_for(match_resource)
+    helpers.similar_contributions_projekt_name_for(match_resource, resource)
+  end
+
   def created_at_for(resource)
     l(resource.created_at, format: :long)
   end

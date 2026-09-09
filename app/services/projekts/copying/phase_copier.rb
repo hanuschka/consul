@@ -1,10 +1,12 @@
 class Projekts::Copying::PhaseCopier < ApplicationService
-  # Everything derived from the source's participants (cached stats) or from a
-  # completed import run against an external system.
+  # Everything derived from the source's participants (cached stats), from a
+  # completed import run against an external system, or from a background run
+  # that only ever happened to the source.
   EXCLUDED_COLUMNS = %w[
     projekt_id
     ai_stats ai_stats_refresh_status ai_stats_refreshed_at
     stats stats_refreshed_at
+    similar_search_recheck_status similar_search_recheck_finished_at
     masterportal_import_status masterportal_last_imported_at
     masterportal_last_imported_count masterportal_import_error
     masterportal_last_endpoint_url masterportal_last_collection_ids
@@ -26,7 +28,7 @@ class Projekts::Copying::PhaseCopier < ApplicationService
     )
 
     copy_settings(copy)
-    copy_restrictions(copy)
+    copy_local_references(copy)
     copy_resource_criteria(copy)
     copy_email_templates(copy)
 
@@ -66,10 +68,11 @@ class Projekts::Copying::PhaseCopier < ApplicationService
       end
     end
 
-    # Empty on an imported bundle: every restriction names a row of this
-    # instance, and a phase re-attached to a same-named row elsewhere would
-    # admit or exclude the wrong people without saying so.
-    def copy_restrictions(copy)
+    # Empty on an imported bundle: each of these names a row of this instance,
+    # and a phase re-attached to a same-named row elsewhere would admit or
+    # exclude the wrong people -- or search the wrong projekt -- without saying
+    # so.
+    def copy_local_references(copy)
       copy.geozone_restrictions =
         Geozone.where(id: local_references["geozone_restriction_ids"])
       copy.registered_address_districts =
@@ -78,6 +81,9 @@ class Projekts::Copying::PhaseCopier < ApplicationService
         RegisteredAddress::Street.where(id: local_references["registered_address_street_ids"])
       copy.individual_group_values =
         IndividualGroupValue.where(id: local_references["individual_group_value_ids"])
+
+      copy.similar_search_projekts =
+        Projekt.where(id: local_references["similar_search_projekt_ids"])
     end
 
     def copy_resource_criteria(copy)

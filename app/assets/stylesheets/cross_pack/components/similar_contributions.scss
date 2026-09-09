@@ -158,6 +158,14 @@
   font-size: 18px;
 }
 
+// The projekt a match comes from, shown only when it is not the one being read.
+// It carries the same scale as the rest of the meta line and only the weight of
+// a heading, because it is what tells an entry of an earlier round apart.
+.similar-contributions-match--projekt {
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
 // Where the match stands in processing. It sits above the title it qualifies,
 // so it reads at the meta scale rather than as another label chip.
 .similar-contributions-match--status {

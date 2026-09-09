@@ -1,0 +1,107 @@
+# Die duzende Fassung der festen Bot-Texte, als Überschreibung statt als eigene
+# Sprache: hier steht nur, was sich zwischen „Sie“ und „du“ tatsächlich anders
+# liest. Alles andere — jede englische Zeile und jede deutsche, die in beiden
+# Anreden gleich klingt — kommt weiter aus whatsapp.yml, weil Whatsapp.copy auf
+# den formellen Schlüssel zurückfällt, sobald dieser Baum ihn nicht führt.
+#
+# Welche Anrede gilt, entscheidet die Einstellung whatsapp.address_form.
+de:
+  whatsapp:
+    bot_du:
+      transcription_failed: "Ich konnte die Sprachnachricht nicht verstehen. Schreib deine Idee bitte als Text."
+      assistant_unavailable: >-
+        Ich kann dir gerade nicht antworten — das ist hoffentlich nur vorübergehend.
+        Versuch es in ein paar Minuten noch einmal.
+      assistant_unavailable_retryable: >-
+        Ich kann dir gerade nicht antworten — das ist hoffentlich nur vorübergehend.
+        Tippe auf „Nochmal versuchen“, dann mache ich genau dort weiter.
+      cancelled: "Alles klar, abgebrochen. Schreib mir einfach wieder, wann immer du möchtest."
+      opted_in: "Du erhältst wieder Nachrichten von uns."
+      compliance:
+        disclosure: "👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet dir kein Mensch direkt."
+        opted_out: "Verstanden, du erhältst keine Nachrichten mehr von uns."
+        opted_out_reminder: >-
+          Du hast dich von unseren Nachrichten abgemeldet, deshalb kann ich dir hier nicht
+          weiterhelfen. Schreib %{keyword}, wenn du wieder Nachrichten erhalten möchtest.
+      comment:
+        online: "Dein Kommentar steht jetzt auf der Seite:"
+        awaiting_review: >-
+          Dein Kommentar ist eingegangen und wird noch geprüft. Sobald er freigegeben ist,
+          erscheint er auf der Seite — einen Link dazu gibt es deshalb noch nicht.
+      preview:
+        online: "Dein Beitrag ist jetzt online:"
+        awaiting_review: >-
+          Dein Beitrag ist eingegangen und liegt jetzt zur Prüfung bei der Verwaltung. Sobald
+          er freigegeben ist, erscheint er auf der Seite — einen Link dazu gibt es deshalb
+          noch nicht.
+      proposal:
+        image_rights_notice: >-
+          Bitte sende nur Bilder, für die du die Rechte hast und auf denen keine Personen
+          erkennbar sind, die damit nicht einverstanden sind.
+        location_optional: "Ein Ort ist freiwillig. Du kannst auch ohne weitermachen."
+      phase:
+        open: "Hier kannst du bei „%{phase}“ mitmachen:"
+        contributions_page: "Hier findest du alles dazu:"
+        contributions_hint: >-
+          Einen einzelnen Beitrag öffnest du über „Beitrag auswählen“ — oder du fragst mich
+          einfach danach.
+      contribution:
+        open: "Dein Beitrag „%{contribution}“:"
+        in_review: >-
+          „%{contribution}“ wird noch geprüft und hat deshalb noch keine öffentliche Seite.
+          Sobald der Beitrag freigegeben ist, kannst du ihn öffnen.
+      poll:
+        login_prompt: >-
+          Zum Abstimmen bei „%{poll}“ brauchst du ein Konto. Zum Anmelden hier tippen —
+          danach geht es mit der Abstimmung gleich weiter. Mit dem Öffnen des Links
+          willigst du in die Verarbeitung deiner Telefonnummer gemäß unserer
+          Datenschutzerklärung ein: %{privacy_url}
+        choices: >-
+          Du kannst bis zu %{maximum} Antworten auswählen und die Auswahl danach
+          abschließen.
+        options_hint: "Deine Antwort wählst du unten aus."
+        open_prompt: "Bitte schreib deine Antwort als Nachricht."
+        location_prompt: "Bitte sende den Ort als Standort."
+        location_prompt_remaining: >-
+          Bitte sende den Ort als Standort. Du kannst noch %{remaining} Orte angeben.
+        location_optional: "Wenn du keinen Ort angeben möchtest, hier tippen."
+        location_remaining: "Du kannst noch %{remaining} Orte angeben."
+        location_outside_area: >-
+          Dieser Ort liegt außerhalb des Gebiets, das für diese Frage festgelegt wurde.
+          Bitte sende einen Ort innerhalb des Gebiets.
+        completed: "Vielen Dank — deine Stimmen bei „%{poll}“ sind gezählt."
+      onboarding:
+        login_prompt: >-
+          Zum Anmelden hier tippen. Mit dem Öffnen des Links willigst du in die Verarbeitung
+          deiner Telefonnummer gemäß unserer Datenschutzerklärung ein: %{privacy_url}
+        linked: >-
+          ✅ Verknüpfung erfolgreich! Ab jetzt kannst du hier direkt Beiträge einreichen,
+          unterstützen und Benachrichtigungen erhalten.
+        unlinked: >-
+          ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Nummer
+          und Chatverlauf bleiben für die übliche Speicherdauer erhalten. Du kannst jederzeit
+          erneut verknüpfen.
+        no_account: >-
+          Für die Verknüpfung brauchst du ein Konto. Die Registrierung dauert 2 Minuten:
+          %{register_url}
+        expired: >-
+          Das hat leider nicht geklappt — der Link ist womöglich abgelaufen. Versuch es noch
+          einmal:
+        already_linked: >-
+          Dein Konto ist bereits mit einer anderen WhatsApp-Nummer verknüpft. Löse diese
+          Verknüpfung zuerst, dann klappt es hier.
+        number_taken: "Diese Nummer ist bereits mit einem anderen Konto verknüpft. Möchtest du wechseln?"
+      notifications:
+        follow_up:
+          deadline_approaching: "Du kannst hier noch mitmachen, bis die Frist abläuft."
+          deadline_passed: "Die Frist ist abgelaufen. Du kannst dir ansehen, was eingegangen ist."
+          status_change: "Bei deinem Beitrag hat sich etwas getan."
+        push:
+          status_change: |-
+            🔔 Es gibt eine Neuigkeit zu deinem Beitrag.
+            %{url}
+          voting_started_action: >-
+            🗳️ Eine neue Abstimmung ist gestartet. Du kannst direkt hier im Chat abstimmen.
+          voting_ending_action: >-
+            ⏳ Nur noch wenige Tage: Die Abstimmung endet bald. Du kannst direkt hier im Chat
+            abstimmen.

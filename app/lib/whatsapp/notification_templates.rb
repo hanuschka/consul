@@ -103,7 +103,7 @@ module Whatsapp::NotificationTemplates
     label = shape(kind) == ACTION_SHAPE ? "vote_now" : "open_ballot"
 
     I18n.with_locale(body_locale(language)) do
-      I18n.t("whatsapp.bot.notifications.push.buttons.#{label}")
+      ::Whatsapp.copy("whatsapp.bot.notifications.push.buttons.#{label}")
     end
   end
 

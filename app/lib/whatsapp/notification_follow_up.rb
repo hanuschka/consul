@@ -85,7 +85,7 @@ module Whatsapp::NotificationFollowUp
   # the default locale while the main-menu pill Send adds came out German — one
   # message, two languages, before BotCopyService had said anything.
   def copy(account, key)
-    I18n.t("whatsapp.bot.#{key}", locale: ::Whatsapp.locale_for(account))
+    ::Whatsapp.copy("whatsapp.bot.#{key}", locale: ::Whatsapp.locale_for(account))
   end
 
   # The body and the labels under it travel through one translation call, for the

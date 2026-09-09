@@ -81,7 +81,7 @@ class Whatsapp::Polls::OfferBallotService < ApplicationService
             "whatsapp.bot.poll.login_prompt",
             poll: poll.name, privacy_url: ::Whatsapp::PortalLinks.privacy_url
           ),
-          I18n.t("whatsapp.bot.buttons.login")
+          ::Whatsapp.copy("whatsapp.bot.buttons.login")
         ]
       )
 

@@ -72,8 +72,8 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
 
     def written_notices
       [
-        I18n.t("whatsapp.bot.proposal.image_rights_notice"),
-        I18n.t("whatsapp.bot.proposal.image_generation_notice")
+        ::Whatsapp.copy("whatsapp.bot.proposal.image_rights_notice"),
+        ::Whatsapp.copy("whatsapp.bot.proposal.image_generation_notice")
       ]
     end
 
@@ -98,7 +98,7 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
 
     def written_labels
       @written_labels ||= ::Whatsapp::FlowActions::IMAGE_ANSWERS.map do |action|
-        I18n.t("whatsapp.bot.buttons.#{action}")
+        ::Whatsapp.copy("whatsapp.bot.buttons.#{action}")
       end
     end
 

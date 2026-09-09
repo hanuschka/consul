@@ -150,7 +150,7 @@ class Whatsapp::Polls::RecordMapPointService < ApplicationService
       ).call
 
       recorded, remaining = translated(
-        I18n.t("whatsapp.bot.poll.location_recorded"), remaining_text
+        ::Whatsapp.copy("whatsapp.bot.poll.location_recorded"), remaining_text
       )
 
       ::Whatsapp::Send.text(
@@ -163,7 +163,7 @@ class Whatsapp::Polls::RecordMapPointService < ApplicationService
 
       return if remaining < 1
 
-      I18n.t("whatsapp.bot.poll.location_remaining", remaining: remaining)
+      ::Whatsapp.copy("whatsapp.bot.poll.location_remaining", remaining: remaining)
     end
 
     # One call for the whole message, because BotCopyService rewrites a message's
@@ -197,7 +197,7 @@ class Whatsapp::Polls::RecordMapPointService < ApplicationService
     # the question stays armed: the next pin is another attempt at the same answer.
     def refuse_outside_area
       ::Whatsapp::Send.locale_text(
-        account: account, body: I18n.t("whatsapp.bot.poll.location_outside_area")
+        account: account, body: ::Whatsapp.copy("whatsapp.bot.poll.location_outside_area")
       )
 
       true

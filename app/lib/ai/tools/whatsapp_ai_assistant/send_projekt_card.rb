@@ -93,7 +93,7 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
       ::Whatsapp::Send.list(
         account: account,
         body: card_body(projekt, summary),
-        button_label: I18n.t("whatsapp.bot.buttons.choose"),
+        button_label: ::Whatsapp.copy("whatsapp.bot.buttons.choose"),
         rows: actions
       )
     end

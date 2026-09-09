@@ -474,7 +474,7 @@ module Whatsapp::Send
   # point of the recovery namespace: these are the buttons that have to be readable
   # when nothing else is.
   def recovery_button(action)
-    { id: RECOVERY_ACTION_IDS.fetch(action), title: I18n.t("whatsapp.bot.buttons.#{action}") }
+    { id: RECOVERY_ACTION_IDS.fetch(action), title: ::Whatsapp.copy("whatsapp.bot.buttons.#{action}") }
   end
 
   def recovery_buttons(actions)

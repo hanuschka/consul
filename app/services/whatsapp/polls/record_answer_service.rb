@@ -84,7 +84,7 @@ class Whatsapp::Polls::RecordAnswerService < ApplicationService
     def refuse_over_maximum
       ::Whatsapp::Send.locale_text(
         account: @conversation.whatsapp_account,
-        body: I18n.t("whatsapp.bot.poll.maximum_reached", maximum: question.max_votes)
+        body: ::Whatsapp.copy("whatsapp.bot.poll.maximum_reached", maximum: question.max_votes)
       )
 
       true

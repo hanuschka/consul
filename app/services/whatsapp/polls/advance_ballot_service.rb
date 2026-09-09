@@ -110,7 +110,7 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
     def send_completed_line
       ::Whatsapp::Send.locale_text(
         account: @conversation.whatsapp_account,
-        body: I18n.t("whatsapp.bot.poll.completed", poll: @poll.name)
+        body: ::Whatsapp.copy("whatsapp.bot.poll.completed", poll: @poll.name)
       )
     end
 end

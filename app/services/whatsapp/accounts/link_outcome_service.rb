@@ -98,7 +98,7 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
     end
 
     def send_linked_line
-      send_bot_line(I18n.t("whatsapp.bot.onboarding.linked"), actions: [:help])
+      send_bot_line(::Whatsapp.copy("whatsapp.bot.onboarding.linked"), actions: [:help])
     end
 
     # No inbound message is being answered here, but there is a conversation behind the

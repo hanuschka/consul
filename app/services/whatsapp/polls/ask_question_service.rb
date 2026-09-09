@@ -18,19 +18,25 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
   # - a rating scale is its steps as pills, with the portal's own wording for the
   #   lowest and the highest above them. It is a `unique` question in every other
   #   respect, and it is recorded as one.
-  # - a weighted question is one choice at a time, named in full, with the numbers
-  #   still free for it as the pills. Each tap records that much weight and comes
-  #   back here for the next choice, so the question is held open by the same marker
-  #   a `multiple` one is held open by.
+  # - a weighted question is one choice at a time, with every choice of it listed and
+  #   the one being weighted marked, and the numbers still free for it as the pills.
+  #   Each tap records that much weight and comes back here for the next choice, so
+  #   the question is held open by the same marker a `multiple` one is held open by.
   # - a map point is WhatsApp's own location picker, which is the one message that
   #   can carry no buttons of its own — so the way past the question follows in a
   #   second short one, the way the drafting flow's picker does it.
   #
-  # Both fixed lines the bot adds — where in the ballot this question sits, and how
-  # many choices a multiple question allows — go into the citizen's language on
-  # their way out. The poll's name and the question's own title do not, for the same
-  # reason a contribution's text does not: a ballot answered in a paraphrase of the
-  # question is not the ballot that was published.
+  # Wherever the options do not fit three buttons, WhatsApp puts them behind a picker
+  # the citizen has to open to see what there is to choose from — so the message
+  # prints them itself, numbered, and the pills carry the same numbers. The number is
+  # what pairs a title cut at twenty characters with its full wording above.
+  #
+  # The fixed lines the bot adds — where in the ballot this question sits, how many
+  # choices a multiple question allows, and where the answer is given — go into the
+  # citizen's language on their way out. The poll's name, the question's own title
+  # and the options do not, for the same reason a contribution's text does not: a
+  # ballot answered in a paraphrase of the question is not the ballot that was
+  # published.
   # The second entry point, for a question the citizen has just tapped the open
   # option of. It is not reachable through #call — there the question's own shape
   # decides, and a question carrying choices beside its open option is asked as
@@ -94,9 +100,17 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     # one is answered by replacing whatever stands, so its options all stay on
     # offer and a citizen changing their mind taps the new one.
     def offerable_options
-      return all_options.to_a if !question.multiple?
+      return titled_options if !question.multiple?
 
-      all_options.reject { |option| chosen_titles.include?(option.title) }
+      titled_options.reject { |option| chosen_titles.include?(option.title) }
+    end
+
+    # An option with no wording has nothing to put on a pill and nothing to read in
+    # the message, so it drops out before either is built. Both are numbered from
+    # this one list: a line numbered against a pill that was never sent points the
+    # citizen at a choice they cannot make.
+    def titled_options
+      all_options.select { |option| option.title.to_s.squish.present? }
     end
 
     def chosen_titles
@@ -135,7 +149,24 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     def ask_for_choice(options)
       disarm_pending!
 
-      send_pills(pills(options), body: body)
+      offer_choices(options, closing_rows: [])
+    end
+
+    # What the message says depends on how its rows will arrive, so the count comes
+    # first. Three of them are buttons printing their own wording, where the message
+    # has nothing to add and the pills nothing to be paired with — a number there
+    # would spend three of the twenty characters a label has on nothing. Past three
+    # WhatsApp puts the rows behind its picker, and then the options are printed in
+    # the message and the pills carry the numbers that pair the two.
+    #
+    # A multiple question's closing pill counts towards the three the way an option
+    # does, which is why it arrives here rather than being appended further down.
+    def offer_choices(options, closing_rows:)
+      if ::Whatsapp.buttons?(options.size + closing_rows.size)
+        return send_pills(pills(options) + closing_rows, body: body([]))
+      end
+
+      send_pills(numbered_pills(options) + closing_rows, body: body(options))
     end
 
     # One choice of a weighted question, with the weight still free for it as the
@@ -181,8 +212,8 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     # as the sentence above it: a line in the citizen's language over a button in the
     # portal's is the split every send here exists to avoid.
     def offer_to_skip_location
-      written_label = I18n.t("whatsapp.bot.buttons.poll_skip", locale: locale)
-      body, label = translated(I18n.t("whatsapp.bot.poll.location_optional"), written_label)
+      written_label = ::Whatsapp.copy("whatsapp.bot.buttons.poll_skip", locale: locale)
+      body, label = translated(::Whatsapp.copy("whatsapp.bot.poll.location_optional"), written_label)
 
       ::Whatsapp::Send.buttons(
         account: account,
@@ -212,11 +243,12 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     # because what makes a multiple question different is that its first answer does
     # not finish it — and the cursor, which reads the recorded answers and nothing
     # else, would move past it on the next message without this.
+    #
     def ask_for_choices(options)
       @conversation.clear_pending_open_question!
       @conversation.store_open_multiple_question!(question.id)
 
-      send_pills(pills(options) + [done_pill], body: body)
+      offer_choices(options, closing_rows: [done_pill])
     end
 
     # Buttons while they fit and a list past that, the same fork the projekt card
@@ -224,7 +256,7 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     # of what it says, and a second line under it would be the bot explaining a
     # ballot to the person voting on it.
     def send_pills(rows, body:)
-      return send_buttons(rows, body: body) if rows.size <= ::Whatsapp::MAX_BUTTONS
+      return send_buttons(rows, body: body) if ::Whatsapp.buttons?(rows.size)
 
       send_list(rows, body: body)
     end
@@ -239,7 +271,7 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
       ::Whatsapp::Send.list(
         account: account,
         body: body,
-        button_label: I18n.t("whatsapp.bot.buttons.choose", locale: locale),
+        button_label: ::Whatsapp.copy("whatsapp.bot.buttons.choose", locale: locale),
         rows: rows
       )
 
@@ -252,13 +284,49 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     # title off the record on the way back is what keeps a cut label from being
     # stored as the vote.
     def pills(options)
-      options.filter_map do |option|
-        title = ::Whatsapp::AssistantActions.truncated(option.title)
-
-        next if title.blank?
-
-        { id: ::Whatsapp::FlowActions.id_for(action: :poll_answer, param: option.id), title: title }
+      options.map do |option|
+        answer_pill(option, ::Whatsapp::AssistantActions.truncated(option.title))
       end
+    end
+
+    # The same pills with the number the message prints beside each option in front
+    # of the wording, for a question whose choices arrive behind the picker. It is
+    # what a citizen reads a cut label back by, and it costs the wording three of the
+    # twenty characters — the cheaper half of the pair, because the option's own
+    # wording stands a line above in full while a pill cut mid-word with nothing to
+    # identify it names no option at all.
+    def numbered_pills(options)
+      numbered(options).map { |number, option| answer_pill(option, pill_label(number, option)) }
+    end
+
+    def pill_label(number, option)
+      return number.to_s if self_numbered?(number, option)
+
+      prefix = "#{number}. "
+      wording = ::Whatsapp::AssistantActions.truncated(
+        option.title,
+        length: ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH - prefix.length
+      )
+
+      "#{prefix}#{wording}"
+    end
+
+    # Whether the option's own wording is already the number standing in front of it.
+    # A rating scale is kept as choices titled "1" to "5", and portals write plain
+    # questions the same way, so without this the pair arrives as "1. 1".
+    def self_numbered?(number, option)
+      option.title.to_s.strip == number.to_s
+    end
+
+    def answer_pill(option, title)
+      { id: ::Whatsapp::FlowActions.id_for(action: :poll_answer, param: option.id), title: title }
+    end
+
+    # The pairing itself, in one place because both sides of it are built separately —
+    # the pills here and the lines in the message body — and a number that means one
+    # option on a button and another in the text is worse than no number at all.
+    def numbered(options)
+      options.each_with_index.map { |option, index| [index + 1, option] }
     end
 
     # Nothing up to whatever is still free for this choice, as its own pill each.
@@ -278,14 +346,14 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     def done_pill
       {
         id: ::Whatsapp::FlowActions.id_for(action: :poll_done, param: question.id),
-        title: I18n.t("whatsapp.bot.buttons.poll_done", locale: locale)
+        title: ::Whatsapp.copy("whatsapp.bot.buttons.poll_done", locale: locale)
       }
     end
 
     def skip_pill
       {
         id: ::Whatsapp::FlowActions.id_for(action: :poll_skip, param: question.id),
-        title: I18n.t("whatsapp.bot.buttons.poll_skip", locale: locale)
+        title: ::Whatsapp.copy("whatsapp.bot.buttons.poll_skip", locale: locale)
       }
     end
 
@@ -294,12 +362,41 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     # reads as the bot asking something of its own. The count under it because a
     # ballot asked one message at a time otherwise gives no sense of its own length —
     # on the page that is what the progress bar is for.
-    def body
-      progress, choices = translated(progress_text, choices_text)
+    def body(printed_options)
+      progress, choices, hint = translated(
+        progress_text, choices_text, options_hint_text(printed_options)
+      )
 
       [
-        "*#{question.poll.name}*", progress, question.title, scale_text, choices
+        "*#{question.poll.name}*", progress, question.title, scale_text,
+        options_text(printed_options), choices, hint
       ].compact_blank.join("\n\n")
+    end
+
+    # The options as a numbered column, in the order the rows offer them and at their
+    # full length. Out of the translation call, like the question's own title and the
+    # scale's labels: an option answered against a paraphrase of it is not the option
+    # that was published.
+    def options_text(options)
+      return if options.empty?
+
+      numbered(options).map { |number, option| option_line(number, option) }.join("\n")
+    end
+
+    def option_line(number, option)
+      return number.to_s if self_numbered?(number, option)
+
+      "#{number}. #{option.title}"
+    end
+
+    # Where the answer is given, which a citizen who has just read the options in the
+    # text has no other reason to look for — the picker is a button saying nothing
+    # about what it opens. Nothing where the options were not printed: the buttons
+    # under a short question are the answer and say so themselves.
+    def options_hint_text(options)
+      return if options.empty?
+
+      ::Whatsapp.copy("whatsapp.bot.poll.options_hint")
     end
 
     # What the two ends of a rating scale mean, which the page prints to the left and
@@ -319,11 +416,11 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
 
       return if minimum.blank? || maximum.blank?
 
-      I18n.t("whatsapp.bot.poll.scale", minimum: minimum, maximum: maximum, locale: locale)
+      ::Whatsapp.copy("whatsapp.bot.poll.scale", minimum: minimum, maximum: maximum, locale: locale)
     end
 
     def text_body
-      progress, prompt = translated(progress_text, I18n.t("whatsapp.bot.poll.open_prompt"))
+      progress, prompt = translated(progress_text, ::Whatsapp.copy("whatsapp.bot.poll.open_prompt"))
 
       ["*#{question.poll.name}*", progress, question.title, prompt].compact_blank.join("\n\n")
     end
@@ -336,8 +433,25 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
       progress, prompt = translated(progress_text, weight_prompt_text(choice))
 
       [
-        "*#{question.poll.name}*", progress, question.title, "*#{choice.title}*", prompt
+        "*#{question.poll.name}*", progress, question.title,
+        weighted_choices_text(choice), prompt
       ].compact_blank.join("\n\n")
+    end
+
+    # Every choice the question holds, with the one being weighted now in bold. A
+    # weighted question arrives one choice at a time, so a citizen asked for the first
+    # number has no way to know how many more are coming or how far the budget has to
+    # stretch — and a weight is spent the moment it is tapped.
+    #
+    # Not numbered, unlike the options of a question answered by tapping one: the
+    # pills here are numbers themselves, and a numbered list above them reads as the
+    # digits to tap.
+    def weighted_choices_text(choice)
+      all_options.map do |option|
+        next "• *#{option.title}*" if option.id == choice.id
+
+        "• #{option.title}"
+      end.join("\n")
     end
 
     def weight_prompt_text(choice)
@@ -357,7 +471,7 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     end
 
     def location_prompt_text
-      return I18n.t("whatsapp.bot.poll.location_prompt") if question.max_map_points < 2
+      return ::Whatsapp.copy("whatsapp.bot.poll.location_prompt") if question.max_map_points < 2
 
       I18n.t(
         "whatsapp.bot.poll.location_prompt_remaining",
@@ -377,7 +491,7 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     def progress_text
       return if @position.total.to_i < 2
 
-      I18n.t("whatsapp.bot.poll.progress", number: @position.number, total: @position.total)
+      ::Whatsapp.copy("whatsapp.bot.poll.progress", number: @position.number, total: @position.total)
     end
 
     # How many choices the question allows, which a citizen looking at a list of
@@ -387,7 +501,7 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     def choices_text
       return if !question.multiple?
 
-      I18n.t("whatsapp.bot.poll.choices", maximum: question.max_votes)
+      ::Whatsapp.copy("whatsapp.bot.poll.choices", maximum: question.max_votes)
     end
 
     # One call for the whole message, because BotCopyService rewrites a message's

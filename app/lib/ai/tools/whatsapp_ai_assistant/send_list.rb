@@ -62,7 +62,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       account: account,
       body: body.strip,
       button_label: ::Whatsapp::AssistantActions.truncated(button_label).presence ||
-                    I18n.t("whatsapp.bot.buttons.choose"),
+                    ::Whatsapp.copy("whatsapp.bot.buttons.choose"),
       rows: listed
     )
 

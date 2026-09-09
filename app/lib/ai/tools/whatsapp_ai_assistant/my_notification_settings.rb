@@ -19,8 +19,8 @@ class Ai::Tools::WhatsappAiAssistant::MyNotificationSettings <
     # dispatcher re-resolves against the known types.
     def row_for(type)
       {
-        name: I18n.t("whatsapp.bot.notifications.types.#{type}.short"),
-        about: I18n.t("whatsapp.bot.notifications.types.#{type}.label"),
+        name: ::Whatsapp.copy("whatsapp.bot.notifications.types.#{type}.short"),
+        about: ::Whatsapp.copy("whatsapp.bot.notifications.types.#{type}.label"),
         enabled: account.notifies?(type),
         action_id: "notify_toggle-#{type}"
       }

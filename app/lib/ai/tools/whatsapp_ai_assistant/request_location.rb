@@ -46,10 +46,10 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
     # of each: a body in the citizen's language over a button in the portal's is the
     # split every other send here exists to avoid.
     def offer_to_continue_without
-      written_label = I18n.t("whatsapp.bot.buttons.location_skip")
+      written_label = ::Whatsapp.copy("whatsapp.bot.buttons.location_skip")
       body, label = ::Whatsapp::AiAssistant::BotCopyService.call(
         account: account,
-        lines: [I18n.t("whatsapp.bot.proposal.location_optional"), written_label]
+        lines: [::Whatsapp.copy("whatsapp.bot.proposal.location_optional"), written_label]
       )
 
       ::Whatsapp::Send.buttons(

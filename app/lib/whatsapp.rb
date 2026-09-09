@@ -41,6 +41,16 @@ module Whatsapp
   # citizen never saw.
   MAX_BUTTONS = 3
 
+  # Whether this many rows arrive as buttons printing their own wording rather than
+  # behind WhatsApp's picker, which two places have to agree on: the sender numbers
+  # the options and prints them in the message only where the picker would hide
+  # them, and the gate that decides whether a ballot can be voted in a chat at all
+  # only asks whether two options can be told apart on a button where a button is
+  # what they arrive on.
+  def self.buttons?(rows_count)
+    rows_count <= MAX_BUTTONS
+  end
+
   # What one message will hold, which the preview has to answer to rather than
   # truncate: a plain text message takes far more than a picture's caption or an
   # interactive message's body, so a block that fits none of the three is split
@@ -221,9 +231,8 @@ module Whatsapp
 
   # How the bot addresses the citizen. German splits this in two and every
   # portal has an answer already — a city writes "Sie", a youth participation
-  # project writes "du" — so it is a setting rather than a translation. Only
-  # the generated prose follows it; the fixed copy in the locale files is
-  # written formally and stays that way.
+  # project writes "du" — so it is a setting rather than a translation. Both the
+  # generated prose and the fixed copy follow it.
   ADDRESS_FORMS = %w[sie du].freeze
   DEFAULT_ADDRESS_FORM = "sie".freeze
 
@@ -233,6 +242,37 @@ module Whatsapp
     return DEFAULT_ADDRESS_FORM if !ADDRESS_FORMS.include?(configured)
 
     configured
+  end
+
+  # Where the bot's fixed copy lives, and where the informal wording of it lives.
+  # The locale files are written formally, and the second tree holds German only and
+  # only the lines that read differently — so it is an override rather than a
+  # translation, and anything missing from it falls back to the formal line: every
+  # line in English, where there is nothing to choose between, and every German line
+  # that is the same either way.
+  BOT_SCOPE = "whatsapp.bot".freeze
+  INFORMAL_BOT_SCOPE = "whatsapp.bot_du".freeze
+
+  # The bot's fixed copy in the address form the portal chose. Every read of a
+  # whatsapp.bot key goes through here rather than through I18n directly, because
+  # nothing about a key says whether its wording differs between the two forms — and
+  # a portal that duzt everywhere except in one consent notice is the split this
+  # setting exists to prevent. A key outside the bot's own scope is passed through
+  # untouched, so a caller need not know which it is holding.
+  #
+  # The formal key goes in front of whatever default the caller passed rather than
+  # replacing it: the formally written line is a better answer than a caller's
+  # stand-in, and a caller's default overwriting it would have been silent.
+  def self.copy(key, **options)
+    return I18n.t(key, **options) if address_form == DEFAULT_ADDRESS_FORM
+
+    prefix = "#{BOT_SCOPE}."
+
+    return I18n.t(key, **options) if !key.to_s.start_with?(prefix)
+
+    informal = "#{INFORMAL_BOT_SCOPE}.#{key.to_s.delete_prefix(prefix)}"
+
+    I18n.t(informal, **options, default: [key.to_s.to_sym, *options[:default]])
   end
 
   # The sentence every prompt that writes German for a citizen carries. Written

@@ -36,7 +36,7 @@ module Whatsapp::MessageBlock
   # translation is unavailable — BotCopyService answers with its own input on every
   # failure path, so there is nothing to rescue here and no label can arrive blank.
   def labels(account:, scope:, keys:)
-    written = keys.index_with { |key| I18n.t("#{scope}.#{key}") }
+    written = keys.index_with { |key| ::Whatsapp.copy("#{scope}.#{key}") }
 
     keys.zip(::Whatsapp::AiAssistant::BotCopyService.call(account: account, lines: written.values))
         .to_h
@@ -105,10 +105,28 @@ module Whatsapp::MessageBlock
     ::Whatsapp.plain_text(text, length: text.length + 1).presence
   end
 
+  # A paragraph with no boundary of its own left inside the limit, cut at the last
+  # place it can be read across: its last line break, then its last space, and only
+  # then the limit itself. The limit alone lands mid-word — and a paragraph long
+  # enough to reach here is a column of lines as often as it is prose, where the
+  # half arriving first would otherwise end in the middle of one of them.
   def hard_slices(paragraph, limit)
     return [paragraph] if paragraph.length <= limit
 
-    paragraph.scan(/.{1,#{limit}}/m)
+    head, rest = readable_cut(paragraph, limit)
+
+    [head, *hard_slices(rest, limit)]
+  end
+
+  # The separator itself belongs to neither half: the two arrive as two messages,
+  # and a message opening on the space that ended the last one reads as a fault.
+  def readable_cut(paragraph, limit)
+    window = paragraph[0, limit]
+    boundary = window.rindex(LINE_BREAK) || window.rindex(" ")
+
+    return [window, paragraph[limit..]] if boundary.nil? || boundary.zero?
+
+    [paragraph[0, boundary], paragraph[(boundary + 1)..]]
   end
 
   def append(collected, paragraph, limit)
@@ -122,5 +140,5 @@ module Whatsapp::MessageBlock
     end
   end
 
-  private_class_method :hard_slices, :append
+  private_class_method :hard_slices, :readable_cut, :append
 end

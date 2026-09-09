@@ -46,7 +46,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   # read this is Ruby.
   OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
 
-  # How many of a phase's contributions the reply names in words. Fewer than the nine
+  # How many of a phase's contributions the reply names in words. Fewer than the ten
   # a list holds, and deliberately: each one is named over two lines with its own
   # address, and past five of those the body outgrows the 1024 characters an
   # interactive message allows — which Whatsapp::Send does not truncate but splits,

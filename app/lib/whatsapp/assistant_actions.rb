@@ -162,8 +162,8 @@ module Whatsapp::AssistantActions
   # Dropped rather than relabelled when the state does not support it, and dropped
   # here rather than trusted to the prompt: the vocabulary the model reads is built
   # once per process, so the conversation is the only place the rule can actually be
-  # enforced. The slot it frees is not backfilled — Whatsapp::Send.with_main_menu
-  # fills a message that is under the cap on its own.
+  # enforced. The slot it frees is not backfilled: nothing is appended to a recovery
+  # line any more except the way back, and that one is added on the way out.
   def recovery_button(spec:, label:, conversation:)
     action, = parse(spec)
     recovery_id = ::Whatsapp::Send::RECOVERY_ACTION_IDS[action]

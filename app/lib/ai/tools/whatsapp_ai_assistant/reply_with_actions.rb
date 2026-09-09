@@ -8,11 +8,10 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
   MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
   description "Answers the citizen with a short text of your own and up to three tappable " \
-              "buttons whose labels you write yourself — the message carries a third of its own, " \
-              "the way to start over, which you never write and never mention. Prefer it over a " \
-              "plain text reply whenever there is an obvious next step: it saves them typing and " \
-              "it says what can happen next. Each button needs an action_id from the list below " \
-              "and a label of at most 20 characters in the citizen's language. Name a " \
+              "buttons whose labels you write yourself — all three are yours to fill. Prefer it " \
+              "over a plain text reply whenever there is an obvious next step: it saves them " \
+              "typing and it says what can happen next. Each button needs an action_id from the " \
+              "list below and a label of at most 20 characters in the citizen's language. Name a " \
               "record-backed action as \"action-id\" using an id a tool in this conversation " \
               "returned (\"view_projekt-482\", \"notify_toggle-new_comments\"); leave its label " \
               "empty to use the record's own name, which is usually better than a paraphrase of " \
@@ -43,7 +42,7 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
     return unusable_actions_error if offerable.empty?
 
-    message = ::Whatsapp::Send.buttons(account: account, body: body.strip, buttons: offerable)
+    message = send_reply(body: body.strip, buttons: offerable)
 
     return send_refused_error if ::Whatsapp::Send.refused?(message)
 
@@ -55,6 +54,21 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
   end
 
   private
+
+    # The reply after a submission went in is where the conversation has actually run
+    # out: the citizen has finished what they came to do, and what this offers next is
+    # an invitation rather than a step they are in the middle of. It is also the only
+    # message that can carry the way back, because the confirmation before it is plain
+    # text with nothing to tap.
+    def send_reply(body:, buttons:)
+      if conversation.submission_completed?
+        return ::Whatsapp::Send.buttons_with_way_out(
+          account: account, body: body, buttons: buttons
+        )
+      end
+
+      ::Whatsapp::Send.buttons(account: account, body: body, buttons: buttons)
+    end
 
     # Deduplicated twice over, and both are silent-failure prevention rather than
     # policy. WhatsApp refuses the whole message when two buttons share an id, so

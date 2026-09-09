@@ -24,21 +24,21 @@ module Whatsapp
   # same number at the protocol edge, where it truncates and warns.
   MAX_LIST_ROWS = 10
 
-  # What a list can actually offer: its last row is the way to start over, and
-  # Whatsapp::Send puts it on every list. This is the number every query that fills
-  # a list is capped at and the size of a Whatsapp::ListWindow page — a query
-  # answering with ten handed the model a tenth row no list could carry, and a
-  # window counting ten as shown paged straight past it.
-  MAX_OFFERED_LIST_ROWS = MAX_LIST_ROWS - 1
+  # What a list can actually offer, which is now every row it holds: a list no
+  # longer carries the way to start over, so the row that used to be reserved for it
+  # goes back to the options. This is the number every query that fills a list is
+  # capped at and the size of a Whatsapp::ListWindow page — a query answering with
+  # more than a list can carry hands the model rows nobody sees, and a window
+  # counting more as shown pages straight past them.
+  MAX_OFFERED_LIST_ROWS = MAX_LIST_ROWS
 
   # A WhatsApp interactive message holds three reply buttons; anything longer
   # becomes a list instead. Declared beside the row cap for the same reason —
   # WhatsappApi::Resources::Messages enforces it again at the protocol edge.
   #
-  # A caller may fill all three. Whatsapp::Send appends the start-over pill only
-  # into a slot no answer wants, so composing three costs the way back rather than
-  # one of the three — which is what keeps a halt line from naming a pill the
-  # citizen never saw.
+  # All three belong to the caller. Only the sends that end the conversation add the
+  # start-over pill, and there it takes a slot like any other answer: a dead end that
+  # already names three ways on is not one.
   MAX_BUTTONS = 3
 
   # Whether this many rows arrive as buttons printing their own wording rather than

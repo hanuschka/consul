@@ -82,8 +82,8 @@ module Whatsapp::NotificationFollowUp
   # Read at the account's own locale rather than at whatever the process happens to
   # be set to. The inbound jobs wrap their work in I18n.with_locale; these two run
   # from a daily schedule and do not, so a German portal was rendering the body in
-  # the default locale while the main-menu pill Send adds came out German — one
-  # message, two languages, before BotCopyService had said anything.
+  # the default locale while the labels beside it came out German — one message, two
+  # languages, before BotCopyService had said anything.
   def copy(account, key)
     ::Whatsapp.copy("whatsapp.bot.#{key}", locale: ::Whatsapp.locale_for(account))
   end
@@ -110,6 +110,12 @@ module Whatsapp::NotificationFollowUp
     return if !::Whatsapp::ServiceWindow.open?(account)
 
     pills = yield
+
+    # A notification carries no way back of its own any more — it is the bot opening
+    # a conversation, not ending one — so an offer with nothing on it is an
+    # interactive message WhatsApp refuses outright rather than one bare pill.
+    return if pills.blank?
+
     lines = ::Whatsapp::AiAssistant::BotCopyService.call(
       account: account, lines: [body, *pills.map { |pill| pill[:title] }]
     )

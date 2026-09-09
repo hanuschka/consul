@@ -17,8 +17,9 @@ module Whatsapp::Send
     help: "whatsapp_help"
   }.freeze
 
-  # The protocol cap applies here too: with_main_menu trims past it, so building a
-  # fourth recovery pill would silently lose it.
+  # The protocol cap applies here too, and a recovery line is one of the few sends
+  # that still carries the start-over pill: with_main_menu drops it once three pills
+  # are named, so a third recovery pill costs the way back and a fourth is lost.
   MAX_RECOVERY_BUTTONS = ::Whatsapp::MAX_BUTTONS
 
   module_function
@@ -58,12 +59,25 @@ module Whatsapp::Send
   end
 
   def buttons(account:, body:, buttons:, header_image_url: nil)
-    offered = with_main_menu(account: account, buttons: buttons)
+    offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
     message = deliver_buttons(
       account: account, body: body, offered: offered, header_image_url: header_image_url
     )
 
     remember_confirmations(account: account, entries: offered, message: message)
+  end
+
+  # The same send where the conversation has actually run out: a step the bot could
+  # not complete, a finished submission, a message with nothing else on offer. Named
+  # rather than switched on a parameter, because "this is a dead end" is what the
+  # call site is saying and `buttons(..., true)` would not say it.
+  def buttons_with_way_out(account:, body:, buttons:, header_image_url: nil)
+    buttons(
+      account: account,
+      body: body,
+      buttons: with_main_menu(account: account, buttons: buttons),
+      header_image_url: header_image_url
+    )
   end
 
   # The same send without the confirmation record, for the recovery lines. Their
@@ -72,6 +86,10 @@ module Whatsapp::Send
   # what the previous message offered with an empty list, and the citizen's screen
   # still shows that message. A "could not answer" line under a comment awaiting a
   # yes would have thrown the yes away.
+  #
+  # Every recovery line is a dead end by definition — it is sent because the bot
+  # could not do what was asked — so this is the one send that still carries the way
+  # back for all of its callers at once.
   def recovery_buttons_message(account:, body:, buttons:)
     deliver_buttons(
       account: account,
@@ -100,7 +118,7 @@ module Whatsapp::Send
   # WhatsApp first means nothing about the send depends on Meta being able to
   # reach us, which on an access-restricted environment it cannot.
   def buttons_with_media_header(account:, body:, buttons:, header_media_id:)
-    offered = with_main_menu(account: account, buttons: buttons)
+    offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
 
     fitting = within_interactive_body(account: account, body: body)
 
@@ -202,7 +220,7 @@ module Whatsapp::Send
   end
 
   def list(account:, body:, button_label:, rows:)
-    listed = with_main_menu_row(account: account, rows: rows)
+    listed = Array(rows).compact.first(::Whatsapp::MAX_OFFERED_LIST_ROWS)
 
     fitting = within_interactive_body(account: account, body: body)
 
@@ -378,19 +396,20 @@ module Whatsapp::Send
     )
   end
 
-  # ── The main-menu pill every interactive message carries ────────────────
-  # Injected here rather than at each caller, and that is the whole point: "every
-  # reply has a way out of it" is a property of the transport, so a tool added next
-  # month inherits it without knowing it exists. Nine callers each remembering to
-  # append one is nine chances for the one message a citizen is stuck on to be the
-  # one that forgot.
+  # ── The main-menu pill, on the sends that end the conversation ──────────
+  # Offered where the bot has nothing further to give: a step it could not complete,
+  # a finished submission, a message with nothing else on it. Everywhere else it was
+  # noise standing between the citizen and the answer they were being asked for —
+  # under a survey question's own options most of all, where it read as one of them.
   #
-  # It fills a slot no answer needs rather than reserving one. A caller may use all
-  # three, and a message that does gets no pill at all: dropping one of its answers
-  # to keep the way back leaves the citizen reading a message that names fewer ways
-  # on than it has, and asking to start over in words still works — so what is given
-  # up is the pill, never an answer. Which is also why the trim keeps the caller's
-  # own pills: starting over is the least of what a message offers.
+  # Not injected into every send any more, so a caller that wants it says so. The
+  # cost of that is a new dead-end path having to remember; the guard against it is
+  # that the recovery family funnels through one method, and asking to start over in
+  # words works from every state regardless.
+  #
+  # It takes a slot rather than filling a spare one: a message that already names
+  # three ways on is not a dead end, so the caller's own pills win and the pill is
+  # dropped. Which is also why the trim keeps them.
   #
   # The label is read at the account's own locale rather than translated through
   # BotCopyService. Two reasons: this runs on the path that must survive the model
@@ -404,14 +423,6 @@ module Whatsapp::Send
     return offered if offered.any? { |button| main_menu_button?(button) }
 
     offered + [main_menu_pill(account)]
-  end
-
-  def with_main_menu_row(account:, rows:)
-    listed = Array(rows).compact
-
-    return listed if listed.any? { |row| main_menu_button?(row) }
-
-    listed.first(::Whatsapp::MAX_OFFERED_LIST_ROWS) + [main_menu_pill(account)]
   end
 
   # A section of its own rather than a row appended to the last one: the sections
@@ -432,13 +443,17 @@ module Whatsapp::Send
   end
 
   # Trimmed from the end, one row at a time, because the ten-row cap is shared
-  # across every section and the last section is the least prominent.
+  # across every section and the last section is the least prominent. It reserves the
+  # row the menu section is about to take rather than reading the offered cap, which
+  # is now the whole ten: a list that carries the pill is the one place a row is
+  # still spoken for.
   def trimmed_sections(sections)
+    kept_rows = ::Whatsapp::MAX_LIST_ROWS - 1
     rows = sections.sum { |section| Array(section[:rows]).size }
 
-    return sections if rows <= ::Whatsapp::MAX_OFFERED_LIST_ROWS
+    return sections if rows <= kept_rows
 
-    over = rows - ::Whatsapp::MAX_OFFERED_LIST_ROWS
+    over = rows - kept_rows
 
     sections.reverse.map do |section|
       kept = Array(section[:rows])
@@ -449,6 +464,10 @@ module Whatsapp::Send
     end.reverse.reject { |section| Array(section[:rows]).empty? }
   end
 
+  # Public because a caller that composes its own buttons may still find itself at a
+  # dead end — a card for a projekt with nothing to act on — and the way-out sends
+  # cannot help it: the pill has to go into the array before the send that carries
+  # the picture with it.
   def main_menu_pill(account)
     {
       id: ::Whatsapp::FlowActions.id_for(action: :main_menu),
@@ -606,8 +625,8 @@ module Whatsapp::Send
   end
 
   private_class_method :recovery_buttons, :deliver_within_service_window, :deliver
-  private_class_method :with_main_menu, :with_main_menu_row, :with_main_menu_section
-  private_class_method :trimmed_sections, :main_menu_pill, :main_menu_button?
+  private_class_method :with_main_menu, :with_main_menu_section
+  private_class_method :trimmed_sections, :main_menu_button?
   private_class_method :deliver_buttons, :remember_confirmations, :irreversible_ids
   private_class_method :within_interactive_body, :delivered?
 end

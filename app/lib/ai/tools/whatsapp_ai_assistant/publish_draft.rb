@@ -121,6 +121,7 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       send_confirmation(url: awaiting_review ? nil : url)
 
       conversation.complete_draft!
+      conversation.note_submission_completed!
 
       {
         published: true,

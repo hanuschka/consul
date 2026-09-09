@@ -34,8 +34,8 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
   end
 
   # Counted rather than measured off the rows, which are capped: the reply says how
-  # many of the total it names, and a number read off a capped list would say nine
-  # of nine on a phase holding two hundred.
+  # many of the total it names, and a number read off a capped list would say ten
+  # of ten on a phase holding two hundred.
   def total
     return 0 if relation.blank?
 

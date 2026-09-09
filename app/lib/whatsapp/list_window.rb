@@ -1,7 +1,7 @@
 module Whatsapp::ListWindow
   # One page of a list the bot sends, and what it owes the model about the rest.
   #
-  # Every list the bot can send is capped at nine offerable rows, and until now a capped list
+  # Every list the bot can send is capped at ten offerable rows, and until now a capped list
   # said nothing about what it cut: two of the tools reported a total beside their
   # rows, the other three reported the rows alone, so on a portal with forty open
   # phases the model answered "ten projekts are running" and had no way to know
@@ -13,11 +13,10 @@ module Whatsapp::ListWindow
   # through the tapped id: `show_more`'s parameter names *which* list, because a
   # scope name is all the inbound side can safely resolve, and the offset is the
   # `next_from` the model was handed with the page it just showed.
-  # The offerable cap rather than the protocol one: a list holds ten rows and the
-  # last is the way to start over, so nine is what a page can actually show. Loading
-  # ten meant the tenth record of every page was reported as shown, counted into the
-  # next offset, and never rendered — one contribution, phase or poll silently lost
-  # per page in every scope below.
+  # What a page can actually show, which a list no longer spends a row of on the way
+  # to start over. Loading more than a list renders means the surplus record of every
+  # page is reported as shown, counted into the next offset, and never seen — one
+  # contribution, phase or poll silently lost per page in every scope below.
   ROWS = ::Whatsapp::MAX_OFFERED_LIST_ROWS
 
   module_function

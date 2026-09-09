@@ -1,8 +1,6 @@
 class Whatsapp::AiAssistant::ContinueConversationService < ApplicationService
   # The one way a finished action hands back into the conversation, and the only place
-  # that knows how to ask the assistant something no citizen wrote. Answers whether it
-  # carried on: false is the caller's signal to send its own closing line, which is why
-  # every caller keeps one.
+  # that knows how to ask the assistant something no citizen wrote.
   #
   # A note rather than an instruction to send fixed copy: the assistant is handed the
   # fact that something completed and writes the confirmation and what follows it itself,
@@ -10,34 +8,55 @@ class Whatsapp::AiAssistant::ContinueConversationService < ApplicationService
   # language the citizen's own. The fixed lines it replaces were locale copy translated
   # after the fact, so this path has one hop fewer rather than one more.
   #
-  # ── Why a turn cannot start inside a turn ───────────────────────────────────
-  # Some completions are reached from a tool the assistant itself called — a ballot
-  # begun through start_poll_vote with every question already answered. A second turn
-  # there would ask the model about a reply it is in the middle of writing, on a chat
-  # state that has not been persisted yet, while holding the conversation's advisory
-  # lock and the tool-call budget of the turn it is nested in. Refused, and the caller's
-  # own line goes out instead — which is exactly what the citizen got before this
-  # existed, so the in-turn path is unchanged rather than degraded.
+  # ── The three answers, and why they are not two ─────────────────────────────
+  # CARRIED_ON is the citizen answered. UNAVAILABLE is nobody is going to answer them
+  # unless the caller does, which is why every caller keeps its closing line. IN_TURN is
+  # neither: an answer is already being written, and the caller's line would land beside
+  # it rather than instead of it.
+  #
+  # A turn cannot start inside a turn. Some completions are reached from a tool the
+  # assistant itself called — a ballot begun through start_poll_vote with every question
+  # already answered — and a second turn there would ask the model about a reply it is
+  # in the middle of writing, on a chat state that has not been persisted yet, while
+  # holding the conversation's advisory lock and the tool-call budget of the turn it is
+  # nested in. The tool that reached this is what says so instead: it has the model's
+  # attention already, so it reports the completion as its result and the reply the
+  # citizen reads is that turn's.
+  #
+  # Which means IN_TURN is only right for a caller reached from a tool that reports it.
+  # There is one — Whatsapp::Polls::OfferBallotService, through start_poll_vote — and a
+  # second in-turn caller that swallowed the outcome would be a completed action nobody
+  # confirmed.
+  CARRIED_ON = :carried_on
+  IN_TURN = :in_turn
+  UNAVAILABLE = :unavailable
+
   def initialize(conversation:, note:)
     @conversation = conversation
     @note = note
   end
 
   def call
-    return false if @note.blank?
-    return false if !::Ai::Settings.ai_available?
-    return false if ::Current.whatsapp_assistant_turn_running
-    return false if typing_message_id.blank?
+    return IN_TURN if ::Current.whatsapp_assistant_turn_running
+    return UNAVAILABLE if @note.blank?
+    return UNAVAILABLE if !::Ai::Settings.ai_available?
+    return UNAVAILABLE if typing_message_id.blank?
 
-    ::Whatsapp::AiAssistant::RouterService.call(
-      conversation: @conversation,
-      inbound_text: @note,
-      typing_message_id: typing_message_id,
-      previous_inbound_at: @conversation.last_inbound_at
-    ).success?
+    return CARRIED_ON if turn.success?
+
+    UNAVAILABLE
   end
 
   private
+
+    def turn
+      ::Whatsapp::AiAssistant::RouterService.call(
+        conversation: @conversation,
+        inbound_text: @note,
+        typing_message_id: typing_message_id,
+        previous_inbound_at: @conversation.last_inbound_at
+      )
+    end
 
     # The message the citizen is sitting under, which for a completion is always the last
     # thing they sent: the tap that finished the vote, or — where the linking was

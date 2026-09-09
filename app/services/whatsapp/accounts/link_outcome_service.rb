@@ -86,10 +86,15 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
       ::Poll.find_by(id: poll_id)
     end
 
+    # Nothing here can be reached from inside a turn — this is a job answering a browser
+    # — so the only outcome that stands in for the fixed line is the citizen having
+    # actually been answered.
     def carried_on?
-      ::Whatsapp::AiAssistant::ContinueConversationService.call(
+      continuation = ::Whatsapp::AiAssistant::ContinueConversationService.call(
         conversation: @conversation, note: ::Whatsapp::CompletionNotes.account_linked
       )
+
+      continuation == ::Whatsapp::AiAssistant::ContinueConversationService::CARRIED_ON
     end
 
     def send_linked_line

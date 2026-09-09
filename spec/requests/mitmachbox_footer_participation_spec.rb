@@ -26,8 +26,13 @@ describe "Answering a Mitmachbox survey from the projekt footer", type: :request
   end
 
   before do
+    enable_online_answering
     allow(Mitmachbox::PublicSurveyService).to receive(:call).and_return(survey)
     allow(Mitmachbox::SubmitWebResponseService).to receive(:call).and_return("created")
+  end
+
+  def enable_online_answering(value = "active")
+    projekt_phase.settings.find_by!(key: "feature.general.answer_survey_online").update!(value: value)
   end
 
   def submit(answers)
@@ -151,19 +156,35 @@ describe "Answering a Mitmachbox survey from the projekt footer", type: :request
       expect(MitmachboxParticipation.count).to eq(0)
     end
 
-    it "honours a phase restriction" do
-      projekt_phase.update!(user_status: "verified")
+    it "refuses a submission after the phase has ended" do
+      projekt_phase.update!(end_date: 2.days.ago, start_date: 10.days.ago)
       expect(Mitmachbox::SubmitWebResponseService).not_to receive(:call)
 
       submit("1" => "10")
 
-      expect(flash_alert).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.not_allowed"))
+      expect(flash_alert).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.closed"))
+    end
+
+    it "refuses a submission before the phase has started" do
+      projekt_phase.update!(start_date: 3.days.from_now, end_date: 10.days.from_now)
+      expect(Mitmachbox::SubmitWebResponseService).not_to receive(:call)
+
+      submit("1" => "10")
+
+      expect(flash_alert).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.closed"))
+    end
+
+    it "ignores the phase user_status, matching what a box in public space can check" do
+      projekt_phase.update!(user_status: "verified")
+      expect(Mitmachbox::SubmitWebResponseService).to receive(:call)
+
+      submit("1" => "10")
+
+      expect(flash_notice).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.thank_you"))
     end
   end
 
-  context "when the phase allows guests" do
-    before { projekt_phase.update!(user_status: "guest") }
-
+  context "guest participation" do
     it "lets a guest submit" do
       guest = create(:user, guest: true)
       login_as(guest)
@@ -197,11 +218,24 @@ describe "Answering a Mitmachbox survey from the projekt footer", type: :request
     end
   end
 
-  it "refuses a signed-out visitor" do
-    expect(Mitmachbox::SubmitWebResponseService).not_to receive(:call)
+  context "when online answering is switched off" do
+    before { enable_online_answering("") }
 
-    submit("1" => "10")
+    it "refuses the submission" do
+      login_as(user)
+      expect(Mitmachbox::SubmitWebResponseService).not_to receive(:call)
 
-    expect(flash_alert).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.not_allowed"))
+      submit("1" => "10")
+
+      expect(flash_alert).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.closed"))
+    end
+  end
+
+  it "lets a signed-out visitor take part without any phase configuration" do
+    expect(Mitmachbox::SubmitWebResponseService).to receive(:call)
+
+    expect { submit("1" => "10") }.to change { User.where(guest: true).count }.by(1)
+
+    expect(flash_notice).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.thank_you"))
   end
 end

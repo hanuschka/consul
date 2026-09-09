@@ -78,6 +78,7 @@ en:
         livestream_phase: Participate now
         mitmachbox_phase: Participate on site
       mitmachbox_phase:
+        public_info: During this phase you can take part in a survey on site. You will find the Mitmachbox devices at the designated locations.
         online_intro: You can answer the survey online right here, or use a Mitmachbox at one of the designated locations.
         submit_button: Submit answer
         required: Required
@@ -86,7 +87,6 @@ en:
         already_answered: You have already taken part in this survey. Thank you!
         closed: This survey is currently not open for participation.
         unavailable: The survey is currently unavailable. Please try again later.
-        not_allowed: You are not allowed to take part in this survey.
         no_answers: Please select at least one answer.
         missing_required: Please answer all required questions.
         submit_failed: Your answer could not be saved. Please try again later.
@@ -220,23 +220,6 @@ en:
           not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
           not_verified: "To continue, please %{verify}."
           organization: Organizations are not allowed to create content.
-          only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
-          only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
-          only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."
-          only_specific_ages: "Participation is limited to citizens in the following age categories: %{age_restriction}."
-          only_specific_individual_group_values: "Participation is limited to: %{individual_group_values}."
-          phase_not_active: This project phase is not active
-          phase_expired: This project phase has already expired
-          phase_not_current: This project phase has not yet started
-          only_admins: Participation is limited to admin users.
-          no_registered_address: A registered address could not be assigned to your account. Please update your account.
-          only_specific_registered_address_groupings: Participation is limited to another area.
-        mitmachbox:
-          guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."
-          not_logged_in: "To continue, you must %{sign_in} or %{sign_up}."
-          missing_user_data: "To continue, please %{enter_missing_user_data}."
-          not_verified: "To continue, please %{verify}."
-          organization: Organizations are not allowed to take part in surveys.
           only_citizens: 'Participation is limited to citizens of the city. Please <a href="/verification">update your data</a> if it''s out of date.'
           only_specific_geozones: "Participation is limited to citizens from the following areas: %{geozones}."
           only_specific_streets: "Participation is limited to residents of the following streets: %{restricted_streets}."

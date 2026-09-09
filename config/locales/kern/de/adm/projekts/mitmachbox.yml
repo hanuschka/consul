@@ -90,6 +90,8 @@ de:
             other: "%{count} Personen haben diese Frage beantwortet"
           count_label: Anzahl
           option_label: Antwortoption
+          source_device_label: Mitmachbox
+          source_web_label: Online
           export_button: Als CSV herunterladen
           empty_title: Noch keine Ergebnisse
           empty_text: Es wurde noch keine Version veröffentlicht oder es liegen noch keine Antworten vor.

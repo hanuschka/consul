@@ -9,11 +9,11 @@ class MitmachboxResponsesController < ApplicationController
       return redirect_back(fallback_location: root_path)
     end
 
-    establish_guest_session! if @projekt_phase.user_status == "guest" && current_user.blank?
-
-    if @projekt_phase.permission_problem(current_user, location: :mitmachbox_phase).present?
-      return redirect_to(footer_path, alert: mitmachbox_t("not_allowed"))
+    unless @projekt_phase.online_answering_open?
+      return redirect_to(footer_path, alert: mitmachbox_t("closed"))
     end
+
+    establish_guest_session! if current_user.blank?
 
     survey = Mitmachbox::PublicSurveyService.call(@projekt_phase)
 

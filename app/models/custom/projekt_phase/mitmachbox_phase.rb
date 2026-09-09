@@ -15,7 +15,8 @@ class ProjektPhase::MitmachboxPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming restrictions mitmachbox_survey mitmachbox_deployments mitmachbox_results]
+    %w[duration naming general_settings
+       mitmachbox_survey mitmachbox_deployments mitmachbox_results]
   end
 
   def customizable_email_templates
@@ -34,15 +35,17 @@ class ProjektPhase::MitmachboxPhase < ProjektPhase
     mitmachbox_survey_id.present?
   end
 
+  def online_answering_enabled?
+    feature?("general.answer_survey_online")
+  end
+
+  def online_answering_open?
+    online_answering_enabled? && current?
+  end
+
   def answered_by?(user, survey_version_id)
     return false if user.blank? || survey_version_id.blank?
 
     mitmachbox_participations.exists?(user_id: user.id, survey_version_id: survey_version_id)
   end
-
-  private
-
-    def phase_specific_permission_problems(user, location)
-      :organization if user.organization?
-    end
 end

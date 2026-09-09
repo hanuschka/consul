@@ -4,11 +4,13 @@
   <%= render Auth::AuthPageTemplateComponent.new do |c| %>
     <% c.with_form do %>
       <h2><%= t("devise_views.sessions.new.title") %></h2>
-      <p>
-        <%= sanitize t("custom.devise_views.users.sessions.new.registration_hint") %>
-      </p>
+      <% unless Brevo::Settings.member_instance? %>
+        <p>
+          <%= sanitize t("custom.devise_views.users.sessions.new.registration_hint") %>
+        </p>
 
-      <div class="auth-page-template--divider"></div>
+        <div class="auth-page-template--divider"></div>
+      <% end %>
 
       <% if SiteCustomization::ContentBlock.custom_block_for("sign_in_hint")&.body&.present? %>
         <%= render_custom_block "sign_in_hint" %>

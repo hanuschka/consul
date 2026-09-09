@@ -60,6 +60,9 @@ module Whatsapp::Send
 
   def buttons(account:, body:, buttons:, header_image_url: nil)
     offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
+
+    return refuse_empty_interactive(account: account, body: body) if offered.empty?
+
     message = deliver_buttons(
       account: account, body: body, offered: offered, header_image_url: header_image_url
     )
@@ -120,6 +123,8 @@ module Whatsapp::Send
   def buttons_with_media_header(account:, body:, buttons:, header_media_id:)
     offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
 
+    return refuse_empty_interactive(account: account, body: body) if offered.empty?
+
     fitting = within_interactive_body(account: account, body: body)
 
     message = deliver_within_service_window(
@@ -150,6 +155,13 @@ module Whatsapp::Send
   # Nil for both routes is simply the message, which is what the caller wants
   # when there was no showable picture to begin with.
   def buttons_with_picture(account:, body:, buttons:, media_id: nil, image_url: nil)
+    # Ahead of the ladder rather than left to the sends it walks: a message with no
+    # options is refused by both rungs, and the second refusal would be recorded as
+    # a picture WhatsApp would not take when the picture was never the problem.
+    if Array(buttons).compact.empty?
+      return refuse_empty_interactive(account: account, body: body)
+    end
+
     return buttons_with_media_header(
       account: account, body: body, buttons: buttons, header_media_id: media_id
     ) if media_id.present?
@@ -222,6 +234,8 @@ module Whatsapp::Send
   def list(account:, body:, button_label:, rows:)
     listed = Array(rows).compact.first(::Whatsapp::MAX_OFFERED_LIST_ROWS)
 
+    return refuse_empty_interactive(account: account, body: body) if listed.empty?
+
     fitting = within_interactive_body(account: account, body: body)
 
     message = deliver_within_service_window(
@@ -237,6 +251,9 @@ module Whatsapp::Send
   # {title:, rows:}; the ten-row limit is shared across all of them.
   def sectioned_list(account:, body:, button_label:, sections:)
     listed = with_main_menu_section(account: account, sections: sections)
+    listed_rows = listed.flat_map { |section| Array(section[:rows]) }
+
+    return refuse_empty_interactive(account: account, body: body) if listed_rows.empty?
 
     fitting = within_interactive_body(account: account, body: body)
 
@@ -606,6 +623,23 @@ module Whatsapp::Send
     chunks.last.to_s
   end
 
+  # An interactive message with nothing on it, refused here rather than at Meta.
+  # WhatsApp rejects the whole send over an empty button or row list, so the round
+  # trip only ever buys the same failure a request later — and it buys it in a
+  # tenant's message log, where a composition bug is read as a delivery problem.
+  # Answered with the failed row the caller already knows how to read, so nothing
+  # downstream needs a third outcome beside delivered and refused.
+  def refuse_empty_interactive(account:, body:)
+    Rails.logger.warn("[Whatsapp] interactive message composed with no options, not sent")
+
+    ::Whatsapp::Message.record_unsent!(
+      account: account,
+      kind: "interactive",
+      body: body.to_s,
+      error: { message: "Interactive message composed with no buttons or rows" }
+    )
+  end
+
   def deliver_within_service_window(account:, kind:, body:, &block)
     return if !Whatsapp::ServiceWindow.deliverable?(account, kind)
 
@@ -628,5 +662,5 @@ module Whatsapp::Send
   private_class_method :with_main_menu, :with_main_menu_section
   private_class_method :trimmed_sections, :main_menu_button?
   private_class_method :deliver_buttons, :remember_confirmations, :irreversible_ids
-  private_class_method :within_interactive_body, :delivered?
+  private_class_method :within_interactive_body, :delivered?, :refuse_empty_interactive
 end

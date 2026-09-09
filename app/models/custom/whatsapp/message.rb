@@ -64,6 +64,23 @@ class Whatsapp::Message < ApplicationRecord
     )
   end
 
+  # A send refused before it was attempted, recorded as the failure it is. The
+  # distinction it keeps is the one every caller already reads: nil means nothing
+  # could be delivered and there is nothing to do differently — a closed service
+  # window — where this is a message composed wrong, which the caller's own error
+  # path is for. No wa_message_id and no sent_at, because WhatsApp never saw it.
+  def self.record_unsent!(account:, kind:, body:, error:, projekt_id: nil)
+    create!(
+      whatsapp_account: account,
+      direction: "outbound",
+      kind: kind,
+      body: body,
+      projekt_id: projekt_id,
+      status: "failed",
+      error: error
+    )
+  end
+
   # Anything that left the system counts as delivered for broadcast purposes:
   # matching "sent" alone would re-send to everyone whose delivery receipt has
   # since moved the row on to "delivered" or "read".

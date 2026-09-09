@@ -1,12 +1,85 @@
 <div class="projekt-footer--inner">
 <%= render "custom/pages/projekt_footer/partials/phase_intro", projekt_phase: @projekt_phase %>
 
-<div class="row">
-  <div class="column">
-    <% if @projekt_phase.description.present? %>
+<% if @projekt_phase.description.present? %>
+  <div class="row">
+    <div class="column">
       <%= AdminWYSIWYGSanitizer.new.sanitize(@projekt_phase.description) %>
+    </div>
+  </div>
+<% end %>
+
+<div class="row">
+  <div class="small-12 medium-8 column mitmachbox-survey">
+    <% permission_problem = @projekt_phase.permission_problem(current_user, location: :mitmachbox_phase) %>
+
+    <% if @mitmachbox_already_answered %>
+      <div class="callout success">
+        <%= t("custom.projekt_phases.mitmachbox_phase.already_answered") %>
+      </div>
+
+    <% elsif @mitmachbox_survey.blank? || @mitmachbox_survey["questions"].blank? %>
+      <div class="callout primary">
+        <%= t("custom.projekt_phases.mitmachbox_phase.unavailable") %>
+      </div>
+
+    <% elsif @mitmachbox_survey["state"] != "open" %>
+      <div class="callout primary">
+        <%= t("custom.projekt_phases.mitmachbox_phase.closed") %>
+      </div>
+
     <% else %>
-      <p><%= t("custom.projekt_phases.mitmachbox_phase.public_info") %></p>
+      <p><%= t("custom.projekt_phases.mitmachbox_phase.online_intro") %></p>
+
+      <%= form_with url: mitmachbox_response_projekt_phase_path(@projekt_phase),
+                    method: :post, local: true, class: "mitmachbox-survey-form" do %>
+        <% @mitmachbox_survey["questions"].each do |question| %>
+          <% multiple = question["question_type"] == "multiple_choice" %>
+          <% field_name = multiple ? "mitmachbox_answers[#{question["id"]}][]" : "mitmachbox_answers[#{question["id"]}]" %>
+          <% hint_id = "mitmachbox_question_#{question["id"]}_hint" if multiple %>
+
+          <%= tag.fieldset class: "mitmachbox-survey-question", aria: { describedby: hint_id } do %>
+            <legend class="mitmachbox-survey-question-legend">
+              <h3 class="mitmachbox-survey-question-prompt"><%= question["prompt"] %></h3>
+              <% if question["required"] %>
+                <span class="mitmachbox-survey-question-required">
+                  <%= t("custom.projekt_phases.mitmachbox_phase.required") %>
+                </span>
+              <% end %>
+            </legend>
+
+            <% if multiple %>
+              <p class="help-text" id="<%= hint_id %>">
+                <%= t("custom.projekt_phases.mitmachbox_phase.multiple_hint") %>
+              </p>
+            <% end %>
+
+            <% question["options"].each do |option| %>
+              <% input_id = "mitmachbox_question_#{question["id"]}_option_#{option["id"]}" %>
+              <div class="mitmachbox-survey-option">
+                <% if multiple %>
+                  <%= check_box_tag field_name, option["id"], false, id: input_id %>
+                <% else %>
+                  <%= radio_button_tag field_name, option["id"], false,
+                        id: input_id, required: question["required"] %>
+                <% end %>
+                <%= label_tag input_id, option["label"],
+                      class: "button hollow expanded mitmachbox-survey-option-label" %>
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <div class="actions">
+          <%= submit_tag t("custom.projekt_phases.mitmachbox_phase.submit_button"),
+                class: "button new-resource-button" %>
+          <% if permission_problem.present? && permission_problem != :guest_not_logged_in %>
+            <div class="callout alert new-resource-not-allowed-message" style="display:none">
+              <%= projekt_phase_view_permission_problem_message(permission_problem, @projekt_phase) %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
     <% end %>
   </div>
 </div>

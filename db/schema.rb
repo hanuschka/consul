@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_08_130000) do
+ActiveRecord::Schema.define(version: 2026_09_09_130000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1814,6 +1814,17 @@ ActiveRecord::Schema.define(version: 2026_09_08_130000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["status_id"], name: "index_milestones_on_status_id"
+  end
+
+  create_table "mitmachbox_participations", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "survey_version_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "user_id", "survey_version_id"], name: "index_mitmachbox_participations_on_phase_user_version", unique: true
+    t.index ["projekt_phase_id"], name: "index_mitmachbox_participations_on_projekt_phase_id"
+    t.index ["user_id"], name: "index_mitmachbox_participations_on_user_id"
   end
 
   create_table "ml_summary_comments", force: :cascade do |t|
@@ -3824,6 +3835,8 @@ ActiveRecord::Schema.define(version: 2026_09_08_130000) do
   add_foreign_key "masterportal_collections", "projekt_phases"
   add_foreign_key "masterportal_pins", "masterportal_collections"
   add_foreign_key "memos", "users"
+  add_foreign_key "mitmachbox_participations", "projekt_phases"
+  add_foreign_key "mitmachbox_participations", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
   add_foreign_key "navbar_items", "projekts"

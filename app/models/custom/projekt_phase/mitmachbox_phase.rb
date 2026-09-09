@@ -1,4 +1,7 @@
 class ProjektPhase::MitmachboxPhase < ProjektPhase
+  has_many :mitmachbox_participations, foreign_key: :projekt_phase_id,
+    dependent: :destroy, inverse_of: :projekt_phase
+
   def name
     "mitmachbox_phase"
   end
@@ -12,7 +15,7 @@ class ProjektPhase::MitmachboxPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[duration naming mitmachbox_survey mitmachbox_deployments mitmachbox_results]
+    %w[duration naming restrictions mitmachbox_survey mitmachbox_deployments mitmachbox_results]
   end
 
   def customizable_email_templates
@@ -30,4 +33,16 @@ class ProjektPhase::MitmachboxPhase < ProjektPhase
   def remote_survey_created?
     mitmachbox_survey_id.present?
   end
+
+  def answered_by?(user, survey_version_id)
+    return false if user.blank? || survey_version_id.blank?
+
+    mitmachbox_participations.exists?(user_id: user.id, survey_version_id: survey_version_id)
+  end
+
+  private
+
+    def phase_specific_permission_problems(user, location)
+      :organization if user.organization?
+    end
 end

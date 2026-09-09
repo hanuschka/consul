@@ -1,8 +1,13 @@
 <%# The pushes the bot sends on its own, each bound to one setting the jobs
     read. Nothing to fill in here: body, name, language and button label all
-    follow from the kind, so the only choice left is which of them to run. %>
+    follow from the kind, so the only choice left is which of them to run.
+
+    Cards rather than table rows: what matters about a push is the wording the
+    citizen receives, and a multi-line quoted message in a table cell read as a
+    second row. The technical name is not repeated here — it is in the slot
+    summary at the top of the page, where it is one column among five. %>
 <section class="mt-5">
-  <h2 class="kern-title mb-2">
+  <h2 class="kern-heading-medium mb-2">
     <%= t("adm.whatsapp.show.notification_templates_title") %>
   </h2>
 
@@ -14,22 +19,12 @@
   <%# The voting rows are three per moment where every other push is one, so what
       picks between them is said here rather than left to be inferred from the
       row labels. %>
-  <p class="kern-body adm-whatsapp-page--explanation mb-3">
+  <p class="kern-body adm-whatsapp-page--explanation mb-4">
     <%= t("adm.whatsapp.show.notification_templates_voting_intro") %>
   </p>
 
-  <table class="kern-table">
-    <thead>
-      <tr>
-        <th><%= t("adm.whatsapp.show.notification_template_column") %></th>
-        <th><%= t("adm.whatsapp.show.template_name") %></th>
-        <th><%= t("adm.whatsapp.show.template_status") %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= render partial: "adm/whatsapp/notification_template_row",
-        collection: @notification_templates, as: :notification_template %>
-    </tbody>
-  </table>
+  <div class="adm-whatsapp-page--notification-cards">
+    <%= render partial: "adm/whatsapp/notification_template_card",
+      collection: @notification_templates, as: :notification_template %>
+  </div>
 </section>

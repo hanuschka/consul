@@ -7,7 +7,7 @@
   <% conversations = @reach_stats[:conversations] %>
 
   <section class="mb-5">
-    <h2 class="kern-title mb-1"><%= t("adm.whatsapp.reach.contacts_title") %></h2>
+    <h2 class="kern-heading-medium mb-1"><%= t("adm.whatsapp.reach.contacts_title") %></h2>
     <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.reach.contacts_intro") %></p>
 
     <%= render "adm/whatsapp/stat_grid", tiles: @reach_tiles[:contacts][:tiles] %>
@@ -18,14 +18,14 @@
   </section>
 
   <section class="mb-5">
-    <h2 class="kern-title mb-1"><%= t("adm.whatsapp.reach.activity_title") %></h2>
+    <h2 class="kern-heading-medium mb-1"><%= t("adm.whatsapp.reach.activity_title") %></h2>
     <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.reach.activity_intro") %></p>
 
     <%= render "adm/whatsapp/stat_grid", tiles: @reach_tiles[:activity][:tiles] %>
   </section>
 
   <section class="mb-5">
-    <h2 class="kern-title mb-1"><%= t("adm.whatsapp.reach.messages_title") %></h2>
+    <h2 class="kern-heading-medium mb-1"><%= t("adm.whatsapp.reach.messages_title") %></h2>
     <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.reach.messages_intro") %></p>
 
     <%= render "adm/whatsapp/stat_grid", tiles: @reach_tiles[:messages][:tiles] %>
@@ -39,7 +39,7 @@
   </section>
 
   <section class="mb-5">
-    <h2 class="kern-title mb-1"><%= t("adm.whatsapp.reach.broadcasts_title") %></h2>
+    <h2 class="kern-heading-medium mb-1"><%= t("adm.whatsapp.reach.broadcasts_title") %></h2>
     <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.reach.broadcasts_intro") %></p>
 
     <% if broadcasts.any? %>
@@ -84,7 +84,7 @@
   </section>
 
   <section class="mb-5">
-    <h2 class="kern-title mb-1"><%= t("adm.whatsapp.reach.flows_title") %></h2>
+    <h2 class="kern-heading-medium mb-1"><%= t("adm.whatsapp.reach.flows_title") %></h2>
     <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.reach.flows_intro") %></p>
 
     <% if conversations[:in_flight].positive? %>

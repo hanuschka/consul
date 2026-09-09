@@ -41,6 +41,8 @@ namespace :adm do
     patch :use_template
     post :create_notification_template
     patch :use_notification_template
+    post :resubmit_notification_template
+    delete :delete_template
     # PDF QR poster disabled for now — see Adm::WhatsappController.
     # get :qr_poster
 

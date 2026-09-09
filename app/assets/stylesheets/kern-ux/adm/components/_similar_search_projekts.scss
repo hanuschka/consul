@@ -1,0 +1,103 @@
+// The per-phase picker of further projekts for the similarity check. An
+// instance can carry hundreds of published projekts, so the list is a bounded,
+// scrollable box with a filter above it rather than a page-long column.
+
+.similar-search-projekts--toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+}
+
+.similar-search-projekts--search {
+  flex: 1 1 240px;
+  max-width: 360px;
+}
+
+.similar-search-projekts--search-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  margin: 0;
+  padding: 6px 12px;
+  font-size: 16px;
+  line-height: 1.3;
+  color: #222;
+  background: #fff;
+  border: 1px solid var(--kern-color-layout-border, #d9d9d9);
+  border-radius: 6px;
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-primary, #1e40af);
+    outline-offset: 1px;
+  }
+}
+
+.similar-search-projekts--selected {
+  margin: 0;
+  font-size: 14px;
+  color: #4a4a4a;
+}
+
+.similar-search-projekts--selected-count {
+  font-weight: 600;
+}
+
+// Bounded height is the point: without it the tab grows by one row per projekt
+// on the instance, and the settings below it move out of reach.
+.similar-search-projekts--list {
+  display: grid;
+  gap: 2px 24px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid var(--kern-color-layout-border, #d9d9d9);
+  border-radius: 6px;
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// The filter hides items rather than removing them, so their checked state
+// still reaches the form. Stated explicitly because a grid item carries a
+// display of its own that would otherwise win over the [hidden] default.
+.similar-search-projekts--item[hidden] {
+  display: none;
+}
+
+.similar-search-projekts--no-matches {
+  margin: 8px 0 0;
+}
+
+.similar-search-projekts--recheck {
+  margin-top: 24px;
+}
+
+.similar-search-projekts--recheck-running {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.similar-search-projekts--recheck-failed {
+  margin: 0 0 8px;
+  font-weight: 600;
+  color: var(--kern-color-feedback-danger, #b42318);
+}
+
+.similar-search-projekts--recheck-content p {
+  margin: 8px 0 0;
+}
+
+.similar-search-projekts--recheck-last {
+  font-size: 14px;
+  color: #4a4a4a;
+}

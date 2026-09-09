@@ -41,7 +41,7 @@ de:
         supported_link: "Zum unterstützten Beitrag"
         submit_anyway: "Beitrag trotzdem einreichen"
       list_component:
-        title: "Ähnliche Beiträge im Projekt"
+        title: "Ähnliche Beiträge"
         not_a_duplicate: "Kein Duplikat"
         not_a_duplicate_confirm: "Diesen Beitrag aus der Duplikatgruppe entfernen? Er wird nicht erneut mit diesem Beitrag gruppiert."
         empty: "Es wurden keine inhaltlich ähnlichen Beiträge gefunden."

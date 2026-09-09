@@ -9,6 +9,12 @@
         <%= render SimilarContributions::MatchItemComponent.new(match.resource, variant: :list) do |item| %>
           <% item.with_meta do %>
             <p class="similar-contributions-match--meta">
+              <% if projekt_name_for(match.resource).present? %>
+                <span class="similar-contributions-match--projekt">
+                  <%= projekt_name_for(match.resource) %>
+                </span>
+                &middot;
+              <% end %>
               <%= phase_title_for(match.resource) %>
               &middot;
               <%= processing_status_for(match.resource) %>

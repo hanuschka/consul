@@ -8,6 +8,7 @@
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.show_implementation_option_fields"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.show_user_cost_estimate"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.general.similar_contributions_check"), :value, :boolean) %>
+<%= render "adm/projekts/phases/form_author/similar_search_projekts", projekt_phase: projekt_phase %>
 
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.form.map_features_limit"), :value, :string) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.form.description_max_length"), :value, :string) %>

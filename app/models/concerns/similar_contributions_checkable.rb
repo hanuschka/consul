@@ -48,7 +48,8 @@ module SimilarContributionsCheckable
 
     return 0 if group.nil?
 
-    group.similar_contribution_memberships.count - 1
+    group.similar_contribution_memberships.count - 1 +
+      group.similar_contribution_references.count
   end
 
   private

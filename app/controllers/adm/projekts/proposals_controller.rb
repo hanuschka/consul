@@ -31,13 +31,16 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
     authorize [:adm, @proposal], :show?
 
     render partial: "adm/projekts/similar_contributions/popup",
-           locals: { matches: ::SimilarContributions::StoredGroup.call(@proposal) }
+           locals: { matches: ::SimilarContributions::StoredGroup.call(@proposal), resource: @proposal }
   end
 
   def exclude_similar_contribution
     authorize [:adm, @proposal], :update?
 
-    excluded = @projekt_phase.projekt.proposals.find(params[:excluded_id])
+    excluded = ::SimilarContributions::Scopes
+      .excludable_relation(@proposal, @projekt_phase)
+      .find(params[:excluded_id])
+
     ::SimilarContributions::ExcludeFromGroup.call(@proposal, excluded, admin: current_user)
 
     redirect_to adm_projekts_phase_proposal_path(@projekt_phase, @proposal),

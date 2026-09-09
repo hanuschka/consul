@@ -116,6 +116,8 @@ namespace :adm do
         # AI
         get :ai_settings
         patch :update_ai_settings
+        post :recheck_similar_contributions
+        get :similar_contributions_recheck_status
 
         # Dynamic resources (from resources_name)
         get :projekt_notifications

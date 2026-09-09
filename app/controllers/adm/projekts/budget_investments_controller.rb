@@ -31,14 +31,16 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @investment], :show?, policy_class: Adm::Projekts::BudgetPolicy
 
     render partial: "adm/projekts/similar_contributions/popup",
-           locals: { matches: ::SimilarContributions::StoredGroup.call(@investment) }
+           locals: { matches: ::SimilarContributions::StoredGroup.call(@investment), resource: @investment }
   end
 
   def exclude_similar_contribution
     authorize [:adm, :projekts, @investment], :update?, policy_class: Adm::Projekts::BudgetPolicy
 
-    excluded = ::Budget::Investment.where(budget_id: @projekt_phase.projekt.budgets.select(:id))
+    excluded = ::SimilarContributions::Scopes
+      .excludable_relation(@investment, @projekt_phase)
       .find(params[:excluded_id])
+
     ::SimilarContributions::ExcludeFromGroup.call(@investment, excluded, admin: current_user)
 
     redirect_to adm_projekts_phase_budget_investment_path(@projekt_phase, @investment),

@@ -77,28 +77,39 @@ class SimilarContributions::RecordGroup < ApplicationService
     def absorb(survivor, absorbed_groups)
       return if absorbed_groups.empty?
 
+      absorbed_ids = absorbed_groups.map(&:id)
+
       SimilarContributionMembership
-        .where(similar_contribution_group_id: absorbed_groups.map(&:id))
+        .where(similar_contribution_group_id: absorbed_ids)
         .update_all(similar_contribution_group_id: survivor.id)
 
-      SimilarContributionGroup.where(id: absorbed_groups.map(&:id)).delete_all
+      move_references(survivor, absorbed_ids)
+
+      SimilarContributionGroup.where(id: absorbed_ids).delete_all
     end
 
-    # Relevance and reason describe the pair that first put a contribution in
-    # the set, so an existing member keeps its own -- only its group moves.
-    def attach(group, contribution, relevance, reason)
-      membership = SimilarContributionMembership.find_or_initialize_by(
-        contribution_type: contribution_type,
-        contribution_id: contribution.id
+    # The absorbed groups go through delete_all, so dependent: :destroy never
+    # runs and a reference left behind would point at nothing -- dropping out of
+    # the list without anyone deciding that. Both sets can already name the same
+    # foreign contribution, and the pair is unique per group, so those rows are
+    # dropped rather than moved.
+    def move_references(survivor, absorbed_ids)
+      absorbed_references = SimilarContributionReference.where(
+        similar_contribution_group_id: absorbed_ids
       )
 
-      membership.similar_contribution_group = group
+      absorbed_references
+        .where("(contribution_type, contribution_id) IN (" \
+               "SELECT contribution_type, contribution_id FROM similar_contribution_references " \
+               "WHERE similar_contribution_group_id = ?)", survivor.id)
+        .delete_all
 
-      if membership.new_record?
-        membership.relevance = relevance
-        membership.reason = reason
-      end
+      absorbed_references.update_all(similar_contribution_group_id: survivor.id)
+    end
 
-      membership.save!
+    def attach(group, contribution, relevance, reason)
+      SimilarContributionMembership.attach(
+        group: group, contribution: contribution, relevance: relevance, reason: reason
+      )
     end
 end

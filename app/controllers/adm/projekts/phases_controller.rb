@@ -84,6 +84,32 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     ]
   end
 
+  # Matches for the further projekts selected on this phase are recorded when a
+  # contribution is published, so a projekt selected later leaves everything
+  # already published without them. This is the catch-up, enqueued rather than
+  # run inline: it costs one AI ranking per contribution.
+  #
+  # The status is committed here rather than in the worker, so the poller the
+  # button starts finds a run in progress even before the job is picked up.
+  def recheck_similar_contributions
+    authorize_phase(:update?)
+
+    @projekt_phase.update!(similar_search_recheck_status: :processing)
+
+    ::SimilarContributions::RecheckAdditionalProjektsJob.perform_later(@projekt_phase)
+
+    render json: { status: @projekt_phase.similar_search_recheck_status }
+  end
+
+  def similar_contributions_recheck_status
+    authorize_phase(:show?)
+
+    render json: {
+      status: @projekt_phase.similar_search_recheck_status || "idle",
+      finished_at: @projekt_phase.similar_search_recheck_finished_at&.iso8601
+    }
+  end
+
   def toggle_active
     authorize_phase(:update?)
     @projekt_phase.update(active: !@projekt_phase.active)
@@ -1046,6 +1072,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         :lock_on,
         registered_address_district_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [], officing_manager_ids: [],
+        similar_search_projekt_ids: [],
         registered_address_grouping_restrictions: registered_address_grouping_restrictions_params
       )
     end

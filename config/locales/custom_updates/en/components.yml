@@ -41,7 +41,7 @@ en:
         supported_link: "Go to the supported contribution"
         submit_anyway: "Submit anyway"
       list_component:
-        title: "Similar contributions in this projekt"
+        title: "Similar contributions"
         not_a_duplicate: "Not a duplicate"
         not_a_duplicate_confirm: "Remove this contribution from the duplicate set? It will not be grouped with this one again."
         empty: "No contributions with similar content were found."

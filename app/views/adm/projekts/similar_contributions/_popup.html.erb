@@ -5,7 +5,18 @@
 <% else %>
   <ul class="similar-contributions-matches">
     <% matches.each do |match| %>
-      <%= render SimilarContributions::MatchItemComponent.new(match.resource, variant: :popup) %>
+      <% projekt_name = similar_contributions_projekt_name_for(match.resource, resource) %>
+      <%= render SimilarContributions::MatchItemComponent.new(match.resource, variant: :popup) do |item| %>
+        <% item.with_meta do %>
+          <p class="similar-contributions-match--meta">
+            <% if projekt_name.present? %>
+              <span class="similar-contributions-match--projekt"><%= projekt_name %></span>
+              &middot;
+            <% end %>
+            <%= match.resource.projekt_phase&.title %>
+          </p>
+        <% end %>
+      <% end %>
     <% end %>
   </ul>
 <% end %>

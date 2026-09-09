@@ -4,12 +4,13 @@ class Whatsapp::Polls::OfferBallotService < ApplicationService
   # is what every poll this cannot ask gets — and the link now opens the ballot itself
   # rather than the projekt page that lists it.
   #
-  # Everything else says which of three things went out, because they are three
+  # Everything else says which of four things went out, because they are four
   # different things for a caller to say afterwards and one truthy value had them
   # reported as the first: the ballot's first question
-  # (Whatsapp::Polls::AdvanceBallotService::ASKED), a ballot that had nothing left to
-  # ask and was confirmed rather than begun (COMPLETED), or the login link for a number
-  # with no account behind it yet (LOGIN_OFFERED).
+  # (Whatsapp::Polls::AdvanceBallotService::ASKED), a ballot answered to its end in this
+  # chat just now (COMPLETED), a vote this citizen took part in some time before and
+  # cannot take part in again (ALREADY_VOTED), or the login link for a number with no
+  # account behind it yet (LOGIN_OFFERED).
   #
   # The fallback is the whole design. A poll is checked before a word of it is sent
   # — Whatsapp::VotableBallotQuery decides, across every question it holds — so a
@@ -28,6 +29,19 @@ class Whatsapp::Polls::OfferBallotService < ApplicationService
 
   LOGIN_OFFERED = :login_offered
 
+  # A ballot this citizen finished some time before now, which is a fourth thing that
+  # can happen and used to be reported as the second. It reached AdvanceBallotService
+  # like any other beginning, found nothing owed and closed the ballot off — so the
+  # citizen was thanked for votes they had just cast, on a tap that cast none, and the
+  # same tap could be made again and thanked again.
+  #
+  # Told apart here rather than there because the two are different before anything is
+  # sent, not after: nothing is begun, no marker is written, and what the citizen is
+  # owed is the fact that they took part earlier. AdvanceBallotService::COMPLETED keeps
+  # the one meaning it can now only have, which is a ballot answered to its end in this
+  # chat just now.
+  ALREADY_VOTED = :already_voted
+
   def initialize(conversation:, projekt_phase:)
     @conversation = conversation
     @projekt_phase = projekt_phase
@@ -40,13 +54,67 @@ class Whatsapp::Polls::OfferBallotService < ApplicationService
 
     problem = @projekt_phase.permission_problem(@conversation.user)
 
-    return begin_ballot(poll) if problem.blank?
     return offer_login(poll) if LINKABLE_PROBLEMS.include?(problem)
+    return false if problem.present?
+    return confirm_participation(poll) if already_voted?(poll)
 
-    false
+    begin_ballot(poll)
   end
 
   private
+
+    # Whether there is anything left to ask, read from the recorded answers alone and
+    # through the same reading the card's own mark is made from —
+    # Whatsapp::BallotParticipation over Polls::BallotTraversalQuery — so a button saying
+    # the citizen has voted and a tap saying they have not cannot both be right.
+    #
+    # The poll is passed rather than the phase because it is already resolved here: going
+    # back through the phase would re-run the gate this method stands behind.
+    #
+    # Branching is answered by the walk itself, the way the ticket asks: taking part is
+    # complete when the questions this citizen was actually led through are answered, not
+    # when every question the poll holds is.
+    def already_voted?(poll)
+      ::Whatsapp::BallotParticipation.finished?(poll: poll, user: @conversation.user)
+    end
+
+    # Nothing is begun and no marker is written — a tap on a vote already answered
+    # changes nothing, which is the whole of what it has to mean. The stored ballot is
+    # deliberately left as it stands: the citizen may be half-way through a different
+    # poll, and clearing it here would abandon that one for a tap that concerned another.
+    #
+    # Confirmed the way AdvanceBallotService confirms a completion, and for the same
+    # reason: a fixed line with nothing under it to tap reads as the bot being finished
+    # with the citizen, where what actually happened is that one thing they tried is
+    # closed and everything else in the projekt is not.
+    def confirm_participation(poll)
+      confirm_earlier_vote(poll)
+
+      ALREADY_VOTED
+    end
+
+    # Whichever route can reach the citizen, the way AdvanceBallotService#confirm_completion
+    # picks one: the assistant carrying the conversation on, the turn this was reached from
+    # reporting the outcome as its own result, or — where neither can — the fixed line.
+    def confirm_earlier_vote(poll)
+      return if carry_on(poll) != ::Whatsapp::AiAssistant::ContinueConversationService::UNAVAILABLE
+
+      send_already_answered_line(poll)
+    end
+
+    def carry_on(poll)
+      ::Whatsapp::AiAssistant::ContinueConversationService.call(
+        conversation: @conversation,
+        note: ::Whatsapp::CompletionNotes.ballot_already_answered(poll: poll)
+      )
+    end
+
+    def send_already_answered_line(poll)
+      ::Whatsapp::Send.locale_text(
+        account: account,
+        body: ::Whatsapp.copy("whatsapp.bot.poll.already_answered", poll: poll.name)
+      )
+    end
 
     # The poll is written down before the first question goes out, so a question the
     # citizen asks in the middle of the ballot can be answered and the ballot picked
@@ -56,11 +124,11 @@ class Whatsapp::Polls::OfferBallotService < ApplicationService
       @conversation.clear_pending_poll!
       @conversation.store_active_poll!(poll.id)
 
-      # Its answer is this one's, ASKED and COMPLETED alike: a ballot with nothing left
-      # to ask is a citizen who has already voted on every question of it, which is a
-      # different thing to report than a ballot that has just begun. A ballot that could
-      # not be carried on has cleared its own markers and left the link as the right
-      # thing to send, and comes back as the false this passes on.
+      # Its answer is this one's, ASKED and COMPLETED alike. COMPLETED is now only the
+      # ballot whose last question was answered in this chat: one with nothing owed at
+      # all never gets here, having been answered above. A ballot that could not be
+      # carried on has cleared its own markers and left the link as the right thing to
+      # send, and comes back as the false this passes on.
       ::Whatsapp::Polls::AdvanceBallotService.call(conversation: @conversation, poll: poll)
     end
 

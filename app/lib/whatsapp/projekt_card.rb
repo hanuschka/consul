@@ -14,7 +14,38 @@ module Whatsapp::ProjektCard
   # rather than text.
   CONTENT_PLACEHOLDER = /\{\{.*?\}\}/
 
+  # What one phase is called and when it closes, for the card's rows and for the
+  # facts its summary is written from.
+  PhaseFacts = Struct.new(:name, :ends_on, keyword_init: true)
+
   module_function
+
+  # What the citizen knows each of these phases by and when each of them closes, as
+  # {projekt_phase_id => PhaseFacts}. Batched because both callers hold a projekt's
+  # whole set of phases and PhaseBallotQuery.by_phase answers them in one query,
+  # where asking phase by phase paid for ten.
+  #
+  # A voting phase is named and dated by its ballot rather than by itself: a projekt
+  # running four of them has four phases all titled "Abstimmung", and it is the
+  # ballots that carry the names saying which is which — while projekt_phases.end_date
+  # is a column a portal need never fill in, where a published poll always has the
+  # window it runs in. It is also the name Whatsapp::OpenPollsQuery titles its rows
+  # with, so one phase reads alike wherever the bot names it.
+  #
+  # Everything else falls back to the phase's own title and end_date: every other
+  # phase type, and a voting phase whose ballot is unpublished or one of several.
+  def phase_facts(projekt_phases)
+    ballots = ::Polls::PhaseBallotQuery.by_phase(projekt_phases.map(&:id))
+
+    projekt_phases.index_by(&:id).transform_values do |projekt_phase|
+      ballot = ballots[projekt_phase.id]
+
+      PhaseFacts.new(
+        name: ballot&.name.presence || projekt_phase.title,
+        ends_on: ballot&.ends_at&.to_date || projekt_phase.end_date
+      )
+    end
+  end
 
   def subtitle(projekt, max_length: TEMPLATE_SUBTITLE_MAX_LENGTH)
     projekt.page&.subtitle.to_s.squish.truncate(max_length).presence

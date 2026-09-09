@@ -12,9 +12,9 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
               "account yet this sends the login link and picks the vote up again afterwards, so " \
               "do not call send_login_link alongside it. Say nothing further once a question or " \
               "that link has gone out: it is already in front of the citizen and anything added " \
-              "talks over it. The one call that leaves you something to say is a vote this " \
-              "citizen has already answered in full — nothing is sent for that, and the result " \
-              "says what to do with it."
+              "talks over it. What leaves you something to say is a vote this citizen already " \
+              "took part in earlier — nothing is sent for that, it cannot be answered again, " \
+              "and the result says what to do with it."
 
   params do
     integer :projekt_phase_id,
@@ -33,14 +33,17 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
 
     return ballot_on_the_page_error(candidate) if !outcome
 
-    # Three different things can have gone out, and for two of them "sent the first
-    # question" is untrue: a ballot with nothing left to ask sent no question at all, and
-    # a number with no account got the login link instead of one. All three were reported
-    # as the first while this read a single truthy value, which left the stored history
-    # saying the citizen was looking at a question they had never been sent.
+    # Four different things can have gone out, and for three of them "sent the first
+    # question" is untrue: a vote already taken part in sent no question at all, a ballot
+    # that ended before its first question could be asked sent none either, and a number
+    # with no account got the login link instead of one. All of them were reported as the
+    # first while this read a single truthy value, which left the stored history saying
+    # the citizen was looking at a question they had never been sent.
     case outcome
-    when ::Whatsapp::Polls::AdvanceBallotService::COMPLETED
+    when ::Whatsapp::Polls::OfferBallotService::ALREADY_VOTED
       already_answered(candidate)
+    when ::Whatsapp::Polls::AdvanceBallotService::COMPLETED
+      ballot_ended_early(candidate)
     when ::Whatsapp::Polls::OfferBallotService::LOGIN_OFFERED
       login_link_sent
     else
@@ -73,14 +76,37 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
     # Not a halt, because nothing has been sent and the citizen is owed a reply. The
     # closing line this used to arrive with was the bot's own; what says it now is the
     # turn this result is reported into, which is also what can offer where to go next.
+    #
+    # Earlier is the word that has to survive into what is said. This used to arrive as
+    # the same outcome a ballot finished a second ago arrives as, so the reply thanked
+    # the citizen for votes they had just cast on a tap that cast none — and left nothing
+    # saying the vote was closed to them, so the same tap could be made again and thanked
+    # again.
     def already_answered(projekt_phase)
       {
-        status: "The citizen has already answered every question of that vote, so there was " \
-                "nothing left to ask and nothing has been sent.",
-        hint: "Say so in one line and offer what plausibly follows for them in " \
-              "*#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)}* — another phase that " \
-              "is open, or the results of this one where they are published. Never start this " \
-              "vote again."
+        status: "The citizen took part in that vote earlier and answered it in full, so there " \
+                "was nothing left to ask and nothing has been sent.",
+        hint: "Say that they have already voted in it, that the answers they gave then stand " \
+              "unchanged and that it cannot be answered a second time — not a thank-you for " \
+              "votes just cast, which is not what happened. Then offer what plausibly follows " \
+              "for them in *#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)}* — another " \
+              "phase that is open, or the results of this one where they are published. Never " \
+              "start this vote again."
+      }
+    end
+
+    # The ballot was begun and ended before a question could go out, which is neither a
+    # vote taken part in nor one under way. It is all but unreachable — every question of
+    # a poll offered here is a shape the chat can ask, which is what
+    # Whatsapp::VotableBallotQuery decides before a word of it is sent — so what it needs
+    # is a reply that does not claim either of the other two happened.
+    def ballot_ended_early(projekt_phase)
+      {
+        status: "The ballot could not be put to the citizen after all and no question was " \
+                "sent. Nothing of theirs was recorded and nothing has been sent.",
+        hint: "Say the vote cannot be answered here right now, without describing its " \
+              "questions, and offer what else is open in " \
+              "*#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)}*."
       }
     end
 

@@ -70,6 +70,9 @@ de:
           Dieser Ort liegt außerhalb des Gebiets, das für diese Frage festgelegt wurde.
           Bitte sende einen Ort innerhalb des Gebiets.
         completed: "Vielen Dank — deine Stimmen bei „%{poll}“ sind gezählt."
+        already_answered: >-
+          Du hast bei „%{poll}“ bereits abgestimmt. Deine Antworten sind gespeichert und
+          bleiben unverändert — ein zweites Mal ist die Abstimmung nicht möglich.
       onboarding:
         login_prompt: >-
           Zum Anmelden hier tippen. Mit dem Öffnen des Links willigst du in die Verarbeitung

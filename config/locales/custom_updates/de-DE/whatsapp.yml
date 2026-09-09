@@ -225,6 +225,9 @@ de:
           Bitte senden Sie einen Ort innerhalb des Gebiets.
         location_maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Orte möglich."
         completed: "Vielen Dank — Ihre Stimmen bei „%{poll}“ sind gezählt."
+        already_answered: >-
+          Sie haben bei „%{poll}“ bereits abgestimmt. Ihre Antworten sind gespeichert und
+          bleiben unverändert — ein zweites Mal ist die Abstimmung nicht möglich.
       onboarding:
         login_prompt: >-
           Zum Anmelden hier tippen. Mit dem Öffnen des Links willigen Sie in die Verarbeitung
@@ -269,6 +272,13 @@ de:
           voting_phase: Jetzt abstimmen
           formular_phase: Formular ausfüllen
           point_of_interest_phase: Mangel melden
+        # Dieselbe Schaltfläche, wenn diese Person in der Abstimmungsphase schon
+        # abgestimmt hat. Ein eigener Zweig neben phase_action und nicht darin, weil
+        # Whatsapp::ProjektCardActions aus dessen Schlüsseln ableitet, welche Phasenarten
+        # überhaupt eine Aktion bekommen — ein Schlüssel mehr dort wäre eine erfundene
+        # Phasenart. Auch hier gelten die 20 Zeichen, die WhatsApp einer Beschriftung lässt.
+        phase_action_voted:
+          voting_phase: Bereits abgestimmt
         phase_contributions: Beiträge ansehen
         contribution_choose: Beitrag auswählen
         view_projekt: Projekt ansehen

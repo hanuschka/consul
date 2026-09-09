@@ -39,17 +39,18 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
     # their way out. So the offer follows in a message of its own.
     #
     # Its own send rather than a line appended above the picker, because the picker's
-    # body is the assistant's question and this is the answer to it. Send puts the
-    # start-over pill beside location_skip, so the second message carries two.
+    # body is the assistant's question and this is the answer to it. The one pill on
+    # it is location_skip: the citizen is in the middle of being asked something, so
+    # nothing is offered beside it that leaves the question.
     #
     # The sentence and the label go through one translation call, not two and not one
     # of each: a body in the citizen's language over a button in the portal's is the
     # split every other send here exists to avoid.
     def offer_to_continue_without
-      written_label = I18n.t("whatsapp.bot.buttons.location_skip")
+      written_label = ::Whatsapp.copy("whatsapp.bot.buttons.location_skip")
       body, label = ::Whatsapp::AiAssistant::BotCopyService.call(
         account: account,
-        lines: [I18n.t("whatsapp.bot.proposal.location_optional"), written_label]
+        lines: [::Whatsapp.copy("whatsapp.bot.proposal.location_optional"), written_label]
       )
 
       ::Whatsapp::Send.buttons(

@@ -33,8 +33,11 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
   #
   # What still does not fit, and sends the citizen to the ballot page instead: a
   # scale with more steps than a list holds, a weighted question whose widest
-  # picker does not fit one, two options a button's twenty characters cannot tell
-  # apart. One of them anywhere in the poll disqualifies the poll, not the question:
+  # picker does not fit one, and — for a question short enough to arrive as bare
+  # buttons — two options a button's twenty characters cannot tell apart. Past three
+  # rows the message prints the options in full and numbers the pills to match, so
+  # there the twenty characters no longer decide anything.
+  # One of them anywhere in the poll disqualifies the poll, not the question:
   # a ballot half-answered in a chat and half on the page is not one the citizen
   # meant to cast.
   ANSWERABLE_VOTE_TYPES = [
@@ -88,6 +91,15 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
     ::Whatsapp::MAX_OFFERED_LIST_ROWS
   end
 
+  # How many rows the question's widest send actually carries, which is the other
+  # side of the same count: its options, plus the row a multiple question spends on
+  # the pill that says the citizen is finished.
+  def self.rows_needed(question, options_count)
+    return options_count + 1 if question.multiple?
+
+    options_count
+  end
+
   # One question's shape, asked of the poll's every question by the gate below and
   # again by the service that sends one. Public because the two need the same
   # answer and a second copy of these rules is how the gate and the message come to
@@ -101,9 +113,21 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
     return false if options.empty?
     return true if free_text_only?(options)
     return weighted_answerable?(question, options) if weighted?(question)
-    return false if !distinct_labels?(options)
+    return false if !tellable_apart?(question, options)
 
     options.size.between?(MIN_OPTIONS, rows_available(question))
+  end
+
+  # Whether the citizen can tell the options apart on the pills, asked only of a
+  # question that arrives as buttons. Past three rows WhatsApp puts the options
+  # behind its picker — and there the message prints each of them in full and the
+  # pills carry the numbers those lines are read by, so two options alike past
+  # twenty characters are still two the citizen can choose between. The whole poll
+  # used to go to the page for that.
+  def self.tellable_apart?(question, options)
+    return true if !::Whatsapp.buttons?(rows_needed(question, options.size))
+
+    distinct_labels?(options)
   end
 
   # A map-point question has nothing to fit into a list and nothing to tell apart —
@@ -159,6 +183,9 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
   # because there is nothing on either pill to say which is which. The vote itself
   # is unaffected either way, since the tap carries the option's id; what is at
   # stake is whether the citizen can tell what they are voting for.
+  #
+  # A bare button is the only place that holds: see #tellable_apart? for the case
+  # where a number in front of the label answers the question instead.
   def self.distinct_labels?(options)
     labels = options.filter_map { |option| ::Whatsapp::AssistantActions.truncated(option.title) }
 

@@ -2,15 +2,14 @@ class Ai::Tools::WhatsappAiAssistant::SendDraftCard < Ai::Tools::WhatsappAiAssis
   MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
   description "Shows the citizen their draft with its picture attached, and up to three buttons " \
-              "whose labels you write — the message carries a third of its own, the way to " \
-              "start over, which you never write and never mention. This is the only way to " \
+              "whose labels you write — all three are yours to fill. This is the only way to " \
               "show them a picture that only exists on an unpublished draft, so use it for the " \
               "last look before publishing — an uploaded photo may be the wrong one, and a " \
               "generated picture is the part nobody has seen. Quote the draft's own title and " \
               "text in the body, unchanged: it is the citizen's contribution, not yours to " \
               "improve. When the draft has no picture, reply_with_actions says the same thing " \
               "more cheaply. Publishing cannot be undone, so a button that publishes must say " \
-              "so — and put that button first, because only the first two are sent and a " \
+              "so — and put that button first, because anything past the third is dropped and a " \
               "draft nobody can submit by tapping is the one thing this message must not be. " \
               "This sends the message itself."
 

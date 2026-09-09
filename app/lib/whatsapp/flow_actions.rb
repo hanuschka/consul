@@ -89,8 +89,8 @@ module Whatsapp::FlowActions
   # pairs each id with its label, and a set built twice is a set that can pair them
   # differently.
   #
-  # Three, which is every slot the message has, so the photo question is one of the
-  # messages that carries no start-over pill. Generation was offered in words before
+  # Three, which is every slot the message has, and all three are the question's own
+  # now that nothing is appended to it. Generation was offered in words before
   # and only once the citizen said they had no photo of their own, so a citizen who
   # did not already know it existed read a message naming two ways out and took one
   # of them. The middle answer is the whole reason the third slot is spent.

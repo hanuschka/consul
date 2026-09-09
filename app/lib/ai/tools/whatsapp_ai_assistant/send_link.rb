@@ -27,7 +27,7 @@ class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant:
       account: account,
       body: text,
       button_label: ::Whatsapp::AssistantActions.truncated(label).presence ||
-                    I18n.t("whatsapp.bot.buttons.open_page"),
+                    ::Whatsapp.copy("whatsapp.bot.buttons.open_page"),
       url: url
     )
 

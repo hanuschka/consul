@@ -27,7 +27,7 @@ class Whatsapp::Accounts::MessageDeliveryService < ApplicationService
     account.opt_in!
 
     ::Whatsapp::Send.recovery(
-      conversation: @conversation, body: I18n.t("whatsapp.bot.opted_in"), actions: [:help]
+      conversation: @conversation, body: ::Whatsapp.copy("whatsapp.bot.opted_in"), actions: [:help]
     )
   end
 
@@ -39,7 +39,7 @@ class Whatsapp::Accounts::MessageDeliveryService < ApplicationService
     account.opt_out!
     @conversation.discard_draft!
 
-    send_bot_line(I18n.t("whatsapp.bot.compliance.opted_out"))
+    send_bot_line(::Whatsapp.copy("whatsapp.bot.compliance.opted_out"))
   end
 
   private

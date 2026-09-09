@@ -650,6 +650,19 @@ class Whatsapp::Conversation < ApplicationRecord
     @starting_over == true
   end
 
+  # That a submission went in during this turn, held the same way and for the same
+  # length of time. The reply the model writes after publishing is the one message
+  # that ends the exchange, so it is the one that carries the way back — and only
+  # the tool that published knows the exchange ended, because the confirmation the
+  # citizen reads is sent from there while the offer under it is not.
+  def note_submission_completed!
+    @submission_completed = true
+  end
+
+  def submission_completed?
+    @submission_completed == true
+  end
+
   # Nothing to write on the common path: most messages offer nothing irreversible,
   # and clearing a key that was never set would cost an UPDATE per reply.
   def remember_confirmations!(action_ids)

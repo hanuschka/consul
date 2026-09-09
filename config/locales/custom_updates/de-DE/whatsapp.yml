@@ -197,6 +197,11 @@ de:
         choices: >-
           Sie können bis zu %{maximum} Antworten auswählen und die Auswahl danach
           abschließen.
+        # Wo die Antwort gegeben wird. Passt eine Frage nicht auf drei Schaltflächen,
+        # legt WhatsApp die Antworten hinter eine Auswahl, die erst geöffnet werden
+        # muss — die Antworten stehen dann im Text, und diese Zeile sagt, wo getippt
+        # wird.
+        options_hint: "Ihre Antwort wählen Sie unten aus."
         open_prompt: "Bitte schreiben Sie Ihre Antwort als Nachricht."
         maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Antworten möglich."
         # Was die beiden Enden einer Skala bedeuten. Auf der Seite steht die Beschriftung

@@ -20,14 +20,14 @@ module Whatsapp::DatePhrase
 
     return if date.blank?
 
-    I18n.l(date, format: I18n.t("whatsapp.bot.date.absolute_format"))
+    I18n.l(date, format: ::Whatsapp.copy("whatsapp.bot.date.absolute_format"))
   end
 
   # For an event, where the time of day is half of what was asked.
   def absolute_with_time(value)
     return if value.blank?
 
-    I18n.l(value.in_time_zone, format: I18n.t("whatsapp.bot.date.absolute_with_time_format"))
+    I18n.l(value.in_time_zone, format: ::Whatsapp.copy("whatsapp.bot.date.absolute_with_time_format"))
   end
 
   # Bucketed here rather than through distance_of_time_in_words, whose German is
@@ -44,11 +44,11 @@ module Whatsapp::DatePhrase
 
     days = (date - Time.zone.today).to_i
 
-    return I18n.t("whatsapp.bot.date.today") if days.zero?
+    return ::Whatsapp.copy("whatsapp.bot.date.today") if days.zero?
 
     unit, count = bucket(days.abs)
 
-    I18n.t("whatsapp.bot.date.#{days.negative? ? "past" : "future"}.#{unit}", count: count)
+    ::Whatsapp.copy("whatsapp.bot.date.#{days.negative? ? "past" : "future"}.#{unit}", count: count)
   end
 
   def bucket(days)

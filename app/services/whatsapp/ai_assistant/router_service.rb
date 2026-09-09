@@ -73,7 +73,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   def call
     return ServiceResult.failure(error: BLANK_MESSAGE_ERROR) if @inbound_text.blank?
 
-    turn = ask
+    turn = within_turn { ask }
     outcome = deliver(turn)
 
     # Written down only for a turn that answered. A blank reply is a failure the
@@ -93,6 +93,24 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   end
 
   private
+
+    # Marks the turn for the depth of the tool loop, so a completion reached from
+    # inside a tool can tell that it is being asked from within an answer already
+    # being written and must not start a second one
+    # (Whatsapp::AiAssistant::ContinueConversationService).
+    #
+    # Around `ask` alone rather than the whole method: the tools run inside it, and
+    # delivery and persistence afterwards call nothing that could re-enter. Restored
+    # rather than cleared, so this cannot be the thing that makes nesting look allowed
+    # once it has been refused.
+    def within_turn
+      running_before = ::Current.whatsapp_assistant_turn_running
+      ::Current.whatsapp_assistant_turn_running = true
+
+      yield
+    ensure
+      ::Current.whatsapp_assistant_turn_running = running_before
+    end
 
     # Which transport answers is a setting, so that a turn that goes wrong on the
     # newer one is a setting away from the older rather than a deploy away.
@@ -247,11 +265,12 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
       record_missed_actions
 
-      # Through buttons rather than text, even with nothing of its own to offer:
-      # Whatsapp::Send puts the start-over pill on every interactive message, so this is
-      # what makes "every reply has something to tap" true of the one path that
-      # composes no buttons at all.
-      message = ::Whatsapp::Send.buttons(
+      # Through the way-out send rather than text, and it is the one path that has to
+      # use it: this composes no buttons of its own, so without the pill the message
+      # would be an interactive one with nothing in it, which WhatsApp refuses
+      # outright. It is also honestly a dead end — the model answered in words and
+      # named no next step — which is what the pill is now for.
+      message = ::Whatsapp::Send.buttons_with_way_out(
         account: @conversation.whatsapp_account, body: body, buttons: []
       )
 
@@ -276,7 +295,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # history. The Responses chain advances only when this turn is persisted, which
     # happens after delivery — re-entering the tool loop before that would have the
     # retry answering from a state that does not exist yet. There it falls through to
-    # the send above, which still carries the start-over pill.
+    # the send above, which carries the start-over pill as its only tappable thing.
     #
     # The halt is written back onto the turn so persistence sees it: the state writer
     # records a halted turn's note, and without this the retry's tool call would be

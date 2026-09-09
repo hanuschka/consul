@@ -157,6 +157,10 @@ en:
         progress: "Question %{number} of %{total}"
         choices: >-
           You can pick up to %{maximum} answers, then finish your selection.
+        # Where the answer is given. Past three buttons WhatsApp puts the answers
+        # behind a picker that has to be opened first — the answers are then printed
+        # in the text, and this line says where to tap.
+        options_hint: "Pick your answer below."
         open_prompt: "Please write your answer as a message."
         maximum_reached: "This question takes at most %{maximum} answers."
         # What the two ends of a scale mean. On the page the wording sits to the left and

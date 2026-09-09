@@ -4,22 +4,21 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
   # the taxonomy picker. What goes in it is the model's; what stays bounded is the
   # id on each row, for the same reason a button's is.
   #
-  # A list earns a tool over buttons on two counts: it holds nine rows rather than
-  # two, and each row carries a description, which is what lets nine options be
-  # named without a sentence above each. The tenth row, the way to start over,
-  # is Whatsapp::Send's and arrives on every list without this tool composing it.
+  # A list earns a tool over buttons on two counts: it holds ten rows rather than
+  # three, and each row carries a description, which is what lets ten options be
+  # named without a sentence above each. All ten are the model's — a list is a
+  # question being asked, so nothing that leaves the question is appended to it.
   MAX_ROWS = ::Whatsapp::MAX_OFFERED_LIST_ROWS
 
   # WhatsApp truncates a row description past this without saying so.
   MAX_DESCRIPTION_LENGTH = 72
 
-  description "Sends the citizen a selectable list — up to nine rows, each with a label you write " \
+  description "Sends the citizen a selectable list — up to ten rows, each with a label you write " \
               "and an optional one-line description. Use it instead of buttons whenever there " \
               "are more than three things to choose between, or when each option needs a line " \
-              "explaining it. The list carries a tenth row of its own, the way to the main " \
-              "menu, which you never write and never mention. Every row needs an action_id " \
-              "from the same vocabulary as " \
-              "reply_with_actions. Nothing is sent unless every row can be: a row whose " \
+              "explaining it. Every row is yours to write, and every row needs an action_id " \
+              "from the same vocabulary as reply_with_actions. Nothing is sent unless every " \
+              "row can be: a row whose " \
               "action is unknown, whose record no longer exists, whose action id repeats " \
               "another row's, or which reads exactly like another row without a description " \
               "to tell the two apart refuses the whole list, because the sentence you wrote " \
@@ -41,7 +40,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
                    "(\"Projekt wählen\", \"Auswählen\")."
     array :rows,
       of: :object,
-      description: "Up to nine rows, most useful first. Each is {\"action_id\": ..., " \
+      description: "Up to ten rows, most useful first. Each is {\"action_id\": ..., " \
                    "\"label\": ..., \"description\": ...}, where description is optional. " \
                    "Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}. " \
@@ -62,7 +61,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       account: account,
       body: body.strip,
       button_label: ::Whatsapp::AssistantActions.truncated(button_label).presence ||
-                    I18n.t("whatsapp.bot.buttons.choose"),
+                    ::Whatsapp.copy("whatsapp.bot.buttons.choose"),
       rows: listed
     )
 

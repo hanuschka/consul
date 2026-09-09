@@ -17,7 +17,7 @@ module Whatsapp::PortalLinks
   module_function
 
   def portal_name
-    Setting["org_name"].presence || I18n.t("whatsapp.bot.portal_fallback_name")
+    Setting["org_name"].presence || ::Whatsapp.copy("whatsapp.bot.portal_fallback_name")
   end
 
   def root_url

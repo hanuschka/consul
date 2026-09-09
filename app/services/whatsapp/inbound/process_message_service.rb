@@ -46,7 +46,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   # read this is Ruby.
   OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
 
-  # How many of a phase's contributions the reply names in words. Fewer than the nine
+  # How many of a phase's contributions the reply names in words. Fewer than the ten
   # a list holds, and deliberately: each one is named over two lines with its own
   # address, and past five of those the body outgrows the 1024 characters an
   # interactive message allows — which Whatsapp::Send does not truncate but splits,
@@ -162,13 +162,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # button that never works is the dead end the pill exists to remove.
     def send_unavailable_line
       send_unavailable_line_offering(
-        body: I18n.t("whatsapp.bot.assistant_unavailable"), actions: [:cancel]
+        body: ::Whatsapp.copy("whatsapp.bot.assistant_unavailable"), actions: [:cancel]
       )
     end
 
     def send_retryable_unavailable_line
       send_unavailable_line_offering(
-        body: I18n.t("whatsapp.bot.assistant_unavailable_retryable"), actions: %i[retry cancel]
+        body: ::Whatsapp.copy("whatsapp.bot.assistant_unavailable_retryable"), actions: %i[retry cancel]
       )
     end
 
@@ -219,7 +219,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       ::Whatsapp::Send.recovery(
         conversation: conversation,
-        body: I18n.t("whatsapp.bot.transcription_failed"),
+        body: ::Whatsapp.copy("whatsapp.bot.transcription_failed"),
         actions: [:cancel]
       )
     end
@@ -637,7 +637,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       send_line_with_link(
-        line: I18n.t("whatsapp.bot.phase.open", phase: projekt_phase.title),
+        line: ::Whatsapp.copy("whatsapp.bot.phase.open", phase: projekt_phase.title),
         url: ::Whatsapp::ProjektLink.ballot_url(projekt_phase) ||
           ::Whatsapp::ProjektLink.phase_url(projekt_phase)
       )
@@ -788,7 +788,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       section = ::Whatsapp::PublishedResultsQuery.public_section_for(projekt_phase)
 
       return send_line_with_link(
-        line: I18n.t("whatsapp.bot.phase.results", phase: projekt_phase.title),
+        line: ::Whatsapp.copy("whatsapp.bot.phase.results", phase: projekt_phase.title),
         url: ::Whatsapp::ProjektLink.evaluation_url(projekt_phase)
       ) if section.present?
 
@@ -830,7 +830,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         account: account,
         body: body,
         button_label: copy[:button_label].presence ||
-                      I18n.t("whatsapp.bot.buttons.contribution_choose"),
+                      ::Whatsapp.copy("whatsapp.bot.buttons.contribution_choose"),
         rows: offered
       )
 
@@ -849,9 +849,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def phase_contributions_copy(projekt_phase:, named:, total:)
       fixed = [
         phase_contributions_intro(projekt_phase: projekt_phase, shown: named.size, total: total),
-        I18n.t("whatsapp.bot.phase.contributions_page"),
-        I18n.t("whatsapp.bot.phase.contributions_hint"),
-        I18n.t("whatsapp.bot.buttons.contribution_choose")
+        ::Whatsapp.copy("whatsapp.bot.phase.contributions_page"),
+        ::Whatsapp.copy("whatsapp.bot.phase.contributions_hint"),
+        ::Whatsapp.copy("whatsapp.bot.buttons.contribution_choose")
       ]
 
       lines = ::Whatsapp::AiAssistant::BotCopyService.call(
@@ -869,7 +869,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def phase_contributions_intro(projekt_phase:, shown:, total:)
       intro = phase_contributions_opening(projekt_phase)
 
-      return I18n.t("whatsapp.bot.phase.contributions_all", intro: intro) if total <= shown
+      return ::Whatsapp.copy("whatsapp.bot.phase.contributions_all", intro: intro) if total <= shown
 
       I18n.t(
         "whatsapp.bot.phase.contributions_newest", intro: intro, shown: shown, total: total
@@ -982,7 +982,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         account: account,
         body: ::Whatsapp::AiAssistant::BotCopyService.line(
           account: account,
-          body: I18n.t("whatsapp.bot.contribution.in_review", contribution: contribution.title)
+          body: ::Whatsapp.copy("whatsapp.bot.contribution.in_review", contribution: contribution.title)
         )
       )
 
@@ -1048,7 +1048,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # BotCopyService falls back to the written copy for.
     def send_cancelled_line
       ::Whatsapp::Send.recovery(
-        conversation: conversation, body: I18n.t("whatsapp.bot.cancelled"), actions: [:help]
+        conversation: conversation, body: ::Whatsapp.copy("whatsapp.bot.cancelled"), actions: [:help]
       )
     end
 

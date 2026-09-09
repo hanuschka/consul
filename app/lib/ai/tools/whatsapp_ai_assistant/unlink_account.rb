@@ -28,7 +28,7 @@ class Ai::Tools::WhatsappAiAssistant::UnlinkAccount < Ai::Tools::WhatsappAiAssis
     # not be left with is a farewell and a blank prompt.
     ::Whatsapp::Send.recovery(
       conversation: conversation,
-      body: I18n.t("whatsapp.bot.onboarding.unlinked"),
+      body: ::Whatsapp.copy("whatsapp.bot.onboarding.unlinked"),
       actions: [:help]
     )
 

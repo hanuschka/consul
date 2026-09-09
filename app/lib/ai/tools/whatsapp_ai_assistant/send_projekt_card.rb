@@ -70,10 +70,15 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
 
       return send_action_list(projekt, summary, actions) if actions.size > ::Whatsapp::MAX_BUTTONS
 
+      # A projekt whose open phases are all of a type with nothing to do in them — a
+      # newsfeed, a milestone — has no action to offer, and that is a dead end: the
+      # card is worth reading and there is nowhere on from it. The way back stands in
+      # for the actions, and it also keeps the message sendable, an interactive one
+      # carrying no buttons at all being the one thing WhatsApp refuses outright.
       ::Whatsapp::Send.buttons_with_picture(
         account: account,
         body: card_body(projekt, summary),
-        buttons: actions,
+        buttons: actions.presence || [::Whatsapp::Send.main_menu_pill(account)],
         image_url: ::Whatsapp::ProjektCard.image_url(projekt)
       )
     end
@@ -93,7 +98,7 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
       ::Whatsapp::Send.list(
         account: account,
         body: card_body(projekt, summary),
-        button_label: I18n.t("whatsapp.bot.buttons.choose"),
+        button_label: ::Whatsapp.copy("whatsapp.bot.buttons.choose"),
         rows: actions
       )
     end

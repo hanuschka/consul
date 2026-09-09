@@ -10,6 +10,21 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
   # error to report: the answers already given stand, the markers are dropped, and
   # what is said next belongs to the assistant, which says it better than a fixed
   # line.
+  #
+  # ── What it answers, and why abandoning is the false one ────────────────────
+  # ASKED and COMPLETED are both "the citizen has been sent something", which is what
+  # every gate that calls this needs to know — so they are truthy and abandoning is
+  # plain false, exactly as this read before the two were told apart. A gate reading a
+  # false falls through to the assistant, which is the whole of what abandoning means.
+  #
+  # The two are told apart for the one caller that has to say something about the
+  # ballot afterwards: Whatsapp::Polls::OfferBallotService, whose own caller may be a
+  # tool reporting into a turn. A ballot with nothing left to ask is not a ballot that
+  # was started, and a tool that reports it as one has told the model the citizen is
+  # looking at a question that was never sent.
+  ASKED = :asked
+  COMPLETED = :completed
+
   def initialize(conversation:, poll:)
     @conversation = conversation
     @poll = poll
@@ -28,9 +43,11 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
 
     return complete if position.blank?
 
-    ::Whatsapp::Polls::AskQuestionService.call(
+    return ASKED if ::Whatsapp::Polls::AskQuestionService.call(
       conversation: @conversation, position: position
-    ) || complete
+    )
+
+    complete
   end
 
   private
@@ -53,15 +70,47 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
 
     # The last question is answered, so the ballot is closed off explicitly. A ballot
     # that simply stops sending questions is indistinguishable from a bot that has
-    # died mid-vote, which is the reading this one line exists to prevent.
+    # died mid-vote, which is the reading this exists to prevent.
+    #
+    # Handed to the assistant rather than said in one fixed line, because closing the
+    # ballot off and closing the conversation are two different things and the line did
+    # both: it confirmed the vote with nothing under it to tap, which reads as the bot
+    # being finished with the citizen. What the assistant says instead is the
+    # confirmation and whatever plausibly follows it in this projekt.
+    #
+    # The fixed line stays as the answer for a model that cannot be reached: the
+    # confirmation is the half of this that must arrive whatever else fails. It is held
+    # back for a turn already in flight, which is the one case where something else is
+    # about to say this — the tool that got here reports the completion as its result,
+    # and a fixed line beside that reply would confirm the vote twice.
     def complete
       @conversation.clear_ballot!
 
+      confirm_completion
+
+      COMPLETED
+    end
+
+    # The citizen is confirmed by whichever route can reach them: the assistant carrying
+    # the conversation on, the turn this was reached from reporting the completion as
+    # its own result, or — where neither can — the fixed line.
+    def confirm_completion
+      return if carry_on != ::Whatsapp::AiAssistant::ContinueConversationService::UNAVAILABLE
+
+      send_completed_line
+    end
+
+    def carry_on
+      ::Whatsapp::AiAssistant::ContinueConversationService.call(
+        conversation: @conversation,
+        note: ::Whatsapp::CompletionNotes.ballot_finished(poll: @poll)
+      )
+    end
+
+    def send_completed_line
       ::Whatsapp::Send.locale_text(
         account: @conversation.whatsapp_account,
-        body: I18n.t("whatsapp.bot.poll.completed", poll: @poll.name)
+        body: ::Whatsapp.copy("whatsapp.bot.poll.completed", poll: @poll.name)
       )
-
-      true
     end
 end

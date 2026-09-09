@@ -100,7 +100,7 @@ class Whatsapp::ProcessInboundMessageJob < ApplicationJob
     def say_it_could_not_be_answered(conversation)
       ::Whatsapp::Send.recovery_without_assistant(
         conversation: conversation,
-        body: I18n.t("whatsapp.bot.assistant_unavailable_retryable"),
+        body: ::Whatsapp.copy("whatsapp.bot.assistant_unavailable_retryable"),
         actions: %i[retry cancel]
       )
     rescue StandardError => e

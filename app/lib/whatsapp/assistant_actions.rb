@@ -162,8 +162,8 @@ module Whatsapp::AssistantActions
   # Dropped rather than relabelled when the state does not support it, and dropped
   # here rather than trusted to the prompt: the vocabulary the model reads is built
   # once per process, so the conversation is the only place the rule can actually be
-  # enforced. The slot it frees is not backfilled — Whatsapp::Send.with_main_menu
-  # fills a message that is under the cap on its own.
+  # enforced. The slot it frees is not backfilled: nothing is appended to a recovery
+  # line any more except the way back, and that one is added on the way out.
   def recovery_button(spec:, label:, conversation:)
     action, = parse(spec)
     recovery_id = ::Whatsapp::Send::RECOVERY_ACTION_IDS[action]
@@ -222,12 +222,16 @@ module Whatsapp::AssistantActions
     truncated(record_label(action: action, param: param, conversation: conversation))
   end
 
-  def truncated(label)
+  # The length is asked for by a caller that has already spent some of the twenty
+  # characters on something of its own — a poll option's number, which its own line in
+  # the message text carries too, so the wording is what gives way rather than the
+  # number that pairs the two.
+  def truncated(label, length: MAX_LABEL_LENGTH)
     text = label.to_s.squish
 
     return if text.blank?
 
-    text.truncate(MAX_LABEL_LENGTH, separator: " ", omission: "")
+    text.truncate(length, separator: " ", omission: "")
   end
 
   # The label of a translated fixed line, as it will actually arrive. Preferring the
@@ -280,7 +284,7 @@ module Whatsapp::AssistantActions
     when :view_contribution then contribution_label(param)
     when :idea_start then phase_projekt_label(param)
     when :phase_open then phase_action_label(param)
-    when :phase_contributions then I18n.t("whatsapp.bot.buttons.phase_contributions")
+    when :phase_contributions then ::Whatsapp.copy("whatsapp.bot.buttons.phase_contributions")
     when :support then proposal_label(param)
     when :support_toggle then support_toggle_label(param, conversation)
     when :category
@@ -289,7 +293,7 @@ module Whatsapp::AssistantActions
       taxonomy_label(::Whatsapp::DraftTaxonomy.sentiment(conversation.projekt_phase), param)
     when :notify_toggle then notification_label(param)
     when :discover_category then browse_category_label(param)
-    when :show_more then I18n.t("whatsapp.bot.buttons.show_more")
+    when :show_more then ::Whatsapp.copy("whatsapp.bot.buttons.show_more")
     end
   end
 
@@ -396,9 +400,9 @@ module Whatsapp::AssistantActions
     user = conversation.user
     supported = user.present? && proposal.voted_up_by?(user)
 
-    return I18n.t("whatsapp.bot.buttons.support_withdraw") if supported
+    return ::Whatsapp.copy("whatsapp.bot.buttons.support_withdraw") if supported
 
-    I18n.t("whatsapp.bot.buttons.support")
+    ::Whatsapp.copy("whatsapp.bot.buttons.support")
   end
 
   # Only the options the phase on the table actually offers. This is the check
@@ -414,7 +418,7 @@ module Whatsapp::AssistantActions
 
     return if type.blank?
 
-    I18n.t("whatsapp.bot.notifications.types.#{type}.short")
+    ::Whatsapp.copy("whatsapp.bot.notifications.types.#{type}.short")
   end
 
   def browse_category_label(param)

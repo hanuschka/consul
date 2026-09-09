@@ -248,6 +248,7 @@ de:
           dialogs: Dialoge
           test_message: Testnachricht
         feature_title: WhatsApp-Bot
+        model_tier_title: Sprachmodell des Bots (vorübergehend)
         settings_title: Einstellungen
         settings_intro: Vorlage, Sprachmodell und Aufbewahrung für den WhatsApp-Bot. Änderungen wirken
           sofort.

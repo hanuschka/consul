@@ -28,6 +28,13 @@ class Ai::ModelProfile
     new(::Ai::Settings.ultrafast_model)
   end
 
+  # Whichever tier the temporary staging setting names, the cheap one until it
+  # names another. Read by the WhatsApp chat services alone, and removed with
+  # the setting once the comparison it exists for has been made.
+  def self.whatsapp
+    new(::Ai::Settings.whatsapp_model)
+  end
+
   attr_reader :model
 
   def initialize(model)

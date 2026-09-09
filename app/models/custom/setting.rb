@@ -292,6 +292,7 @@ class Setting < ApplicationRecord
         "ai.llm_api_endpoint": nil,
         "ai.llm_custom_model": nil,
         "ai.whatsapp_transport": nil,
+        "ai.whatsapp_model_tier": ::Ai::Settings::WHATSAPP_TIER_FAST,
         "ai.evaluation_context": nil,
         "postal_codes": "",
         "remote_census.general.endpoint": "",

@@ -20,6 +20,13 @@ de:
       kobil_address_verification_description: "Übernimmt die Adresse aus dem KOBIL-Konto (Straße, PLZ, Ort) in das Nutzerprofil, ohne sie mit dem Adressregister zu verknüpfen. Gebietsbeschränkte Phasen schaltet sie nicht frei. Aktivieren Sie es, um Tipparbeit zu ersparen."
       whatsapp_bot: "WhatsApp-Bot aktivieren"
       whatsapp_bot_description: "Schaltet den WhatsApp-Bot für Bürger:innen frei. Wirkt erst, wenn euer technisches Team das WhatsApp-Geschäftskonto auf dem Server eingerichtet hat."
+    ai:
+      whatsapp_model_tier: "Sprachmodell des WhatsApp-Bots (vorübergehend)"
+      whatsapp_model_tier_description: "Bestimmt, welches der drei OpenAI-Modelle die Antworten des Bots formuliert. Ein höheres Modell antwortet sorgfältiger, kostet je Nachricht mehr und braucht länger, bis die Antwort im Chat steht. Die Auswahl dient dem Vergleich auf dem Testsystem und wird danach wieder entfernt. Sie erscheint nur, solange OpenAI ohne eigenen API-Endpunkt genutzt wird; bei jedem anderen Anbieter gilt weiterhin das dort konfigurierte Modell. Voreinstellung ist das schnelle Modell."
+      whatsapp_model_tier_options:
+        big: "Hauptmodell (%{model})"
+        fast: "Schnelles Modell (%{model})"
+        ultrafast: "Sehr schnelles Modell (%{model})"
     whatsapp:
       default_locale: "Standardsprache des Bots"
       default_locale_description: "Bestimmt, in welcher Sprache der Bot mit Nummern spricht, die noch kein Konto verknüpft haben. Sobald eine Nummer mit einem Konto verbunden ist, folgt der Bot stattdessen der Spracheinstellung dieser Person. Tragen Sie ein Sprachkürzel ein, das die Plattform anbietet, etwa de oder en. Leer oder ein unbekanntes Kürzel bedeutet die Standardsprache der Plattform."

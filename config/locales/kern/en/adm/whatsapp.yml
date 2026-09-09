@@ -243,6 +243,7 @@ en:
           dialogs: Dialogs
           test_message: Test message
         feature_title: WhatsApp bot
+        model_tier_title: Bot language model (temporary)
         settings_title: Settings
         settings_intro: Template, speech model and retention for the WhatsApp bot. Changes take effect
           immediately.

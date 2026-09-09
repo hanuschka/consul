@@ -319,10 +319,36 @@ module Adm
         @feature_settings = FEATURE_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
         @text_settings = TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
         @auto_broadcast_setting = settings_by_key[AUTO_BROADCAST_SETTING_KEY]
+        @model_tier_setting = model_tier_setting_from(settings_by_key)
+        @model_tier_options = model_tier_options
       end
 
       def all_setting_keys
-        FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS + [AUTO_BROADCAST_SETTING_KEY]
+        FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS +
+          [AUTO_BROADCAST_SETTING_KEY, ::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY]
+      end
+
+      # A temporary control for comparing the three model tiers on the staging
+      # system. The tiers are three separate models only on OpenAI's own
+      # catalogue, so the row is offered nowhere else — and the resolution
+      # ignores a stored value there as well.
+      def model_tier_setting_from(settings_by_key)
+        return if !::Ai::Settings.standard_openai?
+
+        settings_by_key[::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY]
+      end
+
+      # Each option names the model id it would send, so a tester reads the tier
+      # and the model in the same line instead of looking either up in the code.
+      def model_tier_options
+        ::Ai::Settings::WHATSAPP_MODEL_TIERS.map do |tier|
+          label = t(
+            "setting.ai.whatsapp_model_tier_options.#{tier}",
+            model: ::Ai::Settings.whatsapp_tier_model(tier)
+          )
+
+          [label, tier]
+        end
       end
 
       # Uncapped on purpose: the cap #call applies is how many rows fit in one

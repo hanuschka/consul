@@ -8,6 +8,18 @@ module Ai::Settings
   ULTRAFAST_MODEL = "gpt-5.6-luna".freeze
   private_constant :FAST_MODEL, :ULTRAFAST_MODEL
 
+  # A temporary control for comparing the three tiers against each other on the
+  # staging system, read by the WhatsApp chat services and nothing else. When
+  # the comparison has been made, the tier that won is named in those services
+  # directly and all of this comes out again.
+  WHATSAPP_MODEL_TIER_SETTING_KEY = "ai.whatsapp_model_tier".freeze
+  WHATSAPP_TIER_BIG = "big".freeze
+  WHATSAPP_TIER_FAST = "fast".freeze
+  WHATSAPP_TIER_ULTRAFAST = "ultrafast".freeze
+  WHATSAPP_MODEL_TIERS = [
+    WHATSAPP_TIER_BIG, WHATSAPP_TIER_FAST, WHATSAPP_TIER_ULTRAFAST
+  ].freeze
+
   def self.feature_enabled?
     Rails.application.secrets.dig(:ai, :enabled) == true
   end
@@ -128,6 +140,36 @@ module Ai::Settings
 
   def self.ultrafast_model
     openai_tier_model(ULTRAFAST_MODEL)
+  end
+
+  # The three tiers are three separate models only on OpenAI's own catalogue,
+  # so anywhere else the choice is neither offered nor read: a stored value
+  # survives a provider switch without taking effect while it is switched.
+  def self.whatsapp_model_tier
+    return WHATSAPP_TIER_FAST if !standard_openai?
+
+    tier = Setting[WHATSAPP_MODEL_TIER_SETTING_KEY].to_s
+
+    return tier if WHATSAPP_MODEL_TIERS.include?(tier)
+
+    WHATSAPP_TIER_FAST
+  end
+
+  def self.whatsapp_model
+    whatsapp_tier_model(whatsapp_model_tier)
+  end
+
+  # Asked per tier rather than only for the selected one so the admin dropdown
+  # can name the model id each option would send.
+  def self.whatsapp_tier_model(tier)
+    case tier
+    when WHATSAPP_TIER_BIG
+      current_llm_model
+    when WHATSAPP_TIER_ULTRAFAST
+      ultrafast_model
+    else
+      fast_model
+    end
   end
 
   # An instance pointed at another provider, or at an OpenAI-compatible endpoint

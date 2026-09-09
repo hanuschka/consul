@@ -159,7 +159,8 @@ class Whatsapp::AiAssistant::BotCopyService < ApplicationService
         instructions: INSTRUCTIONS,
         input: input,
         timeout_seconds: TIMEOUT_SECONDS,
-        feature: FEATURE
+        feature: FEATURE,
+        profile: ::Ai::ModelProfile.whatsapp
       )
 
       lines = Array(answer["lines"] || answer[:lines]).map { |line| line.to_s.strip }.compact_blank

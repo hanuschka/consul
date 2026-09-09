@@ -20,6 +20,13 @@ en:
       whatsapp_bot_description: "Turns on the WhatsApp bot for citizens. Only takes effect once your technical team has set up the WhatsApp business account on the server."
       kobil_address_verification: "KOBIL address verification"
       kobil_address_verification_description: "Imports the address from the KOBIL account (street, postal code, city) into the user profile without linking it to the address register. It unlocks no district-restricted phases. Enable it to spare users typing."
+    ai:
+      whatsapp_model_tier: "WhatsApp bot language model (temporary)"
+      whatsapp_model_tier_description: "Decides which of the three OpenAI models writes the bot's replies. A larger model answers more carefully, costs more per message and takes longer to appear in the chat. The choice exists for a comparison on the staging system and is removed afterwards. It only appears while OpenAI is used without a custom API endpoint; under any other provider the model configured there still applies. The default is the fast model."
+      whatsapp_model_tier_options:
+        big: "Main model (%{model})"
+        fast: "Fast model (%{model})"
+        ultrafast: "Ultrafast model (%{model})"
     whatsapp:
       default_locale: "Bot default language"
       default_locale_description: "Sets the language the bot speaks to numbers that have not linked an account yet. Once a number is linked to an account, the bot follows that person's own language setting instead. Enter a language code the platform offers, for example de or en. Empty or an unknown code means the platform's default language."

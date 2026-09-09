@@ -183,6 +183,9 @@ en:
           the area.
         location_maximum_reached: "This question takes at most %{maximum} places."
         completed: "Thank you — your votes in “%{poll}” are counted."
+        already_answered: >-
+          You have already voted in “%{poll}”. Your answers are recorded and stay as they
+          are — this vote cannot be answered a second time.
       onboarding:
         login_prompt: >-
           Tap below to log in. By opening the link you consent to the processing of your phone
@@ -216,6 +219,13 @@ en:
           voting_phase: Vote now
           formular_phase: Fill in the form
           point_of_interest_phase: Report a defect
+        # The same button where this citizen has already voted in the voting phase. A
+        # sibling of phase_action rather than a key inside it, because
+        # Whatsapp::ProjektCardActions reads that scope's keys as the register of which
+        # phase types get an action at all — one key more there would be an invented phase
+        # type. The 20 characters WhatsApp allows a button title apply here too.
+        phase_action_voted:
+          voting_phase: Already voted
         phase_contributions: See what's in
         contribution_choose: Choose contribution
         view_projekt: View project

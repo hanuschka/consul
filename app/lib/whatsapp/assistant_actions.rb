@@ -283,7 +283,7 @@ module Whatsapp::AssistantActions
     when :view_projekt then projekt_label(param)
     when :view_contribution then contribution_label(param)
     when :idea_start then phase_projekt_label(param)
-    when :phase_open then phase_action_label(param)
+    when :phase_open then phase_action_label(param, conversation)
     when :phase_contributions then ::Whatsapp.copy("whatsapp.bot.buttons.phase_contributions")
     when :support then proposal_label(param)
     when :support_toggle then support_toggle_label(param, conversation)
@@ -309,12 +309,17 @@ module Whatsapp::AssistantActions
   # phase without labelling it says what the card would have said. Blank for a phase
   # type the card has no action for, which drops the pill: an unlabelled button
   # pointing at a phase nothing can be done in is a tap that leads nowhere.
-  def phase_action_label(param)
+  #
+  # The citizen travels with it for the same reason the wording does. A vote they have
+  # already taken part in is labelled as such on the card, and a pill beside a reply
+  # still reading "Jetzt abstimmen" would be the card's own mark contradicted by the
+  # message under it.
+  def phase_action_label(param, conversation)
     projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
 
     return if projekt_phase.blank?
 
-    ::Whatsapp::ProjektCardActions.label_for(projekt_phase)
+    ::Whatsapp::ProjektCardActions.label_for(projekt_phase, user: conversation.user)
   end
 
   # The line under a row, for the rows whose twenty-character label cannot say which

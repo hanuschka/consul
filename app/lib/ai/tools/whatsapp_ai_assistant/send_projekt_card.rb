@@ -13,7 +13,8 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
               "list, instead of writing the address into your reply. Identified by name rather " \
               "than by id, so it reaches finished projekts too. The card is the whole answer to " \
               "a projekt choice, so the summary carries the detail right away: what the projekt " \
-              "collects, which phase takes contributions and how long it runs. Write it from " \
+              "collects, and each of its open phases by name with its own closing date. Write " \
+              "it from " \
               "what describe_projekt returned, in the citizen's language, and do not repeat it " \
               "or the link in a reply afterwards. The summary itself says what the projekt is " \
               "about — never send the citizen to the link to find that out. Naming several " \
@@ -25,9 +26,13 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
   params do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
     string :summary,
-      description: "Two to four sentences saying what the projekt is about, which phase takes " \
-                   "contributions and until when, in the citizen's language, from what a tool " \
-                   "in this conversation returned."
+      description: "What the projekt is about, then every open phase named on its own with its " \
+                   "own closing date — a projekt running four voting phases names four, each by " \
+                   "the name describe_projekt gave it, never merged into one wording or one " \
+                   "date. Say of each that it is running where its running field says so, even " \
+                   "where it takes no written contribution, and say which of them the chat can " \
+                   "take a contribution into. In the citizen's language, from what " \
+                   "describe_projekt returned in this conversation."
   end
 
   def execute(projekt_name:, summary:)
@@ -61,14 +66,20 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     # them, which only opened a further step where the citizen picked which phase they
     # meant — a question the card had already answered by being about this projekt.
     #
+    # The citizen goes with the projekt because the wording of a phase's pill depends on
+    # what they have already done in it: a vote they took part in is labelled as such
+    # here rather than only after they tap it.
+    #
     # Telling more about the projekt used to be a pill as well. It sat between the
     # citizen picking a projekt and doing anything with it, and what it delivered was
     # the card's own three facts worded differently — so the detail is in the summary
     # now and the step is gone.
     def send_card(projekt, summary)
-      actions = ::Whatsapp::ProjektCardActions.call(projekt)
+      actions = ::Whatsapp::ProjektCardActions.call(projekt, user: conversation.user)
 
-      return send_action_list(projekt, summary, actions) if actions.size > ::Whatsapp::MAX_BUTTONS
+      if ::Whatsapp::ProjektCardActions.list_required?(actions)
+        return send_action_list(projekt, summary, actions)
+      end
 
       # A projekt whose open phases are all of a type with nothing to do in them — a
       # newsfeed, a milestone — has no action to offer, and that is a dead end: the
@@ -83,8 +94,9 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
       )
     end
 
-    # Past three actions the card has to become a list, because three is every reply
-    # button a WhatsApp message holds. The picture goes as a message of its own ahead
+    # The card becomes a list where reply buttons cannot carry the actions — more than
+    # three of them, or two that would read alike, which is Whatsapp::ProjektCardActions'
+    # call. The picture goes as a message of its own ahead
     # of it rather than being dropped: a list message takes no header at all, and the
     # picture is the half of a card a citizen recognises the projekt by. It is sent
     # first so the two arrive in the order they would have been read in, and its

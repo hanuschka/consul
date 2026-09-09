@@ -139,6 +139,25 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     nil
   end
 
+  # Whether this citizen has nothing left to answer in the poll — the reading that
+  # tells a ballot already taken part in from one still to begin, and the one place
+  # that decides it, so a chat offering the vote and a chat answering the tap cannot
+  # disagree about who has voted.
+  #
+  # Deliberately blind to the conversation's own markers, where #first_owed takes both.
+  # A question the citizen declined has no answer row and never will, so counting it as
+  # settled would read a ballot walked away from half-way as one finished. Left out, it
+  # is still owed and the ballot resumes at it, which is what a partly answered ballot
+  # has to do.
+  #
+  # A citizen with no account has answered nothing rather than everything, which
+  # #first_owed's own blank for a missing user would otherwise say the opposite of.
+  def nothing_owed?
+    return false if @user.blank?
+
+    first_owed.blank?
+  end
+
   # How many questions the ballot holds, for the line that tells a citizen how much
   # of it is left. Counted over the whole sequence rather than the path, and in slots
   # — a template's set of contexted clones is one, since exactly one of them is ever

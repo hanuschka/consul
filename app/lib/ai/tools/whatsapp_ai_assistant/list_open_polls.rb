@@ -5,7 +5,9 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
               "portal. Where votable_in_chat is true, voting happens here: call start_poll_vote " \
               "with the projekt_phase_id rather than handing out the address, and offer that for " \
               "every row that can be. Where it is false the ballot_url is the way through — send " \
-              "it with send_link. Returns facts for you to answer in your own words: it sends " \
+              "it with send_link. A row marked already_voted is one this citizen took part in " \
+              "earlier: say so where you name it and never offer to start it — they cannot " \
+              "answer it again. Returns facts for you to answer in your own words: it sends " \
               "nothing to the citizen itself. #{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: " \
               "where there are more, say how many and offer more_action_id as a button."
 
@@ -26,9 +28,12 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
       query = ::Whatsapp::OpenPollsQuery.new(projekt: projekt, from: from)
       polls = query.call
       votable_ids = ::Whatsapp::VotableBallotQuery.votable_poll_ids(polls)
+      voted_ids = ::Whatsapp::BallotParticipation.completed_poll_ids(
+        polls: polls, user: conversation.user
+      )
 
       {
-        polls: polls.map { |poll| row_for(poll, votable_ids) },
+        polls: polls.map { |poll| row_for(poll, votable_ids, voted_ids) },
         **::Whatsapp::ListWindow.report(
           scope: MORE_SCOPE, from: from, shown: polls.size, total: query.total
         )
@@ -49,16 +54,21 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
     # Whatsapp::VotableBallotQuery.votable_poll_ids answers the whole page for what
     # asking one poll costs, where asking row by row paid it nine times over.
     #
+    # Whether the citizen has taken part is answered for the whole page at once for the
+    # same reason, and it travels only where it is true: a false on every row of a list
+    # nobody has voted in is the one fact repeated ten times, and #compact drops it.
+    #
     # The address is the row's own poll rather than its phase's, because the row
     # names that poll — on a phase that has somehow ended up with two, a link to the
     # other one would answer about a ballot nobody was shown.
-    def row_for(poll, votable_ids)
+    def row_for(poll, votable_ids, voted_ids)
       projekt_phase = poll.projekt_phase
 
       {
         title: poll.name,
         projekt_phase_id: projekt_phase.id,
         votable_in_chat: votable_ids.include?(poll.id),
+        already_voted: (true if voted_ids.include?(poll.id)),
         closes_on: ::Whatsapp::DatePhrase.absolute(poll.ends_at),
         closes_in: ::Whatsapp::DatePhrase.relative(poll.ends_at),
         projekt: projekt_title(projekt_phase.projekt),

@@ -5,8 +5,13 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
   DESCRIPTION_LENGTH = 1200
 
   description "Describes one projekt: what it is about in the portal's own words, which phases " \
-              "it has, which of them is open for contributions right now, and where to read " \
-              "more. Identified by name rather than by id, so it reaches finished projekts as " \
+              "it has, which of them are running right now, which of them take a contribution " \
+              "in the chat, when each of them closes, and where to read more. A phase is " \
+              "running when its running field says so, whether or not it takes a written " \
+              "contribution — a voting phase that is running is running. Every phase is a row " \
+              "of its own, several of the same kind included, each with its own name and its " \
+              "own dates: never merge them. " \
+              "Identified by name rather than by id, so it reaches finished projekts as " \
               "well as running ones. Returns facts for you to answer in your own words — it " \
               "sends nothing to the citizen. Answer from what it returned and nothing else; a " \
               "projekt with no text here is one to offer the link for rather than to describe. " \
@@ -50,15 +55,32 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
     # to: a closed phase still holds what happened in it, and that is most of what
     # this tool is asked about.
     #
+    # Named and dated through Whatsapp::ProjektCard.phase_facts, the same reader the
+    # card's rows use, so the summary calls a phase what the row the citizen taps
+    # calls it — and so a voting phase arrives under its ballot's name rather than as
+    # one of four "Abstimmung".
+    #
     # Each row carries the same verdict start_draft will reach, so the model cannot
     # offer a submission into a phase that would refuse it.
+    #
+    # Whether the phase is running is its own field beside that verdict. The two part
+    # company on every phase the bot cannot submit into — a voting phase, a phase whose
+    # portal has switched the bot off as a channel — and a summary reading only the
+    # verdict called those closed, which is what let four running voting phases arrive
+    # as one collective sentence.
     def phases_of(projekt)
-      ::Whatsapp::ProjektPhasesQuery.call(projekt: projekt).map do |candidate|
+      projekt_phases = ::Whatsapp::ProjektPhasesQuery.call(projekt: projekt)
+      facts = ::Whatsapp::ProjektCard.phase_facts(projekt_phases)
+
+      projekt_phases.map do |candidate|
+        phase_facts = facts[candidate.id]
+
         {
           projekt_phase_id: candidate.id,
-          phase: candidate.title,
-          ends_on: ::Whatsapp::DatePhrase.absolute(candidate.end_date),
-          ends_in: ::Whatsapp::DatePhrase.relative(candidate.end_date),
+          phase: phase_facts.name,
+          ends_on: ::Whatsapp::DatePhrase.absolute(phase_facts.ends_on),
+          ends_in: ::Whatsapp::DatePhrase.relative(phase_facts.ends_on),
+          running: candidate.current?,
           open_for_submission: ::Whatsapp::EligiblePhasesQuery.eligible?(candidate)
         }.compact
       end

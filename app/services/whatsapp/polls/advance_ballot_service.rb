@@ -19,9 +19,14 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
   #
   # The two are told apart for the one caller that has to say something about the
   # ballot afterwards: Whatsapp::Polls::OfferBallotService, whose own caller may be a
-  # tool reporting into a turn. A ballot with nothing left to ask is not a ballot that
-  # was started, and a tool that reports it as one has told the model the citizen is
-  # looking at a question that was never sent.
+  # tool reporting into a turn. A ballot that ends without a question going out is not a
+  # ballot that was started, and a tool that reports it as one has told the model the
+  # citizen is looking at a question that was never sent.
+  #
+  # COMPLETED is a ballot answered to its end here and now, and only that. A vote the
+  # citizen took part in some time before never reaches this at all — OfferBallotService
+  # answers it before beginning anything, because the two need different words and
+  # arriving here they had the same ones.
   ASKED = :asked
   COMPLETED = :completed
 

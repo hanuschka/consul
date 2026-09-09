@@ -35,6 +35,19 @@ module Whatsapp::CompletionNotes
       "answer of theirs is recorded. There is nothing left to ask them in it. #{CONTINUATION}"
   end
 
+  # The vote is named the same way and for the same reason, but this is not a completion
+  # at all — nothing happened just now. It says so plainly, because the note above and
+  # this one differ in exactly the thing the citizen has to be told apart: whether their
+  # answers were recorded a moment ago or some time before. A note that only said "every
+  # answer of theirs is recorded" would be read as the first and confirmed as a fresh
+  # ballot, which is the reading this exists to prevent.
+  def ballot_already_answered(poll:)
+    "The citizen has already taken part in the vote \"#{poll.name}\" — they answered it earlier, " \
+      "not just now, and every answer of theirs from then still stands. There is nothing left to " \
+      "ask them in it and they cannot answer it a second time. Say that they have already voted " \
+      "and that their answers stand, and do not thank them for answers just given. #{CONTINUATION}"
+  end
+
   # Linking is the one completion that interrupted something else. What that something
   # was is in the replayed history above rather than in this note — it is whatever they
   # were doing when the login link got in the way — so the note says to read it there

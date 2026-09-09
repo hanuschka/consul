@@ -46,6 +46,22 @@ de:
           versendet wird erst, wenn Sie die Vorlage hier aktivieren.
         notification_failed: 'Vorlage konnte nicht eingereicht werden: %{error}'
         notification_selected: „%{name}“ wird jetzt für diese Benachrichtigung verwendet.
+        deleted: Vorlage „%{name}“ wurde bei 360dialog gelöscht.
+        delete_failed: 'Vorlage konnte nicht gelöscht werden: %{error}'
+        delete_refused_in_use: >-
+          „%{name}“ wird noch verwendet und kann nicht gelöscht werden. Stellen Sie zuerst eine
+          andere Vorlage für diesen Zweck ein.
+        resubmitted: >-
+          Abgelehnte Vorlage „%{name}“ wurde gelöscht und neu bei 360dialog eingereicht. Die
+          Freigabe durch Meta kann einige Stunden dauern; versendet wird erst, wenn Sie die Vorlage
+          danach hier aktivieren.
+        resubmit_failed: >-
+          Die abgelehnte Vorlage wurde gelöscht, die neue konnte aber nicht eingereicht werden:
+          %{error}. Der Platz ist jetzt leer — reichen Sie die Vorlage erneut ein.
+        delete_refused_not_rejected: >-
+          Nur abgelehnte Vorlagen können hier gelöscht werden. „%{name}“ hat einen anderen Status.
+        resubmit_refused_not_rejected: >-
+          Nur abgelehnte Vorlagen können neu eingereicht werden. „%{name}“ hat einen anderen Status.
       api_errors:
         placeholder_position: >-
           Meta akzeptiert keine Vorlage, deren Text mit einem Platzhalter beginnt oder endet. Vor
@@ -81,6 +97,18 @@ de:
         template: Benachrichtigungsvorlage
         welcome: Chat geöffnet
         unsupported: Nicht unterstützt
+      phase_codes:
+        title: QR-Codes einzelner Phasen
+        intro: >-
+          Jede laufende Phase, die Beiträge per Chat annimmt, mit ihrem eigenen Code. Ein Scan führt
+          direkt in den Einreichungsablauf dieser Phase, ohne Menü dazwischen.
+        card_subline: 'Projekt: %{projekt}'
+        empty_title: Derzeit gibt es keine Phasen-Codes
+        empty_body: >-
+          Ein Code erscheint hier, sobald eine Vorschlags- oder Budgetphase läuft, deren Projekt
+          veröffentlicht ist und in der die Einstellung „WhatsApp-Bot: Einreichungen erlauben“
+          eingeschaltet ist. Fehlt eine erwartete Phase, liegt es an einer dieser Bedingungen und
+          nicht an einem Fehler.
       reach:
         contacts_title: Kontakte
         contacts_intro: >-
@@ -93,6 +121,7 @@ de:
         verified: Bestätigte Nummern
         link_pending: Verknüpfung offen
         unlinked: Ohne Konto
+        contacts_breakdown_title: Nach Verknüpfungsstatus
         activity_title: Aktivität
         activity_intro: >-
           Wie viele Kontakte zuletzt geschrieben haben und wie viele in den letzten 30 Tagen dazugekommen
@@ -115,7 +144,6 @@ de:
           Versendete Vorlagen-Nachrichten je Projekt. Fehlgeschlagene Zustellungen deuten auf abgelaufene
           Nummern oder eine nicht freigegebene Vorlage hin.
         projekt: Projekt
-        phase: Phase
         sent: Zugestellt
         failed: Fehlgeschlagen
         last_sent_at: Zuletzt versendet
@@ -123,11 +151,6 @@ de:
         flows_title: Laufende Vorgänge
         flows_intro: Kontakte, die gerade mitten in einem Bot-Dialog stecken – nach Schritt.
         no_flows: Derzeit steckt niemand in einem laufenden Vorgang.
-        phases_title: Phasen mit WhatsApp-Einreichung
-        phases_intro: Laufende Vorschlagsphasen, in die per Chat eingereicht werden kann.
-        qr_code: QR-Code
-        open_phase_qr: QR-Code öffnen
-        no_phases: Derzeit nimmt keine Phase Vorschläge per WhatsApp an.
       dialogs:
         title: Dialoge
         intro: >-
@@ -241,6 +264,7 @@ de:
           dialogs: Dialoge
           test_message: Testnachricht
         feature_title: WhatsApp-Bot
+        model_tier_title: Sprachmodell des Bots (vorübergehend)
         settings_title: Einstellungen
         settings_intro: Vorlage, Sprachmodell und Aufbewahrung für den WhatsApp-Bot. Änderungen wirken
           sofort.
@@ -296,7 +320,6 @@ de:
         test_phone_hint: Nur Ziffern mit Landesvorwahl, z. B. 49177XXXXXXX.
         test_submit: Testnachricht senden
         test_pending: Nachricht wird gesendet …
-        templates_title: Bot-Nachrichtenvorlagen
         templates_intro: >-
           Für Projekt-Benachrichtigungen braucht WhatsApp eine von Meta freigegebene Vorlage mit genau
           zwei Platzhaltern: Projektname und Projektlink.
@@ -369,6 +392,52 @@ de:
         notification_template_not_submitted: noch nicht eingereicht
         notification_template_submit: Einreichen
         notification_template_other_in_use: 'aktiv: %{name}'
+        template_statuses:
+          approved: freigegeben
+          pending: in Prüfung
+          submitted: eingereicht
+          in_appeal: Widerspruch läuft
+          pending_deletion: wird gelöscht
+          flagged: beanstandet
+          rejected: abgelehnt
+          paused: ausgesetzt
+          disabled: gesperrt
+        slots_title: Was aktuell verschickt wird
+        slots_intro: >-
+          Jede Zeile ist ein Platz, an dem eine freigegebene Vorlage hinterlegt sein muss. Ist ein
+          Platz leer oder die hinterlegte Vorlage nicht freigegeben, erreicht diese Nachricht
+          niemanden.
+        slots_armed_summary:
+          zero: Kein Platz ist einsatzbereit.
+          one: 1 von %{total} Plätzen ist einsatzbereit.
+          other: "%{count} von %{total} Plätzen sind einsatzbereit."
+        slot_column: Platz
+        slot_purpose_broadcast: Projekt-Rundnachricht
+        slot_purpose_notification: Push-Benachrichtigung
+        slot_not_configured: keine Vorlage hinterlegt
+        template_form_title: Neue Rundnachrichten-Vorlage einreichen
+        template_submit_hint: >-
+          Nach dem Einreichen dauert es bis zu eine Minute, bis die Vorlage unten in der Kontoliste
+          auftaucht. Die Freigabe durch Meta dauert deutlich länger — meist einige Stunden.
+        account_list_title: Alle Vorlagen des Kontos
+        account_list_summary:
+          zero: Alle Vorlagen des Kontos (keine)
+          one: Alle Vorlagen des Kontos (1)
+          other: Alle Vorlagen des Kontos (%{count})
+        account_list_intro: >-
+          Alles, was bei 360dialog unter diesem Konto liegt — auch Vorlagen, die dieses Portal nie
+          eingereicht hat. Abgelehnte Vorlagen zählen gegen das Kontingent des Kontos und können
+          hier gelöscht werden.
+        template_delete: Löschen
+        notification_template_resubmit: Neu einreichen
+        notification_template_resubmit_confirm: >-
+          Die abgelehnte Vorlage wird bei 360dialog gelöscht und mit dem aktuellen Wortlaut neu
+          eingereicht. Fortfahren?
+        template_delete_confirm: Diese abgelehnte Vorlage bei 360dialog endgültig löschen?
+        notification_template_placeholder_hint: >-
+          %{placeholder} wird beim Versand durch den Link zum jeweiligen Beitrag ersetzt. Worum es
+          geht, steht absichtlich nicht in der Nachricht — sie erscheint auf einem Sperrbildschirm,
+          den auch andere lesen können.
       pages:
         connection:
           hint: Ob der Bot aktiv ist, ob Meta ihn erreicht und was Bürgerinnen und Bürger zuerst sehen.
@@ -479,7 +548,9 @@ de:
             der mit einem Platzhalter beginnt oder endet, zwei unmittelbar aufeinanderfolgende Platzhalter,
             oder Beispielwerte, die nicht zur Anzahl der Platzhalter passen.
         qr_code:
-          hint: Der portalweite Code und Link, die einen Chat mit dem Bot öffnen.
+          hint: >-
+            Alle Codes an einer Stelle: der portalweite und je einer für jede laufende Phase mit
+            Chat-Einreichung.
           description_title: Wofür diese Seite da ist
           description:
           - >-
@@ -493,11 +564,12 @@ de:
             ein Plakat im Rathaus, eine Fußzeile im gedruckten Mitteilungsblatt oder einen Aufkleber
             an einem dauerhaften Ort.
           - >-
-            Codes, die auf ein bestimmtes Projekt oder eine bestimmte Beteiligungsphase zeigen, entstehen
-            auf der Seite des jeweiligen Projekts und nicht hier. Sie tragen ein signiertes Merkmal,
-            sodass ein Scan direkt in den Einreichungsablauf dieser Phase führt, ohne Menü dazwischen.
-            Nutzen Sie diese für Beschilderung genau dort, worum es im Projekt geht: an einem Bauzaun,
-            an einer Tafel im Park, bei einer Bürgerversammlung.
+            Darunter steht für jede laufende Phase, die Beiträge per Chat annimmt, ihr eigener Code.
+            Diese tragen ein signiertes Merkmal, sodass ein Scan direkt in den Einreichungsablauf
+            dieser Phase führt, ohne Menü dazwischen. Nutzen Sie sie für Beschilderung genau dort,
+            worum es im Projekt geht: an einem Bauzaun, an einer Tafel im Park, bei einer
+            Bürgerversammlung. Den projektweiten Code eines einzelnen Projekts finden Sie weiterhin
+            auf der WhatsApp-Seite dieses Projekts.
           - >-
             Der Link unter dem Code ist dieselbe Adresse in Textform. Er wirkt überall dort, wo ein
             gedruckter Code nicht hinkommt: in einer E-Mail, als Schaltfläche auf der Website, in
@@ -536,11 +608,10 @@ de:
             Stelle abbrechen, und nicht, dass gerade viele gleichzeitig mitten in einer Einreichung
             sind.
           - >-
-            Die Liste am Ende zeigt, welche Beteiligungsphasen derzeit eine Einreichung über den Bot
-            annehmen. Eine Phase erscheint nur, wenn ihr Projekt veröffentlicht ist, die Phase läuft
-            und sowohl das Einreichen als auch der KI-Ablauf eingeschaltet sind. Fehlt eine erwartete
-            Phase, liegt es an einer dieser drei Bedingungen — der Bot bietet bewusst nie eine Einreichung
-            an, die er anschließend ablehnen müsste.
+            Welche Beteiligungsphasen derzeit eine Einreichung über den Bot annehmen, beantwortet
+            nicht diese Seite, sondern die Seite QR-Code: dort steht jede dieser Phasen mit ihrem
+            eigenen Code. Reichweite sagt, wie viele Menschen der Kanal erreicht; welche Codes es
+            gibt, ist eine andere Frage.
         dialogs:
           hint: Alle Gespräche des Bots, mit Filtern und einer Antwortmöglichkeit.
           description_title: Wofür diese Seite da ist
@@ -616,6 +687,7 @@ de:
           qr_title: Projekt-QR-Code
           qr_subline: Für Plakate und Flyer zu diesem Projekt.
           eligible_phases_title: Phasen, die Einreichungen annehmen
+          all_phase_codes_link: Alle Phasen-QR-Codes auf der Seite QR-Code ansehen
           eligible_phases_intro:
             one: Eine Phase nimmt Vorschläge per WhatsApp an – Einreichungen gehen direkt dorthin.
             other: '%{count} Phasen nehmen Vorschläge per WhatsApp an – der Bot fragt, welche gemeint

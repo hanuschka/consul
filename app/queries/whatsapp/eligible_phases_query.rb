@@ -126,15 +126,20 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
     end
 
     # The date and flag half of ProjektPhase#current?, plus the projekt's own
-    # visibility, are plain columns, so they are asked of the database rather
-    # than of every phase the portal has ever had. eligible? still re-checks in
-    # Ruby: this only decides what is worth loading, never what is eligible.
+    # visibility and the two feature switches, are plain columns, so they are
+    # asked of the database rather than of every phase the portal has ever had.
+    # eligible? still re-checks in Ruby: this only decides what is worth
+    # loading, never what is eligible — :with_present_feature is written to
+    # mirror #feature? exactly so the narrowing can never drop a phase the Ruby
+    # check would keep.
     def phases_of(phase_class)
       scope =
         phase_class
           .current
           .where(hidden_at: nil)
           .of_publicly_visible_projekt
+          .with_present_feature(::ProjektPhase::WHATSAPP_SUBMISSIONS_FEATURE_KEY)
+          .with_present_feature(phase_class.selectable_by_users_feature_key)
           .includes(preloads_for(phase_class))
 
       scope = scope.where(projekt_id: @projekt.id) if @projekt.present?

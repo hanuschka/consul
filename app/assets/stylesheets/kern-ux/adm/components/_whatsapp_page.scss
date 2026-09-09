@@ -13,6 +13,22 @@
   max-width: 42rem;
 }
 
+// The submission form used to sit flush under the table it feeds, reading as a
+// continuation of it. The frame is what separates "what the account holds" from
+// "what you can add to it".
+.adm-whatsapp-page--form-panel {
+  max-width: 46rem;
+  padding: var(--kern-metric-space-large, 24px);
+  border: 1px solid var(--kern-grey-350);
+  border-radius: 4px;
+  background: var(--kern-grey-050);
+}
+
+.adm-whatsapp-page--submit-hint {
+  max-width: 34rem;
+  margin-bottom: 1rem;
+}
+
 .adm-whatsapp-page--form .kern-form-input {
   margin-bottom: 1.75rem;
 }
@@ -32,6 +48,63 @@
   margin-top: 0.25rem;
   white-space: pre-line;
   color: var(--kern-color-layout-text-muted);
+}
+
+// The slot summary: eleven rows whose purpose kicker groups them by catalog, and
+// whose names are identifiers rather than prose.
+.adm-whatsapp-page--slot-purpose {
+  display: block;
+  color: var(--kern-color-layout-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.6875rem;
+}
+
+.adm-whatsapp-page--slot-name {
+  // KERN ships no monospace token, and a template name is an identifier that
+  // has to be read character by character to be retyped into 360dialog.
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+
+// One column of cards rather than a grid: the quoted message is the point, and
+// two of them side by side wrap into unreadable columns at admin widths.
+.adm-whatsapp-page--notification-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-default, 16px);
+  max-width: 46rem;
+}
+
+.adm-whatsapp-page--notification-card .kern-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--kern-metric-space-default, 16px);
+}
+
+// Quoted as the citizen receives it, so the message is visibly the bot's words
+// and not the panel's own copy.
+.adm-whatsapp-page--notification-card blockquote.adm-whatsapp-page--template-body {
+  margin: 0;
+  padding-left: var(--kern-metric-space-default, 16px);
+  border-left: 3px solid var(--kern-grey-350);
+  color: var(--kern-color-layout-text-default);
+}
+
+.adm-whatsapp-page--template-button,
+.adm-whatsapp-page--placeholder-hint {
+  max-width: 34rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+}
+
+.adm-whatsapp-page--notification-card .kern-card__footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--kern-metric-space-small, 12px);
 }
 
 .adm-whatsapp-page--result:empty {

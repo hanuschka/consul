@@ -10,6 +10,16 @@ class WhatsappApi::Resources::Templates
     @client.get(BASE_PATH)
   end
 
+  # Removes every language version of a template, which is all the endpoint
+  # offers: 360dialog keys the deletion by name alone, so a name approved in two
+  # languages cannot have one of them dropped from here.
+  #
+  # The name is escaped rather than interpolated raw — it reaches this from a
+  # form field, and a slash in it would otherwise address a different path.
+  def destroy(name:)
+    @client.delete("#{BASE_PATH}/#{ERB::Util.url_encode(name)}")
+  end
+
   def create(name:, language:, body:, example_variables: [], category: DEFAULT_CATEGORY)
     @client.post(
       BASE_PATH,

@@ -7,10 +7,8 @@
 module Ai::SingleTurn
   def self.fast_json(
     schema:, instructions:, input:, timeout_seconds:,
-    feature: ::AiUsageRecord::UNKNOWN_FEATURE
+    feature: ::AiUsageRecord::UNKNOWN_FEATURE, profile: ::Ai::ModelProfile.fast
   )
-    profile = ::Ai::ModelProfile.fast
-
     if profile.responses?
       return ::OpenaiApi::Responses.json(
         schema: schema,
@@ -58,10 +56,8 @@ module Ai::SingleTurn
 
   def self.fast_text(
     instructions:, input:, timeout_seconds:,
-    feature: ::AiUsageRecord::UNKNOWN_FEATURE
+    feature: ::AiUsageRecord::UNKNOWN_FEATURE, profile: ::Ai::ModelProfile.fast
   )
-    profile = ::Ai::ModelProfile.fast
-
     if profile.responses?
       return ::OpenaiApi::Responses.text(
         instructions: instructions,

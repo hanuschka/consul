@@ -4,7 +4,7 @@
   <%= render "adm/whatsapp/page_description", key: "settings" %>
 
   <section class="mb-5">
-    <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.settings_title") %></h2>
+    <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.settings_title") %></h2>
     <p class="kern-body mb-3"><%= t("adm.whatsapp.show.settings_intro") %></p>
 
     <% @text_settings.each do |setting| %>
@@ -24,7 +24,7 @@
 
   <% if @auto_broadcast_setting.present? %>
     <section class="mb-5">
-      <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.auto_broadcast_title") %></h2>
+      <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.auto_broadcast_title") %></h2>
       <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.show.auto_broadcast_intro") %></p>
 
       <%= render Adm::AttributeEditorComponent.new(@auto_broadcast_setting, :value, :boolean) %>
@@ -38,7 +38,7 @@
   <% end %>
 
   <section class="mb-5">
-    <h2 class="kern-title kern-title--small mb-2"><%= t("adm.whatsapp.show.draft_evaluation_title") %></h2>
+    <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.draft_evaluation_title") %></h2>
     <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.show.draft_evaluation_body") %></p>
 
     <%= kern_link_button(

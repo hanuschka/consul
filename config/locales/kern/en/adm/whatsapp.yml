@@ -46,6 +46,22 @@ en:
           going out once you activate the template here.
         notification_failed: 'Template could not be submitted: %{error}'
         notification_selected: '"%{name}" is now used for this notification.'
+        deleted: Template "%{name}" was deleted at 360dialog.
+        delete_failed: 'Template could not be deleted: %{error}'
+        delete_refused_in_use: >-
+          "%{name}" is still in use and cannot be deleted. Point that slot at another template
+          first.
+        resubmitted: >-
+          Rejected template "%{name}" was deleted and submitted again to 360dialog. Meta approval
+          can take several hours; the push starts going out once you activate the template here
+          afterwards.
+        resubmit_failed: >-
+          The rejected template was deleted, but the new one could not be submitted: %{error}. The
+          slot is empty now — submit the template again.
+        delete_refused_not_rejected: >-
+          Only rejected templates can be deleted here. "%{name}" has a different status.
+        resubmit_refused_not_rejected: >-
+          Only rejected templates can be submitted again. "%{name}" has a different status.
       api_errors:
         placeholder_position: >-
           Meta does not accept a template whose text begins or ends with a placeholder. Put static
@@ -81,6 +97,17 @@ en:
         template: Notification template
         welcome: Chat opened
         unsupported: Unsupported
+      phase_codes:
+        title: Codes for single phases
+        intro: >-
+          Every running phase that accepts contributions by chat, each with its own code. A scan
+          leads straight into that phase's submission flow with no menu in between.
+        card_subline: 'Projekt: %{projekt}'
+        empty_title: There are no phase codes right now
+        empty_body: >-
+          A code appears here as soon as a proposal or budget phase is running whose projekt is
+          published and which has the "WhatsApp bot: allow submissions" setting switched on. If a
+          phase you expect is missing, one of those conditions is the reason and not a fault.
       reach:
         contacts_title: Contacts
         contacts_intro: >-
@@ -93,6 +120,7 @@ en:
         verified: Verified numbers
         link_pending: Link pending
         unlinked: Without account
+        contacts_breakdown_title: By link status
         activity_title: Activity
         activity_intro: How many contacts wrote recently and how many were added over the last 30
           days.
@@ -114,7 +142,6 @@ en:
           Template messages sent per project. Failed deliveries point to expired numbers or a template
           that is not approved.
         projekt: Project
-        phase: Phase
         sent: Delivered
         failed: Failed
         last_sent_at: Last sent
@@ -122,11 +149,6 @@ en:
         flows_title: Flows in progress
         flows_intro: Contacts currently in the middle of a bot flow, by step.
         no_flows: Nobody is in an active flow right now.
-        phases_title: Phases accepting WhatsApp submissions
-        phases_intro: Running proposal phases that accept submissions via chat.
-        qr_code: QR code
-        open_phase_qr: Open QR code
-        no_phases: No phase currently accepts proposals via WhatsApp.
       dialogs:
         title: Dialogs
         intro: >-
@@ -237,6 +259,7 @@ en:
           dialogs: Dialogs
           test_message: Test message
         feature_title: WhatsApp bot
+        model_tier_title: Bot language model (temporary)
         settings_title: Settings
         settings_intro: Template, speech model and retention for the WhatsApp bot. Changes take effect
           immediately.
@@ -289,7 +312,6 @@ en:
         test_phone_hint: Digits only, including country code, e.g. 49177XXXXXXX.
         test_submit: Send test message
         test_pending: Sending message …
-        templates_title: Bot message templates
         templates_intro: >-
           Project notifications need a Meta-approved template with exactly two placeholders: project
           name and project link.
@@ -361,6 +383,50 @@ en:
         notification_template_not_submitted: not submitted yet
         notification_template_submit: Submit
         notification_template_other_in_use: 'currently active: %{name}'
+        template_statuses:
+          approved: approved
+          pending: under review
+          submitted: submitted
+          in_appeal: appeal pending
+          pending_deletion: being deleted
+          flagged: flagged
+          rejected: rejected
+          paused: paused
+          disabled: disabled
+        slots_title: What is being sent right now
+        slots_intro: >-
+          Each row is a slot that needs an approved template. While a slot is empty or its template
+          is not approved, that message reaches nobody.
+        slots_armed_summary:
+          zero: No slot is ready to send.
+          one: 1 of %{total} slots is ready to send.
+          other: "%{count} of %{total} slots are ready to send."
+        slot_column: Slot
+        slot_purpose_broadcast: Projekt broadcast
+        slot_purpose_notification: Push notification
+        slot_not_configured: no template configured
+        template_form_title: Submit a new broadcast template
+        template_submit_hint: >-
+          After submitting, the template takes up to a minute to appear in the account list below.
+          Meta approval takes considerably longer — usually several hours.
+        account_list_title: All templates on the account
+        account_list_summary:
+          zero: All templates on the account (none)
+          one: All templates on the account (1)
+          other: All templates on the account (%{count})
+        account_list_intro: >-
+          Everything held at 360dialog under this account, including templates this portal never
+          submitted. Rejected templates count against the account quota and can be deleted here.
+        template_delete: Delete
+        notification_template_resubmit: Submit again
+        notification_template_resubmit_confirm: >-
+          The rejected template will be deleted at 360dialog and submitted again with the current
+          wording. Continue?
+        template_delete_confirm: Permanently delete this rejected template at 360dialog?
+        notification_template_placeholder_hint: >-
+          %{placeholder} is replaced with the link to the contribution when the push is sent. What
+          it is about is deliberately left out of the message — it arrives on a lock screen other
+          people can read.
       pages:
         connection:
           hint: Whether the bot is live, whether Meta can reach it, and what a citizen meets first.
@@ -462,7 +528,9 @@ en:
             a placeholder, two placeholders next to each other, or example values that do not match
             the number of parameters in the text.
         qr_code:
-          hint: The portal-wide code and link that open a chat with the bot.
+          hint: >-
+            Every code in one place: the portal-wide one, plus one per running phase that accepts
+            chat submissions.
           description_title: What this page is for
           description:
           - >-
@@ -475,11 +543,11 @@ en:
             carries no projekt and no phase, which makes it the right code for a poster in a town
             hall, a footer on a printed newsletter, or a sticker somewhere permanent.
           - >-
-            Codes that point at one specific projekt or one participation phase are generated on that
-            projekt's own page instead of here. Those carry a signed token, so a scan drops the citizen
-            straight into the submission flow for that phase with no menu in between. Use them for
-            signage at the place a projekt is actually about — a construction hoarding, a park noticeboard,
-            a public meeting.
+            Below it, every running phase that accepts contributions by chat has its own code. Those
+            carry a signed token, so a scan drops the citizen straight into the submission flow for
+            that phase with no menu in between. Use them for signage at the place a projekt is
+            actually about — a construction hoarding, a park noticeboard, a public meeting. The
+            projekt-wide code for one projekt still lives on that projekt's own WhatsApp page.
           - >-
             The link beneath the code is the same address in text form. It works everywhere a printed
             code cannot: an email, a button on the website, a post on social media. Both go through
@@ -516,11 +584,9 @@ en:
             worth investigating: it usually means citizens are abandoning at one particular step rather
             than that many people happen to be mid-submission at once.
           - >-
-            The list at the bottom shows which participation phases currently accept a submission
-            through the bot. A phase appears only when its projekt is published, the phase is running,
-            and both the create and AI-flow switches are on. If a phase you expect is missing, one
-            of those three is the reason — the bot deliberately never offers a submission it would
-            then have to refuse.
+            Which participation phases currently accept a submission through the bot is not answered
+            here but on the QR code page, where each of them is listed with its own code. Reach says
+            how many people this channel gets to; which codes exist is a different question.
         dialogs:
           hint: Every conversation the bot has had, with filters and a way to reply.
           description_title: What this page is for
@@ -591,6 +657,7 @@ en:
           qr_title: Project QR code
           qr_subline: For posters and flyers about this project.
           eligible_phases_title: Phases accepting submissions
+          all_phase_codes_link: See every phase QR code on the QR code page
           eligible_phases_intro:
             one: One phase accepts WhatsApp proposals — submissions go straight there.
             other: '%{count} phases accept WhatsApp proposals — the bot will ask which one.'

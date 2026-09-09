@@ -70,16 +70,17 @@ module Adm
       load_page_chrome
       load_templates
       load_notification_templates
+      load_template_slots
       load_template_form
     end
 
     def qr_code
       load_page_chrome
+      load_eligible_phases
     end
 
     def reach
       load_page_chrome
-      load_eligible_phases
       load_reach_stats
     end
 
@@ -201,7 +202,127 @@ module Adm
       redirect_to templates_adm_whatsapp_path
     end
 
+    # Clears a rejected template off the account, which is the only reason to
+    # delete one from here: Meta keeps it forever and counts it against the
+    # account's limit, while nothing can ever send with it.
+    #
+    # Both guards run here rather than only hiding the button. The listing this
+    # checks against is cached for a minute, so an admin can hold a page whose
+    # buttons describe a state that has since changed — and the request is
+    # unrecoverable at 360dialog.
+    def delete_template
+      name = params[:name].to_s
+
+      return head :bad_request if name.blank?
+      return refuse_template_delete(:delete_refused_in_use, name) if template_in_use?(name)
+      return refuse_template_delete(:delete_refused_not_rejected, name) if !template_rejected?(name)
+
+      response = ::Whatsapp::BroadcastTemplates.delete(name: name)
+
+      if response&.success?
+        expire_template_listing
+
+        flash[:success] = t("adm.whatsapp.template.deleted", name: name)
+      else
+        flash[:error] = t("adm.whatsapp.template.delete_failed",
+          error: response&.admin_error_message || t("adm.whatsapp.not_configured"))
+      end
+
+      redirect_to templates_adm_whatsapp_path
+    end
+
+    # A rejected push cannot simply be submitted again: the rejected template
+    # still occupies the name the kind submits under, so Meta would see a
+    # duplicate. The rejected one is deleted first, which is also the only way to
+    # stop it counting against the account's template limit.
+    #
+    # Pushes only. A broadcast template's name and wording are typed into the
+    # form above, so there is no fixed content for this to resend — a rejected
+    # broadcast row offers delete, and the form is how the next one is written.
+    def resubmit_notification_template
+      kind = notification_template_kind
+
+      return head :bad_request if kind.blank?
+
+      name = ::Whatsapp::NotificationTemplates.submission_name(kind)
+
+      # No in-use guard here, unlike delete_template. A push is armed under the
+      # name its kind submits under, so a template Meta rejected after it was
+      # armed is both in use and rejected — and refusing it would leave that slot
+      # with no way out at all. Resubmitting keeps the name, so the setting stays
+      # correct, and an already-rejected template sends nothing either way.
+      return refuse_template_delete(:resubmit_refused_not_rejected, name) if !template_rejected?(name)
+
+      delete_response = ::Whatsapp::BroadcastTemplates.delete(name: name)
+
+      if !delete_response&.success?
+        flash[:error] = t("adm.whatsapp.template.delete_failed",
+          error: delete_response&.admin_error_message || t("adm.whatsapp.not_configured"))
+
+        return redirect_to templates_adm_whatsapp_path
+      end
+
+      # Dropped before the submission rather than after it: the name is gone at
+      # 360dialog either way now, and a create that fails must leave the page
+      # showing the slot as unsubmitted — which is what it truly is — rather than
+      # the rejected row the cache still holds.
+      expire_template_listing
+
+      resubmit_notification_template_as(kind, name)
+    end
+
     private
+
+      # Split out so the two provider round-trips read as two steps rather than
+      # one method deciding four outcomes.
+      def resubmit_notification_template_as(kind, name)
+        response = ::Whatsapp::NotificationTemplates.create(kind: kind)
+
+        if response&.success?
+          flash[:success] = t("adm.whatsapp.template.resubmitted", name: name)
+        else
+          # The delete already happened, so this is not a no-op failure: the slot
+          # is now empty and the row will offer a plain submission again. Said
+          # explicitly, because "could not submit" alone would suggest nothing
+          # had changed.
+          flash[:error] = t("adm.whatsapp.template.resubmit_failed",
+            error: response&.admin_error_message || t("adm.whatsapp.not_configured"))
+        end
+
+        redirect_to templates_adm_whatsapp_path
+      end
+
+      # The listing every template row is rendered from, cached for a minute. A
+      # write that changes what 360dialog holds has to drop it, or the page comes
+      # back describing the state from before the write.
+      def expire_template_listing
+        Rails.cache.delete("whatsapp/integration_state/templates")
+        @templates = nil
+      end
+
+      def refuse_template_delete(key, name)
+        flash[:error] = t("adm.whatsapp.template.#{key}", name: name)
+
+        redirect_to templates_adm_whatsapp_path
+      end
+
+      # Every slot in both catalogs, so a template armed for a push is as
+      # protected as the one the broadcast job reads.
+      def template_in_use?(name)
+        ::Whatsapp::BroadcastTemplates.configured_names.include?(name)
+      end
+
+      # Read from the listing rather than trusted from the form: the status is
+      # Meta's answer, and the button that submitted this was rendered from a
+      # cached copy of it.
+      def template_rejected?(name)
+        load_templates
+
+        @templates.any? do |template|
+          template[:name] == name &&
+            template[:status] == ::Whatsapp::BroadcastTemplates::REJECTED_STATUS
+        end
+      end
 
       def authorize_settings
         authorize [:adm, Setting], :update?
@@ -309,6 +430,7 @@ module Adm
         @active_tab = TEMPLATES_TAB
         load_templates
         load_notification_templates
+        load_template_slots
 
         render :templates, status: :unprocessable_entity
       end
@@ -319,14 +441,43 @@ module Adm
         @feature_settings = FEATURE_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
         @text_settings = TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
         @auto_broadcast_setting = settings_by_key[AUTO_BROADCAST_SETTING_KEY]
+        @model_tier_setting = model_tier_setting_from(settings_by_key)
+        @model_tier_options = model_tier_options
       end
 
       def all_setting_keys
-        FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS + [AUTO_BROADCAST_SETTING_KEY]
+        FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS +
+          [AUTO_BROADCAST_SETTING_KEY, ::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY]
       end
 
+      # A temporary control for comparing the three model tiers on the staging
+      # system. The tiers are three separate models only on OpenAI's own
+      # catalogue, so the row is offered nowhere else — and the resolution
+      # ignores a stored value there as well.
+      def model_tier_setting_from(settings_by_key)
+        return if !::Ai::Settings.standard_openai?
+
+        settings_by_key[::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY]
+      end
+
+      # Each option names the model id it would send, so a tester reads the tier
+      # and the model in the same line instead of looking either up in the code.
+      def model_tier_options
+        ::Ai::Settings::WHATSAPP_MODEL_TIERS.map do |tier|
+          label = t(
+            "setting.ai.whatsapp_model_tier_options.#{tier}",
+            model: ::Ai::Settings.whatsapp_tier_model(tier)
+          )
+
+          [label, tier]
+        end
+      end
+
+      # Uncapped on purpose: the cap #call applies is how many rows fit in one
+      # WhatsApp list message, so reading it here would drop the eleventh open
+      # phase from a page whose whole point is that every code is on it.
       def load_eligible_phases
-        @eligible_projekt_phases = ::Whatsapp::EligiblePhasesQuery.call
+        @eligible_projekt_phases = ::Whatsapp::EligiblePhasesQuery.uncapped
       end
 
       # Two 360dialog round-trips, each retried three times with a sleep at a
@@ -358,6 +509,12 @@ module Adm
         @notification_templates = ::Whatsapp::NotificationTemplates.states(@templates)
       end
 
+      # The eleven slot rows the page opens with, off the same listing again.
+      def load_template_slots
+        @template_slots = ::Whatsapp::TemplateSlots.all(@templates)
+        @armed_slot_count = ::Whatsapp::TemplateSlots.armed_count(@template_slots)
+      end
+
       def cached_integration_state(key, &block)
         cache_key = "whatsapp/integration_state/#{key}"
         cached = Rails.cache.read(cache_key)
@@ -379,6 +536,7 @@ module Adm
 
       def load_reach_stats
         @reach_stats = ::Whatsapp::Platform::ReachStatsService.call
+        @reach_tiles = ::Whatsapp::Platform::ReachTilesService.call(@reach_stats)
       end
 
       def load_dialogs

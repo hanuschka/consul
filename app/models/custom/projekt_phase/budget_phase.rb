@@ -145,8 +145,12 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     budget&.investments&.count
   end
 
+  def self.selectable_by_users_feature_key
+    "resource.users_can_create_investment_proposals"
+  end
+
   def selectable_by_users?
-    feature?("resource.users_can_create_investment_proposals")
+    feature?(self.class.selectable_by_users_feature_key)
   end
 
   def ai_flow_feature_key
@@ -154,7 +158,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   end
 
   def whatsapp_submissions_enabled?
-    feature?("general.whatsapp_submissions")
+    feature?(WHATSAPP_SUBMISSIONS_FEATURE_KEY)
   end
 
   def selectable_by_admins_only?

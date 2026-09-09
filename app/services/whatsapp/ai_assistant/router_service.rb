@@ -106,7 +106,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # for and the effort it is asked with cannot disagree with each other
     # mid-conversation when the settings change under a running worker.
     def profile
-      @profile ||= ::Ai::ModelProfile.fast
+      @profile ||= ::Ai::ModelProfile.whatsapp
     end
 
     def ruby_llm_turn

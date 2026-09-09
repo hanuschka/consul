@@ -1,6 +1,11 @@
 module Whatsapp::BroadcastTemplates
   APPROVED_STATUS = "approved".freeze
 
+  # The only status the tab offers to delete. Meta keeps a rejected template on
+  # the account forever and counts it against the limit, while every other
+  # status is either in use or still on its way to being usable.
+  REJECTED_STATUS = "rejected".freeze
+
   # The broadcast job always sends two variables, in this order.
   EXAMPLE_VARIABLES = ["Stadtpark neu gestalten", "https://example.org/stadtpark"].freeze
 
@@ -27,6 +32,25 @@ module Whatsapp::BroadcastTemplates
   }.freeze
 
   module_function
+
+  # The name stored for one broadcast kind, mirroring
+  # NotificationTemplates.name_for so a slot row can read either catalog the
+  # same way.
+  def name_for(kind)
+    Setting[SETTING_KEYS_BY_KIND.fetch(kind)].presence
+  end
+
+  # Every name either catalog can have stored, for the check that refuses to
+  # delete a template something is still sending with.
+  def configured_names
+    broadcast_names = SETTING_KEYS_BY_KIND.keys.map { |kind| name_for(kind) }
+    push_names =
+      ::Whatsapp::NotificationTemplates::KINDS.map do |kind|
+        ::Whatsapp::NotificationTemplates.name_for(kind)
+      end
+
+    (broadcast_names + push_names).compact.uniq
+  end
 
   def list
     return [] if !::Whatsapp.configured?
@@ -61,6 +85,22 @@ module Whatsapp::BroadcastTemplates
     # offers "use" once the listing reports it approved, and that path sets the
     # language alongside the name so the two cannot drift.
     response
+  end
+
+  # Rejected templates are not free: they stay on the account for good and count
+  # against its template limit, so the tab needs a way to clear them.
+  #
+  # Rescued like `list` rather than raised: a failure here costs an admin the
+  # button, and the page has to come back to say so instead of 500-ing on a
+  # provider that answered slowly.
+  def delete(name:)
+    return if !::Whatsapp.configured? || name.blank?
+
+    WhatsappApi::Client.new.templates.destroy(name: name)
+  rescue StandardError => e
+    Rails.logger.error("[Whatsapp] template delete failed: #{e.class} - #{e.message}")
+
+    nil
   end
 
   def create_card(name:, language:, body:, button_label:, example_image_url:)

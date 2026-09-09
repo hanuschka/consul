@@ -2,6 +2,12 @@
 // actions on the left, the card heading and the copyable number/link details
 // on the right.
 
+// The QR code page stacks one card per phase below the portal-wide one, so
+// the vertical rhythm between them belongs to the card, not to each caller.
+.adm-whatsapp-qr + .adm-whatsapp-qr {
+  margin-top: var(--kern-metric-space-large);
+}
+
 .adm-whatsapp-qr--split {
   @media (min-width: 992px) {
     // 1.3 : 1.7 rather than 1 : 2 — the QR column keeps the thirds layout but

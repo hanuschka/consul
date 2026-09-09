@@ -10,6 +10,7 @@ class Adm::AiSettingsController < Adm::BaseController
     authorize [:adm, Setting], :index?, policy_class: Adm::AiSettingPolicy
     @ai_settings = policy_scope(Setting, policy_scope_class: Adm::AiSettingPolicy::Scope)
       .where("key LIKE ?", "ai.%")
+      .where.not(key: ::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY)
       .order(:key)
     @evaluation_context_setting =
       @ai_settings.find { |setting| setting.key == Ai::EvaluationContext::SETTING_KEY }

@@ -98,6 +98,8 @@ class ProjektPhase < ApplicationRecord
   # Deliberately unrelated to #ai_flow_feature_key above. That flag is the
   # projekt page's own AI drafting button, and reading it here left a phase
   # openly taking proposals on the website invisible to the bot.
+  WHATSAPP_SUBMISSIONS_FEATURE_KEY = "general.whatsapp_submissions".freeze
+
   def whatsapp_submissions_enabled?
     false
   end
@@ -298,6 +300,30 @@ class ProjektPhase < ApplicationRecord
     joins(:settings)
       .where("projekt_phase_settings.key = ?", "feature.#{feature_key}")
       .where(projekt_phase_settings: { value: (state == "on" ? "active" : [nil, ""]) })
+  }
+
+  # The database half of #feature?, for callers that would otherwise load every
+  # candidate phase to ask it in Ruby. Two differences from :with_feature, both
+  # deliberate:
+  #
+  # EXISTS rather than a join, because a query narrowing on two feature keys
+  # would otherwise put two contradictory conditions on one settings alias and
+  # match nothing.
+  #
+  # Any non-blank value rather than "active", because #feature? asks .present?.
+  # The toggle only ever writes "active" or "", but a row carrying anything else
+  # counts as on in Ruby, and a prefilter that dropped it would hide a phase the
+  # Ruby check keeps.
+  scope :with_present_feature, ->(feature_key) {
+    where(
+      ProjektPhaseSetting
+        .select("1")
+        .where("projekt_phase_settings.projekt_phase_id = projekt_phases.id")
+        .where(key: "feature.#{feature_key}")
+        .where("btrim(projekt_phase_settings.value) <> ''")
+        .arel
+        .exists
+    )
   }
 
   def self.order_phases(ordered_array)

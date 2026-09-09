@@ -12,7 +12,9 @@
   <div class="kern-accordion-group adm-whatsapp-page--description mb-4">
     <details class="kern-accordion">
       <summary class="kern-accordion__header">
-        <span class="kern-title"><%= t("#{page_scope}.description_title") %></span>
+        <%# Deliberately a rank below the group headings on the pages below it:
+            a collapsed aside must not outrank the sections it precedes. %>
+        <span class="kern-title kern-title--small"><%= t("#{page_scope}.description_title") %></span>
       </summary>
       <section class="kern-accordion__body">
         <% paragraphs.each do |paragraph| %>

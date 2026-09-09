@@ -1,0 +1,60 @@
+<%# Everything 360dialog holds under this account, which is reference material
+    rather than the page's subject — so it comes last and collapsed, with the
+    count in the summary so an admin knows what opening it costs.
+
+    This is also where a broadcast slot gets filled: the approved candidates are
+    here, and the slot summary at the top has no template to name until one is
+    picked. %>
+<%
+  configured_language = ::Whatsapp.broadcast_template_language
+  configured_names_by_kind = {
+    ::Whatsapp::BroadcastTemplates::TEXT_KIND => ::Whatsapp.broadcast_template_name,
+    ::Whatsapp::BroadcastTemplates::CARD_KIND => ::Whatsapp.broadcast_card_template_name
+  }
+%>
+
+<section class="mt-5">
+  <div class="kern-accordion-group">
+    <details class="kern-accordion">
+      <summary class="kern-accordion__header">
+        <span class="kern-title">
+          <%= t("adm.whatsapp.show.account_list_summary", count: @templates.size) %>
+        </span>
+      </summary>
+
+      <section class="kern-accordion__body">
+        <p class="kern-body adm-whatsapp-page--explanation mb-3">
+          <%= t("adm.whatsapp.show.account_list_intro") %>
+        </p>
+
+        <% if @templates.any? %>
+          <div class="kern-table-responsive" tabindex="0">
+            <table class="kern-table">
+              <thead class="kern-table__head">
+                <tr class="kern-table__row">
+                  <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.show.template_name") %></th>
+                  <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.show.template_kind") %></th>
+                  <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.show.template_language") %></th>
+                  <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.show.template_status") %></th>
+                  <th scope="col" class="kern-table__header kern-table__header--action">
+                    <%= t("adm.whatsapp.show.template_use") %>
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody class="kern-table__body">
+                <%= render partial: "adm/whatsapp/template_account_row",
+                  collection: @templates,
+                  as: :template,
+                  locals: {
+                    configured_names_by_kind: configured_names_by_kind,
+                    configured_language: configured_language
+                  } %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
+      </section>
+    </details>
+  </div>
+</section>

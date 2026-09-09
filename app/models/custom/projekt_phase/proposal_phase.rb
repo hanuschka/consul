@@ -86,8 +86,12 @@ class ProjektPhase::ProposalPhase < ProjektPhase
     proposals.base_selection.count
   end
 
+  def self.selectable_by_users_feature_key
+    "resource.users_can_create_proposals"
+  end
+
   def selectable_by_users?
-    feature?("resource.users_can_create_proposals")
+    feature?(self.class.selectable_by_users_feature_key)
   end
 
   def ai_flow_feature_key
@@ -95,7 +99,7 @@ class ProjektPhase::ProposalPhase < ProjektPhase
   end
 
   def whatsapp_submissions_enabled?
-    feature?("general.whatsapp_submissions")
+    feature?(WHATSAPP_SUBMISSIONS_FEATURE_KEY)
   end
 
   def selectable_by_admins_only?

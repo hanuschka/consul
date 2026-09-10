@@ -105,11 +105,7 @@
       if (window._mapboxScriptsLoading) return;
       window._mapboxScriptsLoading = true;
 
-      const cssUrls = [
-        'https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css',
-        'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.css',
-        'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.3/mapbox-gl-geocoder.css'
-      ];
+      const cssUrls = [window.VendorAssetUrls.mapboxCss];
       cssUrls.forEach(url => {
         if (!document.querySelector(`link[href="${url}"]`)) {
           const link = document.createElement('link');
@@ -119,11 +115,7 @@
         }
       });
 
-      const jsUrls = [
-        'https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js',
-        'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.js',
-        'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.3/mapbox-gl-geocoder.min.js'
-      ];
+      const jsUrls = [window.VendorAssetUrls.mapboxJs];
 
       function loadNext(index) {
         if (index >= jsUrls.length) {

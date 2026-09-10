@@ -3,6 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%# Redoc still reaches for cdn.redoc.ly (its branding logo) and %>
+    <%# otel.cloud.redocly.com; disable-telemetry below stops the tracing %>
+    <%# call and this policy stops everything else leaving our own host. %>
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; worker-src 'self' blob:">
     <title>API Documentation</title>
     <style>
       body {
@@ -12,8 +17,11 @@
     </style>
   </head>
   <body>
-     <redoc spec-url="<%= @spec_url %>"></redoc>
-    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"> </script>
+     <redoc spec-url="<%= @spec_url %>" disable-telemetry="true"></redoc>
+    <%# Redoc from our own host, never cdn.redoc.ly: the page must not send %>
+    <%# the visitor's IP to a third party. The bundle is an ES module that %>
+    <%# initialises itself from the <redoc> element above. %>
+    <%= javascript_include_tag "redoc/bundle/redoc.standalone", type: "module" %>
   </body>
 </html>
 

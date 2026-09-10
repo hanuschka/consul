@@ -166,4 +166,10 @@ namespace :adm do
   get "projekts/overview_page/navigation", to: redirect("/adm/overview_pages/projekt")
   get "projekts/overview_page/footer",     to: redirect("/adm/overview_pages/projekt")
   get "projekts/overviews",                to: redirect("/adm/overview_pages/others")
+
+  # The cross-instance import lost its own tab and became one of the three
+  # sources behind "Projekt importieren"; bookmarks of the old screen land on
+  # the source that replaced it.
+  get "projekts/instance_import",     to: redirect("/adm/projekts/imports/from_consul_projekt/new")
+  get "projekts/instance_import/new", to: redirect("/adm/projekts/imports/from_consul_projekt/new")
 end

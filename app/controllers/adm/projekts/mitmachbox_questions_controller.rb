@@ -2,6 +2,8 @@ class Adm::Projekts::MitmachboxQuestionsController < Adm::Projekts::BaseControll
   include Adm::Projekts::MitmachboxErrorHandling
 
   QUESTION_TYPES = %w[single_choice multiple_choice rating].freeze
+  # Mirrors the platform's own cap, which mirrors the box's fixed survey size.
+  MAX_QUESTIONS_PER_VERSION = 20
 
   before_action :set_projekt_phase
   before_action :authorize_phase
@@ -14,6 +16,10 @@ class Adm::Projekts::MitmachboxQuestionsController < Adm::Projekts::BaseControll
   end
 
   def create
+    if @draft_detail["questions"].size >= MAX_QUESTIONS_PER_VERSION
+      redirect_to survey_tab_path, alert: t("adm.projekts.mitmachbox.errors.max_questions_reached") and return
+    end
+
     mitmachbox_client.questions.create(survey_id, draft_id, **question_params)
 
     redirect_to survey_tab_path, notice: t("adm.projekts.mitmachbox.questions.created")

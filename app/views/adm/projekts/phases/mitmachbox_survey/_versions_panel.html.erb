@@ -9,10 +9,12 @@
   </h3>
 
   <div class="d-flex flex-wrap justify-content-start gap-2 mb-4">
-    <%= kern_link_button new_adm_projekts_phase_mitmachbox_question_path(@projekt_phase),
-          text: t("adm.projekts.phases.mitmachbox_survey.add_question_button"),
-          icon: "add",
-          style: :secondary %>
+    <% if questions.size < Adm::Projekts::MitmachboxQuestionsController::MAX_QUESTIONS_PER_VERSION %>
+      <%= kern_link_button new_adm_projekts_phase_mitmachbox_question_path(@projekt_phase),
+            text: t("adm.projekts.phases.mitmachbox_survey.add_question_button"),
+            icon: "add",
+            style: :secondary %>
+    <% end %>
 
     <%= form_with url: mitmachbox_publish_draft_adm_projekts_phase_path(@projekt_phase),
           data: { turbo_confirm: t("adm.projekts.phases.mitmachbox_survey.publish_confirm") } do %>
@@ -21,6 +23,12 @@
             icon: "publish" %>
     <% end %>
   </div>
+
+  <% if questions.size >= Adm::Projekts::MitmachboxQuestionsController::MAX_QUESTIONS_PER_VERSION %>
+    <p class="kern-body kern-body--small mb-4">
+      <%= t("adm.projekts.phases.mitmachbox_survey.max_questions_hint") %>
+    </p>
+  <% end %>
 
   <% if questions.any? %>
     <%= render "adm/projekts/phases/mitmachbox_survey/questions_table", questions: questions, editable: true %>

@@ -35,6 +35,7 @@ en:
           new_draft_hint: The published version is copied into an editable draft. The current version stays unchanged on the devices until the next publish.
           read_only_hint: Published versions cannot be edited. Create a new draft to make changes.
           no_questions: No questions yet.
+          max_questions_hint: This version has reached the maximum of 20 questions – the Mitmachbox cannot load more.
           table:
             prompt: Question
             question_type: Question type
@@ -88,6 +89,9 @@ en:
           answered_label:
             one: "%{count} participant answered this question"
             other: "%{count} participants answered this question"
+          reached_label:
+            one: "%{count} run reached this question"
+            other: "%{count} runs reached this question"
           count_label: Count
           option_label: Option
           source_device_label: Mitmachbox
@@ -134,11 +138,17 @@ en:
           label_hint: Shown on the device next to the selection button.
           value_label: Score
           value_hint: Only relevant for rating scales, e.g. 1 to 5.
+          follow_up_label: Follow-up question
+          follow_up_hint: Sets which question comes after this answer. Without a selection the run continues with the next question. A follow-up must lie further back in the order.
+          follow_up_next: Next question in the order
+          follow_up_end: End the survey
+          follow_up_last_question: This question is last in the order, so there is no follow-up to choose.
           save_button: Save
           delete_confirm: Really delete this option?
           table:
             label: Label
             value: Score
+            follow_up: Follow-up question
             actions: Actions
         deployments:
           created: The survey is being deployed to the device.
@@ -161,7 +171,9 @@ en:
           validation: "The input was not accepted by the Mitmachbox platform: %{message}"
           generic: An error occurred while communicating with the Mitmachbox platform.
           no_draft: There is no editable draft. Create a new draft first.
+          branch_order: "This order cannot be saved: a follow-up question must come after the question that branches to it."
           max_options_reached: A maximum of 5 options per question is possible – the Mitmachbox has 5 selection buttons.
+          max_questions_reached: A maximum of 20 questions per version is possible – the Mitmachbox cannot load more.
           not_configured: The Mitmachbox integration is not configured on this instance.
       mitmachbox_questions:
         new:

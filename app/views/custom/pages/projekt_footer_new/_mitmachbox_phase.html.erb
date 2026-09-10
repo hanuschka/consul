@@ -37,15 +37,28 @@
         <p><%= t("custom.projekt_phases.mitmachbox_phase.online_intro") %></p>
 
         <%= form_with url: mitmachbox_response_projekt_phase_path(@projekt_phase),
-                      method: :post, local: true, class: "mitmachbox-survey-form" do %>
+                      method: :post, local: true,
+                      class: "mitmachbox-survey-form js-mitmachbox-survey-form" do %>
+          <div class="mitmachbox-survey-progress js-mitmachbox-progress" hidden>
+            <p class="mitmachbox-survey-progress-label js-mitmachbox-progress-label" aria-live="polite"
+               data-template="<%= t("custom.projekt_phases.mitmachbox_phase.progress") %>"></p>
+            <div class="progress question-wizard--progress">
+              <span class="meter js-mitmachbox-progress-bar"></span>
+            </div>
+          </div>
+
           <% @mitmachbox_survey["questions"].each do |question| %>
             <% multiple = question["question_type"] == "multiple_choice" %>
             <% field_name = multiple ? "mitmachbox_answers[#{question["id"]}][]" : "mitmachbox_answers[#{question["id"]}]" %>
             <% hint_id = "mitmachbox_question_#{question["id"]}_hint" if multiple %>
 
-            <%= tag.fieldset class: "mitmachbox-survey-question", aria: { describedby: hint_id } do %>
+            <%= tag.fieldset class: "mitmachbox-survey-question js-mitmachbox-question",
+                             data: { question_id: question["id"], required: question["required"].presence },
+                             aria: { describedby: hint_id } do %>
               <legend class="mitmachbox-survey-question-legend">
-                <h3 class="mitmachbox-survey-question-prompt"><%= question["prompt"] %></h3>
+                <h3 class="mitmachbox-survey-question-prompt js-mitmachbox-question-prompt" tabindex="-1">
+                  <%= question["prompt"] %>
+                </h3>
                 <% if question["required"] %>
                   <span class="mitmachbox-survey-question-required">
                     <%= t("custom.projekt_phases.mitmachbox_phase.required") %>
@@ -66,7 +79,9 @@
                     <%= check_box_tag field_name, option["id"], false, id: input_id %>
                   <% else %>
                     <%= radio_button_tag field_name, option["id"], false,
-                          id: input_id, required: question["required"] %>
+                          id: input_id, required: question["required"],
+                          data: { next_question_id: option["next_question_id"],
+                                  ends_survey: option["ends_survey"].presence } %>
                   <% end %>
                   <%= label_tag input_id, option["label"],
                         class: "button hollow expanded mitmachbox-survey-option-label" %>
@@ -75,9 +90,20 @@
             <% end %>
           <% end %>
 
-          <div class="actions">
+          <p class="mitmachbox-survey-error js-mitmachbox-error" role="alert" hidden
+             data-message="<%= t("custom.projekt_phases.mitmachbox_phase.select_answer") %>"></p>
+
+          <div class="actions mitmachbox-survey-actions">
+            <button type="button" class="button hollow js-mitmachbox-prev" hidden>
+              <%= t("custom.projekt_phases.mitmachbox_phase.prev_question") %>
+            </button>
+
+            <button type="button" class="button js-mitmachbox-next" hidden>
+              <%= t("custom.projekt_phases.mitmachbox_phase.next_question") %>
+            </button>
+
             <%= submit_tag t("custom.projekt_phases.mitmachbox_phase.submit_button"),
-                  class: "button" %>
+                  class: "button js-mitmachbox-submit" %>
           </div>
         <% end %>
       <% end %>

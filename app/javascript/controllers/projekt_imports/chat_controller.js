@@ -45,6 +45,8 @@ export default class extends Controller {
     commandUrl: String,
     extractUrl: String,
     titleImageUrl: String,
+    applyProposalUrl: String,
+    discardProposalUrl: String,
     summaryUrl: String,
     statusUrl: String,
     importId: Number,
@@ -697,6 +699,49 @@ export default class extends Controller {
       })
       .catch(() => {
         console.log("selectTitleImage: request failed")
+      })
+  }
+
+  applyProposal(event) {
+    this.resolveProposal(this.applyProposalUrlValue, event.currentTarget)
+  }
+
+  discardProposal(event) {
+    this.resolveProposal(this.discardProposalUrlValue, event.currentTarget)
+  }
+
+  // Both buttons of a proposal go inert for the request's duration, so a
+  // double click cannot apply and discard the same change. The server answers
+  // with the re-rendered bubble either way, which replaces the buttons.
+  resolveProposal(url, button) {
+    const proposal = button.closest(".projekt-import-chat--proposal")
+    const buttons = proposal
+      ? Array.from(proposal.querySelectorAll(".projekt-import-chat--proposal-action"))
+      : [button]
+    buttons.forEach((element) => { element.disabled = true })
+
+    const formData = new FormData()
+    formData.append("message_id", button.dataset.messageId)
+    formData.append("proposal_id", button.dataset.proposalId)
+
+    fetch(url, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Accept": "application/json",
+        "X-CSRF-Token": this.csrfValue
+      },
+      body: formData
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data && data.error) this.showImportError(data.error)
+
+        this.renderImmediateMessages(data)
+      })
+      .catch(() => {
+        buttons.forEach((element) => { element.disabled = false })
+        console.log("resolveProposal: request failed")
       })
   }
 

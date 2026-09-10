@@ -53,7 +53,7 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
   private
 
   def sanitizer
-    @sanitizer ||= AdminWYSIWYGSanitizer.new
+    @sanitizer ||= ImportContentBlockSanitizer.new
   end
 
   # Returns the matched templates and whether the catalogue answered at all, because

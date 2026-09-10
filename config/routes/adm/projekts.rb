@@ -275,6 +275,8 @@ namespace :adm do
         post :extract
         post :execute
         post :title_image
+        post :apply_proposal
+        post :discard_proposal
       end
 
       resource :review, only: [:show, :update], controller: "imports/reviews" do

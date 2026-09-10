@@ -28,6 +28,13 @@ class ProjektImports::FromUrlJob < ApplicationJob
       content_locale: ProjektImport.default_content_locale
     )
 
+    if text_result.data[:hidden_content_removed]
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.hidden_content_removed"),
+        stage: ProjektImport::ANALYSIS_WARNING_STAGE
+      )
+    end
+
     # A page carries no pictures the import can lift the way a document does —
     # the images on it belong to whoever published it — so the title image is
     # left unset and the admin picks "create one with AI" in the chat if they
@@ -36,7 +43,8 @@ class ProjektImports::FromUrlJob < ApplicationJob
       text: text_result.data[:text],
       additional_user_instructions: projekt_import.additional_user_instructions,
       response_language: projekt_import.import_response_language,
-      source_images: []
+      source_images: [],
+      source_label: fetch_result.data[:final_url]
     )
 
     if !ai_result.success?

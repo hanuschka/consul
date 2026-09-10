@@ -38,6 +38,27 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
     "-#{display_state}"
   end
 
+  def source_label
+    helpers.import_source_label(projekt_import)
+  end
+
+  # Which step gave up, next to the message it gave up with: a fetch that never
+  # reached the page and a model that could not read it both read as "failed"
+  # otherwise, and they call for different next moves.
+  def failure_stage_label
+    return nil if display_state != :failed
+
+    helpers.import_failure_stage_label(projekt_import)
+  end
+
+  def show_retry?
+    projekt_import.retryable?
+  end
+
+  def retry_url
+    helpers.retry_adm_projekts_import_path(projekt_import)
+  end
+
   TITLE_TRUNCATE = 40
 
   def file_names
@@ -45,6 +66,7 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
   end
 
   def files_summary
+    return projekt_import.source_url.to_s.truncate(TITLE_TRUNCATE) if projekt_import.source_url.present?
     return I18n.t("adm.projekts.imports.list.no_files") if file_names.empty?
     return file_names.first.truncate(TITLE_TRUNCATE) if file_names.size == 1
 
@@ -53,11 +75,13 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
   end
 
   def files_full
+    return projekt_import.source_url.to_s if projekt_import.source_url.present?
+
     file_names.join(", ")
   end
 
   def show_files_tooltip?
-    file_names.present? && files_full != files_summary
+    files_full.present? && files_full != files_summary
   end
 
   def created_label
@@ -122,9 +146,9 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
   def primary_action_url
     case display_state
     when :completed
-      helpers.adm_projekts_import_chat_path(projekt_import, stay_in_chat: 1)
+      helpers.import_review_path(projekt_import, stay_in_chat: 1)
     when :chatting, :submitting
-      helpers.adm_projekts_import_chat_path(projekt_import)
+      helpers.import_review_path(projekt_import)
     else
       helpers.adm_projekts_import_path(projekt_import)
     end

@@ -208,6 +208,8 @@ en:
           extract_file_failed: "Could not read file %{filename}: %{message}"
           unknown_title_image_mode: "Unknown cover image option."
           unknown_title_image: "This image is no longer available for this import."
+          proposal_not_found: "This proposal has already been applied or discarded."
+          proposal_stale: "The import data changed after this proposal was made, so it was not applied. Ask the assistant for the change again."
           title_image_ineligible: "This image cannot be used as a cover image."
         title_image:
           intro:
@@ -244,7 +246,24 @@ en:
           add_phase: "added phase %{index} (%{type})"
           remove_phase: "removed phase (%{type})"
           replace_content_blocks: "replaced the content blocks (now %{count})"
+          proposed: "proposed: %{edit} — waiting for the administrator to apply or discard it"
+          discarded: "the administrator discarded the proposal: %{edit}"
+        proposals:
+          list_label: "Proposed changes"
+          remove_phase: "Remove the phase \"%{name}\""
+          replace_content_blocks:
+            one: "Replace the content blocks with 1 new block"
+            other: "Replace the content blocks with %{count} new blocks"
+          apply: "Apply"
+          discard: "Discard"
+          state:
+            pending: "Waiting for your decision — nothing has been changed yet."
+            applied: "Applied"
+            discarded: "Discarded"
         warnings:
+          proposals_pending: "The assistant proposed changes in the chat that you neither applied nor discarded. The projekt was created without them."
+          hidden_content_removed: "The source contained text that is invisible to readers (hidden elements or invisible characters). It was excluded from the analysis. Pages that hide text from readers sometimes do so to influence AI tools, so please review the extracted data with extra care."
+          external_links: "The imported content links to external sites: %{hosts}. Please check these links before activating the projekt."
           unknown_categories: "These categories do not exist on this platform and were not applied: %{categories}. Create them if needed and assign them to the projekt manually."
           unknown_sdg_codes: "These SDG codes do not exist on this platform and were not applied: %{codes}."
           voting_phase_without_questions: "The voting phase \"%{phase}\" was created without any questions, because none could be derived from the document."

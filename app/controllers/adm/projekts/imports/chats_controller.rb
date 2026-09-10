@@ -186,10 +186,33 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     }
   end
 
+  def apply_proposal
+    respond_to_proposal(ProjektImports::ApplyProposedEditService)
+  end
+
+  def discard_proposal
+    respond_to_proposal(ProjektImports::DiscardProposedEditService)
+  end
+
   private
 
   def authorize_create
     authorize [:adm, :projekts, Projekt], :create?
+  end
+
+  # The bubble is re-rendered server side and handed back, so the proposal's
+  # buttons, its resolved state and the applied-edit line come from one place.
+  def respond_to_proposal(service)
+    message = @ai_chat.ai_chat_messages.role_assistant.find(params[:message_id])
+    result = service.call(ai_chat_message: message, proposal_id: params[:proposal_id])
+
+    if !result.success?
+      render json: { error: result.error, messages: [serialize_message(message.reload)] },
+        status: :unprocessable_entity
+      return
+    end
+
+    render json: { status: "resolved", messages: [serialize_message(message.reload)] }
   end
 
   def pending_message_ids

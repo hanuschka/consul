@@ -54,6 +54,8 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     blocks_created = create_content_blocks(projekt_import, projekt)
     return if !blocks_created
 
+    ProjektImports::ExternalLinksAuditService.call(projekt_import: projekt_import)
+
     if source_images.data[:hero_attached]
       projekt_import.update!(image_status: "skipped")
     else
@@ -108,20 +110,29 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     ai_chat = projekt_import.ai_chat
     return [] if ai_chat.blank?
 
-    has_user_message, has_tool_activity = ai_chat.ai_chat_messages.pick(
-      Arel.sql(
-        "bool_or(role = 'user' AND custom_command IS NULL), " \
-        "bool_or(tool_activity <> '[]'::jsonb)"
-      )
-    )
+    has_user_message = ai_chat.ai_chat_messages.where(role: "user", custom_command: nil).exists?
     return [] if !has_user_message
-    return [] if has_tool_activity
 
-    [{
-      "message" => I18n.t("adm.projekts.imports.warnings.chat_changes_not_applied"),
+    journal_entries = ai_chat.ai_chat_messages.where(role: "assistant").pluck(:tool_activity).flatten
+    warnings = []
+
+    if journal_entries.none? { |entry| ProjektImports::AiEditJournal.applied?(entry) }
+      warnings << submit_warning("chat_changes_not_applied")
+    end
+
+    if ProjektImports::AiEditJournal.pending_proposals(journal_entries).any?
+      warnings << submit_warning("proposals_pending")
+    end
+
+    warnings
+  end
+
+  def submit_warning(key)
+    {
+      "message" => I18n.t("adm.projekts.imports.warnings.#{key}"),
       "stage" => ProjektImport::SUBMIT_WARNING_STAGE,
       "at" => Time.current.iso8601
-    }]
+    }
   end
 
   # CreateFromImportData writes all blocks in one transaction, so a single

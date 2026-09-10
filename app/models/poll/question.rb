@@ -75,10 +75,6 @@ class Poll::Question < ApplicationRecord
     question_answers.max_by(&:total_votes)&.total_votes
   end
 
-  def possible_answers
-    question_answers.joins(:translations).pluck("poll_question_answer_translations.title")
-  end
-
   def answers_with_read_more?
     answers_with_read_more.any?
   end

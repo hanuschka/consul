@@ -67,7 +67,11 @@ export default class extends Controller {
     this.pollTimer = null
     this.statusPollTimer = null
     this.lastImportStatus = null
-    this.shownWarningSignature = null
+    this.shownWarningSignature = this.renderedWarningSignature()
+    // A page that already loaded completed is the warnings view reached from
+    // the flash, the one place the chat is still served after an import. It
+    // must never reload itself, or the poller and the show action would bounce
+    // the page forever.
     this.completionShown = this.importStatusValue === "completed"
     this.pollErrorCount = 0
     this.chatRunning = false
@@ -252,7 +256,7 @@ export default class extends Controller {
     }
 
     if (state.status === "completed") {
-      this.handleCompletion(state.redirect_path)
+      this.handleCompletion()
       return
     }
 
@@ -265,27 +269,15 @@ export default class extends Controller {
     this.scheduleMessagesPoll()
   }
 
-  // When the import finishes live in this session (overlay showing), send the
-  // user to the created projekt's frontend page. Revisiting an already-completed
-  // import (guard) keeps the chat with its success state instead of redirecting.
-  // An import that produced warnings never redirects: leaving the page is the
-  // one thing that guarantees the admin never reads them.
-  handleCompletion(redirectPath) {
-    if (this.completionShown) {
-      this.hideOverlay()
-      this.scheduleMessagesPoll()
-      return
-    }
+  // A finished import leaves the chat for the created projekt's frontend page.
+  // Where it lands is decided server side by the show action, so completion
+  // only reloads — the same path a revisit takes, and the one that lets the
+  // import's warnings arrive as a flash instead of being stranded here.
+  handleCompletion() {
+    if (this.completionShown) return
 
     this.completionShown = true
     this.completeOverlayProgress()
-
-    if (redirectPath && !this.hasVisibleWarnings()) {
-      window.location.href = redirectPath
-      return
-    }
-
-    this.hideOverlay()
     window.location.reload()
   }
 
@@ -299,6 +291,16 @@ export default class extends Controller {
   // the one to hide.
   dismissBanner(event) {
     event.currentTarget.closest(".projekt-import-chat--banner").classList.add("-hidden")
+  }
+
+  // The banner arrives pre-filled when the page is opened to read a finished
+  // import's warnings. Adopting that list as the shown signature keeps the
+  // first poll from rebuilding it — and from undoing a dismissal.
+  renderedWarningSignature() {
+    const messages = Array.from(this.importWarningListTarget.children).map((item) => item.textContent)
+    if (messages.length === 0) return null
+
+    return JSON.stringify(messages)
   }
 
   // Warnings accumulate server-side across the whole import, so the banner is
@@ -320,10 +322,6 @@ export default class extends Controller {
     })
 
     this.importWarningTarget.classList.toggle("-hidden", messages.length === 0)
-  }
-
-  hasVisibleWarnings() {
-    return this.importWarningListTarget.children.length > 0
   }
 
   // A new import run clears warnings server-side, so the previous run's banners
@@ -357,7 +355,7 @@ export default class extends Controller {
         this.renderImportWarnings(data.warnings)
 
         if (data.status === "completed") {
-          this.handleCompletion(data.redirect_path)
+          this.handleCompletion()
           return
         }
         if (data.status === "failed") {

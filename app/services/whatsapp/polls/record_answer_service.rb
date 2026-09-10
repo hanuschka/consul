@@ -90,12 +90,12 @@ class Whatsapp::Polls::RecordAnswerService < ApplicationService
       true
     end
 
-    # The title read off the record rather than off the button the citizen tapped:
-    # Poll::Answer stores the answer as text, and the button carries at most twenty
-    # characters of it. Storing what the button said would file a vote under a cut
-    # phrase that matches no option the poll has.
+    # The option record rather than the button the citizen tapped: the button
+    # carries at most twenty characters of the title, so identifying the answer by
+    # what it said would file a vote under a cut phrase that matches no option the
+    # poll has.
     def record!
-      answer = question.find_or_initialize_user_answer(user, @question_answer.title)
+      answer = question.find_or_initialize_user_answer(user, @question_answer)
 
       answer.save_and_record_voter_participation
     end

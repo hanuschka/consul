@@ -29,7 +29,10 @@ class Adm::AiSettingsController < Adm::BaseController
       return
     end
 
+    provider_change = changing_llm_provider?
+
     @setting.update!(settings_params)
+    Ai::Settings.reset_llm_model! if provider_change
 
     redirect_to adm_ai_settings_path, notice: t("adm.ai_settings.flash.updated")
   end
@@ -62,10 +65,14 @@ class Adm::AiSettingsController < Adm::BaseController
       ["openai", "ollama", "gemini"].include?(provider)
     end
 
+    # OpenAI is included even though it has a built-in default: when the provider
+    # changes what a model accepts, the instance must be able to move off the
+    # default here rather than wait for a deploy. Leaving the field empty keeps
+    # Ai::Settings::DEFAULT_GPT_MODEL.
     def show_model_field?
       provider = Setting["ai.llm_provider"].to_s.downcase
 
-      !provider.in?(["ollama", "openai"]) && Setting["ai.llm_api_endpoint"].blank?
+      provider != "ollama" && Setting["ai.llm_api_endpoint"].blank?
     end
 
     def show_custom_model_field?
@@ -131,6 +138,10 @@ class Adm::AiSettingsController < Adm::BaseController
 
     def image_marking_recovery_command
       ::ExiftoolCommand::RECOVERY_COMMAND
+    end
+
+    def changing_llm_provider?
+      @setting.key == "ai.llm_provider" && @setting.value != settings_params[:value]
     end
 
     def clearing_required_custom_model?

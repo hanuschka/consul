@@ -72,10 +72,10 @@
 
         <%= link_to (@ui_site_homepage_path.presence || root_path), class: "header--responsive-menu-title" do %>
           <div>
-            <%= Setting['extended_option.general.title'] %>
+            <%= setting_text("extended_option.general.title") %>
           </div>
           <div>
-            <b><%= Setting["extended_option.general.subtitle"] %></b>
+            <b><%= setting_text("extended_option.general.subtitle") %></b>
           </div>
         <% end %>
 

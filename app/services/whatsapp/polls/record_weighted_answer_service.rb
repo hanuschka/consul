@@ -89,11 +89,11 @@ class Whatsapp::Polls::RecordWeightedAnswerService < ApplicationService
       )
     end
 
-    # The title read off the record rather than off the button the citizen tapped:
-    # the pill carries an option id and a number, and Poll::Answer records the answer
-    # as text.
+    # The option record rather than the button the citizen tapped: the pill carries
+    # an option id and a number, and Poll::Answer is keyed on the option itself and
+    # copies its title into the answer text.
     def record!
-      answer = question.find_or_initialize_user_answer(user, @question_answer.title)
+      answer = question.find_or_initialize_user_answer(user, @question_answer)
       answer.answer_weight = @weight
 
       answer.save_and_record_voter_participation

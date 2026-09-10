@@ -4,8 +4,7 @@ module AdminHelper
   def dashboard_index_back_path
     if params[:controller].in?(["admin/projekts", "admin/projekt_phases"]) &&
         @projekt.present? &&
-        @projekt.page.present? &&
-        @projekt.page.status == "published"
+        @projekt.page.present?
       page_path(@projekt.page.slug)
 
     elsif controller_name == "pages" &&

@@ -11,6 +11,7 @@ class Idea < ApplicationRecord
 
   translates :title, :description, :official_answer, touch: true
   include Globalizable
+  include MachineTranslatable
 
   acts_as_paranoid column: :hidden_at
   include ActsAsParanoidAliases

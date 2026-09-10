@@ -20,7 +20,10 @@ class Admin::AiSettingsController < Admin::BaseController
 
     def update_setting
       @setting = Setting.find(params[:id])
+      provider_change = changing_llm_provider?
+
       @setting.update!(settings_params)
+      Ai::Settings.reset_llm_model! if provider_change
 
       respond_to do |format|
         format.html {
@@ -56,10 +59,18 @@ class Admin::AiSettingsController < Admin::BaseController
       ["openai", "ollama", "gemini"].include?(provider)
     end
 
+    # OpenAI is included even though it has a built-in default: when the provider
+    # changes what a model accepts, the instance must be able to move off the
+    # default here rather than wait for a deploy. Leaving the field empty keeps
+    # Ai::Settings::DEFAULT_GPT_MODEL.
+    def changing_llm_provider?
+      @setting.key == "ai.llm_provider" && @setting.value != settings_params[:value]
+    end
+
     def show_model_field?
       provider = Setting["ai.llm_provider"].to_s.downcase
 
-      !provider.in?(["ollama", "openai"]) && Setting["ai.llm_api_endpoint"].blank?
+      provider != "ollama" && Setting["ai.llm_api_endpoint"].blank?
     end
 
     def show_custom_model_field?

@@ -15,7 +15,7 @@
     <% @new_comments.each do |comment| %>
       <li>
         <%= comment.body.truncate(30) %>
-        <%= link_to "(Link zum Mängelmelder)", deficiency_report_url(@deficiency_report) %>
+        <%= link_to t("custom.notification_service_mailers.new_comments_for_deficiency_report.link_to_report"), deficiency_report_url(@deficiency_report) %>
       </li>
     <% end %>
   </ul>

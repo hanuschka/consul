@@ -137,7 +137,6 @@ class InternalApi::ProjektsController < InternalApi::BaseController
   def stamp_currently_visible_projekts
     Projekt
       .activated
-      .with_published_custom_page
       .show_in_overview_page
       .regular
       .where(on_dt_global_overview: false)

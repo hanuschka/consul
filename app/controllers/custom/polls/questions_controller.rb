@@ -21,7 +21,7 @@ class Polls::QuestionsController < ApplicationController
       return respond_to { |format| format.js { render "polls/questions/answers" } }
     end
 
-    @answer = @question.find_or_initialize_user_answer(current_user, params[:answer])
+    @answer = @question.find_or_initialize_user_answer(current_user, @question_answer)
     @answer.answer_weight = weight
     @answer.save_and_record_voter_participation
 
@@ -110,14 +110,15 @@ class Polls::QuestionsController < ApplicationController
     end
 
     if open_answer_params[:open_answer_text].present?
-      @answer = @question.find_or_initialize_user_answer(current_user, open_answer_params[:answer])
+      @answer = @question.find_or_initialize_user_answer(current_user, @question.open_question_answer)
       @answer.save_and_record_voter_participation if @answer.new_record?
 
       if @answer.update(open_answer_text: open_answer_params[:open_answer_text])
         @open_answer_updated = true
       end
     else
-      @answer = @question.answers.find_by(author: current_user, answer: open_answer_params[:answer])
+      @answer = @question.answers.find_by(author: current_user,
+                                          question_answer: @question.open_question_answer)
       @answer.destroy_and_remove_voter_participation if @answer.present?
     end
 
@@ -231,7 +232,8 @@ class Polls::QuestionsController < ApplicationController
     end
 
     def providing_an_open_answer?(answer)
-      @question.open_question_answer.present? && @question.open_question_answer.title == answer.answer
+      @question.open_question_answer.present? &&
+        @question.open_question_answer.id == answer.question_answer_id
     end
 
     def wizard_navigable?(question)

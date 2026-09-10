@@ -1,0 +1,41 @@
+<!-- BlockID: B02 Image Overlay – Hero mit Vollbild-Hintergrundbild und dunklem Overlay -->
+<!-- Geeignet für: Bildstarke Intro-Bereiche, Ortsfotos, Projektbilder -->
+<!-- ANPASSEN: src-Attribut im img-Tag ersetzen -->
+
+<div style="position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 24px; min-height: 480px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.18);">
+
+  <!-- Hintergrundbild (src anpassen) -->
+  <img src="https://placehold.co/1200x500/1a365d/ffffff?text=Ihr+Projektbild+hier" alt="Projektbild" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+
+  <!-- Dunkles Overlay mit Gradient -->
+  <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%);"></div>
+
+  <!-- Inhalt -->
+  <div style="position: relative; z-index: 1; text-align: center; padding: 48px 32px; max-width: 680px; width: 100%;">
+
+    <!-- Badge -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 24px;">
+      <div style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #ffffff; font-weight: 600; letter-spacing: 0.04em; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">Stadtentwicklung 2025</div>
+      <div style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #ffffff; font-weight: 600; letter-spacing: 0.04em; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">Beteiligung offen</div>
+    </div>
+
+    <h3 style="font-size: 34px; font-weight: 800; color: #ffffff; margin-bottom: 16px; margin-top: 0; line-height: 1.15; letter-spacing: -0.5px;">Gestalten Sie Ihren Stadtpark mit</h3>
+
+    <p style="font-size: 17px; color: rgba(255,255,255,0.88); margin-bottom: 32px; margin-top: 0; line-height: 1.65; max-width: 540px; margin-left: auto; margin-right: auto;">
+      Von der Idee zur Realität: Teilen Sie uns mit, was Sie sich für den Westpark wünschen. Ihre Stimme zählt.
+    </p>
+
+    <!-- CTAs -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px;">
+      <a href="#" class="button"
+         style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 700; height: 48px; box-sizing: border-box; border-radius: 8px; background: #ffffff; color: #1a2e44; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'"
+         onmouseout="this.style.transform='none';this.style.boxShadow='none'">Idee einreichen</a>
+      <a href="#" class="button hollow"
+         style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 600; height: 48px; box-sizing: border-box; border: 2px solid rgba(255,255,255,0.4); border-radius: 8px; background: transparent; transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;"
+         onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(255,255,255,0.7)';this.style.background='rgba(255,255,255,0.1)'"
+         onmouseout="this.style.transform='none';this.style.borderColor='rgba(255,255,255,0.4)';this.style.background='transparent'">Alle Beiträge ansehen</a>
+    </div>
+
+  </div>
+</div>

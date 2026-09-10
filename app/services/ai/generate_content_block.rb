@@ -33,6 +33,8 @@ class Ai::GenerateContentBlock < ApplicationService
     anchor_template = nil
 
     if @category_hint.present?
+      @content_block&.mark_ai_generation_step!("templates")
+
       dt_templates_by_category = fetch_dt_templates
       filtered_templates = filter_templates_by_category(dt_templates_by_category)
       anchor_template = fetch_anchor_template(dt_templates_by_category)
@@ -51,12 +53,16 @@ class Ai::GenerateContentBlock < ApplicationService
 
     raise_if_cancelled!
 
+    @content_block&.mark_ai_generation_step!("generating")
+
     response =
       chat
         .with_instructions(instructions)
         .ask(@prompt)
 
     raise_if_cancelled!
+
+    @content_block&.mark_ai_generation_step!("finishing")
 
     body_html = response.content&.dig("html")
 

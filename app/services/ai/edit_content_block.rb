@@ -1,7 +1,7 @@
 class Ai::EditContentBlock < ApplicationService
   def initialize(
     instructions, content_block_html, title = nil, subtitle = nil, projekt: nil,
-    use_full_projekt_context: false, allow_text_modification: false
+    use_full_projekt_context: false, allow_text_modification: false, text_locale: nil
 )
     @instructions = instructions
     @content_block_html = content_block_html
@@ -10,6 +10,7 @@ class Ai::EditContentBlock < ApplicationService
     @projekt = projekt
     @use_full_projekt_context = use_full_projekt_context
     @allow_text_modification = allow_text_modification
+    @text_locale = text_locale.presence
   end
 
   def call
@@ -65,10 +66,11 @@ class Ai::EditContentBlock < ApplicationService
     TEXT
   end
 
-  # Called inline from the controller, so the request locale is still the
-  # editor's own — unlike generation, which is dispatched to a job.
+  # Callers that still run inline keep the request locale, which is already the
+  # editor's own. A background caller has no such locale and has to carry the
+  # editor's one in through text_locale.
   def target_language
-    Ai::OutputLanguage.name_for(I18n.locale)
+    Ai::OutputLanguage.name_for(@text_locale || I18n.locale)
   end
 
   def fetch_prompt

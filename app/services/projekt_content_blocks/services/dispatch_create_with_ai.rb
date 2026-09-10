@@ -24,6 +24,8 @@ class ProjektContentBlocks::Services::DispatchCreateWithAi < ApplicationService
   end
 
   def call
+    purge_failed_placeholders
+
     if replace_mode?
       build_replace_placeholder
     else
@@ -41,6 +43,15 @@ class ProjektContentBlocks::Services::DispatchCreateWithAi < ApplicationService
 
   def replace_mode?
     @mode == "replace"
+  end
+
+  # Failed add-mode placeholders are kept so the poller can read the error off
+  # them. They are invisible to the page, so the next generation for the same
+  # projekt is the natural point to clear the previous one out.
+  def purge_failed_placeholders
+    return if @projekt.blank?
+
+    SiteCustomization::ContentBlock.failed_ai_placeholders.where(projekt_id: @projekt.id).destroy_all
   end
 
   def options_payload
@@ -63,6 +74,7 @@ class ProjektContentBlocks::Services::DispatchCreateWithAi < ApplicationService
       position: nil,
       ai_generation_data: {
         "status" => "pending",
+        "step" => "queued",
         "mode" => "add",
         "options" => options_payload,
         "insertion_context" => {
@@ -82,6 +94,7 @@ class ProjektContentBlocks::Services::DispatchCreateWithAi < ApplicationService
     target.update_columns(
       ai_generation_data: {
         "status" => "pending",
+        "step" => "queued",
         "mode" => "replace",
         "options" => options_payload,
         "prior_body" => target.body.to_s

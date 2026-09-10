@@ -33,26 +33,24 @@ class NewsletterContentBlocks::CreateWithAiJob < ApplicationJob
   def handle_cancellation(content_block, mode)
     if mode.to_s == "replace"
       restore_prior_body(content_block)
+      content_block.mark_ai_generation_status!("cancelled")
     else
       content_block.destroy
     end
   end
 
+  # Clearing ai_generation_data on a failed replace made the status endpoint
+  # report "completed", so the poller applied the restored prior body as a
+  # success and the error was never shown.
   def handle_failure(content_block, mode, message)
-    if mode.to_s == "replace"
-      restore_prior_body(content_block)
-    else
-      content_block.mark_ai_generation_status!("failed", error: { message: message })
-    end
+    restore_prior_body(content_block) if mode.to_s == "replace"
+
+    content_block.mark_ai_generation_status!("failed", error: { message: message })
   end
 
   def restore_prior_body(content_block)
     data = content_block.ai_generation_data || {}
-    prior_body = data["prior_body"].to_s
 
-    content_block.update_columns(
-      body: prior_body,
-      ai_generation_data: nil
-    )
+    content_block.update_columns(body: data["prior_body"].to_s)
   end
 end

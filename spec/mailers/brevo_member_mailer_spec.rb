@@ -40,6 +40,17 @@ describe BrevoMemberMailer do
       expect(body).to include("herzlich Willkommen im neuen Mitgliederbereich von Mehr Demokratie e.V.")
     end
 
+    # "Mehr Demokratie e.V." already ends in a period; the abbreviation's dot ends the sentence.
+    it "does not double the period after an organisation name that ends in one" do
+      expect(body_of(mail)).not_to include("Mehr Demokratie e.V..")
+    end
+
+    it "ends the welcome sentence when the organisation name has no trailing period" do
+      Setting["org_name"] = "Mehr Demokratie"
+
+      expect(body_of(mail)).to include("Mitgliederbereich von Mehr Demokratie.")
+    end
+
     it "explains why the account exists" do
       expect(body_of(mail)).to include(
         "Für Sie wurde ein Zugang zur Beteiligungsplattform angelegt, weil Ihre E-Mail-Adresse " \

@@ -5,7 +5,7 @@
   </p>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= t("custom.brevo_member.mailers.invitation.welcome", org_name: setting["org_name"]) %>
+    <%= t("custom.brevo_member.mailers.invitation.welcome", org_name: setting["org_name"].to_s.chomp(".")) %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">

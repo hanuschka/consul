@@ -25,7 +25,7 @@
         <%= render partial: "proposals/proposal/participation_label", locals: { proposal: resource } %>
       <% end %>
 
-    <% elsif action_name == 'show' && controller_name.in?(['proposals', 'debates', 'polls', 'investments']) && resource.projekt_phase.projekt.page.published? %>
+    <% elsif action_name == 'show' && controller_name.in?(['proposals', 'debates', 'polls', 'investments']) && resource.projekt_phase.projekt.visible_for?(current_user) %>
       <%= link_to t("custom.shared.show.back_link", resources: resource.model_name.human(count: 2)), page_path(resource.projekt_phase.projekt.page.slug) %>
 
     <% end %>

@@ -38,7 +38,7 @@
     <div class="flex-layout padding-on-mobile">
       <div class="main-column">
         <div id="debates-content"></div>
-        <h1 class="resource-page--title"><%= "#{@debate.author_name} startet eine Diskussion"  %></h1>
+        <h1 class="resource-page--title"><%= t("custom.debates.show.title", author_name: @debate.author_name) %></h1>
         <div class="resource-page--title-subline">
           <%= render_custom_block('debate_show_welcome_text', custom_prefix: @debate.author_name , default_content: t('custom.debates.show.welcome_default_text')) %>
         </div>

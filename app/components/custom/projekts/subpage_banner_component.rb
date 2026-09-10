@@ -22,7 +22,6 @@ class Projekts::SubpageBannerComponent < ApplicationComponent
     return nil unless @custom_page.image.present?
 
     polymorphic_path(@custom_page.image.attachment_variant(
-      coalesce: true,
       gravity: "center",
       resize_to_fill: [930, 585]
     ))

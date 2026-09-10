@@ -116,8 +116,14 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
     I18n.t("adm.projekts.imports.list.actions.#{key}")
   end
 
+  # A completed import's chat sends every plain visit on to the created
+  # projekt, so opening it from here — a deliberate look back at the
+  # conversation, not the landing after an import — has to say so.
   def primary_action_url
-    if display_state.in?(%i[chatting submitting completed])
+    case display_state
+    when :completed
+      helpers.adm_projekts_import_chat_path(projekt_import, stay_in_chat: 1)
+    when :chatting, :submitting
       helpers.adm_projekts_import_chat_path(projekt_import)
     else
       helpers.adm_projekts_import_path(projekt_import)

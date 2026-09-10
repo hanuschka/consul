@@ -15,4 +15,9 @@ FactoryBot.define do
       type { "ProjektPhase::VotingPhase" }
     end
   end
+
+  factory :mitmachbox_phase, parent: :projekt_phase, class: "ProjektPhase::MitmachboxPhase" do
+    type { "ProjektPhase::MitmachboxPhase" }
+    mitmachbox_survey_id { 7 }
+  end
 end

@@ -2,8 +2,14 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
   ALLOWED_COMMANDS = %w[regenerate summarize import start_over].freeze
   MAX_AGGREGATE_BYTES = 500.megabytes
 
+  # The warnings travel to the projekt page inside the session cookie, which
+  # holds 4 KB for everything. A long list is replaced by a pointer back to the
+  # chat rather than raising CookieOverflow at the end of a successful import.
+  MAX_WARNINGS_FLASH_BYTES = 1200
+
   before_action :authorize_create
   before_action :find_projekt_import
+  before_action :redirect_completed_import, only: [:show]
   before_action :find_ai_chat, except: [:extract, :show]
   before_action :ensure_ai_chat_for_show!, only: [:show]
 
@@ -13,6 +19,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     @chat_user_initials = chat_user_initials(@chat_user)
     @chat_user_image_url = chat_user_image_url(@chat_user)
     @created_projekts = ordered_created_projekts
+    @import_warnings = import_warning_messages
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
@@ -37,8 +44,6 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       messages: combined.sort_by(&:id).map { |m| serialize_message(m) },
       import: {
         status: @projekt_import.status,
-        projekt_id: @projekt_import.projekt_id,
-        redirect_path: import_redirect_path,
         error: @projekt_import.error_message,
         warnings: @projekt_import.warnings
       }
@@ -208,6 +213,50 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     return if !@projekt_import.completed?
 
     projekt_path(@projekt_import.projekt_id)
+  end
+
+  # A finished import has nothing left to discuss, so the chat is left behind
+  # for the created projekt's frontend page — the poller reloads onto this
+  # action when the import finishes live, and every later visit lands here too.
+  # The warnings ride along as a flash because this chat is the only screen that
+  # renders them; stay_in_chat is how the list and the flash reopen it anyway.
+  def redirect_completed_import
+    return if params[:stay_in_chat].present?
+
+    path = import_redirect_path
+    return if path.blank?
+
+    warnings_message = warnings_flash_message
+
+    if warnings_message.present?
+      flash[:warning] = warnings_message
+    end
+
+    redirect_to path
+  end
+
+  # The whole list where the cookie can hold it, a pointer back to the chat
+  # where it cannot. The messages carry no markup of their own, so they are
+  # escaped here; the flash partial sanitizes the result on the way out.
+  def import_warning_messages
+    Array(@projekt_import.warnings).filter_map { |warning| warning["message"].presence }
+  end
+
+  def warnings_flash_message
+    messages = import_warning_messages
+    return if messages.none?
+
+    items = messages.map { |message| "<li>#{ERB::Util.html_escape(message)}</li>" }.join
+    lead = t("adm.projekts.imports.chats.show.warnings_flash_lead")
+    full_list = "#{lead}<ul>#{items}</ul>"
+
+    return full_list if full_list.bytesize <= MAX_WARNINGS_FLASH_BYTES
+
+    t(
+      "adm.projekts.imports.chats.show.warnings_flash_truncated_html",
+      count: messages.size,
+      url: adm_projekts_import_chat_path(@projekt_import, stay_in_chat: 1)
+    )
   end
 
   def find_ai_chat

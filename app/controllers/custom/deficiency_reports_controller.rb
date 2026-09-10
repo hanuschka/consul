@@ -43,6 +43,16 @@ class DeficiencyReportsController < ApplicationController
     filter_by_archived_status
     filter_by_my_posts
 
+    if request.format.json?
+      render json: JSON.generate(
+        MapLocation.flatten_feature_collections(
+          all_deficiency_report_map_locations(@deficiency_reports)
+        )
+      )
+
+      return
+    end
+
     @deficiency_reports = @deficiency_reports.send("sort_by_#{@current_order}").page(params[:page])
 
     @deficiency_reports_map_pin_count = deficiency_report_map_locations_count(@deficiency_reports)
@@ -63,14 +73,6 @@ class DeficiencyReportsController < ApplicationController
         else
           render :index
         end
-      end
-
-      format.json do
-        render json: JSON.generate(
-          MapLocation.flatten_feature_collections(
-            all_deficiency_report_map_locations(@deficiency_reports)
-          )
-        )
       end
 
       format.csv do

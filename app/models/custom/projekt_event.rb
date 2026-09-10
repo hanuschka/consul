@@ -3,6 +3,9 @@ class ProjektEvent < ApplicationRecord
   include Imageable
   include ResourceBelongsToProjekt
 
+  translates :title, :description, :location, touch: true
+  include MachineTranslatable
+
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: "projekt_id" # TODO: remove column after data migration con1538
 
   delegate :projekt, to: :projekt_phase

@@ -62,7 +62,6 @@
   line-height: 1;
 }
 
-[data-controller="table-actions"] > [data-table-actions-target="button"],
 .round-icon-button {
   display: block;
   height: 38px;
@@ -86,7 +85,7 @@
   }
 }
 
-[data-controller="table-actions"] > [data-table-actions-target="button"] {
+.kern-table__actions-toggle {
   .material-symbols-outlined {
     font-size: 28px !important;
   }

@@ -23,7 +23,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
-      { name: t("adm.projekts.imports.from_files.new.title"), url: new_adm_projekts_import_path },
+      { name: t("adm.projekts.imports.index.title"), url: adm_projekts_imports_path },
       { name: t(".title") }
     ]
   end
@@ -114,7 +114,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     case name
     when "start_over"
       @projekt_import.mark_abandoned!
-      render json: { status: "abandoned", redirect_path: new_adm_projekts_import_path }
+      render json: { status: "abandoned", redirect_path: helpers.import_source_new_path(@projekt_import) }
     when "import"
       ProjektImports::ExecuteImportJob.perform_later(@projekt_import.id)
 

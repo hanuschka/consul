@@ -70,8 +70,8 @@ application.register("kern--registered-address-selector", KernRegisteredAddressS
 import TableHeaderController from "./components/table/header_controller"
 application.register("table-header", TableHeaderController)
 
-import TableActionsController from "./components/table/actions_controller"
-application.register("table-actions", TableActionsController)
+import SharedDropdownMenuController from "./shared/dropdown_menu_controller"
+application.register("shared--dropdown-menu", SharedDropdownMenuController)
 
 
 

@@ -3,10 +3,10 @@
 <%= render Adm::HeaderComponent.new(title: t("adm.projekts.imports.index.title"), breadcrumbs: @breadcrumbs, back_button_url: adm_projekts_root_path, compact: true) do |header| %>
   <% header.with_actions do %>
     <div class="projekt-import-list--header-actions">
-      <%= kern_link_button new_adm_projekts_import_path,
-            text: t("adm.projekts.imports.index.new_import"),
-            icon: "upload_file",
-            style: :primary %>
+      <%= render Adm::Projekts::Imports::SourcePickerComponent.new(
+            label: t("adm.projekts.imports.index.new_import"),
+            ai_available: Ai::Settings.ai_available?
+          ) %>
     </div>
   <% end %>
 <% end %>

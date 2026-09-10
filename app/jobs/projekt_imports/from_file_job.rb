@@ -47,7 +47,7 @@ class ProjektImports::FromFileJob < ApplicationJob
       )
     end
 
-    transition_to_chat(projekt_import, text_truncated: text_truncated)
+    ProjektImports::StartChatService.call(projekt_import: projekt_import, text_truncated: text_truncated)
   rescue StandardError => e
     Rails.logger.error("[ProjektImports::FromFileJob] failed: #{e.message}")
     Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import_id, stage: "from_file_job" }) if defined?(Sentry)
@@ -81,40 +81,5 @@ class ProjektImports::FromFileJob < ApplicationJob
     ::AttachmentUpload.open(source_file) do |file|
       DocumentTextExtractor.call(file: file)
     end
-  end
-
-  def transition_to_chat(projekt_import, text_truncated: false)
-    ai_chat = AiChat.create!(resource: projekt_import)
-
-    initial_message_result = ProjektImports::BuildInitialMessageService.call(
-      projekt_import: projekt_import,
-      text_truncated: text_truncated
-    )
-
-    if initial_message_result.success?
-      ai_chat.ai_chat_messages.create!(
-        role: "assistant",
-        content: initial_message_result.data[:content],
-        status: "completed"
-      )
-    end
-
-    post_title_image_picker(ai_chat)
-
-    projekt_import.update!(status: "chatting")
-  end
-
-  # A message rather than a control in the chrome: the choice is part of what the
-  # assistant reports back about the uploaded documents, and it belongs next to
-  # the summary of what it found in them. The message carries no text of its own —
-  # the partial renders the candidates from the import's stored images, so it keeps
-  # showing the current choice however often it is re-rendered.
-  def post_title_image_picker(ai_chat)
-    ai_chat.ai_chat_messages.create!(
-      role: "assistant",
-      content: "",
-      status: "completed",
-      custom_command: ProjektImport::TITLE_IMAGE_PICKER_COMMAND
-    )
   end
 end

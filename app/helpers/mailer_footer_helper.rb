@@ -2,7 +2,7 @@ module MailerFooterHelper
   SYSTEM_EMAIL_FOOTER_BLOCK = "email_footer".freeze
   DEFICIENCY_REPORT_EMAIL_FOOTER_BLOCK = "email_footer_deficiency_report".freeze
 
-  FOOTERLESS_MAILER_CLASSES = %w[DeviseMailer].freeze
+  FOOTERLESS_MAILER_CLASSES = [].freeze
   FOOTERLESS_EMAILS = [
     ["Mailer", "newsletter"]
   ].freeze

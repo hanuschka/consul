@@ -3,12 +3,13 @@ de:
     brevo_member:
       mailers:
         closing: Freundliche Grüße
-        signature: Ihr Beteiligungsteam
+        signature: Ihr Team vom Mitgliederservice
         invitation:
           subject: Ihr Zugang zur Mitglieder-Plattform
           hi: "Hallo %{username},"
+          welcome: "herzlich Willkommen im neuen Mitgliederbereich von %{org_name}."
           p1: >
-            für Sie wurde ein Zugang zur Beteiligungsplattform angelegt, weil Ihre E-Mail-Adresse
+            Für Sie wurde ein Zugang zur Beteiligungsplattform angelegt, weil Ihre E-Mail-Adresse
             %{email} in der Mitgliederliste des Vereins hinterlegt ist. Der Zugang ist bereits
             freigeschaltet.
           p2: >

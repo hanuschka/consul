@@ -3,12 +3,13 @@ en:
     brevo_member:
       mailers:
         closing: Best regards
-        signature: Your participation team
+        signature: Your membership service team
         invitation:
           subject: Your access to the members' platform
           hi: "Hello %{username},"
+          welcome: "Welcome to the new members' area of %{org_name}."
           p1: >
-            access to the participation platform has been created for you, because your email
+            Access to the participation platform has been created for you, because your email
             address %{email} is on the association's member list. The access is already activated.
           p2: >
             To log in, please choose a password first: %{password_link}.

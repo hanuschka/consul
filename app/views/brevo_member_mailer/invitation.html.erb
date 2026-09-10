@@ -5,6 +5,10 @@
   </p>
 
   <p style="<%= css_for_mailer_text %>">
+    <%= t("custom.brevo_member.mailers.invitation.welcome", org_name: setting["org_name"]) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
     <%= t("custom.brevo_member.mailers.invitation.p1", email: @user.email) %>
   </p>
 
@@ -26,11 +30,9 @@
       )) %>
   </p>
 
-  <% unless custom_email_footer_present? %>
-    <p style="<%= css_for_mailer_text %>">
-      <%= t("custom.brevo_member.mailers.closing") %><br>
-      <%= t("custom.brevo_member.mailers.signature") %>
-    </p>
-  <% end %>
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("custom.brevo_member.mailers.closing") %><br>
+    <%= t("custom.brevo_member.mailers.signature") %>
+  </p>
 
 </td>

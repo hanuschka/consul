@@ -2,7 +2,7 @@
 <div class="js-admin-controls-sidebar" style="display: none;">
   <%= render partial: "pages/sidebar/admin_controls" %>
 </div>
-<%= render partial: "pages/sidebar/projekt_phase_subscriptions", locals: { projekt_subscription: @projekt_subscription } %>
+<%= render partial: "pages/sidebar/projekt_subscription", locals: { projekt_subscription: @projekt_subscription } %>
 
 <% if projekt_feature?(@custom_page.projekt, "sidebar.show_phases_in_projekt_page_sidebar") %>
   <div class="sidebar-divider"></div>

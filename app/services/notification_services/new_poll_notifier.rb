@@ -5,24 +5,25 @@ module NotificationServices
     end
 
     def call
-      users_to_notify.each do |user|
-        NotificationServiceMailer.new_poll(user.id, @poll.id).deliver_later
-        Notification.add(user, @poll)
-        Activity.log(user, "email", @poll)
-      end
+      NotificationServices::NotifySubscribers.call(
+        users: users_to_notify,
+        mailer_action: "new_poll",
+        mailer_record: @poll,
+        notifiable: @poll,
+        actionable: @poll
+      )
     end
 
     private
 
       def users_to_notify
-        [projekt_phase_subscribers]
-          .flatten.uniq(&:id).reject(&:not_actual?)
+        projekt_subscribers.uniq(&:id).reject(&:not_actual?)
       end
 
-      def projekt_phase_subscribers
-        return [] unless @poll.projekt_phase.present?
+      def projekt_subscribers
+        return [] if @poll.projekt_phase.blank?
 
-        @poll.projekt_phase.subscribers.to_a
+        @poll.projekt_phase.projekt.subscribers.to_a
       end
   end
 end

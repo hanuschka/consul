@@ -9,10 +9,6 @@ class ProjektSubscriptionsController < ApplicationController
     @custom_page = @projekt.page
 
     @projekt_subscription.update!(active: projekt_subscription_params[:active])
-
-    @projekt.projekt_phases.each do |phase|
-      @projekt_subscription.active? ? phase.subscribe(current_user) : phase.unsubscribe(current_user)
-    end
   end
 
   private

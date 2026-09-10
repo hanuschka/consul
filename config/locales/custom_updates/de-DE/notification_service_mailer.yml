@@ -3,7 +3,7 @@ de:
     notification_service_mailers:
       shared:
         hi: Hallo %{username},
-        unsubscribe_html: Wenn Sie keine weiteren Benachrichtigungen zu diesem Beitrag bekommen möchten, dann klicken Sie <a href="%{url}" target="_blank">hier</a> und klicken auf die Benachrichtigungsglocke (Sie müssen eingeloggt sein).
+        unsubscribe_html: Wenn Sie keine weiteren Nachrichten zu diesem Projekt bekommen möchten, dann klicken Sie <a href="%{url}" target="_blank">hier</a> und schalten die Projektbenachrichtigung aus (Sie müssen eingeloggt sein).
       overdue_deficiency_reports:
         subject: Mangel wurde noch nicht bearbeitet
         hi: Liebe/r Sachbearbeiter*in,

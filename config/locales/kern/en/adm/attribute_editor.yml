@@ -57,8 +57,8 @@ en:
         attachment_label: Image
         attachment_description: "The image is shown at the top of the newsletter as a visual lead, directly below the logo and above the title. Use a landscape image with a clear subject that fits thematically with the newsletter content. Recommended format: at least 600 pixels wide, JPG or PNG. The image is required and must be uploaded before sending."
       newsletter:
-        recipient_group_id_label: Recipient group
-        recipient_group_id_description: 'Defines which recipient group this newsletter is sent to. Recipient groups are managed under <a href="/adm/recipient_groups" target="_blank">Notifications > Recipient groups</a> and can be composed by area, interest, or registration status. Only users assigned to the selected group receive the email. If you want to reach all registered users, choose the corresponding default group.'
+        recipient_target_label: Recipient group
+        recipient_target_description: 'Defines who this newsletter is sent to. You can choose from the groups managed under <a href="/adm/recipient_groups" target="_blank">Notifications > Recipient groups</a> as well as the subscribers of each project who switched on the project notification on the project page. Only users of the selected group receive the email.'
         respect_newsletter_optout_label: Respect newsletter opt-out
         respect_newsletter_optout_description: "When enabled, users who disabled \"Newsletter and system emails\" in their account are skipped at send time — even if they would otherwise belong to the selected recipient group. This option should normally stay enabled to respect users' preferences. Disable it only in exceptional cases, e.g. for mandatory information that all recipients of the group should receive regardless of their newsletter setting. Note: This option only takes effect when a recipient group is assigned to the newsletter. For older newsletters using the legacy segment selection, the opt-out is already applied by the segment itself."
         from_label: From

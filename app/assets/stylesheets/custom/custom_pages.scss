@@ -331,7 +331,7 @@ span.sidebar-projekt-phases-title {
 
 
 // Sidebar projekt subscriptions
-.sidebar-projekt-phase-subscriptions {
+.sidebar-projekt-subscription {
   display: flex;
 
   form {
@@ -493,37 +493,6 @@ span.geo-affiliation-icon:before {
     .tab-info-summary {
       @media screen and (max-width: $small-tablet-viewport-start) {
         display: none;
-      }
-    }
-
-    .phase-subscription {
-      position: absolute;
-      top: 7px;
-      right: 5px;
-
-      a {
-        font-size: 18px;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        padding: 10px;
-        border-radius: 50%;
-        justify-content: center;
-        align-items: center;
-        color: var(--brand-color);
-
-        &:hover {
-          background-color: var(--brand-color-lighter);
-        }
-      }
-
-      @media screen and (max-width: $small-tablet-viewport-start) {
-        top: 12px;
-        right: 45px;
-
-        a {
-          width: auto !important;
-        }
       }
     }
   }

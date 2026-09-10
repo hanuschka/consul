@@ -15,7 +15,7 @@ module NotificationServices
     private
 
       def users_to_notify
-        [administrators, projekt_managers, projekt_phase_subscribers]
+        [administrators, projekt_managers]
           .flatten.uniq(&:id).reject { |user| user.id == @comment.user_id || user.not_actual? }
       end
 
@@ -28,16 +28,6 @@ module NotificationServices
           .where(adm_email_on_new_comment: true)
           .where(projekt_manager_assignments: { projekt_id: @comment&.projekt&.id })
           .where("projekt_manager_assignments.permissions @> ARRAY[?]::text[]", ["get_notifications"]).to_a
-      end
-
-      def projekt_phase_subscribers
-        if @comment.commentable.is_a?(ProjektPhase::CommentPhase)
-          @comment.commentable.subscribers.to_a
-        elsif @comment.commentable.respond_to?(:projekt_phase)
-          @comment.commentable.projekt_phase.subscribers.to_a
-        else
-          []
-        end
       end
   end
 end

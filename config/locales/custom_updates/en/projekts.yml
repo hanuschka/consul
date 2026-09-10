@@ -172,9 +172,9 @@ en:
             title: Composition
           projekt_start: Projekt start
           projekt_end: Planned completion
-          phases_subscription:
-            title: Notifications
-            description: Would you like to stay current?
+          projekt_subscription:
+            title: Project notification
+            description: Receive messages from the city about this project by e-mail. You will not get an e-mail for every new contribution.
           share:
             title: Share
         tabs:

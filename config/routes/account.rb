@@ -8,4 +8,6 @@ end
 
 resource :subscriptions, only: [:edit, :update] do
   delete :cancel_projekts, on: :collection
+  patch :toggle_projekt, on: :collection
+  get :unsubscribe_projekt, on: :collection
 end

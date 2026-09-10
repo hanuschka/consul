@@ -1,0 +1,3 @@
+$("#<%= dom_id(@projekt_subscription) %>").replaceWith(
+  "<%= j render(partial: "subscriptions/projekt_subscription", object: @projekt_subscription, locals: { token: @user.subscriptions_token }) %>"
+);

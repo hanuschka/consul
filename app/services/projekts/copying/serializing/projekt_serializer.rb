@@ -108,6 +108,7 @@ class Projekts::Copying::Serializing::ProjektSerializer < ApplicationService
         "registered_address_district_affiliation_ids" =>
           source.registered_address_district_affiliations.map(&:id),
         "individual_group_value_ids" => source.individual_group_values.map(&:id),
+        "subscriber_ids" => source.subscriptions.pluck(:user_id),
         "projekt_manager_assignments" => source.projekt_manager_assignments.map do |assignment|
           {
             "projekt_manager_id" => assignment.projekt_manager_id,

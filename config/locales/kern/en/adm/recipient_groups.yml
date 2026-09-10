@@ -51,13 +51,10 @@ en:
         base_options_for_kind:
           projekts: Projects
           user_roles: User roles
-        select_options:
-          projekt_related: Project-related
         access_methods:
           newsletter_subscriber_ids: All users with consent
           all_newsletter_subscriber_ids: All users with consent plus newsletter subscribers without an account
           administrators_ids: Administrators
-          any_phase_subscribers_ids: Subscribers of all phases
           authors_of_feasible_ids: Authors whose proposals meet the criteria
           authors_of_unfeasible_ids: Authors whose proposals do not meet the criteria
           authors_of_selected_ids: Authors whose proposals were selected for the voting phase
@@ -85,8 +82,7 @@ en:
           newsletter_subscribers: Newsletter subscribers
           role: Role
           phase_authors: Phase authors
-          phase_subscribers: Phase subscribers
-          projekt_subscribers: Projekt subscribers (sidebar toggle)
+          projekt_subscribers: Project subscribers (project notification)
           comment_authors: Commenters
           voting_participants: Voting participants
           district: District

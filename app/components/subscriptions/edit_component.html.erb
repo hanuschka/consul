@@ -13,24 +13,24 @@
     <% end %>
   </div>
 
-  <% if projekts_with_subscriptions.any? %>
-    <div class="projekts-subscriptions">
-      <h2><%= t("custom.account.subscriptions.projekts.title") %></h2>
+  <% if projekt_subscriptions.any? %>
+    <section class="projekts-subscriptions" aria-labelledby="projekts-subscriptions-title">
+      <h2 id="projekts-subscriptions-title"><%= t("custom.account.subscriptions.projekts.title") %></h2>
       <p><%= t("custom.account.subscriptions.projekts.description1") %></p>
 
-      <div style="display:inline-block;">
-        <% projekts_with_subscriptions.each do |projekt| %>
-          <%= link_to page_path(projekt.page.slug), target: "_blank" do %>
-            <h3><%= projekt.page.title %></h3>
-          <% end %>
-        <% end %>
-      </div>
+      <ul class="projekts-subscriptions--list">
+        <%= render(
+          partial: "subscriptions/projekt_subscription",
+          collection: projekt_subscriptions,
+          locals: { token: user.subscriptions_token }
+        ) %>
+      </ul>
 
       <p><%= t("custom.account.subscriptions.projekts.description2") %></p>
 
-      <%= button_to cancel_projekts_subscriptions_path(token: user.subscriptions_token), method: :delete, class: "button margin-top" do %>
+      <%= button_to cancel_projekts_subscriptions_path(token: user.subscriptions_token), method: :delete, class: "button hollow margin-top" do %>
         <%= t("custom.account.subscriptions.projekts.cancel_projekts_subscriptions_button") %>
       <% end %>
-    </div>
+    </section>
   <% end %>
 </main>

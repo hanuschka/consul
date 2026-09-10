@@ -43,6 +43,40 @@ class Notification < ApplicationRecord
     end
   end
 
+  # One insert for the whole set instead of a create per user. A create also
+  # touches the notifiable and bumps the user's counter cache, so a thousand
+  # subscribers meant a thousand updates of the same poll row; both happen once
+  # here. An unread notification for the same record still counts up rather
+  # than doubling, exactly as add does.
+  def self.add_all(users, notifiable)
+    user_ids = users.map(&:id).compact.uniq
+    return if user_ids.blank?
+
+    unread_notifications = where(read_at: nil, user_id: user_ids, notifiable: notifiable)
+    counted_up_user_ids = unread_notifications.pluck(:user_id)
+    unread_notifications.update_all("counter = counter + 1")
+
+    insert_for(user_ids - counted_up_user_ids, notifiable)
+
+    notifiable.touch
+  end
+
+  def self.insert_for(user_ids, notifiable)
+    return if user_ids.blank?
+
+    rows = user_ids.map do |user_id|
+      {
+        user_id: user_id,
+        notifiable_type: notifiable.class.base_class.name,
+        notifiable_id: notifiable.id,
+        counter: 1
+      }
+    end
+
+    insert_all(rows)
+    User.where(id: user_ids).update_all("notifications_count = notifications_count + 1")
+  end
+
   def self.existent(user, notifiable)
     unread.find_by(user: user, notifiable: notifiable)
   end

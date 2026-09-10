@@ -18,6 +18,29 @@ class Activity < ApplicationRecord
     create!(user: user, action: action.to_s, actionable: actionable)
   end
 
+  # One row per id, in a single insert. A newsletter logs one activity per
+  # recipient, so a large send would otherwise spend a query per address.
+  # insert_all skips validations, callbacks and timestamp assignment, so the
+  # action is a caller-controlled literal and both timestamps travel with the
+  # row. A nil id is kept: an address with no account is still a delivery.
+  def self.log_all(action, actionable, user_ids)
+    return if user_ids.blank?
+
+    now = Time.current
+    rows = user_ids.map do |user_id|
+      {
+        user_id: user_id,
+        action: action.to_s,
+        actionable_type: actionable.class.base_class.name,
+        actionable_id: actionable.id,
+        created_at: now,
+        updated_at: now
+      }
+    end
+
+    insert_all(rows)
+  end
+
   def self.on(actionable)
     where(actionable: actionable)
   end

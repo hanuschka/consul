@@ -1,6 +1,6 @@
 <tr id="<%= dom_id(newsletter) %>" class="kern-table__row">
   <td scope="row" class="kern-table__header"><%= newsletter.subject %></td>
-  <td class="kern-table__cell"><%= newsletter.recipient_group&.name %></td>
+  <td class="kern-table__cell"><%= newsletter.recipient_label %></td>
   <td class="kern-table__cell">
     <% if newsletter.draft? %>
       <%= t('adm.newsletters.index.table.draft') %>

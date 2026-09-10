@@ -67,6 +67,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
     copy_tags
     copy_sdg_relations
     copy_manager_assignments
+    copy_subscriptions
     copy_milestones
     copy_progress_bars
     copy_media_library
@@ -195,6 +196,23 @@ class Projekts::Copying::ProjektCopier < ApplicationService
         existing.permissions |= Array(assignment["permissions"])
         existing.save!
       end
+    end
+
+    # Subscribers are users of this instance, so they travel under
+    # local_references and an imported bundle carries none.
+    def copy_subscriptions
+      subscriber_ids = User.where(id: Array(local_references["subscriber_ids"])).ids
+      return if subscriber_ids.blank?
+
+      now = Time.current
+      rows = subscriber_ids.map do |user_id|
+        {
+          projekt_id: copy.id, user_id: user_id, active: true,
+          created_at: now, updated_at: now
+        }
+      end
+
+      ProjektSubscription.insert_all(rows)
     end
 
     def copy_milestones

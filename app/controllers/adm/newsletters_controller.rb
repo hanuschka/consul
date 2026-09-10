@@ -5,7 +5,7 @@ module Adm
     def index
       authorize [:adm, :newsletter]
       @pagy, @newsletters = pagy(
-        policy_scope([:adm, Newsletter]).order(created_at: :desc)
+        policy_scope([:adm, Newsletter]).includes(:recipient_group).order(created_at: :desc)
       )
 
       @breadcrumbs = [
@@ -145,7 +145,7 @@ module Adm
 
       def newsletter_params
         params.require(:newsletter).permit(
-          :subject, :recipient_group_id, :from, :body, :title, :subtitle,
+          :subject, :recipient_target, :from, :body, :title, :subtitle,
           :greeting, :title_color, :subtitle_color, :respect_newsletter_optout,
           image_attributes: image_attributes
         )

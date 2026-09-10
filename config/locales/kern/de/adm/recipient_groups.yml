@@ -52,13 +52,10 @@ de:
         base_options_for_kind:
           projekts: Projekte
           user_roles: Nutzerrollen
-        select_options:
-          projekt_related: Projektbezogen
         access_methods:
           newsletter_subscriber_ids: Alle Nutzer mit Einverständniserklärung
           all_newsletter_subscriber_ids: Alle Nutzer mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
           administrators_ids: Administratoren
-          any_phase_subscribers_ids: Abonnenten aller Phasen
           authors_of_feasible_ids: Autoren, deren Vorschläge den Kriterien entsprechen
           authors_of_unfeasible_ids: Autoren, deren Vorschläge den Kriterien nicht entsprechen
           authors_of_selected_ids: Autoren, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
@@ -86,8 +83,7 @@ de:
           newsletter_subscribers: Newsletter-Abonnenten
           role: Rolle
           phase_authors: Autoren einer Projektphase
-          phase_subscribers: Abonnenten einer Phase
-          projekt_subscribers: Abonnenten eines Projekts (Sidebar-Schalter)
+          projekt_subscribers: Abonnenten eines Projekts (Projektbenachrichtigung)
           comment_authors: Kommentatoren
           voting_participants: Abstimmungs-Teilnehmer
           district: Stadtteil

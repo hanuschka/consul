@@ -17,11 +17,11 @@ de:
         not_verified_account: Konto ist nicht verifiziert
       subscriptions:
         projekts:
-          title: Projektbezogene Benachrichtungen
-          description1: "Sie haben bei folgenden Projekten die Projektbenachrichtigung aktiviert:"
-          description2: Mit Klick auf den nachfolgenden Button können Sie sich von allen Projektbenachrichtigungen abmelden. Sollten Sie sich nur von einzelnen Projektphasen abmelden wollen, dann nutzen Sie bitte den direkten Link zu den Projekten.
-          description2: Mit Klick auf den nachfolgenden Button können Sie sich von allen Projektbenachrichtigungen abmelden. Sollten Sie sich nur von einzelnen Projektphasen abmelden wollen, dann loggen Sie sich bitte ein und deaktivieren die Benachrichtigung in der Fußzeile des jeweiligen Projektes. Sie können hierfür einfach auf die oben aufgeführten Projekte klicken.
+          title: Projektbenachrichtigungen
+          description1: "Sie erhalten Nachrichten der Stadt zu folgenden Projekten. Schalten Sie die Benachrichtigung je Projekt ein oder aus:"
+          description2: Mit Klick auf den nachfolgenden Button melden Sie sich von allen Projektbenachrichtigungen auf einmal ab.
           cancel_projekts_subscriptions_button: Bei allen Projektbenachrichtigungen abmelden
+          unsubscribed_notice: Sie erhalten keine weiteren Nachrichten zum Projekt „%{projekt}“.
       edit_details:
         title: Daten aktualisieren
         documents_label: Dokumentenprüfung

@@ -19,6 +19,8 @@
           <%= notification_service_mailer_unsubscribe_block(action_name, projekt_phase: @projekt_phase) %>
         <% end %>
 
+        <%= render "mailer/projekt_unsubscribe_link" %>
+
         <% if unsubscribe_path.present? %>
           <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif; margin: 0;padding: 0;line-height: 1.5em;color: #222; font-size: 10px; margin-top: 12px;">
             <%= sanitize t("mailers.config.unsubscribe_text", notifications: link_to(t("mailers.config.notifications_link"), unsubscribe_path)), attributes: %w[href style] %>

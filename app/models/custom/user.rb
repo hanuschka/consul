@@ -62,7 +62,6 @@ User.class_eval do
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
-  has_many :projekt_phase_subscriptions
 
   belongs_to :api_client, optional: true
 
@@ -438,7 +437,6 @@ User.class_eval do
 
     def remove_subscriptions
       projekt_subscriptions.destroy_all
-      projekt_phase_subscriptions.destroy_all
     end
 
     def update_conditional_ballots_for_relevant_budgets

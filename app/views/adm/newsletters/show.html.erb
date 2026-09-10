@@ -29,7 +29,7 @@
           <div class="adm-newsletter-summary--pair">
             <dt class="adm-newsletter-summary--label"><%= t("adm.newsletters.show.recipient_group") %></dt>
             <dd class="adm-newsletter-summary--value">
-              <%= @newsletter.recipient_group.present? ? @newsletter.recipient_group.name : "—" %>
+              <%= @newsletter.recipient_label.presence || "—" %>
             </dd>
           </div>
         </div>
@@ -93,7 +93,7 @@
   </div>
 
   <div class="d-flex gap-3 mb-5">
-    <% if @newsletter.valid_segment_recipient? || @newsletter.recipient_group.present? %>
+    <% if @newsletter.recipients_resolvable? %>
       <%= kern_link_button(
         deliver_adm_newsletter_path(@newsletter),
         text: t('.send'),

@@ -60,9 +60,6 @@ de:
       phases:
         scroll_left: "Phasen nach links scrollen"
         scroll_right: "Phasen nach rechts scrollen"
-      phase_subscription:
-        subscribe: "Benachrichtigungen für diese Phase abonnieren"
-        unsubscribe: "Benachrichtigungen für diese Phase abbestellen"
       skip_links:
         skip_to_content: "Direkt zum Inhalt"
         skip_to_navigation: "Direkt zur Navigation"

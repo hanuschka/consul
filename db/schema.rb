@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_10_140000) do
+ActiveRecord::Schema.define(version: 2026_09_10_154308) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2549,15 +2549,6 @@ ActiveRecord::Schema.define(version: 2026_09_10_140000) do
     t.index ["projekt_phase_id"], name: "index_projekt_phase_stat_questions_on_projekt_phase_id"
   end
 
-  create_table "projekt_phase_subscriptions", force: :cascade do |t|
-    t.bigint "projekt_phase_id"
-    t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["projekt_phase_id"], name: "index_projekt_phase_subscriptions_on_projekt_phase_id"
-    t.index ["user_id"], name: "index_projekt_phase_subscriptions_on_user_id"
-  end
-
   create_table "projekt_phase_translations", force: :cascade do |t|
     t.bigint "projekt_phase_id", null: false
     t.string "locale", null: false
@@ -2742,7 +2733,9 @@ ActiveRecord::Schema.define(version: 2026_09_10_140000) do
     t.boolean "active", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["projekt_id", "active"], name: "index_projekt_subscriptions_on_projekt_id_and_active"
     t.index ["projekt_id"], name: "index_projekt_subscriptions_on_projekt_id"
+    t.index ["user_id", "active"], name: "index_projekt_subscriptions_on_user_id_and_active"
     t.index ["user_id"], name: "index_projekt_subscriptions_on_user_id"
   end
 
@@ -3959,8 +3952,6 @@ ActiveRecord::Schema.define(version: 2026_09_10_140000) do
   add_foreign_key "projekt_phase_geozones", "projekt_phases"
   add_foreign_key "projekt_phase_settings", "projekt_phases"
   add_foreign_key "projekt_phase_stat_questions", "projekt_phases"
-  add_foreign_key "projekt_phase_subscriptions", "projekt_phases"
-  add_foreign_key "projekt_phase_subscriptions", "users"
   add_foreign_key "projekt_phases", "age_ranges"
   add_foreign_key "projekt_phases", "projekts"
   add_foreign_key "projekt_questions", "projekt_phases"

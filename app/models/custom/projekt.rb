@@ -822,12 +822,6 @@ class Projekt < ApplicationRecord
       feature?("general.show_in_overview_page")
   end
 
-  def any_phase_subscribers_ids
-    User.joins(:projekt_phase_subscriptions)
-      .where(projekt_phase_subscriptions: { projekt_phase_id: projekt_phases.ids })
-      .ids.uniq
-  end
-
   def page_content
     if new_content_block_mode?
       content_blocks_content =

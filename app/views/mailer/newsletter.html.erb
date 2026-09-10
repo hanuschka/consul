@@ -86,6 +86,8 @@
             <%= link_to(t("mailers.config.unsubscribe_notifications_link_short"), unsubscribe_path, style: "text-decoration: undescore;") %>
           </p>
         <% end %>
+
+        <%= render "mailer/projekt_unsubscribe_link" %>
       </td>
     </tr>
   </tbody>

@@ -18,10 +18,11 @@ en:
         not_verified_account: Account is not verified
       subscriptions:
         projekts:
-          title: Project related notifications
-          description1: "You have activated project notification for the following projects:"
-          description2: By clicking on the button below you can unsubscribe from all project notifications. If you only want to unsubscribe from individual project phases, please use the direct link to the projects.
+          title: Project notifications
+          description1: "You receive messages from the city about the following projects. Switch the notification on or off per project:"
+          description2: Click the button below to unsubscribe from all project notifications at once.
           cancel_projekts_subscriptions_button: Unsubscribe from all project notifications
+          unsubscribed_notice: You will not receive any further messages about the "%{projekt}" project.
       edit_details:
         title: Update personal information
         documents_label: Document check

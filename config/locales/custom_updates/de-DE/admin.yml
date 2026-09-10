@@ -349,8 +349,6 @@ de:
           label_for_projekt_phase: Projektphase(n)
           label_for_user_role: Nutzerrolle
           name: Name
-          select_options:
-            projekt_related: Alle Projektphasen
           access_methods:
             newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung
             all_newsletter_subscriber_ids: Alle Nutzer*innen mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
@@ -360,7 +358,6 @@ de:
             authors_of_selected_ids: Autor*innen, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
             authors_of_not_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung nicht gewonnen haben
             authors_of_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung gewonnen haben
-            any_phase_subscribers_ids: Abonnent*innen aller Phasen
         create:
           notice: Adressatengruppe wurde erfolgreich erstellt
         update:

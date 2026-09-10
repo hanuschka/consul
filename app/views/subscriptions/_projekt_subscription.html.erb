@@ -1,0 +1,12 @@
+<li id="<%= dom_id(projekt_subscription) %>" class="projekts-subscriptions--item">
+  <%= link_to projekt_subscription.projekt.page.title,
+    page_path(projekt_subscription.projekt.page.slug),
+    class: "projekts-subscriptions--projekt-link" %>
+
+  <%= render Shared::ToggleAttributeComponent.new(
+    projekt_subscription,
+    :active,
+    toggle_projekt_subscriptions_path(token: token, projekt_subscription_id: projekt_subscription.id),
+    input_id: dom_id(projekt_subscription, :toggler)
+  ) %>
+</li>

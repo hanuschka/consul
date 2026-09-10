@@ -1,5 +1,7 @@
 en:
   mailers:
+    config:
+      unsubscribe_projekt_link: Stop receiving messages about the "%{projekt}" project
     shared:
       sincerely: Kind	regards
       signature: Your Consul Team

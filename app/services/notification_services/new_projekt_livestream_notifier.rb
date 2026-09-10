@@ -5,22 +5,23 @@ module NotificationServices
     end
 
     def call
-      users_to_notify.each do |user|
-        NotificationServiceMailer.new_projekt_livestream(user.id, @projekt_livestream.id).deliver_later
-        Notification.add(user, @projekt_livestream)
-        Activity.log(user, "email", @projekt_livestream)
-      end
+      NotificationServices::NotifySubscribers.call(
+        users: users_to_notify,
+        mailer_action: "new_projekt_livestream",
+        mailer_record: @projekt_livestream,
+        notifiable: @projekt_livestream,
+        actionable: @projekt_livestream
+      )
     end
 
     private
 
       def users_to_notify
-        [projekt_phase_subscribers]
-          .flatten.uniq(&:id).reject(&:not_actual?)
+        projekt_subscribers.uniq(&:id).reject(&:not_actual?)
       end
 
-      def projekt_phase_subscribers
-        @projekt_livestream.projekt_phase.subscribers.to_a
+      def projekt_subscribers
+        @projekt_livestream.projekt_phase.projekt.subscribers.to_a
       end
   end
 end

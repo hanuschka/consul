@@ -22,6 +22,7 @@ de:
     config:
       notifications_link: hier
       unsubscribe_notifications_link_short: Newsletter abbestellen
+      unsubscribe_projekt_link: Keine Nachrichten mehr zum Projekt „%{projekt}“ erhalten
       unsubscribe_text: 'Falls Sie keine weiteren E-Mails mehr erhalten möchten, bitte klicken Sie %{notifications}.'
     email_verification:
       click_here_to_verify: diesen Link

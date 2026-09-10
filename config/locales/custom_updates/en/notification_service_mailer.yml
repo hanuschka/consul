@@ -2,7 +2,7 @@ en:
   custom:
     notification_service_mailers:
       shared:
-        unsubscribe_html: If you do not want to receive any further notifications about this, click <a href="%{url}" target="_blank">here</a> and click the notification bell (you must be logged in).
+        unsubscribe_html: If you do not want to receive any further messages about this project, click <a href="%{url}" target="_blank">here</a> and switch off the project notification (you must be logged in).
       overdue_deficiency_reports:
         subject: Deficiency report without an answer
         hi: Dear Officer,

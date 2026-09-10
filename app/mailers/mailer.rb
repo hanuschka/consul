@@ -227,6 +227,7 @@ class Mailer < ApplicationMailer
   def newsletter(newsletter, recipient_email)
     @newsletter = newsletter
     @email_to = recipient_email
+    @newsletter_projekt = newsletter.recipient_projekt
 
     user = User.find_by(email: @email_to)
 

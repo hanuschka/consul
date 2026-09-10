@@ -1,10 +1,10 @@
 <% if @projekt_subscription.present? && projekt_feature?(@custom_page.projekt, "sidebar.show_notification_subscription_toggler") %>
-  <div id="sidebar-projekt-phase-subscriptions">
-    <h2 class="sidebar-title"><%= t("custom.projekts.page.sidebar.phases_subscription.title") %></h2>
+  <div id="sidebar-projekt-subscription">
+    <h2 class="sidebar-title"><%= t("custom.projekts.page.sidebar.projekt_subscription.title") %></h2>
 
-    <div class="sidebar-projekt-phase-subscriptions">
+    <div class="sidebar-projekt-subscription">
       <label for="projekt_subscription_toggler" class="form-label">
-        <%= t("custom.projekts.page.sidebar.phases_subscription.description") %>
+        <%= t("custom.projekts.page.sidebar.projekt_subscription.description") %>
       </label>
 
       <%= render Shared::ToggleAttributeComponent.new(

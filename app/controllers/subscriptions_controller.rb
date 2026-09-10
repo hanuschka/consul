@@ -14,10 +14,24 @@ class SubscriptionsController < ApplicationController
 
   def cancel_projekts
     @user.projekt_subscriptions.update_all(active: false)
-    @user.projekt_phase_subscriptions.each(&:destroy!)
 
     redirect_to edit_subscriptions_path(token: @user.subscriptions_token),
                 notice: t("flash.actions.save_changes.notice")
+  end
+
+  def toggle_projekt
+    @projekt_subscription = ProjektSubscription.find_by!(id: params[:projekt_subscription_id], user: @user)
+    @projekt_subscription.update!(active: projekt_subscription_params[:active])
+  end
+
+  # Reached from a link in a newsletter sent to one projekt's subscribers, so it
+  # answers to GET and identifies the citizen by their subscriptions token.
+  def unsubscribe_projekt
+    projekt = Projekt.find(params[:projekt_id])
+    @user.projekt_subscriptions.where(projekt_id: projekt.id).update_all(active: false, updated_at: Time.current)
+
+    redirect_to edit_subscriptions_path(token: @user.subscriptions_token),
+                notice: t("custom.account.subscriptions.projekts.unsubscribed_notice", projekt: projekt.name)
   end
 
   private
@@ -32,6 +46,10 @@ class SubscriptionsController < ApplicationController
 
     def subscriptions_params
       params.require(:user).permit(allowed_params)
+    end
+
+    def projekt_subscription_params
+      params.require(:projekt_subscription).permit(:active)
     end
 
     def allowed_params

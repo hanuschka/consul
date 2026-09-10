@@ -62,7 +62,6 @@ module Abilities
       can :toggle_subscription, ProjektSubscription do |subscription|
         subscription.user == user
       end
-      can :toggle_subscription, ProjektPhase
 
       can :show, Community do |community|
         projekt_phase = community.communitable&.projekt_phase

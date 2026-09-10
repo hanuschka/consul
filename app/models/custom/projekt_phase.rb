@@ -138,9 +138,6 @@ class ProjektPhase < ApplicationRecord
   has_many :registered_address_street_projekt_phase, dependent: :destroy
   has_many :registered_address_streets, through: :registered_address_street_projekt_phase
 
-  has_many :subscriptions, class_name: "ProjektPhaseSubscription", dependent: :destroy
-  has_many :subscribers, through: :subscriptions, source: :user
-
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
   has_many :stat_questions,
@@ -362,24 +359,6 @@ class ProjektPhase < ApplicationRecord
     false
   end
 
-  def subscribed?(user)
-    return false unless user
-
-    subscriptions.where(user_id: user.id).exists?
-  end
-
-  def subscribe(user)
-    return false unless user
-
-    subscriptions.create(user_id: user.id)
-  end
-
-  def unsubscribe(user)
-    return false unless user
-
-    subscriptions.where(user_id: user.id).destroy_all
-  end
-
   def title
     phase_tab_name.presence || model_name.human
   end
@@ -542,10 +521,6 @@ class ProjektPhase < ApplicationRecord
     return nil unless map_location.present?
 
     map_location.show_admin_shape? ? map_location : nil
-  end
-
-  def subscribable?
-    true
   end
 
   def regular_formular_cutoff_date

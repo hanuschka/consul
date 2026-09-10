@@ -46,6 +46,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       messages: combined.sort_by(&:id).map { |m| serialize_message(m) },
       import: {
         status: @projekt_import.status,
+        submit_stage: @projekt_import.submit_stage,
         error: @projekt_import.error_message,
         warnings: @projekt_import.warnings
       }

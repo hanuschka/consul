@@ -79,6 +79,15 @@ class ProjektImport < ApplicationRecord
     create_projekt copy_projekt image_generation unknown
   ].freeze
 
+  # The steps of the final import in the order the job runs them, reported to
+  # the chat's progress overlay. Only the steps a given import actually
+  # reaches are ever written, so a projekt without a generated title image
+  # never claims to be generating one.
+  SUBMIT_STAGES = %w[
+    creating_projekt resolving_content_blocks creating_content_blocks
+    generating_image copying_projekt
+  ].freeze
+
   # The fields a Consul-projekt import lets the admin change before the copy
   # runs. The bundle itself is not editable — the chat's edit tools only know
   # the ai_result shape — so these are read off it into source_overlay and
@@ -127,6 +136,7 @@ class ProjektImport < ApplicationRecord
       status: "pending",
       error_message: nil,
       failure_stage: nil,
+      submit_stage: nil,
       error_details: {},
       warnings: []
     )
@@ -216,6 +226,17 @@ class ProjektImport < ApplicationRecord
 
   def mark_abandoned!
     update!(status: "abandoned")
+  end
+
+  def start_submit!(warnings)
+    update!(status: "submitting", submit_stage: nil, warnings: warnings)
+  end
+
+  def advance_submit_stage!(stage)
+    stage = stage.to_s
+    raise ArgumentError, "unknown submit stage #{stage}" if !SUBMIT_STAGES.include?(stage)
+
+    update!(submit_stage: stage)
   end
 
   def add_warning!(message, stage: SUBMIT_WARNING_STAGE)

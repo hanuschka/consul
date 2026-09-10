@@ -261,6 +261,7 @@ namespace :adm do
               defaults: { adm_section: "projekts" } do
       member do
         get :status
+        get :source_text
         post :reset
         # "retry" is a Ruby keyword, so the action it routes to cannot share
         # its name.

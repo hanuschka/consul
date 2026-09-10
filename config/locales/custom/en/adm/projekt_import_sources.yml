@@ -5,6 +5,25 @@ en:
         quick_links:
           import: Import projekt
       imports:
+        source_text:
+          title: Source text that was read
+          open: Source text
+          intro: >-
+            This is the text the import read from the source — everything the AI
+            proposed is based on it. Check it before you create the projekt:
+            instructions addressed to an AI do not belong in a projekt
+            description and are a sign the page was tampered with.
+          source_label: Source
+          empty: No text was stored for this import.
+        chats:
+          show:
+            tooltips:
+              source_text:
+                title: View the source text
+                text: >-
+                  Shows the text the import read from the file or the web page,
+                  unchanged, so you can compare the AI's proposals against the
+                  original.
         sources:
           requires_ai: Needs the AI feature, which is switched off on this platform
           file:
@@ -69,6 +88,8 @@ en:
             phase_position: 'Phase %{position}'
             phase_without_dates: No dates set
             projekt_title: Projekt
+            autosave_saving: Saving …
+            autosave_error: Saving failed – the changes are still applied when you create the projekt
             no_phases: This projekt has no phases.
             execute: Create the projekt now
             start_over: Discard and start over

@@ -124,9 +124,12 @@ en:
             import_overlay_title: "Import in progress…"
             import_overlay_message: "The projekt is being created. This can take a moment."
             progress:
-              resolving_content_blocks: "Building content blocks…"
+              queued: "Starting import…"
               creating_projekt: "Creating projekt, phases, and resources…"
+              resolving_content_blocks: "Building content blocks…"
+              creating_content_blocks: "Saving content blocks…"
               generating_image: "Generating title image…"
+              copying_projekt: "Copying projekt…"
             errors:
               extract_failed: "We could not read one or more of the attached files."
               import_failed: "The import could not be completed."

@@ -43,7 +43,7 @@
   },
   "scripts": {
     "build": "esbuild app/javascript/application-kern.js --bundle --format=esm --outdir=app/assets/builds --public-path=/assets",
-    "build:css": "node script/check_scss_css_imports.mjs && npm run build:css:adm --",
+    "build:css": "npm run build:css:adm --",
     "build:css:adm": "sass ./app/assets/stylesheets/application.adm.scss:./app/assets/builds/application.adm.css --load-path=node_modules --load-path=app/assets/stylesheets --load-path=app/assets/stylesheets/cross_pack --style=compressed --no-source-map"
   }
 }

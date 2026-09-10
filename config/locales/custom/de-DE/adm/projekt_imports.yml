@@ -89,6 +89,8 @@ de:
               cancel: "Abbrechen"
               summary_loading: "Projektübersicht wird geladen…"
             confirm_start_over: "Diesen Import verwerfen und neu beginnen?"
+            warnings_flash_lead: "Der Import ist abgeschlossen, es gibt jedoch Hinweise:"
+            warnings_flash_truncated_html: "Der Import ist mit %{count} Hinweisen abgeschlossen. <a href=\"%{url}\">Öffnen Sie den Import, um sie zu lesen.</a>"
             created_banner_title: "Dieser Import hat folgende Projekte erstellt:"
             tooltips:
               start_over:

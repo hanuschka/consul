@@ -89,6 +89,8 @@ en:
               cancel: "Cancel"
               summary_loading: "Loading the projekt summary…"
             confirm_start_over: "Discard this import and start over?"
+            warnings_flash_lead: "The import finished, but with notes:"
+            warnings_flash_truncated_html: "The import finished with %{count} notes. <a href=\"%{url}\">Open the import to read them.</a>"
             created_banner_title: "This import created the following projekts:"
             tooltips:
               start_over:

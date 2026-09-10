@@ -1,0 +1,65 @@
+// The review step for a copied Consul projekt: what the admin changes before
+// the copy runs. Capped to a form measure inside the wide adm container, the
+// same way the source form is.
+.projekt-import-review {
+  max-width: 46rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-large);
+}
+
+.projekt-import-review--intro {
+  max-width: 62ch;
+  margin: 0;
+}
+
+.projekt-import-review--source {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-2x-small);
+  padding: var(--kern-metric-space-small);
+  border-radius: var(--kern-8);
+  background-color: var(--kern-grey-050);
+}
+
+.projekt-import-review--source-label {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--kern-grey-350);
+}
+
+.projekt-import-review--source-url {
+  word-break: break-all;
+}
+
+.projekt-import-review--group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-small);
+}
+
+.projekt-import-review--group-title {
+  margin: 0;
+}
+
+.projekt-import-review--dates {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--kern-metric-space-small);
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.projekt-import-review--actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kern-metric-space-small);
+}
+
+.projekt-import-review--empty {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--kern-grey-350);
+}

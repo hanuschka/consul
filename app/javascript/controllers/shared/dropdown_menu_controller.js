@@ -1,5 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
+// A button that opens a menu anchored to it: open/close, close on an outside
+// click or a scroll, close every other open menu first, and flip above the
+// button when there is no room below. Presentation belongs to the consumer —
+// this owns only the behaviour every dropdown needs.
+
 export default class extends Controller {
   static targets = [ "button", "menu" ]
 
@@ -8,12 +13,12 @@ export default class extends Controller {
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.handleWindowScroll = this.handleWindowScroll.bind(this);
     this.handleBeforeCache = this.handleBeforeCache.bind(this);
-    document.addEventListener("table-actions:close-all", this.close);
+    document.addEventListener("shared--dropdown-menu:close-all", this.close);
     document.addEventListener("turbo:before-cache", this.handleBeforeCache);
   }
 
   disconnect() {
-    document.removeEventListener("table-actions:close-all", this.close);
+    document.removeEventListener("shared--dropdown-menu:close-all", this.close);
     document.removeEventListener("click", this.handleClickOutside);
     window.removeEventListener("scroll", this.handleWindowScroll);
     document.removeEventListener("turbo:before-cache", this.handleBeforeCache);
@@ -39,7 +44,7 @@ export default class extends Controller {
     event.stopPropagation();
 
     document.dispatchEvent(
-      new CustomEvent("table-actions:close-all", {
+      new CustomEvent("shared--dropdown-menu:close-all", {
         detail: { source: this }
       })
     )

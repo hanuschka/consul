@@ -13,6 +13,11 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
       warnings: projekt_import.analysis_warnings + unapplied_chat_warnings(projekt_import)
     )
 
+    if projekt_import.from_consul_projekt?
+      copy_consul_projekt(projekt_import)
+      return
+    end
+
     create_result = ProjektImports::CreateProjektFromImportService.call(projekt_import: projekt_import)
     if !create_result.success?
       projekt_import.mark_failed!(create_result.error, stage: "create_projekt", details: create_result.error_details)
@@ -65,6 +70,26 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
   end
 
   private
+
+  # A copied projekt has no content blocks to resolve and no image prompt to
+  # run: the bundle brought both with it. So this path ends where the copier
+  # does, with the admin's review edits written on top.
+  def copy_consul_projekt(projekt_import)
+    result = ProjektImports::CopyConsulProjektService.call(projekt_import: projekt_import)
+
+    if !result.success?
+      projekt_import.mark_failed!(result.error, stage: "copy_projekt", details: result.error_details)
+      return
+    end
+
+    Array(result.data[:skipped_blobs]).each do |blob|
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.blob_skipped", name: blob.to_s)
+      )
+    end
+
+    projekt_import.update!(status: "completed", image_status: "skipped", error_message: nil)
+  end
 
   # Edits only reach ai_result through the chat's edit tools. A conversation the
   # user contributed to that produced no tool call either predates those tools or

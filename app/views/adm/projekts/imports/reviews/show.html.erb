@@ -1,0 +1,72 @@
+<%= content_for :title, t("adm.projekts.imports.reviews.show.title") %>
+
+<%= render Adm::HeaderComponent.new(
+      title: t("adm.projekts.imports.reviews.show.title"),
+      breadcrumbs: @breadcrumbs,
+      back_button_url: adm_projekts_imports_path,
+      compact: true
+    ) %>
+
+<div class="kern-container my-3">
+  <div class="projekt-import-review">
+    <p class="kern-body projekt-import-review--intro">
+      <%= t("adm.projekts.imports.reviews.show.intro") %>
+    </p>
+
+    <div class="projekt-import-review--source">
+      <span class="projekt-import-review--source-label">
+        <%= t("adm.projekts.imports.reviews.show.source_label") %>
+      </span>
+      <span class="projekt-import-review--source-url"><%= @projekt_import.source_url %></span>
+    </div>
+
+    <%= form_with(url: @execute_url, method: :post) do |f| %>
+      <div class="projekt-import-review--group">
+        <%= f.text_field :name,
+              value: @overlay["name"],
+              label: t("adm.projekts.imports.reviews.show.name_label") %>
+
+        <div class="projekt-import-review--dates">
+          <%= f.date_field :starts_at,
+                value: @overlay["starts_at"],
+                label: t("adm.projekts.imports.reviews.show.starts_at_label") %>
+          <%= f.date_field :ends_at,
+                value: @overlay["ends_at"],
+                label: t("adm.projekts.imports.reviews.show.ends_at_label") %>
+        </div>
+      </div>
+
+      <div class="projekt-import-review--group">
+        <h2 class="kern-title kern-title--small projekt-import-review--group-title">
+          <%= t("adm.projekts.imports.reviews.show.phases_title") %>
+        </h2>
+
+        <% if @overlay["phase_names"].to_a.any? %>
+          <% @overlay["phase_names"].each do |phase| %>
+            <%= text_field_tag "phase_names[#{phase['source_id']}]",
+                  phase["name"],
+                  id: "projekt-import-phase-#{phase['source_id']}",
+                  label: t("adm.projekts.imports.reviews.show.phase_name_label") %>
+          <% end %>
+        <% else %>
+          <p class="projekt-import-review--empty">
+            <%= t("adm.projekts.imports.reviews.show.no_phases") %>
+          </p>
+        <% end %>
+      </div>
+
+      <div class="projekt-import-review--actions">
+        <%= kern_button(
+              text: t("adm.projekts.imports.reviews.show.execute"),
+              icon: "move_down",
+              type: :submit
+            ) %>
+
+        <%= kern_link_button reset_adm_projekts_import_path(@projekt_import),
+              text: t("adm.projekts.imports.reviews.show.start_over"),
+              style: :secondary,
+              data: { turbo_method: :post } %>
+      </div>
+    <% end %>
+  </div>
+</div>

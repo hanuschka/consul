@@ -56,6 +56,21 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
     helpers.import_failure_stage_label(projekt_import)
   end
 
+  def show_progress_spinner?
+    display_state.in?(%i[analyzing submitting])
+  end
+
+  # The step the import job had reached when this page rendered, worded as the
+  # chat's overlay words it. The list does not poll, so the label moves on the
+  # next visit; the overlay is where it moves live.
+  def submit_stage_label
+    return nil if display_state != :submitting
+
+    stage = projekt_import.submit_stage.presence || "queued"
+
+    I18n.t("adm.projekts.imports.chats.show.progress.#{stage}")
+  end
+
   def show_retry?
     projekt_import.retryable?
   end

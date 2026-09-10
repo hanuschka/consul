@@ -1,4 +1,6 @@
 class Adm::Projekts::ImportsController < Adm::Projekts::BaseController
+  include Adm::Projekts::ProjektImportScoped
+
   STATUS_FILTERS = %w[in_progress failed completed].freeze
 
   before_action :authorize_create
@@ -71,7 +73,9 @@ class Adm::Projekts::ImportsController < Adm::Projekts::BaseController
     authorize [:adm, :projekts, @projekt_import], :destroy?
     @projekt_import.destroy
 
-    redirect_to adm_projekts_imports_path(status: params[:status].presence)
+    redirect_to adm_projekts_imports_path(
+      status: params[:status].presence, mine: params[:mine].presence
+    )
   end
 
   private
@@ -81,7 +85,7 @@ class Adm::Projekts::ImportsController < Adm::Projekts::BaseController
     end
 
     def find_projekt_import
-      @projekt_import = current_user.projekt_imports.find(params[:id])
+      @projekt_import = visible_projekt_imports.find(params[:id])
     end
 
     def status_payload
@@ -105,19 +109,32 @@ class Adm::Projekts::ImportsController < Adm::Projekts::BaseController
     end
 
     def load_import_lists
-      imports = policy_scope(
-        ProjektImport, policy_scope_class: Adm::Projekts::ProjektImportPolicy::Scope
-      ).with_attached_source_files
+      imports = listed_imports.with_attached_source_files
 
       @status_filter = params[:status].presence_in(STATUS_FILTERS)
+      @own_imports_only = own_imports_only?
+      @shows_every_owner = Adm::Projekts::ProjektImportPolicy.all_imports_permitted?(current_user)
       @import_counts = {
         "in_progress" => imports.in_progress.count,
         "failed" => imports.failed.count,
         "completed" => imports.completed.count
       }
 
-      @imports = filtered_imports(imports).for_listing.page(params[:page]).per(20)
+      @imports = filtered_imports(imports).includes(:user).for_listing.page(params[:page]).per(20)
       @created_projekts_by_id = created_projekts_map(@imports)
+    end
+
+    # The list carries every import on the instance for the people who may see
+    # them all, which buries your own half-finished one behind colleagues' rows;
+    # the counts follow the same narrowing so the chips keep matching the list.
+    def listed_imports
+      return visible_projekt_imports.where(user: current_user) if own_imports_only?
+
+      visible_projekt_imports
+    end
+
+    def own_imports_only?
+      params[:mine].present?
     end
 
     def filtered_imports(imports)

@@ -6,6 +6,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--kern-metric-space-large);
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kern-metric-space-x-large);
+  }
 }
 
 .projekt-import-review--intro {
@@ -15,17 +21,31 @@
 
 .projekt-import-review--source {
   display: flex;
-  flex-direction: column;
-  gap: var(--kern-metric-space-2x-small);
-  padding: var(--kern-metric-space-small);
+  align-items: flex-start;
+  gap: var(--kern-metric-space-small);
+  padding: var(--kern-metric-space-small) var(--kern-metric-space-default);
   border-radius: var(--kern-8);
   background-color: var(--kern-grey-050);
+}
+
+.projekt-import-review--source-icon {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+  font-size: 1.25rem;
+  color: var(--kern-grey-700);
+}
+
+.projekt-import-review--source-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-2x-small);
+  min-width: 0;
 }
 
 .projekt-import-review--source-label {
   font-size: 0.875rem;
   line-height: 1.5;
-  color: var(--kern-grey-350);
+  color: var(--kern-grey-700);
 }
 
 .projekt-import-review--source-url {
@@ -35,6 +55,13 @@
 .projekt-import-review--group {
   display: flex;
   flex-direction: column;
+  gap: var(--kern-metric-space-default);
+}
+
+.projekt-import-review--group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   gap: var(--kern-metric-space-small);
 }
 
@@ -42,24 +69,74 @@
   margin: 0;
 }
 
+.projekt-import-review--group-count {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--kern-grey-700);
+  font-variant-numeric: tabular-nums;
+}
+
 .projekt-import-review--dates {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--kern-metric-space-small);
+  gap: var(--kern-metric-space-default);
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+// One row per source phase: a type marker on the left, the kern label/hint/
+// input stack on the right. Rows are separated by hairlines rather than
+// boxed, so the inputs stay the loudest element.
+.projekt-import-review--phases {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--kern-grey-100);
+}
+
+.projekt-import-review--phase {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: var(--kern-metric-space-default);
+  padding: var(--kern-metric-space-default) 0;
+  border-bottom: 1px solid var(--kern-grey-100);
+}
+
+.projekt-import-review--phase-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  color: var(--kern-color-action-default);
+  background-color: var(--kern-grey-050);
+
+  .material-symbols-outlined {
+    font-size: 1.375rem;
+  }
+}
+
+.projekt-import-review--phase-field {
+  min-width: 0;
+}
+
+.projekt-import-review--divider {
+  margin: 0;
+}
+
 .projekt-import-review--actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--kern-metric-space-small);
 }
 
 .projekt-import-review--empty {
+  margin: 0;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: var(--kern-grey-350);
+  color: var(--kern-grey-700);
 }

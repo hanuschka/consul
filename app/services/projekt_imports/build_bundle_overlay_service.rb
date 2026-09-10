@@ -31,12 +31,18 @@ class ProjektImports::BuildBundleOverlayService < ApplicationService
     # Keyed by the source's row id, which is the only handle the bundle and the
     # copier's id map agree on. A phase whose tab name is untranslated in the
     # import locale falls back to whatever locale the source did have, so the
-    # admin sees a name to edit rather than an empty box.
+    # admin sees a name to edit rather than an empty box. Type and dates are
+    # read-only context for the review form; only the name is written back.
     def phase_names
       Array(bundle["phases"]).map do |phase|
+        attributes = phase["attributes"] || {}
+
         {
           "source_id" => phase["source_id"],
-          "name" => phase_name_for(phase)
+          "name" => phase_name_for(phase),
+          "type" => attributes["type"],
+          "starts_at" => attributes["start_date"],
+          "ends_at" => attributes["end_date"]
         }
       end
     end

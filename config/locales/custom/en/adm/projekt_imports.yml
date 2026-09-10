@@ -60,6 +60,7 @@ en:
           files_summary: "%{first} +%{count}"
           created_at: "Created: %{time}"
           finished_at: "Finished: %{time}"
+          owner: "By: %{name}"
           projekt_created: "Projekt created: %{title}"
           image_failed_note: "Title image could not be generated"
           filters:
@@ -68,6 +69,8 @@ en:
             in_progress: "In progress"
             failed: "Failed"
             completed: "Completed"
+            mine: "Only mine"
+            owner_aria: "Filter by creator"
           delete_dialog:
             title: "Delete import?"
             message: "This import will be permanently deleted:"

@@ -15,7 +15,7 @@
 //
 //= require ace-builds/src-min/ace
 //= require ace-builds/src-noconflict/mode-html
-//= require ace-builds/src-noconflict/worker-html
+//= require ../ace_worker_urls
 //
 // require idiomorph/dist/idiomorph.js
 //

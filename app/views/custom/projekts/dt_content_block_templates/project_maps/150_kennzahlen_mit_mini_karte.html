@@ -1,0 +1,33 @@
+<div style="border: 1px solid #e6e9ed; border-radius: 14px; overflow: hidden; background: #ffffff;">
+  <div style="display: flex; flex-wrap: wrap;">
+    <div style="flex: 1 1 360px; padding: 28px;">
+      <div style="color: var(--brand-color, #1779ba); font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px;">Planungsgebiet auf einen Blick</div>
+      <h3 style="color: #1f2a37; font-size: 20px; font-weight: 700; line-height: 1.3; margin: 0 0 20px;">Klimaanpassungsplan 2040 — Eckdaten</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        <div style="flex: 1 1 140px; background: #f7f8fa; border: 1px solid #eef1f5; border-radius: 12px; padding: 16px;">
+          <div style="color: var(--brand-color, #1779ba); font-size: 26px; font-weight: 800; line-height: 1;">8,4 km²</div>
+          <div style="color: #6b7280; font-size: 14px; margin-top: 6px;">Planungsgebiet</div>
+        </div>
+        <div style="flex: 1 1 140px; background: #f7f8fa; border: 1px solid #eef1f5; border-radius: 12px; padding: 16px;">
+          <div style="color: #1f2a37; font-size: 26px; font-weight: 800; line-height: 1;">12.400</div>
+          <div style="color: #6b7280; font-size: 14px; margin-top: 6px;">Betroffene Adressen</div>
+        </div>
+        <div style="flex: 1 1 140px; background: #f7f8fa; border: 1px solid #eef1f5; border-radius: 12px; padding: 16px;">
+          <div style="color: #1f2a37; font-size: 26px; font-weight: 800; line-height: 1;">23 %</div>
+          <div style="color: #6b7280; font-size: 14px; margin-top: 6px;">Aktueller Grünanteil</div>
+        </div>
+        <div style="flex: 1 1 140px; background: #f7f8fa; border: 1px solid #eef1f5; border-radius: 12px; padding: 16px;">
+          <div style="color: #1f2a37; font-size: 26px; font-weight: 800; line-height: 1;">45 Tage</div>
+          <div style="color: #6b7280; font-size: 14px; margin-top: 6px;">Beteiligungszeitraum</div>
+        </div>
+      </div>
+    </div>
+    <div class="projekt-map-embed js-projekt-map-embed js-content-block-element-not-editable" data-controller="projekt-map-embed" style="flex: 1 1 300px; height: 340px; border-radius: 14px;">
+      <span class="projekt-map-embed--placeholder" aria-hidden="true">
+        <i class="fas fa-map-marker-alt projekt-map-embed--pin"></i>
+        <span class="projekt-map-embed--label">Kartenansicht</span>
+      </span>
+      {{projekt_map}}
+    </div>
+  </div>
+</div>

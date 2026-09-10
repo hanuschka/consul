@@ -87,10 +87,13 @@ module ProjektContentBlocksAdminActions
     return unless check_ai_model_configured
 
     result =
-      ProjektContentBlocks::Services::DispatchChangeWithAi.call(
+      ::SiteCustomization::ContentBlocks::DispatchChangeWithAi.call(
         content_block: @content_block,
         instructions: params[:instructions],
         content_block_html: params[:content_block_html],
+        title: @content_block.projekt&.page&.title,
+        subtitle: @content_block.projekt&.page&.subtitle,
+        projekt: @content_block.projekt,
         use_full_projekt_context: params[:use_full_projekt_context],
         allow_text_modification: params[:allow_text_modification]
       )
@@ -222,33 +225,9 @@ module ProjektContentBlocksAdminActions
   def ai_generation_status
     authorize!(:update, @content_block.projekt)
 
-    data = @content_block.ai_generation_data || {}
-    status = data["status"] || "completed"
-
-    payload = {
-      status: status,
-      content_block_id: @content_block.id,
-      position: @content_block.position,
-      mode: data["mode"],
-      step_label: ai_generation_step_label(data["step"])
-    }
-
-    if status == "completed"
-      payload[:body_html] = @content_block.body.to_s
-    end
-
-    # A change is a preview the editor applies to the DOM without saving, so
-    # the result never reaches the body column and is handed over once.
-    if status == "completed" && data["mode"] == "change"
-      payload[:content_block_html] = data["result_html"].to_s
-      @content_block.update_column(:ai_generation_data, nil)
-    end
-
-    if status == "failed"
-      payload[:error] = data["error"]
-    end
-
-    render json: payload
+    render json: ::SiteCustomization::ContentBlocks::AiGenerationStatusPayload.call(
+      content_block: @content_block
+    )
   end
 
   def cancel_ai_generation
@@ -295,12 +274,6 @@ module ProjektContentBlocksAdminActions
 
   def find_ai_in_progress_content_block
     @content_block = ::SiteCustomization::ContentBlock.unscoped.find(params[:id])
-  end
-
-  def ai_generation_step_label(step)
-    return if step.blank?
-
-    I18n.t("custom.projekt_content_blocks.ai_create.steps.#{step}", default: nil)
   end
 
   def ai_generation_status_url(content_block_id)

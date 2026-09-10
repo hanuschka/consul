@@ -134,14 +134,7 @@ class Ai::GenerateContentBlock < ApplicationService
   end
 
   def fetch_dt_templates
-    response = DtApi::Client.new(use_cache: true).content_block_templates.all(section: @dt_template_section)
-
-    return [] if !response.success?
-
-    response.parsed_response.dig("content_block_templates_by_category") || []
-  rescue => e
-    Rails.logger.error("Failed to fetch DT templates: #{e.message}")
-    []
+    ContentBlockTemplates::Catalogue.call(section: @dt_template_section)
   end
 
   def filter_templates_by_category(dt_templates_by_category)
@@ -272,39 +265,12 @@ class Ai::GenerateContentBlock < ApplicationService
           end
         end
       end
-    else
-      local_templates = fetch_local_templates_metadata
-      lines << ""
-      lines << "Local templates (names only — full HTML unavailable):"
-      local_templates.each do |category_name, template_names|
-        lines << "  Category: #{category_name}"
-        template_names.each do |name|
-          lines << "    - #{name}"
-        end
-      end
     end
 
     lines.join("\n")
   rescue => e
     Rails.logger.error("Failed to build templates reference: #{e.message}")
     ""
-  end
-
-  def fetch_local_templates_metadata
-    if @newsletter.present?
-      return {
-        "Email Defaults" => Newsletters::ContentBlockTemplatesSelectorComponent::EMAIL_TEMPLATE_NAMES
-      }
-    end
-
-    selector = Projekts::ContentBlockTemplatesSelectorComponent.new
-    {
-      "Basic Content" => selector.basic_content_templates,
-      "Status and Notes" => selector.status_and_notes_templates,
-      "Teasers and Promotions" => selector.teasers_and_promotions,
-      "Media and Resources" => selector.media_and_resources_templates,
-      "Messages" => selector.messages_content_block_templates
-    }
   end
 
   def fetch_base_prompt

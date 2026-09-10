@@ -66,7 +66,7 @@ de:
         submit_shortcut_hint_html: "Tipp: %{shortcut} zum Absenden drücken"
         cancel: Generierung abbrechen
         processing_message: Inhaltsblock wird erstellt...
-        fallback_note: "Vorlagen von demokratie.today sind nicht verfügbar. KI nutzt nur lokale Vorlagennamen als Inspiration."
+        fallback_note: "Die Vorlagenliste konnte nicht geladen werden. Die KI erstellt den Block ohne Vorlagenbezug."
         cancel_acknowledged: Generierung wird abgebrochen
         steps:
           queued: Anfrage wird vorbereitet...

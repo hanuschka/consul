@@ -13,6 +13,7 @@ class Adm::Projekts::Imports::ReviewsController < Adm::Projekts::BaseController
     @overlay = @projekt_import.overlay
     @status_url = status_adm_projekts_import_path(@projekt_import)
     @execute_url = execute_adm_projekts_import_review_path(@projekt_import)
+    @autosave_url = adm_projekts_import_review_path(@projekt_import)
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
@@ -24,8 +25,13 @@ class Adm::Projekts::Imports::ReviewsController < Adm::Projekts::BaseController
   def update
     @projekt_import.apply_overlay!(overlay_params)
 
-    redirect_to adm_projekts_import_review_path(@projekt_import),
-      notice: t("adm.projekts.imports.reviews.saved")
+    respond_to do |format|
+      format.html do
+        redirect_to adm_projekts_import_review_path(@projekt_import),
+          notice: t("adm.projekts.imports.reviews.saved")
+      end
+      format.json { head :ok }
+    end
   end
 
   def execute

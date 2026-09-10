@@ -5,6 +5,26 @@ de:
         quick_links:
           import: Projekt importieren
       imports:
+        source_text:
+          title: Gelesener Quelltext
+          open: Quelltext
+          intro: >-
+            Das ist der Text, den der Import aus der Quelle gelesen hat — die
+            Grundlage aller Vorschläge der KI. Prüfen Sie ihn, bevor Sie das
+            Projekt anlegen: Anweisungen, die sich an eine KI richten, gehören
+            nicht in eine Projektbeschreibung und sind ein Zeichen dafür, dass
+            die Seite manipuliert wurde.
+          source_label: Quelle
+          empty: Für diesen Import wurde kein Text gespeichert.
+        chats:
+          show:
+            tooltips:
+              source_text:
+                title: Quelltext ansehen
+                text: >-
+                  Zeigt den Text, den der Import aus der Datei oder der Webseite
+                  gelesen hat, unverändert an — damit Sie die Vorschläge der KI
+                  mit der Vorlage vergleichen können.
         sources:
           requires_ai: Benötigt die KI-Funktion, die auf dieser Plattform deaktiviert ist
           file:
@@ -69,6 +89,8 @@ de:
             phase_position: 'Phase %{position}'
             phase_without_dates: Kein Zeitraum hinterlegt
             projekt_title: Projekt
+            autosave_saving: Wird gespeichert …
+            autosave_error: Speichern fehlgeschlagen – Änderungen werden beim Anlegen übernommen
             no_phases: Dieses Projekt enthält keine Phasen.
             execute: Projekt jetzt anlegen
             start_over: Verwerfen und neu beginnen

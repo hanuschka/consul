@@ -23,7 +23,14 @@
       </span>
     </div>
 
-    <%= form_with(url: @execute_url, method: :post) do |f| %>
+    <%= form_with(url: @execute_url, method: :post, data: {
+          controller: "adm-projekts--import-review-autosave",
+          "adm-projekts--import-review-autosave-url-value": @autosave_url,
+          "adm-projekts--import-review-autosave-saving-text-value": t("adm.projekts.imports.reviews.show.autosave_saving"),
+          "adm-projekts--import-review-autosave-saved-text-value": t("adm.projekts.imports.reviews.saved"),
+          "adm-projekts--import-review-autosave-error-text-value": t("adm.projekts.imports.reviews.show.autosave_error"),
+          action: "change->adm-projekts--import-review-autosave#save"
+        }) do |f| %>
       <section class="projekt-import-review--group" aria-labelledby="projekt-import-review-projekt-title">
         <h2 class="kern-title kern-title--small projekt-import-review--group-title" id="projekt-import-review-projekt-title">
           <%= t("adm.projekts.imports.reviews.show.projekt_title") %>
@@ -104,6 +111,11 @@
               text: t("adm.projekts.imports.reviews.show.start_over"),
               style: :tertiary,
               data: { turbo_method: :post } %>
+
+        <span class="adm-name-autosave-status projekt-import-review--autosave-status"
+              role="status"
+              aria-live="polite"
+              data-adm-projekts--import-review-autosave-target="status"></span>
       </div>
     <% end %>
   </div>

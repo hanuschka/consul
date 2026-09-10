@@ -4,7 +4,8 @@ class Adm::Projekts::ImportsController < Adm::Projekts::BaseController
   STATUS_FILTERS = %w[in_progress failed completed].freeze
 
   before_action :authorize_create
-  before_action :find_projekt_import, only: [:show, :status, :reset, :retry_import, :destroy]
+  before_action :find_projekt_import,
+    only: [:show, :status, :source_text, :reset, :retry_import, :destroy]
 
   def index
     load_import_lists
@@ -40,6 +41,21 @@ class Adm::Projekts::ImportsController < Adm::Projekts::BaseController
 
   def status
     render json: status_payload
+  end
+
+  # What the import actually read, shown verbatim. The chat reports the model's
+  # conclusions; this is the only place the administrator can check them against
+  # the material — and the only way an instruction hidden in a fetched page
+  # becomes visible to the person approving the projekt.
+  def source_text
+    @source_label = helpers.import_source_description(@projekt_import)
+    @back_url = helpers.import_review_path(@projekt_import)
+
+    @breadcrumbs = [
+      { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
+      { name: t("adm.projekts.imports.index.title"), url: adm_projekts_imports_path },
+      { name: t("adm.projekts.imports.source_text.title") }
+    ]
   end
 
   def reset
@@ -89,7 +105,11 @@ class Adm::Projekts::ImportsController < Adm::Projekts::BaseController
     end
 
     def status_payload
-      payload = { status: @projekt_import.status, warnings: @projekt_import.warnings }
+      payload = {
+        status: @projekt_import.status,
+        submit_stage: @projekt_import.submit_stage,
+        warnings: @projekt_import.warnings
+      }
 
       if @projekt_import.chatting?
         payload[:review_url] = helpers.import_review_path(@projekt_import)

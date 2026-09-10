@@ -30,9 +30,7 @@
        data-projekt-imports--chat-csrf-value="<%= form_authenticity_token %>"
        data-projekt-imports--chat-poll-interval-value="3500"
        data-projekt-imports--chat-confirm-start-over-value="<%= t('.confirm_start_over') %>"
-       data-projekt-imports--chat-progress-resolving-value="<%= t('.progress.resolving_content_blocks') %>"
-       data-projekt-imports--chat-progress-creating-value="<%= t('.progress.creating_projekt') %>"
-       data-projekt-imports--chat-progress-generating-image-value="<%= t('.progress.generating_image') %>"
+       data-projekt-imports--chat-progress-labels-value="<%= t('.progress').to_json %>"
        data-projekt-imports--chat-error-extract-failed-value="<%= t('.errors.extract_failed') %>"
        data-projekt-imports--chat-user-initials-value="<%= @chat_user_initials %>"
        data-projekt-imports--chat-user-image-url-value="<%= @chat_user_image_url %>"
@@ -141,6 +139,15 @@
             <%= t(".commands.regenerate") %>
           </button>
           <%= render "adm/projekts/imports/chats/action_tooltip", key: "regenerate" %>
+        </rich-tooltip>
+        <rich-tooltip delay="700">
+          <%= link_to source_text_adm_projekts_import_path(@projekt_import),
+                class: "projekt-import-chat--topbar-button",
+                data: { turbo: false } do %>
+            <span class="material-symbols-outlined" aria-hidden="true">description</span>
+            <%= t("adm.projekts.imports.source_text.open") %>
+          <% end %>
+          <%= render "adm/projekts/imports/chats/action_tooltip", key: "source_text" %>
         </rich-tooltip>
         <rich-tooltip delay="700">
           <button type="button"

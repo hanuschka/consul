@@ -22,8 +22,7 @@
 
 <%= stylesheet_link_tag "print", media: 'print' %>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<%= javascript_include_tag "packs/charts_vendor", "data-turbolinks-track" => "reload" %>
 
 <%= content_for :additional_plugin_scripts %>
 <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
@@ -43,7 +42,7 @@
 
 <meta name="turbolinks-cache-control" content="no-cache">
 
-<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.0/ckeditor5.css" />
+<%= stylesheet_link_tag "ckeditor5" %>
 
 <% if current_user&.administrator? || current_user&.projekt_manager? %>
   <%= stylesheet_link_tag "studio", "data-turbolinks-track" => "reload" %>

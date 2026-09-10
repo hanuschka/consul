@@ -18,18 +18,34 @@
           filters: [nil, "in_progress", "failed", "completed"].map do |key|
             {
               label: t("adm.projekts.imports.list.filters.#{key || 'all'}"),
-              url: adm_projekts_imports_path(status: key),
+              url: adm_projekts_imports_path(status: key, mine: params[:mine].presence),
               count: key ? @import_counts[key] : @import_counts.values.sum,
               active: key == @status_filter
             }
           end
         ) %>
+
+    <% if @shows_every_owner %>
+      <span class="kern-filter-chips__divider" aria-hidden="true">|</span>
+      <%= render Kern::FilterChipsComponent.new(
+            aria_label: t("adm.projekts.imports.list.filters.owner_aria"),
+            filters: [{
+              label: t("adm.projekts.imports.list.filters.mine"),
+              url: adm_projekts_imports_path(
+                status: @status_filter, mine: (1 if !@own_imports_only)
+              ),
+              active: @own_imports_only
+            }]
+          ) %>
+    <% end %>
   </div>
 
   <% if @imports.any? %>
     <div class="projekt-import-list">
       <%= render(Adm::Projekts::Imports::ListItemComponent.with_collection(
-            @imports, created_projekts_by_id: @created_projekts_by_id)) %>
+            @imports,
+            created_projekts_by_id: @created_projekts_by_id,
+            show_owner: @shows_every_owner)) %>
       <%= paginate @imports if @imports.total_pages > 1 %>
     </div>
   <% else %>

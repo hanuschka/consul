@@ -63,7 +63,12 @@ en:
             starts_at_label: Start
             ends_at_label: End
             phases_title: Phases
-            phase_name_label: Name of the phase
+            phases_count:
+              one: 1 phase
+              other: '%{count} phases'
+            phase_position: 'Phase %{position}'
+            phase_without_dates: No dates set
+            projekt_title: Projekt
             no_phases: This projekt has no phases.
             execute: Create the projekt now
             start_over: Discard and start over

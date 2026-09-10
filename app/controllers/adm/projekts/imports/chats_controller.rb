@@ -1,4 +1,6 @@
 class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
+  include Adm::Projekts::ProjektImportScoped
+
   ALLOWED_COMMANDS = %w[regenerate summarize import start_over].freeze
   MAX_AGGREGATE_BYTES = 500.megabytes
 
@@ -44,6 +46,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       messages: combined.sort_by(&:id).map { |m| serialize_message(m) },
       import: {
         status: @projekt_import.status,
+        submit_stage: @projekt_import.submit_stage,
         error: @projekt_import.error_message,
         warnings: @projekt_import.warnings
       }
@@ -228,7 +231,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
   end
 
   def find_projekt_import
-    @projekt_import = current_user.projekt_imports.find(params[:import_id])
+    @projekt_import = visible_projekt_imports.find(params[:import_id])
   end
 
   def import_redirect_path

@@ -8,16 +8,14 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     # The previous submit attempt's warnings go, the analysis stage's stay: an
     # image the uploaded document does not let us read is still unreadable on the
     # second try, and the admin was told about it before the projekt existed.
-    projekt_import.update!(
-      status: "submitting",
-      warnings: projekt_import.analysis_warnings + unapplied_chat_warnings(projekt_import)
-    )
+    projekt_import.start_submit!(projekt_import.analysis_warnings + unapplied_chat_warnings(projekt_import))
 
     if projekt_import.from_consul_projekt?
       copy_consul_projekt(projekt_import)
       return
     end
 
+    projekt_import.advance_submit_stage!("creating_projekt")
     create_result = ProjektImports::CreateProjektFromImportService.call(projekt_import: projekt_import)
     if !create_result.success?
       projekt_import.mark_failed!(create_result.error, stage: "create_projekt", details: create_result.error_details)
@@ -30,6 +28,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     # links to a participation phase carry its real id and slug. The AI call
     # deliberately runs between the two persistence steps rather than inside
     # either transaction.
+    projekt_import.advance_submit_stage!("resolving_content_blocks")
     source_images = ProjektImports::AttachSourceImagesService.call(
       projekt_import: projekt_import,
       projekt: projekt
@@ -51,6 +50,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
       return
     end
 
+    projekt_import.advance_submit_stage!("creating_content_blocks")
     blocks_created = create_content_blocks(projekt_import, projekt)
     return if !blocks_created
 
@@ -77,6 +77,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
   # run: the bundle brought both with it. So this path ends where the copier
   # does, with the admin's review edits written on top.
   def copy_consul_projekt(projekt_import)
+    projekt_import.advance_submit_stage!("copying_projekt")
     result = ProjektImports::CopyConsulProjektService.call(projekt_import: projekt_import)
 
     if !result.success?
@@ -173,7 +174,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
       return
     end
 
-    projekt_import.update!(image_status: "running")
+    projekt_import.update!(image_status: "running", submit_stage: "generating_image")
 
     response = DtApi::Client.new.ai.generate_image(prompt: image_prompt, aspect_ratio: BANNER_ASPECT_RATIO)
 

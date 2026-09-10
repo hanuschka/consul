@@ -10,14 +10,19 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
     completed: "check_circle"
   }.freeze
 
-  def initialize(projekt_import:, created_projekts_by_id: {})
+  def initialize(projekt_import:, created_projekts_by_id: {}, show_owner: false)
     @projekt_import = projekt_import
     @created_projekts_by_id = created_projekts_by_id
+    @show_owner = show_owner
   end
 
   private
 
   attr_reader :projekt_import, :created_projekts_by_id
+
+  def show_owner?
+    @show_owner
+  end
 
   def display_state
     return :stalled if projekt_import.stalled?
@@ -90,6 +95,18 @@ class Adm::Projekts::Imports::ListItemComponent < ApplicationComponent
 
   def show_finished?
     display_state.in?(%i[completed failed])
+  end
+
+  # A row only names its owner where the list can hold someone else's import:
+  # for an admin who sees just their own, every row would repeat their name.
+  def owner_label
+    I18n.t("adm.projekts.imports.list.owner", name: owner_name)
+  end
+
+  def owner_name
+    user = projekt_import.user
+
+    user.name.presence || user.email.to_s
   end
 
   def finished_label

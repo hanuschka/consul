@@ -60,6 +60,7 @@ de:
           files_summary: "%{first} +%{count}"
           created_at: "Erstellt: %{time}"
           finished_at: "Beendet: %{time}"
+          owner: "Von: %{name}"
           projekt_created: "Projekt erstellt: %{title}"
           image_failed_note: "Titelbild konnte nicht generiert werden"
           filters:
@@ -68,6 +69,8 @@ de:
             in_progress: "Laufend"
             failed: "Fehlgeschlagen"
             completed: "Abgeschlossen"
+            mine: "Nur meine"
+            owner_aria: "Nach Ersteller filtern"
           delete_dialog:
             title: "Import löschen?"
             message: "Dieser Import wird dauerhaft gelöscht:"
@@ -121,9 +124,12 @@ de:
             import_overlay_title: "Import läuft…"
             import_overlay_message: "Das Projekt wird angelegt. Dies kann einen Moment dauern."
             progress:
-              resolving_content_blocks: "Inhaltsblöcke werden erstellt…"
+              queued: "Import wird gestartet…"
               creating_projekt: "Projekt, Phasen und Ressourcen werden angelegt…"
+              resolving_content_blocks: "Inhaltsblöcke werden erstellt…"
+              creating_content_blocks: "Inhaltsblöcke werden gespeichert…"
               generating_image: "Titelbild wird generiert…"
+              copying_projekt: "Projekt wird kopiert…"
             errors:
               extract_failed: "Eine oder mehrere angehängte Dateien konnten nicht gelesen werden."
               import_failed: "Der Import konnte nicht abgeschlossen werden."

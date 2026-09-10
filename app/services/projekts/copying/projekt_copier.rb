@@ -6,7 +6,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
   # sharing a position, which `sort_by_order_number` cannot break.
   EXCLUDED_COLUMNS = %w[
     name order_number preview_code published_at content_updated_at
-    banner_image_generation_status copy_status copied_from_projekt_id
+    banner_image_generation_status copy_status copy_data copied_from_projekt_id
     import_file_status import_file_data imported_by_ai
     whatsapp_broadcast_sent_at whatsapp_broadcast_slug
     on_dt_global_overview from_dt special special_name
@@ -14,8 +14,10 @@ class Projekts::Copying::ProjektCopier < ApplicationService
 
   # The page slug and footer key are unique; the slug was generated for the copy
   # by Projekt#create_corresponding_page and the footer key belongs to whichever
-  # page already claimed it.
-  EXCLUDED_PAGE_COLUMNS = %w[projekt_id slug footer_key].freeze
+  # page already claimed it. The publish state is owned by the shell page too: a
+  # projekt page is always published, so a draft source must not drag the copy
+  # into a state that hides it while every visible setting says otherwise.
+  EXCLUDED_PAGE_COLUMNS = %w[projekt_id slug footer_key status published_at].freeze
 
   # Attachments the landing page carries directly, rather than through an Image
   # or Document row.
@@ -29,22 +31,14 @@ class Projekts::Copying::ProjektCopier < ApplicationService
   ].freeze
 
   # Forced on the copy regardless of the source, so a copy never appears in
-  # public navigation or search results before an admin publishes it. `activated`
-  # is what the admin dashboard counts as a draft.
+  # public navigation or search results before an admin activates it. These four
+  # columns are the only thing hiding a copy -- its page stays published -- and
+  # `activated` is what the admin dashboard counts as a draft.
   HIDDEN_DRAFT_COLUMNS = {
     activated: false,
     show_in_navigation: false,
     show_in_overview_page: false,
     show_in_homepage: false
-  }.freeze
-
-  # The page carries the app's own draft/published flag: it is what
-  # Projekt#published?, the public page controller and the global-overview
-  # export all read. A copy of a live projekt would otherwise inherit
-  # "published" while its projekt sits deactivated.
-  DRAFT_PAGE_COLUMNS = {
-    status: "draft",
-    published_at: nil
   }.freeze
 
   ALLOW_INDEXING_KEY = "projekt_feature.general.allow_indexing".freeze
@@ -104,11 +98,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
       return if page_node.blank? || copy_page.blank?
 
       copy_name = copy.name
-      record_copier.overwrite(
-        page_node, copy_page,
-        attributes: DRAFT_PAGE_COLUMNS,
-        except: EXCLUDED_PAGE_COLUMNS
-      )
+      record_copier.overwrite(page_node, copy_page, except: EXCLUDED_PAGE_COLUMNS)
       restore_copy_title(copy_page, copy_name)
 
       # The projekt's banner lives as a polymorphic Image on the page, not on

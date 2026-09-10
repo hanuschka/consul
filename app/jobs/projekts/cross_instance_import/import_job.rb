@@ -10,21 +10,23 @@ class Projekts::CrossInstanceImport::ImportJob < ApplicationJob
     # Without this the draft would sit in "processing" forever and the admin's
     # poller would spin until it gives up.
     if bundle.blank?
-      projekt.update_column(:copy_status, "failed")
+      Projekts::RecordCopyOutcome.call(
+        projekt: projekt, error: "source instance returned no export for #{source_url}"
+      )
       return
     end
 
     result = Projekts::CrossInstanceImport::ImportService.call(bundle: bundle, target: projekt)
 
-    projekt.update_column(:copy_status, result.success? ? "completed" : "failed")
+    Projekts::RecordCopyOutcome.call(projekt: projekt, result: result)
   rescue StandardError => e
-    Rails.logger.error("[Projekts::CrossInstanceImport::ImportJob] failed: #{e.message}")
+    Rails.logger.error("[Projekts::CrossInstanceImport::ImportJob] failed: #{e.class}: #{e.message}")
 
     if defined?(Sentry)
       Sentry.capture_exception(e, extra: { projekt_id: projekt_id })
     end
 
-    projekt&.update_column(:copy_status, "failed")
+    Projekts::RecordCopyOutcome.call(projekt: projekt, error: e)
   end
 
   private

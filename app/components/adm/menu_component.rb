@@ -63,7 +63,8 @@ class Adm::MenuComponent < Adm::BaseMenuComponent
     def developer_subitems
       [
         { label: t("adm.menu.items.developer_subitems.ai_settings"),       path: adm_ai_settings_path,       active_prefix: "/adm/ai_settings" },
-        { label: t("adm.menu.items.developer_subitems.external_api_keys"), path: adm_external_api_keys_path, active_prefix: "/adm/external_api_keys" }
+        { label: t("adm.menu.items.developer_subitems.external_api_keys"), path: adm_external_api_keys_path, active_prefix: "/adm/external_api_keys" },
+        { label: t("adm.menu.items.developer_subitems.machine_translations"), path: adm_machine_translations_path, active_prefix: "/adm/machine_translations" }
       ]
     end
 

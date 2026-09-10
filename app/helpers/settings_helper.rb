@@ -17,6 +17,10 @@ module SettingsHelper
     @all_settings ||= Setting.all.map { |s| [s.key, s.value.presence] }.to_h
   end
 
+  def setting_text(key)
+    MachineTranslation::SettingText.call(key).presence
+  end
+
   def display_setting_name(setting_name)
     if setting_name == "setting"
       t("admin.settings.setting_name")

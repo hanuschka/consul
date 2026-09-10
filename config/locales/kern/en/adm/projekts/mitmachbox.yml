@@ -90,6 +90,8 @@ en:
             other: "%{count} participants answered this question"
           count_label: Count
           option_label: Option
+          source_device_label: Mitmachbox
+          source_web_label: Online
           export_button: Download as CSV
           empty_title: No results yet
           empty_text: No version has been published yet or no responses have been received.

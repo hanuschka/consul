@@ -105,6 +105,7 @@ class ProjektPhase < ApplicationRecord
   translates :resource_form_description_placeholder, touch: true
   translates :support_button_text, touch: true
   include Globalizable
+  include MachineTranslatable
 
   belongs_to :projekt, touch: true
   has_many :projekt_settings, through: :projekt

@@ -1,4 +1,6 @@
 class Poll::PartialResult < ApplicationRecord
+  include VotesAQuestionAnswer
+
   VALID_ORIGINS = %w[web booth].freeze
 
   belongs_to :question, -> { with_hidden }, inverse_of: :partial_results
@@ -9,8 +11,7 @@ class Poll::PartialResult < ApplicationRecord
   validates :question, presence: true
   validates :author, presence: true
   validates :answer, presence: true
-  validates :answer, inclusion: { in: ->(a) { a.question.possible_answers }},
-                     unless: ->(a) { a.question.blank? }
+  validates :question_answer, presence: true
   validates :origin, inclusion: { in: ->(*) { VALID_ORIGINS }}
 
   scope :by_author, ->(author_id) { where(author_id: author_id) }

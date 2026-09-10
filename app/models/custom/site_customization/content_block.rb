@@ -7,6 +7,18 @@ class SiteCustomization::ContentBlock < ApplicationRecord
 
   attribute :margin_bottom, :integer, default: DEFAULT_MARGIN_BOTTOM
 
+  translates :body, touch: true
+  include MachineTranslatable
+
+  def _assign_attributes(new_attributes)
+    super
+
+    return unless new_attributes.respond_to?(:stringify_keys)
+
+    given_locale = new_attributes.stringify_keys["locale"]
+    self[:locale] = given_locale if given_locale.present?
+  end
+
   validates :name, presence: true, uniqueness: { scope: [:locale, :key] }, inclusion: { in: VALID_BLOCKS }
 
   # The key is unique across the whole table (locale_key_name_index) and encodes
@@ -30,7 +42,10 @@ class SiteCustomization::ContentBlock < ApplicationRecord
 
   after_create :touch_projekt_content_updated_at
   after_destroy :touch_projekt_content_updated_at
-  after_update :touch_projekt_content_updated_at, if: :saved_change_to_body?
+
+  translation_class.after_commit(on: [:create, :update]) do
+    globalized_model&.touch_projekt_content_updated_at if saved_changes.key?("body")
+  end
 
   def ai_generation_status
     return nil if ai_generation_data.blank?
@@ -99,13 +114,13 @@ class SiteCustomization::ContentBlock < ApplicationRecord
     !!@body_stripped
   end
 
-  private
-
   def touch_projekt_content_updated_at
     return if destroyed_by_association.present?
 
     projekt&.touch(:content_updated_at)
   end
+
+  private
 
   def single_parent
     if projekt_id.present? && newsletter_id.present?

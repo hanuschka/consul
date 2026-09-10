@@ -1,0 +1,52 @@
+de:
+  custom:
+    studio:
+      delete_all_content_blocks:
+        title: "Alle Inhaltsblöcke löschen"
+        text: "Entfernt sämtliche Inhaltsblöcke dieser Seite auf einmal. Diese Aktion kann nicht rückgängig gemacht werden — die Inhalte müssen anschließend neu erstellt werden."
+        button_label: "Alle Inhaltsblöcke löschen"
+        confirm: "Sind Sie sicher, dass Sie alle Inhaltsblöcke löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+      add_phase:
+        title: "Phase hinzufügen"
+        text: "Öffnet die Phasenverwaltung in einem neuen Tab, um diesem Projekt eine weitere Phase hinzuzufügen."
+      delete_phase:
+        title: "Phase löschen"
+        text: "Entfernt diese Phase dauerhaft."
+        note: "Diese Aktion kann nicht rückgängig gemacht werden."
+      change_banner:
+        title: "Titelbild ändern"
+        text: "Lädt ein neues Titelbild für diese Seite hoch. Empfohlen wird ein breites Querformat in hoher Auflösung."
+      toggle_phase_visibility:
+        hide_title: "Phase ausblenden"
+        show_title: "Phase einblenden"
+        text: "Steuert die Sichtbarkeit dieser Phase im öffentlichen Footer."
+        note: "Versteckte Phasen sehen nur Administratoren."
+      send_notification:
+        title: "Benachrichtigung senden"
+        text: "Informiert die Abonnenten dieser Phase per Benachrichtigung."
+      edit_phase:
+        title: "Phase bearbeiten"
+        text: "Öffnet die Einstellungen dieser Phase."
+        note: "Wird in einem neuen Tab geöffnet."
+      remove_banner:
+        title: "Titelbild entfernen"
+        text: "Entfernt das aktuelle Titelbild. Die Seite wird anschließend ohne Banner angezeigt."
+      edit_sidebar_card:
+        title: "Bereich bearbeiten"
+        text: "Öffnet die Einstellungen dieses Seitenleisten-Bereichs zur Bearbeitung."
+      copy_template:
+        title: "Vorlage kopieren"
+        text: "Kopiert den HTML-Code dieser Vorlage in die Zwischenablage, um ihn an anderer Stelle einzufügen."
+      toggle_section:
+        text: "Blendet diesen Bereich in der öffentlichen Seitenleiste ein oder aus. Ausgeblendete Bereiche sind nur für Administratoren sichtbar."
+      upload_image:
+        title: "Bilder verwalten"
+        button_label: "Bild hochladen"
+      upload_document:
+        title: "Dokumente verwalten"
+        button_label: "Dokument hochladen"
+      toggle_default_phase:
+        make_default_title: "Als Standardphase festlegen"
+        unset_default_title: "Standardphase aufheben"
+        text: "Diese Phase wird beim Öffnen des Projekts zuerst angezeigt."
+        note: "Es kann nur eine Standardphase geben."

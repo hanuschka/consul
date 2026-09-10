@@ -57,6 +57,7 @@ en:
           connection: DT connection
           ai_settings: AI settings
           external_api_keys: API keys
+          machine_translations: Machine translation
     email_templates:
       send_test:
         success: "Test email sent to %{email}."

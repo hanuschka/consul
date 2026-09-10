@@ -4,6 +4,7 @@ class DeficiencyReport::Status < ApplicationRecord
   translates :title, touch: true
   translates :description, touch: true
   include Globalizable
+  include MachineTranslatable
 
   has_many :deficiency_reports, foreign_key: :deficiency_report_status_id
 

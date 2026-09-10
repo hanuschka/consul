@@ -7,6 +7,7 @@ class Budget < ApplicationRecord
 
   translates :name, :main_link_text, :main_link_url, touch: true
   include Globalizable
+  include MachineTranslatable
 
   # class Translation
   #   validate :name_uniqueness_by_budget

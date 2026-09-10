@@ -31,6 +31,9 @@ de:
     budgets:
       investments:
         index:
+          informing:
+            title: Noch keine Vorschläge vorhanden
+            starts_at: "Vorschläge können erst in der nächsten Phase eingereicht werden. Diese beginnt am %{date}."
           title: Übersicht aller Vorschläge
           welcome_default_text_html: In Beteiligungsprojekten können Bürger*innen Vorschläge erstellen und auf dieser Seite sammeln. Vorschläge können nach dem jeweiligen Budget und der Durchführbarkeit gefiltert werden.
           search_form:

@@ -2,7 +2,15 @@
 # assistant message that caused it. Written through immediately rather than at
 # the end of the turn: a job that dies mid-turn must still leave evidence that
 # the edits landed, otherwise the retry replays them against already-edited data.
+#
+# Destructive edits are not applied by the model at all. They are recorded here
+# as proposals, and only the administrator's click turns one into a real edit,
+# which is then journaled like any other.
 class ProjektImports::AiEditJournal
+  PENDING = "pending".freeze
+  APPLIED = "applied".freeze
+  DISCARDED = "discarded".freeze
+
   attr_reader :ai_chat_message
 
   def initialize(ai_chat_message:)
@@ -16,6 +24,48 @@ class ProjektImports::AiEditJournal
     entry
   end
 
+  def propose(action, details = {})
+    entry = {
+      "action" => action.to_s,
+      "details" => details.stringify_keys,
+      "proposal_id" => SecureRandom.uuid,
+      "state" => PENDING
+    }
+    ai_chat_message.update!(tool_activity: entries + [entry])
+
+    entry
+  end
+
+  def pending_proposal(proposal_id)
+    entries.find do |entry|
+      entry["proposal_id"] == proposal_id && entry["state"] == PENDING
+    end
+  end
+
+  def resolve_proposal!(proposal_id, state)
+    updated = entries.map do |entry|
+      next entry if entry["proposal_id"] != proposal_id
+
+      entry.merge("state" => state)
+    end
+
+    ai_chat_message.update!(tool_activity: updated)
+  end
+
+  def self.proposals(entries)
+    Array(entries).select { |entry| entry.key?("proposal_id") }
+  end
+
+  def self.pending_proposals(entries)
+    proposals(entries).select { |entry| entry["state"] == PENDING }
+  end
+
+  # A journal entry that changed the stored data: a direct edit, or a proposal
+  # the administrator applied (which also produced a direct entry of its own).
+  def self.applied?(entry)
+    !entry.key?("proposal_id")
+  end
+
   def self.summarize(entries)
     Array(entries).map { |entry| describe(entry) }.compact
   end
@@ -23,7 +73,20 @@ class ProjektImports::AiEditJournal
   # Rendered both into the chat bubble the admin reads and into the replayed
   # history the model reads, so it follows the conversation's locale. An action
   # with no key yields nil and is dropped, keeping old entries safe to replay.
+  # An applied proposal describes as nothing because the edit it turned into
+  # has an entry of its own.
   def self.describe(entry)
+    edit = describe_edit(entry)
+    return nil if edit.blank?
+
+    case entry["state"]
+    when nil then edit
+    when PENDING then translate(:proposed, edit: edit)
+    when DISCARDED then translate(:discarded, edit: edit)
+    end
+  end
+
+  def self.describe_edit(entry)
     details = entry["details"] || {}
 
     case entry["action"]

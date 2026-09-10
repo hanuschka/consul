@@ -1,6 +1,9 @@
 class Ai::Tools::ProjektImports::RemoveImportPhase < Ai::Tools::ProjektImports::EditorTool
-  description "Removes one phase from the project import. Only call this when the user " \
-              "explicitly asked for the phase to be deleted."
+  description "Proposes removing one phase from the project import. The phase is NOT " \
+              "removed by this call: the administrator sees the proposal under your " \
+              "message and applies or discards it with a button. Only call this when " \
+              "the user explicitly asked for the phase to be deleted, and call it once " \
+              "per phase."
 
   params(
     type: "object",
@@ -10,9 +13,15 @@ class Ai::Tools::ProjektImports::RemoveImportPhase < Ai::Tools::ProjektImports::
   )
 
   def execute(phase_index:)
-    removed = editor.remove_phase(phase_index)
+    proposal = editor.propose_remove_phase(phase_index)
 
-    { status: "removed", phase_type: removed["type"] }
+    {
+      status: "proposed",
+      proposal_id: proposal["proposal_id"],
+      phase_type: proposal.dig("details", "type"),
+      note: "Not removed yet. Tell the user in one sentence to confirm the " \
+            "removal with the Apply button shown under this message."
+    }
   rescue ::ProjektImports::AiResultEditor::IndexError => e
     { error: e.message }
   end

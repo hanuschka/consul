@@ -24,11 +24,19 @@ class ProjektImports::FromFileJob < ApplicationJob
     # chat and can upload it by hand.
     images_result = ProjektImports::ExtractSourceImagesService.call(projekt_import: projekt_import)
 
+    if extract_result.data[:hidden_content_removed]
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.hidden_content_removed"),
+        stage: ProjektImport::ANALYSIS_WARNING_STAGE
+      )
+    end
+
     ai_result = ProjektImports::ProcessWithAiService.call(
       text: extract_result.data[:text],
       additional_user_instructions: projekt_import.additional_user_instructions,
       response_language: projekt_import.import_response_language,
-      source_images: images_result.data[:source_images]
+      source_images: images_result.data[:source_images],
+      source_label: projekt_import.source_files.map { |file| file.filename.to_s }.join(", ")
     )
 
     if !ai_result.success?
@@ -74,7 +82,12 @@ class ProjektImports::FromFileJob < ApplicationJob
       chunks << result.data[:text]
     end
 
-    ServiceResult.success(text: chunks.join("\n\n---\n\n"))
+    visible = InvisibleUnicodeStripper.call(chunks.join("\n\n---\n\n"))
+
+    ServiceResult.success(
+      text: visible[:text],
+      hidden_content_removed: visible[:removed_characters].positive?
+    )
   end
 
   def extract_single_file(source_file)

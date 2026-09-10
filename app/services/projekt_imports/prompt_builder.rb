@@ -4,18 +4,26 @@ class ProjektImports::PromptBuilder
     "English" => :en
   }.freeze
 
-  attr_reader :base_prompt, :refs, :source_images
+  attr_reader :base_prompt, :refs, :source_images, :additional_user_instructions
 
-  def initialize(base_prompt:, refs:, response_language: nil, source_images: [])
+  def initialize(
+    base_prompt:, refs:, response_language: nil, source_images: [],
+    additional_user_instructions: nil
+  )
     @base_prompt = base_prompt
     @refs = refs
     @response_language = response_language.presence || default_response_language
     @source_images = Array(source_images)
+    @additional_user_instructions = additional_user_instructions
   end
 
   def call
     <<~PROMPT
       #{base_prompt}
+
+      #{ProjektImports::UntrustedContentPolicy.section}
+
+      #{build_admin_instructions_section}
 
       #{build_language_section}
 
@@ -49,6 +57,19 @@ class ProjektImports::PromptBuilder
   def phase_type_labels
     @phase_type_labels ||=
       I18n.with_locale(response_locale) { ProjektPhase.type_labels }
+  end
+
+  # The admin's notes are the one piece of free text that IS an instruction, so
+  # they live here rather than next to the document, where the document could
+  # forge a section that looks just like them.
+  def build_admin_instructions_section
+    return "" if additional_user_instructions.blank?
+
+    <<~SECTION.strip
+      ## Instructions from the administrator
+
+      #{additional_user_instructions}
+    SECTION
   end
 
   def build_language_section

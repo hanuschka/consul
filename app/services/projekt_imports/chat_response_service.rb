@@ -59,6 +59,7 @@ class ProjektImports::ChatResponseService < ApplicationService
     editor = ProjektImports::AiResultEditor.new(projekt_import: projekt_import, journal: journal)
 
     [
+      Ai::Tools::ProjektImports::ReadSourceDocument.new(editor: editor),
       Ai::Tools::ProjektImports::ReadImportData.new(editor: editor),
       Ai::Tools::ProjektImports::UpdateImportFields.new(editor: editor),
       Ai::Tools::ProjektImports::ReplaceImportPhase.new(editor: editor),
@@ -99,7 +100,12 @@ class ProjektImports::ChatResponseService < ApplicationService
     return content if docs.empty?
 
     parts = docs.map do |doc|
-      "--- Attached document: #{doc['name']} (#{doc['filetype']}) ---\n#{doc['extracted_text']}"
+      ProjektImports::UntrustedContentPolicy.wrap_document(
+        InvisibleUnicodeStripper.call(doc["extracted_text"])[:text],
+        tag: ProjektImports::UntrustedContentPolicy::ATTACHED_DOCUMENT_TAG,
+        name: doc["name"],
+        filetype: doc["filetype"]
+      )
     end
 
     "#{content}\n\n#{parts.join("\n\n")}".strip

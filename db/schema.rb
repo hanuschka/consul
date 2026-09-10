@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_09_130000) do
+ActiveRecord::Schema.define(version: 2026_09_10_130000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -525,6 +525,8 @@ ActiveRecord::Schema.define(version: 2026_09_09_130000) do
     t.string "external_source_url"
     t.bigint "masterportal_pin_id"
     t.boolean "generated_image", default: false, null: false
+    t.jsonb "similar_contributions_matches"
+    t.string "similar_contributions_check_status"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id", "source", "source_collection"], name: "index_budget_investments_on_budget_source_collection"
@@ -2522,6 +2524,15 @@ ActiveRecord::Schema.define(version: 2026_09_09_130000) do
     t.index ["projekt_phase_id"], name: "index_projekt_phase_settings_on_projekt_phase_id"
   end
 
+  create_table "projekt_phase_similar_search_projekts", force: :cascade do |t|
+    t.integer "projekt_phase_id"
+    t.integer "projekt_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_id"], name: "index_projekt_phase_similar_search_projekts_on_projekt_id"
+    t.index ["projekt_phase_id", "projekt_id"], name: "index_projekt_phase_similar_search_projekts_on_pair", unique: true
+  end
+
   create_table "projekt_phase_stat_questions", force: :cascade do |t|
     t.bigint "projekt_phase_id", null: false
     t.text "question", null: false
@@ -2596,6 +2607,8 @@ ActiveRecord::Schema.define(version: 2026_09_09_130000) do
     t.string "masterportal_destroy_status"
     t.text "masterportal_destroy_error"
     t.string "mitmachbox_survey_id"
+    t.string "similar_search_recheck_status"
+    t.datetime "similar_search_recheck_finished_at"
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -2782,6 +2795,7 @@ ActiveRecord::Schema.define(version: 2026_09_09_130000) do
     t.string "whatsapp_broadcast_slug"
     t.string "copy_status"
     t.bigint "copied_from_projekt_id"
+    t.jsonb "copy_data"
     t.index ["activated"], name: "index_projekts_on_activated"
     t.index ["copied_from_projekt_id"], name: "index_projekts_on_copied_from_projekt_id"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
@@ -2871,6 +2885,8 @@ ActiveRecord::Schema.define(version: 2026_09_09_130000) do
     t.string "external_source_url"
     t.bigint "masterportal_pin_id"
     t.boolean "generated_image", default: false, null: false
+    t.jsonb "similar_contributions_matches"
+    t.string "similar_contributions_check_status"
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
@@ -3197,6 +3213,50 @@ ActiveRecord::Schema.define(version: 2026_09_09_130000) do
     t.datetime "updated_at"
     t.date "date_of_birth"
     t.string "postal_code"
+  end
+
+  create_table "similar_contribution_exclusions", force: :cascade do |t|
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.string "excluded_contribution_type", null: false
+    t.bigint "excluded_contribution_id", null: false
+    t.bigint "excluded_by_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id", "excluded_contribution_type", "excluded_contribution_id"], name: "index_similar_contribution_exclusions_on_pair", unique: true
+    t.index ["contribution_type", "contribution_id"], name: "index_similar_contribution_exclusions_on_contribution"
+    t.index ["excluded_by_id"], name: "index_similar_contribution_exclusions_on_excluded_by_id"
+  end
+
+  create_table "similar_contribution_groups", force: :cascade do |t|
+    t.bigint "projekt_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_id"], name: "index_similar_contribution_groups_on_projekt_id"
+  end
+
+  create_table "similar_contribution_memberships", force: :cascade do |t|
+    t.bigint "similar_contribution_group_id", null: false
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.integer "relevance"
+    t.string "reason"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id"], name: "index_similar_contribution_memberships_on_contribution", unique: true
+    t.index ["similar_contribution_group_id"], name: "index_similar_contribution_memberships_on_group_id"
+  end
+
+  create_table "similar_contribution_references", force: :cascade do |t|
+    t.integer "similar_contribution_group_id"
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.integer "relevance"
+    t.string "reason"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id"], name: "index_similar_contribution_references_on_contribution"
+    t.index ["similar_contribution_group_id", "contribution_type", "contribution_id"], name: "index_similar_contribution_references_on_group_and_contribution", unique: true
   end
 
   create_table "site_customization_content_block_translations", force: :cascade do |t|
@@ -3924,6 +3984,9 @@ ActiveRecord::Schema.define(version: 2026_09_09_130000) do
   add_foreign_key "section_activities", "users"
   add_foreign_key "section_contact_people", "users"
   add_foreign_key "sentiments", "projekt_phases"
+  add_foreign_key "similar_contribution_exclusions", "users", column: "excluded_by_id"
+  add_foreign_key "similar_contribution_groups", "projekts"
+  add_foreign_key "similar_contribution_memberships", "similar_contribution_groups"
   add_foreign_key "site_customization_email_templates", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"

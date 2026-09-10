@@ -70,15 +70,35 @@ class ProjektImports::AiResultEditor
     removed
   end
 
+  # Deleting a phase and replacing the whole block list are the two edits a
+  # document that smuggled instructions to the model would most like to make,
+  # and the two the administrator can least easily undo. Neither is written
+  # here: the request is journaled as a proposal and applied only when the
+  # administrator clicks it in the chat.
+  def propose_remove_phase(phase_index)
+    current = phases
+    ensure_index!(phase_index, current)
+    phase = current[phase_index]
+
+    journal.propose(
+      "remove_phase",
+      phase_index: phase_index,
+      type: phase["type"],
+      name: phase["name"]
+    )
+  end
+
+  def propose_content_blocks(blocks)
+    ensure_blocks_editable!
+
+    journal.propose("replace_content_blocks", count: blocks.size, blocks: Array(blocks))
+  end
+
   # ResolveContentBlocksService rewrites stored blocks from {template_id,
   # content_data} to {html} and persists that, so once an import has run the
   # template form is gone and writing it back would mix two shapes.
   def replace_content_blocks(blocks)
-    if content_blocks.any? { |block| block.key?("html") }
-      raise ResolvedContentBlocksError,
-        "content blocks were already rendered to HTML by a previous import and " \
-        "can no longer be edited here"
-    end
+    ensure_blocks_editable!
 
     write(data.merge("content_blocks" => Array(blocks)), "replace_content_blocks", count: blocks.size)
 
@@ -86,6 +106,14 @@ class ProjektImports::AiResultEditor
   end
 
   private
+
+  def ensure_blocks_editable!
+    return if content_blocks.none? { |block| block.key?("html") }
+
+    raise ResolvedContentBlocksError,
+      "content blocks were already rendered to HTML by a previous import and " \
+      "can no longer be edited here"
+  end
 
   def data
     projekt_import.ai_result.presence || {}

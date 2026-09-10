@@ -1,0 +1,36 @@
+<%= content_for :title, t("adm.projekts.imports.source_text.title") %>
+
+<%= render Adm::HeaderComponent.new(
+      title: t("adm.projekts.imports.source_text.title"),
+      breadcrumbs: @breadcrumbs,
+      back_button_url: @back_url,
+      compact: true
+    ) %>
+
+<div class="kern-container my-3">
+  <div class="projekt-import-source-text">
+    <p class="kern-body projekt-import-source-text--intro">
+      <%= t("adm.projekts.imports.source_text.intro") %>
+    </p>
+
+    <div class="projekt-import-source-text--source">
+      <span class="material-symbols-outlined projekt-import-source-text--source-icon" aria-hidden="true">
+        description
+      </span>
+      <span class="projekt-import-source-text--source-body">
+        <span class="projekt-import-source-text--source-label">
+          <%= t("adm.projekts.imports.source_text.source_label") %>
+        </span>
+        <span class="projekt-import-source-text--source-value"><%= @source_label %></span>
+      </span>
+    </div>
+
+    <% if @projekt_import.extracted_text.present? %>
+      <div class="projekt-import-source-text--body"><%= @projekt_import.extracted_text %></div>
+    <% else %>
+      <p class="projekt-import-source-text--empty">
+        <%= t("adm.projekts.imports.source_text.empty") %>
+      </p>
+    <% end %>
+  </div>
+</div>

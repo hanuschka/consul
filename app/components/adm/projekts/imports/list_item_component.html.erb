@@ -33,6 +33,10 @@
         <span class="projekt-import-list-item--meta-sep" aria-hidden="true">·</span>
         <span class="projekt-import-list-item--time"><%= finished_label %></span>
       <% end %>
+      <% if show_owner? %>
+        <span class="projekt-import-list-item--meta-sep" aria-hidden="true">·</span>
+        <span class="projekt-import-list-item--owner"><%= owner_label %></span>
+      <% end %>
     </div>
 
     <% if show_error? %>

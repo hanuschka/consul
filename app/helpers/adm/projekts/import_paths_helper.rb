@@ -25,6 +25,18 @@ module Adm::Projekts::ImportPathsHelper
     t("adm.projekts.imports.sources.#{projekt_import.source_kind}.label")
   end
 
+  # Where this import's material actually came from — the address, or the
+  # filenames it was read out of. Names the thing the admin has to judge, which
+  # the source kind alone ("Aus einer Datei") does not.
+  def import_source_description(projekt_import)
+    return projekt_import.source_url if projekt_import.source_url.present?
+
+    filenames = projekt_import.source_files.map { |file| file.filename.to_s }
+    return import_source_label(projekt_import) if filenames.empty?
+
+    filenames.join(", ")
+  end
+
   def import_failure_stage_label(projekt_import)
     stage = projekt_import.failure_stage.presence
     return nil if stage.blank?

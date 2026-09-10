@@ -60,6 +60,7 @@ en:
           files_summary: "%{first} +%{count}"
           created_at: "Created: %{time}"
           finished_at: "Finished: %{time}"
+          owner: "By: %{name}"
           projekt_created: "Projekt created: %{title}"
           image_failed_note: "Title image could not be generated"
           filters:
@@ -68,6 +69,8 @@ en:
             in_progress: "In progress"
             failed: "Failed"
             completed: "Completed"
+            mine: "Only mine"
+            owner_aria: "Filter by creator"
           delete_dialog:
             title: "Delete import?"
             message: "This import will be permanently deleted:"
@@ -121,9 +124,12 @@ en:
             import_overlay_title: "Import in progress…"
             import_overlay_message: "The projekt is being created. This can take a moment."
             progress:
-              resolving_content_blocks: "Building content blocks…"
+              queued: "Starting import…"
               creating_projekt: "Creating projekt, phases, and resources…"
+              resolving_content_blocks: "Building content blocks…"
+              creating_content_blocks: "Saving content blocks…"
               generating_image: "Generating title image…"
+              copying_projekt: "Copying projekt…"
             errors:
               extract_failed: "We could not read one or more of the attached files."
               import_failed: "The import could not be completed."

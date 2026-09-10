@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_10_130002) do
+ActiveRecord::Schema.define(version: 2026_09_10_140000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2386,6 +2386,7 @@ ActiveRecord::Schema.define(version: 2026_09_10_130002) do
     t.string "source_kind", default: "file", null: false
     t.string "source_url"
     t.jsonb "source_overlay", default: {}, null: false
+    t.string "submit_stage"
     t.index ["created_at"], name: "index_projekt_imports_on_created_at"
     t.index ["projekt_id"], name: "index_projekt_imports_on_projekt_id"
     t.index ["source_kind"], name: "index_projekt_imports_on_source_kind"

@@ -157,6 +157,9 @@ application.register("adm-newsletters--filter-stack", AdmNewslettersFilterStackC
 import AdmRecipientGroupsNameAutosaveController from "./adm/recipient_groups/name_autosave_controller"
 application.register("adm-recipient-groups--name-autosave", AdmRecipientGroupsNameAutosaveController)
 
+import AdmProjektsImportReviewAutosaveController from "./adm/projekts/import_review_autosave_controller"
+application.register("adm-projekts--import-review-autosave", AdmProjektsImportReviewAutosaveController)
+
 import AdmBudgetInvestmentsPhasesAccordionController from "./adm/budget_investments/phases_accordion_controller"
 application.register("adm-budget-investments--phases-accordion", AdmBudgetInvestmentsPhasesAccordionController)
 

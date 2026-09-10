@@ -3,6 +3,8 @@
 # built is a plain form rather than a conversation — which is also what keeps
 # this source working on an instance with the AI switched off.
 class Adm::Projekts::Imports::ReviewsController < Adm::Projekts::BaseController
+  include Adm::Projekts::ProjektImportScoped
+
   before_action :authorize_create
   before_action :find_projekt_import
   before_action :ensure_review_step!
@@ -11,6 +13,7 @@ class Adm::Projekts::Imports::ReviewsController < Adm::Projekts::BaseController
     @overlay = @projekt_import.overlay
     @status_url = status_adm_projekts_import_path(@projekt_import)
     @execute_url = execute_adm_projekts_import_review_path(@projekt_import)
+    @autosave_url = adm_projekts_import_review_path(@projekt_import)
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
@@ -22,8 +25,13 @@ class Adm::Projekts::Imports::ReviewsController < Adm::Projekts::BaseController
   def update
     @projekt_import.apply_overlay!(overlay_params)
 
-    redirect_to adm_projekts_import_review_path(@projekt_import),
-      notice: t("adm.projekts.imports.reviews.saved")
+    respond_to do |format|
+      format.html do
+        redirect_to adm_projekts_import_review_path(@projekt_import),
+          notice: t("adm.projekts.imports.reviews.saved")
+      end
+      format.json { head :ok }
+    end
   end
 
   def execute
@@ -40,7 +48,7 @@ class Adm::Projekts::Imports::ReviewsController < Adm::Projekts::BaseController
     end
 
     def find_projekt_import
-      @projekt_import = current_user.projekt_imports.find(params[:import_id])
+      @projekt_import = visible_projekt_imports.find(params[:import_id])
     end
 
     # An AI-negotiated import belongs in the chat; a finished one has nothing
@@ -67,15 +75,15 @@ class Adm::Projekts::Imports::ReviewsController < Adm::Projekts::BaseController
     end
 
     # The form posts one field per phase keyed by the source row id, which is
-    # the handle the overlay and the copier's id map both use.
+    # the handle the overlay and the copier's id map both use. The rest of the
+    # entry (type, dates) is display context and passes through untouched.
     def submitted_phase_names
       submitted = params[:phase_names] || {}
 
       @projekt_import.overlay["phase_names"].to_a.map do |entry|
-        source_id = entry["source_id"]
-        name = submitted[source_id.to_s]
+        name = submitted[entry["source_id"].to_s]
 
-        { "source_id" => source_id, "name" => (name.presence || entry["name"]).to_s.strip }
+        entry.merge("name" => (name.presence || entry["name"]).to_s.strip)
       end
     end
 end

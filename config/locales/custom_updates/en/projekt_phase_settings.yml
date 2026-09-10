@@ -57,3 +57,8 @@ en:
           resource:
             create_investment_with_ai: Create investment proposal with AI
             create_investment_with_ai_description: Enables the "Create investment proposal with AI" button in the frontend. Users can have an AI assistant help them formulate an investment proposal by describing their concern in their own words. The AI suggests a title, summary, and description. The resulting draft remains fully editable before submission.
+      mitmachbox:
+        feature:
+          general:
+            answer_survey_online: Survey can also be answered online
+            answer_survey_online_description: Lets a Mitmachbox phase's survey be answered online on the projekt page as well as on the devices. On the projekt page the survey appears as a form that can be filled in without signing in; those answers are evaluated together with the ones collected by the devices. Enable this when you want to ask the same question in public space and on the platform at the same time.

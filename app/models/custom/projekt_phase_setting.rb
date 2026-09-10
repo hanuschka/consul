@@ -206,6 +206,10 @@ class ProjektPhaseSetting < ApplicationRecord
           "option.general.submissions_limit": "1"
         },
 
+        "ProjektPhase::MitmachboxPhase" => {
+          "feature.general.answer_survey_online": ""
+        },
+
         "ProjektPhase::IframePhase" => {
           "option.general.iframe_url": "",
           "option.general.iframe_width": "1240",

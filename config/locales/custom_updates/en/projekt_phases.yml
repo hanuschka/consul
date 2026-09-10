@@ -79,6 +79,17 @@ en:
         mitmachbox_phase: Participate on site
       mitmachbox_phase:
         public_info: During this phase you can take part in a survey on site. You will find the Mitmachbox devices at the designated locations.
+        online_intro: You can answer the survey online right here, or use a Mitmachbox at one of the designated locations.
+        submit_button: Submit answer
+        required: Required
+        multiple_hint: Multiple answers possible
+        thank_you: Thank you for taking part!
+        already_answered: You have already taken part in this survey. Thank you!
+        closed: This survey is currently not open for participation.
+        unavailable: The survey is currently unavailable. Please try again later.
+        no_answers: Please select at least one answer.
+        missing_required: Please answer all required questions.
+        submit_failed: Your answer could not be saved. Please try again later.
       permission_problem:
         new_button_component:
           shared:

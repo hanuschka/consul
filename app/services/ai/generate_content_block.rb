@@ -44,7 +44,7 @@ class Ai::GenerateContentBlock < ApplicationService
       tool = Ai::Tools::FetchContentBlockTemplates.new(
         templates_by_category: filtered_templates
       )
-      chat.with_tool(tool)
+      Ai::RubyLlmFactory.attach_tools(chat, [tool], Ai::ModelProfile.default)
     end
 
     instructions = build_system_instructions(filtered_templates, anchor_template)

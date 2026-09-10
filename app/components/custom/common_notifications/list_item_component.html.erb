@@ -20,7 +20,7 @@
         </i>
       <% end %>
 
-      <%= button_to delete_path, method: :delete, data: { confirm: "Möchten Sie die Benachrichtigung wirklich löschen?" } do %>
+      <%= button_to delete_path, method: :delete, data: { confirm: t("components.common_notifications.list_item_component.destroy_confirmation") } do %>
         <i class="fa fa-trash delete-icon-button">
         </i>
       <% end %>

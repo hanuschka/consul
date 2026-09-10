@@ -70,7 +70,7 @@ class Whatsapp::Polls::RecordOpenAnswerService < ApplicationService
     end
 
     def record!
-      answer = question.find_or_initialize_user_answer(user, open_option.title)
+      answer = question.find_or_initialize_user_answer(user, open_option)
 
       answer.save_and_record_voter_participation if answer.new_record?
       answer.update!(open_answer_text: @text)

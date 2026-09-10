@@ -42,7 +42,6 @@ class Api::ProjektsController < Api::BaseController
       projekts =
         Projekt
           .activated
-          .with_published_custom_page
           .show_in_overview_page
     else
       projekts = Projekt.regular
@@ -107,10 +106,9 @@ class Api::ProjektsController < Api::BaseController
     check_read_access!
 
     if current_client.public_data?
-      page_published = @projekt.page&.status == 'published'
       show_in_overview = @projekt.projekt_settings.find_by(key: 'projekt_feature.general.show_in_overview_page')&.value == 'active'
 
-      unless @projekt.activated? && page_published && show_in_overview
+      unless @projekt.activated? && show_in_overview
         return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
       end
     end

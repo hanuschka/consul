@@ -140,16 +140,6 @@
             <% end %>
           <% end  %>
 
-          <% if translations_interface_enabled? %>
-            <%= render Shared::SidebarCardComponent.new(
-                          title: t("custom.deficiency_reports.form.languages.title"),
-                          description: t("custom.deficiency_reports.form.languages.description"),
-                          icon_name: "language"
-                       ) do |c| %>
-                <%= render "shared/globalize_locales", resource: investment %>
-            <% end %>
-          <% end %>
-
           <% if projekt_phase_feature?(investment.projekt_phase, "form.enable_external_video") %>
             <%= render(Shared::SidebarCardComponent.new(
               title: "Video hinzufügen",
@@ -274,10 +264,6 @@
               nesting_prefix: "budget_investments" %>
           </div>
       <% end %>
-
-      <div>
-        <%= render "shared/globalize_locales", resource: investment %>
-      </div>
 
       <%= f.translatable_fields do |translations_form| %>
         <div>

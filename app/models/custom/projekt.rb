@@ -26,6 +26,7 @@ class Projekt < ApplicationRecord
 
   translates :description
   include Globalizable
+  include MachineTranslatable
 
   has_secure_token :preview_code
 
@@ -285,14 +286,12 @@ class Projekt < ApplicationRecord
 
   scope :index_order_all, ->() {
     activated
-      .with_published_custom_page
       .show_in_overview_page
       .order("projekts.created_at DESC")
   }
 
   scope :index_order_underway, ->(timestamp = Time.zone.today) {
     current(timestamp)
-      .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
       .where(current_regular_phase_exists(timestamp).or(consider_underway_setting_exists))
@@ -301,7 +300,6 @@ class Projekt < ApplicationRecord
 
   scope :index_order_ongoing, ->(timestamp = Time.zone.today) {
     current(timestamp)
-      .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
       .where(Arel::Nodes::Not.new(current_regular_phase_exists(timestamp)))
@@ -310,7 +308,6 @@ class Projekt < ApplicationRecord
 
   scope :index_order_upcoming, ->(timestamp = Time.zone.today) {
     activated
-      .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
       .where("total_duration_start > ?", timestamp)
@@ -319,15 +316,13 @@ class Projekt < ApplicationRecord
 
   scope :index_order_expired, ->(timestamp = Time.zone.today) {
     expired
-      .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
       .order("projekts.created_at DESC")
   }
 
   scope :index_order_individual_list, -> {
-    with_published_custom_page
-      .show_in_overview_page
+    show_in_overview_page
       .in_individual_list
       .order("projekts.created_at DESC")
   }
@@ -486,11 +481,6 @@ class Projekt < ApplicationRecord
     individual_list
   }
 
-  scope :with_published_custom_page, -> {
-    joins(:page)
-      .where(site_customization_pages: { status: "published" })
-  }
-
   def self.overview_page
     find_by(
       special_name: "projekt_overview_page",
@@ -562,8 +552,7 @@ class Projekt < ApplicationRecord
   def meets_publish_criteria?
     !special? &&
       activated? &&
-      hard_individual_group_values.none? &&
-      page&.published?
+      hard_individual_group_values.none?
   end
 
   # Geo-restricted projekts are left out: most subscribers live outside the
@@ -871,7 +860,6 @@ class Projekt < ApplicationRecord
 
   def acceptable_to_be_exported_for_global_overview?
     !special &&
-      page&.published? &&
       activated? &&
       feature?("general.show_in_overview_page")
   end

@@ -32,10 +32,26 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   validate :single_parent
   acts_as_list scope: [:projekt_id, :newsletter_id]
 
-  default_scope { where("ai_generation_data IS NULL OR ai_generation_data->>'status' = 'completed'") }
+  # Add-mode rows are placeholders that never existed as content, so they stay
+  # hidden until the generation completes. Every other mode operates on a live
+  # block: hiding those would make an existing block vanish from the page for
+  # the duration of the generation, and stay gone if it fails.
+  default_scope {
+    where(
+      "ai_generation_data IS NULL " \
+      "OR ai_generation_data->>'status' = 'completed' " \
+      "OR ai_generation_data->>'mode' <> 'add'"
+    )
+  }
 
   scope :with_ai_in_progress, -> {
     unscoped.where("ai_generation_data->>'status' IN (?)", %w[pending processing cancelled failed])
+  }
+
+  scope :failed_ai_placeholders, -> {
+    unscoped.where(
+      "ai_generation_data->>'mode' = 'add' AND ai_generation_data->>'status' = 'failed'"
+    )
   }
 
   before_validation :repair_html_body, :sanitize_body
@@ -60,6 +76,12 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   def mark_ai_generation_status!(status, extra = {})
     new_data = (ai_generation_data || {}).merge("status" => status).merge(extra.stringify_keys)
     update_column(:ai_generation_data, new_data)
+  end
+
+  # Only the step key is stored. The status endpoint translates it, because it
+  # runs in the editor's request locale while the job does not.
+  def mark_ai_generation_step!(step)
+    mark_ai_generation_status!(ai_generation_status || "processing", step: step)
   end
 
   # Blocks are authored in a single locale. Rows for the other locales are

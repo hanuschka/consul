@@ -1,0 +1,12 @@
+// Points Ace at the worker scripts on our own host. Without this Ace derives
+// the URL from ace.config.basePath — the directory the executing pack was
+// served from — and asks for /assets/worker-<mode>.js, which does not exist
+// because Sprockets fingerprints the filename.
+//
+// Requiring worker-html into the pack is not an alternative: the file guards
+// on `window.document` and returns immediately outside a Worker context, so
+// Ace can only reach it over the network.
+
+<% { "ace/mode/html_worker" => "ace-builds/src-noconflict/worker-html.js" }.each do |module_name, asset| %>
+ace.config.setModuleUrl("<%= module_name %>", "<%= asset_path(asset) %>");
+<% end %>

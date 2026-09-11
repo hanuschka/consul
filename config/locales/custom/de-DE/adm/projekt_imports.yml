@@ -60,6 +60,7 @@ de:
           files_summary: "%{first} +%{count}"
           created_at: "Erstellt: %{time}"
           finished_at: "Beendet: %{time}"
+          owner: "Von: %{name}"
           projekt_created: "Projekt erstellt: %{title}"
           image_failed_note: "Titelbild konnte nicht generiert werden"
           filters:
@@ -68,6 +69,8 @@ de:
             in_progress: "Laufend"
             failed: "Fehlgeschlagen"
             completed: "Abgeschlossen"
+            mine: "Nur meine"
+            owner_aria: "Nach Ersteller filtern"
           delete_dialog:
             title: "Import löschen?"
             message: "Dieser Import wird dauerhaft gelöscht:"
@@ -121,9 +124,12 @@ de:
             import_overlay_title: "Import läuft…"
             import_overlay_message: "Das Projekt wird angelegt. Dies kann einen Moment dauern."
             progress:
-              resolving_content_blocks: "Inhaltsblöcke werden erstellt…"
+              queued: "Import wird gestartet…"
               creating_projekt: "Projekt, Phasen und Ressourcen werden angelegt…"
+              resolving_content_blocks: "Inhaltsblöcke werden erstellt…"
+              creating_content_blocks: "Inhaltsblöcke werden gespeichert…"
               generating_image: "Titelbild wird generiert…"
+              copying_projekt: "Projekt wird kopiert…"
             errors:
               extract_failed: "Eine oder mehrere angehängte Dateien konnten nicht gelesen werden."
               import_failed: "Der Import konnte nicht abgeschlossen werden."
@@ -208,6 +214,8 @@ de:
           extract_file_failed: "Die Datei %{filename} konnte nicht gelesen werden: %{message}"
           unknown_title_image_mode: "Unbekannte Titelbild-Option."
           unknown_title_image: "Dieses Bild steht für diesen Import nicht mehr zur Verfügung."
+          proposal_not_found: "Dieser Vorschlag wurde bereits übernommen oder verworfen."
+          proposal_stale: "Die Importdaten haben sich seit diesem Vorschlag geändert, er wurde daher nicht übernommen. Bitten Sie den Assistenten erneut um die Änderung."
           title_image_ineligible: "Dieses Bild kann nicht als Titelbild verwendet werden."
         title_image:
           intro:
@@ -244,7 +252,24 @@ de:
           add_phase: "Phase %{index} hinzugefügt (%{type})"
           remove_phase: "Phase entfernt (%{type})"
           replace_content_blocks: "Inhaltsblöcke ersetzt (jetzt %{count})"
+          proposed: "vorgeschlagen: %{edit} – wartet darauf, dass die Administration den Vorschlag übernimmt oder verwirft"
+          discarded: "die Administration hat den Vorschlag verworfen: %{edit}"
+        proposals:
+          list_label: "Vorgeschlagene Änderungen"
+          remove_phase: "Phase „%{name}\" entfernen"
+          replace_content_blocks:
+            one: "Inhaltsblöcke durch 1 neuen Block ersetzen"
+            other: "Inhaltsblöcke durch %{count} neue Blöcke ersetzen"
+          apply: "Übernehmen"
+          discard: "Verwerfen"
+          state:
+            pending: "Wartet auf Ihre Entscheidung – bisher wurde nichts geändert."
+            applied: "Übernommen"
+            discarded: "Verworfen"
         warnings:
+          proposals_pending: "Der Assistent hat im Chat Änderungen vorgeschlagen, die Sie weder übernommen noch verworfen haben. Das Projekt wurde ohne sie angelegt."
+          hidden_content_removed: "Die Quelle enthielt für Leser unsichtbaren Text (versteckte Elemente oder unsichtbare Zeichen). Er wurde von der Analyse ausgeschlossen. Seiten, die Text vor Lesern verbergen, tun dies manchmal, um KI-Werkzeuge zu beeinflussen – bitte prüfen Sie die extrahierten Daten besonders sorgfältig."
+          external_links: "Die importierten Inhalte verlinken auf externe Seiten: %{hosts}. Bitte prüfen Sie diese Links, bevor Sie das Projekt aktivieren."
           unknown_categories: "Diese Kategorien existieren auf dieser Plattform nicht und wurden nicht übernommen: %{categories}. Legen Sie sie bei Bedarf an und ordnen Sie sie dem Projekt manuell zu."
           unknown_sdg_codes: "Diese SDG-Codes existieren auf dieser Plattform nicht und wurden nicht übernommen: %{codes}."
           voting_phase_without_questions: "Die Abstimmungsphase „%{phase}\" wurde ohne Fragen angelegt, da aus dem Dokument keine Fragen abgeleitet werden konnten."

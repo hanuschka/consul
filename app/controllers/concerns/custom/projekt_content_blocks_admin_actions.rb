@@ -78,30 +78,38 @@ module ProjektContentBlocksAdminActions
     end
   end
 
+  # Running the edit inline held the request open for the whole generation and
+  # hit the proxy's 60s gateway timeout. It is dispatched like generate_with_ai
+  # and polled through ai_generation_status instead.
   def change_with_ai
     authorize!(:update, @content_block.projekt)
 
     return unless check_ai_model_configured
 
-    use_full_projekt_context = ActiveModel::Type::Boolean.new.cast(params[:use_full_projekt_context])
-    allow_text_modification = ActiveModel::Type::Boolean.new.cast(params[:allow_text_modification])
-
-    new_content_block_body =
-      Ai::EditContentBlock.call(
-        params[:instructions],
-        params[:content_block_html],
-        @content_block.projekt&.page&.title,
-        @content_block.projekt&.page&.subtitle,
+    result =
+      ::SiteCustomization::ContentBlocks::DispatchChangeWithAi.call(
+        content_block: @content_block,
+        instructions: params[:instructions],
+        content_block_html: params[:content_block_html],
+        title: @content_block.projekt&.page&.title,
+        subtitle: @content_block.projekt&.page&.subtitle,
         projekt: @content_block.projekt,
-        use_full_projekt_context: use_full_projekt_context,
-        allow_text_modification: allow_text_modification
+        use_full_projekt_context: params[:use_full_projekt_context],
+        allow_text_modification: params[:allow_text_modification]
       )
 
-    if new_content_block_body.present?
-      render json: { content_block_html: new_content_block_body, status: { message: I18n.t("custom.projekt_content_blocks.change_with_ai.success") }}
-    else
-      render json: { status: { message: I18n.t("ai.errors.generation_failed") }}
+    if !result.success?
+      return render(
+        json: { error: { message: result.error.to_s } },
+        status: :unprocessable_entity
+      )
     end
+
+    render json: {
+      content_block_id: result.content_block_id,
+      status_url: ai_generation_status_url(result.content_block_id),
+      cancel_url: cancel_ai_generation_url(result.content_block_id)
+    }
   end
 
   def ai_generate_with_file
@@ -217,25 +225,9 @@ module ProjektContentBlocksAdminActions
   def ai_generation_status
     authorize!(:update, @content_block.projekt)
 
-    data = @content_block.ai_generation_data || {}
-    status = data["status"] || "completed"
-
-    payload = {
-      status: status,
-      content_block_id: @content_block.id,
-      position: @content_block.position,
-      mode: data["mode"]
-    }
-
-    if status == "completed"
-      payload[:body_html] = @content_block.body.to_s
-    end
-
-    if status == "failed"
-      payload[:error] = data["error"]
-    end
-
-    render json: payload
+    render json: ::SiteCustomization::ContentBlocks::AiGenerationStatusPayload.call(
+      content_block: @content_block
+    )
   end
 
   def cancel_ai_generation

@@ -1,0 +1,109 @@
+<!-- BlockID: C10 Image Slider mit Thumbnails, GLightbox, Image-Edit + Studio-List-Edit -->
+<!-- Editieren: Admin bearbeitet Hauptbilder (ImageEdit), Thumbnails spiegeln die src automatisch. -->
+<!-- Paired-List: Haupt-ul ist Primary, Thumb-ul ist Follower — Hinzufuegen/Loeschen/Sortieren der Hauptbilder mirrort automatisch auf die Thumbs. -->
+<!-- Mehrere Instanzen pro Seite: data-gallery wird per JS (App.SliderThumbsSync) pro Instanz eindeutig vergeben. -->
+
+<div class="js-slider-thumbs-sync" style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 14px 14px 18px 14px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+
+  <!-- Primary list: Hauptslides (fuehrt Add/Delete/Reorder; Add-Button aussserhalb des scrollbaren Bereichs) -->
+  <ul class="js-slider-thumbs-sync-main" data-paired-list=".js-slider-thumbs-sync-thumbs" data-list-edit-add-outside style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; list-style: none; padding: 0 0 12px 0; margin: 0; border-radius: 12px; background: #1a202c;">
+
+    <!-- Slide 1 -->
+    <li class="js-slider-thumbs-sync-slide" style="flex: 0 0 100%; scroll-snap-align: start; position: relative; list-style: none;">
+      <a class="glightbox" href="https://placehold.co/1200x700/1a365d/ffffff?text=Standort+1" data-glightbox="type: image" data-title="Luftbild des Planungsgebiets" data-description="Uebersicht ueber das gesamte Projektareal aus der Vogelperspektive." target="_blank" style="display: block; overflow: hidden; position: relative; min-height: 320px; text-decoration: none; color: inherit;">
+        <img referrerpolicy="no-referer" src="https://placehold.co/1000x400/1a365d/ffffff?text=Standort+1" alt="Luftbild des Planungsgebiets" class="js-slider-thumbs-sync-main-img" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.6) 100%); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 26px;">
+          <h4 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 4px 0;">Luftbild des Planungsgebiets</h4>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Uebersicht ueber das gesamte Projektareal aus der Vogelperspektive.</p>
+        </div>
+        <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1; pointer-events: none;" aria-hidden="true"><i class="fas fa-magnifying-glass-plus"></i></span>
+      </a>
+    </li>
+
+    <!-- Slide 2 -->
+    <li class="js-slider-thumbs-sync-slide" style="flex: 0 0 100%; scroll-snap-align: start; position: relative; list-style: none;">
+      <a class="glightbox" href="https://placehold.co/1200x700/0d5c53/ffffff?text=Standort+2" data-glightbox="type: image" data-title="Bestandsaufnahme Kreuzung" data-description="Aktuelle Situation an der zentralen Kreuzung im Planungsgebiet." target="_blank" style="display: block; overflow: hidden; position: relative; min-height: 320px; text-decoration: none; color: inherit;">
+        <img referrerpolicy="no-referer" src="https://placehold.co/1000x400/0d5c53/ffffff?text=Standort+2" alt="Bestandsaufnahme Kreuzung" class="js-slider-thumbs-sync-main-img" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.6) 100%); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 26px;">
+          <h4 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 4px 0;">Bestandsaufnahme Kreuzung</h4>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Aktuelle Situation an der zentralen Kreuzung im Planungsgebiet.</p>
+        </div>
+        <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1; pointer-events: none;" aria-hidden="true"><i class="fas fa-magnifying-glass-plus"></i></span>
+      </a>
+    </li>
+
+    <!-- Slide 3 -->
+    <li class="js-slider-thumbs-sync-slide" style="flex: 0 0 100%; scroll-snap-align: start; position: relative; list-style: none;">
+      <a class="glightbox" href="https://placehold.co/1200x700/1a5c3a/ffffff?text=Standort+3" data-glightbox="type: image" data-title="Gruenflaeche am Stadtpark" data-description="Die bestehende Gruenflaeche soll erweitert und aufgewertet werden." target="_blank" style="display: block; overflow: hidden; position: relative; min-height: 320px; text-decoration: none; color: inherit;">
+        <img referrerpolicy="no-referer" src="https://placehold.co/1000x400/1a5c3a/ffffff?text=Standort+3" alt="Gruenflaeche am Stadtpark" class="js-slider-thumbs-sync-main-img" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.6) 100%); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 26px;">
+          <h4 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 4px 0;">Gruenflaeche am Stadtpark</h4>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Die bestehende Gruenflaeche soll erweitert und aufgewertet werden.</p>
+        </div>
+        <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1; pointer-events: none;" aria-hidden="true"><i class="fas fa-magnifying-glass-plus"></i></span>
+      </a>
+    </li>
+
+    <!-- Slide 4 -->
+    <li class="js-slider-thumbs-sync-slide" style="flex: 0 0 100%; scroll-snap-align: start; position: relative; list-style: none;">
+      <a class="glightbox" href="https://placehold.co/1200x700/6b2137/ffffff?text=Standort+4" data-glightbox="type: image" data-title="Spielplatz Neugestaltung" data-description="Entwurfsskizze fuer den neuen inklusiven Spielbereich." target="_blank" style="display: block; overflow: hidden; position: relative; min-height: 320px; text-decoration: none; color: inherit;">
+        <img referrerpolicy="no-referer" src="https://placehold.co/1000x400/6b2137/ffffff?text=Standort+4" alt="Spielplatz Neugestaltung" class="js-slider-thumbs-sync-main-img" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.6) 100%); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 26px;">
+          <h4 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 4px 0;">Spielplatz Neugestaltung</h4>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Entwurfsskizze fuer den neuen inklusiven Spielbereich.</p>
+        </div>
+        <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1; pointer-events: none;" aria-hidden="true"><i class="fas fa-magnifying-glass-plus"></i></span>
+      </a>
+    </li>
+
+    <!-- Slide 5 -->
+    <li class="js-slider-thumbs-sync-slide" style="flex: 0 0 100%; scroll-snap-align: start; position: relative; list-style: none;">
+      <a class="glightbox" href="https://placehold.co/1200x700/1a3050/ffffff?text=Standort+5" data-glightbox="type: image" data-title="Radweg-Planung" data-description="Geplanter Verlauf des neuen Radschnellwegs durch das Quartier." target="_blank" style="display: block; overflow: hidden; position: relative; min-height: 320px; text-decoration: none; color: inherit;">
+        <img referrerpolicy="no-referer" src="https://placehold.co/1000x400/1a3050/ffffff?text=Standort+5" alt="Radweg-Planung" class="js-slider-thumbs-sync-main-img" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.6) 100%); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 26px;">
+          <h4 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 4px 0;">Radweg-Planung</h4>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Geplanter Verlauf des neuen Radschnellwegs durch das Quartier.</p>
+        </div>
+        <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1; pointer-events: none;" aria-hidden="true"><i class="fas fa-magnifying-glass-plus"></i></span>
+      </a>
+    </li>
+
+  </ul><!-- /main -->
+
+  <!-- Follower list: Thumbnails (strukturell gespiegelt durch ListEdit, src gespiegelt durch SliderThumbsSync) -->
+  <ul class="js-slider-thumbs-sync-thumbs" data-list-edit-follower style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; list-style: none; margin: 12px 0 0 0; padding: 4px 2px;">
+    <li style="flex: 0 0 80px; scroll-snap-align: start; margin-right: 8px; list-style: none;">
+      <a class="js-slider-thumbs-sync-thumb" style="display: block; text-decoration: none; cursor: pointer;">
+        <img referrerpolicy="no-referer" src="https://placehold.co/80x60/1a365d/ffffff?text=1" alt="" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px; display: block; pointer-events: none;">
+      </a>
+    </li>
+    <li style="flex: 0 0 80px; scroll-snap-align: start; margin-right: 8px; list-style: none;">
+      <a class="js-slider-thumbs-sync-thumb" style="display: block; text-decoration: none; cursor: pointer;">
+        <img referrerpolicy="no-referer" src="https://placehold.co/80x60/0d5c53/ffffff?text=2" alt="" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px; display: block; pointer-events: none;">
+      </a>
+    </li>
+    <li style="flex: 0 0 80px; scroll-snap-align: start; margin-right: 8px; list-style: none;">
+      <a class="js-slider-thumbs-sync-thumb" style="display: block; text-decoration: none; cursor: pointer;">
+        <img referrerpolicy="no-referer" src="https://placehold.co/80x60/1a5c3a/ffffff?text=3" alt="" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px; display: block; pointer-events: none;">
+      </a>
+    </li>
+    <li style="flex: 0 0 80px; scroll-snap-align: start; margin-right: 8px; list-style: none;">
+      <a class="js-slider-thumbs-sync-thumb" style="display: block; text-decoration: none; cursor: pointer;">
+        <img referrerpolicy="no-referer" src="https://placehold.co/80x60/6b2137/ffffff?text=4" alt="" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px; display: block; pointer-events: none;">
+      </a>
+    </li>
+    <li style="flex: 0 0 80px; scroll-snap-align: start; margin-right: 8px; list-style: none;">
+      <a class="js-slider-thumbs-sync-thumb" style="display: block; text-decoration: none; cursor: pointer;">
+        <img referrerpolicy="no-referer" src="https://placehold.co/80x60/1a3050/ffffff?text=5" alt="" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px; display: block; pointer-events: none;">
+      </a>
+    </li>
+  </ul>
+
+  <p style="font-size: 13px; color: #9ca3af; text-align: center; margin: 10px 0 0 0; line-height: 1.6;">Klicken Sie auf ein Vorschaubild, um das Foto anzuzeigen</p>
+
+</div>

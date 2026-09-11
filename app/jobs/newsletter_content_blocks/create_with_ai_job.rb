@@ -51,6 +51,6 @@ class NewsletterContentBlocks::CreateWithAiJob < ApplicationJob
   def restore_prior_body(content_block)
     data = content_block.ai_generation_data || {}
 
-    content_block.update_columns(body: data["prior_body"].to_s)
+    content_block.update_without_validation!(body: data["prior_body"].to_s)
   end
 end

@@ -73,6 +73,15 @@ class SiteCustomization::ContentBlock < ApplicationRecord
     %w[pending processing].include?(ai_generation_status)
   end
 
+  # body is a Globalize attribute and lives in the translations table, so a
+  # raw column write on this record targets a column the table does not have.
+  # Assigning and saving routes the value to the translation row instead, while
+  # still skipping the validations update_columns used to skip.
+  def update_without_validation!(attributes)
+    assign_attributes(attributes)
+    save(validate: false)
+  end
+
   def mark_ai_generation_status!(status, extra = {})
     new_data = (ai_generation_data || {}).merge("status" => status).merge(extra.stringify_keys)
     update_column(:ai_generation_data, new_data)

@@ -9,7 +9,6 @@ class SimilarContributions::SelectableProjektsQuery < ApplicationQuery
   def call
     Projekt
       .regular
-      .with_published_custom_page
       .where.not(id: projekt_phase.projekt_id)
       .reorder(created_at: :desc)
   end

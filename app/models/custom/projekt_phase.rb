@@ -508,11 +508,11 @@ class ProjektPhase < ApplicationRecord
   end
 
   # What the similarity check may actually search beyond this phase: a selected
-  # projekt that has since been unpublished or deleted is no longer something
-  # staff should be shown matches from, and dropping it here keeps every caller
-  # -- the find, the badge, the re-check -- from repeating the filter.
+  # projekt that has since been deleted is no longer something staff should be
+  # shown matches from, and dropping it here keeps every caller -- the find,
+  # the badge, the re-check -- from repeating the filter.
   def published_similar_search_projekts
-    similar_search_projekts.with_published_custom_page
+    similar_search_projekts
   end
 
   # Mirrors the footer partials' map gate: proposal/budget phases render their

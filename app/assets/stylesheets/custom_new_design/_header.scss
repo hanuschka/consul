@@ -702,9 +702,9 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     color: $brand;
   }
 
-  // Werthaltigere Top-Nav-Links: eine animierte Akzent-Linie in Markenfarbe
-  // (das horizontale Pendant zum vertikalen Marken-Streifen an Titelkarte,
-  // Suchfeld und CTA) plus weicher Farb-Hover. Rein optisch.
+  // Werthaltigere Top-Nav-Links: eine animierte Akzent-Linie in der Farbe des
+  // Menuepunkts (das horizontale Pendant zum vertikalen Marken-Streifen an
+  // Titelkarte, Suchfeld und CTA) plus weicher Farb-Hover. Rein optisch.
   //
   // WICHTIG: Die Linie liegt auf ::before. Das ::after ist auf genau diesen
   // Links bereits vom Dropdown-Chevron belegt (custom/menu.scss: content
@@ -729,7 +729,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
         bottom: -3px;
         height: 2px;
         border-radius: 2px;
-        background: var(--brand-color);
+        background: currentColor;
         transform: scaleX(0);
         transform-origin: left center;
         transition: transform 220ms ease;

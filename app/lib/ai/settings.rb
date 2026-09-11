@@ -3,7 +3,8 @@ module Ai::Settings
 
   # Cheaper tiers of the same generation, for calls that classify pre-filtered
   # candidates rather than generate prose. Read them through fast_model and
-  # ultrafast_model, never directly: the names exist only on OpenAI itself.
+  # ultrafast_model, never directly: the names exist only on OpenAI itself, as
+  # does DEFAULT_GPT_MODEL read through big_model.
   FAST_MODEL = "gpt-5.6-terra".freeze
   ULTRAFAST_MODEL = "gpt-5.6-luna".freeze
   private_constant :FAST_MODEL, :ULTRAFAST_MODEL
@@ -136,6 +137,14 @@ module Ai::Settings
     Setting["ai.llm_provider"].presence || "openai"
   end
 
+  # The big tier names DEFAULT_GPT_MODEL rather than current_llm_model so the
+  # three tiers stay the three models being compared: an instance that has
+  # moved ai.llm_model onto one of the cheaper ids would otherwise offer the
+  # same model twice.
+  def self.big_model
+    openai_tier_model(DEFAULT_GPT_MODEL)
+  end
+
   def self.fast_model
     openai_tier_model(FAST_MODEL)
   end
@@ -166,7 +175,7 @@ module Ai::Settings
   def self.whatsapp_tier_model(tier)
     case tier
     when WHATSAPP_TIER_BIG
-      current_llm_model
+      big_model
     when WHATSAPP_TIER_ULTRAFAST
       ultrafast_model
     else

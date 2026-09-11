@@ -1,6 +1,6 @@
 App.Studio.ContentBlocks.AiEditMode = {
   initialized: false,
-  activeAjaxRequests: {},
+  activeGenerations: {},
 
   initialize() {
     this.initEventListeners()
@@ -119,10 +119,7 @@ App.Studio.ContentBlocks.AiEditMode = {
   exitAiEditMode(contentBlockWrapper, restoreContent = false) {
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
-    if (this.activeAjaxRequests[contentBlockId]) {
-      this.activeAjaxRequests[contentBlockId].abort();
-      delete this.activeAjaxRequests[contentBlockId];
-    }
+    this.cancelGeneration(contentBlockId);
 
     this.removePopup(contentBlockWrapper);
 
@@ -167,13 +164,9 @@ App.Studio.ContentBlocks.AiEditMode = {
     const allowTextModificationCheckbox = popup.querySelector('.js-ai-allow-text-modification');
     const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
 
-    if (this.activeAjaxRequests[contentBlockId]) {
-      this.activeAjaxRequests[contentBlockId].abort();
-      delete this.activeAjaxRequests[contentBlockId];
-
-      submitButton.disabled = false;
-      this.setButtonState(submitButton, 'submit');
-      instructionsTextarea.disabled = false;
+    if (this.activeGenerations[contentBlockId]) {
+      this.cancelGeneration(contentBlockId);
+      this.finishGeneration(contentBlockId, contentBlockWrapper, popup);
       return;
     }
 
@@ -186,48 +179,118 @@ App.Studio.ContentBlocks.AiEditMode = {
     const contentBlock = App.Studio.ContentBlocks.DomHelpers.getContentBlock(contentBlockWrapper);
 
     this.setLoadingState(contentBlockWrapper, popup, true);
+    this.activeGenerations[contentBlockId] = { poller: null, cancelUrl: null };
 
     const aiUrl = contentBlockWrapper.dataset.aiUrl
       || `/${App.routeNamespace}/projekt_content_blocks/${contentBlockId}/change_with_ai`;
 
-    const ajaxRequest = window.App.Ajax.request({
-      url: aiUrl,
-      type: "PATCH",
-      dataType: "json",
-      data: {
-        instructions: instructions,
-        content_block_html: App.Studio.utils.resetMapEmbeds(contentBlock.innerHTML),
-        use_full_projekt_context: useFullProjektContext,
-        allow_text_modification: allowTextModification
-      }
-    });
-
-    this.activeAjaxRequests[contentBlockId] = ajaxRequest;
+    window.App.Ajax
+      .request({
+        url: aiUrl,
+        type: "PATCH",
+        dataType: "json",
+        data: {
+          instructions: instructions,
+          content_block_html: App.Studio.utils.resetMapEmbeds(contentBlock.innerHTML),
+          use_full_projekt_context: useFullProjektContext,
+          allow_text_modification: allowTextModification
+        }
+      })
+      .then((data) => this.startGenerationPolling(data, contentBlockWrapper, popup, contentBlock))
+      .catch((response) => {
+        this.handleErrorResponse(response);
+        this.finishGeneration(contentBlockId, contentBlockWrapper, popup);
+      });
 
     setTimeout(() => {
-      if (this.activeAjaxRequests[contentBlockId] === ajaxRequest) {
+      if (this.activeGenerations[contentBlockId]) {
         submitButton.disabled = false;
         this.setButtonState(submitButton, 'cancel');
         instructionsTextarea.disabled = true;
       }
     }, 550);
+  },
 
-    ajaxRequest
-    .then((response) => {
-      this.handleSuccessResponse(response, contentBlock);
-      instructionsTextarea.value = ""
-    })
-    .catch((response) => {
-      if (response.statusText !== 'abort') {
-        this.handleErrorResponse(response);
+  // The edit runs as a background job now, so the request only hands back the
+  // polling URLs; the generated HTML arrives through the status endpoint.
+  startGenerationPolling(data, contentBlockWrapper, popup, contentBlock) {
+    const contentBlockId = contentBlockWrapper.dataset.contentBlockId;
+    const generation = this.activeGenerations[contentBlockId];
+
+    if (!generation) return
+
+    if (data.error) {
+      this.showErrorMessage(data.error.message || 'Fehler beim Aktualisieren des Inhaltsblocks');
+      this.finishGeneration(contentBlockId, contentBlockWrapper, popup);
+      return
+    }
+
+    generation.cancelUrl = data.cancel_url;
+    generation.poller = App.Studio.ContentBlocks.AiGenerationPoller.start(data.status_url, {
+      onProgress: (stepLabel) => this.showStepLabel(popup, stepLabel),
+      onCompleted: (response) => {
+        this.handleSuccessResponse(response, contentBlock);
+        this.finishGeneration(contentBlockId, contentBlockWrapper, popup);
+        this.clearInstructions(popup);
+      },
+      onCancelled: () => this.finishGeneration(contentBlockId, contentBlockWrapper, popup),
+      onError: (message) => {
+        this.showErrorMessage(message);
+        this.finishGeneration(contentBlockId, contentBlockWrapper, popup);
       }
-    })
-    .always(() => {
-      delete this.activeAjaxRequests[contentBlockId];
-      this.setLoadingState(contentBlockWrapper, popup, false);
-
-      instructionsTextarea.disabled = false
     });
+  },
+
+  cancelGeneration(contentBlockId) {
+    const generation = this.activeGenerations[contentBlockId];
+
+    if (!generation) return
+
+    if (generation.poller) {
+      generation.poller.stop();
+    }
+
+    if (generation.cancelUrl) {
+      window.App.Ajax
+        .request({
+          url: generation.cancelUrl,
+          method: "DELETE",
+          dataType: "json"
+        })
+        .catch(() => {});
+    }
+
+    delete this.activeGenerations[contentBlockId];
+  },
+
+  finishGeneration(contentBlockId, contentBlockWrapper, popup) {
+    const generation = this.activeGenerations[contentBlockId];
+
+    if (generation && generation.poller) {
+      generation.poller.stop();
+    }
+
+    delete this.activeGenerations[contentBlockId];
+
+    if (!popup) return
+
+    const submitButton = popup.querySelector('.js-content-block-ai-edit--submit-prompt');
+    const instructionsTextarea = popup.querySelector('.js-ai-instructions-textarea');
+
+    submitButton.disabled = false;
+    this.setButtonState(submitButton, 'submit');
+    instructionsTextarea.disabled = false;
+
+    this.showStepLabel(popup, "");
+    this.setLoadingState(contentBlockWrapper, popup, false);
+  },
+
+  clearInstructions(popup) {
+    popup.querySelector('.js-ai-instructions-textarea').value = "";
+  },
+
+  showStepLabel(popup, stepLabel) {
+    popup.querySelector('.js-ai-edit-step').textContent = stepLabel;
   },
 
   handleSuccessResponse(response, contentBlock) {

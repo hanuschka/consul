@@ -6,6 +6,7 @@ class AgeRange < ApplicationRecord
 
   translates :name, touch: true
   include Globalizable
+  include MachineTranslatable
 
   has_many :age_range_projekt_phases, dependent: :destroy
   has_many :projekt_phases, through: :age_range_projekt_phases

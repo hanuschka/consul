@@ -71,8 +71,13 @@ en:
         submit_shortcut_hint_html: "Tip: press %{shortcut} to submit"
         cancel: Cancel generation
         processing_message: Content block is being created...
-        fallback_note: "Templates from demokratie.today are unavailable. AI will use only local template names as inspiration."
+        fallback_note: "The template list could not be loaded. The AI will build the block without a template reference."
         cancel_acknowledged: Generation is being cancelled
+        steps:
+          queued: Preparing the request...
+          templates: Loading templates...
+          generating: The AI is writing the content...
+          finishing: Checking and inserting the content...
         errors:
           no_prompt: Please enter a prompt
           generation_failed: Error generating content block
@@ -82,7 +87,6 @@ en:
     projekt:
       content_block_templates_selector:
         loading: "Loading content block templates..."
-        fallback_note: "demokratie.today templates cannot be loaded. Local default templates are being displayed."
         load_error: "Content block templates could not be loaded."
         retry: "Try again"
         blank_create_button:
@@ -96,11 +100,6 @@ en:
           hidden: Hidden
           hidden_until: "Hidden until %{date}"
         tabs:
-          basic_content: Basic content
-          status_and_notes: Status & notes
-          teasers_and_promotions: Teasers and promotions
-          media_and_resources: Media & resources
-          messages: Messages
           internal_content_blocks: Internal content blocks
           own_content_blocks: Own content blocks
         saved_content_blocks:

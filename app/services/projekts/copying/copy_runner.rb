@@ -17,7 +17,7 @@ class Projekts::Copying::CopyRunner < ApplicationService
       rewire_references
     end
 
-    ServiceResult.success(projekt: copy)
+    ServiceResult.success(projekt: copy, skipped_blobs: record_copier.blob_copier.skipped_blobs)
   rescue StandardError => e
     Rails.logger.error(
       "[Projekts::Copying::CopyRunner] failed: #{e.message}\n#{e.backtrace.first(10).join("\n")}"
@@ -27,7 +27,7 @@ class Projekts::Copying::CopyRunner < ApplicationService
       Sentry.capture_exception(e, extra: { copy_projekt_id: copy.id })
     end
 
-    ServiceResult.failure(error: e.message)
+    ServiceResult.failure(error: e.message, error_details: { class: e.class.name })
   end
 
   private

@@ -52,6 +52,7 @@
       App.NotifyReviewers.initialize();
       App.LoaderSpinner.initialize();
       App.AccountUsernameEditComponent.initialize();
+      App.MitmachboxSurvey.initialize();
     }
   };
 }).call(this);

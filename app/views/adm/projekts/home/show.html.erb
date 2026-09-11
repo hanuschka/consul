@@ -11,20 +11,19 @@
         <p class="adm-dashboard__intro"><%= @intro_text %></p>
       <% end %>
 
-      <% if @quick_links.any? %>
+      <% if @quick_links.any? || @can_create_projekt %>
         <div class="adm-dashboard__section-actions">
           <% @quick_links.each do |link| %>
-            <% if link[:ai_gated] %>
-              <%= render Shared::AiFeatureTooltipComponent.new(feature_title: link[:label], feature_text: link[:description]) do %>
-                <%= kern_link_button link[:path],
-                      text: link[:label],
-                      style: link[:primary] ? :primary : :secondary %>
-              <% end %>
-            <% else %>
-              <%= kern_link_button link[:path],
-                    text: link[:label],
-                    style: link[:primary] ? :primary : :secondary %>
-            <% end %>
+            <%= kern_link_button link[:path],
+                  text: link[:label],
+                  style: link[:primary] ? :primary : :secondary %>
+          <% end %>
+
+          <% if @can_create_projekt %>
+            <%= render Adm::Projekts::Imports::SourcePickerComponent.new(
+                  label: @import_picker_label,
+                  ai_available: @ai_available
+                ) %>
           <% end %>
         </div>
       <% end %>

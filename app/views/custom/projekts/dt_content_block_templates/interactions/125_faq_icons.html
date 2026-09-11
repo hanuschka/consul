@@ -1,0 +1,58 @@
+<!-- BlockID: F07 -->
+<!-- K2: FAQ Accordion – Mit Icons vor Fragen + border-left Akzent je Item -->
+<!-- VORAUSSETZUNG: Foundation 6 JS muss auf der Seite geladen sein (in Consul enthalten) -->
+<!-- Geeignet für: Auffälligeres FAQ mit visueller Führung -->
+
+<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+  <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; letter-spacing: -0.3px; margin: 0 0 8px 0;"><span style="display: inline-block; width: 8px; height: 8px; background: var(--brand-color, #1779ba); border-radius: 50%; margin-right: 10px; vertical-align: middle;"></span>Ihre Fragen – unsere Antworten</h3>
+  <p style="font-size: 14px; color: #6b7280; margin-bottom: 20px; margin-top: 0; padding-left: 16px;">Alles, was Sie zur Beteiligung wissen müssen:</p>
+
+  <ul class="accordion" data-accordion data-allow-all-closed="true" style="display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none;">
+
+    <li class="accordion-item" data-accordion-item style="border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06); border-right: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+      <a href="#" class="accordion-title" style="display: flex; flex-wrap: wrap; align-items: center; padding: 16px 20px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
+        <div style="width: 30px; height: 30px; border-radius: 4px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 14px;">?</div>
+        Wer darf abstimmen?
+      </a>
+      <div class="accordion-content" data-tab-content style="padding: 0 20px 16px 64px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
+        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Alle registrierten Nutzer:innen der Plattform, die die Teilnahmevoraussetzungen erfüllen (Wohnsitz oder Bezug zur Stadt, Mindestalter 16 Jahre).</p>
+      </div>
+    </li>
+
+    <li class="accordion-item" data-accordion-item style="border-left: 4px solid #10b981; border-radius: 12px; overflow: hidden; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06); border-right: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+      <a href="#" class="accordion-title" style="display: flex; flex-wrap: wrap; align-items: center; padding: 16px 20px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
+        <div style="width: 30px; height: 30px; border-radius: 4px; background: #10b981; color: #ffffff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 14px;">&#10003;</div>
+        Wie werden meine Daten geschützt?
+      </a>
+      <div class="accordion-content" data-tab-content style="padding: 0 20px 16px 64px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
+        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Die Plattform speichert Ihre Daten verschlüsselt auf deutschen Servern. Beiträge erscheinen nur mit Ihrem gewählten Nickname – nie mit echtem Namen, sofern Sie das nicht wünschen.</p>
+      </div>
+    </li>
+
+    <li class="accordion-item" data-accordion-item style="border-left: 4px solid #f97316; border-radius: 12px; overflow: hidden; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06); border-right: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+      <a href="#" class="accordion-title" style="display: flex; flex-wrap: wrap; align-items: center; padding: 16px 20px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
+        <div style="width: 30px; height: 30px; border-radius: 4px; background: #f97316; color: #ffffff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 14px;">i</div>
+        Welche Informationen brauche ich zur Einreichung?
+      </a>
+      <div class="accordion-content" data-tab-content style="padding: 0 20px 16px 64px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
+        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Nur einen Titel (bis 80 Zeichen), eine Beschreibung (bis 500 Zeichen) und optional eine Ortsangabe. Mehr ist nicht erforderlich.</p>
+        <ul style="display: flex; flex-direction: column; gap: 4px; margin: 10px 0 0 0; padding-left: 18px; font-size: 13px; color: #6b7280; line-height: 1.6;">
+          <li>Titel: z.B. "Mehr Sitzbänke im Stadtpark"</li>
+          <li>Beschreibung: Was, warum, für wen?</li>
+          <li>Ort: Optional, aber hilfreich</li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="accordion-item" data-accordion-item style="border-left: 4px solid #0891b2; border-radius: 12px; overflow: hidden; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06); border-right: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+      <a href="#" class="accordion-title" style="display: flex; flex-wrap: wrap; align-items: center; padding: 16px 20px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
+        <div style="width: 30px; height: 30px; border-radius: 4px; background: #0891b2; color: #ffffff; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 14px;">&#8594;</div>
+        Wie erfahre ich, was mit meinem Vorschlag passiert ist?
+      </a>
+      <div class="accordion-content" data-tab-content style="padding: 0 20px 16px 64px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
+        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Sie erhalten eine E-Mail-Benachrichtigung, wenn Ihr Beitrag kommentiert oder in den Ergebnisbericht aufgenommen wird. Der Bericht ist ab Oktober 2025 öffentlich zugänglich.</p>
+      </div>
+    </li>
+
+  </ul>
+</div>

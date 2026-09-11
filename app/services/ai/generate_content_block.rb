@@ -33,6 +33,8 @@ class Ai::GenerateContentBlock < ApplicationService
     anchor_template = nil
 
     if @category_hint.present?
+      @content_block&.mark_ai_generation_step!("templates")
+
       dt_templates_by_category = fetch_dt_templates
       filtered_templates = filter_templates_by_category(dt_templates_by_category)
       anchor_template = fetch_anchor_template(dt_templates_by_category)
@@ -44,12 +46,14 @@ class Ai::GenerateContentBlock < ApplicationService
       tool = Ai::Tools::FetchContentBlockTemplates.new(
         templates_by_category: filtered_templates
       )
-      chat.with_tool(tool)
+      Ai::RubyLlmFactory.attach_tools(chat, tool)
     end
 
     instructions = build_system_instructions(filtered_templates, anchor_template)
 
     raise_if_cancelled!
+
+    @content_block&.mark_ai_generation_step!("generating")
 
     response =
       chat
@@ -57,6 +61,8 @@ class Ai::GenerateContentBlock < ApplicationService
         .ask(@prompt)
 
     raise_if_cancelled!
+
+    @content_block&.mark_ai_generation_step!("finishing")
 
     body_html = response.content&.dig("html")
 
@@ -128,14 +134,7 @@ class Ai::GenerateContentBlock < ApplicationService
   end
 
   def fetch_dt_templates
-    response = DtApi::Client.new(use_cache: true).content_block_templates.all(section: @dt_template_section)
-
-    return [] if !response.success?
-
-    response.parsed_response.dig("content_block_templates_by_category") || []
-  rescue => e
-    Rails.logger.error("Failed to fetch DT templates: #{e.message}")
-    []
+    ContentBlockTemplates::Catalogue.call(section: @dt_template_section)
   end
 
   def filter_templates_by_category(dt_templates_by_category)
@@ -266,39 +265,12 @@ class Ai::GenerateContentBlock < ApplicationService
           end
         end
       end
-    else
-      local_templates = fetch_local_templates_metadata
-      lines << ""
-      lines << "Local templates (names only — full HTML unavailable):"
-      local_templates.each do |category_name, template_names|
-        lines << "  Category: #{category_name}"
-        template_names.each do |name|
-          lines << "    - #{name}"
-        end
-      end
     end
 
     lines.join("\n")
   rescue => e
     Rails.logger.error("Failed to build templates reference: #{e.message}")
     ""
-  end
-
-  def fetch_local_templates_metadata
-    if @newsletter.present?
-      return {
-        "Email Defaults" => Newsletters::ContentBlockTemplatesSelectorComponent::EMAIL_TEMPLATE_NAMES
-      }
-    end
-
-    selector = Projekts::ContentBlockTemplatesSelectorComponent.new
-    {
-      "Basic Content" => selector.basic_content_templates,
-      "Status and Notes" => selector.status_and_notes_templates,
-      "Teasers and Promotions" => selector.teasers_and_promotions,
-      "Media and Resources" => selector.media_and_resources_templates,
-      "Messages" => selector.messages_content_block_templates
-    }
   end
 
   def fetch_base_prompt

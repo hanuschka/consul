@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_27_150000) do
+ActiveRecord::Schema.define(version: 2026_09_10_172943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -557,6 +557,8 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.datetime "published_at"
     t.bigint "masterportal_pin_id"
     t.boolean "generated_image", default: false, null: false
+    t.jsonb "similar_contributions_matches"
+    t.string "similar_contributions_check_status"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
@@ -1186,11 +1188,21 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.index ["formular_id"], name: "index_formular_answers_on_formular_id"
   end
 
+  create_table "formular_field_translations", force: :cascade do |t|
+    t.integer "formular_field_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.text "description"
+    t.index ["formular_field_id", "locale"], name: "index_formular_field_translations_on_field_id_and_locale", unique: true
+    t.index ["formular_field_id"], name: "index_formular_field_translations_on_formular_field_id"
+    t.index ["locale"], name: "index_formular_field_translations_on_locale"
+  end
+
   create_table "formular_fields", force: :cascade do |t|
     t.integer "given_order", default: 1
     t.boolean "required", default: false, null: false
-    t.string "name"
-    t.string "description"
     t.string "key"
     t.string "kind"
     t.jsonb "options", default: {}, null: false
@@ -1200,7 +1212,6 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.boolean "follow_up", default: false
     t.index ["formular_id"], name: "index_formular_fields_on_formular_id"
     t.index ["key", "formular_id"], name: "index_formular_fields_on_key_and_formular_id", unique: true
-    t.index ["name", "formular_id"], name: "index_formular_fields_on_name_and_formular_id", unique: true
   end
 
   create_table "formular_follow_up_letter_recipients", force: :cascade do |t|
@@ -1270,12 +1281,14 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "value"
+    t.index ["i18n_content_id", "locale"], name: "index_i18n_content_translations_on_content_and_locale", unique: true
     t.index ["i18n_content_id"], name: "index_i18n_content_translations_on_i18n_content_id"
     t.index ["locale"], name: "index_i18n_content_translations_on_locale"
   end
 
   create_table "i18n_contents", id: :serial, force: :cascade do |t|
     t.string "key"
+    t.index ["key"], name: "index_i18n_contents_on_key", unique: true
   end
 
   create_table "idea_categories", force: :cascade do |t|
@@ -1842,6 +1855,17 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.index ["status_id"], name: "index_milestones_on_status_id"
   end
 
+  create_table "mitmachbox_participations", force: :cascade do |t|
+    t.bigint "projekt_phase_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "survey_version_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_phase_id", "user_id", "survey_version_id"], name: "index_mitmachbox_participations_on_phase_user_version", unique: true
+    t.index ["projekt_phase_id"], name: "index_mitmachbox_participations_on_projekt_phase_id"
+    t.index ["user_id"], name: "index_mitmachbox_participations_on_user_id"
+  end
+
   create_table "ml_summary_comments", force: :cascade do |t|
     t.integer "commentable_id"
     t.string "commentable_type"
@@ -1979,8 +2003,10 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.string "open_answer_text"
     t.integer "answer_weight", default: 1
     t.bigint "officing_manager_id"
+    t.integer "question_answer_id"
     t.index ["author_id"], name: "index_poll_answers_on_author_id"
     t.index ["officing_manager_id"], name: "index_poll_answers_on_officing_manager_id"
+    t.index ["question_answer_id"], name: "index_poll_answers_on_question_answer_id"
     t.index ["question_id", "answer"], name: "index_poll_answers_on_question_id_and_answer"
     t.index ["question_id", "author_id"], name: "index_poll_answers_unique_map_point_answer", unique: true, where: "(answer IS NULL)"
     t.index ["question_id"], name: "index_poll_answers_on_question_id"
@@ -2048,10 +2074,12 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.text "amount_log", default: ""
     t.text "officer_assignment_id_log", default: ""
     t.text "author_id_log", default: ""
+    t.integer "question_answer_id"
     t.index ["answer"], name: "index_poll_partial_results_on_answer"
     t.index ["author_id"], name: "index_poll_partial_results_on_author_id"
     t.index ["booth_assignment_id", "date"], name: "index_poll_partial_results_on_booth_assignment_id_and_date"
     t.index ["origin"], name: "index_poll_partial_results_on_origin"
+    t.index ["question_answer_id"], name: "index_poll_partial_results_on_question_answer_id"
     t.index ["question_id"], name: "index_poll_partial_results_on_question_id"
   end
 
@@ -2320,15 +2348,25 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.index ["user_id"], name: "index_projekt_event_registrations_on_user_id"
   end
 
-  create_table "projekt_events", force: :cascade do |t|
+  create_table "projekt_event_translations", force: :cascade do |t|
+    t.integer "projekt_event_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "title"
+    t.text "description"
     t.string "location"
+    t.index ["locale"], name: "index_projekt_event_translations_on_locale"
+    t.index ["projekt_event_id", "locale"], name: "index_projekt_event_translations_on_event_id_and_locale", unique: true
+    t.index ["projekt_event_id"], name: "index_projekt_event_translations_on_projekt_event_id"
+  end
+
+  create_table "projekt_events", force: :cascade do |t|
     t.datetime "datetime"
     t.string "weblink"
     t.integer "projekt_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "description"
     t.datetime "end_datetime"
     t.string "summary"
     t.bigint "projekt_phase_id"
@@ -2368,8 +2406,13 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.jsonb "source_images", default: [], null: false
     t.string "title_image_mode", default: "document", null: false
     t.integer "title_image_index"
+    t.string "source_kind", default: "file", null: false
+    t.string "source_url"
+    t.jsonb "source_overlay", default: {}, null: false
+    t.string "submit_stage"
     t.index ["created_at"], name: "index_projekt_imports_on_created_at"
     t.index ["projekt_id"], name: "index_projekt_imports_on_projekt_id"
+    t.index ["source_kind"], name: "index_projekt_imports_on_source_kind"
     t.index ["status"], name: "index_projekt_imports_on_status"
     t.index ["user_id"], name: "index_projekt_imports_on_user_id"
   end
@@ -2509,6 +2552,15 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.index ["projekt_phase_id"], name: "index_projekt_phase_settings_on_projekt_phase_id"
   end
 
+  create_table "projekt_phase_similar_search_projekts", force: :cascade do |t|
+    t.integer "projekt_phase_id"
+    t.integer "projekt_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_id"], name: "index_projekt_phase_similar_search_projekts_on_projekt_id"
+    t.index ["projekt_phase_id", "projekt_id"], name: "index_projekt_phase_similar_search_projekts_on_pair", unique: true
+  end
+
   create_table "projekt_phase_stat_questions", force: :cascade do |t|
     t.bigint "projekt_phase_id", null: false
     t.text "question", null: false
@@ -2523,8 +2575,8 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
   create_table "projekt_phase_subscriptions", force: :cascade do |t|
     t.bigint "projekt_phase_id"
     t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["projekt_phase_id"], name: "index_projekt_phase_subscriptions_on_projekt_phase_id"
     t.index ["user_id"], name: "index_projekt_phase_subscriptions_on_user_id"
   end
@@ -2583,6 +2635,8 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.string "masterportal_destroy_status"
     t.text "masterportal_destroy_error"
     t.string "mitmachbox_survey_id"
+    t.string "similar_search_recheck_status"
+    t.datetime "similar_search_recheck_finished_at"
     t.index ["age_range_id"], name: "index_projekt_phases_on_age_range_id"
     t.index ["projekt_id"], name: "index_projekt_phases_on_projekt_id"
     t.index ["registered_address_grouping_restrictions"], name: "index_p_phases_on_ra_grouping_restrictions", using: :gin
@@ -2704,7 +2758,9 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.boolean "active", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["projekt_id", "active"], name: "index_projekt_subscriptions_on_projekt_id_and_active"
     t.index ["projekt_id"], name: "index_projekt_subscriptions_on_projekt_id"
+    t.index ["user_id", "active"], name: "index_projekt_subscriptions_on_user_id_and_active"
     t.index ["user_id"], name: "index_projekt_subscriptions_on_user_id"
   end
 
@@ -2762,6 +2818,7 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.string "whatsapp_broadcast_slug"
     t.string "copy_status"
     t.bigint "copied_from_projekt_id"
+    t.jsonb "copy_data"
     t.index ["activated"], name: "index_projekts_on_activated"
     t.index ["copied_from_projekt_id"], name: "index_projekts_on_copied_from_projekt_id"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
@@ -2847,6 +2904,8 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.text "ai_image_prompt"
     t.bigint "masterportal_pin_id"
     t.boolean "generated_image", default: false, null: false
+    t.jsonb "similar_contributions_matches"
+    t.string "similar_contributions_check_status"
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
@@ -3172,10 +3231,64 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.string "postal_code"
   end
 
+  create_table "similar_contribution_exclusions", force: :cascade do |t|
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.string "excluded_contribution_type", null: false
+    t.bigint "excluded_contribution_id", null: false
+    t.bigint "excluded_by_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id", "excluded_contribution_type", "excluded_contribution_id"], name: "index_similar_contribution_exclusions_on_pair", unique: true
+    t.index ["contribution_type", "contribution_id"], name: "index_similar_contribution_exclusions_on_contribution"
+    t.index ["excluded_by_id"], name: "index_similar_contribution_exclusions_on_excluded_by_id"
+  end
+
+  create_table "similar_contribution_groups", force: :cascade do |t|
+    t.bigint "projekt_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["projekt_id"], name: "index_similar_contribution_groups_on_projekt_id"
+  end
+
+  create_table "similar_contribution_memberships", force: :cascade do |t|
+    t.bigint "similar_contribution_group_id", null: false
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.integer "relevance"
+    t.string "reason"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id"], name: "index_similar_contribution_memberships_on_contribution", unique: true
+    t.index ["similar_contribution_group_id"], name: "index_similar_contribution_memberships_on_group_id"
+  end
+
+  create_table "similar_contribution_references", force: :cascade do |t|
+    t.integer "similar_contribution_group_id"
+    t.string "contribution_type", null: false
+    t.bigint "contribution_id", null: false
+    t.integer "relevance"
+    t.string "reason"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_type", "contribution_id"], name: "index_similar_contribution_references_on_contribution"
+    t.index ["similar_contribution_group_id", "contribution_type", "contribution_id"], name: "index_similar_contribution_references_on_group_and_contribution", unique: true
+  end
+
+  create_table "site_customization_content_block_translations", force: :cascade do |t|
+    t.integer "site_customization_content_block_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "body"
+    t.index ["locale"], name: "index_scb_translations_on_locale"
+    t.index ["site_customization_content_block_id", "locale"], name: "index_scb_translations_on_content_block_id_and_locale", unique: true
+    t.index ["site_customization_content_block_id"], name: "index_scb_translations_on_content_block_id"
+  end
+
   create_table "site_customization_content_blocks", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "locale"
-    t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "key"
@@ -3184,6 +3297,7 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
     t.integer "margin_bottom"
     t.jsonb "ai_generation_data"
     t.integer "newsletter_id"
+    t.index "((ai_generation_data ->> 'mode'::text)), ((ai_generation_data ->> 'status'::text))", name: "index_site_customization_content_blocks_on_ai_mode_and_status"
     t.index "((ai_generation_data ->> 'status'::text))", name: "index_site_customization_content_blocks_on_ai_status"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
     t.index ["newsletter_id"], name: "index_site_customization_content_blocks_on_newsletter_id"
@@ -3815,6 +3929,8 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
   add_foreign_key "masterportal_collections", "projekt_phases"
   add_foreign_key "masterportal_pins", "masterportal_collections"
   add_foreign_key "memos", "users"
+  add_foreign_key "mitmachbox_participations", "projekt_phases"
+  add_foreign_key "mitmachbox_participations", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
   add_foreign_key "navbar_items", "projekts"
@@ -3827,11 +3943,13 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
   add_foreign_key "pending_role_assignments", "users", column: "created_by_id"
   add_foreign_key "poll_answer_map_points", "poll_answers", on_delete: :cascade
   add_foreign_key "poll_answers", "officing_managers"
+  add_foreign_key "poll_answers", "poll_question_answers", column: "question_answer_id", on_delete: :nullify
   add_foreign_key "poll_answers", "poll_questions", column: "question_id"
   add_foreign_key "poll_booth_assignments", "polls"
   add_foreign_key "poll_officer_assignments", "poll_booth_assignments", column: "booth_assignment_id"
   add_foreign_key "poll_partial_results", "poll_booth_assignments", column: "booth_assignment_id"
   add_foreign_key "poll_partial_results", "poll_officer_assignments", column: "officer_assignment_id"
+  add_foreign_key "poll_partial_results", "poll_question_answers", column: "question_answer_id", on_delete: :nullify
   add_foreign_key "poll_partial_results", "poll_questions", column: "question_id"
   add_foreign_key "poll_partial_results", "users", column: "author_id"
   add_foreign_key "poll_question_answer_videos", "poll_question_answers", column: "answer_id"
@@ -3899,6 +4017,9 @@ ActiveRecord::Schema.define(version: 2026_08_27_150000) do
   add_foreign_key "section_activities", "users"
   add_foreign_key "section_contact_people", "users"
   add_foreign_key "sentiments", "projekt_phases"
+  add_foreign_key "similar_contribution_exclusions", "users", column: "excluded_by_id"
+  add_foreign_key "similar_contribution_groups", "projekts"
+  add_foreign_key "similar_contribution_memberships", "similar_contribution_groups"
   add_foreign_key "site_customization_email_templates", "projekt_phases"
   add_foreign_key "site_customization_pages", "projekts"
   add_foreign_key "user_individual_group_values", "individual_group_values"

@@ -1,0 +1,65 @@
+<!-- BlockID: C07 Image Slider – Vollbreite, 1 Slide sichtbar, Caption-Leiste, Dot-Navigation -->
+<!-- GLightbox + Image-Edit + Studio-List-Edit aktiv (Hinzufuegen/Loeschen/Sortieren pro Slide). -->
+<!-- Navigation: Maus-Drag, Touch-Swipe, Dot-Navigation (von JS App.SliderFullwidth injiziert). -->
+<!-- Mehrere Instanzen pro Seite: data-gallery wird per JS pro Instanz eindeutig vergeben. -->
+<!-- ANPASSEN: src-Attribut in den img-Tags und href im umschliessenden a-Tag ersetzen. -->
+
+<div class="js-slider-fullwidth" style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 14px 14px 18px 14px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+
+  <!-- Slider-Wrapper (enthaelt Viewport + JS-injizierte Dot-Navigation) -->
+  <div class="js-slider-fullwidth-wrapper" style="position: relative;">
+
+    <!-- Scroll-Container (als ul fuer Studio-List-Edit; Add-Button aussserhalb des Wrappers, damit er die Dots nicht ueberlappt) -->
+    <ul class="js-slider-fullwidth-viewport" data-list-edit-add-outside data-list-edit-add-outside-of=".js-slider-fullwidth-wrapper" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; list-style: none; padding: 0 0 12px 0; margin: 0;">
+
+      <!-- Slide 1 -->
+      <li class="js-slider-fullwidth-slide" style="flex: 0 0 100%; scroll-snap-align: start; position: relative; list-style: none;">
+        <a class="glightbox" href="https://placehold.co/1600x900/1a365d/ffffff?text=Slide+1" data-glightbox="type: image" data-title="Auftakt-Workshop im Rathaus" data-description="Ueber 80 Buergerinnen und Buerger diskutierten Ideen fuer den Westpark." target="_blank" style="display: block; border-radius: 12px; overflow: hidden; position: relative; min-height: 380px; background: #1a202c; text-decoration: none; color: inherit;">
+          <img referrerpolicy="no-referer" src="https://placehold.co/1200x500/1a365d/ffffff?text=Slide+1" alt="Auftakt-Workshop im Rathaus" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+          <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%); pointer-events: none;"></div>
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 26px 30px;">
+            <div style="background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; padding: 4px 14px; font-size: 13px; color: #ffffff; font-weight: 600; margin-bottom: 12px; letter-spacing: 0.02em;">Phase 1 &nbsp;|&nbsp; Abgeschlossen</div>
+            <h3 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 6px 0; line-height: 1.3;">Auftakt-Workshop im Rathaus</h3>
+            <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Ueber 80 Buergerinnen und Buerger diskutierten Ideen fuer den Westpark.</p>
+          </div>
+          <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1; pointer-events: none;" aria-hidden="true"><i class="fas fa-magnifying-glass-plus"></i></span>
+        </a>
+      </li>
+
+      <!-- Slide 2 -->
+      <li class="js-slider-fullwidth-slide" style="flex: 0 0 100%; scroll-snap-align: start; position: relative; list-style: none;">
+        <a class="glightbox" href="https://placehold.co/1600x900/0d7e6d/ffffff?text=Slide+2" data-glightbox="type: image" data-title="Online-Beteiligung geoeffnet" data-description="Bis 30. September koennen Ideen und Anmerkungen digital eingereicht werden." target="_blank" style="display: block; border-radius: 12px; overflow: hidden; position: relative; min-height: 380px; background: #1a202c; text-decoration: none; color: inherit;">
+          <img referrerpolicy="no-referer" src="https://placehold.co/1200x500/0d7e6d/ffffff?text=Slide+2" alt="Online-Beteiligung geoeffnet" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+          <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%); pointer-events: none;"></div>
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 26px 30px;">
+            <div style="background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; padding: 4px 14px; font-size: 13px; color: #ffffff; font-weight: 600; margin-bottom: 12px; letter-spacing: 0.02em;">Phase 2 &nbsp;|&nbsp; Laufend</div>
+            <h3 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 6px 0; line-height: 1.3;">Online-Beteiligung geoeffnet</h3>
+            <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Bis 30. September koennen Ideen und Anmerkungen digital eingereicht werden.</p>
+          </div>
+          <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1; pointer-events: none;" aria-hidden="true"><i class="fas fa-magnifying-glass-plus"></i></span>
+        </a>
+      </li>
+
+      <!-- Slide 3 -->
+      <li class="js-slider-fullwidth-slide" style="flex: 0 0 100%; scroll-snap-align: start; position: relative; list-style: none;">
+        <a class="glightbox" href="https://placehold.co/1600x900/1a5c3a/ffffff?text=Slide+3" data-glightbox="type: image" data-title="Ergebnispraesentation im Stadtrat" data-description="Im November werden die Ergebnisse oeffentlich vorgestellt und beraten." target="_blank" style="display: block; border-radius: 12px; overflow: hidden; position: relative; min-height: 380px; background: #1a202c; text-decoration: none; color: inherit;">
+          <img referrerpolicy="no-referer" src="https://placehold.co/1200x500/1a5c3a/ffffff?text=Slide+3" alt="Ergebnispraesentation im Stadtrat" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+          <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%); pointer-events: none;"></div>
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 26px 30px;">
+            <div style="background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; display: inline-block; padding: 4px 14px; font-size: 13px; color: #ffffff; font-weight: 600; margin-bottom: 12px; letter-spacing: 0.02em;">Phase 3 &nbsp;|&nbsp; Geplant</div>
+            <h3 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 6px 0; line-height: 1.3;">Ergebnispraesentation im Stadtrat</h3>
+            <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Im November werden die Ergebnisse oeffentlich vorgestellt und beraten.</p>
+          </div>
+          <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1; pointer-events: none;" aria-hidden="true"><i class="fas fa-magnifying-glass-plus"></i></span>
+        </a>
+      </li>
+
+    </ul><!-- /viewport -->
+
+    <!-- Dot-Navigation wird per JS (App.SliderFullwidth) hier eingefuegt -->
+
+  </div><!-- /slider-wrapper -->
+
+  <p style="font-size: 13px; color: #9ca3af; text-align: center; margin: 12px 0 0 0; line-height: 1.6;">Ziehen, wischen oder unten auf einen Punkt klicken, um alle Stationen zu sehen</p>
+
+</div>

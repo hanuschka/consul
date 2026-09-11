@@ -70,8 +70,8 @@ application.register("kern--registered-address-selector", KernRegisteredAddressS
 import TableHeaderController from "./components/table/header_controller"
 application.register("table-header", TableHeaderController)
 
-import TableActionsController from "./components/table/actions_controller"
-application.register("table-actions", TableActionsController)
+import SharedDropdownMenuController from "./shared/dropdown_menu_controller"
+application.register("shared--dropdown-menu", SharedDropdownMenuController)
 
 
 
@@ -153,6 +153,9 @@ application.register("adm-newsletters--filter-stack", AdmNewslettersFilterStackC
 
 import AdmRecipientGroupsNameAutosaveController from "./adm/recipient_groups/name_autosave_controller"
 application.register("adm-recipient-groups--name-autosave", AdmRecipientGroupsNameAutosaveController)
+
+import AdmProjektsImportReviewAutosaveController from "./adm/projekts/import_review_autosave_controller"
+application.register("adm-projekts--import-review-autosave", AdmProjektsImportReviewAutosaveController)
 
 import AdmBudgetInvestmentsPhasesAccordionController from "./adm/budget_investments/phases_accordion_controller"
 application.register("adm-budget-investments--phases-accordion", AdmBudgetInvestmentsPhasesAccordionController)

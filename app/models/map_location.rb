@@ -215,22 +215,23 @@ class MapLocation < ApplicationRecord
     end
 
     def get_approximated_address
-      return unless geocoder_data.present?
+      address = geocoder_data["address"] if geocoder_data.is_a?(Hash)
+      return if address.blank?
 
       locality = [
-        geocoder_data["address"]["neighbourhood"],
-        geocoder_data["address"]["suburb"],
-        geocoder_data["address"]["village"],
-        geocoder_data["address"]["town"],
-        geocoder_data["address"]["city"]
+        address["neighbourhood"],
+        address["suburb"],
+        address["village"],
+        address["town"],
+        address["city"]
       ].compact.join(", ")
 
       street_address = [
-        geocoder_data["address"]["road"],
-        geocoder_data["address"]["house_number"]
+        address["road"],
+        address["house_number"]
       ].compact.join(" ")
 
-      "#{street_address}, #{geocoder_data["address"]["postcode"]} #{locality}"
+      "#{street_address}, #{address["postcode"]} #{locality}"
     end
 
     def get_feature_color(category: nil, sentiment: nil)

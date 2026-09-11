@@ -1,0 +1,46 @@
+<!-- BlockID: E07 -->
+<!-- J1: KPI / Fakten-Kacheln – 4 gleichwertige Kacheln in einer Reihe -->
+<!-- Geeignet für: Kennzahlen, Projektzeitraum, Budget, Umfang -->
+
+<div style="background: linear-gradient(160deg, #1a2e44 0%, #243b55 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+  <h3 style="font-size: 22px; font-weight: 700; color: #ffffff; margin-bottom: 6px; text-align: center; letter-spacing: -0.3px;">Das Projekt auf einen Blick</h3>
+  <p style="color: rgba(255,255,255,0.7); font-size: 15px; text-align: center; margin-bottom: 28px; margin-top: 0;">Alle wichtigen Fakten zur Buergerbeteiligung</p>
+
+  <ul class="row" style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap;">
+
+    <li class="column small-12 medium-3" style="margin-bottom: 16px;">
+      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 16px; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+        <div style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Laufzeit</div>
+        <div style="font-size: 36px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">12 Mon.</div>
+      </div>
+    </li>
+
+    <li class="column small-12 medium-3" style="margin-bottom: 16px;">
+      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 16px; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+        <div style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Stadtteile</div>
+        <div style="font-size: 36px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">7</div>
+      </div>
+    </li>
+
+    <li class="column small-12 medium-3" style="margin-bottom: 16px;">
+      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 16px; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+        <div style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Budget</div>
+        <div style="font-size: 36px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">250.000 &euro;</div>
+      </div>
+    </li>
+
+    <li class="column small-12 medium-3" style="margin-bottom: 16px;">
+      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 16px; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+        <div style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Beitr&auml;ge</div>
+        <div style="font-size: 36px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">1.847</div>
+      </div>
+    </li>
+
+  </ul>
+</div>
+<script>
+document.querySelectorAll('#J1 .kpi-card, [style*="linear-gradient(160deg"] .kpi-card').forEach(function(card){
+  card.addEventListener('mouseenter',function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.24)';});
+  card.addEventListener('mouseleave',function(){this.style.transform='translateY(0)';this.style.boxShadow='none';});
+});
+</script>

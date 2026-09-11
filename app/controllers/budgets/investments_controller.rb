@@ -59,7 +59,6 @@ module Budgets
       @investments_map_coordinates += MasterportalPin.standalone_features_for_phase(@budget.projekt_phase)
 
       @tag_cloud = tag_cloud
-      @remote_translations = detect_remote_translations(@investments)
     end
 
     def new
@@ -74,7 +73,6 @@ module Budgets
       @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
       set_comment_flags(@comment_tree.comments)
       @investment_ids = [@investment.id]
-      @remote_translations = detect_remote_translations([@investment], @comment_tree.comments)
       @milestones = @investment.milestones
       @related_contents = Kaminari.paginate_array(@investment.relationed_contents)
                                   .page(params[:page]).per(5)

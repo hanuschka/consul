@@ -135,6 +135,7 @@ namespace :adm do
     patch :update_api_key, on: :collection
   end
   resources :external_api_keys, only: [:index, :show, :edit, :update]
+  resources :machine_translations, only: [:index, :destroy]
   resources :api_clients, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     post :regenerate_token, on: :member
     get :logs, on: :member
@@ -167,4 +168,10 @@ namespace :adm do
   get "projekts/overview_page/navigation", to: redirect("/adm/overview_pages/projekt")
   get "projekts/overview_page/footer",     to: redirect("/adm/overview_pages/projekt")
   get "projekts/overviews",                to: redirect("/adm/overview_pages/others")
+
+  # The cross-instance import lost its own tab and became one of the three
+  # sources behind "Projekt importieren"; bookmarks of the old screen land on
+  # the source that replaced it.
+  get "projekts/instance_import",     to: redirect("/adm/projekts/imports/from_consul_projekt/new")
+  get "projekts/instance_import/new", to: redirect("/adm/projekts/imports/from_consul_projekt/new")
 end

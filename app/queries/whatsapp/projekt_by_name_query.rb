@@ -48,7 +48,6 @@ class Whatsapp::ProjektByNameQuery < ApplicationQuery
   def self.readable_candidates
     Projekt
       .activated
-      .with_published_custom_page
       .order("projekts.created_at DESC")
       .includes(page: :translations)
   end

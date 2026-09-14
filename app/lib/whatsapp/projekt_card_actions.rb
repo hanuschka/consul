@@ -53,9 +53,12 @@ module Whatsapp::ProjektCardActions
   # have repeated is replaced by the phase's own name before any row is built from it.
   #
   # Cut to what a list holds, because past that the sender truncates rows away
-  # silently. The phases are what the card is for, so the entry that gives is the
-  # trailing one — the way to the existing contributions, which the projekt link also
-  # reaches.
+  # silently. The entry that gives is a phase's, never the trailing one: the way to the
+  # existing contributions used to be what fell off once the phases alone filled the
+  # card, so a projekt with ten running phases lost the one row that opened what was
+  # already in it. Now a row is kept for it whenever there is one to show, and the
+  # phases share what is left. A cut that still costs a running phase is said out loud
+  # by #log_phases_cut, where it used to happen with nothing anywhere naming it.
   # `user` is who the card is being sent to, and only the wording of a button depends on
   # it: a phase they have already taken part in keeps its row and its place, because the
   # row is how they reach what they did there and dropping it would leave the card
@@ -65,19 +68,26 @@ module Whatsapp::ProjektCardActions
   def call(projekt, user: nil)
     phases = actionable_phases(projekt)
     facts = ::Whatsapp::ProjektCard.phase_facts(phases)
+    contributions = contributions_entry(phases, facts)
+    kept = phases.first(phase_row_budget(contributions))
     voted_ids = ::Whatsapp::BallotParticipation.completed_phase_ids(
-      projekt_phases: markable(phases), user: user
+      projekt_phases: markable(kept), user: user
     )
-    texts = row_texts(phases, facts, voted_ids)
+    texts = row_texts(kept, facts, voted_ids)
     entries =
-      (phases.map { |phase| action_entry(phase, facts[phase.id], texts[phase.id]) } +
-        [contributions_entry(phases, facts)])
-        .compact
-        .first(::Whatsapp::MAX_OFFERED_LIST_ROWS)
+      (kept.map { |phase| action_entry(phase, facts[phase.id], texts[phase.id]) } +
+        [contributions]).compact
 
+    log_phases_cut(projekt, phases, kept)
     log_entries_reading_alike(projekt, entries)
 
     entries
+  end
+
+  # How many phase rows the card has room for once the contributions row, when there
+  # is one, has taken its place.
+  def phase_row_budget(contributions)
+    ::Whatsapp::MAX_OFFERED_LIST_ROWS - [contributions].compact.size
   end
 
   # Whether these entries have to arrive behind the list picker rather than as reply
@@ -365,6 +375,21 @@ module Whatsapp::ProjektCardActions
   # one kind the same thing, with neither carrying a dated ballot to tell them apart.
   # What is left is to say so, because the send fails at Meta's edge with nothing
   # there naming the projekt whose phases caused it.
+  # A running phase the card had no row for. The query already puts the running phases
+  # ahead of the cap, so reaching this means the projekt runs more actionable phases
+  # at once than a list can hold — which nothing here can fix, and which used to pass
+  # without a trace.
+  def log_phases_cut(projekt, phases, kept)
+    dropped = phases.drop(kept.size)
+
+    return if dropped.blank?
+
+    Rails.logger.warn(
+      "[Whatsapp] projekt #{projekt.id} card holds #{kept.size} of #{phases.size} running " \
+      "phases, dropped phase ids: #{dropped.map(&:id).join(", ")}"
+    )
+  end
+
   def log_entries_reading_alike(projekt, entries)
     alike = entries
       .group_by { |entry| [entry[:title], entry[:description]] }

@@ -13,6 +13,8 @@
   <p class="kern-body kern-body--small mb-4"><%= t("adm.projekts.mitmachbox.questions.options_hint") %></p>
 
   <% question_options = (@question["options"] || []).sort_by { |option| option["position"].to_i } %>
+  <% branchable = @question["question_type"] == "single_choice" %>
+  <% prompts_by_question_id = @draft_detail["questions"].to_h { |question| [question["id"], question["prompt"]] } %>
 
   <% if question_options.size < Adm::Projekts::MitmachboxOptionsController::MAX_OPTIONS_PER_QUESTION %>
     <%= new_resource_link(new_adm_projekts_phase_mitmachbox_question_mitmachbox_option_path(@projekt_phase, @question["id"]),
@@ -26,6 +28,9 @@
           <tr class="kern-table__row">
             <th scope="col" class="kern-table__header"><%= t("adm.projekts.mitmachbox.options.table.label") %></th>
             <th scope="col" class="kern-table__header"><%= t("adm.projekts.mitmachbox.options.table.value") %></th>
+            <% if branchable %>
+              <th scope="col" class="kern-table__header"><%= t("adm.projekts.mitmachbox.options.table.follow_up") %></th>
+            <% end %>
             <th scope="col" class="kern-table__header"><%= t("adm.projekts.mitmachbox.options.table.actions") %></th>
           </tr>
         </thead>
@@ -35,6 +40,17 @@
             <tr class="kern-table__row">
               <th scope="row" class="kern-table__header"><%= option["label"] %></th>
               <td class="kern-table__cell"><%= option["value"] %></td>
+              <% if branchable %>
+                <td class="kern-table__cell">
+                  <% if option["ends_survey"] %>
+                    <%= t("adm.projekts.mitmachbox.options.follow_up_end") %>
+                  <% elsif option["next_question_id"].present? %>
+                    <%= prompts_by_question_id[option["next_question_id"]] %>
+                  <% else %>
+                    <%= t("adm.projekts.mitmachbox.options.follow_up_next") %>
+                  <% end %>
+                </td>
+              <% end %>
               <td class="kern-table__cell">
                 <%= render Kern::Table::ActionsComponent.new do |actions| %>
                   <% actions.with_action(label: t("shared.edit"),

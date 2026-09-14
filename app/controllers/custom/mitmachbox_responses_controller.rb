@@ -25,9 +25,10 @@ class MitmachboxResponsesController < ApplicationController
       return redirect_to(footer_path, notice: mitmachbox_t("already_answered"))
     end
 
-    answers = submitted_answers(survey)
+    path = Mitmachbox::SurveyPath.new(survey["questions"])
+    answers = path.on_path(submitted_answers(survey))
 
-    if missing_required_questions(survey, answers).any?
+    if missing_required_questions(survey, answers, path).any?
       return redirect_to(footer_path, alert: mitmachbox_t("missing_required"))
     end
 
@@ -88,9 +89,17 @@ class MitmachboxResponsesController < ApplicationController
         .map(&:to_i)
     end
 
-    def missing_required_questions(survey, answers)
+    # A required question the run never reached cannot be missing: branching
+    # routes past it, exactly as it does on the box.
+    def missing_required_questions(survey, answers, path)
       answered = answers.map { |answer| answer[:question_id] }.uniq
+      chosen = answers.group_by { |answer| answer[:question_id] }
+                      .transform_values { |group| group.map { |answer| answer[:option_id] } }
+      reached = path.reached_question_ids(chosen)
 
-      survey["questions"].select { |question| question["required"] && answered.exclude?(question["id"]) }
+      survey["questions"].select do |question|
+        question["required"] && reached.include?(question["id"]) &&
+          answered.exclude?(question["id"])
+      end
     end
 end

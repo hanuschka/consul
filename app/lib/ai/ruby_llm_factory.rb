@@ -41,6 +41,13 @@ module Ai::RubyLlmFactory
 
     chat.with_tools(*tools)
 
+    disable_reasoning(chat, profile)
+  end
+
+  # The same effort attach_tools names, for a call that attaches no tools and
+  # still has no reasoning to pay for. Reading it off the profile rather than a
+  # constant is what keeps the two from drifting apart.
+  def self.disable_reasoning(chat, profile)
     return chat if profile.reasoning_effort.blank?
 
     chat.with_thinking(effort: profile.reasoning_effort)

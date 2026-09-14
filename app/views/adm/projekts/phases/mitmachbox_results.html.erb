@@ -51,7 +51,12 @@
       <% (@results["questions"] || []).sort_by { |question| question["position"].to_i }.each do |question| %>
         <div class="mb-5">
           <h3 class="kern-title kern-title--small mb-1"><%= question["prompt"] %></h3>
-          <p class="kern-body kern-body--small mb-3"><%= t(".answered_label", count: question["answered"]) %></p>
+          <p class="kern-body kern-body--small mb-3">
+            <%= t(".answered_label", count: question["answered"]) %>
+            <% if question["reached"].to_i < @results["responses_total"].to_i %>
+              · <%= t(".reached_label", count: question["reached"]) %>
+            <% end %>
+          </p>
 
           <% question_options = (question["options"] || []).sort_by { |option| option["position"].to_i } %>
           <% if question_options.any? %>

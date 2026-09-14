@@ -156,6 +156,17 @@ dialog.custom-content-block-ai-create {
   }
 }
 
+.content-block-ai-create--step {
+  margin: -16px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+  text-align: center;
+
+  &:empty {
+    display: none;
+  }
+}
+
 .content-block-ai-create--actions {
   display: flex;
   align-items: center;

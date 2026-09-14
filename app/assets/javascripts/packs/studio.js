@@ -45,6 +45,7 @@
 //= require ../studio/ContentBlocks/TemplateSelector
 //= require ../studio/ContentBlocks/Crud
 //= require ../studio/ContentBlocks/MapEmbed
+//= require ../studio/ContentBlocks/AiGenerationPoller
 //= require ../studio/ContentBlocks/EditModes/AiEditMode
 //= require ../studio/ContentBlocks/EditModes/CodeEditMode
 //= require ../studio/ContentBlocks/EditModes/EditModeSwitcher

@@ -215,7 +215,7 @@ class MapLocation < ApplicationRecord
     end
 
     def get_approximated_address
-      return if geocoder_data.blank?
+      return if !geocoder_data.is_a?(Hash)
 
       ::Geocoding::ApproximateAddress.call(geocoder_data["address"])
     end

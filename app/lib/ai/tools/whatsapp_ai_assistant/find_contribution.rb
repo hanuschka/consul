@@ -5,8 +5,9 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
   # — and a single match is remembered on the conversation so the state the
   # assistant is told says which contribution the conversation is about.
   description "Finds the contribution a citizen is talking about from what they called it, " \
-              "however roughly. Returns its id, its title, how many supports it has, whether it " \
-              "can be supported and the link to open it — or several candidates when more than " \
+              "however roughly. Returns its id, its title, how many supports it has, whether " \
+              "this citizen has already supported it, whether it can be supported and the link " \
+              "to open it — or several candidates when more than " \
               "one matches, so you can ask which they mean rather than guessing. Call it before " \
               "support_proposal, withdraw_support, draft_comment or send_link for a " \
               "contribution; each of those needs the id this returns. Sends nothing."

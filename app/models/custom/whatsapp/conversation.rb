@@ -152,7 +152,13 @@ class Whatsapp::Conversation < ApplicationRecord
   # no memory of the last ten minutes. It used to be wiped here, which the step
   # column made survivable.
   def discard_draft!
-    update!(draft_resource: nil, projekt_phase_id: nil, context: retained_context)
+    next_context = retained_context
+
+    if projekt_phase_id.present?
+      next_context = next_context.merge(subject_change_stamp)
+    end
+
+    update!(draft_resource: nil, projekt_phase_id: nil, context: next_context)
   end
 
   # The same, keeping the phase: a citizen who just published usually has their
@@ -165,10 +171,16 @@ class Whatsapp::Conversation < ApplicationRecord
   # submission has settled nothing — except for the assistant's own stored
   # history, which is the conversation and outlives any one draft in it.
   def start_draft!(new_projekt_phase)
+    next_context = retained_context
+
+    if new_projekt_phase&.id != projekt_phase_id
+      next_context = next_context.merge(subject_change_stamp)
+    end
+
     update!(
       draft_resource: nil,
       projekt_phase: new_projekt_phase,
-      context: retained_context
+      context: next_context
     )
   end
 
@@ -184,7 +196,37 @@ class Whatsapp::Conversation < ApplicationRecord
   def leave_projekt!
     return if projekt_phase_id.blank?
 
-    update!(projekt_phase_id: nil)
+    update!(projekt_phase_id: nil, context: context.merge(subject_change_stamp))
+  end
+
+  # ── When the conversation stopped being about what it was about ─────────
+  # The replayed chat does not end when a subject does. A citizen who leaves one
+  # projekt and asks about another is answered from a transcript where both are
+  # present and nothing says which is over, so how far back an answer reaches is
+  # the model's guess — and it guessed wrong in both cases reported on 11
+  # September, once quoting a location phrase from two subjects earlier and once
+  # answering about a contribution in a projekt never mentioned.
+  #
+  # One timestamp rather than a record of what the subject was, because the only
+  # question the transcript has to answer is where to draw the line: everything
+  # said before this belongs to something the citizen has closed. What it was is
+  # already in the lines themselves.
+  #
+  # Written by the four ways a subject ends — discarding a draft, entering a
+  # different phase, leaving the projekt, asking to start over — and by none of
+  # them when the subject did not actually change. A stamp on every draft started
+  # in a projekt the conversation was already about would cut a citizen off from
+  # what they had just said about their own idea.
+  #
+  # Retained across complete_draft! for the same reason the typing hint is: it is
+  # a fact about the chat rather than about the draft being replaced. Publishing
+  # and writing the next idea for the same projekt is not a change of subject.
+  def subject_changed_at
+    changed_at = context["subject_changed_at"]
+
+    return if changed_at.blank?
+
+    Time.zone.parse(changed_at)
   end
 
   # ── How often the bot says a question can simply be typed ───────────────
@@ -322,7 +364,7 @@ class Whatsapp::Conversation < ApplicationRecord
   end
 
   def request_start_over!
-    merge_context!(start_over_requested: true)
+    merge_context!(subject_change_stamp.merge("start_over_requested" => true))
   end
 
   # Cleared on a revision, where the record is already persisted. Deliberately: a
@@ -806,6 +848,15 @@ class Whatsapp::Conversation < ApplicationRecord
     # moment they started a submission, which is the one point in the conversation
     # where they are least in need of it.
     def retained_context
-      context.slice("ai_chat", "ai_chain", "typing_hint_at_message_id")
+      context.slice(
+        "ai_chat", "ai_chain", "typing_hint_at_message_id", "subject_changed_at"
+      )
+    end
+
+    # String-keyed because two of its three callers merge it into a context being
+    # replaced wholesale rather than through merge_context!, and those never see
+    # the symbol keys stringified.
+    def subject_change_stamp
+      { "subject_changed_at" => Time.current.iso8601 }
     end
 end

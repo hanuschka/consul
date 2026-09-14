@@ -22,8 +22,8 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
               "the record, so do not write it out: pass only the question and the buttons. This " \
               "is the only thing that lets a draft be published, so publishing is refused until " \
               "it has been called and called again after any change to the draft. Publishing " \
-              "cannot be undone, so a button that publishes must say so. This sends the messages " \
-              "itself."
+              "cannot be undone, so the button that publishes carries a fixed label saying so and " \
+              "whatever you write for it is discarded. This sends the messages itself."
 
   params do
     string :question,
@@ -33,9 +33,9 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
     array :buttons,
       of: :object,
       description: "Up to three buttons, each {\"action_id\": ..., \"label\": ...}. Offer " \
-                   "draft_publish among them whenever you are asking whether it can go in, with " \
-                   "a label that says it submits — nothing else arms publishing. " \
-                   "Parameterless action ids: " \
+                   "draft_publish among them whenever you are asking whether it can go in — " \
+                   "nothing else arms publishing, and its label is written for you, so leave it " \
+                   "empty. Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}."
   end
 

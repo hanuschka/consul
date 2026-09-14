@@ -123,6 +123,20 @@ module Whatsapp::FlowActions
   # them mid-conversation is a pill that answers a question nobody was asked.
   BOT_ONLY_ACTIONS = %i[poll_answer poll_weight poll_done poll_skip].freeze
 
+  # Withheld for a reason the set above does not cover. A bot-only id is one whose
+  # label belongs to a record; this is one whose whole message does — the pill sits
+  # under a sentence saying what the action does to the citizen's data, and a model
+  # free to word that sentence is free to word it wrongly.
+  #
+  # `unlink_confirm` severs the number from the account and nothing more. Asked to
+  # say so in its own words, the assistant promised an erasure of account data and
+  # contributions on one reply and denied it on the next, on the same commit, with
+  # both reachable. Keeping the id out of the vocabulary is what makes the fixed
+  # sentence unavoidable rather than merely preferred: the pill exists only where
+  # Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation has just sent the
+  # block, so the tool that unlinks can read the offer as proof the citizen saw it.
+  PLATFORM_WORDED_ACTIONS = %i[unlink_confirm].freeze
+
   # The two pills that answer a tap on this side rather than by asking the assistant,
   # and the reason they are separated from the rest: the projekt card offers a phase's
   # own action, and the action has to begin on the tap — a note saying which button was
@@ -247,11 +261,11 @@ module Whatsapp::FlowActions
     RETIRED_ACTIONS.include?(action)
   end
 
-  # Everything the assistant may not compose, for whichever of the two reasons. One
+  # Everything the assistant may not compose, for whichever of the three reasons. One
   # answer because every caller asking has the same question — may the model put this
   # on a button — and none of them cares which list said no.
   def unofferable
-    RETIRED_ACTIONS + BOT_ONLY_ACTIONS
+    RETIRED_ACTIONS + BOT_ONLY_ACTIONS + PLATFORM_WORDED_ACTIONS
   end
 
   def unofferable?(action)

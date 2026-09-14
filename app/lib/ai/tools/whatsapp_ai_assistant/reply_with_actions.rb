@@ -1,10 +1,11 @@
 class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAssistant::BaseTool
-  # The assistant's own message with the way onward attached. Both halves are its
-  # words: the sentence and the labels on the buttons. What it does not choose is
-  # the *id* behind a button, because WhatsApp returns the id to the webhook and
-  # the inbound side is what turns one back into an action — an invented id has
-  # nothing behind it, so the citizen taps and nothing happens, with no error
-  # anywhere.
+  # The assistant's own message with the way onward attached. The sentence is its
+  # words, and so is nearly every label. What it does not choose is the *id* behind a
+  # button, because WhatsApp returns the id to the webhook and the inbound side is
+  # what turns one back into an action — an invented id has nothing behind it, so the
+  # citizen taps and nothing happens, with no error anywhere. Nor does it choose the
+  # words on the handful of pills whose label is a statement rather than a
+  # signpost (Whatsapp::AssistantActions::FORCED_LABEL_ACTIONS).
   MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
   description "Answers the citizen with a short text of your own and up to three tappable " \
@@ -17,10 +18,10 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
               "empty to use the record's own name, which is usually better than a paraphrase of " \
               "it. A button whose action is unknown or whose record no longer exists is " \
               "dropped. " \
-              "For an action that cannot be undone — publishing, commenting, unlinking — the " \
-              "label must say what it does (\"Jetzt einreichen\", not \"Weiter\"). This sends " \
-              "the message itself: do not write one as well, and do not put a link in it when a " \
-              "button already leads there."
+              "An action that cannot be undone — publishing, commenting — carries a fixed " \
+              "label saying what it does, so leave those labels empty; unlinking is not yours " \
+              "to offer at all. This sends the message itself: do not write one as well, and do " \
+              "not put a link in it when a button already leads there."
 
   params do
     string :body,

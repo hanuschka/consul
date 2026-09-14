@@ -29,17 +29,39 @@ module Whatsapp::AssistantActions
   # on a public page, a severed account link.
   IRREVERSIBLE_ACTIONS = %i[draft_publish submit_final comment_post unlink_confirm].freeze
 
-  # The one pill whose words are not the model's. Every other label is a sentence it
-  # wrote, checked for length and nothing else, because the dispatcher re-resolves the
-  # id on the tap and a poor label costs a badly-worded button.
+  # The pills the model may offer but not name. Every other label it offers is a
+  # sentence it wrote, checked for length and nothing else, because the dispatcher
+  # re-resolves the id on the tap and a poor label costs a badly-worded button.
   #
-  # The support toggle is the exception because the same id does opposite things: it
-  # gives support or takes it back depending on the vote as it stands when the tap
-  # arrives. A label the model wrote a message earlier can therefore say the precise
-  # opposite of what tapping it does, and the citizen has no way to tell. Read from
-  # the vote instead, and the model's own words for this one are discarded rather
-  # than preferred.
-  FORCED_LABEL_ACTIONS = %i[support_toggle].freeze
+  # The support toggle is here because the same id does opposite things: it gives
+  # support or takes it back depending on the vote as it stands when the tap arrives.
+  # A label the model wrote a message earlier can therefore say the precise opposite
+  # of what tapping it does, and the citizen has no way to tell. Read from the vote
+  # instead, and the model's own words for this one are discarded rather than
+  # preferred.
+  #
+  # The other three are the irreversible pills a citizen still has to be able to
+  # recognise: a comment going onto a public page under their name, a contribution
+  # going in. That the label has to say so was a sentence in three tool descriptions
+  # — the same prompt-level guarantee that let the unlink question promise an erasure
+  # it could not deliver — and a "Weiter" on the button that publishes is a citizen
+  # who has not been asked. The words are fixed rather than asked for.
+  #
+  # Not the same thing as a platform-worded pill (#platform_button): there the offer
+  # itself is withheld, because what has to be fixed is the sentence above the button
+  # and not only the words on it. Here the model still decides when to offer, which is
+  # safe because each of these is re-checked on the tap — against the vote, against the
+  # digest of what was shown.
+  FORCED_LABEL_ACTIONS = %i[support_toggle comment_post draft_publish submit_final].freeze
+
+  # The fixed labels that have no record behind them to be read off. `submit_final` is
+  # the id `draft_publish` took over and is still accepted as proof of the question
+  # having been asked, so it says the same thing rather than something of its own.
+  FORCED_LABEL_COPY_KEYS = {
+    comment_post: "whatsapp.bot.buttons.comment_post",
+    draft_publish: "whatsapp.bot.buttons.draft_publish",
+    submit_final: "whatsapp.bot.buttons.draft_publish"
+  }.freeze
 
   module_function
 
@@ -82,6 +104,23 @@ module Whatsapp::AssistantActions
     end
 
     button(spec: spec, label: label, conversation: conversation)
+  end
+
+  # The pill neither half of which is the model's, for the ids withheld from it
+  # entirely (Whatsapp::FlowActions::PLATFORM_WORDED_ACTIONS). #button would refuse
+  # these — being unofferable is exactly what they are — so the one thing they still
+  # need from here is the irreversible offer being recorded, which is what the tool
+  # that acts reads back.
+  #
+  # The title is composed by the caller rather than looked up here, because it comes
+  # out of the same translation batch as the block it is sent with: asking for it
+  # again would put a label from one cache state under a sentence from another.
+  def platform_button(action:, title:, conversation:)
+    return if title.blank?
+
+    record_irreversible_offer(action, conversation)
+
+    { id: ::Whatsapp::FlowActions.id_for(action: action), title: title }
   end
 
   # One tappable button from the action id and the label the model wrote, or nil
@@ -211,7 +250,7 @@ module Whatsapp::AssistantActions
   # paraphrase, and it is also what proves the record exists.
   def title_for(action:, param:, label:, conversation:)
     if FORCED_LABEL_ACTIONS.include?(action)
-      return truncated(record_label(action: action, param: param, conversation: conversation))
+      return truncated(forced_label(action: action, param: param, conversation: conversation))
     end
 
     written = truncated(label)
@@ -269,6 +308,19 @@ module Whatsapp::AssistantActions
   # nothing of the kind.
   def ended_on_boundary?(text, cut)
     text[cut.length] == " "
+  end
+
+  # The words of a pill the model may offer but not name, in whichever of the two
+  # shapes it has: a fixed line of copy, or a label read off the record the pill
+  # points at. The copy shape is checked first because the parameterless ones have no
+  # record at all — #record_label's own first guard would answer nil for them, and a
+  # blank title is the one value WhatsApp refuses the whole message over.
+  def forced_label(action:, param:, conversation:)
+    key = FORCED_LABEL_COPY_KEYS[action]
+
+    return ::Whatsapp.copy(key) if key.present?
+
+    record_label(action: action, param: param, conversation: conversation)
   end
 
   # The label read off the thing the pill points at. A projekt that does not

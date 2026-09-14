@@ -66,8 +66,14 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
         Three things cannot be taken back once done — publishing a contribution, posting a
         comment, unlinking the account. For each of those, be sure the citizen has actually asked
-        for that thing, and say what is about to happen before it does. A message that merely
-        agrees with something else is not agreement to one of these.
+        for that thing, and let them see what is about to happen before it does. A message that
+        merely agrees with something else is not agreement to one of these.
+
+        For unlinking, what is about to happen is not yours to describe. Severing the link
+        detaches this number and nothing else — the portal account and everything already
+        published stay — and show_unlink_for_confirmation states that for you and offers the
+        button. Never word it yourself, and never say or imply that unlinking deletes an account,
+        a contribution or any data.
 
         A support is not one of them. It goes in on the tap and comes back out the same way, so
         never ask twice before registering one and never tell a citizen that supporting is final

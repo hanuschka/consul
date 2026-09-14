@@ -83,6 +83,18 @@ en:
       # is there. The comment itself is their own and is never translated.
       # online and awaiting_review each stand alone as that whole second message,
       # so both have to read as a full sentence with nothing above them.
+      # The block Whatsapp::UnlinkPreview puts in front of the confirmation question.
+      # These two lines are explicitly not the model's: unlinking detaches the number
+      # and nothing else, and wording that promises an erasure on one reply and denies
+      # it on the next is the whole reason they are fixed here. erasure stands on its
+      # own, with the address on the line below it.
+      unlink:
+        consequence: >-
+          Unlinking only disconnects this number from your account. Your portal account stays,
+          and every contribution you have published stays online unchanged.
+        erasure: >-
+          If you want your account and your data actually deleted, you can do that in the portal
+          under "Delete account":
       comment:
         on_proposal: Comment on
         online: "Your comment is now on the page:"
@@ -194,8 +206,10 @@ en:
           ✅ Successfully linked! From now on you can submit contributions, support them, and receive notifications
           directly here.
         unlinked: >-
-          ✅ Account unlinked. This number is no longer tied to an account. The number and the chat
-          history are kept for the usual retention period. You can link again at any time.
+          ✅ Account unlinked. This number is no longer tied to an account. Your portal account and
+          every contribution you have published stay as they are. The number and the chat history
+          are kept for the usual retention period. You can link again at any time. If you want your
+          account and your data deleted, you can do that here: %{delete_account_url}
         no_account: You need an account to link. You can register in 2 minutes at %{register_url}.
         expired: 'That didn''t work — the link may have expired. Try again:'
         already_linked: >-
@@ -238,6 +252,17 @@ en:
         support: Support now
         support_withdraw: Withdraw
         image_skip: Continue without
+        # The one label the model may not even offer: the button severs the link, and
+        # what that means is stated in the block above it. It has to fit the 20
+        # characters WhatsApp allows a button title.
+        unlink_confirm: Unlink number
+        # The two buttons that do something irreversible: a comment goes onto a public
+        # page under this citizen's name, a contribution goes in. That the label says
+        # so used to live as a sentence in the tool descriptions — a "Continue" on the
+        # button that publishes is a citizen who was not asked. The same 20 characters
+        # apply.
+        comment_post: Post comment
+        draft_publish: Submit now
       notifications:
         follow_up:
           deadline_approaching: You can still take part here until the deadline passes.

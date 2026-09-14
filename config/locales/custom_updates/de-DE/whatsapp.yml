@@ -92,6 +92,20 @@ de:
       # is there. The comment itself is their own and is never translated.
       # online and awaiting_review each stand alone as that whole second message,
       # so both have to read as a full sentence with nothing above them.
+      # Der Block, den Whatsapp::UnlinkPreview vor die Bestätigungsfrage stellt. Diese
+      # beiden Zeilen schreibt ausdrücklich nicht das Modell: Das Aufheben der
+      # Verknüpfung löst nur die Nummer vom Konto, und eine Formulierung, die je nach
+      # Antwort mal eine Löschung verspricht und mal nicht, ist genau das, was hier
+      # nicht passieren darf. erasure steht für sich, die Adresse kommt in der Zeile
+      # darunter.
+      unlink:
+        consequence: >-
+          Wenn Sie die Verknüpfung lösen, wird nur diese Nummer von Ihrem Konto getrennt. Ihr
+          Konto im Portal bleibt bestehen, und alle Beiträge, die Sie veröffentlicht haben,
+          bleiben unverändert online.
+        erasure: >-
+          Wenn Sie Ihr Konto und Ihre Daten wirklich löschen möchten, geht das im Portal unter
+          „Konto löschen“:
       comment:
         on_proposal: "Kommentar zu"
         online: "Ihr Kommentar steht jetzt auf der Seite:"
@@ -236,9 +250,11 @@ de:
           ✅ Verknüpfung erfolgreich! Ab jetzt können Sie hier direkt Beiträge einreichen, unterstützen
           und Benachrichtigungen erhalten.
         unlinked: >-
-          ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Nummer und
+          ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Ihr Konto im
+          Portal und alle Beiträge, die Sie veröffentlicht haben, bleiben bestehen. Nummer und
           Chatverlauf bleiben für die übliche Speicherdauer erhalten. Sie können jederzeit erneut
-          verknüpfen.
+          verknüpfen. Wenn Sie Ihr Konto und Ihre Daten löschen möchten, geht das hier:
+          %{delete_account_url}
         no_account: >-
           Für die Verknüpfung brauchen Sie ein Konto. Die Registrierung dauert 2 Minuten: %{register_url}
         expired: >-
@@ -288,7 +304,7 @@ de:
         show_more: Weitere anzeigen
         image_upload: Foto hinzufügen
         image_generate: Bild erzeugen
-        # The two faces of one pill, and the only labels the assistant is not allowed
+        # The two faces of one pill, and two of the labels the assistant is not allowed
         # to write itself: the same button gives a support or takes it back depending
         # on the vote, so words it chose a message ago could say the opposite of what
         # tapping it does. Both have to stay inside the 20 characters WhatsApp allows
@@ -296,7 +312,20 @@ de:
         # which is why the fuller phrase lives on the message and not on the button.
         support: Jetzt unterstützen
         support_withdraw: Zurücknehmen
+        # Die beiden Schaltflächen, die etwas Unwiderrufliches auslösen: Ein Kommentar
+        # steht danach unter dem Namen dieser Person auf einer öffentlichen Seite, ein
+        # Beitrag ist eingereicht. Dass die Beschriftung das auch sagt, stand vorher
+        # nur als Satz in der Werkzeugbeschreibung — ein „Weiter“ auf der Schaltfläche,
+        # die veröffentlicht, ist eine Person, die nicht gefragt wurde. Auch hier
+        # gelten die 20 Zeichen.
+        comment_post: Jetzt kommentieren
+        draft_publish: Jetzt einreichen
         image_skip: Ohne Foto weiter
+        # Die einzige Beschriftung, die das Modell nicht einmal anbieten darf: Die
+        # Schaltfläche löst die Verknüpfung, und was das bedeutet, steht im Block
+        # darüber. Auch sie muss in die 20 Zeichen passen, die WhatsApp einer
+        # Beschriftung lässt.
+        unlink_confirm: Verknüpfung lösen
       notifications:
         follow_up:
           deadline_approaching: Sie können hier noch mitmachen, bis die Frist abläuft.

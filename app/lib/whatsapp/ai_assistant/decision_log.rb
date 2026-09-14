@@ -48,6 +48,12 @@ module Whatsapp::AiAssistant::DecisionLog
   # but the rate is the only way to tell a budget the model can write to from one
   # it is told and routinely misses, and it is what says whether wording the
   # instruction differently changed anything.
+  #
+  # `translation_discarded` is its counterpart for the lines Ruby sends itself: a
+  # fixed label whose translation did not fit, so the citizen read that one button
+  # in German. It is counted separately because the remedy is the opposite one —
+  # nothing the model does affects it, and what has to give is the German source
+  # line being too long to survive being translated.
   EVENTS = %i[
     tool_called
     action_dropped
@@ -55,6 +61,7 @@ module Whatsapp::AiAssistant::DecisionLog
     actions_missed
     irreversible_offered
     label_truncated
+    translation_discarded
     tap_dispatched
     tap_unhandled
     start_over

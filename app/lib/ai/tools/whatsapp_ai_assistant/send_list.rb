@@ -64,12 +64,10 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
     return unusable_rows_error if listed.empty?
     return partial_rows_error(offered: offered, listed: listed) if listed.size < offered.size
 
+    opener = ::Whatsapp::AssistantActions.truncated(button_label).presence ||
+             ::Whatsapp.copy("whatsapp.bot.buttons.choose")
     message = ::Whatsapp::Send.list(
-      account: account,
-      body: body.strip,
-      button_label: ::Whatsapp::AssistantActions.truncated(button_label).presence ||
-                    ::Whatsapp.copy("whatsapp.bot.buttons.choose"),
-      rows: listed
+      account: account, body: body.strip, button_label: opener, rows: listed
     )
 
     return send_refused_error if ::Whatsapp::Send.refused?(message)
@@ -78,7 +76,14 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
 
     note_typing_hint_offered! if ::Whatsapp::FlowActions.projekt_choice?(row_ids)
 
-    halt("Sent a list of #{listed.size} rows: #{row_ids.join(", ")}.")
+    halt(
+      [
+        "Sent a list of #{listed.size} rows: #{row_ids.join(", ")}.",
+        ::Whatsapp::AssistantActions.wording_note(
+          wording_offers(listed) << [button_label, opener]
+        )
+      ].compact.join(" ")
+    )
   end
 
   private
@@ -113,6 +118,8 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
 
       return if button.blank?
 
+      written_labels[button[:id]] = label
+
       return button if name_only?(button)
 
       description =
@@ -136,6 +143,17 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       return if !row.respond_to?(:[])
 
       row[key] || row[key.to_sym]
+    end
+
+    # Kept against the id rather than returned with the row, because #listable_rows
+    # deduplicates and cuts to ten after this: only the rows that survive are worth
+    # telling the model about.
+    def written_labels
+      @written_labels ||= {}
+    end
+
+    def wording_offers(listed)
+      listed.map { |row| [written_labels[row[:id]], row[:title]] }
     end
 
     def blank_body_error

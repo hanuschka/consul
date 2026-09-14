@@ -26,15 +26,20 @@ class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant:
     return invalid_url_error if !openable?(url)
 
     text = body.strip
+    button_label = ::Whatsapp::AssistantActions.truncated(label).presence ||
+                   ::Whatsapp.copy("whatsapp.bot.buttons.open_page")
     message = ::Whatsapp::Send.cta_url(
-      account: account,
-      body: text,
-      button_label: ::Whatsapp::AssistantActions.truncated(label).presence ||
-                    ::Whatsapp.copy("whatsapp.bot.buttons.open_page"),
-      url: url
+      account: account, body: text, button_label: button_label, url: url
     )
 
-    return halt("Sent the link button to #{url}.") if message&.status == "sent"
+    if message&.status == "sent"
+      return halt(
+        [
+          "Sent the link button to #{url}.",
+          ::Whatsapp::AssistantActions.wording_note([[label, button_label]])
+        ].compact.join(" ")
+      )
+    end
 
     ::Whatsapp::Send.text(account: account, body: "#{text}\n\n#{url}")
 

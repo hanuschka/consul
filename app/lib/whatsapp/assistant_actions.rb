@@ -313,6 +313,33 @@ module Whatsapp::AssistantActions
     text.to_s.squish.length <= length
   end
 
+  # What the citizen will actually read on the pills, for the tool to hand back to
+  # the model — but only where the model wrote words of its own and they did not
+  # survive. The sentence above the buttons is composed before the buttons exist, so
+  # a model that is not told goes on to ask the citizen to tap wording no button
+  # carries: one message contradicting itself on a single screen.
+  #
+  # A pill the model left unlabelled on purpose is not one of these. The tool
+  # descriptions ask for exactly that wherever a record names itself better than a
+  # paraphrase would, so reporting those would put a note on most turns — and a note
+  # that arrives every turn is one that stops being read, which is the whole reason
+  # this is silent whenever every written label survived.
+  def wording_note(offers)
+    changed = offers.filter_map do |written, title|
+      words = written.to_s.squish
+
+      next if words.blank? || title.blank? || words == title
+
+      "\"#{title}\""
+    end
+
+    return if changed.empty?
+
+    "Your label did not fit on #{changed.size == 1 ? "one button" : "some buttons"} — the " \
+      "citizen reads #{changed.join(", ")}. Say it that way if you refer to them again, and " \
+      "write shorter labels from here."
+  end
+
   # The label of a translated fixed line, as it will actually arrive. Preferring the
   # translation, but not at the price of arriving shortened where the copy behind it
   # would have fitted whole.
@@ -335,7 +362,12 @@ module Whatsapp::AssistantActions
 
     return truncated(written, length: length) if text.blank?
     return text if fits?(text, length)
-    return written if fits?(written, length)
+
+    if fits?(written, length)
+      record_discarded_translation(text, written)
+
+      return written
+    end
 
     truncated(text, length: length)
   end
@@ -563,6 +595,22 @@ module Whatsapp::AssistantActions
   def record_truncation(text, length)
     ::Whatsapp::AiAssistant::DecisionLog.record(
       event: :label_truncated, label: text, over_by: text.length - length
+    )
+  end
+
+  # A citizen answered in the portal's language on one button because theirs did not
+  # fit. BotCopyService is told the budget, so this rising says the instruction is
+  # not one the language can be held to rather than one the model ignored — and the
+  # fix for that is a shorter German source line, not a firmer prompt.
+  #
+  # Both sides are kept because both are needed to act: the translation names the
+  # language it is in far better than a code would, and the line it was written from
+  # is what would have to be shortened. No locale is asked for — the only place the
+  # turn's language is held is a cache key built from a database read, which is a
+  # query per discarded button to learn what the text already says.
+  def record_discarded_translation(text, written)
+    ::Whatsapp::AiAssistant::DecisionLog.record(
+      event: :translation_discarded, translated: text, written: written
     )
   end
 end

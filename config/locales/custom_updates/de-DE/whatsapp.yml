@@ -298,13 +298,26 @@ de:
           voting_phase: Jetzt abstimmen
           formular_phase: Formular ausfüllen
           point_of_interest_phase: Mangel melden
-        # Dieselbe Schaltfläche, wenn diese Person in der Abstimmungsphase schon
-        # abgestimmt hat. Ein eigener Zweig neben phase_action und nicht darin, weil
-        # Whatsapp::ProjektCardActions aus dessen Schlüsseln ableitet, welche Phasenarten
-        # überhaupt eine Aktion bekommen — ein Schlüssel mehr dort wäre eine erfundene
-        # Phasenart. Auch hier gelten die 20 Zeichen, die WhatsApp einer Beschriftung lässt.
+        # Welche Phasenarten überhaupt als "schon erledigt" markiert werden können, und
+        # zugleich das Wort, das die Karte dafür verwendet. Ein eigener Zweig neben
+        # phase_action und nicht darin, weil Whatsapp::ProjektCardActions aus dessen
+        # Schlüsseln ableitet, welche Phasenarten eine Aktion bekommen — ein Schlüssel
+        # mehr dort wäre eine erfundene Phasenart.
+        #
+        # Auf der Karte steht dieses Wort inzwischen in der Zeile unter dem Titel und
+        # nicht mehr im Titel selbst: als Titel stand es bei einem Projekt mit vier
+        # Abstimmungen viermal gleichlautend da. Als Beschriftung einer einzelnen
+        # Schaltfläche des Assistenten wird es weiterhin so verwendet, dort gelten die
+        # 20 Zeichen, die WhatsApp einer Schaltfläche lässt.
         phase_action_voted:
           voting_phase: Bereits abgestimmt
+        # Der Titel der Zeile, wenn diese Person schon abgestimmt hat: der Name der
+        # Abstimmung selbst, mit einem Haken davor. Der Name und nicht das Wort oben,
+        # weil nur der Name die vier Abstimmungen eines Projekts voneinander
+        # unterscheidet — und die Beschreibungszeile, die das bisher allein tat, wird
+        # von einer Antwortschaltfläche überhaupt nicht angezeigt. Der Haken zählt wie
+        # jedes andere Zeichen gegen die 24, die WhatsApp einer Listenzeile lässt.
+        phase_action_voted_title: "✓ %{name}"
         phase_contributions: Beiträge ansehen
         contribution_choose: Beitrag auswählen
         view_projekt: Projekt ansehen

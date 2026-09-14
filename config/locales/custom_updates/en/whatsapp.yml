@@ -237,13 +237,25 @@ en:
           voting_phase: Vote now
           formular_phase: Fill in the form
           point_of_interest_phase: Report a defect
-        # The same button where this citizen has already voted in the voting phase. A
-        # sibling of phase_action rather than a key inside it, because
+        # Which phase types can be marked as already done at all, and the word the card
+        # uses for it. A sibling of phase_action rather than a key inside it, because
         # Whatsapp::ProjektCardActions reads that scope's keys as the register of which
         # phase types get an action at all — one key more there would be an invented phase
-        # type. The 20 characters WhatsApp allows a button title apply here too.
+        # type.
+        #
+        # On the card this word now sits on the line under the title rather than in the
+        # title: as a title it read the same four times over on a projekt running four
+        # ballots. It is still the whole of a single assistant pill, where the 20
+        # characters WhatsApp allows a button title apply.
         phase_action_voted:
           voting_phase: Already voted
+        # The row's title where this citizen has already voted: the ballot's own name
+        # with a mark in front of it. The name rather than the word above, because the
+        # name is the only thing that tells one of a projekt's four ballots from
+        # another — and the description line that used to carry it alone is not shown
+        # on a reply button at all. The mark counts against the 24 characters WhatsApp
+        # allows a list row title like any other character.
+        phase_action_voted_title: "✓ %{name}"
         phase_contributions: See what's in
         contribution_choose: Choose contribution
         view_projekt: View project

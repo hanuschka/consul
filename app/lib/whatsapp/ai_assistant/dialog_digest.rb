@@ -17,13 +17,28 @@ class Whatsapp::AiAssistant::DialogDigest
   # several hundred characters of title and URL, and none of it helps here.
   MAX_BODY_LENGTH = 160
 
+  # Where one subject ends and the next begins, written into the transcript rather
+  # than left for the model to infer. Without it every line reads as equally
+  # current, and an answer took its subject from a projekt the citizen had left
+  # two subjects earlier (CON-3091).
+  #
+  # Drawn rather than worded: the sentence saying what it means belongs to the
+  # prompt that introduces this list, which is the only thing that knows how the
+  # list is framed. This marks the place.
+  SUBJECT_BOUNDARY_LINE = "- ─────── the citizen moved on to a different subject here ───────".freeze
+
   # `excluding_wa_message_id` is the message being answered, which must not appear
   # in a list the prompt introduces as already dealt with — see
   # Whatsapp::RecentDialogQuery, where the ordering that makes it necessary is
   # documented.
-  def initialize(account:, excluding_wa_message_id: nil)
+  #
+  # `subject_changed_at` is Whatsapp::Conversation#subject_changed_at, and nil is a
+  # conversation that has never changed subject — the whole window is one subject
+  # and no boundary is drawn.
+  def initialize(account:, excluding_wa_message_id: nil, subject_changed_at: nil)
     @account = account
     @excluding_wa_message_id = excluding_wa_message_id
+    @subject_changed_at = subject_changed_at
   end
 
   # Nil rather than an empty string when there is nothing to show, so a prompt
@@ -31,10 +46,57 @@ class Whatsapp::AiAssistant::DialogDigest
   def transcript
     return if messages.blank?
 
-    messages.map { |message| line_for(message) }.join("\n")
+    transcript_lines.join("\n")
+  end
+
+  # Whether the transcript actually carries a boundary, so the prompt can explain
+  # one only when there is one to explain. A rule about a line the model cannot
+  # see is a rule it has to invent a referent for.
+  def subject_boundary?
+    messages.present? && !boundary_position.zero?
   end
 
   private
+
+    def transcript_lines
+      lines = messages.map { |message| line_for(message) }
+
+      return lines if boundary_position.zero?
+
+      lines.insert(boundary_position, SUBJECT_BOUNDARY_LINE)
+    end
+
+    # The index the boundary line takes in the transcript, which is where the
+    # first message belonging to the current subject sits. Zero means every
+    # message is already part of it and there is nothing above to close off —
+    # a line there would sit at the top with nothing before it.
+    #
+    # Past the end is the other useful case rather than a degenerate one: the
+    # subject changed after the newest message in the window, so the whole
+    # transcript is closed and the boundary belongs at the bottom. Array#insert
+    # appends at exactly that index.
+    #
+    # Zero is truthy, so memoising with ||= is safe here.
+    def boundary_position
+      @boundary_position ||= first_current_message_index
+    end
+
+    def first_current_message_index
+      return 0 if @subject_changed_at.blank?
+
+      messages.index { |message| current_subject?(message) } || messages.length
+    end
+
+    # A message with no timestamp cannot be placed on either side of the change,
+    # and counting it as current is the harmless direction: the boundary moves
+    # earlier, so nothing that belongs to a closed subject is presented as open.
+    def current_subject?(message)
+      created_at = message[:created_at]
+
+      return true if created_at.blank?
+
+      created_at >= @subject_changed_at
+    end
 
     def messages
       @messages ||= ::Whatsapp::RecentDialogQuery.call(

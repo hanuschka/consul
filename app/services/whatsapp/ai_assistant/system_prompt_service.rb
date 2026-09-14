@@ -329,8 +329,24 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       [
         "- Already said in this chat, oldest first. Refer back to it when it helps; never",
         "  answer these again, they have been dealt with:",
+        subject_boundary_rule,
         transcript.lines.map { |line| "  #{line.chomp}" }.join("\n")
-      ].join("\n")
+      ].compact.join("\n")
+    end
+
+    # What the drawn boundary means, said once and only when the transcript
+    # actually carries one. Permission to recall across it is deliberate and is
+    # the narrower half of the rule: a citizen asking "was war das nochmal?"
+    # about a projekt they left is asking about the lines above, and refusing
+    # those would trade one wrong answer for a bot with no memory. What is
+    # refused is the other direction — lines above the boundary supplying the
+    # subject of an answer the citizen did not point at (CON-3091).
+    def subject_boundary_rule
+      return if !digest.subject_boundary?
+
+      "  Lines above the boundary belong to a subject the citizen has closed. Answer from " \
+        "them only when this message points at them; never let them decide what this answer " \
+        "is about, and where the message could mean either, ask which is meant."
     end
 
     # Built here rather than on a per-turn global. It used to sit on Current because
@@ -339,7 +355,8 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     def digest
       @digest ||= ::Whatsapp::AiAssistant::DialogDigest.new(
         account: @conversation.whatsapp_account,
-        excluding_wa_message_id: @inbound_message_id
+        excluding_wa_message_id: @inbound_message_id,
+        subject_changed_at: @conversation.subject_changed_at
       )
     end
 

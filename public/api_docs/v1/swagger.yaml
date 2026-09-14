@@ -11353,8 +11353,8 @@ paths:
       description: "Retrieve a list of all projekts. By default ordered by creation
         date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering
         (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring
-        next at the top). By default returns only public projekts (activated with
-        published pages). Users with public_data access level can only access public
+        next at the top). By default returns only public projekts (activated and shown
+        in the overview). Users with public_data access level can only access public
         projekts. Pagination is optional: by default all matching projekts are returned,
         but supplying 'page' (and optionally 'per_page', default 20) paginates the
         results and adds a 'pagination' object to the response. \n\n*Authorization:
@@ -11373,7 +11373,7 @@ paths:
           - 'index_order_expired': Projekts past their end date. Shows completed projects.
 
           **Special status filters**:
-          - 'index_order_all': All activated projekts with published pages shown in overview. Broader view excluding special lists.
+          - 'index_order_all': All activated projekts shown in overview. Broader view excluding special lists.
           - 'index_order_individual_list': Projekts configured to appear in individual lists (separate display area). Requires 'show_in_individual_list' setting.
           - 'index_order_drafts': Draft or inactive projekts (not activated). Admin only. Useful for content management and previewing unpublished projects.
 
@@ -11411,7 +11411,7 @@ paths:
         in: query
         required: false
         description: |
-          If false, returns all projekts (admin only); true returns only activated projekts with published pages shown in overview. Users with public_data access can only access public projekts.
+          If false, returns all projekts (admin only); true returns only activated projekts shown in overview. Users with public_data access can only access public projekts.
 
           **Default:** true (only public projekts).
         schema:

@@ -11,5 +11,29 @@
     <% end %>
   <% end %>
 
+  <% if branchable_question? %>
+    <% choices = follow_up_choices %>
+
+    <% if choices.any? %>
+      <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.options.follow_up_label"),
+                                              hint: t("adm.projekts.mitmachbox.options.follow_up_hint")) do %>
+        <%= f.select :follow_up,
+              options_for_select(
+                [[t("adm.projekts.mitmachbox.options.follow_up_next"), ""]] +
+                  choices +
+                  [[t("adm.projekts.mitmachbox.options.follow_up_end"),
+                    Adm::Projekts::MitmachboxOptionsController::END_OF_SURVEY]],
+                current_follow_up
+              ),
+              {},
+              { label: false } %>
+      <% end %>
+    <% else %>
+      <p class="kern-body kern-body--small mb-4">
+        <%= t("adm.projekts.mitmachbox.options.follow_up_last_question") %>
+      </p>
+    <% end %>
+  <% end %>
+
   <%= form_submit_button(text: t("adm.projekts.mitmachbox.options.save_button")) %>
 <% end %>

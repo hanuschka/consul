@@ -43,6 +43,8 @@ module Adm::Projekts::MitmachboxErrorHandling
     end
 
     def mitmachbox_error_message(error)
+      return t("adm.projekts.mitmachbox.errors.branch_order") if error.api_code == "branch_order_violation"
+
       case error
       when Mitmachbox::ConnectionError
         t("adm.projekts.mitmachbox.errors.connection")

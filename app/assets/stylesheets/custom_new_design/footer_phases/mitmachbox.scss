@@ -1,6 +1,37 @@
 $mitmachbox-answered-color: #207868;
 
 .custom-new-design {
+  .mitmachbox-survey-form [hidden] {
+    display: none;
+  }
+
+  .mitmachbox-survey-progress {
+    margin-bottom: 1.5rem;
+  }
+
+  .mitmachbox-survey-progress-label {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .mitmachbox-survey-error {
+    margin-bottom: 1rem;
+    font-weight: 500;
+    color: $alert-color;
+  }
+
+  .mitmachbox-survey-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+
+    .button {
+      margin: 0;
+    }
+  }
+
   .mitmachbox-survey-question {
     min-width: 0;
     margin: 0 0 2rem;

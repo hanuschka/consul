@@ -174,6 +174,49 @@ describe "Answering a Mitmachbox survey from the projekt footer", type: :request
       expect(flash_alert).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.closed"))
     end
 
+    it "renders the survey as a wizard, usable without JavaScript" do
+      get page_path(projekt.page.slug, projekt_phase_id: projekt_phase.id)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("js-mitmachbox-survey-form")
+      expect(response.body).to include(I18n.t("custom.projekt_phases.mitmachbox_phase.next_question"))
+      expect(response.body).to include(I18n.t("custom.projekt_phases.mitmachbox_phase.submit_button"))
+      expect(response.body).to include("Single")
+      expect(response.body).to include("Multi")
+    end
+
+    context "with a branching survey" do
+      before do
+        survey["questions"][0]["options"][1]["ends_survey"] = true
+        survey["questions"][1]["required"] = true
+      end
+
+      it "drops answers to a question the branch skipped" do
+        expect(Mitmachbox::SubmitWebResponseService).to receive(:call)
+          .with(hash_including(answers: [{ question_id: 1, option_id: 11 }]))
+
+        submit("1" => "11", "2" => "20")
+
+        expect(flash_notice).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.thank_you"))
+      end
+
+      it "does not demand a required question the run never reached" do
+        expect(Mitmachbox::SubmitWebResponseService).to receive(:call)
+
+        submit("1" => "11")
+
+        expect(flash_notice).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.thank_you"))
+      end
+
+      it "still demands a required question the run does reach" do
+        expect(Mitmachbox::SubmitWebResponseService).not_to receive(:call)
+
+        submit("1" => "10")
+
+        expect(flash_alert).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.missing_required"))
+      end
+    end
+
     it "ignores the phase user_status, matching what a box in public space can check" do
       projekt_phase.update!(user_status: "verified")
       expect(Mitmachbox::SubmitWebResponseService).to receive(:call)

@@ -1,6 +1,3 @@
-<% if fallback? %>
-  <div class="js-content-block-templates-fallback-marker" hidden></div>
-<% end %>
 <ul id="contentBlockSelectorTabs" class="shared-tabs custom-content-block-templates-selector--tabs js-tabs">
   <% if newsletter_context? %>
     <li class="custom-content-block-templates-selector--tab shared-tabs--item is-active">
@@ -9,7 +6,7 @@
       </a>
     </li>
   <% end %>
-  <% dt_templates_by_category.each_with_index do |category_data, index| %>
+  <% templates_by_category.each_with_index do |category_data, index| %>
     <% category = category_data["category"] %>
     <% is_first = index == 0 && !newsletter_context? %>
     <li class="custom-content-block-templates-selector--tab shared-tabs--item <%= 'is-active' if is_first %>">
@@ -19,18 +16,6 @@
         aria-selected="<%= is_first %>"
       >
         <%= category['name_de'] %>
-      </a>
-    </li>
-  <% end %>
-  <% local_template_categories.each_with_index do |category, index| %>
-    <% is_first = index == 0 && !newsletter_context? %>
-    <li class="custom-content-block-templates-selector--tab shared-tabs--item <%= 'is-active' if is_first %>">
-      <a
-        class="shared-tabs--link js-tab"
-        href="#contentBlockSelectorTab--<%= category[:id] %>"
-        aria-selected="<%= is_first %>"
-      >
-        <%= category[:name] %>
       </a>
     </li>
   <% end %>
@@ -56,7 +41,7 @@
       <% end %>
     </div>
   <% end %>
-  <% dt_templates_by_category.each_with_index do |category_data, index| %>
+  <% templates_by_category.each_with_index do |category_data, index| %>
     <% category = category_data["category"] %>
     <% templates = category_data["templates"] || [] %>
     <% is_first = index == 0 && !newsletter_context? %>
@@ -66,20 +51,6 @@
     >
       <% templates.each do |template| %>
         <%= render Projekts::DtContentBlockTemplateItemComponent.new(template: template) %>
-      <% end %>
-    </div>
-  <% end %>
-  <% local_template_categories.each_with_index do |category, index| %>
-    <% is_first = index == 0 && !newsletter_context? %>
-    <div
-      id="contentBlockSelectorTab--<%= category[:id] %>"
-      class="shared-tabs-panel <%= 'is-active' if is_first %>"
-    >
-      <% category[:template_names].each do |template_name| %>
-        <%= render Projekts::ContentBlockTemplateItemComponent.new(
-          template_name: template_name,
-          template_dir: category[:template_dir]
-        ) %>
       <% end %>
     </div>
   <% end %>

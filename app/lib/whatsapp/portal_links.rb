@@ -36,6 +36,16 @@ module Whatsapp::PortalLinks
     Rails.application.routes.url_helpers.new_user_registration_url(**UrlOptions.default.to_h)
   end
 
+  # Where an erasure is actually asked for, as against severing the WhatsApp link,
+  # which detaches a number and removes nothing. A route helper rather than a page
+  # slug: this form is part of the application, so there is no admin-named page for
+  # it to be missing and no fallback to the front page to make.
+  def delete_account_url
+    Rails.application.routes.url_helpers.users_registrations_delete_form_url(
+      **UrlOptions.default.to_h
+    )
+  end
+
   def privacy_url
     page_url(:privacy)
   end

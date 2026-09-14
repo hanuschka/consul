@@ -14,7 +14,10 @@ class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant:
   params do
     string :body, description: "The sentence above the button, in the citizen's language."
     string :label,
-      description: "What the button says, at most 20 characters (\"Seite öffnen\", \"Anmelden\")."
+      description: "What the button says, at most " \
+                   "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting " \
+                   "spaces (\"Seite öffnen\", \"Anmelden\"). Count them: a longer one is cut " \
+                   "and arrives ending in \"…\"."
     string :url, description: "The address, exactly as a tool returned it."
   end
 
@@ -23,15 +26,20 @@ class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant:
     return invalid_url_error if !openable?(url)
 
     text = body.strip
+    button_label = ::Whatsapp::AssistantActions.truncated(label).presence ||
+                   ::Whatsapp.copy("whatsapp.bot.buttons.open_page")
     message = ::Whatsapp::Send.cta_url(
-      account: account,
-      body: text,
-      button_label: ::Whatsapp::AssistantActions.truncated(label).presence ||
-                    ::Whatsapp.copy("whatsapp.bot.buttons.open_page"),
-      url: url
+      account: account, body: text, button_label: button_label, url: url
     )
 
-    return halt("Sent the link button to #{url}.") if message&.status == "sent"
+    if message&.status == "sent"
+      return halt(
+        [
+          "Sent the link button to #{url}.",
+          ::Whatsapp::AssistantActions.wording_note([[label, button_label]])
+        ].compact.join(" ")
+      )
+    end
 
     ::Whatsapp::Send.text(account: account, body: "#{text}\n\n#{url}")
 

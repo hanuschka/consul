@@ -72,8 +72,11 @@ class Whatsapp::AiAssistant::BotCopyService < ApplicationService
     in the new language as in the one they were written in, so nothing in them may be
     dropped, shortened or paraphrased away.
 
-    A line that is a button label has at most 20 characters to fit in, so keep those
-    as short as the original.
+    A line that is a button label has at most
+    #{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters to fit in, spaces
+    included, so keep those as short as the original. One that does not fit is not
+    used: the German line is sent instead, because a whole word in the wrong language
+    says more than a shortened one in the right one.
   TEXT
 
   SCHEMA = {

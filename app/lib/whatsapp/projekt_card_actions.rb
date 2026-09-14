@@ -22,6 +22,23 @@ module Whatsapp::ProjektCardActions
   # phase where taking part is not a thing that finishes.
   VOTED_LABEL_SCOPE = "whatsapp.bot.buttons.phase_action_voted".freeze
 
+  # The wording that puts the ballot's own name on the row of a citizen who has answered
+  # it. A key of its own and deliberately not one inside VOTED_LABEL_SCOPE, whose keys are
+  # the register above: a key more there would invent a phase type and put a row on the
+  # card for it.
+  VOTED_TITLE_KEY = "whatsapp.bot.buttons.phase_action_voted_title".freeze
+
+  # The two lines of a row, worked out as one thing because they are one decision. A phase
+  # has two identities on a card — the action it offers and the name it goes by — and
+  # whichever of them the title takes, the line underneath carries the other, so nothing is
+  # said twice and nothing that tells two rows apart goes unsaid.
+  #
+  # `named` records which way round that came out, because #told_apart's whole remedy for a
+  # repeated title is to put the phase's name there: a row whose title is already the name
+  # has nothing left to be substituted, and rewriting it anyway would strip the mark and
+  # the word underneath while leaving the two rows just as alike as before.
+  RowText = Struct.new(:title, :note, :named, keyword_init: true)
+
   module_function
 
   # The card's entries, most useful first: every open phase's own action, then the
@@ -31,9 +48,9 @@ module Whatsapp::ProjektCardActions
   # Every open phase keeps its entry, phases of the same kind included. They used to
   # be deduplicated by the label — the one thing a button shows — so a projekt running
   # four voting phases at once offered "Jetzt abstimmen" once and the other three
-  # could not be voted in from the chat at all. What tells them apart is the phase's
-  # own name and closing date, which travel as the entry's description and which only
-  # the list form renders; list_required? is what keeps colliding titles off buttons.
+  # could not be voted in from the chat at all. What tells them apart is now the row's
+  # own title, worked out by #row_texts over the whole set at once: a title that would
+  # have repeated is replaced by the phase's own name before any row is built from it.
   #
   # Cut to what a list holds, because past that the sender truncates rows away
   # silently. The phases are what the card is for, so the entry that gives is the
@@ -51,8 +68,9 @@ module Whatsapp::ProjektCardActions
     voted_ids = ::Whatsapp::BallotParticipation.completed_phase_ids(
       projekt_phases: markable(phases), user: user
     )
+    texts = row_texts(phases, facts, voted_ids)
     entries =
-      (phases.map { |phase| action_entry(phase, facts[phase.id], voted_ids) } +
+      (phases.map { |phase| action_entry(phase, facts[phase.id], texts[phase.id]) } +
         [contributions_entry(phases, facts)])
         .compact
         .first(::Whatsapp::MAX_OFFERED_LIST_ROWS)
@@ -66,10 +84,10 @@ module Whatsapp::ProjektCardActions
   # buttons. Two reasons now, where it used to be only the first: more entries than a
   # message holds buttons for, or two entries whose titles read alike. A reply button
   # carries a title and nothing else — WhatsappApi::Resources::Messages drops the
-  # description a list row shows — so entries reading alike are indistinguishable
-  # there, and the twenty characters a title holds leave no room to work the phase name
-  # in. Titles collide across phase types as well as within one: proposal_phase and
-  # budget_phase are both labelled "Vorschlag erstellen".
+  # description a list row shows — so entries reading alike are indistinguishable there.
+  # #row_texts settles most of that before this is asked, by naming a repeated title after
+  # its own phase; what is left for the second reason is the collision it cannot resolve,
+  # which is two phases carrying the same name as well as the same action.
   def list_required?(entries)
     titles = entries.map { |entry| entry[:title] }
 
@@ -103,12 +121,12 @@ module Whatsapp::ProjektCardActions
     :phase_open
   end
 
-  def action_entry(projekt_phase, phase_facts, voted_ids)
+  def action_entry(projekt_phase, phase_facts, row_text)
     entry(
       action: action_for(projekt_phase),
       projekt_phase: projekt_phase,
-      title: card_label(projekt_phase, voted_ids),
-      description: phase_description(phase_facts)
+      title: row_text.title,
+      description: phase_description(phase_facts, row_text.note)
     )
   end
 
@@ -120,17 +138,17 @@ module Whatsapp::ProjektCardActions
     phases.select { |projekt_phase| scoped_label(VOTED_LABEL_SCOPE, projekt_phase).present? }
   end
 
-  # What tells two rows carrying the same action apart: the phase's name and its
-  # closing date. The date as well as the name because the name alone need not
-  # differ — a portal running four voting phases may have left two of the ballots
-  # named alike — and two rows reading alike in every field are a list WhatsApp
-  # refuses outright, where the same two dated apart send and read fine. Written
-  # through DatePhrase like every other date the bot shows, so it cannot arrive as a
-  # tappable phone number.
-  def phase_description(phase_facts)
+  # The line under the title: whichever of the phase's two identities the title left for
+  # it, and the closing date. The date as well, because that half need not differ on its
+  # own — a portal running four voting phases may have left two of the ballots named
+  # alike — and two rows reading alike in every field are a list WhatsApp refuses
+  # outright, where the same two dated apart send and read fine. Written through
+  # DatePhrase like every other date the bot shows, so it cannot arrive as a tappable
+  # phone number.
+  def phase_description(phase_facts, note)
     return if phase_facts.blank?
 
-    [phase_facts.name, ::Whatsapp::DatePhrase.absolute(phase_facts.ends_on)]
+    [note, ::Whatsapp::DatePhrase.absolute(phase_facts.ends_on)]
       .compact_blank
       .join(" · ")
       .presence
@@ -162,8 +180,8 @@ module Whatsapp::ProjektCardActions
   # phase's own title. The title is a name — "Ideen", "Bürgerhaushalt" — where a
   # button has to be an instruction, and a portal that renames a phase would
   # otherwise rename the action with it. It is also the only way the twenty
-  # characters WhatsApp allows a button title are guaranteed rather than truncated
-  # mid-word; #truncated is the backstop for a translation that outgrows them.
+  # characters WhatsApp allows a button title are guaranteed rather than spent down
+  # to an ellipsis; #truncated is the backstop for a translation that outgrows them.
   #
   # A citizen who has already voted is told so on the button itself, before they tap it.
   # The pill used to read "Jetzt abstimmen" whatever they had already done, so the only
@@ -174,18 +192,132 @@ module Whatsapp::ProjektCardActions
   # one for, or a citizen who has not finished the ballot, falls through to the ordinary
   # label, and a blank there still drops the row the way it always did.
   # One phase at a time, for the assistant's own pills, which arrive one record at a
-  # time and have no page to batch over. The card asks #card_label instead: it knows
-  # which of its phases are marked before it labels any of them.
+  # time and have no page to batch over. They keep the plain marked wording rather than
+  # the card's named one: a pill is offered for the phase under discussion, so there is
+  # no second row beside it to be confused with, and the assistant's pills can still be
+  # sent as buttons, where the twenty characters leave no room for a name. The card asks
+  # #row_texts instead: it knows all of its phases before it words any of them.
   def label_for(projekt_phase, user: nil)
     return action_label(projekt_phase) if !voted?(projekt_phase, user)
 
     marked_label(projekt_phase)
   end
 
-  def card_label(projekt_phase, voted_ids)
-    return action_label(projekt_phase) if !voted_ids.include?(projekt_phase.id)
+  # Every phase's two lines, worked out over the whole set at once. Whether a title says
+  # enough to tell its row apart is a property of the set and not of the phase: "Jetzt
+  # abstimmen" names the action on a card with one open vote and names nothing on a card
+  # with four. Cut to length last, once the wording is settled, so the budget is spent on
+  # the words that survived the comparison rather than on the ones about to be replaced.
+  def row_texts(phases, facts, voted_ids)
+    written = phases.index_by(&:id).transform_values do |projekt_phase|
+      written_row(projekt_phase, facts[projekt_phase.id], voted_ids)
+    end
+    length = title_length(written.values.count { |row| row.title.present? })
 
-    marked_label(projekt_phase)
+    told_apart(written, facts).transform_values do |row|
+      RowText.new(
+        title: ::Whatsapp::AssistantActions.truncated(row.title, length: length),
+        note: row.note,
+        named: row.named
+      )
+    end
+  end
+
+  # What a row says before anything is done about its neighbours.
+  def written_row(projekt_phase, phase_facts, voted_ids)
+    if voted_ids.include?(projekt_phase.id)
+      marked_row(projekt_phase, phase_facts)
+    else
+      unmarked_row(projekt_phase, phase_facts&.name)
+    end
+  end
+
+  def unmarked_row(projekt_phase, name)
+    RowText.new(
+      title: scoped_label(ACTION_LABEL_SCOPE, projekt_phase), note: name, named: false
+    )
+  end
+
+  # A vote this citizen has already answered, named rather than merely marked. The row
+  # used to read "Bereits abgestimmt" and nothing else, so a projekt running four ballots
+  # put four rows on the card that a citizen could not choose between — told apart only by
+  # the line underneath, which a reply button does not render at all. The name goes on top
+  # and the word moves down, where there is room for it and where it is no longer the only
+  # thing the row says.
+  #
+  # Both fallbacks keep the row rather than losing it: a phase type nobody wrote a voted
+  # wording for falls through to its ordinary action, and a phase with no name to put in
+  # the title — or a portal locale that predates the named wording — keeps the word there.
+  def marked_row(projekt_phase, phase_facts)
+    voted_word = scoped_label(VOTED_LABEL_SCOPE, projekt_phase)
+    name = phase_facts&.name
+    title = voted_title(name)
+
+    if voted_word.blank?
+      unmarked_row(projekt_phase, name)
+    elsif title.blank?
+      RowText.new(title: voted_word, note: name, named: false)
+    else
+      RowText.new(title: title, note: voted_word, named: true)
+    end
+  end
+
+  # Read at the portal's own locale like every other fixed word on the card, and with no
+  # default: a locale that does not carry the key answers nil, which #marked_row reads as
+  # the instruction to keep the wording the row had before rather than putting a raw
+  # translation-missing string on a title.
+  def voted_title(name)
+    return if name.blank?
+
+    I18n.t(VOTED_TITLE_KEY, name: name, locale: ::Whatsapp.default_locale, default: nil)
+  end
+
+  # Titles that repeat replaced by the thing that differs, which is the phase's own name,
+  # with the word they gave up moved to the line underneath. The verb is what yields — a
+  # proposal phase and a budget phase both offering "Vorschlag erstellen" become their two
+  # names — because a citizen who cannot tell which row is which cannot use either of
+  # them, and because a list carrying two identical rows is one WhatsApp refuses outright,
+  # which costs the whole card rather than the one row.
+  #
+  # A phase whose title is already its name, or that has no name to offer, keeps what it
+  # has: there is nothing there left to tell it apart with, and the date on the line below
+  # is the last thing that can. That case is two concurrent ballots a portal named the
+  # same, which #log_entries_reading_alike is there to say out loud.
+  def told_apart(written, facts)
+    repeated = written
+      .values
+      .map(&:title)
+      .compact_blank
+      .tally
+      .select { |_, count| count > 1 }
+      .keys
+
+    written.to_h do |phase_id, row|
+      name = facts[phase_id]&.name
+
+      if repeated.exclude?(row.title) || row.named || name.blank?
+        [phase_id, row]
+      else
+        [phase_id, RowText.new(title: name, note: row.title, named: true)]
+      end
+    end
+  end
+
+  # The characters a title may spend. A set of rows is sent as reply buttons or behind the
+  # list picker depending only on how many there are, so a title has to be written to the
+  # button's smaller budget unless this card cannot be sent as buttons at all — only then
+  # are the four extra characters a list row allows safe to spend on it.
+  #
+  # Counted over the labelled phases alone rather than over the finished entries: the
+  # trailing contributions row only ever makes a card longer, so leaving it out can
+  # understate the count but never overstate it, and understating it only costs four
+  # characters where overstating it would ship a title WhatsApp cuts mid-word.
+  def title_length(labelled_count)
+    if ::Whatsapp.buttons?(labelled_count)
+      ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH
+    else
+      ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
+    end
   end
 
   # The voted wording where the phase type has one and the ordinary label where it has

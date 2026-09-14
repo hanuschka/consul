@@ -12,8 +12,9 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
               "draft_comment wrote down, so do not write it out: pass only the question and the " \
               "buttons. This is the only thing that lets a comment be posted, so posting is " \
               "refused until it has been called and called again after any change to the words. " \
-              "A posted comment cannot be taken back, so a button that posts must say so. This " \
-              "sends the messages itself."
+              "A posted comment cannot be taken back, so the button that posts carries a fixed " \
+              "label saying so and whatever you write for it is discarded. This sends the " \
+              "messages itself."
 
   params do
     string :question,
@@ -24,8 +25,8 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
       of: :object,
       description: "Up to three buttons, each {\"action_id\": ..., \"label\": ...}. Offer " \
                    "comment_post among them whenever you are asking whether it should go on the " \
-                   "page, with a label that says it posts — nothing else arms posting. " \
-                   "Parameterless action ids: " \
+                   "page — nothing else arms posting, and its label is written for you, so leave " \
+                   "it empty. Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}."
   end
 

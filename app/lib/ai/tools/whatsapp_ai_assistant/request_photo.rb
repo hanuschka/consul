@@ -78,9 +78,9 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
     # The fit is decided after the translation, because the length that fits is a
     # property of the label as sent rather than as written: eighteen characters in
     # German is not eighteen in every language it is put into. Where the translation
-    # can only arrive cut mid-word, fitting_label falls back to the written copy —
-    # the one thing the citizen must be able to read here in full is the option to
-    # go on without a picture.
+    # can only arrive shortened, fitting_label falls back to the written copy — the
+    # one thing the citizen must be able to read here in full is the option to go on
+    # without a picture.
     def image_answer_buttons(labels)
       ::Whatsapp::FlowActions::IMAGE_ANSWERS.zip(labels, written_labels).map do |answer|
         action, translated, written = answer

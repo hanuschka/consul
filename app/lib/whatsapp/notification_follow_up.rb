@@ -93,8 +93,8 @@ module Whatsapp::NotificationFollowUp
   # and here they are also the only lines of the exchange the citizen did not
   # prompt. What fits in a button is a property of the translated label rather than
   # of the copy it was written from, so the fit is decided after the translation —
-  # and a translation that can only arrive cut mid-word gives way to the written
-  # copy, which is what fitting_label is for.
+  # and a translation that can only arrive shortened gives way to the written copy,
+  # which is what fitting_label is for.
   #
   # The window is checked here rather than left to Send, even though Send checks it
   # too. Send's guard is the last thing before the request; the translation above is

@@ -23,6 +23,16 @@ de:
         opted_out_reminder: >-
           Du hast dich von unseren Nachrichten abgemeldet, deshalb kann ich dir hier nicht
           weiterhelfen. Schreib %{keyword}, wenn du wieder Nachrichten erhalten möchtest.
+      # Die Schaltfläche „Verknüpfung lösen“ liest sich in beiden Anreden gleich und
+      # steht deshalb nur in whatsapp.yml.
+      unlink:
+        consequence: >-
+          Wenn du die Verknüpfung löst, wird nur diese Nummer von deinem Konto getrennt. Dein
+          Konto im Portal bleibt bestehen, und alle Beiträge, die du veröffentlicht hast,
+          bleiben unverändert online.
+        erasure: >-
+          Wenn du dein Konto und deine Daten wirklich löschen möchtest, geht das im Portal unter
+          „Konto löschen“:
       comment:
         online: "Dein Kommentar steht jetzt auf der Seite:"
         awaiting_review: >-
@@ -73,6 +83,10 @@ de:
         already_answered: >-
           Du hast bei „%{poll}“ bereits abgestimmt. Deine Antworten sind gespeichert und
           bleiben unverändert — ein zweites Mal ist die Abstimmung nicht möglich.
+        typed_answer_read: "Ich habe deine Antwort als „%{answer}“ gelesen."
+        left_for_other: >-
+          Die Abstimmung „%{poll}“ haben wir hier verlassen. Deine bisherigen Antworten sind
+          gespeichert — du kannst jederzeit dort weitermachen.
       onboarding:
         login_prompt: >-
           Zum Anmelden hier tippen. Mit dem Öffnen des Links willigst du in die Verarbeitung
@@ -81,9 +95,11 @@ de:
           ✅ Verknüpfung erfolgreich! Ab jetzt kannst du hier direkt Beiträge einreichen,
           unterstützen und Benachrichtigungen erhalten.
         unlinked: >-
-          ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Nummer
+          ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Dein Konto
+          im Portal und alle Beiträge, die du veröffentlicht hast, bleiben bestehen. Nummer
           und Chatverlauf bleiben für die übliche Speicherdauer erhalten. Du kannst jederzeit
-          erneut verknüpfen.
+          erneut verknüpfen. Wenn du dein Konto und deine Daten löschen möchtest, geht das
+          hier: %{delete_account_url}
         no_account: >-
           Für die Verknüpfung brauchst du ein Konto. Die Registrierung dauert 2 Minuten:
           %{register_url}

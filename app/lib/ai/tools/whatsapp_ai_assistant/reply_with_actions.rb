@@ -1,26 +1,29 @@
 class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAssistant::BaseTool
-  # The assistant's own message with the way onward attached. Both halves are its
-  # words: the sentence and the labels on the buttons. What it does not choose is
-  # the *id* behind a button, because WhatsApp returns the id to the webhook and
-  # the inbound side is what turns one back into an action — an invented id has
-  # nothing behind it, so the citizen taps and nothing happens, with no error
-  # anywhere.
+  # The assistant's own message with the way onward attached. The sentence is its
+  # words, and so is nearly every label. What it does not choose is the *id* behind a
+  # button, because WhatsApp returns the id to the webhook and the inbound side is
+  # what turns one back into an action — an invented id has nothing behind it, so the
+  # citizen taps and nothing happens, with no error anywhere. Nor does it choose the
+  # words on the handful of pills whose label is a statement rather than a
+  # signpost (Whatsapp::AssistantActions::FORCED_LABEL_ACTIONS).
   MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
   description "Answers the citizen with a short text of your own and up to three tappable " \
               "buttons whose labels you write yourself — all three are yours to fill. Prefer it " \
               "over a plain text reply whenever there is an obvious next step: it saves them " \
               "typing and it says what can happen next. Each button needs an action_id from the " \
-              "list below and a label of at most 20 characters in the citizen's language. Name a " \
+              "list below and a label in the citizen's language of at most " \
+              "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting spaces — " \
+              "count them, because a longer one is cut and arrives ending in \"…\". Name a " \
               "record-backed action as \"action-id\" using an id a tool in this conversation " \
               "returned (\"view_projekt-482\", \"notify_toggle-new_comments\"); leave its label " \
               "empty to use the record's own name, which is usually better than a paraphrase of " \
               "it. A button whose action is unknown or whose record no longer exists is " \
               "dropped. " \
-              "For an action that cannot be undone — publishing, commenting, unlinking — the " \
-              "label must say what it does (\"Jetzt einreichen\", not \"Weiter\"). This sends " \
-              "the message itself: do not write one as well, and do not put a link in it when a " \
-              "button already leads there."
+              "An action that cannot be undone — publishing, commenting — carries a fixed " \
+              "label saying what it does, so leave those labels empty; unlinking is not yours " \
+              "to offer at all. This sends the message itself: do not write one as well, and do " \
+              "not put a link in it when a button already leads there."
 
   params do
     string :body,
@@ -50,7 +53,12 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
     note_typing_hint_offered! if ::Whatsapp::FlowActions.projekt_choice?(button_ids)
 
-    halt("Replied to the citizen with buttons: #{button_ids.join(", ")}.")
+    halt(
+      [
+        "Replied to the citizen with buttons: #{button_ids.join(", ")}.",
+        ::Whatsapp::AssistantActions.wording_note(wording_offers(offerable))
+      ].compact.join(" ")
+    )
   end
 
   private
@@ -86,13 +94,30 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
     # A recovery id keeps its own namespace, read by the inbound side before the
     # catalog's, so it is built by its own path — but the label on it is the
     # model's like every other.
+    #
+    # The words the model asked for are kept against the id the button got, so what
+    # it wrote can be compared afterwards with what shipped. Kept here rather than
+    # returned alongside the button because #offerable_buttons drops and deduplicates
+    # after this: only the buttons that survive that are worth mentioning, and they
+    # are known by their id.
     def build(button)
       spec = button_value(button, "action_id")
       label = button_value(button, "label")
-
-      ::Whatsapp::AssistantActions.offered_button(
+      offered = ::Whatsapp::AssistantActions.offered_button(
         spec: spec, label: label, conversation: conversation
       )
+
+      written_labels[offered[:id]] = label if offered.present?
+
+      offered
+    end
+
+    def written_labels
+      @written_labels ||= {}
+    end
+
+    def wording_offers(offerable)
+      offerable.map { |button| [written_labels[button[:id]], button[:title]] }
     end
 
     # Providers disagree on whether an object array arrives with string or symbol

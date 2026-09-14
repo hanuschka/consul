@@ -414,6 +414,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::PostComment,
       ::Ai::Tools::WhatsappAiAssistant::ManageSubscription,
+      ::Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::UnlinkAccount,
       ::Ai::Tools::WhatsappAiAssistant::StartPollVote
     ].freeze
@@ -502,6 +503,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::SendProjektCard,
       ::Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation,
+      ::Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::RequestLocation,
       ::Ai::Tools::WhatsappAiAssistant::RequestPhoto
     ].freeze

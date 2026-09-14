@@ -92,6 +92,20 @@ de:
       # is there. The comment itself is their own and is never translated.
       # online and awaiting_review each stand alone as that whole second message,
       # so both have to read as a full sentence with nothing above them.
+      # Der Block, den Whatsapp::UnlinkPreview vor die Bestätigungsfrage stellt. Diese
+      # beiden Zeilen schreibt ausdrücklich nicht das Modell: Das Aufheben der
+      # Verknüpfung löst nur die Nummer vom Konto, und eine Formulierung, die je nach
+      # Antwort mal eine Löschung verspricht und mal nicht, ist genau das, was hier
+      # nicht passieren darf. erasure steht für sich, die Adresse kommt in der Zeile
+      # darunter.
+      unlink:
+        consequence: >-
+          Wenn Sie die Verknüpfung lösen, wird nur diese Nummer von Ihrem Konto getrennt. Ihr
+          Konto im Portal bleibt bestehen, und alle Beiträge, die Sie veröffentlicht haben,
+          bleiben unverändert online.
+        erasure: >-
+          Wenn Sie Ihr Konto und Ihre Daten wirklich löschen möchten, geht das im Portal unter
+          „Konto löschen“:
       comment:
         on_proposal: "Kommentar zu"
         online: "Ihr Kommentar steht jetzt auf der Seite:"
@@ -228,6 +242,16 @@ de:
         already_answered: >-
           Sie haben bei „%{poll}“ bereits abgestimmt. Ihre Antworten sind gespeichert und
           bleiben unverändert — ein zweites Mal ist die Abstimmung nicht möglich.
+        # Was der Bot aus einer geschriebenen Antwort gelesen hat. Beim Tippen auf eine
+        # Schaltfläche braucht es das nicht — da sieht die Bürgerin selbst, was sie
+        # gewählt hat. Sagt die Lesart, nicht das Ergebnis: die Stimme kann darunter
+        # noch abgelehnt werden, und die Ablehnung sagt ihr eigenes Wort danach.
+        typed_answer_read: "Ich habe Ihre Antwort als „%{answer}“ gelesen."
+        # Wenn eine laufende Abstimmung für eine andere verlassen wurde. Ohne diese Zeile
+        # steht die Bürgerin plötzlich bei Frage 1 von etwas anderem.
+        left_for_other: >-
+          Die Abstimmung „%{poll}“ haben wir hier verlassen. Ihre bisherigen Antworten sind
+          gespeichert — Sie können jederzeit dort weitermachen.
       onboarding:
         login_prompt: >-
           Zum Anmelden hier tippen. Mit dem Öffnen des Links willigen Sie in die Verarbeitung
@@ -236,9 +260,11 @@ de:
           ✅ Verknüpfung erfolgreich! Ab jetzt können Sie hier direkt Beiträge einreichen, unterstützen
           und Benachrichtigungen erhalten.
         unlinked: >-
-          ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Nummer und
+          ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Ihr Konto im
+          Portal und alle Beiträge, die Sie veröffentlicht haben, bleiben bestehen. Nummer und
           Chatverlauf bleiben für die übliche Speicherdauer erhalten. Sie können jederzeit erneut
-          verknüpfen.
+          verknüpfen. Wenn Sie Ihr Konto und Ihre Daten löschen möchten, geht das hier:
+          %{delete_account_url}
         no_account: >-
           Für die Verknüpfung brauchen Sie ein Konto. Die Registrierung dauert 2 Minuten: %{register_url}
         expired: >-
@@ -272,13 +298,26 @@ de:
           voting_phase: Jetzt abstimmen
           formular_phase: Formular ausfüllen
           point_of_interest_phase: Mangel melden
-        # Dieselbe Schaltfläche, wenn diese Person in der Abstimmungsphase schon
-        # abgestimmt hat. Ein eigener Zweig neben phase_action und nicht darin, weil
-        # Whatsapp::ProjektCardActions aus dessen Schlüsseln ableitet, welche Phasenarten
-        # überhaupt eine Aktion bekommen — ein Schlüssel mehr dort wäre eine erfundene
-        # Phasenart. Auch hier gelten die 20 Zeichen, die WhatsApp einer Beschriftung lässt.
+        # Welche Phasenarten überhaupt als "schon erledigt" markiert werden können, und
+        # zugleich das Wort, das die Karte dafür verwendet. Ein eigener Zweig neben
+        # phase_action und nicht darin, weil Whatsapp::ProjektCardActions aus dessen
+        # Schlüsseln ableitet, welche Phasenarten eine Aktion bekommen — ein Schlüssel
+        # mehr dort wäre eine erfundene Phasenart.
+        #
+        # Auf der Karte steht dieses Wort inzwischen in der Zeile unter dem Titel und
+        # nicht mehr im Titel selbst: als Titel stand es bei einem Projekt mit vier
+        # Abstimmungen viermal gleichlautend da. Als Beschriftung einer einzelnen
+        # Schaltfläche des Assistenten wird es weiterhin so verwendet, dort gelten die
+        # 20 Zeichen, die WhatsApp einer Schaltfläche lässt.
         phase_action_voted:
           voting_phase: Bereits abgestimmt
+        # Der Titel der Zeile, wenn diese Person schon abgestimmt hat: der Name der
+        # Abstimmung selbst, mit einem Haken davor. Der Name und nicht das Wort oben,
+        # weil nur der Name die vier Abstimmungen eines Projekts voneinander
+        # unterscheidet — und die Beschreibungszeile, die das bisher allein tat, wird
+        # von einer Antwortschaltfläche überhaupt nicht angezeigt. Der Haken zählt wie
+        # jedes andere Zeichen gegen die 24, die WhatsApp einer Listenzeile lässt.
+        phase_action_voted_title: "✓ %{name}"
         phase_contributions: Beiträge ansehen
         contribution_choose: Beitrag auswählen
         view_projekt: Projekt ansehen
@@ -288,7 +327,7 @@ de:
         show_more: Weitere anzeigen
         image_upload: Foto hinzufügen
         image_generate: Bild erzeugen
-        # The two faces of one pill, and the only labels the assistant is not allowed
+        # The two faces of one pill, and two of the labels the assistant is not allowed
         # to write itself: the same button gives a support or takes it back depending
         # on the vote, so words it chose a message ago could say the opposite of what
         # tapping it does. Both have to stay inside the 20 characters WhatsApp allows
@@ -296,7 +335,20 @@ de:
         # which is why the fuller phrase lives on the message and not on the button.
         support: Jetzt unterstützen
         support_withdraw: Zurücknehmen
+        # Die beiden Schaltflächen, die etwas Unwiderrufliches auslösen: Ein Kommentar
+        # steht danach unter dem Namen dieser Person auf einer öffentlichen Seite, ein
+        # Beitrag ist eingereicht. Dass die Beschriftung das auch sagt, stand vorher
+        # nur als Satz in der Werkzeugbeschreibung — ein „Weiter“ auf der Schaltfläche,
+        # die veröffentlicht, ist eine Person, die nicht gefragt wurde. Auch hier
+        # gelten die 20 Zeichen.
+        comment_post: Jetzt kommentieren
+        draft_publish: Jetzt einreichen
         image_skip: Ohne Foto weiter
+        # Die einzige Beschriftung, die das Modell nicht einmal anbieten darf: Die
+        # Schaltfläche löst die Verknüpfung, und was das bedeutet, steht im Block
+        # darüber. Auch sie muss in die 20 Zeichen passen, die WhatsApp einer
+        # Beschriftung lässt.
+        unlink_confirm: Verknüpfung lösen
       notifications:
         follow_up:
           deadline_approaching: Sie können hier noch mitmachen, bis die Frist abläuft.

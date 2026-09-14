@@ -95,6 +95,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return if handle_poll_skip_tap
     return if handle_poll_location
     return if handle_open_answer_text
+    return if handle_typed_ballot_answer
 
     apply_start_over_tap
 
@@ -193,6 +194,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Held back where the turn moved the conversation somewhere else. A citizen who
     # asked to submit a contribution is now drafting one, and re-asking a poll
     # question on top of that is the bot talking over itself.
+    # Held back too where the turn swapped the ballot for another one. That is said
+    # by Whatsapp::Polls::OfferBallotService as it begins the second, which is the
+    # only moment both are still nameable and the new question has not gone out yet.
     def resume_ballot(poll_id)
       return if poll_id.blank?
       return if conversation.reload.active_poll_id != poll_id
@@ -767,6 +771,48 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
     end
 
+    # The same reading applied to a question that is answered by tapping. A citizen
+    # part-way through a ballot who writes "Ich bin dafuer" is answering it, and
+    # their words used to be taken as a fresh request instead — which threw them
+    # into a different ballot and recorded nothing of the one they were in.
+    #
+    # Only where the words name exactly one option
+    # (Whatsapp::Polls::TypedAnswerQuery). Anything else falls through to the
+    # assistant, which is what a citizen asking a question in the middle of a ballot
+    # must keep being able to do.
+    #
+    # What the bot read goes out before the answer is recorded, which a tap needs no
+    # equivalent of: the citizen saw which pill they pressed, where here a sentence
+    # has been interpreted for them. It says the reading rather than the result,
+    # because the record can still be refused underneath it — a poll closed between
+    # two messages, a maximum already spent — and those refusals say their own piece
+    # after it without contradicting it.
+    def handle_typed_ballot_answer
+      return false if conversation.active_poll_id.blank?
+      return false if reading.tapped_reply_id.present?
+      return false if reading.text.blank?
+      return false if ::Whatsapp::QrToken.carried_in?(reading.text)
+
+      question_answer = ::Whatsapp::Polls::TypedAnswerQuery.for(
+        conversation: conversation, text: reading.text
+      )
+
+      return false if question_answer.blank?
+
+      announce_typed_answer(question_answer)
+
+      ::Whatsapp::Polls::RecordAnswerService.call(
+        conversation: conversation, question_answer: question_answer
+      )
+    end
+
+    def announce_typed_answer(question_answer)
+      ::Whatsapp::Send.locale_text(
+        account: account,
+        body: ::Whatsapp.copy("whatsapp.bot.poll.typed_answer_read", answer: question_answer.title)
+      )
+    end
+
     # Where the ballot goes after a pill that settled a question without answering
     # one. Re-resolves the poll rather than trusting the marker, because the marker
     # outlives the poll it names.
@@ -923,7 +969,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # with what it says.
     #
     # Numbered with the same position the entry carries in the message above, and not
-    # for decoration: a row title holds twenty characters, so two proposals whose
+    # for decoration: a row title holds twenty-four characters, so two proposals whose
     # titles agree for that long arrive as two rows reading identically, with the same
     # date under both and nothing on either saying which is which. The number is also
     # what lets the citizen pick the third one they just read about.
@@ -931,7 +977,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return if entry[:action_id].blank?
 
       button = ::Whatsapp::AssistantActions.offered_button(
-        spec: entry[:action_id], label: "#{position}. #{entry[:title]}", conversation: conversation
+        spec: entry[:action_id], label: "#{position}. #{entry[:title]}",
+        conversation: conversation,
+        length: ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
       )
 
       return if button.blank?

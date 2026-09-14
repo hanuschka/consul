@@ -166,8 +166,24 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
         contribution_id: contribution.id,
         title: contribution.title,
         projekt: projekt.present? ? projekt_title(projekt) : nil,
-        supports: contribution.cached_votes_up
+        supports: contribution.cached_votes_up,
+        supported_by_you: supported_by_user?(contribution)
       }.compact
+    end
+
+    # Read the way the pill beside the sentence reads it, through
+    # Whatsapp::AssistantActions#support_toggle_label, so the two cannot come
+    # apart: a support registered in an earlier session is not in the transcript,
+    # and with no fact to write from the model offers a support the button under
+    # it is already labelled "withdraw".
+    #
+    # Absent rather than false for a budget investment and for an unlinked number.
+    # Neither is a proposal this citizen has not supported yet, and reported as
+    # false both would read as one.
+    def supported_by_user?(contribution)
+      return if !contribution.is_a?(::Proposal) || user.blank?
+
+      contribution.voted_up_by?(user)
     end
 
     # ── Refusals ────────────────────────────────────────────────────────────

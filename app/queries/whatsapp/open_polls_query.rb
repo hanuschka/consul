@@ -22,13 +22,24 @@ class Whatsapp::OpenPollsQuery < ApplicationQuery
 
   private
 
+    # Open is what ProjektPhase.current says, not Poll.current: that scope compares
+    # both phase dates with no regard for nulls and skips active and hidden_at, so
+    # an open-ended vote — a phase with no end date, or none of either — was missing
+    # from this list and its count while the projekt card, which reads a null date
+    # as "no bound" through ProjektPhase#current?, kept offering it as a row. The
+    # same citizen was told four votes were running under a card that showed nine.
+    #
+    # The predicate also asks for hidden_at; the join already carries that, because
+    # ProjektPhase's default scope puts it on the association. `reorder` because the
+    # same default scope orders by given_order and a merge brings that along, which
+    # across projekts sorts by nothing a citizen can read.
     def scope
       relation = Poll
-        .current
         .joins(projekt_phase: { projekt: :page })
+        .merge(ProjektPhase.current)
         .where(site_customization_pages: { status: "published" })
         .merge(Projekt.activated)
-        .order(:ends_at)
+        .reorder(:ends_at)
 
       return relation if @projekt.blank?
 

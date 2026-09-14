@@ -7,11 +7,23 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
               "every row that can be. Where it is false the ballot_url is the way through — send " \
               "it with send_link. A row marked already_voted is one this citizen took part in " \
               "earlier: say so where you name it and never offer to start it — they cannot " \
-              "answer it again. Returns facts for you to answer in your own words: it sends " \
-              "nothing to the citizen itself. #{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: " \
-              "where there are more, say how many and offer more_action_id as a button."
+              "answer it again. Every row without that mark is a vote this citizen has NOT " \
+              "answered, and a vote that is not in the list is simply not open — never tell " \
+              "the citizen they took part in something the list does not mark as " \
+              "already_voted. covers says what total counts: 'projekt' when a project was " \
+              "named, 'portal' for the whole portal — say which when you name the number. " \
+              "Returns facts for you to answer in your own words: it sends nothing to the " \
+              "citizen itself. #{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: where there " \
+              "are more, say how many and offer more_action_id as a button."
 
   MORE_SCOPE = "polls".freeze
+
+  # What the count covers, said in the result rather than left to the model to
+  # remember from its own arguments: the same total read as a portal's and as one
+  # projekt's is the difference between "four votes are running here" and "four
+  # votes are running", and the citizen hears only the sentence.
+  PROJEKT_COVERAGE = "projekt".freeze
+  PORTAL_COVERAGE = "portal".freeze
 
   params do
     optional :projekt_name,
@@ -33,6 +45,7 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
       )
 
       {
+        covers: projekt.present? ? PROJEKT_COVERAGE : PORTAL_COVERAGE,
         polls: polls.map { |poll| row_for(poll, votable_ids, voted_ids) },
         **::Whatsapp::ListWindow.report(
           scope: MORE_SCOPE, from: from, shown: polls.size, total: query.total

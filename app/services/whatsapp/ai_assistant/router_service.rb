@@ -73,6 +73,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   def call
     return ServiceResult.failure(error: BLANK_MESSAGE_ERROR) if @inbound_text.blank?
 
+    keep_waiting_visible
+
     turn = within_turn { ask }
     outcome = deliver(turn)
 
@@ -218,11 +220,18 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       raise ToolLoopError, "assistant called more than #{MAX_TOOL_CALLS} tools in one turn"
     end
 
-    # Asked again on every tool call, because both things that end the bubble happen
-    # inside the loop: a tool that speaks to the citizen dismisses it, and a turn
-    # still running after TYPING_INDICATOR_SECONDS has had it expire. Unthrottled on
-    # purpose — MAX_TOOL_CALLS bounds it, and `typing` swallows its own failures, so
-    # the cost of asking once too often is a log line the citizen never sees.
+    # Asked for at three points. At the start of the turn, before the opening
+    # completion: that is the longest single wait, and on a turn that calls no tool
+    # — every smalltalk reply, every off-topic refusal — it used to be the whole
+    # turn, passed in silence. Again on every tool call, because both things that
+    # end the bubble happen inside the loop: a tool that speaks to the citizen
+    # dismisses it, and a turn still running after TYPING_INDICATOR_SECONDS has had
+    # it expire. And once more before the actions retry, whose second completion
+    # starts after the window the first one was given. The read receipt travels in
+    # the same request, so the citizen sees both the moment their message is taken
+    # up. Unthrottled on purpose — MAX_TOOL_CALLS bounds it, and `typing` swallows
+    # its own failures, so the cost of asking once too often is a log line the
+    # citizen never sees.
     def keep_waiting_visible
       ::Whatsapp::Send.typing(message_id: @typing_message_id)
     end
@@ -306,6 +315,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     def retry_for_actions(turn)
       return if turn.chat.blank?
       return if @tool_calls_made >= MAX_TOOL_CALLS
+
+      keep_waiting_visible
 
       response = turn.chat.ask(RETRY_FOR_ACTIONS)
 

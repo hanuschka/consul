@@ -14,6 +14,14 @@ module TextSimilarity
   PADDING = "  ".freeze
   TRIGRAM_LENGTH = 3
 
+  # How much of a beginning two words have to share to be read as the same word.
+  # Four characters, because German builds its topics by compounding: "Parken"
+  # and "Parkraumkonzept" are the same subject and share nothing a trigram score
+  # over whole titles can see, while "Parken" and "Partnerstadt" share three and
+  # are not. Also what reaches a citizen who spells an umlaut out — "dafuer" for
+  # "dafür", which transliterates to "dafur" and scores below every usable floor.
+  STEM_PREFIX_LENGTH = 4
+
   module_function
 
   # 1.0 for identical strings, 0.0 for nothing in common. Two blank strings
@@ -29,6 +37,24 @@ module TextSimilarity
     union = (left_trigrams | right_trigrams).size
 
     shared.fdiv(union)
+  end
+
+  # Whether two already-normalised words are the same word. Asked of words rather
+  # than of whole strings on purpose: a trigram score is the right question for
+  # two titles, and the wrong one for a sentence held against a five-letter
+  # option, where the sentence's own length drives the union and the score down.
+  #
+  # Both sides have to be long enough to carry the prefix. Below it every short
+  # word matches every other one that starts alike — "Ja" and "Jahr" — so a short
+  # word is compared whole by the callers instead.
+  def same_stem?(left, right)
+    return false if left.length < STEM_PREFIX_LENGTH || right.length < STEM_PREFIX_LENGTH
+
+    left[0, STEM_PREFIX_LENGTH] == right[0, STEM_PREFIX_LENGTH]
+  end
+
+  def words(text)
+    normalize(text).split
   end
 
   def trigrams(text)

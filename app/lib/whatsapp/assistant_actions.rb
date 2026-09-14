@@ -16,6 +16,19 @@ module Whatsapp::AssistantActions
   # 21-character label ships as nonsense rather than as a slightly long label.
   MAX_LABEL_LENGTH = 20
 
+  # A list row is allowed four characters more than a button, and rows are where the
+  # longest labels are — a projekt's name, a citizen's own contribution title — so
+  # the four are worth threading a length through for. Buttons keep the lower figure
+  # rather than both surfaces sharing one: a set of poll options is sent as buttons
+  # or as rows depending only on how many there are, so a label written for a row
+  # has to survive being put on a button.
+  MAX_ROW_TITLE_LENGTH = 24
+
+  # Spent out of the budget rather than added to it — WhatsApp counts it like any
+  # other character — which is the whole point: the label gives up a character to
+  # say that it gave up the rest.
+  TRUNCATION_OMISSION = "…".freeze
+
   # The actions whose consequence cannot be taken back from a chat. Their labels
   # are the model's like every other, but the offer is recorded as its own event:
   # a pill that publishes a contribution has to be findable afterwards, and "the
@@ -96,14 +109,16 @@ module Whatsapp::AssistantActions
   # state: five call sites read a nil from the recovery side as "not a recovery id"
   # and asked the catalog for it, which answered nil again and logged the drop a
   # second time under the wrong reason.
-  def offered_button(spec:, label:, conversation:)
+  def offered_button(spec:, label:, conversation:, length: MAX_LABEL_LENGTH)
     action, = parse(spec)
 
     if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
-      return recovery_button(spec: spec, label: label, conversation: conversation)
+      return recovery_button(
+        spec: spec, label: label, conversation: conversation, length: length
+      )
     end
 
-    button(spec: spec, label: label, conversation: conversation)
+    button(spec: spec, label: label, conversation: conversation, length: length)
   end
 
   # The pill neither half of which is the model's, for the ids withheld from it
@@ -127,7 +142,7 @@ module Whatsapp::AssistantActions
   # when that is not something it may offer. Nil rather than an exception on
   # purpose: one unusable pill in a set of three should cost that pill, not the
   # reply.
-  def button(spec:, label:, conversation:)
+  def button(spec:, label:, conversation:, length: MAX_LABEL_LENGTH)
     action, param = parse(spec)
 
     return dropped(spec, conversation, :unparseable) if action.blank?
@@ -136,7 +151,9 @@ module Whatsapp::AssistantActions
     return dropped(spec, conversation, :unknown_scope) if !known_scope?(action, param)
     return dropped(spec, conversation, :nothing_to_tell) if !tells_more?(action, param)
 
-    title = title_for(action: action, param: param, label: label, conversation: conversation)
+    title = title_for(
+      action: action, param: param, label: label, conversation: conversation, length: length
+    )
 
     return dropped(spec, conversation, :unlabelled) if title.blank?
 
@@ -203,7 +220,7 @@ module Whatsapp::AssistantActions
   # once per process, so the conversation is the only place the rule can actually be
   # enforced. The slot it frees is not backfilled: nothing is appended to a recovery
   # line any more except the way back, and that one is added on the way out.
-  def recovery_button(spec:, label:, conversation:)
+  def recovery_button(spec:, label:, conversation:, length: MAX_LABEL_LENGTH)
     action, = parse(spec)
     recovery_id = ::Whatsapp::Send::RECOVERY_ACTION_IDS[action]
 
@@ -213,7 +230,7 @@ module Whatsapp::AssistantActions
       return dropped(spec, conversation, :recovery_unavailable)
     end
 
-    title = truncated(label)
+    title = truncated(label, length: length)
 
     return if title.blank?
 
@@ -241,73 +258,86 @@ module Whatsapp::AssistantActions
       .map(&:to_s)
   end
 
-  # The model's own words, cut on a word boundary. WhatsApp's own truncation is
-  # mid-word and silent, so a label that is one character too long arrives as a
-  # fragment; cutting it here at least ends on something readable.
+  # The model's own words, shortened to what the surface holds. WhatsApp's own
+  # truncation is mid-word and silent, so a label that is one character too long
+  # arrives as a fragment; cutting it here is what puts a mark on the cut.
   #
   # Falls back to the record's own name for a parameterised pill the model left
   # unlabelled — a projekt's title as the portal writes it is better than a
   # paraphrase, and it is also what proves the record exists.
-  def title_for(action:, param:, label:, conversation:)
+  def title_for(action:, param:, label:, conversation:, length: MAX_LABEL_LENGTH)
     if FORCED_LABEL_ACTIONS.include?(action)
-      return truncated(forced_label(action: action, param: param, conversation: conversation))
+      return truncated(
+        forced_label(action: action, param: param, conversation: conversation), length: length
+      )
     end
 
-    written = truncated(label)
+    written = truncated(label, length: length)
 
     return written if written.present?
     return if !::Whatsapp::FlowActions.parameterised?(action)
 
-    truncated(record_label(action: action, param: param, conversation: conversation))
+    truncated(
+      record_label(action: action, param: param, conversation: conversation), length: length
+    )
   end
 
-  # The length is asked for by a caller that has already spent some of the twenty
-  # characters on something of its own — a poll option's number, which its own line in
-  # the message text carries too, so the wording is what gives way rather than the
-  # number that pairs the two.
+  # Cut where the budget runs out and marked with an ellipsis, rather than at the
+  # last word boundary before it. A boundary cut with nothing to show for itself is
+  # how "Kommentar veröffentlichen" reached a citizen as "Kommentar" — not a
+  # shortened label but a different, shorter one, under a message asking them to tap
+  # it. The boundary was never a rule either: a German compound holds no space to
+  # fall back to, so "Benachrichtigungseinstellungen" was hard-cut mid-word anyway
+  # and only labels that happened to have an early space were treated differently.
+  #
+  # The length is asked for by a caller that has already spent some of the budget on
+  # something of its own — a poll option's number, which its own line in the message
+  # text carries too, so the wording is what gives way rather than the number that
+  # pairs the two — or by one whose surface is allowed more of it than a button is.
   def truncated(label, length: MAX_LABEL_LENGTH)
     text = label.to_s.squish
 
     return if text.blank?
 
-    text.truncate(length, separator: " ", omission: "")
+    shortened = text.truncate(length, omission: TRUNCATION_OMISSION)
+
+    record_truncation(text, length) if shortened != text
+
+    shortened
+  end
+
+  # Whether the words fit whole, asked without producing the cut: a probe that went
+  # through #truncated would count a truncation that never ships against the rate
+  # below.
+  def fits?(text, length)
+    text.to_s.squish.length <= length
   end
 
   # The label of a translated fixed line, as it will actually arrive. Preferring the
-  # translation, but not at the price of arriving cut mid-word.
+  # translation, but not at the price of arriving shortened where the copy behind it
+  # would have fitted whole.
   #
-  # #truncated finds a word boundary only when there is a space inside the limit.
-  # A single compound longer than it has none, and Rails falls back to a hard cut —
-  # so "Benachrichtigungseinstellungen" ships as "Benachrichtigungsein", which no
-  # cut can fix because no cut of it fits. German and Turkish generate exactly those.
+  # The question used to be *where* the cut fell, and a cut that landed on a word
+  # boundary was kept — which is precisely how a first word shipped as though it were
+  # the label. Now that every cut says so, the only question left is whether one
+  # happened at all: a label in the portal's own language that fits beats one in the
+  # citizen's that has been shortened, which is the same trade BotCopyService already
+  # makes whenever a translation cannot be had at all. German and Turkish compounds
+  # are what make it come up — past twenty characters they have no shorter form.
   #
-  # Where the written copy does fit whole, that is the readable answer: a label in
-  # the portal's own language beats a fragment in the citizen's, and it is the same
-  # trade BotCopyService already makes whenever a translation cannot be had. A
-  # translation cut on a real word boundary is not a fragment and is kept.
   # Blank is answered by the written copy rather than by nil: BotCopyService cannot
   # hand back a blank line — a mismatched count falls the whole message back to the
   # copy as written — but a blank title is the one value WhatsApp refuses the message
   # over, so this never returns one while the copy behind it has words.
-  def fitting_label(translated:, original:)
+  def fitting_label(translated:, original:, length: MAX_LABEL_LENGTH)
     text = translated.to_s.squish
     written = original.to_s.squish
-    cut = truncated(text)
 
-    return truncated(written) if cut.blank?
-    return cut if cut == text || ended_on_boundary?(text, cut)
-    return cut if truncated(written) != written
+    return truncated(written, length: length) if text.blank?
+    return text if fits?(text, length)
+    return written if fits?(written, length)
 
-    written
-  end
-
-  # Whether the cut fell between words rather than inside one. Asked of the
-  # character the cut stopped before, not of the cut's own contents: #truncated
-  # consumes the separator, so a boundary cut that leaves one short word — "Ab" out
-  # of "Ab cdefghij…" — holds no space and would read as a fragment while being
-  # nothing of the kind.
-  def ended_on_boundary?(text, cut)
-    text[cut.length] == " "
+    truncated(text, length: length)
   end
 
   # The words of a pill the model may offer but not name, in whichever of the two
@@ -517,6 +547,22 @@ module Whatsapp::AssistantActions
 
     ::Whatsapp::AiAssistant::DecisionLog.record(
       event: :irreversible_offered, conversation: conversation, action: action
+    )
+  end
+
+  # Counted rather than prevented, because what overruns is a sentence the model
+  # wrote and the same pill fits one turn and not the next — so "how often" has no
+  # answer a single line could give. The rate is what says whether the budget the
+  # prompt states is one the model can write to or one it is quietly missing, and
+  # the label is kept with it because a budget missed by two characters and one
+  # missed by twenty are different problems with different fixes.
+  #
+  # Without a conversation: #truncated is reached from the card and the poll as well
+  # as from a turn, and a count that only held the ones that had a conversation to
+  # hand would be read as the whole.
+  def record_truncation(text, length)
+    ::Whatsapp::AiAssistant::DecisionLog.record(
+      event: :label_truncated, label: text, over_by: text.length - length
     )
   end
 end

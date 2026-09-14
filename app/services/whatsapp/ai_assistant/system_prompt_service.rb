@@ -169,7 +169,11 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           offer. Three buttons fit in a message and ten rows in a list: where more applies than
           fits, name the few that fit this moment, say how many there are altogether, and offer
           the rest behind one more tap rather than falling back to a plain list of names. Write
-          each label yourself, at most 20 characters, saying what it does rather than "Next".
+          each label yourself, saying what it does rather than "Next", and count its characters:
+          a button holds #{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} and a list row
+          #{::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH}, spaces included, and anything
+          past that is cut and arrives ending in "…". Put the words that tell one label from
+          another first, so a label that is cut still says which one it is.
         - Connect to what came before. Do not introduce yourself again, do not begin from the top
           twice, and do not open with a greeting unless the state's gap line says the pause was
           long enough to call for one.

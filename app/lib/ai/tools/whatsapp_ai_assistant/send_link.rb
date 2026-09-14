@@ -14,7 +14,10 @@ class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant:
   params do
     string :body, description: "The sentence above the button, in the citizen's language."
     string :label,
-      description: "What the button says, at most 20 characters (\"Seite öffnen\", \"Anmelden\")."
+      description: "What the button says, at most " \
+                   "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting " \
+                   "spaces (\"Seite öffnen\", \"Anmelden\"). Count them: a longer one is cut " \
+                   "and arrives ending in \"…\"."
     string :url, description: "The address, exactly as a tool returned it."
   end
 

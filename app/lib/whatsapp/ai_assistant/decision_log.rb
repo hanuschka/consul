@@ -41,12 +41,20 @@ module Whatsapp::AiAssistant::DecisionLog
   # the turn was stored as though it had answered, and the citizen saw nothing —
   # so a rate here is how a body the model writes too long for one message, or a
   # number that has blocked us, becomes visible at all.
+  #
+  # `label_truncated` is a button or row label the model wrote past what the
+  # surface holds. It is the one event here whose subject is the prompt rather
+  # than the code: the label still ships, marked, so nothing is broken by it —
+  # but the rate is the only way to tell a budget the model can write to from one
+  # it is told and routinely misses, and it is what says whether wording the
+  # instruction differently changed anything.
   EVENTS = %i[
     tool_called
     action_dropped
     actions_unusable
     actions_missed
     irreversible_offered
+    label_truncated
     tap_dispatched
     tap_unhandled
     start_over

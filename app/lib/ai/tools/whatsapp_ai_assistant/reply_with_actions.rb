@@ -12,7 +12,9 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
               "buttons whose labels you write yourself — all three are yours to fill. Prefer it " \
               "over a plain text reply whenever there is an obvious next step: it saves them " \
               "typing and it says what can happen next. Each button needs an action_id from the " \
-              "list below and a label of at most 20 characters in the citizen's language. Name a " \
+              "list below and a label in the citizen's language of at most " \
+              "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting spaces — " \
+              "count them, because a longer one is cut and arrives ending in \"…\". Name a " \
               "record-backed action as \"action-id\" using an id a tool in this conversation " \
               "returned (\"view_projekt-482\", \"notify_toggle-new_comments\"); leave its label " \
               "empty to use the record's own name, which is usually better than a paraphrase of " \

@@ -41,16 +41,57 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     return unknown_projekt_error(projekt_name) if projekt.blank?
 
     send_card(projekt, summary)
+
+    entered = enter_single_open_phase(projekt)
+
     note_typing_hint_offered!
 
     # Halts like every tool that sends its own message: the card already carries
     # the title, the summary, the picture and the link, so a further completion
     # would pay for a sentence that may only repeat them.
-    halt("Sent the card for #{projekt_title(projekt)}, carrying the title, your summary, the " \
-         "picture and the link.")
+    halt(
+      "Sent the card for #{projekt_title(projekt)}, carrying the title, your summary, the " \
+      "picture and the link.#{entered_note(entered)}"
+    )
   end
 
   private
+
+    # Picking a projekt is how a citizen says what they want to talk about, and
+    # where the projekt has exactly one thing the chat can take a contribution
+    # into, it is also how they say which phase they mean. Left unset, the
+    # conversation reads "no active phase" and the contribution they write next is
+    # sent to the topic search instead of into a draft — answered, in the case this
+    # comes from, with no projekt being about it.
+    #
+    # Two or more open phases is a real question and the card's own pills ask it,
+    # one per phase. None is nothing to enter.
+    #
+    # Only where there is nothing to lose. start_draft! replaces the context, so a
+    # citizen part-way through a submission or a ballot would have it taken from
+    # under them by a card they asked to see.
+    def enter_single_open_phase(projekt)
+      return if conversation.unsaved_work?
+      return if conversation.active_poll_id.present?
+
+      open_phases = ::Whatsapp::EligiblePhasesQuery.uncapped(projekt: projekt)
+
+      return if open_phases.size != 1
+
+      conversation.start_draft!(open_phases.first)
+
+      open_phases.first
+    end
+
+    # Said to the model because the card said nothing about it to the citizen: the
+    # phase is open underneath, and what the model must not do now is search for a
+    # projekt when their next message is the contribution itself.
+    def entered_note(projekt_phase)
+      return "" if projekt_phase.blank?
+
+      " Their submission to *#{projekt_phase.title}* is open, so whatever they write next is " \
+        "their contribution — call draft_proposal with it rather than searching for a projekt."
+    end
 
     # Buttons rather than a caption on its own, which is what this sent before: a
     # card is the one message where the next step is never in doubt — the citizen is

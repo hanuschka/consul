@@ -121,6 +121,8 @@ class Whatsapp::Polls::OfferBallotService < ApplicationService
     # up afterwards. Dropped again by AdvanceBallotService the moment there is
     # nothing left to ask.
     def begin_ballot(poll)
+      announce_ballot_left(poll)
+
       @conversation.clear_pending_poll!
       @conversation.store_active_poll!(poll.id)
 
@@ -130,6 +132,33 @@ class Whatsapp::Polls::OfferBallotService < ApplicationService
       # carried on has cleared its own markers and left the link as the right thing to
       # send, and comes back as the false this passes on.
       ::Whatsapp::Polls::AdvanceBallotService.call(conversation: @conversation, poll: poll)
+    end
+
+    # The ballot this one is replacing. A citizen part-way through one poll who is
+    # handed the first question of another has been moved without a word about what
+    # became of the answers they already gave — which is how a typed sentence under
+    # "Grundfragen, Frage 1 von 5" came back as "Parken in der Ortsmitte, Frage 1 von
+    # 3" and nothing was said about the first.
+    #
+    # Said here rather than after the turn that caused it, which is the only place
+    # both ballots are still nameable and the new question has not gone out yet: read
+    # afterwards, the leaving would arrive underneath a question about something else
+    # and read as a comment on that.
+    #
+    # This is the one place a ballot is swapped for another. Everywhere else that
+    # writes the marker is a Record service storing the poll it has just recorded an
+    # answer in, and a marker that goes blank is a ballot finished or abandoned —
+    # both of which have their own closing line.
+    def announce_ballot_left(poll)
+      left_behind = ::Poll.find_by(id: @conversation.active_poll_id)
+
+      return if left_behind.blank?
+      return if left_behind.id == poll.id
+
+      ::Whatsapp::Send.locale_text(
+        account: account,
+        body: ::Whatsapp.copy("whatsapp.bot.poll.left_for_other", poll: left_behind.name)
+      )
     end
 
     # The ballot the citizen was about to be given, held while they go and link. The

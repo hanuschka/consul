@@ -293,8 +293,8 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     # of the wording, for a question whose choices arrive behind the picker. It is
     # what a citizen reads a cut label back by, and it costs the wording three of the
     # twenty characters — the cheaper half of the pair, because the option's own
-    # wording stands a line above in full while a pill cut mid-word with nothing to
-    # identify it names no option at all.
+    # wording stands a line above in full while a cut pill carrying nothing but its
+    # own first words names no option at all.
     def numbered_pills(options)
       numbered(options).map { |number, option| answer_pill(option, pill_label(number, option)) }
     end

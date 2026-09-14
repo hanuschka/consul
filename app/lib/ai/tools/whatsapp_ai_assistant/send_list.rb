@@ -36,12 +36,19 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       description: "The sentence above the list, in the citizen's language, laid out as the " \
                    "style rules require."
     string :button_label,
-      description: "What the button that opens the list says, at most 20 characters " \
-                   "(\"Projekt wählen\", \"Auswählen\")."
+      description: "What the button that opens the list says, at most " \
+                   "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting " \
+                   "spaces (\"Projekt wählen\", \"Auswählen\"). Count them: a longer one is " \
+                   "cut and arrives ending in \"…\"."
     array :rows,
       of: :object,
       description: "Up to ten rows, most useful first. Each is {\"action_id\": ..., " \
                    "\"label\": ..., \"description\": ...}, where description is optional. " \
+                   "A row label holds " \
+                   "#{::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH} characters counting " \
+                   "spaces and a longer one is cut and arrives ending in \"…\", so write the " \
+                   "words that tell this row from the others first; the description below it " \
+                   "holds #{MAX_DESCRIPTION_LENGTH} and is where the rest belongs. " \
                    "Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}. " \
                    "With a record id after a dash: " \
@@ -100,7 +107,8 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
 
       button =
         ::Whatsapp::AssistantActions.offered_button(
-          spec: spec, label: label, conversation: conversation
+          spec: spec, label: label, conversation: conversation,
+          length: ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
         )
 
       return if button.blank?

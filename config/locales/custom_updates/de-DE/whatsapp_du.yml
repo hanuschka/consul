@@ -83,6 +83,10 @@ de:
         already_answered: >-
           Du hast bei „%{poll}“ bereits abgestimmt. Deine Antworten sind gespeichert und
           bleiben unverändert — ein zweites Mal ist die Abstimmung nicht möglich.
+        typed_answer_read: "Ich habe deine Antwort als „%{answer}“ gelesen."
+        left_for_other: >-
+          Die Abstimmung „%{poll}“ haben wir hier verlassen. Deine bisherigen Antworten sind
+          gespeichert — du kannst jederzeit dort weitermachen.
       onboarding:
         login_prompt: >-
           Zum Anmelden hier tippen. Mit dem Öffnen des Links willigst du in die Verarbeitung

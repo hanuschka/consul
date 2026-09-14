@@ -242,6 +242,16 @@ de:
         already_answered: >-
           Sie haben bei „%{poll}“ bereits abgestimmt. Ihre Antworten sind gespeichert und
           bleiben unverändert — ein zweites Mal ist die Abstimmung nicht möglich.
+        # Was der Bot aus einer geschriebenen Antwort gelesen hat. Beim Tippen auf eine
+        # Schaltfläche braucht es das nicht — da sieht die Bürgerin selbst, was sie
+        # gewählt hat. Sagt die Lesart, nicht das Ergebnis: die Stimme kann darunter
+        # noch abgelehnt werden, und die Ablehnung sagt ihr eigenes Wort danach.
+        typed_answer_read: "Ich habe Ihre Antwort als „%{answer}“ gelesen."
+        # Wenn eine laufende Abstimmung für eine andere verlassen wurde. Ohne diese Zeile
+        # steht die Bürgerin plötzlich bei Frage 1 von etwas anderem.
+        left_for_other: >-
+          Die Abstimmung „%{poll}“ haben wir hier verlassen. Ihre bisherigen Antworten sind
+          gespeichert — Sie können jederzeit dort weitermachen.
       onboarding:
         login_prompt: >-
           Zum Anmelden hier tippen. Mit dem Öffnen des Links willigen Sie in die Verarbeitung

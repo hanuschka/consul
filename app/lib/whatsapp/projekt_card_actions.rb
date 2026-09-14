@@ -162,8 +162,8 @@ module Whatsapp::ProjektCardActions
   # phase's own title. The title is a name — "Ideen", "Bürgerhaushalt" — where a
   # button has to be an instruction, and a portal that renames a phase would
   # otherwise rename the action with it. It is also the only way the twenty
-  # characters WhatsApp allows a button title are guaranteed rather than truncated
-  # mid-word; #truncated is the backstop for a translation that outgrows them.
+  # characters WhatsApp allows a button title are guaranteed rather than spent down
+  # to an ellipsis; #truncated is the backstop for a translation that outgrows them.
   #
   # A citizen who has already voted is told so on the button itself, before they tap it.
   # The pill used to read "Jetzt abstimmen" whatever they had already done, so the only

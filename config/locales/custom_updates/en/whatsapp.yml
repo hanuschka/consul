@@ -198,6 +198,10 @@ en:
         already_answered: >-
           You have already voted in “%{poll}”. Your answers are recorded and stay as they
           are — this vote cannot be answered a second time.
+        typed_answer_read: "I read your answer as “%{answer}”."
+        left_for_other: >-
+          We have left the vote “%{poll}” here. The answers you gave are recorded — you can
+          pick it up again whenever you like.
       onboarding:
         login_prompt: >-
           Tap below to log in. By opening the link you consent to the processing of your phone

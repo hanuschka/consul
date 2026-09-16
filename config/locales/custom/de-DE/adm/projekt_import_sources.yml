@@ -1,0 +1,130 @@
+de:
+  adm:
+    projekts:
+      home:
+        quick_links:
+          import: Projekt importieren
+      imports:
+        source_text:
+          title: Gelesener Quelltext
+          open: Quelltext
+          intro: >-
+            Das ist der Text, den der Import aus der Quelle gelesen hat — die
+            Grundlage aller Vorschläge der KI. Prüfen Sie ihn, bevor Sie das
+            Projekt anlegen: Anweisungen, die sich an eine KI richten, gehören
+            nicht in eine Projektbeschreibung und sind ein Zeichen dafür, dass
+            die Seite manipuliert wurde.
+          source_label: Quelle
+          empty: Für diesen Import wurde kein Text gespeichert.
+        chats:
+          show:
+            tooltips:
+              source_text:
+                title: Quelltext ansehen
+                text: >-
+                  Zeigt den Text, den der Import aus der Datei oder der Webseite
+                  gelesen hat, unverändert an — damit Sie die Vorschläge der KI
+                  mit der Vorlage vergleichen können.
+        sources:
+          requires_ai: Benötigt die KI-Funktion, die auf dieser Plattform deaktiviert ist
+          file:
+            label: Aus einer Datei
+            description: Ein oder mehrere Dokumente hochladen und daraus ein Projekt erzeugen lassen
+          consul_projekt:
+            label: Aus einem Consul-Projekt
+            description: Ein Projekt von einer anderen Consul-Instanz übernehmen
+          url:
+            label: Aus einer URL
+            description: Eine öffentliche Webseite auslesen und daraus ein Projekt erzeugen lassen
+        show:
+          title: Importfortschritt
+          failed_title: Import fehlgeschlagen
+          stalled_title: Analyse hängt fest
+          stalled_message: Die Analyse dauert ungewöhnlich lange und ist möglicherweise fehlgeschlagen.
+          dismiss: Verwerfen
+          upload_new: Neu beginnen
+          retry: Erneut versuchen
+          processing_title: Analyse läuft…
+          processing_message: Die Quelle wird ausgewertet. Dies kann einen Moment dauern.
+          progress:
+            extracting: Inhalt wird aus der Quelle gelesen…
+            processing: Inhalt wird mit KI analysiert…
+            chatting: Fast fertig — nächster Schritt wird geöffnet…
+        from_urls:
+          new:
+            title: Projekt aus einer URL importieren
+            intro: Geben Sie die Adresse einer öffentlichen Webseite an. Die KI liest die Seite und schlägt daraus ein Projekt vor, das Sie anschließend im Chat anpassen können.
+            url_label: Adresse der Webseite
+            url_hint: Jede öffentlich erreichbare Adresse. Für ein Projekt einer anderen Consul-Instanz nutzen Sie „Aus einem Consul-Projekt“.
+            url_field_label: URL
+            url_placeholder: https://www.beispielstadt.de/stadtentwicklung/umbau-marktplatz
+            instructions_label: Zusätzlicher Kontext (optional)
+            instructions_hint: Alles, was die Seite nicht klärt.
+            instructions_field_label: Hinweise für die KI
+            instructions_placeholder: Zielgruppe, Umfang, gewünschte Phasen…
+            action: Seite auslesen
+        from_consul_projekts:
+          new:
+            title: Projekt aus einem Consul-Projekt importieren
+            intro: Geben Sie die Adresse eines Projekts auf einer anderen Consul-Instanz an. Das Projekt wird kopiert; vor dem Anlegen können Sie Titel, Zeitraum und Phasennamen anpassen.
+            url_label: Adresse des Projekts
+            url_hint: Die öffentliche Adresse des Projekts auf der anderen Instanz.
+            url_field_label: URL
+            url_placeholder: https://bochum-mitgestalten.de/marktplatz-umbau
+            browse_inspiration: Projekte durchsuchen
+            action: Projekt abrufen
+        reviews:
+          saved: Änderungen gespeichert
+          show:
+            title: Import prüfen
+            intro: Das Projekt wurde noch nicht angelegt. Prüfen Sie Titel, Zeitraum und Phasennamen — beim Import werden diese Angaben auf die Kopie übertragen.
+            source_label: Quelle
+            name_label: Projekttitel
+            starts_at_label: Beginn
+            ends_at_label: Ende
+            phases_title: Phasen
+            phases_count:
+              one: 1 Phase
+              other: '%{count} Phasen'
+            phase_position: 'Phase %{position}'
+            phase_without_dates: Kein Zeitraum hinterlegt
+            projekt_title: Projekt
+            autosave_saving: Wird gespeichert …
+            autosave_error: Speichern fehlgeschlagen – Änderungen werden beim Anlegen übernommen
+            no_phases: Dieses Projekt enthält keine Phasen.
+            execute: Projekt jetzt anlegen
+            start_over: Verwerfen und neu beginnen
+        list:
+          actions:
+            retry: Erneut versuchen
+        failure_stages:
+          fetch_url: Seitenabruf
+          extract_html: Seiteninhalt
+          fetch_bundle: Projektabruf
+          copy_projekt: Projektkopie
+        warnings:
+          blob_skipped: Die Datei „%{name}“ konnte nicht übernommen werden.
+        errors:
+          not_retryable: Dieser Import kann nicht wiederholt werden.
+          file_too_large: Die Datei %{filename} ist größer als %{size}.
+          url:
+            blank: Bitte geben Sie eine Adresse an.
+            invalid: Diese Adresse konnte nicht gelesen werden.
+            scheme: Bitte geben Sie eine vollständige Adresse an, die mit http:// oder https:// beginnt.
+            private_address: Diese Adresse verweist auf ein internes Netzwerk und kann nicht abgerufen werden.
+            unreachable: Die Seite konnte nicht erreicht werden.
+            timeout: Die Seite hat nicht rechtzeitig geantwortet.
+            tls: Die verschlüsselte Verbindung zu dieser Seite konnte nicht aufgebaut werden.
+            not_found: Unter dieser Adresse wurde keine Seite gefunden.
+            http_status: Die Seite hat mit dem Fehler %{status} geantwortet.
+            too_many_redirects: Diese Adresse leitet zu oft weiter.
+            content_type: Unter dieser Adresse liegt keine lesbare Webseite.
+            empty: Diese Seite enthält keinen Text.
+            unreadable: Aus dieser Seite konnte kein verwertbarer Text gelesen werden.
+          consul_projekt:
+            blank: Bitte geben Sie die Adresse eines Projekts an.
+            invalid: Diese Adresse konnte nicht gelesen werden.
+            unreachable: Das Projekt konnte von dieser Adresse nicht abgerufen werden.
+            empty: Unter dieser Adresse wurde kein Projekt gefunden.
+            unsupported_format: Dieses Projekt liegt im Format %{version} vor, das diese Plattform nicht lesen kann.
+            bundle_missing: Die abgerufenen Projektdaten sind nicht mehr vorhanden. Bitte beginnen Sie neu.

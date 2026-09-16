@@ -41,6 +41,7 @@ module Adm::Projekts::MitmachboxPhaseActions
     end
 
     mitmachbox_client.surveys.update_state(@projekt_phase.mitmachbox_survey_id, state)
+    Mitmachbox::PublicSurveyService.expire!(@projekt_phase.mitmachbox_survey_id)
 
     redirect_to mitmachbox_survey_adm_projekts_phase_path(@projekt_phase),
       notice: t("adm.projekts.mitmachbox.survey.state_changed", state: t("adm.projekts.mitmachbox.survey.states.#{state}"))
@@ -65,6 +66,7 @@ module Adm::Projekts::MitmachboxPhaseActions
     end
 
     mitmachbox_client.versions.publish(survey["id"], draft["id"])
+    Mitmachbox::PublicSurveyService.expire!(@projekt_phase.mitmachbox_survey_id)
 
     redirect_to mitmachbox_survey_adm_projekts_phase_path(@projekt_phase),
       notice: t("adm.projekts.mitmachbox.survey.published")

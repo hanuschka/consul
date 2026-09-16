@@ -35,6 +35,7 @@ de:
           new_draft_hint: Die veröffentlichte Version wird in einen bearbeitbaren Entwurf kopiert. Die laufende Version bleibt bis zur nächsten Veröffentlichung unverändert auf den Geräten.
           read_only_hint: Veröffentlichte Versionen können nicht bearbeitet werden. Erstellen Sie einen neuen Entwurf, um Änderungen vorzunehmen.
           no_questions: Noch keine Fragen vorhanden.
+          max_questions_hint: Diese Version hat die maximale Anzahl von 20 Fragen erreicht – mehr kann die Mitmachbox nicht laden.
           table:
             prompt: Frage
             question_type: Fragetyp
@@ -88,8 +89,13 @@ de:
           answered_label:
             one: "%{count} Person hat diese Frage beantwortet"
             other: "%{count} Personen haben diese Frage beantwortet"
+          reached_label:
+            one: "%{count} Durchlauf hat diese Frage erreicht"
+            other: "%{count} Durchläufe haben diese Frage erreicht"
           count_label: Anzahl
           option_label: Antwortoption
+          source_device_label: Mitmachbox
+          source_web_label: Online
           export_button: Als CSV herunterladen
           empty_title: Noch keine Ergebnisse
           empty_text: Es wurde noch keine Version veröffentlicht oder es liegen noch keine Antworten vor.
@@ -132,11 +138,17 @@ de:
           label_hint: Wird auf dem Gerät neben der Auswahltaste angezeigt.
           value_label: Punktwert
           value_hint: Nur für Bewertungsskalen relevant, z. B. 1 bis 5.
+          follow_up_label: Folgefrage
+          follow_up_hint: Legt fest, welche Frage nach dieser Antwort angezeigt wird. Ohne Auswahl geht es mit der nächsten Frage weiter. Eine Folgefrage muss in der Reihenfolge weiter hinten liegen.
+          follow_up_next: Nächste Frage in der Reihenfolge
+          follow_up_end: Umfrage beenden
+          follow_up_last_question: Diese Frage steht am Ende der Reihenfolge. Es steht keine Folgefrage zur Auswahl.
           save_button: Speichern
           delete_confirm: Antwortoption wirklich löschen?
           table:
             label: Beschriftung
             value: Punktwert
+            follow_up: Folgefrage
             actions: Aktionen
         deployments:
           created: Die Umfrage wird auf dem Gerät ausgespielt.
@@ -159,7 +171,10 @@ de:
           validation: "Die Eingaben wurden von der Mitmachbox-Plattform nicht akzeptiert: %{message}"
           generic: Bei der Kommunikation mit der Mitmachbox-Plattform ist ein Fehler aufgetreten.
           no_draft: Es ist kein bearbeitbarer Entwurf vorhanden. Erstellen Sie zuerst einen neuen Entwurf.
+          branch_order: "Die Reihenfolge kann so nicht gespeichert werden: Eine Folgefrage muss hinter der Frage liegen, die auf sie verzweigt."
           max_options_reached: Es sind maximal 5 Antwortoptionen pro Frage möglich – die Mitmachbox hat 5 Auswahltasten.
+          max_questions_reached: Es sind maximal 20 Fragen pro Version möglich – mehr kann die Mitmachbox nicht laden.
+          max_questions_reached: Es sind maximal 20 Fragen pro Version möglich – mehr kann die Mitmachbox nicht laden.
           not_configured: Die Mitmachbox-Integration ist auf dieser Instanz nicht konfiguriert.
       mitmachbox_questions:
         new:

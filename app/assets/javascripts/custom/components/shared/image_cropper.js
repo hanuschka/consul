@@ -138,6 +138,7 @@
 
     outputType: function() {
       if (this.fileType === "image/jpeg") return "image/jpeg";
+      if (this.fileType === "image/webp") return "image/webp";
 
       return "image/png";
     },

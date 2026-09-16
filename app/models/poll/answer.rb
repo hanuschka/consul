@@ -1,4 +1,6 @@
 class Poll::Answer < ApplicationRecord
+  include VotesAQuestionAnswer
+
   audited if: :audit_changes?
 
   belongs_to :question, -> { with_hidden }, inverse_of: :answers
@@ -13,10 +15,8 @@ class Poll::Answer < ApplicationRecord
   validates :question, presence: true
   validates :author, presence: true
   validates :answer, presence: true, unless: :map_points?
+  validates :question_answer, presence: true, unless: :map_points?
   validate :max_votes
-
-  validates :answer, inclusion: { in: ->(a) { a.question.possible_answers }},
-                     unless: ->(a) { a.question.blank? || a.map_points? }
 
   scope :by_author, ->(author_id) { where(author_id: author_id) }
   scope :by_question, ->(question_id) { where(question_id: question_id) }
@@ -48,7 +48,12 @@ class Poll::Answer < ApplicationRecord
       author.save! if author.guest? && author.changed == ["locale"]
       author.lock!
 
-      available_weight = [ (question.max_votes - question.answers.by_author(author).where.not(answer: answer).sum(:answer_weight)), question.votation_type.max_votes_per_answer].compact.min
+      used_weight = question.answers.by_author(author)
+        .where.not(question_answer_id: question_answer_id)
+        .sum(:answer_weight)
+
+      available_weight = [question.max_votes - used_weight,
+                          question.votation_type.max_votes_per_answer].compact.min
 
       if answer_weight > available_weight
         raise "Maximum number of votes per user exceeded"

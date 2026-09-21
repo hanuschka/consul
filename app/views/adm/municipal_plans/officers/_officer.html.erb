@@ -1,5 +1,5 @@
 <tr class="kern-table__row" id="<%= dom_id(officer) %>">
-  <th scope="row" class="kern-table__header" data-field="name"><%= officer.user&.name %></th>
+  <th scope="row" class="kern-table__header" data-field="name"><%= officer.name %></th>
   <td class="kern-table__cell" data-field="email"><%= officer.user&.email %></td>
   <td class="kern-table__cell">
     <% if officer.persisted? %>

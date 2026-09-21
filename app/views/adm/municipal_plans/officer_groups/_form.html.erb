@@ -17,7 +17,7 @@
 
   <%= render Kern::FormFieldComponent.new(label: t(".officers_label"), hint: t(".officers_hint")) do %>
     <% if officers.any? %>
-      <%= f.collection_check_boxes :officer_ids, officers, :id, ->(officer) { officer.user&.name } %>
+      <%= f.collection_check_boxes :officer_ids, officers, :id, :name %>
     <% else %>
       <%= empty_state(title: t(".no_officers_title"), description: t(".no_officers_description"),
                       icon: "person_off") %>

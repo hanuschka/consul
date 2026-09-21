@@ -1,0 +1,45 @@
+<% responsible_name = municipal_plan.responsible&.name %>
+
+<tr id="<%= dom_id(municipal_plan) %>" class="kern-table__row">
+  <th scope="row" class="kern-table__header" data-field="title">
+    <%= link_to municipal_plan.title, adm_municipal_plans_municipal_plan_path(municipal_plan),
+          class: "kern-link", title: municipal_plan.title, data: { turbo_frame: "_top" } %>
+  </th>
+  <td class="kern-table__cell" data-field="status">
+    <%= t("adm.municipal_plans.municipal_plans.statuses.#{municipal_plan.status}") %>
+  </td>
+  <td class="kern-table__cell" data-field="districts">
+    <%= municipal_plan.districts.map(&:name_for_display).join(", ") %>
+  </td>
+  <td class="kern-table__cell" data-field="responsible"><%= responsible_name %></td>
+  <td class="kern-table__cell" data-field="content_updated_at">
+    <%= l(municipal_plan.content_updated_at, format: "%d.%m.%Y") if municipal_plan.content_updated_at %>
+  </td>
+  <td class="kern-table__cell" data-field="version"><%= municipal_plan.version %></td>
+  <td class="kern-table__cell">
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(
+        label: t("shared.show"),
+        url: adm_municipal_plans_municipal_plan_path(municipal_plan),
+        icon: "visibility",
+        data: { turbo_frame: "_top" }
+      ) %>
+      <% actions.with_action(
+        label: t("shared.edit"),
+        url: edit_adm_municipal_plans_municipal_plan_path(municipal_plan),
+        icon: "edit",
+        style: :edit,
+        data: { turbo_frame: "_top" },
+        show: Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, municipal_plan).update?
+      ) %>
+      <% actions.with_action(
+        label: t("shared.delete"),
+        url: adm_municipal_plans_municipal_plan_path(municipal_plan),
+        icon: "delete",
+        style: :delete,
+        data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete"), turbo_frame: "_top" },
+        show: Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, municipal_plan).destroy?
+      ) %>
+    <% end %>
+  </td>
+</tr>

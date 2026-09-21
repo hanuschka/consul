@@ -41,7 +41,7 @@
         <tr id="<%= dom_id(officer_group) %>" class="kern-table__row">
           <th scope="row" class="kern-table__header" data-field="name"><%= officer_group.name %></th>
           <td class="kern-table__cell" data-field="officers">
-            <%= officer_group.officers.map { |officer| officer.user&.name }.compact.join(", ") %>
+            <%= officer_group.officers.map(&:name).join(", ") %>
           </td>
           <td class="kern-table__cell" data-field="default_email"><%= officer_group.default_email %></td>
           <td class="kern-table__cell">

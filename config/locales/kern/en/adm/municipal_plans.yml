@@ -5,9 +5,168 @@ en:
       menu:
         aria_label: Municipal plans navigation
         items:
+          municipal_plans: Plans
           officers: Officers
           officer_groups: Officer groups
           topics: Topics
+      municipal_plans:
+        index:
+          title: Plans
+          page_hint: "Manage the municipal plans of the city. Each plan describes an administrative project with its processing status, schedule, affected districts and contact people. Published plans appear in the public plan list; drafts and archived plans stay internal. The version number is raised automatically whenever content changes."
+          new_button: New plan
+          no_items_title: No plans yet
+          no_items_description: Create a plan to publish it in the plan list.
+          table:
+            title: Title
+            status: Status
+            districts: Districts
+            responsible: Responsible officer
+            content_updated_at: Updated on
+            version: Version
+        statuses:
+          draft: Draft
+          published: Published
+          archived: Archived
+        new:
+          title: New plan
+        edit:
+          title: Edit plan
+        create:
+          success: The plan was created.
+        update:
+          success: The plan was updated.
+        destroy:
+          success: The plan was deleted.
+        show:
+          sections:
+            content: Plan
+            assignment: Classification
+            participation: Citizen participation
+            revision: Revision
+            links: Links and documents
+            contact: Contact
+            map: Map position
+            administration: Administration
+          further_information: Further information
+          last_resolution: Last resolution
+          processing_status: Current processing status
+          next_steps: Schedule / next steps
+          costs: Costs where quantifiable
+          districts: Affected area / district
+          topics: Main topics affected
+          formal_participation: Formal citizen participation
+          informal_participation: Informal citizen participation
+          content_updated_at: Updated on
+          version: Version
+          no_links: No links or documents added.
+          contact_name: Name
+          contact_role: Role
+          contact_phone: Phone
+          contact_email: Email
+          responsible: Responsible officer
+          system_mailbox_email: System mailbox for notices
+          internal_notes: Internal notes
+          status: Status
+          none: "—"
+        form_fields:
+          errors_title: The plan could not be saved
+          not_set: Set automatically on save
+          add_link: Add link
+          officer_groups: Officer groups
+          officers: Officers
+          no_responsible: "-- No responsible officer --"
+          no_districts_title: No districts yet
+          no_districts_description: Districts are taken from the registered addresses. Without districts a plan cannot be saved.
+          no_topics_title: No topics yet
+          no_topics_description: Create a topic under "Topics" first. Without a topic a plan cannot be saved.
+          sections:
+            content: Plan
+            assignment: Classification
+            participation: Citizen participation
+            revision: Revision
+            links: Links and documents
+            contact: Contact
+            map: Map position
+            administration: Administration
+          labels:
+            title: Plan title
+            short_description: Short description
+            further_information: Further information
+            last_resolution: Last resolution
+            processing_status: Current processing status
+            next_steps: Schedule / next steps
+            costs: Costs where quantifiable
+            districts: Affected area / district
+            topics: Main topics affected
+            formal_participation: Formal citizen participation
+            formal_participation_checkbox: Formal citizen participation is planned
+            formal_participation_reason: Note on formal citizen participation
+            informal_participation: Informal citizen participation
+            informal_participation_checkbox: Informal citizen participation is planned
+            informal_participation_reason: Note on informal citizen participation
+            content_updated_at: Updated on
+            version: Version
+            links: Links and documents
+            link_title: Label
+            link_url: Address (URL)
+            contact_name: Name
+            contact_role: Role
+            contact_phone: Phone
+            contact_email: Email
+            map_location: Map position
+            responsible: Responsible officer
+            system_mailbox_email: System mailbox for notices
+            internal_notes: Internal notes
+            status: Status
+          hints:
+            title: The title names the plan the way citizens see it in the plan list. Use a short, understandable wording without file numbers or abbreviations.
+            short_description: The short description is the entry text in the public plan list and should summarise the plan in about 420 characters. Explain in a few sentences what it is about and why the city is pursuing it.
+            further_information: Additional background for interested readers, for example planning stages or general conditions. This field is optional and is shown below the short description.
+            last_resolution: The latest political resolution on this plan, for example the committee, the date and the content of the decision. Leave empty if no resolution has been passed yet.
+            processing_status: The current processing status describes where the plan stands right now. Keep it up to date — it is the most important information for citizens and raises the version number on every change.
+            next_steps: The planned next steps with a time frame, as far as foreseeable. Rough statements such as "first half of 2027" are welcome when no exact date is fixed.
+            costs: The cost statement is a free text field and ranges from a concrete sum to a general statement about funding.
+            districts: Select the districts affected by the plan. At most four districts can be selected; if more areas are affected, pick the four most relevant ones.
+            topics: Assign the plan to the topics that are mainly affected. Topics are used as a filter by citizens in the plan list. At least one topic is required.
+            formal_participation: Formal citizen participation is required by law, for example the public display in a land-use planning procedure.
+            formal_participation_reason: Briefly explain which formal participation is planned — or why none takes place.
+            informal_participation: Informal citizen participation is voluntary, for example workshops, surveys or participation processes on this platform.
+            informal_participation_reason: Briefly explain which informal participation is planned — or why none takes place.
+            content_updated_at: The update date is set automatically as soon as content of the plan changes. It cannot be edited by hand.
+            version: The version number is raised automatically on every content change and makes it visible to citizens that the plan has been revised.
+            links: Link to further pages and documents, for example resolutions, plans or the council information system. Each entry needs a label and a full address.
+            contact_name: Name of the contact person citizens can reach with questions about this plan.
+            contact_role: Role or job title of the contact person, for example "Project lead urban development".
+            contact_phone: Phone number of the contact person. Prefer a direct line that is reachable during absences.
+            contact_email: Email address of the contact person. A functional address is preferable to a personal one.
+            map_location: Set the map position of the plan by clicking on the map. The position is required and is shown in the public map view.
+            responsible: Define who maintains the plan inside the administration. You can pick a single officer or a whole officer group.
+            system_mailbox_email: Notices from citizens about this plan are forwarded to this mailbox. Use a functional address so notices are handled during absences.
+            internal_notes: Internal notes are visible inside the administration only and are never shown publicly. Use the field for arrangements, responsibilities or notes to colleagues.
+            status: Only published plans appear in the public plan list. Drafts are visible inside the administration only, archived plans are removed from the active list.
+          placeholders:
+            title: e.g. Redesign of the market square
+            costs: e.g. approx. EUR 50,000 or budgeted
+            formal_participation_reason: e.g. public display in Q2 2027
+            informal_participation_reason: e.g. citizens' workshop in autumn, results feed into the planning
+            link_title: e.g. Resolution in the council information system
+            link_url: https://
+            contact_name: e.g. Maria Muster
+            contact_role: e.g. Project lead urban development
+            contact_phone: e.g. +49 3641 49-0
+            contact_email: e.g. urban-development@city.example
+            system_mailbox_email: e.g. plans@city.example
+            internal_notes: Visible internally only
+      municipal_plan_audits:
+        show:
+          title: Change details
+          audit_details: Change details
+          edited_at: Edited at
+          edited_by: Edited by
+          changes: Changes
+          field: Field
+          old_value: Old value
+          new_value: New value
       officers:
         index:
           title: Officers

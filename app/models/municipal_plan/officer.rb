@@ -10,6 +10,10 @@ class MunicipalPlan::Officer < ApplicationRecord
 
   before_destroy :ensure_not_in_use, prepend: true
 
+  def name
+    user&.name || I18n.t("shared.author_info.author_deleted")
+  end
+
   def safe_to_destroy?
     !municipal_plans.exists?
   end

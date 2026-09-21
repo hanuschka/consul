@@ -5,9 +5,168 @@ de:
       menu:
         aria_label: Vorhabenliste Navigation
         items:
+          municipal_plans: Vorhaben
           officers: Sachbearbeitung
           officer_groups: Bearbeitergruppen
           topics: Themen
+      municipal_plans:
+        index:
+          title: Vorhaben
+          page_hint: "Hier verwalten Sie die Vorhaben der Stadt. Jedes Vorhaben beschreibt ein Projekt der Verwaltung mit Bearbeitungsstand, Zeitplanung, betroffenen Ortsteilen und Ansprechpartnern. Veröffentlichte Vorhaben erscheinen in der öffentlichen Vorhabenliste; Entwürfe und archivierte Vorhaben bleiben intern. Die Versionsnummer erhöht sich automatisch, sobald sich inhaltliche Angaben ändern."
+          new_button: Neues Vorhaben
+          no_items_title: Keine Vorhaben vorhanden
+          no_items_description: Legen Sie ein Vorhaben an, um es in der Vorhabenliste zu veröffentlichen.
+          table:
+            title: Titel
+            status: Status
+            districts: Ortsteile
+            responsible: Zuständige Sachbearbeitung
+            content_updated_at: Aktualisierungsdatum
+            version: Versionsnummer
+        statuses:
+          draft: Entwurf
+          published: Veröffentlicht
+          archived: Archiviert
+        new:
+          title: Neues Vorhaben
+        edit:
+          title: Vorhaben bearbeiten
+        create:
+          success: Das Vorhaben wurde erstellt.
+        update:
+          success: Das Vorhaben wurde aktualisiert.
+        destroy:
+          success: Das Vorhaben wurde gelöscht.
+        show:
+          sections:
+            content: Vorhaben
+            assignment: Zuordnung
+            participation: Bürgerbeteiligung
+            revision: Aktualisierung
+            links: Links und Dokumente
+            contact: Kontakt
+            map: Kartenposition
+            administration: Verwaltung
+          further_information: Weitere Informationen
+          last_resolution: Letzter Beschluss
+          processing_status: Aktueller Bearbeitungsstand
+          next_steps: Geplanter Zeitpunkt / nächste Schritte
+          costs: Kosten soweit bezifferbar
+          districts: Betroffenes Gebiet / Ortsteil
+          topics: Schwerpunktmäßig betroffene Themen
+          formal_participation: Bürgerbeteiligung formell
+          informal_participation: Bürgerbeteiligung informell
+          content_updated_at: Aktualisierungsdatum
+          version: Versionsnummer
+          no_links: Keine Links und Dokumente hinterlegt.
+          contact_name: Name
+          contact_role: Funktion
+          contact_phone: Telefon
+          contact_email: E-Mail
+          responsible: Zuständige Sachbearbeitung
+          system_mailbox_email: Systempostfach für Hinweise
+          internal_notes: Interne Notizen
+          status: Status
+          none: "—"
+        form_fields:
+          errors_title: Das Vorhaben konnte nicht gespeichert werden
+          not_set: Wird beim Speichern gesetzt
+          add_link: Link hinzufügen
+          officer_groups: Bearbeitergruppen
+          officers: Sachbearbeitung
+          no_responsible: "-- Keine Zuständigkeit --"
+          no_districts_title: Keine Ortsteile vorhanden
+          no_districts_description: Ortsteile werden aus den registrierten Adressen übernommen. Ohne Ortsteile kann kein Vorhaben gespeichert werden.
+          no_topics_title: Keine Themen vorhanden
+          no_topics_description: Legen Sie zunächst unter „Themen" ein Thema an. Ohne Thema kann kein Vorhaben gespeichert werden.
+          sections:
+            content: Vorhaben
+            assignment: Zuordnung
+            participation: Bürgerbeteiligung
+            revision: Aktualisierung
+            links: Links und Dokumente
+            contact: Kontakt
+            map: Kartenposition
+            administration: Verwaltung
+          labels:
+            title: Titel des Vorhabens
+            short_description: Kurze Beschreibung
+            further_information: Weitere Informationen
+            last_resolution: Letzter Beschluss
+            processing_status: Aktueller Bearbeitungsstand
+            next_steps: Geplanter Zeitpunkt / nächste Schritte
+            costs: Kosten soweit bezifferbar
+            districts: Betroffenes Gebiet / Ortsteil
+            topics: Schwerpunktmäßig betroffene Themen
+            formal_participation: Bürgerbeteiligung formell
+            formal_participation_checkbox: Eine formelle Bürgerbeteiligung ist vorgesehen
+            formal_participation_reason: Begründung zur formellen Bürgerbeteiligung
+            informal_participation: Bürgerbeteiligung informell
+            informal_participation_checkbox: Eine informelle Bürgerbeteiligung ist vorgesehen
+            informal_participation_reason: Begründung zur informellen Bürgerbeteiligung
+            content_updated_at: Aktualisierungsdatum
+            version: Versionsnummer
+            links: Links und Dokumente
+            link_title: Bezeichnung
+            link_url: Adresse (URL)
+            contact_name: Name
+            contact_role: Funktion
+            contact_phone: Telefon
+            contact_email: E-Mail
+            map_location: Kartenposition
+            responsible: Zuständige Sachbearbeitung
+            system_mailbox_email: Systempostfach für Hinweise
+            internal_notes: Interne Notizen
+            status: Status
+          hints:
+            title: Der Titel benennt das Vorhaben so, wie es Bürgerinnen und Bürger in der Vorhabenliste sehen. Wählen Sie eine kurze, verständliche Bezeichnung ohne Aktenzeichen und Abkürzungen.
+            short_description: Die Kurzbeschreibung ist der Einstiegstext in der öffentlichen Vorhabenliste und soll das Vorhaben in etwa 420 Zeichen zusammenfassen. Beschreiben Sie in wenigen Sätzen, worum es geht und warum die Stadt das Vorhaben verfolgt.
+            further_information: Ergänzende Erläuterungen für Interessierte, zum Beispiel Hintergründe, Planungsstände oder Rahmenbedingungen. Dieses Feld ist optional und wird unterhalb der Kurzbeschreibung angezeigt.
+            last_resolution: Der letzte politische Beschluss zu diesem Vorhaben, zum Beispiel Gremium, Datum und Inhalt des Beschlusses. Lassen Sie das Feld leer, wenn noch kein Beschluss vorliegt.
+            processing_status: Der aktuelle Bearbeitungsstand beschreibt, wo das Vorhaben gerade steht. Halten Sie ihn aktuell – er ist für Bürgerinnen und Bürger die wichtigste Information und erhöht bei jeder Änderung die Versionsnummer.
+            next_steps: Die geplanten nächsten Schritte mit Zeitangabe, soweit absehbar. Grobe Angaben wie „1. Halbjahr 2027" sind ausdrücklich erwünscht, wenn noch kein genaues Datum feststeht.
+            costs: Die Kostenangabe ist ein freies Textfeld und reicht von einer konkreten Summe bis zu einer allgemeinen Aussage zur Finanzierung.
+            districts: Wählen Sie die Ortsteile aus, die von dem Vorhaben betroffen sind. Es können höchstens vier Ortsteile ausgewählt werden; betrifft das Vorhaben mehr Gebiete, wählen Sie die vier wichtigsten.
+            topics: Ordnen Sie das Vorhaben den Themen zu, die schwerpunktmäßig betroffen sind. Die Themen dienen Bürgerinnen und Bürgern als Filter in der Vorhabenliste. Mindestens ein Thema ist erforderlich.
+            formal_participation: Eine formelle Bürgerbeteiligung ist gesetzlich vorgeschrieben, zum Beispiel die Offenlage im Bauleitplanverfahren.
+            formal_participation_reason: Erläutern Sie kurz, welche formelle Beteiligung vorgesehen ist – oder warum keine stattfindet.
+            informal_participation: Eine informelle Bürgerbeteiligung erfolgt freiwillig, zum Beispiel über Workshops, Befragungen oder Beteiligungsverfahren auf dieser Plattform.
+            informal_participation_reason: Erläutern Sie kurz, welche informelle Beteiligung vorgesehen ist – oder warum keine stattfindet.
+            content_updated_at: Das Aktualisierungsdatum wird automatisch gesetzt, sobald sich inhaltliche Angaben des Vorhabens ändern. Es kann nicht von Hand gepflegt werden.
+            version: Die Versionsnummer erhöht sich automatisch bei jeder inhaltlichen Änderung und macht für Bürgerinnen und Bürger nachvollziehbar, dass das Vorhaben fortgeschrieben wurde.
+            links: Verweisen Sie auf weiterführende Seiten und Dokumente, zum Beispiel Beschlussvorlagen, Pläne oder das Ratsinformationssystem. Jeder Eintrag benötigt eine Bezeichnung und eine vollständige Adresse.
+            contact_name: Name der Ansprechperson, die Bürgerinnen und Bürger bei Rückfragen zu diesem Vorhaben erreichen.
+            contact_role: Funktion oder Amtsbezeichnung der Ansprechperson, zum Beispiel „Projektleitung Stadtentwicklung".
+            contact_phone: Telefonnummer der Ansprechperson. Verwenden Sie möglichst eine Durchwahl, die auch bei Abwesenheit erreichbar ist.
+            contact_email: E-Mail-Adresse der Ansprechperson. Eine Funktionsadresse ist einer persönlichen Adresse vorzuziehen.
+            map_location: Setzen Sie die Kartenposition des Vorhabens per Klick in die Karte. Die Position ist erforderlich und wird in der öffentlichen Kartenansicht angezeigt.
+            responsible: Legen Sie fest, wer das Vorhaben in der Verwaltung pflegt. Sie können eine einzelne Person aus der Sachbearbeitung oder eine ganze Bearbeitergruppe auswählen.
+            system_mailbox_email: An dieses Postfach werden Hinweise von Bürgerinnen und Bürgern zu diesem Vorhaben weitergeleitet. Verwenden Sie eine Funktionsadresse, damit Hinweise auch bei Abwesenheit bearbeitet werden.
+            internal_notes: Interne Notizen sind ausschließlich in der Verwaltung sichtbar und werden nie öffentlich angezeigt. Nutzen Sie das Feld für Absprachen, Zuständigkeiten oder Hinweise an Kolleginnen und Kollegen.
+            status: Nur veröffentlichte Vorhaben erscheinen in der öffentlichen Vorhabenliste. Entwürfe sind ausschließlich in der Verwaltung sichtbar, archivierte Vorhaben werden aus der aktiven Liste genommen.
+          placeholders:
+            title: z. B. Neugestaltung des Marktplatzes
+            costs: z. B. ca. 50.000 € oder im Haushalt eingeplant
+            formal_participation_reason: z. B. Offenlage nach § 3 Abs. 2 BauGB im 2. Quartal 2027
+            informal_participation_reason: z. B. Bürgerwerkstatt im Herbst, Ergebnisse fließen in die Planung ein
+            link_title: z. B. Beschlussvorlage im Ratsinformationssystem
+            link_url: https://
+            contact_name: z. B. Maria Muster
+            contact_role: z. B. Projektleitung Stadtentwicklung
+            contact_phone: z. B. 03641 49-0
+            contact_email: z. B. stadtentwicklung@stadt.de
+            system_mailbox_email: z. B. vorhaben@stadt.de
+            internal_notes: Nur intern sichtbar
+      municipal_plan_audits:
+        show:
+          title: Änderungsdetails
+          audit_details: Änderungsdetails
+          edited_at: Geändert am
+          edited_by: Geändert von
+          changes: Änderungen
+          field: Feld
+          old_value: Alter Wert
+          new_value: Neuer Wert
       officers:
         index:
           title: Sachbearbeitung

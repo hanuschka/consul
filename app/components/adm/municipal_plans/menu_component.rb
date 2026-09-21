@@ -4,10 +4,21 @@ class Adm::MunicipalPlans::MenuComponent < Adm::BaseMenuComponent
   end
 
   def menu_items
-    [officers_item, officer_groups_item, topics_item].compact
+    [municipal_plans_item, officers_item, officer_groups_item, topics_item].compact
   end
 
   private
+
+    def municipal_plans_item
+      return unless Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, nil).index?
+
+      {
+        label: t("adm.municipal_plans.menu.items.municipal_plans"),
+        icon: "assignment",
+        path: adm_municipal_plans_root_path,
+        active_pattern: %r{\A/adm/municipal_plans(/(new|\d+)(/.*)?)?\z}
+      }
+    end
 
     def officers_item
       return unless Adm::MunicipalPlans::OfficerPolicy.new(current_user, nil).index?

@@ -1,0 +1,22 @@
+<div data-nested-field class="kern-card p-4 mb-3 position-relative">
+  <%= f.hidden_field :given_order, value: f.object.given_order || 0 %>
+  <%= f.hidden_field :_destroy %>
+
+  <div style="position: absolute; top: 0.75rem; right: 0.75rem;">
+    <%= kern_button(icon: "close", style: :tertiary,
+                    data: { action: "adm-nested-fields#remove" }) %>
+  </div>
+
+  <div class="kern-row" style="padding-right: 2.5rem;">
+    <div class="kern-col-12 kern-col-md-5">
+      <%= f.text_field :title,
+            label: t("adm.municipal_plans.municipal_plans.form_fields.labels.link_title"),
+            placeholder: t("adm.municipal_plans.municipal_plans.form_fields.placeholders.link_title") %>
+    </div>
+    <div class="kern-col-12 kern-col-md-5">
+      <%= f.url_field :url,
+            label: t("adm.municipal_plans.municipal_plans.form_fields.labels.link_url"),
+            placeholder: t("adm.municipal_plans.municipal_plans.form_fields.placeholders.link_url") %>
+    </div>
+  </div>
+</div>

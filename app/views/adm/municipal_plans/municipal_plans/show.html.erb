@@ -1,0 +1,225 @@
+<% responsible_name = @municipal_plan.responsible&.name %>
+<% may_update = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, @municipal_plan).update? %>
+
+<%= content_for :title, @municipal_plan.title %>
+
+<%= render Adm::HeaderComponent.new(title: @municipal_plan.title, breadcrumbs: @breadcrumbs,
+                                    back_button_url: adm_municipal_plans_root_path) do |header| %>
+  <% if may_update %>
+    <% header.with_actions do %>
+      <%= kern_link_button(edit_adm_municipal_plans_municipal_plan_path(@municipal_plan),
+            text: t("shared.edit"), icon: "edit", style: :primary) %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<div class="kern-container mb-5">
+
+  <section class="adm-detail-section">
+    <h2 class="adm-detail-section-title mb-3"><%= t(".sections.content") %></h2>
+
+    <div class="adm-content-card mb-4">
+      <div class="adm-content-card__body">
+        <h3 class="adm-detail-content-title mb-2"><%= @municipal_plan.title %></h3>
+        <div class="adm-detail-description">
+          <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.short_description) %>
+        </div>
+      </div>
+    </div>
+
+    <%
+      content_rows = []
+
+      if @municipal_plan.further_information.present?
+        content_rows << { label: t(".further_information"),
+                          value: auto_link_already_sanitized_html(wysiwyg(@municipal_plan.further_information)) }
+      end
+
+      if @municipal_plan.last_resolution.present?
+        content_rows << { label: t(".last_resolution"),
+                          value: auto_link_already_sanitized_html(wysiwyg(@municipal_plan.last_resolution)) }
+      end
+
+      content_rows << { label: t(".processing_status"),
+                        value: auto_link_already_sanitized_html(wysiwyg(@municipal_plan.processing_status)) }
+
+      content_rows << { label: t(".next_steps"),
+                        value: auto_link_already_sanitized_html(wysiwyg(@municipal_plan.next_steps)) }
+
+      if @municipal_plan.costs.present?
+        content_rows << { label: t(".costs"), value: @municipal_plan.costs }
+      end
+    %>
+
+    <div class="adm-detail-table">
+      <% content_rows.each do |row| %>
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label"><%= row[:label] %></div>
+          <div class="adm-detail-table__value"><%= row[:value] %></div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="adm-detail-section">
+    <h2 class="adm-detail-section-title mb-3"><%= t(".sections.assignment") %></h2>
+
+    <div class="adm-detail-table">
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".districts") %></div>
+        <div class="adm-detail-table__value">
+          <%= @municipal_plan.districts.map(&:name_for_display).join(", ").presence || t(".none") %>
+        </div>
+      </div>
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".topics") %></div>
+        <div class="adm-detail-table__value">
+          <%= @municipal_plan.topics.map(&:name).join(", ").presence || t(".none") %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="adm-detail-section">
+    <h2 class="adm-detail-section-title mb-3"><%= t(".sections.participation") %></h2>
+
+    <div class="adm-detail-table">
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".formal_participation") %></div>
+        <div class="adm-detail-table__value">
+          <%= t("shared.#{@municipal_plan.formal_participation}") %>
+          <% if @municipal_plan.formal_participation_reason.present? %>
+            <p class="mb-0 mt-2"><%= @municipal_plan.formal_participation_reason %></p>
+          <% end %>
+        </div>
+      </div>
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".informal_participation") %></div>
+        <div class="adm-detail-table__value">
+          <%= t("shared.#{@municipal_plan.informal_participation}") %>
+          <% if @municipal_plan.informal_participation_reason.present? %>
+            <p class="mb-0 mt-2"><%= @municipal_plan.informal_participation_reason %></p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="adm-detail-section">
+    <h2 class="adm-detail-section-title mb-3"><%= t(".sections.revision") %></h2>
+
+    <div class="adm-detail-table">
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".content_updated_at") %></div>
+        <div class="adm-detail-table__value">
+          <% if @municipal_plan.content_updated_at.present? %>
+            <%= l(@municipal_plan.content_updated_at, format: "%d.%m.%Y") %>
+          <% else %>
+            <%= t(".none") %>
+          <% end %>
+        </div>
+      </div>
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".version") %></div>
+        <div class="adm-detail-table__value"><%= @municipal_plan.version %></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="adm-detail-section">
+    <h2 class="adm-detail-section-title mb-3"><%= t(".sections.links") %></h2>
+
+    <% if @municipal_plan.links.any? %>
+      <ul class="mb-0">
+        <% @municipal_plan.links.each do |link| %>
+          <li>
+            <%= link_to link.title, link.url, class: "kern-link", target: "_blank", rel: "noopener" %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="kern-body m-0"><%= t(".no_links") %></p>
+    <% end %>
+  </section>
+
+  <section class="adm-detail-section">
+    <h2 class="adm-detail-section-title mb-3"><%= t(".sections.contact") %></h2>
+
+    <div class="adm-detail-table">
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".contact_name") %></div>
+        <div class="adm-detail-table__value"><%= @municipal_plan.contact_name.presence || t(".none") %></div>
+      </div>
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".contact_role") %></div>
+        <div class="adm-detail-table__value"><%= @municipal_plan.contact_role.presence || t(".none") %></div>
+      </div>
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".contact_phone") %></div>
+        <div class="adm-detail-table__value"><%= @municipal_plan.contact_phone.presence || t(".none") %></div>
+      </div>
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".contact_email") %></div>
+        <div class="adm-detail-table__value"><%= @municipal_plan.contact_email.presence || t(".none") %></div>
+      </div>
+    </div>
+  </section>
+
+  <% if @municipal_plan.map_location.present? %>
+    <section class="adm-detail-section">
+      <h2 class="adm-detail-section-title mb-3"><%= t(".sections.map") %></h2>
+
+      <div class="adm-detail-media-card">
+        <% pin = @municipal_plan.map_location.pin_coordinates %>
+        <%= render Kern::MapComponent.new(
+          map_location: @municipal_plan.map_location,
+          gesture_handling: false,
+          height: 400,
+          latitude: pin&.dig(:latitude),
+          longitude: pin&.dig(:longitude),
+          zoom: pin ? 18 : nil
+        ) %>
+      </div>
+    </section>
+  <% end %>
+
+  <section class="adm-detail-section">
+    <h2 class="adm-detail-section-title mb-3"><%= t(".sections.administration") %></h2>
+
+    <div class="adm-detail-table">
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".responsible") %></div>
+        <div class="adm-detail-table__value"><%= responsible_name.presence || t(".none") %></div>
+      </div>
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".system_mailbox_email") %></div>
+        <div class="adm-detail-table__value">
+          <%= @municipal_plan.system_mailbox_email.presence || t(".none") %>
+        </div>
+      </div>
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".internal_notes") %></div>
+        <div class="adm-detail-table__value">
+          <% if @municipal_plan.internal_notes.present? %>
+            <%= simple_format(@municipal_plan.internal_notes) %>
+          <% else %>
+            <%= t(".none") %>
+          <% end %>
+        </div>
+      </div>
+      <div class="adm-detail-table__row">
+        <div class="adm-detail-table__label"><%= t(".status") %></div>
+        <div class="adm-detail-table__value">
+          <%= t("adm.municipal_plans.municipal_plans.statuses.#{@municipal_plan.status}") %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="adm-detail-section">
+    <%= render "adm/shared/audits",
+          auditable: @municipal_plan,
+          audit_show_path: ->(audit) { adm_municipal_plans_municipal_plan_audit_path(@municipal_plan, audit) } %>
+  </section>
+
+</div>

@@ -1,0 +1,224 @@
+<% form.object.build_map_location if form.object.map_location.blank? %>
+
+<% if form.object.errors[:base].any? %>
+  <div class="mb-5">
+    <%= kern_alert(title: t(".errors_title"), style: :danger) do %>
+      <ul class="mb-0">
+        <% form.object.errors[:base].each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% end %>
+
+<h2 class="fs-4 strong mb-4"><%= t(".sections.content") %></h2>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.title"), hint: t(".hints.title"),
+                                        required: true) do %>
+  <%= form.text_field :title, label: false, placeholder: t(".placeholders.title") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.short_description"),
+                                        hint: t(".hints.short_description"),
+                                        required: true, stacked: true) do %>
+  <%= form.rich_text_area :short_description, label: false %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.further_information"),
+                                        hint: t(".hints.further_information"), stacked: true) do %>
+  <%= form.rich_text_area :further_information, label: false %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.last_resolution"),
+                                        hint: t(".hints.last_resolution"), stacked: true) do %>
+  <%= form.rich_text_area :last_resolution, label: false %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.processing_status"),
+                                        hint: t(".hints.processing_status"),
+                                        required: true, stacked: true) do %>
+  <%= form.rich_text_area :processing_status, label: false %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.next_steps"), hint: t(".hints.next_steps"),
+                                        required: true, stacked: true) do %>
+  <%= form.rich_text_area :next_steps, label: false %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.costs"), hint: t(".hints.costs")) do %>
+  <%= form.text_field :costs, label: false, placeholder: t(".placeholders.costs") %>
+<% end %>
+
+<h2 class="fs-4 strong mb-4 mt-5"><%= t(".sections.assignment") %></h2>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.districts"), hint: t(".hints.districts"),
+                                        required: true, stacked: true) do %>
+  <% districts = RegisteredAddress::District.all.sort_by(&:name_for_display) %>
+  <% if districts.any? %>
+    <%= form.collection_check_boxes :district_ids, districts, :id, :name_for_display %>
+  <% else %>
+    <%= empty_state(title: t(".no_districts_title"), description: t(".no_districts_description"),
+                    icon: "location_off") %>
+  <% end %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.topics"), hint: t(".hints.topics"),
+                                        required: true, stacked: true) do %>
+  <% topics = MunicipalPlan::Topic.all %>
+  <% if topics.any? %>
+    <%= form.collection_check_boxes :topic_ids, topics, :id, :name %>
+  <% else %>
+    <%= empty_state(title: t(".no_topics_title"), description: t(".no_topics_description"),
+                    icon: "category") %>
+  <% end %>
+<% end %>
+
+<h2 class="fs-4 strong mb-4 mt-5"><%= t(".sections.participation") %></h2>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.formal_participation"),
+                                        hint: t(".hints.formal_participation")) do %>
+  <%= form.check_box :formal_participation, label: t(".labels.formal_participation_checkbox") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.formal_participation_reason"),
+                                        hint: t(".hints.formal_participation_reason"),
+                                        stacked: true) do %>
+  <%= form.text_area :formal_participation_reason, label: false, rows: 3,
+        placeholder: t(".placeholders.formal_participation_reason") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.informal_participation"),
+                                        hint: t(".hints.informal_participation")) do %>
+  <%= form.check_box :informal_participation, label: t(".labels.informal_participation_checkbox") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.informal_participation_reason"),
+                                        hint: t(".hints.informal_participation_reason"),
+                                        stacked: true) do %>
+  <%= form.text_area :informal_participation_reason, label: false, rows: 3,
+        placeholder: t(".placeholders.informal_participation_reason") %>
+<% end %>
+
+<h2 class="fs-4 strong mb-4 mt-5"><%= t(".sections.revision") %></h2>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.content_updated_at"),
+                                        hint: t(".hints.content_updated_at")) do %>
+  <p class="kern-body m-0">
+    <% if form.object.content_updated_at.present? %>
+      <%= l(form.object.content_updated_at, format: "%d.%m.%Y") %>
+    <% else %>
+      <%= t(".not_set") %>
+    <% end %>
+  </p>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.version"), hint: t(".hints.version")) do %>
+  <p class="kern-body m-0"><%= form.object.version.presence || t(".not_set") %></p>
+<% end %>
+
+<h2 class="fs-4 strong mb-4 mt-5"><%= t(".sections.links") %></h2>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.links"), hint: t(".hints.links"),
+                                        stacked: true) do %>
+  <div data-controller="adm-nested-fields">
+    <div data-adm-nested-fields-target="container">
+      <%= form.fields_for :links do |link_form| %>
+        <%= render "link_fields", f: link_form %>
+      <% end %>
+    </div>
+
+    <template data-adm-nested-fields-target="template">
+      <%= form.fields_for :links, MunicipalPlan::Link.new, child_index: "NEW_RECORD" do |link_form| %>
+        <%= render "link_fields", f: link_form %>
+      <% end %>
+    </template>
+
+    <%= kern_button(icon: "add", text: t(".add_link"), style: :secondary, class: "mt-2",
+                    data: { action: "adm-nested-fields#add" }) %>
+  </div>
+<% end %>
+
+<h2 class="fs-4 strong mb-4 mt-5"><%= t(".sections.contact") %></h2>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.contact_name"),
+                                        hint: t(".hints.contact_name")) do %>
+  <%= form.text_field :contact_name, label: false, placeholder: t(".placeholders.contact_name") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.contact_role"),
+                                        hint: t(".hints.contact_role")) do %>
+  <%= form.text_field :contact_role, label: false, placeholder: t(".placeholders.contact_role") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.contact_phone"),
+                                        hint: t(".hints.contact_phone")) do %>
+  <%= form.text_field :contact_phone, label: false, placeholder: t(".placeholders.contact_phone") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.contact_email"),
+                                        hint: t(".hints.contact_email")) do %>
+  <%= form.email_field :contact_email, label: false, placeholder: t(".placeholders.contact_email") %>
+<% end %>
+
+<h2 class="fs-4 strong mb-4 mt-5"><%= t(".sections.map") %></h2>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.map_location"),
+                                        hint: t(".hints.map_location"),
+                                        required: true, stacked: true) do %>
+  <%= form.fields_for :map_location do |map_form| %>
+    <%= render Kern::MapComponent.new(
+      map_location: form.object.map_location,
+      form: map_form,
+      editable: true,
+      admin_editor: false,
+      height: 500,
+      error: form.object.errors[:map_location].to_sentence.presence
+    ) %>
+  <% end %>
+<% end %>
+
+<h2 class="fs-4 strong mb-4 mt-5"><%= t(".sections.administration") %></h2>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.responsible"),
+                                        hint: t(".hints.responsible"), required: true) do %>
+  <% officer_groups = MunicipalPlan::OfficerGroup.order(:name) %>
+  <% officers = MunicipalPlan::Officer.joins(:user).includes(:user).order("users.username ASC") %>
+  <% grouped_options = {} %>
+  <% if officer_groups.any? %>
+    <% grouped_options[t(".officer_groups")] = officer_groups.map { |g| [g.name, "OfficerGroup:#{g.id}"] } %>
+  <% end %>
+  <% if officers.any? %>
+    <% grouped_options[t(".officers")] = officers.map { |o| [o.name, "Officer:#{o.id}"] } %>
+  <% end %>
+  <% selected = case form.object.responsible
+                when MunicipalPlan::OfficerGroup then "OfficerGroup:#{form.object.responsible.id}"
+                when MunicipalPlan::Officer then "Officer:#{form.object.responsible.id}"
+                end %>
+  <div class="kern-form-input">
+    <%= select_tag :responsible,
+          grouped_options_for_select(grouped_options, selected),
+          include_blank: t(".no_responsible"),
+          class: "kern-form-input__input" %>
+  </div>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.system_mailbox_email"),
+                                        hint: t(".hints.system_mailbox_email")) do %>
+  <%= form.email_field :system_mailbox_email, label: false,
+        placeholder: t(".placeholders.system_mailbox_email") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.internal_notes"),
+                                        hint: t(".hints.internal_notes"), stacked: true) do %>
+  <%= form.text_area :internal_notes, label: false, rows: 4,
+        placeholder: t(".placeholders.internal_notes") %>
+<% end %>
+
+<%= render Kern::FormFieldComponent.new(label: t(".labels.status"), hint: t(".hints.status"),
+                                        required: true) do %>
+  <%= form.select :status,
+        MunicipalPlan::STATUSES.map { |status| [t("adm.municipal_plans.municipal_plans.statuses.#{status}"), status] },
+        {},
+        { label: false } %>
+<% end %>

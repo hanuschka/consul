@@ -5,6 +5,7 @@ module Adm::SectionVisibility
     "landing_pages"      => [Adm::LandingPages::LandingPagePolicy,           :index?],
     "moderation"         => [Adm::Moderation::ProposalPolicy,                :index?],
     "deficiency_reports" => [Adm::DeficiencyReports::DeficiencyReportPolicy, :index?],
+    "municipal_plans"    => [Adm::MunicipalPlans::MunicipalPlanPolicy,       :index?],
     "ideas"              => [Adm::Ideas::IdeaPolicy,                         :index?],
     "valuation"          => [Adm::Valuation::BudgetInvestmentPolicy,         :index?],
     "officing"           => [Adm::Officing::BasePolicy,                      :index?]

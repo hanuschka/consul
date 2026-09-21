@@ -1,4 +1,8 @@
 FactoryBot.define do
+  factory :registered_address_district, class: "RegisteredAddress::District" do
+    sequence(:name) { |n| "Ortsteil #{n}" }
+  end
+
   factory :registered_address do
     sequence(:street_number, &:to_s)
 

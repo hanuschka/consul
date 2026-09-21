@@ -72,6 +72,15 @@ class MunicipalPlan < ApplicationRecord
   before_save :stamp_content_change, if: :content_change?
 
   scope :published, -> { where(status: "published") }
+  scope :assigned_to_officer, ->(officer) {
+    return none if officer.blank?
+
+    where(
+      "(responsible_type = ? AND responsible_id = ?) OR (responsible_type = ? AND responsible_id IN (?))",
+      "MunicipalPlan::Officer", officer.id,
+      "MunicipalPlan::OfficerGroup", officer.officer_groups.select(:id)
+    )
+  }
   scope :sorted, -> { order(Arel.sql("given_order IS NULL, given_order ASC, id ASC")) }
 
   def draft?

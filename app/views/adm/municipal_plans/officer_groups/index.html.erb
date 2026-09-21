@@ -1,0 +1,69 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
+
+<%
+  headers = {
+    name:          Kern::Table::HeaderComponent.new(:name, t(".table.name"), data_field: "name"),
+    officers:      Kern::Table::HeaderComponent.new(:officers, t(".table.officers"), data_field: "officers"),
+    default_email: Kern::Table::HeaderComponent.new(:default_email, t(".table.default_email"),
+                                                    data_field: "default_email")
+  }
+%>
+
+<div class="kern-container my-5">
+  <%= new_resource_link(new_adm_municipal_plans_officer_group_path, t(".new_officer_group")) %>
+
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "municipal_plan_officer_groups_table",
+        records: @officer_groups,
+        headers: headers,
+        column_count: 4,
+        empty_state: {
+          title: t(".no_items_title"),
+          description: t(".no_items_description"),
+          icon: "groups"
+        }
+      ) do |c| %>
+    <% c.with_header_row do %>
+      <%= render headers[:name] %>
+      <%= render headers[:officers] %>
+      <%= render headers[:default_email] %>
+      <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @officer_groups.each do |officer_group| %>
+        <tr id="<%= dom_id(officer_group) %>" class="kern-table__row">
+          <th scope="row" class="kern-table__header" data-field="name"><%= officer_group.name %></th>
+          <td class="kern-table__cell" data-field="officers">
+            <%= officer_group.officers.map { |officer| officer.user&.name }.compact.join(", ") %>
+          </td>
+          <td class="kern-table__cell" data-field="default_email"><%= officer_group.default_email %></td>
+          <td class="kern-table__cell">
+            <%= render Kern::Table::ActionsComponent.new do |actions| %>
+              <% actions.with_action(
+                label: t("shared.edit"),
+                url: edit_adm_municipal_plans_officer_group_path(officer_group),
+                icon: "edit",
+                style: :edit,
+                data: { turbo_frame: "_top" }
+              ) %>
+              <% actions.with_action(
+                label: t("shared.delete"),
+                url: adm_municipal_plans_officer_group_path(officer_group),
+                icon: "delete",
+                style: :delete,
+                data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete"), turbo_frame: "_top" }
+              ) %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

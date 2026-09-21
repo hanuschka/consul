@@ -6,6 +6,8 @@ class MunicipalPlan::Officer < ApplicationRecord
   has_many :officer_groups, through: :officer_group_assignments
   has_many :municipal_plans, as: :responsible, inverse_of: false, dependent: :restrict_with_error
 
+  validates :user_id, uniqueness: true
+
   before_destroy :ensure_not_in_use, prepend: true
 
   def safe_to_destroy?

@@ -1,0 +1,22 @@
+<tr class="kern-table__row" id="<%= dom_id(officer) %>">
+  <th scope="row" class="kern-table__header" data-field="name"><%= officer.user&.name %></th>
+  <td class="kern-table__cell" data-field="email"><%= officer.user&.email %></td>
+  <td class="kern-table__cell">
+    <% if officer.persisted? %>
+      <%= render Kern::Table::ActionsComponent.new do |actions| %>
+        <% actions.with_action(
+          label: t("shared.delete"),
+          url: adm_municipal_plans_officer_path(officer),
+          icon: "delete",
+          style: :delete,
+          data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete"), turbo_frame: "_top" }
+        ) %>
+      <% end %>
+    <% else %>
+      <%= form_with url: adm_municipal_plans_officers_path, method: :post, data: { turbo_frame: "_top" } do %>
+        <%= hidden_field_tag :user_id, officer.user_id %>
+        <%= kern_button(type: :submit, text: t(".add")) %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

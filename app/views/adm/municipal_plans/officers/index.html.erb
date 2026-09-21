@@ -1,0 +1,49 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
+
+<%
+  headers = {
+    name:  Kern::Table::HeaderComponent.new(:name, t(".table.name"), data_field: "name"),
+    email: Kern::Table::HeaderComponent.new(:email, t(".table.email"), data_field: "email")
+  }
+%>
+
+<div class="kern-container my-5">
+  <%= render Adm::UserSearchComponent.new(
+    url: search_adm_municipal_plans_officers_path,
+    label: t(".search_label"),
+    description: t(".search_description")
+  ) %>
+
+  <div id="search-result" class="my-4"></div>
+
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "municipal_plan_officers_table",
+        records: @officers,
+        pagy: @pagy,
+        headers: headers,
+        column_count: 3,
+        empty_state: {
+          title: t(".no_items_title"),
+          description: t(".no_items_description"),
+          icon: "badge"
+        }
+      ) do |c| %>
+    <% c.with_header_row do %>
+      <%= render headers[:name] %>
+      <%= render headers[:email] %>
+      <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @officers.each do |officer| %>
+        <%= render "officer", officer: officer %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

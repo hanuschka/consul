@@ -1,0 +1,93 @@
+en:
+  adm:
+    municipal_plans:
+      title: Municipal plans
+      menu:
+        aria_label: Municipal plans navigation
+        items:
+          officers: Officers
+          officer_groups: Officer groups
+          topics: Topics
+      officers:
+        index:
+          title: Officers
+          page_hint: "Manage the people who are allowed to edit municipal plans. Search for an existing user account by email address and add it to the officers. Officers maintain the plans assigned to them and keep their processing status up to date. Only registered user accounts can be added."
+          search_label: Search user
+          search_description: Search by email address for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only registered users can be added as officers. Officers edit the plans assigned to them or to their officer group.
+          no_items_title: No officers yet
+          no_items_description: Search for a user account and add it to the officers.
+          table:
+            name: Name
+            email: Email
+        officer:
+          add: Add
+        search:
+          table:
+            name: Name
+            email: Email
+        user_not_found:
+          user_not_found: User not found
+        create:
+          success: The user was added to the officers.
+        destroy:
+          success: The user was removed from the officers.
+      officer_groups:
+        index:
+          title: Officer groups
+          page_hint: "Manage the officer groups of the municipal plans module. A group bundles several officers and can be set as the responsible unit for a plan. Each group has a default email address for notifications. Groups that still have plans assigned to them cannot be deleted."
+          new_officer_group: New officer group
+          no_items_title: No officer groups yet
+          no_items_description: Create an officer group to bundle responsibilities for plans.
+          table:
+            name: Name
+            officers: Members
+            default_email: Default email
+        new:
+          title: New officer group
+        edit:
+          title: Edit officer group
+        create:
+          success: The officer group was created.
+        update:
+          success: The officer group was updated.
+        destroy:
+          success: The officer group was deleted.
+          cannot_destroy: The officer group cannot be deleted because plans are still assigned to it.
+        form:
+          name_label: Name
+          name_hint: The name of the officer group appears in the lists where you assign the responsible unit to a plan. Use a unique, descriptive name that matches your administration, for example "Urban planning department". The name is only visible in the admin area.
+          name_placeholder: e.g. Urban planning department
+          default_email_label: Default email
+          default_email_hint: All notifications about plans this group is responsible for are sent to this address. Prefer a functional address so notifications are delivered independently of individual people.
+          default_email_placeholder: e.g. planning@city.example
+          officers_label: Members
+          officers_hint: Select the officers who belong to this group. All members can edit the plans the group is responsible for. An officer can belong to several groups.
+          no_officers_title: No officers yet
+          no_officers_description: Add officers under "Officers" first before assigning them to a group.
+          submit: Save
+      topics:
+        index:
+          title: Topics
+          page_hint: "Manage the topics of the municipal plans module. Topics assign each plan to a subject area such as mobility, education or urban development and are used as a filter by citizens. Use drag and drop to set the order in which topics are displayed. Topics that still have plans assigned to them cannot be deleted."
+          new_topic: New topic
+          no_items_title: No topics yet
+          no_items_description: Create a topic so plans can be assigned to a subject area.
+          table:
+            order: Order
+            name: Name
+        new:
+          title: New topic
+        edit:
+          title: Edit topic
+        create:
+          success: The topic was created.
+        update:
+          success: The topic was updated.
+        destroy:
+          success: The topic was deleted.
+          cannot_destroy: The topic cannot be deleted because plans are still assigned to it.
+        form:
+          name_label: Name
+          name_hint: The name of the topic is shown to citizens as a filter in the municipal plans list and appears on every plan it is assigned to. Use a short, generally understandable term such as "Mobility and traffic".
+          name_placeholder: e.g. Mobility and traffic
+          submit: Save

@@ -1,0 +1,93 @@
+de:
+  adm:
+    municipal_plans:
+      title: Vorhabenliste
+      menu:
+        aria_label: Vorhabenliste Navigation
+        items:
+          officers: Sachbearbeitung
+          officer_groups: Bearbeitergruppen
+          topics: Themen
+      officers:
+        index:
+          title: Sachbearbeitung
+          page_hint: "Hier verwalten Sie die Personen, die Vorhaben bearbeiten dürfen. Suchen Sie über die E-Mail-Adresse nach einem bereits registrierten Nutzerkonto und nehmen Sie es in die Sachbearbeitung auf. Sachbearbeiterinnen und Sachbearbeiter pflegen die ihnen zugewiesenen Vorhaben und halten den Bearbeitungsstand aktuell. Nur bereits registrierte Nutzerkonten können aufgenommen werden."
+          search_label: Nutzer suchen
+          search_description: Suchen Sie per E-Mail-Adresse nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können in die Sachbearbeitung aufgenommen werden. Sachbearbeiterinnen und Sachbearbeiter bearbeiten die Vorhaben, die ihnen oder ihrer Bearbeitergruppe zugewiesen sind.
+          no_items_title: Keine Sachbearbeitung hinterlegt
+          no_items_description: Suchen Sie nach einem Nutzerkonto und nehmen Sie es in die Sachbearbeitung auf.
+          table:
+            name: Name
+            email: E-Mail
+        officer:
+          add: Hinzufügen
+        search:
+          table:
+            name: Name
+            email: E-Mail
+        user_not_found:
+          user_not_found: Nutzer nicht gefunden
+        create:
+          success: Die Person wurde in die Sachbearbeitung aufgenommen.
+        destroy:
+          success: Die Person wurde aus der Sachbearbeitung entfernt.
+      officer_groups:
+        index:
+          title: Bearbeitergruppen
+          page_hint: "Hier verwalten Sie die Bearbeitergruppen der Vorhabenliste. Eine Gruppe fasst mehrere Personen aus der Sachbearbeitung zusammen und kann als zuständige Stelle für ein Vorhaben hinterlegt werden. Jede Gruppe hat eine Standard-E-Mail-Adresse, an die Benachrichtigungen gehen. Gruppen, denen noch Vorhaben zugeordnet sind, können nicht gelöscht werden."
+          new_officer_group: Neue Bearbeitergruppe
+          no_items_title: Keine Bearbeitergruppen vorhanden
+          no_items_description: Legen Sie eine Bearbeitergruppe an, um Zuständigkeiten für Vorhaben zu bündeln.
+          table:
+            name: Name
+            officers: Mitglieder
+            default_email: Standard-E-Mail
+        new:
+          title: Neue Bearbeitergruppe
+        edit:
+          title: Bearbeitergruppe bearbeiten
+        create:
+          success: Die Bearbeitergruppe wurde erstellt.
+        update:
+          success: Die Bearbeitergruppe wurde aktualisiert.
+        destroy:
+          success: Die Bearbeitergruppe wurde gelöscht.
+          cannot_destroy: Die Bearbeitergruppe kann nicht gelöscht werden, da ihr noch Vorhaben zugeordnet sind.
+        form:
+          name_label: Name
+          name_hint: Der Name der Bearbeitergruppe erscheint in den Auswahllisten, in denen Sie einem Vorhaben die zuständige Stelle zuweisen. Wählen Sie eine eindeutige, sprechende Bezeichnung, die der Organisationsstruktur Ihrer Verwaltung entspricht, zum Beispiel „Stadtplanungsamt" oder „Amt für Stadtentwicklung". Der Name ist nur in der Verwaltung sichtbar.
+          name_placeholder: z. B. Stadtplanungsamt
+          default_email_label: Standard-E-Mail
+          default_email_hint: An diese Adresse gehen alle Benachrichtigungen zu Vorhaben, für die diese Gruppe zuständig ist. Verwenden Sie möglichst eine Funktionsadresse wie stadtplanung@stadt.de, damit die Benachrichtigungen unabhängig von einzelnen Personen zugestellt werden.
+          default_email_placeholder: z. B. stadtplanung@stadt.de
+          officers_label: Mitglieder
+          officers_hint: Wählen Sie die Personen aus, die dieser Gruppe angehören sollen. Alle Mitglieder können die Vorhaben bearbeiten, für die die Gruppe zuständig ist. Personen können gleichzeitig mehreren Gruppen angehören.
+          no_officers_title: Keine Sachbearbeitung hinterlegt
+          no_officers_description: Nehmen Sie zunächst unter „Sachbearbeitung" Personen auf, bevor Sie ihnen eine Gruppe zuweisen.
+          submit: Speichern
+      topics:
+        index:
+          title: Themen
+          page_hint: "Hier verwalten Sie die Themen der Vorhabenliste. Themen ordnen jedes Vorhaben einem inhaltlichen Bereich zu, zum Beispiel Mobilität, Bildung oder Stadtentwicklung, und dienen den Bürgerinnen und Bürgern als Filter. Per Drag & Drop legen Sie fest, in welcher Reihenfolge die Themen angezeigt werden. Themen, denen noch Vorhaben zugeordnet sind, können nicht gelöscht werden."
+          new_topic: Neues Thema
+          no_items_title: Keine Themen vorhanden
+          no_items_description: Legen Sie ein Thema an, um Vorhaben inhaltlich zuordnen zu können.
+          table:
+            order: Reihenfolge
+            name: Name
+        new:
+          title: Neues Thema
+        edit:
+          title: Thema bearbeiten
+        create:
+          success: Das Thema wurde erstellt.
+        update:
+          success: Das Thema wurde aktualisiert.
+        destroy:
+          success: Das Thema wurde gelöscht.
+          cannot_destroy: Das Thema kann nicht gelöscht werden, da ihm noch Vorhaben zugeordnet sind.
+        form:
+          name_label: Name
+          name_hint: Der Name des Themas wird den Bürgerinnen und Bürgern in der Vorhabenliste als Filter angezeigt und erscheint bei jedem Vorhaben, dem dieses Thema zugeordnet ist. Wählen Sie einen kurzen, allgemein verständlichen Begriff wie „Mobilität und Verkehr" oder „Grün und Umwelt".
+          name_placeholder: z. B. Mobilität und Verkehr
+          submit: Speichern

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_21_100000) do
+ActiveRecord::Schema.define(version: 2026_09_21_110000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1951,7 +1951,7 @@ ActiveRecord::Schema.define(version: 2026_09_21_100000) do
 
   create_table "municipal_plans", force: :cascade do |t|
     t.string "status", default: "draft", null: false
-    t.string "version", default: "1.0", null: false
+    t.string "version", default: "0.1", null: false
     t.date "content_updated_at"
     t.integer "given_order"
     t.boolean "formal_participation", default: false, null: false

@@ -3,6 +3,8 @@ class MunicipalPlan < ApplicationRecord
 
   STATUSES = %w[draft published archived].freeze
 
+  FIRST_PUBLISHED_VERSION = "1.0".freeze
+
   MAX_DISTRICTS = 4
 
   CONTENT_ATTRIBUTES = %w[
@@ -69,7 +71,7 @@ class MunicipalPlan < ApplicationRecord
   validate :districts_within_limit
   validate :districts_are_present
 
-  before_save :stamp_content_change, if: :content_change?
+  before_save :apply_version_rules
 
   scope :published, -> { where(status: "published") }
   scope :assigned_to_officer, ->(officer) {
@@ -95,11 +97,18 @@ class MunicipalPlan < ApplicationRecord
     status == "archived"
   end
 
+  # The minor part is a plain counter: 1.9 is followed by 1.10, never by 2.0. The major part only
+  # ever moves from 0 to 1, when the plan is published for the first time.
   def next_version
-    major, minor = version.to_s.split(".", 2)
-    major = "1" if major.blank?
+    "#{major_version}.#{minor_version + 1}"
+  end
 
-    "#{major}.#{minor.to_i + 1}"
+  def major_version
+    version.to_s.split(".", 2).first.to_i
+  end
+
+  def minor_version
+    version.to_s.split(".", 2).last.to_i
   end
 
   def register_content_change!
@@ -116,9 +125,18 @@ class MunicipalPlan < ApplicationRecord
       (changed & self.class.content_attribute_names).any?
     end
 
-    def stamp_content_change
-      self.content_updated_at = Date.current
-      self.version = next_version unless new_record?
+    def apply_version_rules
+      self.content_updated_at = Date.current if content_change?
+
+      if becoming_published?
+        self.version = FIRST_PUBLISHED_VERSION
+      elsif content_change? && !new_record?
+        self.version = next_version
+      end
+    end
+
+    def becoming_published?
+      status == "published" && status_changed? && major_version.zero?
     end
 
     def topics_are_present

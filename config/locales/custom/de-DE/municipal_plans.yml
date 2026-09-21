@@ -1,0 +1,36 @@
+de:
+  custom:
+    municipal_plans:
+      index:
+        title: Vorhabenliste
+        intro_text: In der Vorhabenliste stellt die Stadt ihre laufenden und geplanten Vorhaben vor. Zu jedem Vorhaben finden Sie den aktuellen Bearbeitungsstand, die nächsten Schritte, die betroffenen Ortsteile sowie eine Ansprechperson in der Verwaltung.
+        empty_list_text: Zurzeit sind keine Vorhaben veröffentlicht.
+      participation:
+        "yes": Ja
+        "no": Nein
+        formal_short: Formelle Beteiligung
+        informal_short: Informelle Beteiligung
+      show:
+        back: Zurück zur Vorhabenliste
+        contact: Kontakt
+        contact_name: Name
+        contact_role: Funktion
+        contact_phone: Telefon
+        contact_email: E-Mail
+        last_resolution: Letzter Beschluss
+        processing_status: Aktueller Bearbeitungsstand
+        next_steps: Geplanter Zeitpunkt, nächste Schritte
+        further_information: Weitere Informationen
+        districts: Betroffenes Gebiet / Ortsteil
+        topics: Schwerpunktmäßig betroffene Themen
+        costs: Kosten soweit bezifferbar
+        participation: Bürgerbeteiligung
+        formal_participation: Bürgerbeteiligung formell
+        informal_participation: Bürgerbeteiligung informell
+        links: Links und Dokumente
+        opens_in_new_tab: (öffnet in einem neuen Tab)
+        map_location: Kartenposition
+        map_address: "Das Vorhaben befindet sich bei folgender Adresse: %{address}"
+        map_address_missing: Zu diesem Vorhaben liegt keine Adresse vor. Die Lage ist ausschließlich in der Karte dargestellt.
+        content_updated_at: Aktualisierungsdatum
+        version: Versionsnummer

@@ -1,0 +1,29 @@
+<% provide :title do %><%= t("custom.municipal_plans.index.title") %><% end %>
+
+<main>
+  <h1><%= t("custom.municipal_plans.index.title") %></h1>
+
+  <div class="flex-layout">
+    <div class="main-column">
+      <div class="resource-page--intro-text">
+        <p><%= t("custom.municipal_plans.index.intro_text") %></p>
+      </div>
+
+      <%= render Resources::List::BaseComponent.new do |c| %>
+        <% if @municipal_plans.present? %>
+          <% c.with_items do %>
+            <% @municipal_plans.each do |municipal_plan| %>
+              <%= render MunicipalPlans::ListItemComponent.new(municipal_plan: municipal_plan) %>
+            <% end %>
+          <% end %>
+        <% else %>
+          <p class="resources-list--not-items-message text-center">
+            <%= t("custom.municipal_plans.index.empty_list_text") %>
+          </p>
+        <% end %>
+      <% end %>
+
+      <%= paginate @municipal_plans %>
+    </div>
+  </div>
+</main>

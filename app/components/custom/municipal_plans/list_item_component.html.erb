@@ -1,0 +1,35 @@
+<%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% if topic_names.any? %>
+    <% c.with_subheading do %>
+      <span class="municipal-plan-list-item--topics">
+        <i class="fas fa-tags" aria-hidden="true"></i>
+        <span class="show-for-sr"><%= t("custom.municipal_plans.show.topics") %>:</span>
+        <%= topic_names.to_sentence %>
+      </span>
+    <% end %>
+  <% end %>
+
+  <% if district_names.any? %>
+    <% c.with_additional_body_section do %>
+      <span class="municipal-plan-list-item--districts">
+        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+        <span class="show-for-sr"><%= t("custom.municipal_plans.show.districts") %>:</span>
+        <%= district_names.to_sentence %>
+      </span>
+    <% end %>
+  <% end %>
+
+  <% PARTICIPATION_KINDS.each do |kind| %>
+    <% c.with_footer_section do %>
+      <span class="municipal-plan-list-item--participation">
+        <i class="fas <%= participation_icon_class(kind) %>" aria-hidden="true"></i>
+        <%= t("custom.municipal_plans.participation.#{kind}_short") %>:
+        <% if participation_enabled?(kind) %>
+          <%= t("custom.municipal_plans.participation.yes") %>
+        <% else %>
+          <%= t("custom.municipal_plans.participation.no") %>
+        <% end %>
+      </span>
+    <% end %>
+  <% end %>
+<% end %>

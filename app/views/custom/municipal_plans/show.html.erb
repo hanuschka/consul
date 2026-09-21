@@ -1,0 +1,187 @@
+<%= content_for :body_class, "municipal-plans-show" %>
+<% provide :title do %><%= @municipal_plan.title %><% end %>
+<% content_for :meta_description do %><%= truncate(strip_tags(@municipal_plan.short_description.to_s), length: 300) %><% end %>
+<% content_for :canonical do %>
+  <%= render "shared/canonical", href: municipal_plan_url(@municipal_plan) %>
+<% end %>
+
+<% rich_text_present = ->(value) { strip_tags(value.to_s).strip.present? } %>
+<% map_location = @municipal_plan.map_location %>
+<% contact_rows = [
+     { label: t("custom.municipal_plans.show.contact_name"), value: @municipal_plan.contact_name },
+     { label: t("custom.municipal_plans.show.contact_role"), value: @municipal_plan.contact_role },
+     { label: t("custom.municipal_plans.show.contact_phone"), value: @municipal_plan.contact_phone },
+     { label: t("custom.municipal_plans.show.contact_email"), value: @municipal_plan.contact_email }
+   ].select { |row| row[:value].present? } %>
+
+<main>
+  <div class="resource-page municipal-plan-page">
+    <div class="flex-layout">
+      <div class="main-column">
+        <%= back_link_to(municipal_plans_path, t("custom.municipal_plans.show.back")) %>
+
+        <h1><%= @municipal_plan.title %></h1>
+
+        <% if rich_text_present.call(@municipal_plan.short_description) %>
+          <div class="municipal-plan-page--lead">
+            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.short_description) %>
+          </div>
+        <% end %>
+
+        <% if contact_rows.any? %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.contact") %></h2>
+            <dl class="municipal-plan-page--definitions">
+              <% contact_rows.each do |row| %>
+                <dt><%= row[:label] %></dt>
+                <dd>
+                  <% if row[:label] == t("custom.municipal_plans.show.contact_email") %>
+                    <%= mail_to row[:value] %>
+                  <% elsif row[:label] == t("custom.municipal_plans.show.contact_phone") %>
+                    <%= link_to row[:value], "tel:#{row[:value].gsub(/[^0-9+]/, '')}" %>
+                  <% else %>
+                    <%= row[:value] %>
+                  <% end %>
+                </dd>
+              <% end %>
+            </dl>
+          </section>
+        <% end %>
+
+        <% if rich_text_present.call(@municipal_plan.last_resolution) %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.last_resolution") %></h2>
+            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.last_resolution) %>
+          </section>
+        <% end %>
+
+        <% if rich_text_present.call(@municipal_plan.processing_status) %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.processing_status") %></h2>
+            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.processing_status) %>
+          </section>
+        <% end %>
+
+        <% if rich_text_present.call(@municipal_plan.next_steps) %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.next_steps") %></h2>
+            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.next_steps) %>
+          </section>
+        <% end %>
+
+        <% if rich_text_present.call(@municipal_plan.further_information) %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.further_information") %></h2>
+            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.further_information) %>
+          </section>
+        <% end %>
+
+        <% if @municipal_plan.districts.any? %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.districts") %></h2>
+            <ul class="municipal-plan-page--list">
+              <% @municipal_plan.districts.each do |district| %>
+                <li><%= district.name_for_display %></li>
+              <% end %>
+            </ul>
+          </section>
+        <% end %>
+
+        <% if @municipal_plan.topics.any? %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.topics") %></h2>
+            <ul class="municipal-plan-page--list">
+              <% @municipal_plan.topics.each do |topic| %>
+                <li><%= topic.name %></li>
+              <% end %>
+            </ul>
+          </section>
+        <% end %>
+
+        <% if @municipal_plan.costs.present? %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.costs") %></h2>
+            <p><%= @municipal_plan.costs %></p>
+          </section>
+        <% end %>
+
+        <section class="municipal-plan-page--section">
+          <h2><%= t("custom.municipal_plans.show.participation") %></h2>
+          <dl class="municipal-plan-page--definitions">
+            <dt><%= t("custom.municipal_plans.show.formal_participation") %></dt>
+            <dd>
+              <span class="municipal-plan-page--flag">
+                <i class="fas <%= @municipal_plan.formal_participation ? "fa-check" : "fa-times" %>" aria-hidden="true"></i>
+                <%= @municipal_plan.formal_participation ? t("custom.municipal_plans.participation.yes") : t("custom.municipal_plans.participation.no") %>
+              </span>
+              <% if @municipal_plan.formal_participation_reason.present? %>
+                <p class="municipal-plan-page--flag-reason"><%= @municipal_plan.formal_participation_reason %></p>
+              <% end %>
+            </dd>
+
+            <dt><%= t("custom.municipal_plans.show.informal_participation") %></dt>
+            <dd>
+              <span class="municipal-plan-page--flag">
+                <i class="fas <%= @municipal_plan.informal_participation ? "fa-check" : "fa-times" %>" aria-hidden="true"></i>
+                <%= @municipal_plan.informal_participation ? t("custom.municipal_plans.participation.yes") : t("custom.municipal_plans.participation.no") %>
+              </span>
+              <% if @municipal_plan.informal_participation_reason.present? %>
+                <p class="municipal-plan-page--flag-reason"><%= @municipal_plan.informal_participation_reason %></p>
+              <% end %>
+            </dd>
+          </dl>
+        </section>
+
+        <% if @municipal_plan.links.any? %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.links") %></h2>
+            <ul class="municipal-plan-page--list">
+              <% @municipal_plan.links.each do |link| %>
+                <li>
+                  <%= link_to link.url, target: "_blank", rel: "noopener" do %>
+                    <%= link.title.presence || link.url %>
+                    <span class="show-for-sr"><%= t("custom.municipal_plans.show.opens_in_new_tab") %></span>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          </section>
+        <% end %>
+
+        <% if map_location.present? %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.map_location") %></h2>
+
+            <p class="municipal-plan-page--map-address">
+              <% if map_location.approximated_address.present? %>
+                <%= t("custom.municipal_plans.show.map_address", address: map_location.approximated_address) %>
+              <% else %>
+                <%= t("custom.municipal_plans.show.map_address_missing") %>
+              <% end %>
+            </p>
+
+            <div class="margin-bottom not-print">
+              <%= render Shared::MapComponent.new(
+                mappable: @municipal_plan,
+                features: map_location.features_json_data
+              ) %>
+            </div>
+          </section>
+        <% end %>
+
+        <dl class="municipal-plan-page--definitions municipal-plan-page--meta">
+          <% if @municipal_plan.content_updated_at.present? %>
+            <dt><%= t("custom.municipal_plans.show.content_updated_at") %></dt>
+            <dd><%= l(@municipal_plan.content_updated_at, format: "%d.%m.%Y") %></dd>
+          <% end %>
+
+          <% if @municipal_plan.version.present? %>
+            <dt><%= t("custom.municipal_plans.show.version") %></dt>
+            <dd><%= @municipal_plan.version %></dd>
+          <% end %>
+        </dl>
+      </div>
+      <div class="sidebar-placeholder"></div>
+    </div>
+  </div>
+</main>

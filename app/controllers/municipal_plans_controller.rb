@@ -6,7 +6,10 @@ class MunicipalPlansController < ApplicationController
   feature_flag :municipal_plans
 
   def index
-    @municipal_plans = MunicipalPlan.published.sorted
+    @municipal_plans = MunicipalPlan.published
+                                    .includes(:topics, :districts)
+                                    .sorted
+                                    .page(params[:page])
   end
 
   def show

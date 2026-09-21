@@ -1,4 +1,41 @@
 en:
+  activerecord:
+    models:
+      municipal_plan:
+        one: "Plan"
+        other: "Plans"
+      municipal_plan/topic:
+        one: "Topic"
+        other: "Topics"
+    attributes:
+      municipal_plan:
+        status: "Status"
+        responsible: "Responsible case worker"
+        map_location: "Map position"
+        title: "Plan title"
+        short_description: "Short description"
+        processing_status: "Current processing status"
+        next_steps: "Planned timing, next steps"
+      municipal_plan/translation:
+        title: "Plan title"
+        short_description: "Short description"
+        processing_status: "Current processing status"
+        next_steps: "Planned timing, next steps"
+      municipal_plan/link:
+        title: "Title"
+        url: "Target"
+      municipal_plan/topic:
+        name: "Name"
+      municipal_plan/topic/translation:
+        name: "Name"
+      municipal_plan/officer_group:
+        name: "Name"
+    errors:
+      models:
+        municipal_plan:
+          districts_required: "Please select at least one district."
+          too_many_districts: "Please select at most %{count} districts."
+          topics_required: "Please select at least one topic."
   deficiency_reports:
     official_answer_documents:
       too_many: "At most %{count} documents can be attached to the official response."

@@ -12,6 +12,12 @@ de:
     resource_terms: Die AGBs und die Datenschutzbestimmung
   activerecord:
     models:
+      municipal_plan:
+        one: "Vorhaben"
+        other: "Vorhaben"
+      municipal_plan/topic:
+        one: "Thema"
+        other: "Themen"
       activity:
         one: "Aktivität"
         other: "Aktivitäten"
@@ -148,6 +154,28 @@ de:
         one: Import von Datensatz aus dem Melderegister
         other: Import von Datensätzen aus dem Melderegister
     attributes:
+      municipal_plan:
+        status: "Status"
+        responsible: "Zuständige Sachbearbeitung"
+        map_location: "Kartenposition"
+        title: "Titel des Vorhabens"
+        short_description: "Kurze Beschreibung"
+        processing_status: "Aktueller Bearbeitungsstand"
+        next_steps: "Geplanter Zeitpunkt, nächste Schritte"
+      municipal_plan/translation:
+        title: "Titel des Vorhabens"
+        short_description: "Kurze Beschreibung"
+        processing_status: "Aktueller Bearbeitungsstand"
+        next_steps: "Geplanter Zeitpunkt, nächste Schritte"
+      municipal_plan/link:
+        title: "Titel"
+        url: "Ziel"
+      municipal_plan/topic:
+        name: "Name"
+      municipal_plan/topic/translation:
+        name: "Name"
+      municipal_plan/officer_group:
+        name: "Name"
       deficiency_report:
         admin_accepted: "Sichtbarkeit"
         admin_accepted_true: "Veröffentlicht"
@@ -553,6 +581,10 @@ de:
         service_api_token: Service-API-Token
     errors:
       models:
+        municipal_plan:
+          districts_required: "Bitte wählen Sie mindestens einen Ortsteil aus."
+          too_many_districts: "Bitte wählen Sie höchstens %{count} Ortsteile aus."
+          topics_required: "Bitte wählen Sie mindestens ein Thema aus."
         projekt:
           attributes:
             parent_id:

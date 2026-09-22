@@ -585,6 +585,7 @@ de:
           districts_required: "Bitte wählen Sie mindestens einen Ortsteil aus."
           too_many_districts: "Bitte wählen Sie höchstens %{count} Ortsteile aus."
           topics_required: "Bitte wählen Sie mindestens ein Thema aus."
+          release_required: "Bitte füllen Sie das Feld „%{field}“ aus, bevor Sie das Vorhaben veröffentlichen."
         projekt:
           attributes:
             parent_id:

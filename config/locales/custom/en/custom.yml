@@ -36,6 +36,7 @@ en:
           districts_required: "Please select at least one district."
           too_many_districts: "Please select at most %{count} districts."
           topics_required: "Please select at least one topic."
+          release_required: "Please fill in “%{field}” before publishing the plan."
   deficiency_reports:
     official_answer_documents:
       too_many: "At most %{count} documents can be attached to the official response."

@@ -69,4 +69,46 @@ describe "Vorhaben in /adm", type: :request do
       expect { patch_plan(status: "archived") }.not_to change { plan.reload.version }
     end
   end
+
+  describe "an Entwurf that is still incomplete" do
+    def create_plan(attributes)
+      post adm_municipal_plans_municipal_plans_path,
+           params: { municipal_plan: { status: "draft" }.merge(attributes) }
+    end
+
+    def missing_field_message(field)
+      I18n.t("activerecord.errors.models.municipal_plan.release_required",
+             field: MunicipalPlan.human_attribute_name(field))
+    end
+
+    it "saves with nothing but a Titel" do
+      expect { create_plan(title: "Halbfertiges Vorhaben") }.to change(MunicipalPlan, :count).by(1)
+
+      expect(MunicipalPlan.last.title).to eq("Halbfertiges Vorhaben")
+    end
+
+    it "refuses publication and names every missing field" do
+      create_plan(title: "Halbfertiges Vorhaben", status: "published")
+
+      expect(MunicipalPlan.count).to eq(0)
+
+      MunicipalPlan::RELEASE_REQUIRED_FIELDS.each do |field|
+        expect(response.body).to include(missing_field_message(field))
+      end
+    end
+
+    it "shows every value again when it is reopened" do
+      create_plan(title: "Halbfertiges Vorhaben", short_description: "Nur ein Anfang",
+                  contact_name: "Kai Ostermann",
+                  district_ids: [district.id], topic_ids: [topic.id])
+
+      get edit_adm_municipal_plans_municipal_plan_path(MunicipalPlan.last)
+
+      expect(response.body).to include("Halbfertiges Vorhaben")
+      expect(response.body).to include("Nur ein Anfang")
+      expect(response.body).to include("Kai Ostermann")
+      expect(response.body).to match(/value="#{district.id}"[^>]*checked/)
+      expect(response.body).to match(/value="#{topic.id}"[^>]*checked/)
+    end
+  end
 end

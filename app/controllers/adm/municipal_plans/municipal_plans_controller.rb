@@ -35,7 +35,7 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
 
   def create
     @municipal_plan = MunicipalPlan.new(municipal_plan_params)
-    @municipal_plan.responsible = resolve_responsible
+    @municipal_plan.responsible = resolve_responsible || current_user.municipal_plan_officer
     authorize @municipal_plan, policy_class: Adm::MunicipalPlans::MunicipalPlanPolicy
 
     if @municipal_plan.save

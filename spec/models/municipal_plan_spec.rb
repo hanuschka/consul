@@ -94,6 +94,52 @@ describe MunicipalPlan do
     end
   end
 
+  describe "Entwurf und Freigabe" do
+    def missing_field_message(field)
+      I18n.t("activerecord.errors.models.municipal_plan.release_required",
+             field: MunicipalPlan.human_attribute_name(field))
+    end
+
+    it "saves an Entwurf that carries nothing but a Titel" do
+      expect(MunicipalPlan.new(title: "Nur ein Titel")).to be_valid
+    end
+
+    it "still refuses an Entwurf without a Titel" do
+      expect(MunicipalPlan.new).not_to be_valid
+    end
+
+    it "names every missing field when that Entwurf is published" do
+      plan = MunicipalPlan.new(title: "Nur ein Titel", status: "published")
+
+      expect(plan).not_to be_valid
+
+      MunicipalPlan::RELEASE_REQUIRED_FIELDS.each do |field|
+        expect(plan.errors[:base]).to include(missing_field_message(field))
+      end
+
+      expect(plan.errors[:base])
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.districts_required"))
+      expect(plan.errors[:base])
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.topics_required"))
+    end
+
+    it "counts an emptied rich text field as missing" do
+      plan = build(:municipal_plan, responsible: officer, status: "published",
+                                    processing_status: "<p>&nbsp;</p>")
+
+      expect(plan).not_to be_valid
+      expect(plan.errors[:base]).to include(missing_field_message(:processing_status))
+    end
+
+    it "publishes once every required field is filled" do
+      expect(build(:municipal_plan, :published, responsible: officer)).to be_valid
+    end
+
+    it "refuses to archive an Entwurf that was never complete" do
+      expect(MunicipalPlan.new(title: "Nur ein Titel", status: "archived")).not_to be_valid
+    end
+  end
+
   describe "badges" do
     let(:plan) { create(:municipal_plan, responsible: officer) }
 
@@ -194,21 +240,37 @@ describe MunicipalPlan do
         .to include(I18n.t("activerecord.errors.models.municipal_plan.too_many_districts", count: 4))
     end
 
-    it "requires at least one district" do
-      plan = build(:municipal_plan, responsible: officer)
+    it "requires at least one district for publication" do
+      plan = build(:municipal_plan, :published, responsible: officer)
       plan.district_assignments.clear
 
       expect(plan).not_to be_valid
     end
+
+    it "lets an Entwurf go without one" do
+      plan = build(:municipal_plan, responsible: officer)
+      plan.district_assignments.clear
+
+      expect(plan).to be_valid
+    end
   end
 
   describe "Kartenposition" do
-    it "requires a map location on create" do
-      plan = build(:municipal_plan, responsible: officer)
+    it "requires a map location for publication" do
+      plan = build(:municipal_plan, :published, responsible: officer)
       plan.map_location = nil
 
       expect(plan).not_to be_valid
-      expect(plan.errors[:map_location]).to be_present
+      expect(plan.errors[:base])
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.release_required",
+                           field: MunicipalPlan.human_attribute_name(:map_location)))
+    end
+
+    it "lets an Entwurf go without one" do
+      plan = build(:municipal_plan, responsible: officer)
+      plan.map_location = nil
+
+      expect(plan).to be_valid
     end
 
     it "exposes the district derived from the pin" do
@@ -220,11 +282,18 @@ describe MunicipalPlan do
   end
 
   describe "topics" do
-    it "requires at least one topic" do
-      plan = build(:municipal_plan, responsible: officer)
+    it "requires at least one topic for publication" do
+      plan = build(:municipal_plan, :published, responsible: officer)
       plan.topic_assignments.clear
 
       expect(plan).not_to be_valid
+    end
+
+    it "lets an Entwurf go without one" do
+      plan = build(:municipal_plan, responsible: officer)
+      plan.topic_assignments.clear
+
+      expect(plan).to be_valid
     end
   end
 end

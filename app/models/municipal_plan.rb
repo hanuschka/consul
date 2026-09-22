@@ -8,6 +8,15 @@ class MunicipalPlan < ApplicationRecord
 
   MAX_DISTRICTS = 4
 
+  # Everything an Entwurf may still be missing, and has to carry before it leaves Entwurf.
+  RELEASE_REQUIRED_FIELDS = %i[
+    short_description
+    processing_status
+    next_steps
+    responsible
+    map_location
+  ].freeze
+
   # How long a Vorhaben carries the "neu" or "aktualisiert" badge.
   RECENCY_WINDOW = 30.days
 
@@ -65,15 +74,9 @@ class MunicipalPlan < ApplicationRecord
   accepts_nested_attributes_for :links, allow_destroy: true
 
   validates :status, inclusion: { in: STATUSES }
-  validates :responsible, presence: true
-  validates :map_location, presence: true, on: :create
   validates_translation :title, presence: true
-  validates_translation :short_description, presence: true
-  validates_translation :processing_status, presence: true
-  validates_translation :next_steps, presence: true
-  validate :topics_are_present
   validate :districts_within_limit
-  validate :districts_are_present
+  validate :release_requirements, unless: :draft?
 
   before_save :apply_version_rules
 
@@ -196,6 +199,25 @@ class MunicipalPlan < ApplicationRecord
 
     def becoming_published?
       status == "published" && status_changed? && major_version.zero?
+    end
+
+    def release_requirements
+      RELEASE_REQUIRED_FIELDS.each do |field|
+        next if release_value_present?(public_send(field))
+
+        errors.add(:base, I18n.t("activerecord.errors.models.municipal_plan.release_required",
+                                 field: self.class.human_attribute_name(field)))
+      end
+
+      districts_are_present
+      topics_are_present
+    end
+
+    # An emptied CKEditor leaves markup behind, which would otherwise pass as a filled field.
+    def release_value_present?(value)
+      return value.present? unless value.is_a?(String)
+
+      ActionController::Base.helpers.strip_tags(value).tr("\u00A0", " ").strip.present?
     end
 
     def topics_are_present

@@ -97,6 +97,99 @@ describe "Vorhabenliste", type: :request do
     end
   end
 
+  describe "search and sorting" do
+    # The search dictionary comes from I18n.default_locale, which is :en in the test environment
+    # and :de on a German instance. Stemming and weighting are only meaningful under German.
+    around do |example|
+      original = I18n.default_locale
+      I18n.default_locale = :de
+      example.run
+      I18n.default_locale = original
+    end
+
+    before { enable_module(true) }
+
+    let!(:in_title) do
+      create(:municipal_plan, :published, responsible: officer,
+                                          title: "Sanierung der Brücke am Markt")
+    end
+    let!(:in_body) do
+      create(:municipal_plan, :published, responsible: officer,
+                                          title: "Umbau Eichplatz",
+                                          short_description: "Neue Brücke geplant")
+    end
+
+    def titles_in_order
+      response.body.scan(/Sanierung der Brücke am Markt|Umbau Eichplatz/).uniq
+    end
+
+    it "ranks a Titel match above a Kurze Beschreibung match" do
+      get municipal_plans_path(search: "Brücke")
+
+      expect(titles_in_order.first).to eq("Sanierung der Brücke am Markt")
+    end
+
+    it "finds a stem when the search word is inflected" do
+      get municipal_plans_path(search: "Brücken")
+
+      expect(response.body).to include("Sanierung der Brücke am Markt")
+      expect(response.body).to include("Umbau Eichplatz")
+    end
+
+    it "sorts by editorial order when nothing is searched" do
+      in_title.update!(given_order: 2)
+      in_body.update!(given_order: 1)
+
+      get municipal_plans_path
+
+      expect(titles_in_order.first).to eq("Umbau Eichplatz")
+    end
+
+    it "sorts by title when asked" do
+      get municipal_plans_path(order: "title")
+
+      expect(titles_in_order.first).to eq("Sanierung der Brücke am Markt")
+    end
+  end
+
+  describe "administration-only filters stay out of the public area" do
+    before do
+      enable_module(true)
+      create(:municipal_plan, responsible: officer, title: "Nicht freigegeben")
+    end
+
+    shared_examples "no administration filters" do
+      it "offers neither a Status nor a Zuständigkeit filter" do
+        get municipal_plans_path
+
+        expect(response.body).not_to match(/name="status/)
+        expect(response.body).not_to match(/name="responsible/)
+      end
+
+      it "ignores a hand-crafted status parameter instead of revealing drafts" do
+        get municipal_plans_path(status: ["draft"])
+
+        expect(response.body).not_to include("Nicht freigegeben")
+      end
+
+      it "ignores a hand-crafted responsible parameter" do
+        get municipal_plans_path(responsible: ["Officer:#{officer.id}"])
+
+        expect(response.body).not_to include("Nicht freigegeben")
+      end
+    end
+
+    context "for an anonymous visitor" do
+      include_examples "no administration filters"
+    end
+
+    context "for a signed-in administrator" do
+      before { login_as(create(:administrator).user) }
+
+      include_examples "no administration filters"
+    end
+  end
+
   describe "internal data never reaches the public detail page" do
     before { enable_module(true) }
 

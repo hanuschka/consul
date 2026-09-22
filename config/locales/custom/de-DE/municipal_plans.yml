@@ -5,11 +5,48 @@ de:
         title: Vorhabenliste
         intro_text: In der Vorhabenliste stellt die Stadt ihre laufenden und geplanten Vorhaben vor. Zu jedem Vorhaben finden Sie den aktuellen Bearbeitungsstand, die nächsten Schritte, die betroffenen Ortsteile sowie eine Ansprechperson in der Verwaltung.
         empty_list_text: Zurzeit sind keine Vorhaben veröffentlicht.
+        result_count:
+          zero: Keine Vorhaben gefunden
+          one: 1 Vorhaben gefunden
+          other: "%{count} Vorhaben gefunden"
+        orders:
+          relevance: Relevanz
+          given_order: redaktionelle Reihenfolge
+          content_updated_at: Aktualisierungsdatum
+          title: Titel
+        sidebar:
+          apply: Filter anwenden
+          reset: Alle Filter zurücksetzen
+          search:
+            title: Suche
+            region_label: Vorhaben durchsuchen
+            label: Suchbegriff
+            placeholder: z. B. Marktplatz
+          districts:
+            title: Ortsteil
+            empty: Es sind keine Ortsteile hinterlegt.
+          topics:
+            title: Thema
+            empty: Es sind keine Themen hinterlegt.
+          participation:
+            title: Bürgerbeteiligung
+            options:
+              formal: formelle Bürgerbeteiligung
+              informal: informelle Bürgerbeteiligung
+          recency:
+            title: Kennzeichnung
+          updated_range:
+            title: Aktualisierungsdatum
+            from_label: Aktualisiert ab
+            to_label: Aktualisiert bis
+      badges:
+        new: neuer Eintrag
+        updated: aktualisierter Eintrag
+        formal_participation: formelle Bürgerbeteiligung
+        informal_participation: informelle Bürgerbeteiligung
       participation:
         "yes": Ja
         "no": Nein
-        formal_short: Formelle Beteiligung
-        informal_short: Informelle Beteiligung
       show:
         back: Zurück zur Vorhabenliste
         contact: Kontakt

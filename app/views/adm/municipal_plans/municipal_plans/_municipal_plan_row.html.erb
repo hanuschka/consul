@@ -6,10 +6,13 @@
           class: "kern-link", title: municipal_plan.title, data: { turbo_frame: "_top" } %>
   </th>
   <td class="kern-table__cell" data-field="status">
-    <%= t("adm.municipal_plans.municipal_plans.statuses.#{municipal_plan.status}") %>
+    <%= t("adm.municipal_plans.statuses.#{municipal_plan.status}") %>
   </td>
   <td class="kern-table__cell" data-field="districts">
     <%= municipal_plan.districts.map(&:name_for_display).join(", ") %>
+  </td>
+  <td class="kern-table__cell" data-field="topics">
+    <%= municipal_plan.topics.map(&:name).join(", ") %>
   </td>
   <td class="kern-table__cell" data-field="responsible"><%= responsible_name %></td>
   <td class="kern-table__cell" data-field="content_updated_at">

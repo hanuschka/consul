@@ -1,11 +1,15 @@
 class MunicipalPlan < ApplicationRecord
   include Mappable
+  include Searchable
 
   STATUSES = %w[draft published archived].freeze
 
   FIRST_PUBLISHED_VERSION = "1.0".freeze
 
   MAX_DISTRICTS = 4
+
+  # How long a Vorhaben carries the "neu" or "aktualisiert" badge.
+  RECENCY_WINDOW = 30.days
 
   CONTENT_ATTRIBUTES = %w[
     formal_participation
@@ -74,6 +78,24 @@ class MunicipalPlan < ApplicationRecord
   before_save :apply_version_rules
 
   scope :published, -> { where(status: "published") }
+  scope :sort_by_content_updated_at, -> { reorder(content_updated_at: :desc, id: :desc) }
+  scope :newly_added, -> { where(created_at: RECENCY_WINDOW.ago..) }
+  scope :recently_updated, -> {
+    where(content_updated_at: (Date.current - RECENCY_WINDOW.in_days.to_i)..)
+      .where.not(created_at: RECENCY_WINDOW.ago..)
+  }
+  # Ordered by a correlated subquery rather than a join: a join would drop every plan that has no
+  # translation in the current locale, which silently hides plans instead of sorting them.
+  scope :sort_by_title, -> {
+    locale = connection.quote(I18n.locale.to_s)
+
+    reorder(Arel.sql(<<~SQL.squish))
+      (SELECT t.title FROM municipal_plan_translations t
+        WHERE t.municipal_plan_id = municipal_plans.id
+        ORDER BY (t.locale = #{locale}) DESC, t.id ASC
+        LIMIT 1) ASC NULLS LAST
+    SQL
+  }
   scope :assigned_to_officer, ->(officer) {
     return none if officer.blank?
 
@@ -109,6 +131,43 @@ class MunicipalPlan < ApplicationRecord
 
   def minor_version
     version.to_s.split(".", 2).last.to_i
+  end
+
+  # "neu" and "aktualisiert" are mutually exclusive: a Vorhaben created inside the window is new,
+  # not updated, even though its Aktualisierungsdatum also falls inside it.
+  def newly_added?
+    created_at.present? && created_at >= RECENCY_WINDOW.ago
+  end
+
+  def recently_updated?
+    return false if newly_added?
+    return false if content_updated_at.blank?
+
+    content_updated_at >= Date.current - RECENCY_WINDOW.in_days.to_i
+  end
+
+  def badges
+    [
+      (:new if newly_added?),
+      (:updated if recently_updated?),
+      (:formal_participation if formal_participation?),
+      (:informal_participation if informal_participation?)
+    ].compact
+  end
+
+  def searchable_values
+    searchable_globalized_values
+  end
+
+  def searchable_translations_definitions
+    {
+      title => "A",
+      short_description => "B",
+      last_resolution => "C",
+      processing_status => "C",
+      next_steps => "C",
+      further_information => "D"
+    }
   end
 
   def register_content_change!

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_21_110000) do
+ActiveRecord::Schema.define(version: 2026_09_21_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1965,9 +1965,11 @@ ActiveRecord::Schema.define(version: 2026_09_21_110000) do
     t.bigint "responsible_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.tsvector "tsv"
     t.index ["given_order"], name: "index_municipal_plans_on_given_order"
     t.index ["responsible_type", "responsible_id"], name: "index_municipal_plans_on_responsible"
     t.index ["status"], name: "index_municipal_plans_on_status"
+    t.index ["tsv"], name: "index_municipal_plans_on_tsv", using: :gin
   end
 
   create_table "navbar_items", force: :cascade do |t|

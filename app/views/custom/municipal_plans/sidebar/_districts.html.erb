@@ -1,0 +1,19 @@
+<% selected = Array(params[:districts]).map(&:to_s) %>
+
+<% if @districts.any? %>
+  <fieldset class="municipal-plans-filter--fieldset">
+    <legend class="show-for-sr"><%= t("custom.municipal_plans.index.sidebar.districts.title") %></legend>
+
+    <ul class="no-bullet municipal-plans-filter--options">
+      <% @districts.each do |district| %>
+        <li>
+          <%= check_box_tag "districts[]", district.id, district.id.to_s.in?(selected),
+                id: "filter_district_#{district.id}" %>
+          <%= label_tag "filter_district_#{district.id}", district.name_for_display %>
+        </li>
+      <% end %>
+    </ul>
+  </fieldset>
+<% else %>
+  <p><%= t("custom.municipal_plans.index.sidebar.districts.empty") %></p>
+<% end %>

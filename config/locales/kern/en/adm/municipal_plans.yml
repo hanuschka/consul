@@ -9,6 +9,10 @@ en:
           officers: Officers
           officer_groups: Officer groups
           topics: Topics
+      statuses:
+        draft: Draft
+        published: Published
+        archived: Archived
       municipal_plans:
         index:
           title: Plans
@@ -16,17 +20,16 @@ en:
           new_button: New plan
           no_items_title: No plans yet
           no_items_description: Create a plan to publish it in the plan list.
+          no_results_filtered_title: No matches
+          no_results_filtered_description: No plans match the selected filters. Adjust the filters or reset them.
           table:
             title: Title
             status: Status
             districts: Districts
+            topics: Topics
             responsible: Responsible officer
             content_updated_at: Updated on
             version: Version
-        statuses:
-          draft: Draft
-          published: Published
-          archived: Archived
         new:
           title: New plan
         edit:

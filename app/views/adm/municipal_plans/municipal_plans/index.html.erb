@@ -15,18 +15,20 @@
 <%
   headers = {
     title:              Kern::Table::HeaderComponent.new(:title, t(".table.title"),
-                                                         data_field: "title"),
+                          **@title_header_options.merge(data_field: "title")),
     status:             Kern::Table::HeaderComponent.new(:status, t(".table.status"),
-                                                         data_field: "status"),
+                          **@status_header_options.merge(data_field: "status")),
     districts:          Kern::Table::HeaderComponent.new(:districts, t(".table.districts"),
-                                                         data_field: "districts"),
+                          **@districts_header_options.merge(data_field: "districts")),
+    topics:             Kern::Table::HeaderComponent.new(:topics, t(".table.topics"),
+                          **@topics_header_options.merge(data_field: "topics")),
     responsible:        Kern::Table::HeaderComponent.new(:responsible, t(".table.responsible"),
-                                                         data_field: "responsible"),
+                          **@responsible_header_options.merge(data_field: "responsible")),
     content_updated_at: Kern::Table::HeaderComponent.new(:content_updated_at,
-                                                         t(".table.content_updated_at"),
-                                                         data_field: "content_updated_at"),
+                          t(".table.content_updated_at"),
+                          **@content_updated_at_header_options.merge(data_field: "content_updated_at")),
     version:            Kern::Table::HeaderComponent.new(:version, t(".table.version"),
-                                                         data_field: "version")
+                          **@version_header_options.merge(data_field: "version"))
   }
 %>
 
@@ -36,21 +38,27 @@
         records: @municipal_plans,
         pagy: @pagy,
         headers: headers,
-        column_count: 7,
+        column_count: 8,
         column_selector: {
           storage_key: "adm-municipal-plans-columns-v2",
-          defaults: "title,status,districts,responsible,content_updated_at,version"
+          defaults: "title,status,districts,topics,responsible,content_updated_at,version"
         },
         empty_state: {
           title: t(".no_items_title"),
           description: t(".no_items_description"),
           icon: "assignment"
+        },
+        empty_state_filtered: {
+          title: t(".no_results_filtered_title"),
+          description: t(".no_results_filtered_description"),
+          icon: "filter_alt_off"
         }
       ) do |c| %>
     <% c.with_header_row do %>
       <%= render headers[:title] %>
       <%= render headers[:status] %>
       <%= render headers[:districts] %>
+      <%= render headers[:topics] %>
       <%= render headers[:responsible] %>
       <%= render headers[:content_updated_at] %>
       <%= render headers[:version] %>

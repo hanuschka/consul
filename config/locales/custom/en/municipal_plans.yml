@@ -5,11 +5,48 @@ en:
         title: Municipal plans
         intro_text: The plan list presents the city's ongoing and planned projects. For each plan you will find the current processing status, the next steps, the districts affected and a contact person in the administration.
         empty_list_text: No plans are published at the moment.
+        result_count:
+          zero: No plans found
+          one: 1 plan found
+          other: "%{count} plans found"
+        orders:
+          relevance: Relevance
+          given_order: Editorial order
+          content_updated_at: Updated on
+          title: Title
+        sidebar:
+          apply: Apply filters
+          reset: Reset all filters
+          search:
+            title: Search
+            region_label: Search plans
+            label: Search term
+            placeholder: e.g. market square
+          districts:
+            title: District
+            empty: No districts have been set up.
+          topics:
+            title: Topic
+            empty: No topics have been set up.
+          participation:
+            title: Citizen participation
+            options:
+              formal: formal citizen participation
+              informal: informal citizen participation
+          recency:
+            title: Label
+          updated_range:
+            title: Updated on
+            from_label: Updated from
+            to_label: Updated until
+      badges:
+        new: new entry
+        updated: updated entry
+        formal_participation: formal citizen participation
+        informal_participation: informal citizen participation
       participation:
         "yes": "Yes"
         "no": "No"
-        formal_short: Formal participation
-        informal_short: Informal participation
       show:
         back: Back to the plan list
         contact: Contact

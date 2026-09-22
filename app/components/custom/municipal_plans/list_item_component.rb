@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class MunicipalPlans::ListItemComponent < ApplicationComponent
-  PARTICIPATION_KINDS = %w[formal informal].freeze
-
   attr_reader :municipal_plan
 
   def initialize(municipal_plan:)
@@ -25,13 +23,5 @@ class MunicipalPlans::ListItemComponent < ApplicationComponent
 
   def district_names
     municipal_plan.districts.map(&:name_for_display)
-  end
-
-  def participation_enabled?(kind)
-    municipal_plan.public_send("#{kind}_participation")
-  end
-
-  def participation_icon_class(kind)
-    participation_enabled?(kind) ? "fa-check" : "fa-times"
   end
 end

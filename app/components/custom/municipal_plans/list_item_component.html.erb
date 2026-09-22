@@ -19,17 +19,9 @@
     <% end %>
   <% end %>
 
-  <% PARTICIPATION_KINDS.each do |kind| %>
+  <% if municipal_plan.badges.any? %>
     <% c.with_footer_section do %>
-      <span class="municipal-plan-list-item--participation">
-        <i class="fas <%= participation_icon_class(kind) %>" aria-hidden="true"></i>
-        <%= t("custom.municipal_plans.participation.#{kind}_short") %>:
-        <% if participation_enabled?(kind) %>
-          <%= t("custom.municipal_plans.participation.yes") %>
-        <% else %>
-          <%= t("custom.municipal_plans.participation.no") %>
-        <% end %>
-      </span>
+      <%= render MunicipalPlans::BadgesComponent.new(municipal_plan: municipal_plan) %>
     <% end %>
   <% end %>
 <% end %>

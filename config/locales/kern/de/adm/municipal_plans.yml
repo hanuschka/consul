@@ -9,6 +9,10 @@ de:
           officers: Sachbearbeitung
           officer_groups: Bearbeitergruppen
           topics: Themen
+      statuses:
+        draft: Entwurf
+        published: Veröffentlicht
+        archived: Archiviert
       municipal_plans:
         index:
           title: Vorhaben
@@ -16,17 +20,16 @@ de:
           new_button: Neues Vorhaben
           no_items_title: Keine Vorhaben vorhanden
           no_items_description: Legen Sie ein Vorhaben an, um es in der Vorhabenliste zu veröffentlichen.
+          no_results_filtered_title: Keine Treffer
+          no_results_filtered_description: Für die gewählten Filter wurden keine Vorhaben gefunden. Passen Sie die Filter an oder setzen Sie sie zurück.
           table:
             title: Titel
             status: Status
             districts: Ortsteile
+            topics: Themen
             responsible: Zuständige Sachbearbeitung
             content_updated_at: Aktualisierungsdatum
             version: Versionsnummer
-        statuses:
-          draft: Entwurf
-          published: Veröffentlicht
-          archived: Archiviert
         new:
           title: Neues Vorhaben
         edit:

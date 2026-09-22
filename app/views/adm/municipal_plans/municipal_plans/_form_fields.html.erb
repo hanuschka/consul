@@ -218,7 +218,7 @@
 <%= render Kern::FormFieldComponent.new(label: t(".labels.status"), hint: t(".hints.status"),
                                         required: true) do %>
   <%= form.select :status,
-        MunicipalPlan::STATUSES.map { |status| [t("adm.municipal_plans.municipal_plans.statuses.#{status}"), status] },
+        MunicipalPlan::STATUSES.map { |status| [t("adm.municipal_plans.statuses.#{status}"), status] },
         {},
         { label: false } %>
 <% end %>

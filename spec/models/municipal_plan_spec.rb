@@ -94,6 +94,64 @@ describe MunicipalPlan do
     end
   end
 
+  describe "badges" do
+    let(:plan) { create(:municipal_plan, responsible: officer) }
+
+    def age(created:, updated:)
+      plan.update_columns(created_at: created.days.ago, content_updated_at: Date.current - updated)
+      plan.reload
+    end
+
+    it "marks a brand new Vorhaben as new, not as updated" do
+      expect(plan.badges).to include(:new)
+      expect(plan.badges).not_to include(:updated)
+    end
+
+    it "marks a Vorhaben updated 29 days ago as updated" do
+      age(created: 400, updated: 29)
+
+      expect(plan.badges).to include(:updated)
+    end
+
+    it "leaves a Vorhaben updated 31 days ago unmarked" do
+      age(created: 400, updated: 31)
+
+      expect(plan.badges).not_to include(:updated)
+      expect(plan.badges).not_to include(:new)
+    end
+
+    it "carries neither badge when both dates are backdated, as after an import" do
+      age(created: 400, updated: 400)
+
+      expect(plan.badges & %i[new updated]).to be_empty
+    end
+
+    it "shows the participation flags that are set" do
+      plan.update!(formal_participation: false, informal_participation: true)
+
+      expect(plan.badges).to include(:informal_participation)
+      expect(plan.badges).not_to include(:formal_participation)
+    end
+
+    describe "scopes" do
+      it "finds new Vorhaben" do
+        fresh = plan
+        old = create(:municipal_plan, responsible: officer)
+        old.update_columns(created_at: 400.days.ago, content_updated_at: Date.current - 400)
+
+        expect(MunicipalPlan.newly_added).to eq([fresh])
+      end
+
+      it "finds updated Vorhaben without the new ones" do
+        plan
+        updated = create(:municipal_plan, responsible: officer)
+        updated.update_columns(created_at: 400.days.ago, content_updated_at: Date.current - 29)
+
+        expect(MunicipalPlan.recently_updated).to eq([updated])
+      end
+    end
+  end
+
   describe "Bürgerbeteiligung formell and informell" do
     [[true, true], [true, false], [false, true], [false, false]].each do |formal, informal|
       it "accepts formell #{formal} with informell #{informal}" do

@@ -1,0 +1,15 @@
+<fieldset class="municipal-plans-filter--fieldset">
+  <legend class="show-for-sr"><%= t("custom.municipal_plans.index.sidebar.updated_range.title") %></legend>
+
+  <div class="municipal-plans-filter--date">
+    <%= label_tag :updated_from, t("custom.municipal_plans.index.sidebar.updated_range.from_label"),
+          class: "municipal-plans-filter--label" %>
+    <%= date_field_tag :updated_from, params[:updated_from], id: "updated_from" %>
+  </div>
+
+  <div class="municipal-plans-filter--date">
+    <%= label_tag :updated_to, t("custom.municipal_plans.index.sidebar.updated_range.to_label"),
+          class: "municipal-plans-filter--label" %>
+    <%= date_field_tag :updated_to, params[:updated_to], id: "updated_to" %>
+  </div>
+</fieldset>

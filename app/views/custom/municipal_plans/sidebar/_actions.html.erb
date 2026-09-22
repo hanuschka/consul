@@ -1,0 +1,10 @@
+<div class="sidebar-filter-group">
+  <%= submit_tag t("custom.municipal_plans.index.sidebar.apply"), name: nil,
+        class: "sidebar-filter-button" %>
+
+  <%= link_to municipal_plans_path,
+        class: "sidebar-reset-filter-button",
+        title: t("custom.municipal_plans.index.sidebar.reset") do %>
+    <span class="show-for-sr"><%= t("custom.municipal_plans.index.sidebar.reset") %></span>
+  <% end %>
+</div>

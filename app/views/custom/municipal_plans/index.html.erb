@@ -9,7 +9,18 @@
         <p><%= t("custom.municipal_plans.index.intro_text") %></p>
       </div>
 
+      <p class="municipal-plans--result-count" role="status">
+        <%= t("custom.municipal_plans.index.result_count", count: @municipal_plans.total_count) %>
+      </p>
+
       <%= render Resources::List::BaseComponent.new do |c| %>
+        <% c.with_toolbar(
+          i18n_namespace: "custom.municipal_plans.index",
+          filters: @valid_orders,
+          current_filter: @current_order,
+          param: "order"
+        ) %>
+
         <% if @municipal_plans.present? %>
           <% c.with_items do %>
             <% @municipal_plans.each do |municipal_plan| %>
@@ -24,6 +35,10 @@
       <% end %>
 
       <%= paginate @municipal_plans %>
+    </div>
+
+    <div id="municipal-plans-sidebar" class="sidebar">
+      <%= render "municipal_plans/filters" %>
     </div>
   </div>
 </main>

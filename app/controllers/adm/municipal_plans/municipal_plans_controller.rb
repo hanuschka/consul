@@ -6,7 +6,13 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
   def index
     authorize MunicipalPlan, :index?, policy_class: Adm::MunicipalPlans::MunicipalPlanPolicy
 
-    @pagy, @municipal_plans = pagy(scoped_plans.includes(:responsible, :topics, :districts).sorted)
+    set_header_options
+
+    @pagy, @municipal_plans = pagy(
+      Adm::MunicipalPlansQuery.new(
+        scoped_plans.includes(:responsible, :topics, :districts), params
+      ).call
+    )
 
     @breadcrumbs = [{ name: t("adm.municipal_plans.menu.items.municipal_plans"), icon: "assignment" }]
   end
@@ -64,6 +70,35 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
   end
 
   private
+
+    def set_header_options
+      @title_header_options = { search: true }
+      @status_header_options = { sort: true, filter_options: status_filter_options }
+      @responsible_header_options = { filter_options: responsible_filter_options }
+      @districts_header_options = { filter_options: district_filter_options }
+      @topics_header_options = { filter_options: topic_filter_options }
+      @content_updated_at_header_options = { sort: true, date_range: true }
+      @version_header_options = { sort: true }
+    end
+
+    def status_filter_options
+      MunicipalPlan::STATUSES.index_with { |status| t("adm.municipal_plans.statuses.#{status}") }
+    end
+
+    def responsible_filter_options
+      groups = MunicipalPlan::OfficerGroup.order(:name).map { |g| ["OfficerGroup:#{g.id}", g.name] }
+      officers = MunicipalPlan::Officer.includes(:user).map { |o| ["Officer:#{o.id}", o.name] }
+
+      (groups + officers.sort_by(&:last)).to_h
+    end
+
+    def district_filter_options
+      RegisteredAddress::District.order(:name).to_h { |d| [d.id.to_s, d.name] }
+    end
+
+    def topic_filter_options
+      MunicipalPlan::Topic.all.to_h { |topic| [topic.id.to_s, topic.name] }
+    end
 
     def find_municipal_plan
       @municipal_plan = scoped_plans.find(params[:id])

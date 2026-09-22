@@ -1,0 +1,19 @@
+<% selected = Array(params[:topics]).map(&:to_s) %>
+
+<% if @topics.any? %>
+  <fieldset class="municipal-plans-filter--fieldset">
+    <legend class="show-for-sr"><%= t("custom.municipal_plans.index.sidebar.topics.title") %></legend>
+
+    <ul class="no-bullet municipal-plans-filter--options">
+      <% @topics.each do |topic| %>
+        <li>
+          <%= check_box_tag "topics[]", topic.id, topic.id.to_s.in?(selected),
+                id: "filter_topic_#{topic.id}" %>
+          <%= label_tag "filter_topic_#{topic.id}", topic.name %>
+        </li>
+      <% end %>
+    </ul>
+  </fieldset>
+<% else %>
+  <p><%= t("custom.municipal_plans.index.sidebar.topics.empty") %></p>
+<% end %>

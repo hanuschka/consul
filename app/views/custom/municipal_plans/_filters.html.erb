@@ -1,0 +1,55 @@
+<%= form_tag municipal_plans_path, method: :get, enforce_utf8: false,
+      class: "municipal-plans-filter-form",
+      data: { turbolinks: false } do %>
+
+  <% if params[:order].present? %>
+    <%= hidden_field_tag :order, params[:order] %>
+  <% end %>
+
+  <div role="search" aria-label="<%= t("custom.municipal_plans.index.sidebar.search.region_label") %>">
+    <%= render Shared::SidebarCardComponent.new(
+      title: t("custom.municipal_plans.index.sidebar.search.title"),
+      icon_name: "search",
+      opened_on_mobile: true
+    ) do %>
+      <%= render "municipal_plans/sidebar/search" %>
+    <% end %>
+  </div>
+
+  <%= render Shared::SidebarCardComponent.new(
+    title: t("custom.municipal_plans.index.sidebar.districts.title"),
+    icon_name: "map-marker-alt"
+  ) do %>
+    <%= render "municipal_plans/sidebar/districts" %>
+  <% end %>
+
+  <%= render Shared::SidebarCardComponent.new(
+    title: t("custom.municipal_plans.index.sidebar.topics.title"),
+    icon_name: "tags"
+  ) do %>
+    <%= render "municipal_plans/sidebar/topics" %>
+  <% end %>
+
+  <%= render Shared::SidebarCardComponent.new(
+    title: t("custom.municipal_plans.index.sidebar.participation.title"),
+    icon_name: "hands-helping"
+  ) do %>
+    <%= render "municipal_plans/sidebar/participation" %>
+  <% end %>
+
+  <%= render Shared::SidebarCardComponent.new(
+    title: t("custom.municipal_plans.index.sidebar.recency.title"),
+    icon_name: "star"
+  ) do %>
+    <%= render "municipal_plans/sidebar/recency" %>
+  <% end %>
+
+  <%= render Shared::SidebarCardComponent.new(
+    title: t("custom.municipal_plans.index.sidebar.updated_range.title"),
+    icon_name: "calendar-alt"
+  ) do %>
+    <%= render "municipal_plans/sidebar/updated_range" %>
+  <% end %>
+
+  <%= render "municipal_plans/sidebar/actions" %>
+<% end %>

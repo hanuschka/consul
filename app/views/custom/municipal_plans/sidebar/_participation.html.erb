@@ -1,0 +1,15 @@
+<% selected = Array(params[:participation]).map(&:to_s) %>
+
+<fieldset class="municipal-plans-filter--fieldset">
+  <legend class="show-for-sr"><%= t("custom.municipal_plans.index.sidebar.participation.title") %></legend>
+
+  <ul class="no-bullet municipal-plans-filter--options">
+    <% MunicipalPlansQuery::PARTICIPATION_KINDS.each do |kind| %>
+      <li>
+        <%= check_box_tag "participation[]", kind, kind.in?(selected), id: "filter_participation_#{kind}" %>
+        <%= label_tag "filter_participation_#{kind}",
+              t("custom.municipal_plans.index.sidebar.participation.options.#{kind}") %>
+      </li>
+    <% end %>
+  </ul>
+</fieldset>

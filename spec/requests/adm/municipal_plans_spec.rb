@@ -442,4 +442,49 @@ describe "Vorhaben in /adm", type: :request do
       expect(other.notices.count).to eq(1)
     end
   end
+
+  describe "the Archivdatum" do
+    let(:released) { create(:municipal_plan, :published, responsible: officer, version: "1.0") }
+
+    def set_archive_date(value)
+      patch archive_date_adm_municipal_plans_municipal_plan_path(released),
+            params: { municipal_plan: { archive_on: value }}
+    end
+
+    it "is stored straight on the released Vorhaben" do
+      set_archive_date("2027-03-01")
+
+      expect(released.reload.archive_on).to eq(Date.new(2027, 3, 1))
+      expect(response).to redirect_to(adm_municipal_plans_municipal_plan_path(released))
+    end
+
+    it "needs no release and creates no working copy" do
+      expect { set_archive_date("2027-03-01") }.not_to change { released.reload.version }
+
+      expect(released.reload.working_copy).to be_nil
+      expect(released.content_updated_at).to eq(Date.current)
+    end
+
+    it "is offered on the released Vorhaben and withheld on a working copy" do
+      get adm_municipal_plans_municipal_plan_path(released)
+
+      expect(response.body)
+        .to include(archive_date_adm_municipal_plans_municipal_plan_path(released))
+
+      copy = ::MunicipalPlans::WorkingCopyService.call(released)
+
+      get adm_municipal_plans_municipal_plan_path(copy)
+
+      expect(response.body)
+        .not_to include(archive_date_adm_municipal_plans_municipal_plan_path(copy))
+    end
+
+    it "can be cleared again" do
+      released.update!(archive_on: Date.current + 30)
+
+      set_archive_date("")
+
+      expect(released.reload.archive_on).to be_nil
+    end
+  end
 end

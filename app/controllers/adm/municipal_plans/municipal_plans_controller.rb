@@ -2,7 +2,7 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
   include MapLocationAttributes
 
   before_action :find_municipal_plan, only: [:show, :edit, :update, :destroy, :submit, :release,
-                                             :archive, :unarchive]
+                                             :archive, :unarchive, :archive_date]
   before_action :redirect_to_working_copy, only: [:edit, :update]
 
   def index
@@ -111,6 +111,17 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
     else
       @breadcrumbs = breadcrumbs_for_action(t("adm.municipal_plans.municipal_plans.edit.title"))
       render :edit
+    end
+  end
+
+  # The planned Archivdatum is an editorial note on the released Vorhaben, not content: it is set
+  # here rather than in the form, so it never waits for a release.
+  def archive_date
+    if @municipal_plan.update(archive_on: params.require(:municipal_plan).permit(:archive_on)[:archive_on])
+      redirect_to adm_municipal_plans_municipal_plan_path(@municipal_plan), notice: t(".success")
+    else
+      redirect_to adm_municipal_plans_municipal_plan_path(@municipal_plan),
+                  alert: @municipal_plan.errors[:base].to_sentence
     end
   end
 

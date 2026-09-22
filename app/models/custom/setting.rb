@@ -151,6 +151,7 @@ class Setting < ApplicationRecord
         "process.deficiency_reports": false,
         "process.municipal_plans": false,
         "municipal_plans.officers_see_all": false,
+        "municipal_plans.auto_archive": false,
         "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,

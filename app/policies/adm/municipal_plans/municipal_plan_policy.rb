@@ -51,6 +51,10 @@ class Adm::MunicipalPlans::MunicipalPlanPolicy < ApplicationPolicy
     update?
   end
 
+  def archive_date?
+    update?
+  end
+
   def release?
     @user&.administrator?
   end

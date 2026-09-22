@@ -260,6 +260,10 @@ de:
       external_video: Externes Video einbinden
       external_video_description: >
         Ermöglicht es Nutzern, externe Videos von YouTube oder Vimeo in ihre Ideen einzubetten. So können z.B. Erklärvideos, Visualisierungen oder Anschauungsmaterial direkt in der Idee angezeigt werden, ohne dass große Dateien auf die Plattform hochgeladen werden müssen — und ohne zusätzlichen Speicherbedarf.
+    municipal_plans:
+      auto_archive: Vorhaben automatisch archivieren
+      auto_archive_description: >
+        Archiviert ein Vorhaben selbsttätig, sobald das an ihm hinterlegte Archivdatum erreicht ist. Im Frontend verschwindet es zu diesem Zeitpunkt aus der Übersicht und bleibt im Archivbereich unter derselben Adresse erreichbar. Aktivieren Sie diese Funktion, wenn Ihre Fachbereiche das Ende eines Vorhabens verlässlich im Voraus eintragen und Sie sich das manuelle Archivieren sparen wollen.
     deficiency_reports:
       feature_name: Bezeichnung des Bereichs
       feature_name_description: >

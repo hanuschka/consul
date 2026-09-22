@@ -23,6 +23,7 @@ namespace :adm do
         patch :release
         patch :archive
         patch :unarchive
+        patch :archive_date
       end
 
       resources :audits, only: :show, controller: "municipal_plan_audits"

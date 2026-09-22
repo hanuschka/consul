@@ -5,6 +5,11 @@ en:
         title: Municipal plans
         intro_text: The plan list presents the city's ongoing and planned projects. For each plan you will find the current processing status, the next steps, the districts affected and a contact person in the administration.
         empty_list_text: No plans are published at the moment.
+        archive_title: Municipal plans archive
+        archive_intro_text: The archive holds plans that have been completed or are no longer being pursued. The entries keep all their information but are no longer updated.
+        archive_empty_list_text: There are no plans in the archive at the moment.
+        archive_link: Go to the municipal plans archive
+        overview_link: Back to the plan list
         result_count:
           zero: No plans found
           one: 1 plan found

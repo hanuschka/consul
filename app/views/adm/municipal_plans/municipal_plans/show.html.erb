@@ -1,6 +1,7 @@
 <% responsible_name = @municipal_plan.responsible&.name %>
 <% policy = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, @municipal_plan) %>
 <% may_update = policy.update? %>
+<% may_edit_archive_date = may_update && !@municipal_plan.working_copy? %>
 
 <%= content_for :title, @municipal_plan.title %>
 
@@ -306,7 +307,36 @@
           <%= t("adm.municipal_plans.statuses.#{@municipal_plan.status}") %>
         </div>
       </div>
+
+      <% if may_edit_archive_date %>
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label"><%= t(".archive_date.label") %></div>
+          <div class="adm-detail-table__value">
+            <% if @municipal_plan.archive_on.present? %>
+              <%= l(@municipal_plan.archive_on, format: "%d.%m.%Y") %>
+            <% else %>
+              <%= t(".none") %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
+
+    <% if may_edit_archive_date %>
+      <div class="mt-4">
+        <%= form_with url: archive_date_adm_municipal_plans_municipal_plan_path(@municipal_plan),
+              scope: :municipal_plan, method: :patch do |f| %>
+          <div class="d-flex flex-wrap align-items-end gap-3">
+            <%= f.date_field :archive_on, value: @municipal_plan.archive_on,
+                  label: t(".archive_date.label") %>
+            <%= kern_button(type: :submit, text: t(".archive_date.submit"), icon: "event_available",
+                            style: :secondary) %>
+          </div>
+        <% end %>
+
+        <p class="kern-body kern-body--small mt-2 mb-0"><%= t(".archive_date.hint") %></p>
+      </div>
+    <% end %>
   </section>
 
   <% if may_update && !@municipal_plan.working_copy? %>

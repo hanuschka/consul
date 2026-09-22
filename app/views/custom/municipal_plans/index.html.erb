@@ -1,12 +1,26 @@
-<% provide :title do %><%= t("custom.municipal_plans.index.title") %><% end %>
+<% archive_view = action_name == "archive" %>
+<% list_path = archive_view ? archive_municipal_plans_path : municipal_plans_path %>
+<% page_title = archive_view ? t("custom.municipal_plans.index.archive_title") : t("custom.municipal_plans.index.title") %>
+<% intro_text = archive_view ? t("custom.municipal_plans.index.archive_intro_text") : t("custom.municipal_plans.index.intro_text") %>
+<% empty_list_text = archive_view ? t("custom.municipal_plans.index.archive_empty_list_text") : t("custom.municipal_plans.index.empty_list_text") %>
+
+<% provide :title do %><%= page_title %><% end %>
 
 <main>
-  <h1><%= t("custom.municipal_plans.index.title") %></h1>
+  <h1><%= page_title %></h1>
 
   <div class="flex-layout">
     <div class="main-column">
       <div class="resource-page--intro-text">
-        <p><%= t("custom.municipal_plans.index.intro_text") %></p>
+        <p><%= intro_text %></p>
+
+        <p class="municipal-plans--archive-link">
+          <% if archive_view %>
+            <%= link_to t("custom.municipal_plans.index.overview_link"), municipal_plans_path %>
+          <% else %>
+            <%= link_to t("custom.municipal_plans.index.archive_link"), archive_municipal_plans_path %>
+          <% end %>
+        </p>
       </div>
 
       <p class="municipal-plans--result-count" role="status">
@@ -29,7 +43,7 @@
           <% end %>
         <% else %>
           <p class="resources-list--not-items-message text-center">
-            <%= t("custom.municipal_plans.index.empty_list_text") %>
+            <%= empty_list_text %>
           </p>
         <% end %>
       <% end %>
@@ -38,7 +52,7 @@
     </div>
 
     <div id="municipal-plans-sidebar" class="sidebar">
-      <%= render "municipal_plans/filters" %>
+      <%= render "municipal_plans/filters", form_url: list_path %>
     </div>
   </div>
 </main>

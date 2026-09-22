@@ -89,6 +89,9 @@ class MunicipalPlan < ApplicationRecord
 
   scope :published, -> { where(status: "published") }
   scope :released_versions, -> { where(released_plan_id: nil) }
+  scope :archived, -> { where(status: "archived") }
+  scope :publicly_visible, -> { where(status: %w[published archived]) }
+  scope :due_for_archiving, -> { published.released_versions.where(archive_on: ..Date.current) }
   scope :sort_by_content_updated_at, -> { reorder(content_updated_at: :desc, id: :desc) }
   scope :newly_added, -> { where(created_at: RECENCY_WINDOW.ago..) }
   scope :recently_updated, -> {
@@ -170,10 +173,11 @@ class MunicipalPlan < ApplicationRecord
     content_updated_at >= Date.current - RECENCY_WINDOW.in_days.to_i
   end
 
+  # An archived Vorhaben carries no recency badges: its dates lie in the past by definition.
   def badges
     [
-      (:new if newly_added?),
-      (:updated if recently_updated?),
+      (:new if newly_added? && !archived?),
+      (:updated if recently_updated? && !archived?),
       (:formal_participation if formal_participation?),
       (:informal_participation if informal_participation?)
     ].compact
@@ -200,6 +204,13 @@ class MunicipalPlan < ApplicationRecord
 
   # Editorial order is neither content nor a release: it is written past validations, callbacks
   # and the Versionsnummer.
+  # Archives every Vorhaben whose Archivdatum has come, but only where the instance asked for it.
+  def self.apply_due_archiving!
+    return [] unless Setting["municipal_plans.auto_archive"].present?
+
+    due_for_archiving.to_a.each { |plan| plan.update!(status: "archived") }
+  end
+
   def self.apply_editorial_order(ordered_ids)
     transaction do
       ordered_ids.each_with_index do |id, index|

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_22_100000) do
+ActiveRecord::Schema.define(version: 2026_09_22_110000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1978,6 +1978,7 @@ ActiveRecord::Schema.define(version: 2026_09_22_100000) do
     t.tsvector "tsv"
     t.datetime "submitted_at"
     t.bigint "released_plan_id"
+    t.date "archive_on"
     t.index ["given_order"], name: "index_municipal_plans_on_given_order"
     t.index ["released_plan_id"], name: "index_municipal_plans_on_released_plan_id"
     t.index ["responsible_type", "responsible_id"], name: "index_municipal_plans_on_responsible"

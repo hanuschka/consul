@@ -257,6 +257,10 @@ en:
       external_video: Embed external video
       external_video_description: >
         Allows users to embed external videos from YouTube or Vimeo in their ideas. Explainer videos, visualizations, or reference material can be shown directly inside the idea without uploading large files to the platform — and without additional storage requirements.
+    municipal_plans:
+      auto_archive: Archive plans automatically
+      auto_archive_description: >
+        Archives a plan by itself as soon as the archive date entered on it is reached. At that point it disappears from the public overview and stays reachable in the archive under the same address. Enable this when your departments reliably enter the end of a plan in advance and you want to save the manual archiving step.
     deficiency_reports:
       feature_name: Feature name
       feature_name_description: >

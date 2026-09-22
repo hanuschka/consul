@@ -80,10 +80,18 @@ describe "Vorhabenliste", type: :request do
       expect { get municipal_plan_path(draft) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
-    it "hides an archived plan" do
-      archived = create(:municipal_plan, responsible: officer, status: "archived")
+    it "keeps an archived plan off the overview but reachable" do
+      archived = create(:municipal_plan, :published, responsible: officer,
+                                                     title: "Abgeschlossen und archiviert")
+      archived.update!(status: "archived")
 
-      expect { get municipal_plan_path(archived) }.to raise_error(ActiveRecord::RecordNotFound)
+      get municipal_plans_path
+
+      expect(response.body).not_to include("Abgeschlossen und archiviert")
+
+      get municipal_plan_path(archived)
+
+      expect(response).to have_http_status(:ok)
     end
 
     it "lists only published plans on the overview" do
@@ -304,6 +312,73 @@ describe "Vorhabenliste", type: :request do
 
       expect(response.body.index("Hinten einsortiert")).to be < response.body.index("Vorne einsortiert")
       expect([back, front].map { |plan| plan.reload.given_order }).to eq([1, 2])
+    end
+  end
+
+  describe "the archive" do
+    before do
+      enable_module(true)
+      create(:municipal_plan, :published, responsible: officer, title: "Laufendes Vorhaben")
+    end
+
+    let!(:archived) do
+      create(:municipal_plan, :published, responsible: officer, title: "Abgeschlossenes Vorhaben")
+        .tap { |plan| plan.update!(status: "archived") }
+    end
+
+    it "keeps the archived Vorhaben out of the main overview" do
+      get municipal_plans_path
+
+      expect(response.body).to include("Laufendes Vorhaben")
+      expect(response.body).not_to include("Abgeschlossenes Vorhaben")
+    end
+
+    it "shows only archived Vorhaben in the archive" do
+      get archive_municipal_plans_path
+
+      expect(response.body).to include("Abgeschlossenes Vorhaben")
+      expect(response.body).not_to include("Laufendes Vorhaben")
+    end
+
+    it "keeps the detail page reachable at its unchanged address" do
+      get municipal_plan_path(archived)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Abgeschlossenes Vorhaben")
+    end
+
+    it "filters the archive the same way as the main list" do
+      district = create(:registered_address_district)
+      archived.district_assignments.destroy_all
+      archived.district_assignments.create!(district: district)
+      other = create(:municipal_plan, :published, responsible: officer, title: "Anderer Ortsteil")
+      other.update!(status: "archived")
+
+      get archive_municipal_plans_path(districts: [district.id])
+
+      expect(response.body).to include("Abgeschlossenes Vorhaben")
+      expect(response.body).not_to include("Anderer Ortsteil")
+    end
+
+    it "keeps the filter form inside the archive" do
+      get archive_municipal_plans_path
+
+      expect(response.body).to include(%(action="#{archive_municipal_plans_path}"))
+    end
+
+    it "searches the archive" do
+      get archive_municipal_plans_path(search: "Abgeschlossenes")
+
+      expect(response.body).to include("Abgeschlossenes Vorhaben")
+    end
+
+    it "still hides an Entwurf" do
+      draft = create(:municipal_plan, responsible: officer, title: "Nicht freigegeben")
+
+      get archive_municipal_plans_path
+
+      expect(response.body).not_to include("Nicht freigegeben")
+      expect { get municipal_plan_path(draft) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

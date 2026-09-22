@@ -62,6 +62,8 @@ de:
           no_changes: Diese Fassung enthält keine Änderungen gegenüber der freigegebenen Fassung und wurde nicht eingereicht.
         release:
           success: Das Vorhaben wurde freigegeben und ist jetzt öffentlich.
+        archive_date:
+          success: Das Archivdatum wurde gespeichert.
         archive:
           success: Das Vorhaben wurde archiviert.
         unarchive:
@@ -97,6 +99,11 @@ de:
           internal_notes: Interne Notizen
           status: Status
           none: "—"
+          archive_date:
+            label: Archivdatum
+            submit: Archivdatum speichern
+            hint: >
+              Das Archivdatum archiviert das Vorhaben nur dann von selbst, wenn in den Plattform-Einstellungen „Vorhaben automatisch archivieren“ eingeschaltet ist. Leeren Sie das Feld, um das geplante Archivdatum wieder zu entfernen.
           submitted_hint: Dieses Vorhaben wurde zur Freigabe eingereicht und wartet auf die Entscheidung der Administration.
           actions:
             submit: Zur Freigabe einreichen

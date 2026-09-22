@@ -5,6 +5,11 @@ de:
         title: Vorhabenliste
         intro_text: In der Vorhabenliste stellt die Stadt ihre laufenden und geplanten Vorhaben vor. Zu jedem Vorhaben finden Sie den aktuellen Bearbeitungsstand, die nächsten Schritte, die betroffenen Ortsteile sowie eine Ansprechperson in der Verwaltung.
         empty_list_text: Zurzeit sind keine Vorhaben veröffentlicht.
+        archive_title: Archiv der Vorhabenliste
+        archive_intro_text: Im Archiv finden Sie Vorhaben, die abgeschlossen sind oder nicht weiterverfolgt werden. Die Einträge bleiben mit allen Angaben erhalten, werden aber nicht mehr aktualisiert.
+        archive_empty_list_text: Im Archiv sind zurzeit keine Vorhaben abgelegt.
+        archive_link: Zum Archiv der Vorhabenliste
+        overview_link: Zurück zur Vorhabenliste
         result_count:
           zero: Keine Vorhaben gefunden
           one: 1 Vorhaben gefunden

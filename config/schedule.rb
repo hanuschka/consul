@@ -37,6 +37,10 @@ every 1.day, at: "5:00 am" do
   rake "-s sitemap:refresh"
 end
 
+every 1.day, at: "3:30 am", roles: [:cron] do
+  rake "-s municipal_plans:apply_due_archiving"
+end
+
 every 2.hours do
   rake "-s stats:generate"
 end

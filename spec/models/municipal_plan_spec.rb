@@ -140,6 +140,84 @@ describe MunicipalPlan do
     end
   end
 
+  describe "automatisches Archivieren" do
+    let!(:due) do
+      create(:municipal_plan, :published, responsible: officer, archive_on: Date.current - 1)
+    end
+    let!(:due_today) do
+      create(:municipal_plan, :published, responsible: officer, archive_on: Date.current)
+    end
+    let!(:later) do
+      create(:municipal_plan, :published, responsible: officer, archive_on: Date.current + 1)
+    end
+    let!(:undated) { create(:municipal_plan, :published, responsible: officer) }
+
+    def auto_archive(enabled)
+      allow(Setting).to receive(:[]).and_call_original
+      allow(Setting).to receive(:[]).with("municipal_plans.auto_archive").and_return(enabled)
+    end
+
+    it "leaves everything alone while the setting is off" do
+      auto_archive(false)
+
+      MunicipalPlan.apply_due_archiving!
+
+      expect([due, due_today, later, undated].map { |plan| plan.reload.status }).to all(eq("published"))
+    end
+
+    it "archives what is due once the setting is on" do
+      auto_archive(true)
+
+      MunicipalPlan.apply_due_archiving!
+
+      expect(due.reload).to be_archived
+      expect(due_today.reload).to be_archived
+      expect(later.reload).to be_published
+      expect(undated.reload).to be_published
+    end
+
+    it "moves neither Aktualisierungsdatum nor Versionsnummer" do
+      auto_archive(true)
+      before_state = due.attributes.slice("version", "content_updated_at")
+
+      MunicipalPlan.apply_due_archiving!
+
+      expect(due.reload.attributes.slice("version", "content_updated_at")).to eq(before_state)
+    end
+
+    it "leaves an Entwurf out of it" do
+      auto_archive(true)
+      draft = create(:municipal_plan, responsible: officer, archive_on: Date.current - 1)
+
+      MunicipalPlan.apply_due_archiving!
+
+      expect(draft.reload).to be_draft
+    end
+
+    it "leaves a working copy out of it" do
+      auto_archive(true)
+      copy = MunicipalPlans::WorkingCopyService.call(due)
+      copy.update_columns(archive_on: Date.current - 1, status: "published")
+
+      MunicipalPlan.apply_due_archiving!
+
+      expect(copy.reload.status).to eq("published")
+    end
+  end
+
+  describe "badges in the archive" do
+    it "drops the recency badges once a Vorhaben is archived" do
+      plan = create(:municipal_plan, :published, responsible: officer, formal_participation: true)
+
+      expect(plan.badges).to include(:new)
+
+      plan.update!(status: "archived")
+
+      expect(plan.badges).not_to include(:new, :updated)
+      expect(plan.badges).to include(:formal_participation)
+    end
+  end
+
   describe "badges" do
     let(:plan) { create(:municipal_plan, responsible: officer) }
 

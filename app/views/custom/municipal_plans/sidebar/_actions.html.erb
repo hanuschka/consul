@@ -2,7 +2,7 @@
   <%= submit_tag t("custom.municipal_plans.index.sidebar.apply"), name: nil,
         class: "sidebar-filter-button" %>
 
-  <%= link_to municipal_plans_path,
+  <%= link_to reset_url,
         class: "sidebar-reset-filter-button",
         title: t("custom.municipal_plans.index.sidebar.reset") do %>
     <span class="show-for-sr"><%= t("custom.municipal_plans.index.sidebar.reset") %></span>

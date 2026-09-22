@@ -62,6 +62,8 @@ en:
           no_changes: This version contains no changes against the released version and was not submitted.
         release:
           success: The plan was released and is now public.
+        archive_date:
+          success: The archive date was saved.
         archive:
           success: The plan was archived.
         unarchive:
@@ -97,6 +99,11 @@ en:
           internal_notes: Internal notes
           status: Status
           none: "—"
+          archive_date:
+            label: Archive date
+            submit: Save archive date
+            hint: >
+              The archive date only archives the plan by itself when the platform setting "Archive plans automatically" is switched on. Clear the field to remove the planned archive date again.
           submitted_hint: This plan has been submitted for release and is waiting for a decision by the administration.
           actions:
             submit: Submit for release

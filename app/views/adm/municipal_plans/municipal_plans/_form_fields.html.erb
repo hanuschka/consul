@@ -215,10 +215,6 @@
         placeholder: t(".placeholders.internal_notes") %>
 <% end %>
 
-<%= render Kern::FormFieldComponent.new(label: t(".labels.status"), hint: t(".hints.status"),
-                                        required: true) do %>
-  <%= form.select :status,
-        MunicipalPlan::STATUSES.map { |status| [t("adm.municipal_plans.statuses.#{status}"), status] },
-        {},
-        { label: false } %>
+<%= render Kern::FormFieldComponent.new(label: t(".labels.status"), hint: t(".hints.status")) do %>
+  <p class="kern-body m-0"><%= t("adm.municipal_plans.statuses.#{form.object.status}") %></p>
 <% end %>

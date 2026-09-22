@@ -231,4 +231,41 @@ describe "Vorhabenliste", type: :request do
       include_examples "hides internal data"
     end
   end
+
+  describe "a change waiting for release" do
+    before { enable_module(true) }
+
+    it "keeps showing the released text, and keeps the Vorhaben in the list" do
+      plan.update_columns(content_updated_at: Date.current - 10.days)
+      copy = ::MunicipalPlans::WorkingCopyService.call(plan)
+      copy.update!(title: "Noch nicht freigegebene Überschrift")
+
+      get municipal_plan_path(plan)
+
+      expect(response.body).to include("Weiterentwicklung des Eichplatz-Areals")
+      expect(response.body).not_to include("Noch nicht freigegebene Überschrift")
+      expect(plan.reload.content_updated_at).to eq(Date.current - 10.days)
+
+      get municipal_plans_path
+
+      expect(response.body).to include("Weiterentwicklung des Eichplatz-Areals")
+      expect(response.body).not_to include("Noch nicht freigegebene Überschrift")
+    end
+
+    it "shows the new text once it is released" do
+      copy = ::MunicipalPlans::WorkingCopyService.call(plan)
+      copy.update!(title: "Freigegebene Überschrift", submitted_at: Time.current)
+      ::MunicipalPlans::ReleaseService.call(copy)
+
+      get municipal_plan_path(plan)
+
+      expect(response.body).to include("Freigegebene Überschrift")
+    end
+
+    it "never exposes the working copy on its own" do
+      copy = ::MunicipalPlans::WorkingCopyService.call(plan)
+
+      expect { get municipal_plan_path(copy) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
 end

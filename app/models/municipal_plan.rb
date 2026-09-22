@@ -61,6 +61,9 @@ class MunicipalPlan < ApplicationRecord
   end
 
   belongs_to :responsible, polymorphic: true, optional: true
+  belongs_to :released_plan, class_name: "MunicipalPlan", optional: true, inverse_of: :working_copy
+  has_one :working_copy, class_name: "MunicipalPlan", foreign_key: :released_plan_id,
+    dependent: :destroy, inverse_of: :released_plan
 
   has_many :district_assignments, class_name: "MunicipalPlan::DistrictAssignment", dependent: :destroy,
     inverse_of: :municipal_plan
@@ -76,11 +79,13 @@ class MunicipalPlan < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
   validates_translation :title, presence: true
   validate :districts_within_limit
-  validate :release_requirements, unless: :draft?
+  validate :release_requirements, unless: :editable_draft?
+  validate :released_plan_is_a_released_version
 
   before_save :apply_version_rules
 
   scope :published, -> { where(status: "published") }
+  scope :released_versions, -> { where(released_plan_id: nil) }
   scope :sort_by_content_updated_at, -> { reorder(content_updated_at: :desc, id: :desc) }
   scope :newly_added, -> { where(created_at: RECENCY_WINDOW.ago..) }
   scope :recently_updated, -> {
@@ -112,6 +117,19 @@ class MunicipalPlan < ApplicationRecord
 
   def draft?
     status == "draft"
+  end
+
+  def working_copy?
+    released_plan_id.present?
+  end
+
+  def submitted_for_release?
+    submitted_at.present?
+  end
+
+  # What the Sachbearbeitung is still free to leave incomplete: an Entwurf nobody has handed in.
+  def editable_draft?
+    draft? && !submitted_for_release?
   end
 
   def published?
@@ -199,6 +217,13 @@ class MunicipalPlan < ApplicationRecord
 
     def becoming_published?
       status == "published" && status_changed? && major_version.zero?
+    end
+
+    # One Vorhaben carries at most one pending version, never a chain of them.
+    def released_plan_is_a_released_version
+      return if released_plan.blank? || released_plan.released_plan_id.blank?
+
+      errors.add(:base, I18n.t("activerecord.errors.models.municipal_plan.nested_working_copy"))
     end
 
     def release_requirements

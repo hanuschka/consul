@@ -40,6 +40,15 @@ de:
           success: Das Vorhaben wurde aktualisiert.
         destroy:
           success: Das Vorhaben wurde gelöscht.
+        submit:
+          success: Das Vorhaben wurde zur Freigabe eingereicht.
+          no_changes: Diese Fassung enthält keine Änderungen gegenüber der freigegebenen Fassung und wurde nicht eingereicht.
+        release:
+          success: Das Vorhaben wurde freigegeben und ist jetzt öffentlich.
+        archive:
+          success: Das Vorhaben wurde archiviert.
+        unarchive:
+          success: Das Vorhaben wurde aus dem Archiv geholt.
         show:
           sections:
             content: Vorhaben
@@ -71,6 +80,27 @@ de:
           internal_notes: Interne Notizen
           status: Status
           none: "—"
+          submitted_hint: Dieses Vorhaben wurde zur Freigabe eingereicht und wartet auf die Entscheidung der Administration.
+          actions:
+            submit: Zur Freigabe einreichen
+            release: Freigeben
+            archive: Archivieren
+            unarchive: Aus dem Archiv holen
+          release_pending:
+            title: Bearbeitungsfassung wartet auf Freigabe
+            body: Zu diesem Vorhaben liegt eine geänderte Fassung vor, die noch nicht freigegeben ist. Bis zur Freigabe bleibt in der öffentlichen Vorhabenliste diese Fassung sichtbar.
+            link: Bearbeitungsfassung öffnen
+          working_copy:
+            title: Dies ist die Bearbeitungsfassung
+            body: Diese Fassung ist noch nicht öffentlich. Sie ersetzt das freigegebene Vorhaben, sobald sie freigegeben wurde.
+            link: Freigegebene Fassung öffnen
+          changes:
+            title: Änderungen gegenüber der freigegebenen Fassung
+            field: Feld
+            released: Freigegebene Fassung
+            new: Bearbeitungsfassung
+            map_changed: Die Kartenposition wurde geändert.
+            no_changes: Diese Fassung enthält keine Änderungen gegenüber der freigegebenen Fassung.
         form_fields:
           errors_title: Das Vorhaben konnte nicht gespeichert werden
           not_set: Wird beim Speichern gesetzt
@@ -146,7 +176,7 @@ de:
             responsible: Legen Sie fest, wer das Vorhaben in der Verwaltung pflegt. Sie können eine einzelne Person aus der Sachbearbeitung oder eine ganze Bearbeitergruppe auswählen.
             system_mailbox_email: An dieses Postfach werden Hinweise von Bürgerinnen und Bürgern zu diesem Vorhaben weitergeleitet. Verwenden Sie eine Funktionsadresse, damit Hinweise auch bei Abwesenheit bearbeitet werden.
             internal_notes: Interne Notizen sind ausschließlich in der Verwaltung sichtbar und werden nie öffentlich angezeigt. Nutzen Sie das Feld für Absprachen, Zuständigkeiten oder Hinweise an Kolleginnen und Kollegen.
-            status: Nur veröffentlichte Vorhaben erscheinen in der öffentlichen Vorhabenliste. Entwürfe sind ausschließlich in der Verwaltung sichtbar, archivierte Vorhaben werden aus der aktiven Liste genommen.
+            status: "Der Status wird nicht im Formular gepflegt, sondern über die Schaltflächen auf der Detailseite des Vorhabens: Entwürfe werden zur Freigabe eingereicht und anschließend freigegeben, veröffentlichte Vorhaben können archiviert und später wieder aus dem Archiv geholt werden. Nur veröffentlichte Vorhaben erscheinen in der öffentlichen Vorhabenliste."
           placeholders:
             title: z. B. Neugestaltung des Marktplatzes
             costs: z. B. ca. 50.000 € oder im Haushalt eingeplant

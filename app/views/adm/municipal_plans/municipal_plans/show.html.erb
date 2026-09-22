@@ -1,5 +1,6 @@
 <% responsible_name = @municipal_plan.responsible&.name %>
-<% may_update = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, @municipal_plan).update? %>
+<% policy = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, @municipal_plan) %>
+<% may_update = policy.update? %>
 
 <%= content_for :title, @municipal_plan.title %>
 
@@ -7,13 +8,105 @@
                                     back_button_url: adm_municipal_plans_root_path) do |header| %>
   <% if may_update %>
     <% header.with_actions do %>
-      <%= kern_link_button(edit_adm_municipal_plans_municipal_plan_path(@municipal_plan),
-            text: t("shared.edit"), icon: "edit", style: :primary) %>
+      <div class="ml-auto d-flex flex-wrap align-items-center gap-2">
+        <%= kern_link_button(edit_adm_municipal_plans_municipal_plan_path(@municipal_plan),
+              text: t("shared.edit"), icon: "edit", style: :primary) %>
+
+        <% if @municipal_plan.draft? && !@municipal_plan.submitted_for_release? && policy.submit? %>
+          <%= form_with url: submit_adm_municipal_plans_municipal_plan_path(@municipal_plan),
+                method: :patch do %>
+            <%= kern_button(type: :submit, text: t(".actions.submit"), icon: "outbox",
+                            style: :secondary) %>
+          <% end %>
+        <% end %>
+
+        <% if @municipal_plan.draft? && policy.release? %>
+          <%= form_with url: release_adm_municipal_plans_municipal_plan_path(@municipal_plan),
+                method: :patch do %>
+            <%= kern_button(type: :submit, text: t(".actions.release"), icon: "task_alt",
+                            style: :primary) %>
+          <% end %>
+        <% end %>
+
+        <% if @municipal_plan.published? && policy.archive? %>
+          <%= form_with url: archive_adm_municipal_plans_municipal_plan_path(@municipal_plan),
+                method: :patch do %>
+            <%= kern_button(type: :submit, text: t(".actions.archive"), icon: "archive",
+                            style: :secondary) %>
+          <% end %>
+        <% end %>
+
+        <% if @municipal_plan.archived? && policy.unarchive? %>
+          <%= form_with url: unarchive_adm_municipal_plans_municipal_plan_path(@municipal_plan),
+                method: :patch do %>
+            <%= kern_button(type: :submit, text: t(".actions.unarchive"), icon: "unarchive",
+                            style: :secondary) %>
+          <% end %>
+        <% end %>
+      </div>
     <% end %>
   <% end %>
 <% end %>
 
 <div class="kern-container mb-5">
+
+  <% if @municipal_plan.working_copy.present? %>
+    <div class="mb-5">
+      <%= kern_alert(title: t(".release_pending.title")) do %>
+        <p class="kern-body mb-3"><%= t(".release_pending.body") %></p>
+        <%= kern_link_button(adm_municipal_plans_municipal_plan_path(@municipal_plan.working_copy),
+              text: t(".release_pending.link"), icon: "arrow_forward") %>
+      <% end %>
+    </div>
+  <% elsif @municipal_plan.working_copy? %>
+    <div class="mb-5">
+      <%= kern_alert(title: t(".working_copy.title")) do %>
+        <p class="kern-body mb-3"><%= t(".working_copy.body") %></p>
+        <%= kern_link_button(adm_municipal_plans_municipal_plan_path(@municipal_plan.released_plan),
+              text: t(".working_copy.link"), icon: "arrow_back") %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @municipal_plan.draft? && @municipal_plan.submitted_for_release? %>
+    <p class="kern-body mb-5"><%= t(".submitted_hint") %></p>
+  <% end %>
+
+  <% if @municipal_plan.working_copy? %>
+    <% plan_changes = ::MunicipalPlans::ChangeSummaryService.call(@municipal_plan) %>
+
+    <section class="adm-detail-section">
+      <h2 class="adm-detail-section-title mb-3"><%= t(".changes.title") %></h2>
+
+      <% if plan_changes.any? %>
+        <div class="adm-detail-table">
+          <div class="adm-detail-table__row">
+            <div class="adm-detail-table__label"><%= t(".changes.field") %></div>
+            <div class="adm-detail-table__value strong"><%= t(".changes.released") %></div>
+            <div class="adm-detail-table__value strong"><%= t(".changes.new") %></div>
+          </div>
+
+          <% plan_changes.each do |plan_change| %>
+            <div class="adm-detail-table__row">
+              <div class="adm-detail-table__label"><%= plan_change.label %></div>
+              <% if plan_change.kind == :map %>
+                <div class="adm-detail-table__value"><%= t(".changes.map_changed") %></div>
+              <% else %>
+                <div class="adm-detail-table__value">
+                  <%= render "change_value", kind: plan_change.kind, value: plan_change.before %>
+                </div>
+                <div class="adm-detail-table__value">
+                  <%= render "change_value", kind: plan_change.kind, value: plan_change.after %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="kern-body m-0"><%= t(".changes.no_changes") %></p>
+      <% end %>
+    </section>
+  <% end %>
 
   <section class="adm-detail-section">
     <h2 class="adm-detail-section-title mb-3"><%= t(".sections.content") %></h2>

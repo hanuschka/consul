@@ -1,0 +1,101 @@
+require "rails_helper"
+
+describe MunicipalPlans::ReleaseService do
+  let(:officer) { create(:municipal_plan_officer) }
+  let(:district) { create(:registered_address_district) }
+  let(:topic) { create(:municipal_plan_topic) }
+
+  describe "the first publication" do
+    let(:plan) { create(:municipal_plan, responsible: officer) }
+
+    it "publishes the Entwurf itself and starts the 1 series" do
+      plan.update!(submitted_at: Time.current)
+
+      MunicipalPlans::ReleaseService.call(plan)
+
+      expect(plan.reload).to be_published
+      expect(plan.version).to eq("1.0")
+      expect(plan.submitted_at).to be_nil
+    end
+  end
+
+  describe "a later change" do
+    let(:plan) do
+      create(:municipal_plan, :published, responsible: officer,
+                                          short_description: "Alte Fassung")
+    end
+    let(:copy) { MunicipalPlans::WorkingCopyService.call(plan) }
+
+    before { plan.update_columns(version: "1.0", content_updated_at: Date.current - 10.days) }
+
+    it "moves the new text onto the released Vorhaben" do
+      copy.update!(short_description: "Neue Fassung", submitted_at: Time.current)
+
+      MunicipalPlans::ReleaseService.call(copy)
+
+      expect(plan.reload.short_description).to eq("Neue Fassung")
+    end
+
+    it "advances Versionsnummer and Aktualisierungsdatum" do
+      copy.update!(short_description: "Neue Fassung", submitted_at: Time.current)
+
+      MunicipalPlans::ReleaseService.call(copy)
+
+      expect(plan.reload.version).to eq("1.1")
+      expect(plan.content_updated_at).to eq(Date.current)
+    end
+
+    it "keeps the id of the released Vorhaben and removes the copy" do
+      copy.update!(short_description: "Neue Fassung", submitted_at: Time.current)
+      copy_id = copy.id
+
+      released = MunicipalPlans::ReleaseService.call(copy)
+
+      expect(released.id).to eq(plan.id)
+      expect(MunicipalPlan.where(id: copy_id)).to be_empty
+      expect(plan.reload.working_copy).to be_nil
+    end
+
+    it "advances the version when only the Ortsteile changed" do
+      copy.district_ids = [district.id]
+      copy.update!(submitted_at: Time.current)
+
+      MunicipalPlans::ReleaseService.call(copy)
+
+      expect(plan.reload.district_ids).to match_array([district.id])
+      expect(plan.version).to eq("1.1")
+      expect(plan.content_updated_at).to eq(Date.current)
+    end
+
+    it "carries Themen, Links and the Kartenposition over" do
+      copy.topic_ids = [topic.id]
+      copy.links.create!(title: "Rahmenplan", url: "https://example.org", given_order: 1)
+      copy.map_location.update!(latitude: 50.9, longitude: 11.6)
+      copy.update!(submitted_at: Time.current)
+
+      MunicipalPlans::ReleaseService.call(copy)
+
+      expect(plan.reload.topic_ids).to match_array([topic.id])
+      expect(plan.links.map(&:title)).to eq(["Rahmenplan"])
+      expect(plan.map_location.latitude).to eq(50.9)
+    end
+
+    it "keeps an archived Vorhaben archived" do
+      plan.update!(status: "archived")
+      copy.update!(short_description: "Neue Fassung", submitted_at: Time.current)
+
+      MunicipalPlans::ReleaseService.call(copy)
+
+      expect(plan.reload.status).to eq("archived")
+      expect(plan.short_description).to eq("Neue Fassung")
+      expect(plan.version).to eq("1.1")
+    end
+
+    it "leaves the released text alone until it is released" do
+      copy.update!(short_description: "Neue Fassung", submitted_at: Time.current)
+
+      expect(plan.reload.short_description).to eq("Alte Fassung")
+      expect(plan.content_updated_at).to eq(Date.current - 10.days)
+    end
+  end
+end

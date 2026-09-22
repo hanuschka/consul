@@ -40,6 +40,15 @@ en:
           success: The plan was updated.
         destroy:
           success: The plan was deleted.
+        submit:
+          success: The plan was submitted for release.
+          no_changes: This version contains no changes against the released version and was not submitted.
+        release:
+          success: The plan was released and is now public.
+        archive:
+          success: The plan was archived.
+        unarchive:
+          success: The plan was taken out of the archive.
         show:
           sections:
             content: Plan
@@ -71,6 +80,27 @@ en:
           internal_notes: Internal notes
           status: Status
           none: "—"
+          submitted_hint: This plan has been submitted for release and is waiting for a decision by the administration.
+          actions:
+            submit: Submit for release
+            release: Release
+            archive: Archive
+            unarchive: Take out of the archive
+          release_pending:
+            title: A working version is waiting for release
+            body: This plan has a changed version that has not been released yet. Until it is released, the public plan list keeps showing this version.
+            link: Open working version
+          working_copy:
+            title: This is the working version
+            body: This version is not public yet. It replaces the released plan as soon as it has been released.
+            link: Open released version
+          changes:
+            title: Changes against the released version
+            field: Field
+            released: Released version
+            new: Working version
+            map_changed: The map position was changed.
+            no_changes: This version contains no changes against the released version.
         form_fields:
           errors_title: The plan could not be saved
           not_set: Set automatically on save
@@ -146,7 +176,7 @@ en:
             responsible: Define who maintains the plan inside the administration. You can pick a single officer or a whole officer group.
             system_mailbox_email: Notices from citizens about this plan are forwarded to this mailbox. Use a functional address so notices are handled during absences.
             internal_notes: Internal notes are visible inside the administration only and are never shown publicly. Use the field for arrangements, responsibilities or notes to colleagues.
-            status: Only published plans appear in the public plan list. Drafts are visible inside the administration only, archived plans are removed from the active list.
+            status: "The status is not maintained in this form but through the buttons on the plan's detail page: drafts are submitted for release and then released, published plans can be archived and taken out of the archive again. Only published plans appear in the public plan list."
           placeholders:
             title: e.g. Redesign of the market square
             costs: e.g. approx. EUR 50,000 or budgeted

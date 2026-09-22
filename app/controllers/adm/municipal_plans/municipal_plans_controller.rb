@@ -1,7 +1,9 @@
 class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseController
   include MapLocationAttributes
 
-  before_action :find_municipal_plan, only: [:show, :edit, :update, :destroy]
+  before_action :find_municipal_plan, only: [:show, :edit, :update, :destroy, :submit, :release,
+                                             :archive, :unarchive]
+  before_action :redirect_to_working_copy, only: [:edit, :update]
 
   def index
     authorize MunicipalPlan, :index?, policy_class: Adm::MunicipalPlans::MunicipalPlanPolicy
@@ -10,7 +12,7 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
 
     @pagy, @municipal_plans = pagy(
       Adm::MunicipalPlansQuery.new(
-        scoped_plans.includes(:responsible, :topics, :districts), params
+        scoped_plans.released_versions.includes(:responsible, :topics, :districts), params
       ).call
     )
 
@@ -69,6 +71,45 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
     redirect_to adm_municipal_plans_root_path, notice: t(".success")
   end
 
+  def submit
+    if nothing_to_release?
+      return redirect_to adm_municipal_plans_municipal_plan_path(@municipal_plan),
+                         alert: t(".no_changes")
+    end
+
+    @municipal_plan.submitted_at = Time.current
+
+    if @municipal_plan.save
+      ::MunicipalPlans::SubmissionNotificationService.call(@municipal_plan)
+      redirect_to adm_municipal_plans_municipal_plan_path(@municipal_plan), notice: t(".success")
+    else
+      @breadcrumbs = breadcrumbs_for_action(t("adm.municipal_plans.municipal_plans.edit.title"))
+      render :edit
+    end
+  end
+
+  def release
+    @municipal_plan.submitted_at ||= Time.current
+
+    if @municipal_plan.valid?
+      released = ::MunicipalPlans::ReleaseService.call(@municipal_plan)
+      redirect_to adm_municipal_plans_municipal_plan_path(released), notice: t(".success")
+    else
+      @breadcrumbs = breadcrumbs_for_action(t("adm.municipal_plans.municipal_plans.edit.title"))
+      render :edit
+    end
+  end
+
+  def archive
+    change_status("archived")
+  end
+
+  # A Vorhaben that was released before returns to the public list as it was, without a new
+  # release; one that never left Entwurf goes back to being an Entwurf.
+  def unarchive
+    change_status(@municipal_plan.major_version.zero? ? "draft" : "published")
+  end
+
   private
 
     def set_header_options
@@ -98,6 +139,29 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
 
     def topic_filter_options
       MunicipalPlan::Topic.all.to_h { |topic| [topic.id.to_s, topic.name] }
+    end
+
+    def nothing_to_release?
+      @municipal_plan.working_copy? &&
+        ::MunicipalPlans::ChangeSummaryService.call(@municipal_plan).empty?
+    end
+
+    # Content of a released Vorhaben is never edited in place: the form always works on the copy.
+    def redirect_to_working_copy
+      return if @municipal_plan.draft?
+
+      redirect_to edit_adm_municipal_plans_municipal_plan_path(
+        ::MunicipalPlans::WorkingCopyService.call(@municipal_plan)
+      )
+    end
+
+    def change_status(status)
+      if @municipal_plan.update(status: status)
+        redirect_to adm_municipal_plans_municipal_plan_path(@municipal_plan), notice: t(".success")
+      else
+        redirect_to adm_municipal_plans_municipal_plan_path(@municipal_plan),
+                    alert: @municipal_plan.errors[:base].to_sentence
+      end
     end
 
     def find_municipal_plan
@@ -142,7 +206,7 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
 
     def municipal_plan_params
       params.require(:municipal_plan).permit(
-        :status, :given_order,
+        :given_order,
         :formal_participation, :informal_participation,
         :contact_name, :contact_phone, :contact_email,
         :system_mailbox_email, :internal_notes,

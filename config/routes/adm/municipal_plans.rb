@@ -13,6 +13,13 @@ namespace :adm do
     end
 
     resources :municipal_plans, only: [:new, :create, :show, :edit, :update, :destroy], path: "" do
+      member do
+        patch :submit
+        patch :release
+        patch :archive
+        patch :unarchive
+      end
+
       resources :audits, only: :show, controller: "municipal_plan_audits"
     end
   end

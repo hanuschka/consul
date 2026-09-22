@@ -1,0 +1,15 @@
+<% if kind == :boolean %>
+  <%= t("shared.#{value.present?}") %>
+<% elsif value.blank? %>
+  <%= t("adm.municipal_plans.municipal_plans.show.none") %>
+<% elsif kind == :rich_text %>
+  <%= auto_link_already_sanitized_html wysiwyg(value) %>
+<% elsif kind == :list %>
+  <ul class="m-0">
+    <% value.each do |entry| %>
+      <li><%= entry %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <%= value %>
+<% end %>

@@ -38,6 +38,23 @@ class Adm::MunicipalPlans::MunicipalPlanPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
+  # Handing a Vorhaben in is part of editing it; releasing it never is.
+  def submit?
+    update?
+  end
+
+  def archive?
+    update?
+  end
+
+  def unarchive?
+    update?
+  end
+
+  def release?
+    @user&.administrator?
+  end
+
   class Scope < Scope
     def resolve
       return scope.all if user&.administrator?

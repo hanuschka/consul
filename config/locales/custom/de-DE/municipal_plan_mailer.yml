@@ -1,0 +1,9 @@
+de:
+  custom:
+    municipal_plan_mailer:
+      submitted_for_release:
+        subject: "Vorhaben zur Freigabe eingereicht: %{title}"
+        greeting: "Hallo,"
+        body: "das Vorhaben „%{title}“ wurde zur Freigabe eingereicht und wartet auf Ihre Prüfung."
+        body_with_responsible: "das Vorhaben „%{title}“ wurde von %{responsible} zur Freigabe eingereicht und wartet auf Ihre Prüfung."
+        review_link: Vorhaben prüfen und freigeben.

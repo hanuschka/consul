@@ -22,6 +22,19 @@ module ExiftoolCommand
 
   INSTALL_COMMAND = "apt-get install -y libimage-exiftool-perl  # macOS: brew install exiftool".freeze
 
+  # The releases where the two optional parts of the marking start working.
+  # Below them exiftool only warns -- "Not a deletable group: jumbf", "Tag ...
+  # is not defined" -- and still exits 0, because the rest of the write
+  # succeeded. A capability therefore has to be decided from the version before
+  # the arguments are built; it cannot be read back off the result.
+  #
+  # 12.64 is the release that added JUMBF to the deletable groups. 13.55 is the
+  # oldest build the AI system tags were confirmed present in, and 13.00 does
+  # not have them, so anything between the two is treated as lacking them and
+  # records no system rather than asking for a tag it cannot write.
+  JUMBF_DELETE_VERSION = Gem::Version.new("12.64")
+  AI_SYSTEM_TAG_VERSION = Gem::Version.new("13.55")
+
   # Only a healthy result is memoised. A binary that is on PATH cannot leave it
   # under a running process, so that answer is worth keeping. A failure is
   # re-probed because the usual cause is a box that has not been provisioned
@@ -47,6 +60,42 @@ module ExiftoolCommand
     ENV["PATH"].to_s.split(File::PATH_SEPARATOR).lazy
       .map { |directory| File.join(directory, BINARY) }
       .find { |candidate| File.executable?(candidate) }
+  end
+
+  # nil when the binary is unusable or its answer unparseable, which every
+  # capability predicate below reads as "not supported". Memoised like
+  # runtime_status: only a real answer is kept, so a box that gets the package
+  # installed under a running process recovers on the next call.
+  def self.version
+    @version ||= probe_version
+  end
+
+  def self.probe_version
+    return nil if binary_path.blank?
+
+    result = run("-ver")
+
+    return nil if !result.success?
+
+    Gem::Version.new(result.stdout.to_s.strip)
+  rescue ArgumentError
+    nil
+  end
+
+  def self.supports_jumbf_delete?
+    version.present? && version >= JUMBF_DELETE_VERSION
+  end
+
+  def self.supports_ai_system_tags?
+    version.present? && version >= AI_SYSTEM_TAG_VERSION
+  end
+
+  # Whether everything the marking writes actually lands. Reported rather than
+  # enforced: an older binary still writes the source type every verification
+  # tool reads, and refusing to mark at all would take image generation down on
+  # a portal that is merely behind.
+  def self.full_marking_supported?
+    supports_jumbf_delete? && supports_ai_system_tags?
   end
 
   def self.run(*arguments)

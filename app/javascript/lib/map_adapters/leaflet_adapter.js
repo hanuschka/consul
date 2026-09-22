@@ -1,4 +1,5 @@
 import BaseAdapter from "./base_adapter"
+import { loadLeaflet } from "../map_vendor_assets"
 import { getBrandColor, MapPopup, numberOrDefault } from "./map_utils"
 
 /**
@@ -8,9 +9,6 @@ import { getBrandColor, MapPopup, numberOrDefault } from "./map_utils"
  * Scripts are loaded asynchronously on first use.
  */
 export default class LeafletAdapter extends BaseAdapter {
-  static scriptsLoaded = false
-  static scriptsLoading = false
-  static loadQueue = []
   static searchCountryCodes = "de"
   static searchBiasDegrees = 0.3
 
@@ -61,68 +59,7 @@ export default class LeafletAdapter extends BaseAdapter {
    * Load Leaflet and all plugins asynchronously
    */
   loadScripts() {
-    return new Promise((resolve) => {
-      if (LeafletAdapter.scriptsLoaded) {
-        resolve()
-        return
-      }
-
-      LeafletAdapter.loadQueue.push(resolve)
-
-      if (LeafletAdapter.scriptsLoading) return
-
-      LeafletAdapter.scriptsLoading = true
-
-      const cssUrls = [
-        "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
-        "https://unpkg.com/@geoman-io/leaflet-geoman-free@2.16.0/dist/leaflet-geoman.css",
-        "https://unpkg.com/leaflet-geosearch@3.11.1/dist/geosearch.css",
-        "https://unpkg.com/leaflet.locatecontrol@0.81.1/dist/L.Control.Locate.min.css",
-        "https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.css",
-        "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css",
-        "https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
-      ]
-
-      cssUrls.forEach(url => {
-        if (!document.querySelector(`link[href="${url}"]`)) {
-          const link = document.createElement("link")
-          link.rel = "stylesheet"
-          link.href = url
-          document.head.appendChild(link)
-        }
-      })
-
-      const jsUrls = [
-        "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
-        "https://unpkg.com/@geoman-io/leaflet-geoman-free@2.16.0/dist/leaflet-geoman.js",
-        "https://unpkg.com/leaflet-geosearch@3.11.1/dist/bundle.min.js",
-        "https://unpkg.com/leaflet.locatecontrol@0.81.1/dist/L.Control.Locate.min.js",
-        "https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.js",
-        "https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js",
-        "https://cdn.jsdelivr.net/npm/Leaflet.Deflate@1.0.0-alpha.3/dist/L.Deflate.min.js"
-      ]
-
-      const loadNext = (index) => {
-        if (index >= jsUrls.length) {
-          LeafletAdapter.scriptsLoaded = true
-          LeafletAdapter.loadQueue.forEach(cb => cb())
-          LeafletAdapter.loadQueue = []
-          return
-        }
-
-        const script = document.createElement("script")
-        script.src = jsUrls[index]
-        script.async = false
-        script.onload = () => loadNext(index + 1)
-        script.onerror = () => {
-          console.error(`Failed to load: ${jsUrls[index]}`)
-          loadNext(index + 1)
-        }
-        document.head.appendChild(script)
-      }
-
-      loadNext(0)
-    })
+    return loadLeaflet()
   }
 
   // ===========================================================================

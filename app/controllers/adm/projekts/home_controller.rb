@@ -24,17 +24,18 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
       { value: Projekt.not_activated.count, label: t("adm.projekts.home.stats.draft"), icon: "edit_note" }
     ]
 
+    # Two entry points side by side: an empty projekt, and an import that first
+    # asks where the projekt comes from. The import picker gates its own
+    # sources on the AI flag — one of the three needs no AI — so the button
+    # itself is never AI-gated.
+    @can_create_projekt = policy([:adm, :projekts, Projekt]).create?
     @quick_links = [
-      (if policy([:adm, :projekts, Projekt]).create?
+      (if @can_create_projekt
          { label: t("adm.projekts.home.quick_links.new"), path: new_adm_projekts_projekt_path, primary: true }
-       end),
-      (if policy([:adm, :projekts, Projekt]).create?
-         { label: t("adm.projekts.home.quick_links.imports"),
-           path: adm_projekts_imports_path,
-           ai_gated: true,
-           description: t("adm.projekts.imports.index.new_button_description") }
        end)
     ].compact
+    @import_picker_label = t("adm.projekts.home.quick_links.import")
+    @ai_available = Ai::Settings.ai_available?
 
     @breadcrumbs = [
       { name: t("adm.projekts.menu.items.home"), icon: "home" }
@@ -44,20 +45,18 @@ class Adm::Projekts::HomeController < Adm::Projekts::BaseController
   private
 
     # The copy poller sends the admin here once a copy reaches a terminal state,
-    # so this is where its outcome gets announced. A cross-instance import
-    # shares that column and that poller, and is told apart by having no local
-    # source projekt to point back at.
+    # so this is where its outcome gets announced. copy_status now only ever
+    # describes a local copy: an import from another instance is a ProjektImport
+    # and reports through the import screens instead.
     def flash_finished_copy
       copy = policy_scope([:adm, :projekts, Projekt]).find_by(id: params[:finished_copy])
       return if copy.blank? || copy.copy_status.blank?
       return if copy.copy_in_progress?
 
-      scope = copy.copied_from_projekt_id.present? ? "copy" : "instance_import"
-
       if copy.copy_unfinished?
-        flash.now[:alert] = t("adm.projekts.projekts.#{scope}.failed_notice", name: copy.title)
+        flash.now[:alert] = t("adm.projekts.projekts.copy.failed_notice", name: copy.title)
       else
-        flash.now[:notice] = t("adm.projekts.projekts.#{scope}.finished", name: copy.title)
+        flash.now[:notice] = t("adm.projekts.projekts.copy.finished", name: copy.title)
       end
     end
 

@@ -64,10 +64,6 @@ module TranslatableFormHelper
         @object.translations.new(locale: locale).tap(&:mark_for_destruction)
       end
 
-      def highlight_translation_html_class
-        @template.highlight_translation_html_class
-      end
-
       def translations_options(resource, locale)
         {
           class: "translatable-fields js-globalize-attribute",
@@ -81,7 +77,7 @@ module TranslatableFormHelper
       end
 
       def visible_locales
-        [I18n.default_locale]
+        [I18n.locale]
       end
   end
 

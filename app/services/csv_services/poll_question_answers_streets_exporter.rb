@@ -28,7 +28,7 @@ module CsvServices
 
         question.question_answers.each do |qa|
           answer_count_by_street = question.answers
-            .where(answer: qa.title)
+            .where(question_answer_id: qa.id)
             .joins(author: [registered_address: :registered_address_street])
             .where(registered_address_streets: { id: street.id })
             .count

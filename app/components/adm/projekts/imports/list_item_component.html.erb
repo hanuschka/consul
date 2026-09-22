@@ -21,21 +21,35 @@
         <%= files_link %>
       <% end %>
       <span class="projekt-import-list-item--badge <%= state_modifier %>"><%= state_label %></span>
+      <span class="projekt-import-list-item--source"><%= source_label %></span>
     </div>
 
     <div class="projekt-import-list-item--meta">
-      <% if display_state == :analyzing %>
+      <% if show_progress_spinner? %>
         <span class="projekt-import-list-item--spinner" aria-hidden="true"></span>
+      <% end %>
+      <% if submit_stage_label.present? %>
+        <span class="projekt-import-list-item--stage"><%= submit_stage_label %></span>
+        <span class="projekt-import-list-item--meta-sep" aria-hidden="true">·</span>
       <% end %>
       <span class="projekt-import-list-item--time"><%= created_label %></span>
       <% if show_finished? %>
         <span class="projekt-import-list-item--meta-sep" aria-hidden="true">·</span>
         <span class="projekt-import-list-item--time"><%= finished_label %></span>
       <% end %>
+      <% if show_owner? %>
+        <span class="projekt-import-list-item--meta-sep" aria-hidden="true">·</span>
+        <span class="projekt-import-list-item--owner"><%= owner_label %></span>
+      <% end %>
     </div>
 
     <% if show_error? %>
-      <p class="projekt-import-list-item--error"><%= error_preview %></p>
+      <p class="projekt-import-list-item--error">
+        <% if failure_stage_label.present? %>
+          <span class="projekt-import-list-item--error-stage"><%= failure_stage_label %></span>
+        <% end %>
+        <%= error_preview %>
+      </p>
     <% end %>
 
     <% if show_image_failed_note? %>
@@ -75,6 +89,14 @@
     <%= link_to primary_action_label, primary_action_url,
           class: "projekt-import-list-item--primary-button",
           data: { turbo: false } %>
+
+    <% if show_retry? %>
+      <%= button_to t("adm.projekts.imports.list.actions.retry"),
+            retry_url,
+            method: :post,
+            class: "projekt-import-list-item--retry-button",
+            form_class: "projekt-import-list-item--retry-form" %>
+    <% end %>
 
     <button type="button"
             class="round-icon-button"

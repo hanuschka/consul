@@ -1,6 +1,12 @@
 en:
   custom:
     municipal_plan_mailer:
+      notice_submitted:
+        subject: "New notice on the plan: %{title}"
+        greeting: "Hello,"
+        body: "a notice on the plan “%{title}” was submitted through the plan list."
+        sender: "Submitted by"
+        no_name: "no name given"
       submitted_for_release:
         subject: "Plan submitted for release: %{title}"
         greeting: "Hello,"

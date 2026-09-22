@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_22_090000) do
+ActiveRecord::Schema.define(version: 2026_09_22_100000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1878,6 +1878,16 @@ ActiveRecord::Schema.define(version: 2026_09_22_090000) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["municipal_plan_id"], name: "index_municipal_plan_links_on_plan_id"
+  end
+
+  create_table "municipal_plan_notices", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.string "name"
+    t.string "email", null: false
+    t.text "body", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_id"], name: "index_municipal_plan_notices_on_municipal_plan_id"
   end
 
   create_table "municipal_plan_officer_group_assignments", force: :cascade do |t|
@@ -4021,6 +4031,7 @@ ActiveRecord::Schema.define(version: 2026_09_22_090000) do
   add_foreign_key "mitmachbox_participations", "projekt_phases"
   add_foreign_key "mitmachbox_participations", "users"
   add_foreign_key "moderators", "users"
+  add_foreign_key "municipal_plan_notices", "municipal_plans"
   add_foreign_key "municipal_plans", "municipal_plans", column: "released_plan_id"
   add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
   add_foreign_key "navbar_items", "projekts"

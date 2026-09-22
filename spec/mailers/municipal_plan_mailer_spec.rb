@@ -38,6 +38,38 @@ describe MunicipalPlanMailer do
     end
   end
 
+  describe "notice_submitted" do
+    let(:notice) do
+      plan.notices.create!(name: "Kai Ostermann", email: "kai@example.org",
+                           body: "Bitte prüfen Sie den Zeitplan.")
+    end
+    let(:mail) { MunicipalPlanMailer.notice_submitted(notice, "amt@jena.example") }
+
+    it "names the Vorhaben in the subject" do
+      expect(mail.to).to eq(["amt@jena.example"])
+      expect(mail.subject).to include("Sanierung der Brücke am Markt")
+    end
+
+    it "links to the Vorhaben and carries the Hinweis with its sender" do
+      expect(mail.body.encoded).to include(municipal_plan_url(plan, host: mail_host))
+      expect(mail.body.encoded).to include("Kai Ostermann")
+      expect(mail.body.encoded).to include("kai@example.org")
+      expect(mail.body.encoded).to include("Bitte")
+    end
+
+    it "manages a Hinweis without a Name" do
+      anonymous = plan.notices.create!(email: "kai@example.org", body: "Anonym")
+
+      expect { MunicipalPlanMailer.notice_submitted(anonymous, "amt@jena.example").deliver_now }
+        .to change { ActionMailer::Base.deliveries.count }.by(1)
+    end
+
+    it "sends nothing without a recipient" do
+      expect { MunicipalPlanMailer.notice_submitted(notice, "").deliver_now }
+        .not_to change { ActionMailer::Base.deliveries.count }
+    end
+  end
+
   def mail_host
     Rails.application.config.action_mailer.default_url_options[:host]
   end

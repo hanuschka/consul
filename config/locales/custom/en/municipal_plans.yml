@@ -44,6 +44,20 @@ en:
         updated: updated entry
         formal_participation: formal citizen participation
         informal_participation: informal citizen participation
+      notices:
+        create:
+          success: Thank you! Your notice was forwarded to the responsible department.
+        form:
+          title: Submit a notice
+          intro: Do you have a remark, a question or a correction on this plan? Your message goes to the responsible department in the administration.
+          name: Name
+          name_hint: Optional
+          email: E-mail address
+          email_hint: Needed so the administration can reply.
+          body: Your notice
+          submit: Send notice
+          error_title: Your notice could not be sent
+
       participation:
         "yes": "Yes"
         "no": "No"

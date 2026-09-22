@@ -183,6 +183,10 @@ de:
         short_description: "Kurze Beschreibung"
         processing_status: "Aktueller Bearbeitungsstand"
         next_steps: "Geplanter Zeitpunkt, nächste Schritte"
+      municipal_plan/notice:
+        name: "Name"
+        email: "E-Mail-Adresse"
+        body: "Hinweis"
       municipal_plan/link:
         title: "Titel"
         url: "Ziel"

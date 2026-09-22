@@ -309,6 +309,42 @@
     </div>
   </section>
 
+  <% if may_update && !@municipal_plan.working_copy? %>
+    <section class="adm-detail-section">
+      <h2 class="adm-detail-section-title mb-3"><%= t(".notices.title") %></h2>
+
+      <% if @municipal_plan.notices.any? %>
+        <% @municipal_plan.notices.each do |plan_notice| %>
+          <% notice_date = l(plan_notice.created_at, format: "%d.%m.%Y") %>
+          <div class="adm-content-card mb-3">
+            <div class="adm-content-card__header d-flex flex-wrap align-items-center gap-3">
+              <div>
+                <p class="strong m-0"><%= plan_notice.name.presence || t(".notices.no_name") %></p>
+                <p class="m-0">
+                  <%= notice_date %> &middot; <%= mail_to plan_notice.email, class: "kern-link" %>
+                </p>
+              </div>
+
+              <%= form_with url: adm_municipal_plans_municipal_plan_notice_path(@municipal_plan, plan_notice),
+                    method: :delete,
+                    data: { turbo_confirm: t(".notices.delete_confirm", date: notice_date) } do %>
+                <%= kern_button(type: :submit, text: t(".notices.delete"), icon: "delete",
+                                style: :danger,
+                                "aria-label": t(".notices.delete_aria", date: notice_date)) %>
+              <% end %>
+            </div>
+
+            <div class="adm-content-card__body">
+              <%= simple_format(plan_notice.body) %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="kern-body m-0"><%= t(".notices.empty") %></p>
+      <% end %>
+    </section>
+  <% end %>
+
   <section class="adm-detail-section">
     <%= render "adm/shared/audits",
           auditable: @municipal_plan,

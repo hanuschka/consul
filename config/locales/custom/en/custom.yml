@@ -37,6 +37,10 @@ en:
         short_description: "Short description"
         processing_status: "Current processing status"
         next_steps: "Planned timing, next steps"
+      municipal_plan/notice:
+        name: "Name"
+        email: "E-mail address"
+        body: "Notice"
       municipal_plan/link:
         title: "Title"
         url: "Target"

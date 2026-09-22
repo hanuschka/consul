@@ -182,6 +182,51 @@
             <dd><%= @municipal_plan.version %></dd>
           <% end %>
         </dl>
+
+        <% if @municipal_plan.published? %>
+          <% plan_notice = @notice || MunicipalPlan::Notice.new %>
+          <section class="municipal-plan-page--section municipal-plan-page--notice-form"
+                   id="municipal-plan-notice-form">
+            <h2><%= t("custom.municipal_plans.notices.form.title") %></h2>
+            <p><%= t("custom.municipal_plans.notices.form.intro") %></p>
+
+            <%= form_with model: plan_notice, url: municipal_plan_notices_path(@municipal_plan),
+                  scope: :municipal_plan_notice, local: true do |f| %>
+              <% if plan_notice.errors.any? %>
+                <div class="callout alert" role="alert">
+                  <h3><%= t("custom.municipal_plans.notices.form.error_title") %></h3>
+                  <ul>
+                    <% plan_notice.errors.each do |error| %>
+                      <li>
+                        <% if error.attribute.in?(%i[name email body]) %>
+                          <%= link_to error.full_message,
+                                "#municipal_plan_notice_#{error.attribute}" %>
+                        <% else %>
+                          <%= error.full_message %>
+                        <% end %>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% end %>
+
+              <%= f.text_field :name, autocomplete: "name",
+                    label: t("custom.municipal_plans.notices.form.name"),
+                    hint: t("custom.municipal_plans.notices.form.name_hint") %>
+
+              <%= f.email_field :email, autocomplete: "email", required: true,
+                    label: t("custom.municipal_plans.notices.form.email"),
+                    hint: t("custom.municipal_plans.notices.form.email_hint") %>
+
+              <%= f.text_area :body, rows: 6, required: true,
+                    label: t("custom.municipal_plans.notices.form.body") %>
+
+              <%= f.invisible_captcha :subtitle %>
+
+              <%= f.submit t("custom.municipal_plans.notices.form.submit"), class: "button" %>
+            <% end %>
+          </section>
+        <% end %>
       </div>
       <div class="sidebar-placeholder"></div>
     </div>

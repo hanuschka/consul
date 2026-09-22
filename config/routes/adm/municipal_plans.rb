@@ -26,6 +26,7 @@ namespace :adm do
       end
 
       resources :audits, only: :show, controller: "municipal_plan_audits"
+      resources :notices, only: :destroy, controller: "municipal_plan_notices"
     end
   end
 end

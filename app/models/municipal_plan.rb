@@ -74,6 +74,9 @@ class MunicipalPlan < ApplicationRecord
   has_many :links, -> { order(:given_order) }, class_name: "MunicipalPlan::Link", dependent: :destroy,
     inverse_of: :municipal_plan
 
+  has_many :notices, -> { order(created_at: :desc) }, class_name: "MunicipalPlan::Notice",
+    dependent: :destroy, inverse_of: :municipal_plan
+
   accepts_nested_attributes_for :links, allow_destroy: true
 
   validates :status, inclusion: { in: STATUSES }

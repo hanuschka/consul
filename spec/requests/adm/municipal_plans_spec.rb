@@ -395,4 +395,51 @@ describe "Vorhaben in /adm", type: :request do
       end
     end
   end
+
+  describe "Hinweise in the administration" do
+    let!(:notice) do
+      plan.notices.create!(name: "Kai Ostermann", email: "kai@example.org", body: "Eine Frage")
+    end
+
+    it "removes a Hinweis" do
+      expect { delete adm_municipal_plans_municipal_plan_notice_path(plan, notice) }
+        .to change { plan.notices.count }.by(-1)
+
+      expect(response).to redirect_to(adm_municipal_plans_municipal_plan_path(plan))
+    end
+
+    it "lists the Hinweise at the released Vorhaben" do
+      released = create(:municipal_plan, :published, responsible: officer)
+      released.notices.create!(name: "Lena Wolf", email: "lena@example.org", body: "Ein Hinweis")
+
+      get adm_municipal_plans_municipal_plan_path(released)
+
+      expect(response.body).to include(I18n.t("adm.municipal_plans.municipal_plans.show.notices.title"))
+      expect(response.body).to include("Lena Wolf")
+      expect(response.body).to include("Ein Hinweis")
+    end
+
+    it "shows no Hinweise section on a working copy" do
+      released = create(:municipal_plan, :published, responsible: officer)
+      released.notices.create!(email: "lena@example.org", body: "Ein Hinweis")
+      copy = ::MunicipalPlans::WorkingCopyService.call(released)
+
+      get adm_municipal_plans_municipal_plan_path(copy)
+
+      expect(response.body)
+        .not_to include(I18n.t("adm.municipal_plans.municipal_plans.show.notices.title"))
+      expect(response.body).not_to include("Ein Hinweis")
+    end
+
+    it "keeps a Sachbearbeitung away from another Vorhaben's Hinweise" do
+      other = create(:municipal_plan, responsible: create(:municipal_plan_officer))
+      other_notice = other.notices.create!(email: "kai@example.org", body: "Eine Frage")
+      login_as(officer.user)
+
+      expect { delete adm_municipal_plans_municipal_plan_notice_path(other, other_notice) }
+        .to raise_error(ActiveRecord::RecordNotFound)
+
+      expect(other.notices.count).to eq(1)
+    end
+  end
 end

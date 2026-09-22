@@ -13,6 +13,10 @@ de:
         draft: Entwurf
         published: Veröffentlicht
         archived: Archiviert
+      municipal_plan_notices:
+        destroy:
+          success: Der Hinweis wurde gelöscht.
+
       municipal_plans:
         index:
           title: Vorhaben
@@ -114,6 +118,13 @@ de:
             new: Bearbeitungsfassung
             map_changed: Die Kartenposition wurde geändert.
             no_changes: Diese Fassung enthält keine Änderungen gegenüber der freigegebenen Fassung.
+          notices:
+            title: Hinweise von Bürgerinnen und Bürgern
+            no_name: Ohne Namensangabe
+            delete: Löschen
+            delete_aria: "Hinweis vom %{date} löschen"
+            delete_confirm: "Möchten Sie den Hinweis vom %{date} wirklich löschen? Das kann nicht rückgängig gemacht werden."
+            empty: Zu diesem Vorhaben liegen keine Hinweise vor.
         form_fields:
           errors_title: Das Vorhaben konnte nicht gespeichert werden
           not_set: Wird beim Speichern gesetzt

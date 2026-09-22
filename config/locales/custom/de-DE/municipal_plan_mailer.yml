@@ -1,6 +1,12 @@
 de:
   custom:
     municipal_plan_mailer:
+      notice_submitted:
+        subject: "Neuer Hinweis zum Vorhaben: %{title}"
+        greeting: "Hallo,"
+        body: "zum Vorhaben „%{title}“ wurde ein Hinweis über die Vorhabenliste eingereicht."
+        sender: "Eingereicht von"
+        no_name: "ohne Namensangabe"
       submitted_for_release:
         subject: "Vorhaben zur Freigabe eingereicht: %{title}"
         greeting: "Hallo,"

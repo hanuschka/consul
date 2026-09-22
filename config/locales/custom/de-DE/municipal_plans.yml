@@ -44,6 +44,20 @@ de:
         updated: aktualisierter Eintrag
         formal_participation: formelle Bürgerbeteiligung
         informal_participation: informelle Bürgerbeteiligung
+      notices:
+        create:
+          success: Vielen Dank! Ihr Hinweis wurde an die zuständige Stelle weitergeleitet.
+        form:
+          title: Hinweis einreichen
+          intro: Haben Sie eine Anmerkung, eine Frage oder einen Korrekturhinweis zu diesem Vorhaben? Ihre Nachricht geht an die zuständige Stelle in der Verwaltung.
+          name: Name
+          name_hint: Optional
+          email: E-Mail-Adresse
+          email_hint: Wird benötigt, damit die Verwaltung antworten kann.
+          body: Ihr Hinweis
+          submit: Hinweis absenden
+          error_title: Ihr Hinweis konnte nicht abgeschickt werden
+
       participation:
         "yes": Ja
         "no": Nein

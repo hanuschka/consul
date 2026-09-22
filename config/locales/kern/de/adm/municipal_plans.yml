@@ -18,6 +18,7 @@ de:
           title: Vorhaben
           page_hint: "Hier verwalten Sie die Vorhaben der Stadt. Jedes Vorhaben beschreibt ein Projekt der Verwaltung mit Bearbeitungsstand, Zeitplanung, betroffenen Ortsteilen und Ansprechpartnern. Veröffentlichte Vorhaben erscheinen in der öffentlichen Vorhabenliste; Entwürfe und archivierte Vorhaben bleiben intern. Die Versionsnummer erhöht sich automatisch, sobald sich inhaltliche Angaben ändern."
           new_button: Neues Vorhaben
+          order_button: Reihenfolge festlegen
           no_items_title: Keine Vorhaben vorhanden
           no_items_description: Legen Sie ein Vorhaben an, um es in der Vorhabenliste zu veröffentlichen.
           no_results_filtered_title: Keine Treffer
@@ -30,6 +31,18 @@ de:
             responsible: Zuständige Sachbearbeitung
             content_updated_at: Aktualisierungsdatum
             version: Versionsnummer
+        order:
+          title: Reihenfolge der Vorhaben
+          page_hint: "Hier legen Sie fest, in welcher Reihenfolge die Vorhaben in der öffentlichen Vorhabenliste standardmäßig erscheinen. Ziehen Sie ein Vorhaben am Anfasser an die gewünschte Position; die neue Reihenfolge wird sofort gespeichert, eine Schaltfläche zum Speichern gibt es nicht. Archivierte Vorhaben werden hier nicht aufgeführt."
+          drag_handle: "Vorhaben „%{title}“ verschieben"
+          no_items_title: Keine Vorhaben vorhanden
+          no_items_description: Sobald Vorhaben freigegeben sind, können Sie hier ihre Reihenfolge festlegen.
+          none: "—"
+          table:
+            order: Reihenfolge
+            title: Titel
+            status: Status
+            content_updated_at: Aktualisierungsdatum
         new:
           title: Neues Vorhaben
         edit:

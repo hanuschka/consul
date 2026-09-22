@@ -1,13 +1,25 @@
+<% policy = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, MunicipalPlan) %>
+
 <%= content_for :title, t(".title") %>
 
 <%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
   <% header.with_hint do %>
     <p class="adm-hint__text"><%= t(".page_hint") %></p>
   <% end %>
-  <% if Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, nil).new? %>
+  <% if policy.new? || policy.reorder? %>
     <% header.with_actions do %>
-      <%= kern_link_button(new_adm_municipal_plans_municipal_plan_path, text: t(".new_button"),
-                           style: :primary, data: { turbo_frame: "_top" }) %>
+      <div class="ml-auto d-flex flex-wrap align-items-center gap-2">
+        <% if policy.new? %>
+          <%= kern_link_button(new_adm_municipal_plans_municipal_plan_path, text: t(".new_button"),
+                               style: :primary, data: { turbo_frame: "_top" }) %>
+        <% end %>
+
+        <% if policy.reorder? %>
+          <%= kern_link_button(order_adm_municipal_plans_municipal_plans_path,
+                               text: t(".order_button"), icon: "swap_vert",
+                               data: { turbo_frame: "_top" }) %>
+        <% end %>
+      </div>
     <% end %>
   <% end %>
 <% end %>

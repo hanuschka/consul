@@ -305,4 +305,94 @@ describe "Vorhaben in /adm", type: :request do
       expect(response.body).not_to include("municipal_plan[status]")
     end
   end
+
+  describe "the editorial order" do
+    let!(:first) { create(:municipal_plan, :published, responsible: officer, given_order: 1) }
+    let!(:second) { create(:municipal_plan, :published, responsible: officer, given_order: 2) }
+    let!(:third) { create(:municipal_plan, :published, responsible: officer, given_order: 3) }
+
+    def reorder(ids)
+      patch reorder_adm_municipal_plans_municipal_plans_path,
+            params: { tree: ids.map { |id| { id: id.to_s, children: [] } }}, as: :json
+    end
+
+    it "lists the Vorhaben in editorial order" do
+      get order_adm_municipal_plans_municipal_plans_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body.index(first.title)).to be < response.body.index(third.title)
+    end
+
+    it "renumbers in the submitted order" do
+      reorder([third.id, first.id, second.id])
+
+      expect(response).to have_http_status(:ok)
+      expect([third, first, second].map { |plan| plan.reload.given_order }).to eq([1, 2, 3])
+    end
+
+    it "leaves Aktualisierungsdatum, Versionsnummer and status untouched" do
+      before_state = [first, second, third].map do |plan|
+        plan.reload.attributes.slice("version", "content_updated_at", "status")
+      end
+
+      reorder([third.id, second.id, first.id])
+
+      expect([first, second, third].map do |plan|
+        plan.reload.attributes.slice("version", "content_updated_at", "status")
+      end).to eq(before_state)
+    end
+
+    it "ignores a Vorhaben that does not belong in the editorial list" do
+      archived = create(:municipal_plan, :published, responsible: officer, given_order: 9)
+      archived.update!(status: "archived")
+
+      reorder([archived.id, third.id, first.id, second.id])
+
+      expect(archived.reload.given_order).to eq(9)
+      expect([third, first, second].map { |plan| plan.reload.given_order }).to eq([1, 2, 3])
+    end
+
+    it "keeps the archive out of the editorial list" do
+      archived = create(:municipal_plan, :published, responsible: officer)
+      archived.update!(status: "archived", given_order: 4)
+
+      get order_adm_municipal_plans_municipal_plans_path
+
+      expect(response.body).not_to include(archived.title)
+    end
+
+    it "keeps a working copy out of the editorial list" do
+      copy = ::MunicipalPlans::WorkingCopyService.call(first)
+
+      get order_adm_municipal_plans_municipal_plans_path
+
+      expect(response.body).to include(%(data-sortable-id="#{first.id}"))
+      expect(response.body).not_to include(%(data-sortable-id="#{copy.id}"))
+      expect(copy.reload.given_order).to be_nil
+    end
+
+    context "for a Sachbearbeitung" do
+      before { login_as(officer.user) }
+
+      it "is refused while it sees only its own Vorhaben" do
+        get order_adm_municipal_plans_municipal_plans_path
+
+        expect(response).to redirect_to(adm_root_path)
+
+        reorder([third.id, first.id, second.id])
+
+        expect(first.reload.given_order).to eq(1)
+      end
+
+      it "is allowed once case workers see everything" do
+        allow(Setting).to receive(:[]).and_call_original
+        allow(Setting).to receive(:[]).with("municipal_plans.officers_see_all").and_return(true)
+
+        reorder([third.id, first.id, second.id])
+
+        expect(response).to have_http_status(:ok)
+        expect(third.reload.given_order).to eq(1)
+      end
+    end
+  end
 end

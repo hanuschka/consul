@@ -1,0 +1,75 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs,
+                                    back_button_url: adm_municipal_plans_root_path) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
+
+<% headers = {
+     title:              Kern::Table::HeaderComponent.new(:title, t(".table.title"),
+                           data_field: "title"),
+     status:             Kern::Table::HeaderComponent.new(:status, t(".table.status"),
+                           data_field: "status"),
+     content_updated_at: Kern::Table::HeaderComponent.new(:content_updated_at,
+                           t(".table.content_updated_at"),
+                           data_field: "content_updated_at")
+   } %>
+
+<div class="kern-container my-5">
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "municipal_plans_order_table",
+        records: @municipal_plans,
+        headers: headers,
+        column_count: 4,
+        body_html_options: {
+          data: {
+            controller: "sortable",
+            "sortable-url-value": reorder_adm_municipal_plans_municipal_plans_path
+          }
+        },
+        empty_state: {
+          title: t(".no_items_title"),
+          description: t(".no_items_description"),
+          icon: "assignment"
+        }
+      ) do |c| %>
+    <% c.with_header_row do %>
+      <th scope="col" class="kern-table__header">
+        <span class="sr-only"><%= t(".table.order") %></span>
+      </th>
+      <%= render headers[:title] %>
+      <%= render headers[:status] %>
+      <%= render headers[:content_updated_at] %>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @municipal_plans.each do |municipal_plan| %>
+        <% handle_label = t(".drag_handle", title: municipal_plan.title) %>
+        <tr id="<%= dom_id(municipal_plan) %>" class="kern-table__row"
+            data-sortable-id="<%= municipal_plan.id %>">
+          <td class="kern-table__cell" data-sortable-handle aria-label="<%= handle_label %>"
+              style="cursor: grab;">
+            <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+            <span class="sr-only"><%= handle_label %></span>
+          </td>
+          <th scope="row" class="kern-table__header" data-field="title">
+            <%= link_to municipal_plan.title, adm_municipal_plans_municipal_plan_path(municipal_plan),
+                  class: "kern-link", title: municipal_plan.title, data: { turbo_frame: "_top" } %>
+          </th>
+          <td class="kern-table__cell" data-field="status">
+            <%= t("adm.municipal_plans.statuses.#{municipal_plan.status}") %>
+          </td>
+          <td class="kern-table__cell" data-field="content_updated_at">
+            <% if municipal_plan.content_updated_at.present? %>
+              <%= l(municipal_plan.content_updated_at, format: "%d.%m.%Y") %>
+            <% else %>
+              <%= t(".none") %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

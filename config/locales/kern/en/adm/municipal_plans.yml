@@ -18,6 +18,7 @@ en:
           title: Plans
           page_hint: "Manage the municipal plans of the city. Each plan describes an administrative project with its processing status, schedule, affected districts and contact people. Published plans appear in the public plan list; drafts and archived plans stay internal. The version number is raised automatically whenever content changes."
           new_button: New plan
+          order_button: Set order
           no_items_title: No plans yet
           no_items_description: Create a plan to publish it in the plan list.
           no_results_filtered_title: No matches
@@ -30,6 +31,18 @@ en:
             responsible: Responsible officer
             content_updated_at: Updated on
             version: Version
+        order:
+          title: Plan order
+          page_hint: "Set the order in which plans appear by default in the public plan list. Drag a plan by its handle to the position you want; the new order is stored immediately, there is no save button. Archived plans are not listed here."
+          drag_handle: "Move plan \"%{title}\""
+          no_items_title: No plans yet
+          no_items_description: As soon as plans are released you can set their order here.
+          none: "—"
+          table:
+            order: Order
+            title: Title
+            status: Status
+            content_updated_at: Updated on
         new:
           title: New plan
         edit:

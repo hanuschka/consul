@@ -55,6 +55,14 @@ class Adm::MunicipalPlans::MunicipalPlanPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
+  # Renumbering the list only makes sense for someone who sees all of it.
+  def reorder?
+    return true if @user&.administrator?
+    return false unless @user&.municipal_plan_officer?
+
+    self.class.officers_see_all?
+  end
+
   class Scope < Scope
     def resolve
       return scope.all if user&.administrator?

@@ -71,6 +71,20 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
     redirect_to adm_municipal_plans_root_path, notice: t(".success")
   end
 
+  def order
+    authorize MunicipalPlan, :reorder?, policy_class: Adm::MunicipalPlans::MunicipalPlanPolicy
+
+    @municipal_plans = orderable_plans.includes(:responsible, :topics, :districts)
+    @breadcrumbs = breadcrumbs_for_action(t(".title"))
+  end
+
+  def reorder
+    authorize MunicipalPlan, :reorder?, policy_class: Adm::MunicipalPlans::MunicipalPlanPolicy
+
+    MunicipalPlan.apply_editorial_order(ordered_ids)
+    head :ok
+  end
+
   def submit
     if nothing_to_release?
       return redirect_to adm_municipal_plans_municipal_plan_path(@municipal_plan),
@@ -139,6 +153,20 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
 
     def topic_filter_options
       MunicipalPlan::Topic.all.to_h { |topic| [topic.id.to_s, topic.name] }
+    end
+
+    # The archive keeps an order of its own, so it is left out of the editorial list.
+    def orderable_plans
+      scoped_plans.released_versions.where.not(status: "archived").sorted
+    end
+
+    # The submitted order decides, but only for Vorhaben this user may reorder at all.
+    def ordered_ids
+      submitted = Array(params[:tree]).map { |item| item[:id].to_s }
+                                      .select { |id| id.match?(/\A\d+\z/) }
+                                      .map(&:to_i)
+
+      submitted & orderable_plans.ids
     end
 
     def nothing_to_release?

@@ -195,6 +195,16 @@ class MunicipalPlan < ApplicationRecord
     update_columns(content_updated_at: Date.current, version: next_version)
   end
 
+  # Editorial order is neither content nor a release: it is written past validations, callbacks
+  # and the Versionsnummer.
+  def self.apply_editorial_order(ordered_ids)
+    transaction do
+      ordered_ids.each_with_index do |id, index|
+        where(id: id).update_all(given_order: index + 1)
+      end
+    end
+  end
+
   def self.content_attribute_names
     CONTENT_ATTRIBUTES + translated_attribute_names.map(&:to_s)
   end

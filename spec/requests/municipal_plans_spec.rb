@@ -268,4 +268,42 @@ describe "Vorhabenliste", type: :request do
       expect { get municipal_plan_path(copy) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
+
+  describe "the editorial order on the overview" do
+    before { enable_module(true) }
+
+    let!(:back) do
+      create(:municipal_plan, :published, responsible: officer, title: "Hinten einsortiert",
+                                          given_order: 3)
+    end
+    let!(:front) do
+      create(:municipal_plan, :published, responsible: officer, title: "Vorne einsortiert",
+                                          given_order: 1)
+    end
+
+    it "follows the order set in the administration" do
+      get municipal_plans_path
+
+      expect(response.body.index("Vorne einsortiert")).to be < response.body.index("Hinten einsortiert")
+
+      MunicipalPlan.apply_editorial_order([back.id, front.id])
+
+      get municipal_plans_path
+
+      expect(response.body.index("Hinten einsortiert")).to be < response.body.index("Vorne einsortiert")
+    end
+
+    it "comes back after a visitor sorted by Titel" do
+      MunicipalPlan.apply_editorial_order([back.id, front.id])
+
+      get municipal_plans_path(order: "title")
+
+      expect(response.body.index("Hinten einsortiert")).to be < response.body.index("Vorne einsortiert")
+
+      get municipal_plans_path
+
+      expect(response.body.index("Hinten einsortiert")).to be < response.body.index("Vorne einsortiert")
+      expect([back, front].map { |plan| plan.reload.given_order }).to eq([1, 2])
+    end
+  end
 end

@@ -13,6 +13,11 @@ namespace :adm do
     end
 
     resources :municipal_plans, only: [:new, :create, :show, :edit, :update, :destroy], path: "" do
+      collection do
+        get :order
+        patch :reorder
+      end
+
       member do
         patch :submit
         patch :release

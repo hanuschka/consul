@@ -1,9 +1,7 @@
 <div class="resource-page-banner <%= resource_class %>">
   <div class="resource-page-banner--text-section">
     <%= content_tag heading_level, class: "resource-page-banner--title" do %>
-      <%= link_to resource do %>
-        <%= resource.title %>
-      <% end %>
+      <%= resource.title %>
     <% end %>
 
     <div class="resource-page-banner--details">

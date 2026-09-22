@@ -12,7 +12,7 @@ class ProjektImports::ChatResponseService < ApplicationService
 
     chat = Ai::RubyLlmFactory.chat(feature: "projekt_imports.chat_response")
       .with_instructions(prompt_result.data[:prompt])
-    chat.with_tools(*edit_tools)
+    Ai::RubyLlmFactory.attach_tools(chat, *edit_tools)
     history = build_history
 
     history[0..-2].each do |msg|
@@ -33,9 +33,15 @@ class ProjektImports::ChatResponseService < ApplicationService
 
     ServiceResult.success(content: text)
   rescue StandardError => e
-    Rails.logger.error("[ProjektImports::ChatResponseService] failed: #{e.message}")
-    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "chat" }) if defined?(Sentry)
-    ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.ai_chat_failed", message: e.message))
+    ServiceResult.failure(
+      error: ProjektImports::FailureReporter.error_message(
+        e,
+        source: self.class.name,
+        stage: "chat",
+        key: "ai_chat_failed",
+        sentry_context: { projekt_import_id: projekt_import.id }
+      )
+    )
   end
 
   private
@@ -47,6 +53,7 @@ class ProjektImports::ChatResponseService < ApplicationService
     editor = ProjektImports::AiResultEditor.new(projekt_import: projekt_import, journal: journal)
 
     [
+      Ai::Tools::ProjektImports::ReadSourceDocument.new(editor: editor),
       Ai::Tools::ProjektImports::ReadImportData.new(editor: editor),
       Ai::Tools::ProjektImports::UpdateImportFields.new(editor: editor),
       Ai::Tools::ProjektImports::ReplaceImportPhase.new(editor: editor),
@@ -87,7 +94,12 @@ class ProjektImports::ChatResponseService < ApplicationService
     return content if docs.empty?
 
     parts = docs.map do |doc|
-      "--- Attached document: #{doc['name']} (#{doc['filetype']}) ---\n#{doc['extracted_text']}"
+      ProjektImports::UntrustedContentPolicy.wrap_document(
+        InvisibleUnicodeStripper.call(doc["extracted_text"])[:text],
+        tag: ProjektImports::UntrustedContentPolicy::ATTACHED_DOCUMENT_TAG,
+        name: doc["name"],
+        filetype: doc["filetype"]
+      )
     end
 
     "#{content}\n\n#{parts.join("\n\n")}".strip

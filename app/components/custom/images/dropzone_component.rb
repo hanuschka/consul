@@ -26,7 +26,7 @@ class Images::DropzoneComponent < ApplicationComponent
         @attachment_name,
         label_options: { class: "dropzone-image-upload--select-button js-dropzone-image-upload--select-button" },
         label: false,
-        accept: [".jpg", ".jpeg", ".png"].join(","),
+        accept: [".jpg", ".jpeg", ".png", ".webp"].join(","),
         class: "js-dropzone-image-upload--input"
       )
     end

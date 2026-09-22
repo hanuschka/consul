@@ -97,6 +97,9 @@ module Ai::Settings
     ExternalApiKey.vertex_ai_credentials
   end
 
+  # DEFAULT_GPT_MODEL is only the fallback. When OpenAI changes what a model
+  # accepts, an instance has to be able to move off it from the settings screen;
+  # without this the escape hatch would be a deploy for the whole fleet at once.
   def self.current_llm_model
     custom_model = Setting["ai.llm_custom_model"]
     custom_endpoint = Setting["ai.llm_api_endpoint"]
@@ -105,14 +108,21 @@ module Ai::Settings
       return custom_model
     end
 
-    if current_llm_provider == "openai"
-      DEFAULT_GPT_MODEL
-    else
-      Setting["ai.llm_model"]
-    end
+    configured_model = Setting["ai.llm_model"]
+    return configured_model if configured_model.present?
+
+    DEFAULT_GPT_MODEL if current_llm_provider == "openai"
   end
 
   def self.current_llm_provider
     Setting["ai.llm_provider"].presence || "openai"
+  end
+
+  # Model ids belong to one provider only, so a value chosen for the previous
+  # provider would be sent to an API that has never heard of it — and since the
+  # setting now wins over DEFAULT_GPT_MODEL, that would break every AI call
+  # instead of being quietly ignored as it was before.
+  def self.reset_llm_model!
+    Setting["ai.llm_model"] = nil
   end
 end

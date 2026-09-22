@@ -14,7 +14,6 @@ namespace :adm do
 
     resource :inspiration, only: [:show], controller: "inspiration"
 
-    resource :instance_import, only: [:new, :create], controller: "instance_imports"
 
     resources :contact_persons, controller: "/adm/section_contact_people",
               only: [:new, :create, :edit, :update, :destroy],
@@ -249,12 +248,24 @@ namespace :adm do
       end
     end
 
-    resources :imports, only: [:index, :new, :create, :show, :destroy],
-              controller: "imports/from_files",
+    # One screen per source, all of them creating the same ProjektImport. Declared
+    # before the collection so /imports/from_file/new is never read as an id.
+    scope :imports, module: :imports, as: :imports,
+          defaults: { adm_section: "projekts" } do
+      resource :from_file, only: [:new, :create], controller: "from_files"
+      resource :from_url, only: [:new, :create], controller: "from_urls"
+      resource :from_consul_projekt, only: [:new, :create], controller: "from_consul_projekts"
+    end
+
+    resources :imports, only: [:index, :show, :destroy],
               defaults: { adm_section: "projekts" } do
       member do
         get :status
+        get :source_text
         post :reset
+        # "retry" is a Ruby keyword, so the action it routes to cannot share
+        # its name.
+        post :retry, action: :retry_import
       end
 
       resource :chat, only: [:show], controller: "imports/chats" do
@@ -265,6 +276,12 @@ namespace :adm do
         post :extract
         post :execute
         post :title_image
+        post :apply_proposal
+        post :discard_proposal
+      end
+
+      resource :review, only: [:show, :update], controller: "imports/reviews" do
+        post :execute
       end
     end
 

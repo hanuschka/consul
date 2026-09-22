@@ -10,12 +10,12 @@ module SettingsHelper
   end
 
   def deficiency_reports_feature_name
-    Setting["deficiency_reports.feature_name"].presence ||
+    setting_text("deficiency_reports.feature_name").presence ||
       t("custom.deficiency_reports.index.title")
   end
 
   def deficiency_reports_create_cta
-    Setting["deficiency_reports.create_cta"].presence ||
+    setting_text("deficiency_reports.create_cta").presence ||
       t("custom.deficiency_reports.index.start_deficiency_report")
   end
 

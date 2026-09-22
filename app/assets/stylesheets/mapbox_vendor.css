@@ -1,0 +1,10 @@
+/* Stylesheet half of packs/mapbox_vendor.js, loaded lazily alongside it by
+ * both packs.
+ *
+ * Plain CSS on purpose: the vendor files use space-separated color syntax
+ * (rgb(0 0 0/0)), which the LibSass-based sassc rejects outright.
+ *
+ *= require mapbox-gl/dist/mapbox-gl
+ *= require @mapbox/mapbox-gl-draw/dist/mapbox-gl-draw
+ *= require @mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder
+ */

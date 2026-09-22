@@ -1,0 +1,8 @@
+/* Stylesheet half of packs/plyr_vendor.js, injected by GLightbox alongside
+ * it on the first video slide.
+ *
+ * Plain CSS on purpose, to match the other vendor packs: sassc has no reason
+ * to parse an already-compiled vendor stylesheet.
+ *
+ *= require plyr/dist/plyr
+ */

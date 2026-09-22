@@ -1,6 +1,7 @@
 require_dependency Rails.root.join("app", "models", "site_customization", "page").to_s
 
 class SiteCustomization::Page < ApplicationRecord
+include MachineTranslatable
   include ActionView::Helpers::SanitizeHelper
 
   self.inheritance_column = nil
@@ -62,6 +63,7 @@ class SiteCustomization::Page < ApplicationRecord
   before_validation :normalize_subtitle
   validate :subtitle_within_limits
   before_save :capture_old_title
+  before_validation :force_published_for_projekt_page
   before_save :set_published_at
   after_update :sync_projekt_name
   after_update :sync_projekt_for_global_overview
@@ -84,6 +86,13 @@ class SiteCustomization::Page < ApplicationRecord
 
   def published?
     status == 'published'
+  end
+
+  # A projekt's own page, as opposed to a landing page or a footer page. Its
+  # publish state is not an admin decision: see
+  # #force_published_for_projekt_page.
+  def projekt_page?
+    projekt_id.present? && !landing?
   end
 
   def comments_count
@@ -133,6 +142,17 @@ class SiteCustomization::Page < ApplicationRecord
     if MultilineSubtitleNormalizer.line_break_count(subtitle) > MultilineSubtitleNormalizer::MAX_LINE_BREAKS
       errors.add(:subtitle, :too_many_lines, count: MultilineSubtitleNormalizer::MAX_LINE_BREAKS + 1)
     end
+  end
+
+  # A projekt page is never a draft: whether the projekt is visible is decided
+  # by its own activation and visibility switches. An unpublished projekt page
+  # hides the projekt everywhere while every visible setting says it is public,
+  # so no path may leave one behind. Landing and footer pages keep their own
+  # draft/published state.
+  def force_published_for_projekt_page
+    return unless projekt_page?
+
+    self.status = "published"
   end
 
   def set_published_at

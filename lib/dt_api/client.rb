@@ -54,10 +54,6 @@ class DtApi::Client
     @connection ||= DtApi::Resources::Connection.new(self)
   end
 
-  def content_block_templates
-    @content_block_templates ||= DtApi::Resources::ContentBlockTemplates.new(self)
-  end
-
   def consul_api_request_logs
     @consul_api_request_logs ||= DtApi::Resources::ConsulApiRequestLogs.new(self)
   end

@@ -1,5 +1,6 @@
 class PollQuestionImports::ExtractAndGenerateJob < ApplicationJob
   queue_as :projekt_imports
+  self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
 
   def perform(poll_question_import_id)
     question_import = ::PollQuestionImport.find(poll_question_import_id)

@@ -2,6 +2,10 @@ module Ai::Settings
   DEFAULT_GPT_MODEL = "gpt-5.6-sol"
   # DEFAULT_GPT_MODEL = "gpt-5.2"
 
+  # An AI provider call that never answers would otherwise hold the worker,
+  # and every job queued behind it, for the worker-wide max_run_time.
+  JOB_MAX_RUN_TIME = 18.minutes
+
   def self.feature_enabled?
     Rails.application.secrets.dig(:ai, :enabled) == true
   end

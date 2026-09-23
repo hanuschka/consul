@@ -11,6 +11,8 @@ describe "Vorhaben in /adm", type: :request do
   before do
     allow_any_instance_of(ActionView::Base).to receive(:stylesheet_link_tag).and_return("".html_safe)
     allow_any_instance_of(ActionView::Base).to receive(:javascript_include_tag).and_return("".html_safe)
+    allow(Setting).to receive(:[]).and_call_original
+    allow(Setting).to receive(:[]).with("process.municipal_plans").and_return(true)
     login_as(admin)
   end
 
@@ -485,6 +487,36 @@ describe "Vorhaben in /adm", type: :request do
       set_archive_date("")
 
       expect(released.reload.archive_on).to be_nil
+    end
+  end
+
+  describe "while the module is switched invisible for the public" do
+    before { allow(Setting).to receive(:[]).with("process.municipal_plans").and_return(nil) }
+
+    it "keeps the overview working" do
+      plan
+
+      get adm_municipal_plans_root_path
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "keeps the detail page working" do
+      get adm_municipal_plans_municipal_plan_path(plan)
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "keeps the edit form working" do
+      get edit_adm_municipal_plans_municipal_plan_path(plan)
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "keeps saving working" do
+      patch_plan(contact_name: "Kai Ostermann")
+
+      expect(plan.reload.contact_name).to eq "Kai Ostermann"
     end
   end
 end

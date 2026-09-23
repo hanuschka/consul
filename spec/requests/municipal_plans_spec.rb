@@ -34,6 +34,19 @@ describe "Vorhabenliste", type: :request do
       expect { get municipal_plan_path(plan) }.to raise_error(FeatureFlags::FeatureDisabled)
     end
 
+    it "keeps the archive unreachable when it is off" do
+      enable_module(nil)
+
+      expect { get archive_municipal_plans_path }.to raise_error(FeatureFlags::FeatureDisabled)
+    end
+
+    it "keeps the pages unreachable for a signed-in visitor too when it is off" do
+      enable_module(nil)
+      login_as(create(:user))
+
+      expect { get municipal_plan_path(plan) }.to raise_error(FeatureFlags::FeatureDisabled)
+    end
+
     it "answers that refusal with 403 in front of a user" do
       expect(Rails.application.config.action_dispatch.rescue_responses["FeatureFlags::FeatureDisabled"])
         .to eq(:forbidden)

@@ -24,6 +24,20 @@ describe "Link from a project page to its Vorhaben", type: :request do
     end
   end
 
+  context "with a published Vorhaben while the module is switched invisible" do
+    let(:plan) { create(:municipal_plan, :published, responsible: officer, title: "Stadtteilzentrum Lobeda") }
+
+    before { allow(Setting).to receive(:[]).with("process.municipal_plans").and_return(nil) }
+
+    it "shows no link" do
+      get page_path(projekt.page.slug)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).not_to include(sidebar_title)
+      expect(response.body).not_to include(municipal_plan_path(plan))
+    end
+  end
+
   context "with a Vorhaben still in Entwurf" do
     let(:plan) { create(:municipal_plan, responsible: officer) }
 

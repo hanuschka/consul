@@ -2,6 +2,8 @@ en:
   custom:
     community:
       show:
+        title: Workgroup on the proposal below
+        intro: "A workgroup has formed around the proposal below to discuss the details across a range of topics. You can comment on individual topics or bring in a new topic for the group to discuss."
         participate: Participate
         participants: Participants
       sidebar:

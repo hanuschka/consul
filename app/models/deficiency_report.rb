@@ -14,6 +14,7 @@ class DeficiencyReport < ApplicationRecord
   translates :summary, touch: true
   translates :official_answer, touch: true
   include Globalizable
+  include MachineTranslatable
 
   acts_as_votable
   acts_as_paranoid column: :hidden_at

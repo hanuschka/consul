@@ -2,6 +2,8 @@ de:
   custom:
     community:
       show:
+        title: Arbeitskreis zum nachfolgendem Vorschlag
+        intro: "Für den nachfolgenden Vorschlag hat sich ein Arbeitskreis gebildet, um anhand unterschiedlicher Themen über Detailfragen zu beraten. Sie können einzelne Themen kommentieren oder selbst ein neues Thema einbringen, über das beraten wird."
         participate: Beteiligen
         participants: Teilnehmer*innen
       sidebar:

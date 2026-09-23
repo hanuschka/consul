@@ -67,9 +67,15 @@ class ProjektImports::CreateProjektFromImportService < ApplicationService
       phases: phase_entries.map { |entry| entry[:record] }
     )
   rescue StandardError => e
-    Rails.logger.error("[ProjektImports::CreateProjektFromImportService] failed: #{e.message}\n#{e.backtrace.first(10).join("\n")}")
-    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "create_projekt" }) if defined?(Sentry)
-    ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.create_projekt_failed", message: e.message))
+    ServiceResult.failure(
+      error: ProjektImports::FailureReporter.error_message(
+        e,
+        source: self.class.name,
+        stage: "create_projekt",
+        key: "create_projekt_failed",
+        sentry_context: { projekt_import_id: projekt_import.id }
+      )
+    )
   end
 
   private

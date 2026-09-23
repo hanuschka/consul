@@ -15,7 +15,7 @@ info:
     ### Creating an API Client
 
     API clients are created by a platform administrator in the admin area,
-    under **Developer area → API clients**. Creating a client there also
+    under **API → API clients**. Creating a client there also
     issues its token and sets up the user that will author API content
     (see *Content author* below). This is the main way to create a client.
 
@@ -64,7 +64,26 @@ info:
     api_client.access_token
     ```
 
-    The token can be rotated with `api_client.regenerate_access_token`.
+    ### Rotating the token
+
+    Rotating issues a new token and invalidates the current one
+    immediately, so every integration still using the old token starts
+    receiving `401 Unauthorized`. Update your integrations right after a
+    rotation.
+
+    **In the admin area (recommended):** go to **API → API clients**, open
+    the client, and press **Regenerate token** on its detail page. Confirm
+    the dialog; the new token is then displayed in the *Auth token* field,
+    where it can be revealed and copied.
+
+    **Via the API:** an authenticated client can rotate its own token with
+    `POST /api/auth/rotate_token`; the response returns the new token.
+
+    **In the Rails console:**
+
+    ```ruby
+    api_client.regenerate_access_token
+    ```
 
     ### Access Levels
 
@@ -11353,8 +11372,8 @@ paths:
       description: "Retrieve a list of all projekts. By default ordered by creation
         date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering
         (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring
-        next at the top). By default returns only public projekts (activated with
-        published pages). Users with public_data access level can only access public
+        next at the top). By default returns only public projekts (activated and shown
+        in the overview). Users with public_data access level can only access public
         projekts. Pagination is optional: by default all matching projekts are returned,
         but supplying 'page' (and optionally 'per_page', default 20) paginates the
         results and adds a 'pagination' object to the response. \n\n*Authorization:
@@ -11373,7 +11392,7 @@ paths:
           - 'index_order_expired': Projekts past their end date. Shows completed projects.
 
           **Special status filters**:
-          - 'index_order_all': All activated projekts with published pages shown in overview. Broader view excluding special lists.
+          - 'index_order_all': All activated projekts shown in overview. Broader view excluding special lists.
           - 'index_order_individual_list': Projekts configured to appear in individual lists (separate display area). Requires 'show_in_individual_list' setting.
           - 'index_order_drafts': Draft or inactive projekts (not activated). Admin only. Useful for content management and previewing unpublished projects.
 
@@ -11411,7 +11430,7 @@ paths:
         in: query
         required: false
         description: |
-          If false, returns all projekts (admin only); true returns only activated projekts with published pages shown in overview. Users with public_data access can only access public projekts.
+          If false, returns all projekts (admin only); true returns only activated projekts shown in overview. Users with public_data access can only access public projekts.
 
           **Default:** true (only public projekts).
         schema:

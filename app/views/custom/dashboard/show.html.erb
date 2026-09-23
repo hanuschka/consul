@@ -6,10 +6,7 @@
 
         <h1>Dashboard zu Ihrem Vorschlag</h1>
         <p class="common-page-description">
-        Sie können Sich hier einen Überblick über die Unterstützung zu Ihrem Vorschlag verschaffen. Darüber hinaus stehen Ihnen
-        mit der Benachrichtigungsfunktion sowie der Möglichkeit Abstimmungen zum Vorschlag zu initiieren, weitere Hilfsmittel
-        zur Verfügung, um mit anderen BürgerInnen in Kontakt zu treten. Zusätzlich können Sie sich Material für Werbekampagnen
-        herunterladen.
+        <%= t("custom.proposals.dashboard.show.description") %>
         </p>
         <%= render ResourcePage::BannerComponent.new(resource: @proposal, compact: true)  %>
 
@@ -31,7 +28,7 @@
           <%= link_to proposal_dashbord_campaign_path, class: "proposal-dashboard-page--resource-link new-card" do %>
             <i class="fa fa-mail-bulk proposal-dashboard-page--resource-link-icon"></i>
             <div class="proposal-dashboard-page--resource-link-title">
-              Material für Kampagne
+              <%= t("custom.proposals.dashboard.show.campaign_link") %>
             </div>
           <% end %>
         </div>

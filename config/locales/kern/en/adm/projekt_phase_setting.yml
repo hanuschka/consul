@@ -236,3 +236,8 @@ en:
           show_comments_description: "Enables the comment feature for the voting module. A comment area with reply function is shown below the vote on the frontend, in which users can exchange opinions. Enable this feature to promote dialogue around the vote. Disable it for votes without accompanying discussion."
           show_open_answer_author_name: Publish name
           show_open_answer_author_name_description: "Shows the username of the author on open answers in the vote. The name appears next to the answer text on the frontend. Enable this option when transparency about authorship is desired. Disable it for sensitive topics to enable anonymous answers and an unbiased expression of opinion."
+    mitmachbox_phase:
+      feature:
+        general:
+          answer_survey_online: Survey can also be answered online
+          answer_survey_online_description: "Lets the survey be answered online on the projekt page as well as on the devices. There it appears as a question wizard that needs no sign-in, and its answers are evaluated together with the devices'."

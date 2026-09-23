@@ -493,6 +493,11 @@ class PagesController < ApplicationController
     end
 
     def set_mitmachbox_phase_footer_tab_variables
+      @mitmachbox_survey = Mitmachbox::PublicSurveyService.call(@projekt_phase)
+      return if @mitmachbox_survey.blank?
+
+      @mitmachbox_already_answered =
+        @projekt_phase.answered_by?(current_user, @mitmachbox_survey["version_id"])
     end
 
     def set_iframe_phase_footer_tab_variables

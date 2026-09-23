@@ -87,7 +87,6 @@ class Resources::ListItemComponent < ApplicationComponent
       return if image.blank?
 
       image.attachment_variant(
-        coalesce: true,
         resize_to_fill: size,
         saver: { quality: 85 },
         format: "jpeg"

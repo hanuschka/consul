@@ -38,7 +38,7 @@ class MachineTranslation::Enqueuer
     end
 
     def target_locales
-      MachineTranslation.translatable_locales - [source_locale.to_sym]
+      MachineTranslation.translatable_locales_from(source_locale)
     end
 
     def enqueue(target_locale)

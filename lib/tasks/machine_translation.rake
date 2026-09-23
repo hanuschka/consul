@@ -1,7 +1,7 @@
 namespace :machine_translation do
   desc "Estimate the DeepL characters needed to backfill a target locale"
   task :estimate, [:locale] => :environment do |_task, args|
-    locale = MachineTranslation::Tasks.validate_locale!(args[:locale])
+    locale = MachineTranslation::Tasks.validate_locale!(args[:locale], allow_source_locale: true)
     total = 0
 
     MachineTranslation.translatable_models.each do |model|
@@ -25,7 +25,7 @@ namespace :machine_translation do
 
   desc "Enqueue DeepL translations for existing content in a target locale"
   task :backfill, [:locale, :limit] => :environment do |_task, args|
-    locale = MachineTranslation::Tasks.validate_locale!(args[:locale])
+    locale = MachineTranslation::Tasks.validate_locale!(args[:locale], allow_source_locale: true)
 
     unless MachineTranslation.enabled?
       abort "machine translation is disabled (no DeepL API key configured)"

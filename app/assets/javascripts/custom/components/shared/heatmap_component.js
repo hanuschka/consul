@@ -53,27 +53,9 @@
         }
       };
 
-      if (typeof L.heatLayer === "function") {
-        L.heatLayer(boostedCoordinates, heatOptions).addTo(map);
-      } else {
-        this.loadHeatPlugin(() => {
-          L.heatLayer(boostedCoordinates, heatOptions).addTo(map);
-        });
-      }
+      L.heatLayer(boostedCoordinates, heatOptions).addTo(map);
 
       container.dataset.heatmapInitialized = "true";
-    },
-
-    loadHeatPlugin: function(callback) {
-      if (typeof L.heatLayer === "function") {
-        callback();
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js";
-      script.onload = callback;
-      document.head.appendChild(script);
     }
   };
 }).call(this);

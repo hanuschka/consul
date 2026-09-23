@@ -13,18 +13,20 @@ const SCROLL_BOTTOM_THRESHOLD = 80
 // scrolls it back into view.
 const TITLE_IMAGE_HIGHLIGHT_DURATION = 1600
 
-// Final-import overlay bar. The import status endpoint only reports
-// completed/failed, so the bar creeps through these staged percents on a timer
-// to signal work is happening, then snaps to 100% on completion. Priming from
-// 0% happens after OVERLAY_PROGRESS_INITIAL_DELAY; later steps advance every
-// OVERLAY_PROGRESS_STEP_DELAY, holding at the last step until the import ends.
-const OVERLAY_PROGRESS_INITIAL_DELAY = 1200
-const OVERLAY_PROGRESS_STEP_DELAY = 2500
-const OVERLAY_PROGRESS_STEPS = [
-  { percent: 35, labelValue: "progressResolving" },
-  { percent: 65, labelValue: "progressCreating" },
-  { percent: 85, labelValue: "progressGeneratingImage" }
-]
+// Final-import overlay bar. The status endpoint reports the job's current
+// submit_stage, and the bar sits at that stage's position with its label.
+// "queued" is the gap between the import request and the job picking it up.
+// A stage the import never reaches — a copied projekt, a title image taken
+// from the document rather than generated — is never reported, so it is
+// never shown. The bar snaps to 100% on completion.
+const OVERLAY_STAGE_PERCENTS = {
+  queued: 5,
+  creating_projekt: 20,
+  resolving_content_blocks: 45,
+  creating_content_blocks: 65,
+  generating_image: 85,
+  copying_projekt: 50
+}
 
 // Chat screen: polls /messages for new messages (after=:last_id) plus refreshed
 // state for messages still in progress (pending[]=:ids), so finished messages
@@ -45,15 +47,15 @@ export default class extends Controller {
     commandUrl: String,
     extractUrl: String,
     titleImageUrl: String,
+    applyProposalUrl: String,
+    discardProposalUrl: String,
     summaryUrl: String,
     statusUrl: String,
     importId: Number,
     csrf: String,
     pollInterval: { type: Number, default: 2000 },
     confirmStartOver: String,
-    progressResolving: String,
-    progressCreating: String,
-    progressGeneratingImage: String,
+    progressLabels: { type: Object, default: {} },
     errorExtractFailed: String,
     errorSummaryFailed: String,
     userInitials: { type: String, default: "" },
@@ -67,7 +69,11 @@ export default class extends Controller {
     this.pollTimer = null
     this.statusPollTimer = null
     this.lastImportStatus = null
-    this.shownWarningSignature = null
+    this.shownWarningSignature = this.renderedWarningSignature()
+    // A page that already loaded completed is the warnings view reached from
+    // the flash, the one place the chat is still served after an import. It
+    // must never reload itself, or the poller and the show action would bounce
+    // the page forever.
     this.completionShown = this.importStatusValue === "completed"
     this.pollErrorCount = 0
     this.chatRunning = false
@@ -85,7 +91,6 @@ export default class extends Controller {
   disconnect() {
     this.clearPollTimer()
     this.clearStatusPollTimer()
-    this.clearOverlayStepTimer()
     window.clearTimeout(this.titleImageHighlightTimer)
   }
 
@@ -247,12 +252,13 @@ export default class extends Controller {
 
     if (state.status === "submitting") {
       this.showOverlay()
+      this.renderOverlayStage(state.submit_stage)
       this.scheduleStatusPoll()
       return
     }
 
     if (state.status === "completed") {
-      this.handleCompletion(state.redirect_path)
+      this.handleCompletion()
       return
     }
 
@@ -265,27 +271,15 @@ export default class extends Controller {
     this.scheduleMessagesPoll()
   }
 
-  // When the import finishes live in this session (overlay showing), send the
-  // user to the created projekt's frontend page. Revisiting an already-completed
-  // import (guard) keeps the chat with its success state instead of redirecting.
-  // An import that produced warnings never redirects: leaving the page is the
-  // one thing that guarantees the admin never reads them.
-  handleCompletion(redirectPath) {
-    if (this.completionShown) {
-      this.hideOverlay()
-      this.scheduleMessagesPoll()
-      return
-    }
+  // A finished import leaves the chat for the created projekt's frontend page.
+  // Where it lands is decided server side by the show action, so completion
+  // only reloads — the same path a revisit takes, and the one that lets the
+  // import's warnings arrive as a flash instead of being stranded here.
+  handleCompletion() {
+    if (this.completionShown) return
 
     this.completionShown = true
     this.completeOverlayProgress()
-
-    if (redirectPath && !this.hasVisibleWarnings()) {
-      window.location.href = redirectPath
-      return
-    }
-
-    this.hideOverlay()
     window.location.reload()
   }
 
@@ -299,6 +293,16 @@ export default class extends Controller {
   // the one to hide.
   dismissBanner(event) {
     event.currentTarget.closest(".projekt-import-chat--banner").classList.add("-hidden")
+  }
+
+  // The banner arrives pre-filled when the page is opened to read a finished
+  // import's warnings. Adopting that list as the shown signature keeps the
+  // first poll from rebuilding it — and from undoing a dismissal.
+  renderedWarningSignature() {
+    const messages = Array.from(this.importWarningListTarget.children).map((item) => item.textContent)
+    if (messages.length === 0) return null
+
+    return JSON.stringify(messages)
   }
 
   // Warnings accumulate server-side across the whole import, so the banner is
@@ -320,10 +324,6 @@ export default class extends Controller {
     })
 
     this.importWarningTarget.classList.toggle("-hidden", messages.length === 0)
-  }
-
-  hasVisibleWarnings() {
-    return this.importWarningListTarget.children.length > 0
   }
 
   // A new import run clears warnings server-side, so the previous run's banners
@@ -357,7 +357,7 @@ export default class extends Controller {
         this.renderImportWarnings(data.warnings)
 
         if (data.status === "completed") {
-          this.handleCompletion(data.redirect_path)
+          this.handleCompletion()
           return
         }
         if (data.status === "failed") {
@@ -365,6 +365,7 @@ export default class extends Controller {
           this.showImportError(data.error)
           return
         }
+        this.renderOverlayStage(data.submit_stage)
         this.scheduleStatusPoll()
       })
       .catch(() => this.scheduleStatusPoll())
@@ -372,52 +373,25 @@ export default class extends Controller {
 
   showOverlay() {
     this.overlayTarget.classList.remove("-hidden")
-    this.startOverlayProgress()
+    this.renderOverlayStage(null)
   }
 
   hideOverlay() {
     this.overlayTarget.classList.add("-hidden")
-    this.clearOverlayStepTimer()
-    this.overlayProgressStarted = false
   }
 
-  startOverlayProgress() {
-    if (this.overlayProgressStarted) return
+  // A stage that is not known here (a poll that raced ahead of a deploy) keeps
+  // whatever the bar last showed rather than blanking it.
+  renderOverlayStage(stage) {
+    const stageKey = stage || "queued"
+    const percent = OVERLAY_STAGE_PERCENTS[stageKey]
+    if (percent === undefined) return
 
-    this.overlayProgressStarted = true
-    this.overlayStepIndex = 0
-    this.setOverlayProgress(0)
-    this.setOverlayLabel(OVERLAY_PROGRESS_STEPS[0].labelValue)
-    this.scheduleOverlayStep(OVERLAY_PROGRESS_INITIAL_DELAY)
-  }
-
-  scheduleOverlayStep(delay) {
-    this.clearOverlayStepTimer()
-    this.overlayStepTimer = setTimeout(() => this.advanceOverlayStep(), delay)
-  }
-
-  clearOverlayStepTimer() {
-    if (this.overlayStepTimer) {
-      clearTimeout(this.overlayStepTimer)
-      this.overlayStepTimer = null
-    }
-  }
-
-  advanceOverlayStep() {
-    const step = OVERLAY_PROGRESS_STEPS[this.overlayStepIndex]
-    if (!step) return
-
-    this.setOverlayProgress(step.percent)
-    this.setOverlayLabel(step.labelValue)
-    this.overlayStepIndex += 1
-
-    if (this.overlayStepIndex < OVERLAY_PROGRESS_STEPS.length) {
-      this.scheduleOverlayStep(OVERLAY_PROGRESS_STEP_DELAY)
-    }
+    this.setOverlayProgress(percent)
+    this.overlayLabelTarget.textContent = this.progressLabelsValue[stageKey] || ""
   }
 
   completeOverlayProgress() {
-    this.clearOverlayStepTimer()
     this.setOverlayProgress(100)
   }
 
@@ -425,10 +399,6 @@ export default class extends Controller {
     if (this.hasOverlayFillTarget) {
       this.overlayFillTarget.style.width = `${Math.max(0, Math.min(100, percent))}%`
     }
-  }
-
-  setOverlayLabel(labelValue) {
-    this.overlayLabelTarget.textContent = this[`${labelValue}Value`]
   }
 
   submit(event) {
@@ -699,6 +669,49 @@ export default class extends Controller {
       })
       .catch(() => {
         console.log("selectTitleImage: request failed")
+      })
+  }
+
+  applyProposal(event) {
+    this.resolveProposal(this.applyProposalUrlValue, event.currentTarget)
+  }
+
+  discardProposal(event) {
+    this.resolveProposal(this.discardProposalUrlValue, event.currentTarget)
+  }
+
+  // Both buttons of a proposal go inert for the request's duration, so a
+  // double click cannot apply and discard the same change. The server answers
+  // with the re-rendered bubble either way, which replaces the buttons.
+  resolveProposal(url, button) {
+    const proposal = button.closest(".projekt-import-chat--proposal")
+    const buttons = proposal
+      ? Array.from(proposal.querySelectorAll(".projekt-import-chat--proposal-action"))
+      : [button]
+    buttons.forEach((element) => { element.disabled = true })
+
+    const formData = new FormData()
+    formData.append("message_id", button.dataset.messageId)
+    formData.append("proposal_id", button.dataset.proposalId)
+
+    fetch(url, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Accept": "application/json",
+        "X-CSRF-Token": this.csrfValue
+      },
+      body: formData
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data && data.error) this.showImportError(data.error)
+
+        this.renderImmediateMessages(data)
+      })
+      .catch(() => {
+        buttons.forEach((element) => { element.disabled = false })
+        console.log("resolveProposal: request failed")
       })
   }
 

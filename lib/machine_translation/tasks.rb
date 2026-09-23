@@ -2,12 +2,14 @@ module MachineTranslation
   module Tasks
     module_function
 
-    def validate_locale!(locale)
+    def validate_locale!(locale, allow_source_locale: false)
       locale = locale.to_s
+      permitted = MachineTranslation.translatable_locales
+      permitted += [MachineTranslation.source_locale] if allow_source_locale
 
-      unless MachineTranslation.translatable_locales.map(&:to_s).include?(locale)
+      unless permitted.map(&:to_s).include?(locale)
         abort "unknown target locale #{locale.inspect}; " \
-              "available: #{MachineTranslation.translatable_locales.join(", ")}"
+              "available: #{permitted.join(", ")}"
       end
 
       locale

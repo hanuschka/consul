@@ -3,13 +3,17 @@ class ProjektImports::ProcessWithAiService < ApplicationService
 
   MAX_INPUT_CHARS = 200_000
 
-  attr_reader :text, :additional_user_instructions, :source_images
+  attr_reader :text, :additional_user_instructions, :source_images, :source_label
 
-  def initialize(text:, additional_user_instructions: nil, response_language: nil, source_images: [])
+  def initialize(
+    text:, additional_user_instructions: nil, response_language: nil,
+    source_images: [], source_label: nil
+  )
     @text = text
     @additional_user_instructions = additional_user_instructions
     @response_language = response_language
     @source_images = Array(source_images)
+    @source_label = source_label
   end
 
   def call
@@ -21,7 +25,8 @@ class ProjektImports::ProcessWithAiService < ApplicationService
       base_prompt: base_prompt,
       refs: refs,
       response_language: @response_language,
-      source_images: source_images
+      source_images: source_images,
+      additional_user_instructions: additional_user_instructions
     ).call
 
     schema = ProjektImports::OutputSchemaBuilder.build(refs)
@@ -81,14 +86,14 @@ class ProjektImports::ProcessWithAiService < ApplicationService
     :admin_projekt_import
   end
 
+  # The document is the whole user turn: the admin's notes moved into the
+  # system prompt, so nothing the page contains can pose as them.
   def build_user_message
-    parts = ["Document text:\n#{analyzed_text}"]
-
-    if additional_user_instructions.present?
-      parts << "Additional context about this project:\n#{additional_user_instructions}"
-    end
-
-    parts.join("\n\n")
+    ProjektImports::UntrustedContentPolicy.wrap_document(
+      analyzed_text,
+      tag: ProjektImports::UntrustedContentPolicy::SOURCE_DOCUMENT_TAG,
+      source: source_label
+    )
   end
 
   def analyzed_text

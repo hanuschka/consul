@@ -1,0 +1,43 @@
+<div class="projekt-import-source-picker" data-controller="shared--dropdown-menu">
+  <button type="button"
+          class="kern-btn kern-btn--secondary projekt-import-source-picker--toggle"
+          aria-haspopup="true"
+          aria-expanded="false"
+          data-shared--dropdown-menu-target="button"
+          data-action="click->shared--dropdown-menu#toggleMenu">
+    <span class="kern-label"><%= label %></span>
+    <span class="material-symbols-outlined projekt-import-source-picker--caret" aria-hidden="true">
+      expand_more
+    </span>
+  </button>
+
+  <div class="projekt-import-source-picker--menu d-none"
+       role="menu"
+       data-shared--dropdown-menu-target="menu">
+    <% sources.each do |source| %>
+      <% if source.available?(ai_available) %>
+        <%= link_to source.url, class: "projekt-import-source-picker--item", role: "menuitem" do %>
+          <span class="material-symbols-outlined projekt-import-source-picker--item-icon" aria-hidden="true">
+            <%= source.icon %>
+          </span>
+          <span class="projekt-import-source-picker--item-text">
+            <span class="projekt-import-source-picker--item-label"><%= source.label %></span>
+            <span class="projekt-import-source-picker--item-description"><%= source.description %></span>
+          </span>
+        <% end %>
+      <% else %>
+        <span class="projekt-import-source-picker--item -disabled"
+              role="menuitem"
+              aria-disabled="true">
+          <span class="material-symbols-outlined projekt-import-source-picker--item-icon" aria-hidden="true">
+            <%= source.icon %>
+          </span>
+          <span class="projekt-import-source-picker--item-text">
+            <span class="projekt-import-source-picker--item-label"><%= source.label %></span>
+            <span class="projekt-import-source-picker--item-description"><%= unavailable_note %></span>
+          </span>
+        </span>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -69,27 +69,24 @@ class Adm::Newsletters::ContentBlocksController < Adm::BaseController
 
     return unless check_ai_model_configured
 
-    allow_text_modification = ActiveModel::Type::Boolean.new.cast(params[:allow_text_modification])
-
-    new_content_block_body =
-      Ai::EditContentBlock.call(
-        params[:instructions],
-        params[:content_block_html],
-        @newsletter.subject,
-        nil,
-        projekt: nil,
-        use_full_projekt_context: false,
-        allow_text_modification: allow_text_modification
+    result =
+      ::SiteCustomization::ContentBlocks::DispatchChangeWithAi.call(
+        content_block: @content_block,
+        instructions: params[:instructions],
+        content_block_html: params[:content_block_html],
+        title: @newsletter.subject,
+        allow_text_modification: params[:allow_text_modification]
       )
 
-    if new_content_block_body.present?
-      render json: {
-        content_block_html: new_content_block_body,
-        status: { message: t(".success") }
-      }
-    else
-      render json: { status: { message: I18n.t("ai.errors.generation_failed") } }
+    if !result.success?
+      return render(json: { error: { message: result.error.to_s }}, status: :unprocessable_entity)
     end
+
+    render json: {
+      content_block_id: result.content_block_id,
+      status_url: ai_generation_status_adm_newsletter_content_block_path(@newsletter, result.content_block_id),
+      cancel_url: cancel_ai_generation_adm_newsletter_content_block_path(@newsletter, result.content_block_id)
+    }
   end
 
   def generate_with_ai
@@ -128,24 +125,11 @@ class Adm::Newsletters::ContentBlocksController < Adm::BaseController
   def ai_generation_status
     authorize_content_block
 
-    data = @content_block.ai_generation_data || {}
-    status = data["status"] || "completed"
+    payload = ::SiteCustomization::ContentBlocks::AiGenerationStatusPayload.call(
+      content_block: @content_block
+    )
 
-    payload = {
-      status: status,
-      content_block_id: @content_block.id,
-      position: @content_block.position,
-      mode: data["mode"]
-    }
-
-    if status == "completed"
-      payload[:body_html] = @content_block.body.to_s
-      payload[:urls] = content_block_urls(@content_block)
-    end
-
-    if status == "failed"
-      payload[:error] = data["error"]
-    end
+    payload[:urls] = content_block_urls(@content_block) if payload[:status] == "completed"
 
     render json: payload
   end

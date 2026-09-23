@@ -29,6 +29,10 @@ module Ai::RubyLlmFactory
     return chat if tools.empty?
 
     chat.with_tools(*tools)
+    disable_reasoning(chat)
+  end
+
+  def self.disable_reasoning(chat)
     chat.with_thinking(effort: NO_REASONING_EFFORT) if current_provider_is_openai?
 
     chat

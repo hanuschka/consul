@@ -17,6 +17,16 @@ Delayed::Worker.default_queue_name = "default"
 Delayed::Worker.raise_signal_exceptions = :term
 Delayed::Worker.logger = Logger.new(File.join(Rails.root, "log", "delayed_job.log"))
 
+# delayed_job reads a per-job max_run_time from the payload object, but for
+# ActiveJob that object is Rails' JobWrapper, which does not expose one, so a
+# cap declared on the job class would be silently ignored.
+# ApplicationJob#serialize puts the cap into job_data.
+ActiveJob::QueueAdapters::DelayedJobAdapter::JobWrapper.class_eval do
+  def max_run_time
+    job_data["max_run_time"]
+  end
+end
+
 if Rails.env.development?
   Delayed::Worker.class_eval do
     def reload!

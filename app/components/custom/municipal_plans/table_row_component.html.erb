@@ -1,0 +1,7 @@
+<tr role="row">
+  <th scope="row" role="rowheader" data-label="<%= label_for(:name) %>"><%= link_to municipal_plan.title, helpers.municipal_plan_path(municipal_plan) %></th>
+  <td role="cell" data-label="<%= label_for(:tags) %>"><%= render MunicipalPlans::BadgesComponent.new(municipal_plan: municipal_plan) %></td>
+  <td role="cell" data-label="<%= label_for(:content_updated_at) %>"><%= content_updated_at %></td>
+  <td role="cell" data-label="<%= label_for(:topics) %>"><%= topic_names.join(", ") %></td>
+  <td role="cell" data-label="<%= label_for(:districts) %>"><%= district_names.join(", ") %></td>
+</tr>

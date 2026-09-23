@@ -1,0 +1,9 @@
+<div class="resources-view-switch" role="group" aria-label="<%= label %>">
+  <% options.each do |mode, text| %>
+    <% if current?(mode) %>
+      <span class="resources-view-switch--option resources-view-switch--option-active" aria-current="true"><%= text %></span>
+    <% else %>
+      <%= link_to text, switch_path(mode), class: "resources-view-switch--option" %>
+    <% end %>
+  <% end %>
+</div>

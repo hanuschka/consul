@@ -44,6 +44,20 @@ en:
             title: Updated on
             from_label: Updated from
             to_label: Updated until
+        view_switch:
+          label: View
+          tiles: Tiles
+          table: Table
+        table:
+          caption: Municipal plans
+          archive_caption: Municipal plans archive
+          region_label: Table of plans
+          columns:
+            name: Name
+            tags: Tags
+            content_updated_at: Updated on
+            topics: Topic
+            districts: District
       badges:
         new: new entry
         updated: updated entry

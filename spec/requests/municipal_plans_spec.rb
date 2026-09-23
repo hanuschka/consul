@@ -465,4 +465,153 @@ describe "Vorhabenliste", type: :request do
       expect(map_wrapper).to be_present
     end
   end
+
+  describe "remembering the chosen view" do
+    before { enable_module(true) }
+
+    it "stores the table view in a cookie and returns to the same list with its filters" do
+      get municipal_plans_path(view: "table", districts: ["7"], order: "title")
+
+      query = { districts: ["7"], order: "title" }.to_query
+      expect(response).to redirect_to("#{municipal_plans_path}?#{query}")
+      expect(cookies["municipal_plans_view"]).to eq "table"
+    end
+
+    it "does the same in the archive" do
+      get archive_municipal_plans_path(view: "table")
+
+      expect(response).to redirect_to(archive_municipal_plans_path)
+      expect(cookies["municipal_plans_view"]).to eq "table"
+    end
+
+    it "ignores an unknown view but still drops it from the address" do
+      get municipal_plans_path(view: "javascript:alert(1)")
+
+      expect(response).to redirect_to(municipal_plans_path)
+      expect(cookies["municipal_plans_view"]).to be_blank
+    end
+
+    it "switches back to the tiles" do
+      get municipal_plans_path(view: "table")
+      get municipal_plans_path(view: "tiles")
+
+      expect(cookies["municipal_plans_view"]).to eq "tiles"
+    end
+  end
+
+  describe "the table view" do
+    before do
+      enable_module(true)
+      cookies["municipal_plans_view"] = "table"
+    end
+
+    def document
+      Nokogiri::HTML(response.body)
+    end
+
+    def row_for(title)
+      document.css("table tbody tr").find { |row| row.at_css("th[scope=row]")&.text&.strip == title }
+    end
+
+    def row_titles
+      document.css("table tbody tr th[scope=row]").map { |cell| cell.text.strip }
+    end
+
+    it "renders a table with five column headers and the linked name" do
+      plan
+
+      get municipal_plans_path
+
+      expect(document.css("table thead th[scope=col]").size).to eq 5
+      expect(document.css(".resources-list--inner")).to be_empty
+      link = row_for("Weiterentwicklung des Eichplatz-Areals").at_css("a")
+      expect(link["href"]).to eq municipal_plan_path(plan)
+    end
+
+    it "keeps the table semantics as explicit ARIA roles" do
+      plan
+
+      get municipal_plans_path
+
+      table = document.at_css("table[role=table]")
+      caption = table.at_css("caption")
+      expect(table["aria-labelledby"]).to eq caption["id"]
+      expect(table.css("thead[role=rowgroup] tr[role=row] [role=columnheader]").size).to eq 5
+      rows = table.css("tbody[role=rowgroup] > tr")
+      expect(rows).not_to be_empty
+      rows.each do |row|
+        expect(row["role"]).to eq "row"
+        expect(row.css("[role=rowheader]").size).to eq 1
+        expect(row.css("> [role=cell]").size).to eq 4
+      end
+    end
+
+    it "shows every Ortsteil of a Vorhaben" do
+      names = %w[Lobeda Wenigenjena Winzerla Zwätzen]
+      plan.district_assignments.destroy_all
+      names.each do |name|
+        plan.district_assignments.create!(district: create(:registered_address_district, name: name))
+      end
+
+      get municipal_plans_path
+
+      label = I18n.t("custom.municipal_plans.index.table.columns.districts")
+      districts_cell = row_for("Weiterentwicklung des Eichplatz-Areals").at_css("td[data-label='#{label}']")
+      names.each { |name| expect(districts_cell.text).to include(name) }
+    end
+
+    it "applies the Ortsteil filter and keeps it checked" do
+      district = create(:registered_address_district, name: "Lobeda")
+      plan.district_assignments.destroy_all
+      plan.district_assignments.create!(district: district)
+      create(:municipal_plan, :published, responsible: officer, title: "Anderer Ortsteil")
+
+      get municipal_plans_path(districts: [district.id])
+
+      expect(row_titles).to eq ["Weiterentwicklung des Eichplatz-Areals"]
+      expect(document.at_css("#filter_district_#{district.id}")["checked"]).to be_present
+    end
+
+    it "lists the newest update first when sorted by Aktualisierungsdatum" do
+      older = create(:municipal_plan, :published, responsible: officer, title: "Älteres Vorhaben")
+      newer = create(:municipal_plan, :published, responsible: officer, title: "Neueres Vorhaben")
+      older.update_columns(content_updated_at: Date.current - 20.days)
+      newer.update_columns(content_updated_at: Date.current - 2.days)
+
+      get municipal_plans_path(order: "content_updated_at")
+
+      expect(row_titles).to eq ["Neueres Vorhaben", "Älteres Vorhaben"]
+    end
+
+    it "renders the table in the archive too" do
+      create(:municipal_plan, :published, responsible: officer, title: "Abgeschlossenes Vorhaben")
+        .update!(status: "archived")
+
+      get archive_municipal_plans_path
+
+      expect(row_titles).to eq ["Abgeschlossenes Vorhaben"]
+    end
+  end
+
+  describe "the view switch" do
+    before { enable_module(true) }
+
+    it "links to the table with the current filters and replaces the wide-mode button" do
+      plan
+
+      get municipal_plans_path(districts: ["7"], order: "title", page: 2)
+
+      document = Nokogiri::HTML(response.body)
+      group = document.at_css(".resources-view-switch[role=group]")
+      table_text = I18n.t("custom.municipal_plans.index.view_switch.table")
+      table_link = group.css("a").find { |link| link.text.strip == table_text }
+      query = Rack::Utils.parse_nested_query(URI.parse(table_link["href"]).query)
+
+      expect(URI.parse(table_link["href"]).path).to eq municipal_plans_path
+      expect(query).to eq("districts" => ["7"], "order" => "title", "view" => "table")
+      expect(group.at_css("[aria-current=true]").text.strip)
+        .to eq I18n.t("custom.municipal_plans.index.view_switch.tiles")
+      expect(document.at_css(".js-resource-list-switch-view-button")).to be_nil
+    end
+  end
 end

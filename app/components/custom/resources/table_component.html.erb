@@ -1,0 +1,15 @@
+<div class="resources-table" role="region" tabindex="0" aria-label="<%= region_label %>">
+  <table class="resources-table--table" role="table" aria-labelledby="<%= caption_id %>">
+    <caption id="<%= caption_id %>" class="resources-table--caption show-for-sr"><%= caption %></caption>
+    <thead role="rowgroup">
+      <tr role="row">
+        <% columns.each do |column| %>
+          <th scope="col" role="columnheader" class="resources-table--<%= column[:key].to_s.dasherize %>"><%= column[:label] %></th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody role="rowgroup">
+      <%= content %>
+    </tbody>
+  </table>
+</div>

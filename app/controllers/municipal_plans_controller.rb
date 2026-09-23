@@ -6,6 +6,11 @@ class MunicipalPlansController < ApplicationController
 
   feature_flag :municipal_plans
 
+  VIEW_MODES = %w[tiles table].freeze
+  VIEW_MODE_COOKIE = :municipal_plans_view
+
+  before_action :remember_view_mode, only: [:index, :archive]
+  before_action :set_view_mode, only: [:index, :archive]
   before_action :parse_search_terms, only: :archive
   before_action :set_search_order, only: :archive
 
@@ -27,6 +32,22 @@ class MunicipalPlansController < ApplicationController
   end
 
   private
+
+    def remember_view_mode
+      return if params[:view].blank?
+
+      if params[:view].in?(VIEW_MODES)
+        cookies[VIEW_MODE_COOKIE] = { value: params[:view], expires: 1.year, same_site: :lax }
+      end
+
+      query = request.query_parameters.except("view").to_query
+      redirect_to [request.path, query.presence].compact.join("?")
+    end
+
+    def set_view_mode
+      stored = cookies[VIEW_MODE_COOKIE]
+      @view_mode = stored.in?(VIEW_MODES) ? stored : VIEW_MODES.first
+    end
 
     def load_overview(scope)
       @districts = RegisteredAddress::District.all.sort_by(&:name_for_display)

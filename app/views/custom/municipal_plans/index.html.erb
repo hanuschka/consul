@@ -39,10 +39,30 @@
           i18n_namespace: "custom.municipal_plans.index",
           filters: @valid_orders,
           current_filter: @current_order,
-          param: "order"
+          param: "order",
+          hide_view_mode_button: true
         ) %>
 
-        <% if @municipal_plans.present? %>
+        <%= render Resources::ViewSwitchComponent.new(
+          options: {
+            "tiles" => t("custom.municipal_plans.index.view_switch.tiles"),
+            "table" => t("custom.municipal_plans.index.view_switch.table")
+          },
+          current: @view_mode,
+          label: t("custom.municipal_plans.index.view_switch.label")
+        ) %>
+
+        <% if @municipal_plans.present? && @view_mode == "table" %>
+          <%= render Resources::TableComponent.new(
+            columns: MunicipalPlans::TableRowComponent.columns,
+            caption: archive_view ? t("custom.municipal_plans.index.table.archive_caption") : t("custom.municipal_plans.index.table.caption"),
+            region_label: t("custom.municipal_plans.index.table.region_label")
+          ) do %>
+            <% @municipal_plans.each do |municipal_plan| %>
+              <%= render MunicipalPlans::TableRowComponent.new(municipal_plan: municipal_plan) %>
+            <% end %>
+          <% end %>
+        <% elsif @municipal_plans.present? %>
           <% c.with_items do %>
             <% @municipal_plans.each do |municipal_plan| %>
               <%= render MunicipalPlans::ListItemComponent.new(municipal_plan: municipal_plan) %>

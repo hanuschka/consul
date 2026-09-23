@@ -44,6 +44,20 @@ de:
             title: Aktualisierungsdatum
             from_label: Aktualisiert ab
             to_label: Aktualisiert bis
+        view_switch:
+          label: Ansicht
+          tiles: Kacheln
+          table: Tabelle
+        table:
+          caption: Vorhabenliste
+          archive_caption: Archiv der Vorhabenliste
+          region_label: Tabelle der Vorhaben
+          columns:
+            name: Name
+            tags: Tags
+            content_updated_at: Aktualisierungsdatum
+            topics: Thema
+            districts: Ortsteil
       badges:
         new: neuer Eintrag
         updated: aktualisierter Eintrag

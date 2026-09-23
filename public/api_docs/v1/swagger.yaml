@@ -15,7 +15,7 @@ info:
     ### Creating an API Client
 
     API clients are created by a platform administrator in the admin area,
-    under **Developer area → API clients**. Creating a client there also
+    under **API → API clients**. Creating a client there also
     issues its token and sets up the user that will author API content
     (see *Content author* below). This is the main way to create a client.
 
@@ -64,7 +64,26 @@ info:
     api_client.access_token
     ```
 
-    The token can be rotated with `api_client.regenerate_access_token`.
+    ### Rotating the token
+
+    Rotating issues a new token and invalidates the current one
+    immediately, so every integration still using the old token starts
+    receiving `401 Unauthorized`. Update your integrations right after a
+    rotation.
+
+    **In the admin area (recommended):** go to **API → API clients**, open
+    the client, and press **Regenerate token** on its detail page. Confirm
+    the dialog; the new token is then displayed in the *Auth token* field,
+    where it can be revealed and copied.
+
+    **Via the API:** an authenticated client can rotate its own token with
+    `POST /api/auth/rotate_token`; the response returns the new token.
+
+    **In the Rails console:**
+
+    ```ruby
+    api_client.regenerate_access_token
+    ```
 
     ### Access Levels
 

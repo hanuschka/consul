@@ -35,28 +35,41 @@ module SiteContentBlocksAiActions
     }
   end
 
+  # Ran inline until it hit the proxy's 60s gateway timeout, like the projekt
+  # and newsletter editors did. Both site namespaces shared the same body, so
+  # it lives here now rather than in each controller.
+  def change_with_ai
+    content_block = ::SiteCustomization::ContentBlock.find(params[:id])
+    authorize!(:update, content_block)
+
+    return if check_ai_model_configured == false
+
+    result =
+      ::SiteCustomization::ContentBlocks::DispatchChangeWithAi.call(
+        content_block: content_block,
+        instructions: params[:instructions],
+        content_block_html: params[:content_block_html],
+        allow_text_modification: params[:allow_text_modification]
+      )
+
+    if !result.success?
+      return render(json: { error: { message: result.error.to_s }}, status: :unprocessable_entity)
+    end
+
+    render json: {
+      content_block_id: result.content_block_id,
+      status_url: ai_generation_status_url_for(result.content_block_id),
+      cancel_url: cancel_ai_generation_url_for(result.content_block_id)
+    }
+  end
+
   def ai_generation_status
     content_block = find_ai_in_progress_content_block
     authorize!(:update, content_block)
 
-    data = content_block.ai_generation_data || {}
-    status = data["status"] || "completed"
-
-    payload = {
-      status: status,
-      content_block_id: content_block.id,
-      mode: data["mode"]
-    }
-
-    if status == "completed"
-      payload[:body_html] = content_block.body.to_s
-    end
-
-    if status == "failed"
-      payload[:error] = data["error"]
-    end
-
-    render json: payload
+    render json: ::SiteCustomization::ContentBlocks::AiGenerationStatusPayload.call(
+      content_block: content_block
+    )
   end
 
   def cancel_ai_generation

@@ -6,7 +6,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
   # sharing a position, which `sort_by_order_number` cannot break.
   EXCLUDED_COLUMNS = %w[
     name order_number preview_code published_at content_updated_at
-    banner_image_generation_status copy_status copied_from_projekt_id
+    banner_image_generation_status copy_status copy_data copied_from_projekt_id
     import_file_status import_file_data imported_by_ai
     whatsapp_broadcast_sent_at whatsapp_broadcast_slug
     on_dt_global_overview from_dt special special_name

@@ -139,6 +139,7 @@
 //= require custom
 //= require_tree ./custom
 //= require lib/files/filter_serializer
+//= require vendor_asset_urls
 //= require_tree ./maps
 
 var initialize_modules = function() {

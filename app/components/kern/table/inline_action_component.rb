@@ -1,15 +1,14 @@
-class Kern::Table::ActionComponent < ApplicationComponent
+class Kern::Table::InlineActionComponent < ApplicationComponent
   STYLE_CLASSES = {
     default: "",
-    edit: "kern-table__actions-menu-item--edit",
-    delete: "kern-table__actions-menu-item--delete"
+    edit: "kern-table__inline-action--edit",
+    delete: "kern-table__inline-action--delete"
   }.freeze
 
-  def initialize(label:, url:, style: :default, divider: false, icon: nil, **options)
+  def initialize(label:, url:, style: :default, icon: nil, **options)
     @label = label
     @url = url
     @style = style.to_sym
-    @divider = divider
     @icon = Kern::Table::ActionOptions.icon(explicit_icon: icon, style: @style, label: label)
     @options = Kern::Table::ActionOptions.with_turbo_method(options)
   end
@@ -20,16 +19,10 @@ class Kern::Table::ActionComponent < ApplicationComponent
 
   def css_classes
     [
-      "kern-table__actions-menu-item",
+      "round-icon-button",
+      "kern-table__inline-action",
       "text-decoration-none",
-      "d-flex",
-      "align-items-center",
-      "gap-2",
       STYLE_CLASSES[@style]
     ].compact_blank.join(" ")
-  end
-
-  def divider?
-    @divider
   end
 end

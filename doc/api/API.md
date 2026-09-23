@@ -222,3 +222,8 @@ client.access_token            # the current Bearer token
 client.regenerate_access_token # issues a new token, invalidates the old one
 ```
 
+Admins rotate it from the UI instead: **API → API clients**, open the client,
+press **Regenerate token**. A client can also rotate its own token through
+`POST /api/auth/rotate_token`. Every rotation invalidates the previous token
+immediately.
+

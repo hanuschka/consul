@@ -8,11 +8,14 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     # The previous submit attempt's warnings go, the analysis stage's stay: an
     # image the uploaded document does not let us read is still unreadable on the
     # second try, and the admin was told about it before the projekt existed.
-    projekt_import.update!(
-      status: "submitting",
-      warnings: projekt_import.analysis_warnings + unapplied_chat_warnings(projekt_import)
-    )
+    projekt_import.start_submit!(projekt_import.analysis_warnings + unapplied_chat_warnings(projekt_import))
 
+    if projekt_import.from_consul_projekt?
+      copy_consul_projekt(projekt_import)
+      return
+    end
+
+    projekt_import.advance_submit_stage!("creating_projekt")
     create_result = ProjektImports::CreateProjektFromImportService.call(projekt_import: projekt_import)
     if !create_result.success?
       projekt_import.mark_failed!(create_result.error, stage: "create_projekt", details: create_result.error_details)
@@ -25,6 +28,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     # links to a participation phase carry its real id and slug. The AI call
     # deliberately runs between the two persistence steps rather than inside
     # either transaction.
+    projekt_import.advance_submit_stage!("resolving_content_blocks")
     source_images = ProjektImports::AttachSourceImagesService.call(
       projekt_import: projekt_import,
       projekt: projekt
@@ -46,8 +50,11 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
       return
     end
 
+    projekt_import.advance_submit_stage!("creating_content_blocks")
     blocks_created = create_content_blocks(projekt_import, projekt)
     return if !blocks_created
+
+    ProjektImports::ExternalLinksAuditService.call(projekt_import: projekt_import)
 
     if source_images.data[:hero_attached]
       projekt_import.update!(image_status: "skipped")
@@ -66,6 +73,27 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
 
   private
 
+  # A copied projekt has no content blocks to resolve and no image prompt to
+  # run: the bundle brought both with it. So this path ends where the copier
+  # does, with the admin's review edits written on top.
+  def copy_consul_projekt(projekt_import)
+    projekt_import.advance_submit_stage!("copying_projekt")
+    result = ProjektImports::CopyConsulProjektService.call(projekt_import: projekt_import)
+
+    if !result.success?
+      projekt_import.mark_failed!(result.error, stage: "copy_projekt", details: result.error_details)
+      return
+    end
+
+    Array(result.data[:skipped_blobs]).each do |blob|
+      projekt_import.add_warning!(
+        I18n.t("adm.projekts.imports.warnings.blob_skipped", name: blob.to_s)
+      )
+    end
+
+    projekt_import.update!(status: "completed", image_status: "skipped", error_message: nil)
+  end
+
   # Edits only reach ai_result through the chat's edit tools. A conversation the
   # user contributed to that produced no tool call either predates those tools or
   # is one where the model answered in prose without applying anything — either
@@ -83,20 +111,29 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
     ai_chat = projekt_import.ai_chat
     return [] if ai_chat.blank?
 
-    has_user_message, has_tool_activity = ai_chat.ai_chat_messages.pick(
-      Arel.sql(
-        "bool_or(role = 'user' AND custom_command IS NULL), " \
-        "bool_or(tool_activity <> '[]'::jsonb)"
-      )
-    )
+    has_user_message = ai_chat.ai_chat_messages.where(role: "user", custom_command: nil).exists?
     return [] if !has_user_message
-    return [] if has_tool_activity
 
-    [{
-      "message" => I18n.t("adm.projekts.imports.warnings.chat_changes_not_applied"),
+    journal_entries = ai_chat.ai_chat_messages.where(role: "assistant").pluck(:tool_activity).flatten
+    warnings = []
+
+    if journal_entries.none? { |entry| ProjektImports::AiEditJournal.applied?(entry) }
+      warnings << submit_warning("chat_changes_not_applied")
+    end
+
+    if ProjektImports::AiEditJournal.pending_proposals(journal_entries).any?
+      warnings << submit_warning("proposals_pending")
+    end
+
+    warnings
+  end
+
+  def submit_warning(key)
+    {
+      "message" => I18n.t("adm.projekts.imports.warnings.#{key}"),
       "stage" => ProjektImport::SUBMIT_WARNING_STAGE,
       "at" => Time.current.iso8601
-    }]
+    }
   end
 
   # CreateFromImportData writes all blocks in one transaction, so a single
@@ -137,7 +174,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
       return
     end
 
-    projekt_import.update!(image_status: "running")
+    projekt_import.update!(image_status: "running", submit_stage: "generating_image")
 
     response = DtApi::Client.new.ai.generate_image(prompt: image_prompt, aspect_ratio: BANNER_ASPECT_RATIO)
 

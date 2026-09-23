@@ -1,9 +1,7 @@
-// Leaflet vendor CSS imports
-@import "leaflet/dist/leaflet.css";
-@import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
-@import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
-@import "leaflet-geosearch/dist/geosearch.css";
-@import "leaflet.locatecontrol/dist/L.Control.Locate.css";
+// The Leaflet vendor CSS is not imported here: dart-sass leaves an @import of
+// a .css file as a literal @import rule, which resolves against /assets and
+// 404s in production. It ships as the leaflet_vendor.css Sprockets asset,
+// which lib/map_vendor_assets.js injects alongside the Leaflet scripts.
 
 // Leaflet overrides for kern design
 .leaflet-control-zoom a,

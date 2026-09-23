@@ -1,5 +1,6 @@
 require_dependency Rails.root.join("app", "models", "proposal").to_s
 class Proposal < ApplicationRecord
+include MachineTranslatable
   include Labelable
   include Sentimentable
   include ResourceBelongsToProjekt
@@ -32,7 +33,7 @@ class Proposal < ApplicationRecord
   scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
   scope :user_created, -> { where(masterportal_pin_id: nil) }
   scope :with_index_card_associations, -> {
-    includes(
+    preload(
       :translations,
       :image,
       :sentiment,
@@ -93,9 +94,19 @@ class Proposal < ApplicationRecord
   }
 
   scope :sort_by_alphabet, -> {
-    with_translations(I18n.locale).
-    select("proposals.*, LOWER(proposal_translations.title)").
-    reorder("LOWER(proposal_translations.title) ASC, proposals.id ASC")
+    title = "LOWER(COALESCE(current_translations.title, fallback_translations.title))"
+
+    joins(sanitize_sql_array([
+      "LEFT JOIN proposal_translations current_translations " \
+        "ON current_translations.proposal_id = proposals.id " \
+        "AND current_translations.locale = ? AND current_translations.hidden_at IS NULL " \
+      "LEFT JOIN proposal_translations fallback_translations " \
+        "ON fallback_translations.proposal_id = proposals.id " \
+        "AND fallback_translations.locale = ? AND fallback_translations.hidden_at IS NULL",
+      I18n.locale.to_s, I18n.default_locale.to_s
+    ])).
+    select("proposals.*, #{title}").
+    reorder(Arel.sql("#{title} ASC, proposals.id ASC"))
   }
   scope :sort_by_votes_up, -> { reorder(cached_votes_up: :desc, id: :desc) }
   scope :sort_by_hot_score, -> { reorder(hot_score: :desc, id: :desc) }

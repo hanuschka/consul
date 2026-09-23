@@ -8,7 +8,8 @@ class Admin::AiFeaturesService < ApplicationService
       custom_endpoint: custom_endpoint,
       projekt_import_tools: projekt_import_tools,
       headless_browser_libraries: headless_browser_libraries,
-      image_ai_marking: image_ai_marking
+      image_ai_marking: image_ai_marking,
+      pgvector: ::Pgvector::ExtensionStatus.report
     }
   end
 
@@ -70,12 +71,17 @@ class Admin::AiFeaturesService < ApplicationService
 
   # Marking generated images is mandatory, so a box without exiftool cannot
   # generate AI images at all -- unlike the other tool checks here, this one
-  # reports a hard outage rather than a degraded feature.
+  # reports a hard outage. It also reports the degraded case above it: a binary
+  # too old for the JUMBF strip or the AI system tags marks the source type and
+  # nothing else, which is a working feature that records less than it claims
+  # to, and so is invisible without the version.
   def image_ai_marking
     {
       status: ::ExiftoolCommand.runtime_status,
       binary_path: ::ExiftoolCommand.binary_path,
       all_installed: ::ExiftoolCommand.available?,
+      version: ::ExiftoolCommand.version&.to_s,
+      full_marking_supported: ::ExiftoolCommand.full_marking_supported?,
       install_command: ::ExiftoolCommand::INSTALL_COMMAND
     }
   end

@@ -269,3 +269,8 @@ de:
           form:
             map_features_limit: Anzahl Pins pro Nutzer innerhalb einer Session
             map_features_limit_description: Legt die Anzahl der Pins fest, die ein Nutzer während einer Session setzen kann.
+      mitmachbox:
+        feature:
+          general:
+            answer_survey_online: Umfrage zusätzlich online beantwortbar
+            answer_survey_online_description: Ermöglicht, dass die Umfrage einer Mitmachbox-Phase nicht nur an den Geräten, sondern auch online auf der Projektseite beantwortet werden kann. Im Frontend erscheint die Umfrage als Formular, das ohne Anmeldung ausgefüllt werden kann; die Antworten laufen mit denen der Geräte in einer Auswertung zusammen. Aktivieren Sie diese Funktion, wenn Sie dieselbe Frage parallel im öffentlichen Raum und auf der Plattform stellen möchten.

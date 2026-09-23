@@ -1,0 +1,11 @@
+/* CKEditor 5 editor styles, served from our own host instead of
+ * cdn.ckeditor.com so that opening a page never sends the visitor's IP to a
+ * third party before consent. The version here must stay in step with the
+ * vendored app/assets/javascripts/ckeditor5/ckeditor5.umd.js, which is why
+ * package.json pins ckeditor5 to an exact version rather than a range.
+ *
+ * Plain CSS on purpose: the vendor file is 380 KB of already-compiled CSS and
+ * sassc would either reject it or re-emit an @import url() for it.
+ *
+ *= require ckeditor5/dist/ckeditor5
+ */

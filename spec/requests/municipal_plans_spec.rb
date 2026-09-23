@@ -105,6 +105,30 @@ describe "Vorhabenliste", type: :request do
     end
   end
 
+  describe "linked participation projects on the detail page" do
+    before { enable_module(true) }
+
+    it "links an activated project and leaves out deactivated and deleted ones" do
+      active = create(:projekt, name: "Beteiligung Eichplatz", municipal_plan: plan)
+      create(:projekt, :deactivated, name: "Deaktivierte Beteiligung", municipal_plan: plan)
+      create(:projekt, name: "Gelöschte Beteiligung", municipal_plan: plan).destroy!
+
+      get municipal_plan_path(plan)
+
+      expect(response.body).to include(I18n.t("custom.municipal_plans.show.projekts"))
+      expect(response.body).to include(page_path(active.page.slug))
+      expect(response.body).to include("Beteiligung Eichplatz")
+      expect(response.body).not_to include("Deaktivierte Beteiligung")
+      expect(response.body).not_to include("Gelöschte Beteiligung")
+    end
+
+    it "shows no section when no project is linked" do
+      get municipal_plan_path(plan)
+
+      expect(response.body).not_to include(I18n.t("custom.municipal_plans.show.projekts"))
+    end
+  end
+
   describe "search and sorting" do
     # The search dictionary comes from I18n.default_locale, which is :en in the test environment
     # and :de on a German instance. Stemming and weighting are only meaningful under German.

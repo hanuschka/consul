@@ -110,6 +110,9 @@ de:
             release: Freigeben
             archive: Archivieren
             unarchive: Aus dem Archiv holen
+            convert: In Beteiligungsprojekt überführen
+          projekts:
+            title: Verknüpfte Beteiligungsprojekte
           release_pending:
             title: Bearbeitungsfassung wartet auf Freigabe
             body: Zu diesem Vorhaben liegt eine geänderte Fassung vor, die noch nicht freigegeben ist. Bis zur Freigabe bleibt in der öffentlichen Vorhabenliste diese Fassung sichtbar.
@@ -221,6 +224,22 @@ de:
             contact_email: z. B. stadtentwicklung@stadt.de
             system_mailbox_email: z. B. vorhaben@stadt.de
             internal_notes: Nur intern sichtbar
+      projekt_conversions:
+        new:
+          title: In Beteiligungsprojekt überführen
+          intro_title: Aus dem Vorhaben wird ein Beteiligungsprojekt
+          intro_text: Titel und Kurzbeschreibung werden aus dem Vorhaben übernommen und lassen sich hier noch anpassen. Ortsteile und Kartenposition werden ebenfalls übernommen und können danach in den Projekteinstellungen geändert werden. Das Vorhaben selbst bleibt unverändert bestehen und wird mit dem neuen Projekt verknüpft.
+          name_label: Projekttitel
+          subtitle_label: Untertitel
+          subtitle_hint: Wird unter dem Projekttitel angezeigt. Höchstens %{count} Zeichen und fünf Zeilen.
+          submit: Beteiligungsprojekt anlegen
+          errors_title: Das Beteiligungsprojekt konnte nicht angelegt werden
+        create:
+          success: Das Beteiligungsprojekt wurde angelegt und mit dem Vorhaben verknüpft.
+        errors:
+          name_blank: Bitte geben Sie einen Projekttitel ein.
+          subtitle_too_long: Der Untertitel darf höchstens %{count} Zeichen lang sein. Bitte kürzen Sie ihn.
+          subtitle_too_many_lines: Der Untertitel darf höchstens %{count} Zeilen enthalten.
       municipal_plan_audits:
         show:
           title: Änderungsdetails

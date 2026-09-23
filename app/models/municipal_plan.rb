@@ -77,6 +77,8 @@ class MunicipalPlan < ApplicationRecord
   has_many :notices, -> { order(created_at: :desc) }, class_name: "MunicipalPlan::Notice",
     dependent: :destroy, inverse_of: :municipal_plan
 
+  has_many :projekts, dependent: :nullify, inverse_of: :municipal_plan
+
   accepts_nested_attributes_for :links, allow_destroy: true
 
   validates :status, inclusion: { in: STATUSES }
@@ -171,6 +173,10 @@ class MunicipalPlan < ApplicationRecord
     return false if content_updated_at.blank?
 
     content_updated_at >= Date.current - RECENCY_WINDOW.in_days.to_i
+  end
+
+  def visible_projekts_for(user)
+    projekts.visible_for(user).includes(:page)
   end
 
   # An archived Vorhaben carries no recency badges: its dates lie in the past by definition.

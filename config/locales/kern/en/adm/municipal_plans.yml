@@ -110,6 +110,9 @@ en:
             release: Release
             archive: Archive
             unarchive: Take out of the archive
+            convert: Convert into project
+          projekts:
+            title: Linked participation projects
           release_pending:
             title: A working version is waiting for release
             body: This plan has a changed version that has not been released yet. Until it is released, the public plan list keeps showing this version.
@@ -221,6 +224,22 @@ en:
             contact_email: e.g. urban-development@city.example
             system_mailbox_email: e.g. plans@city.example
             internal_notes: Visible internally only
+      projekt_conversions:
+        new:
+          title: Convert into project
+          intro_title: Turning a plan into a participation project
+          intro_text: Title and short description are taken from the plan and can still be adjusted here. Districts and map position are copied as well and can be changed afterwards in the project settings. The plan itself stays unchanged and is linked to the new project.
+          name_label: Project title
+          subtitle_label: Subtitle
+          subtitle_hint: Shown below the project title. At most %{count} characters and five lines.
+          submit: Create project
+          errors_title: The participation project could not be created
+        create:
+          success: The participation project has been created and linked to the plan.
+        errors:
+          name_blank: Please enter a project title.
+          subtitle_too_long: The subtitle may be at most %{count} characters long. Please shorten it.
+          subtitle_too_many_lines: The subtitle may contain at most %{count} lines.
       municipal_plan_audits:
         show:
           title: Change details

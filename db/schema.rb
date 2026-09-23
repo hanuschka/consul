@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_22_110000) do
+ActiveRecord::Schema.define(version: 2026_09_23_100000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2929,10 +2929,12 @@ ActiveRecord::Schema.define(version: 2026_09_22_110000) do
     t.string "copy_status"
     t.bigint "copied_from_projekt_id"
     t.jsonb "copy_data"
+    t.bigint "municipal_plan_id"
     t.index ["activated"], name: "index_projekts_on_activated"
     t.index ["copied_from_projekt_id"], name: "index_projekts_on_copied_from_projekt_id"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
+    t.index ["municipal_plan_id"], name: "index_projekts_on_municipal_plan_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["published_at"], name: "index_projekts_on_published_at"
@@ -4098,6 +4100,7 @@ ActiveRecord::Schema.define(version: 2026_09_22_110000) do
   add_foreign_key "projekt_settings", "projekts"
   add_foreign_key "projekt_subscriptions", "projekts"
   add_foreign_key "projekt_subscriptions", "users"
+  add_foreign_key "projekts", "municipal_plans", on_delete: :nullify
   add_foreign_key "projekts", "projekts", column: "parent_id"
   add_foreign_key "projekts", "site_customization_pages", column: "landing_page_id"
   add_foreign_key "proposals", "communities"

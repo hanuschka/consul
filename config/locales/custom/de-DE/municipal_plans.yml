@@ -90,3 +90,6 @@ de:
         map_address_missing: Zu diesem Vorhaben liegt keine Adresse vor. Die Lage ist ausschließlich in der Karte dargestellt.
         content_updated_at: Aktualisierungsdatum
         version: Versionsnummer
+        projekts: Beteiligung zu diesem Vorhaben
+      projekt_sidebar:
+        title: Zugehöriges Vorhaben

@@ -28,6 +28,7 @@ namespace :adm do
 
       resources :audits, only: :show, controller: "municipal_plan_audits"
       resources :notices, only: :destroy, controller: "municipal_plan_notices"
+      resource :projekt_conversion, only: [:new, :create]
     end
   end
 end

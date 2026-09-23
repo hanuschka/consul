@@ -59,6 +59,13 @@ class Adm::MunicipalPlans::MunicipalPlanPolicy < ApplicationPolicy
     @user&.administrator?
   end
 
+  def convert?
+    return false unless @user&.administrator?
+    return false unless @record.is_a?(MunicipalPlan)
+
+    @record.released_plan_id.nil? && @record.status == "published"
+  end
+
   # Renumbering the list only makes sense for someone who sees all of it.
   def reorder?
     return true if @user&.administrator?

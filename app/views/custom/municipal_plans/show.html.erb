@@ -134,6 +134,18 @@
           </dl>
         </section>
 
+        <% linked_projekts = @municipal_plan.visible_projekts_for(current_user).select(&:page) %>
+        <% if linked_projekts.any? %>
+          <section class="municipal-plan-page--section">
+            <h2><%= t("custom.municipal_plans.show.projekts") %></h2>
+            <ul class="municipal-plan-page--list">
+              <% linked_projekts.each do |linked_projekt| %>
+                <li><%= link_to linked_projekt.title, page_path(linked_projekt.page.slug) %></li>
+              <% end %>
+            </ul>
+          </section>
+        <% end %>
+
         <% if @municipal_plan.links.any? %>
           <section class="municipal-plan-page--section">
             <h2><%= t("custom.municipal_plans.show.links") %></h2>

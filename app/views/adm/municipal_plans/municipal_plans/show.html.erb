@@ -44,6 +44,11 @@
                             style: :secondary) %>
           <% end %>
         <% end %>
+
+        <% if policy.convert? %>
+          <%= kern_link_button(new_adm_municipal_plans_municipal_plan_projekt_conversion_path(@municipal_plan),
+                text: t(".actions.convert"), icon: "rocket_launch", style: :secondary) %>
+        <% end %>
       </div>
     <% end %>
   <% end %>
@@ -198,6 +203,22 @@
       </div>
     </div>
   </section>
+
+  <% linked_projekts = @municipal_plan.projekts.includes(page: :translations).to_a %>
+  <% if linked_projekts.any? %>
+    <section class="adm-detail-section">
+      <h2 class="adm-detail-section-title mb-3"><%= t(".projekts.title") %></h2>
+
+      <ul class="mb-0">
+        <% linked_projekts.each do |linked_projekt| %>
+          <li>
+            <%= link_to linked_projekt.title, details_adm_projekts_projekt_path(linked_projekt),
+                  class: "kern-link" %>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
 
   <section class="adm-detail-section">
     <h2 class="adm-detail-section-title mb-3"><%= t(".sections.revision") %></h2>

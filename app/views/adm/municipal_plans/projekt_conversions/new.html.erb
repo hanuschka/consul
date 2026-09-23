@@ -1,0 +1,39 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs,
+                                    back_button_url: adm_municipal_plans_municipal_plan_path(@municipal_plan)) do |header| %>
+  <% header.with_hint do %>
+    <h3 class="kern-title kern-title--small mb-3"><%= t(".intro_title") %></h3>
+    <p class="kern-body"><%= t(".intro_text") %></p>
+  <% end %>
+<% end %>
+
+<article class="kern-container mb-5">
+  <%= form_with model: @conversion, scope: :municipal_plan_projekt_conversion,
+        url: adm_municipal_plans_municipal_plan_projekt_conversion_path(@municipal_plan),
+        method: :post do |f| %>
+
+    <% if @conversion.errors[:base].any? %>
+      <div class="mb-5">
+        <%= kern_alert(title: t(".errors_title"), style: :danger) do %>
+          <ul class="mb-0">
+            <% @conversion.errors[:base].each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= f.text_field :name, label: t(".name_label") %>
+
+    <%= f.text_area :subtitle, label: t(".subtitle_label"), rows: 5,
+          hint: t(".subtitle_hint", count: MultilineSubtitleNormalizer::MAX_VISIBLE_LENGTH) %>
+
+    <div class="d-flex gap-2 mb-4 mt-5">
+      <%= kern_button(text: t(".submit"), icon: "rocket_launch", type: :submit) %>
+      <%= kern_link_button(adm_municipal_plans_municipal_plan_path(@municipal_plan),
+            text: t("shared.cancel"), style: :secondary) %>
+    </div>
+  <% end %>
+</article>

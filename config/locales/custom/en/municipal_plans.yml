@@ -90,3 +90,6 @@ en:
         map_address_missing: No address is available for this plan. Its location is shown on the map only.
         content_updated_at: Updated on
         version: Version
+        projekts: Participation on this plan
+      projekt_sidebar:
+        title: Related plan

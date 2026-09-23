@@ -103,6 +103,7 @@ class Projekt < ApplicationRecord
   has_many_attached :images
 
   belongs_to :landing_page, class_name: 'SiteCustomization::Page', optional: true
+  belongs_to :municipal_plan, optional: true, inverse_of: :projekts
 
   belongs_to :copied_from_projekt, class_name: "Projekt", optional: true,
     inverse_of: :copies
@@ -681,6 +682,13 @@ class Projekt < ApplicationRecord
 
   def title
     page&.title || name
+  end
+
+  def public_municipal_plan
+    return if municipal_plan_id.blank?
+    return if Setting["process.municipal_plans"].blank?
+
+    MunicipalPlan.publicly_visible.find_by(id: municipal_plan_id)
   end
 
   def legislation_process

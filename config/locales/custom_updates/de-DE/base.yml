@@ -154,6 +154,8 @@ de:
     milestones:
       collapse_title: Meilensteine - von der Verwaltung gesetzt (%{count})
     pages:
+      forbidden:
+        visibility_restricted_to: "Die Sichtbarkeit ist beschränkt auf: %{groups}"
       impressum:
         title: Impressum
       contact_us:

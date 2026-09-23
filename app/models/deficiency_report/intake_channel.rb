@@ -1,6 +1,7 @@
 class DeficiencyReport::IntakeChannel < ApplicationRecord
   translates :name, touch: true
   include Globalizable
+  include MachineTranslatable
 
   has_many :deficiency_reports, foreign_key: :deficiency_report_intake_channel_id
 

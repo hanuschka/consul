@@ -1,0 +1,91 @@
+.projekt-import-source-picker {
+  position: relative;
+  display: inline-block;
+}
+
+.projekt-import-source-picker--toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kern-metric-space-2x-small);
+}
+
+.projekt-import-source-picker--caret {
+  font-size: 20px !important;
+}
+
+// Positioned against the viewport by shared--dropdown-menu, the same way the
+// table's action menu is, so it escapes any scrolling ancestor. The z-index
+// matches that menu deliberately: they are the same layer.
+.projekt-import-source-picker--menu {
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  min-width: 20rem;
+  max-width: 24rem;
+  padding: var(--kern-4);
+  background-color: var(--kern-custom-white);
+  border-radius: var(--kern-8);
+  box-shadow:
+    0 0 0 1px rgba(16, 24, 40, 0.06),
+    0 4px 8px -2px rgba(16, 24, 40, 0.1),
+    0 12px 24px -4px rgba(16, 24, 40, 0.12);
+}
+
+.projekt-import-source-picker--menu.d-none {
+  display: none;
+}
+
+.projekt-import-source-picker--item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--kern-metric-space-small);
+  padding: var(--kern-metric-space-small);
+  border-radius: var(--kern-4);
+  color: var(--kern-grey-700);
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--kern-grey-050);
+    color: var(--kern-grey-700);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: -2px;
+  }
+}
+
+.projekt-import-source-picker--item.-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.projekt-import-source-picker--item.-disabled:hover {
+  background-color: transparent;
+}
+
+.projekt-import-source-picker--item-icon {
+  flex: 0 0 auto;
+  font-size: 22px !important;
+  color: var(--kern-color-action-default);
+}
+
+.projekt-import-source-picker--item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.projekt-import-source-picker--item-label {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.projekt-import-source-picker--item-description {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--kern-grey-350);
+}

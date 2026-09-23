@@ -236,3 +236,8 @@ de:
           show_comments_description: "Aktiviert die Kommentarfunktion für das Abstimmungsmodul. Im Frontend wird unterhalb der Abstimmung ein Kommentarbereich mit Antwortfunktion angezeigt, in dem Nutzer ihre Meinungen austauschen können. Aktivieren Sie diese Funktion, um den Dialog rund um die Abstimmung zu fördern. Deaktivieren Sie sie bei Abstimmungen, die ohne begleitende."
           show_open_answer_author_name: Name veröffentlichen
           show_open_answer_author_name_description: "Zeigt den Nutzernamen des Verfassers bei offenen Antworten in der Abstimmung an. Im Frontend erscheint der Name neben dem Antworttext. Aktivieren Sie diese Option, wenn Transparenz über die Autorenschaft gewünscht ist. Deaktivieren Sie sie bei sensiblen Themen, um anonyme Antworten zu ermöglichen und eine unbeeinflusste Meinungsäusserung."
+    mitmachbox_phase:
+      feature:
+        general:
+          answer_survey_online: Umfrage zusätzlich online beantwortbar
+          answer_survey_online_description: "Ermöglicht, die Umfrage zusätzlich online auf der Projektseite zu beantworten. Dort erscheint sie als Fragen-Assistent ohne Anmeldung; die Antworten fließen mit denen der Geräte in eine gemeinsame Auswertung."

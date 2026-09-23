@@ -118,13 +118,13 @@
           <% if @custom_page&.landing? %>
            <%= @custom_page.header_title %>
           <% else %>
-            <%= Setting["extended_option.general.title"] %>
+            <%= setting_text("extended_option.general.title") %>
           <% end %>
           <br>
           <% if @custom_page&.landing? %>
            <b><%= @custom_page.subtitle %></b>
           <% else %>
-            <b><%= Setting["extended_option.general.subtitle"] %></b>
+            <b><%= setting_text("extended_option.general.subtitle") %></b>
           <% end %>
       </h1>
     <% end %>

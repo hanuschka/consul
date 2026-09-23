@@ -1,7 +1,7 @@
 <div class="sidebar-resource-author sidebar-card">
   <div class="sidebar-resource-author--background-image">
     <% if show_background_image? %>
-      <%= image_tag(user.background_image.variant(resize_to_limit: [300, 300])) %>
+      <%= image_tag(user.background_image.variant(resize_to_fill: [700, 200])) %>
     <% end %>
   </div>
   <div class="sidebar-resource-author--info">

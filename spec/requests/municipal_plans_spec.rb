@@ -381,4 +381,64 @@ describe "Vorhabenliste", type: :request do
       expect { get municipal_plan_path(draft) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
+
+  describe "the Ortsteil map" do
+    before { enable_module(true) }
+
+    let(:area) do
+      {
+        "type" => "FeatureCollection",
+        "features" => [{
+          "type" => "Feature",
+          "properties" => {},
+          "geometry" => {
+            "type" => "Polygon",
+            "coordinates" => [[[11.58, 50.92], [11.60, 50.92], [11.60, 50.94], [11.58, 50.92]]]
+          }
+        }]
+      }
+    end
+
+    def map_wrapper
+      Nokogiri::HTML(response.body).at_css(".js-municipal-plans-map")
+    end
+
+    def area_properties
+      JSON.parse(map_wrapper["data-areas"])["features"].map { |feature| feature["properties"] }
+    end
+
+    it "is not rendered on an instance where no Ortsteil areas were loaded" do
+      create(:registered_address_district, name: "Lobeda")
+      plan
+
+      get municipal_plans_path
+
+      expect(response).to have_http_status(:ok)
+      expect(map_wrapper).to be_nil
+      expect(response.body).to include("Weiterentwicklung des Eichplatz-Areals")
+    end
+
+    it "carries the Ortsteil areas and marks the selected one" do
+      lobeda = create(:registered_address_district, name: "Lobeda")
+      create(:map_location, mappable: lobeda, features: area)
+      wenigenjena = create(:registered_address_district, name: "Wenigenjena")
+      create(:map_location, mappable: wenigenjena, features: area)
+
+      get municipal_plans_path(districts: [lobeda.id])
+
+      expect(area_properties).to contain_exactly(
+        { "district_id" => lobeda.id, "name" => "Lobeda", "selected" => true },
+        { "district_id" => wenigenjena.id, "name" => "Wenigenjena", "selected" => false }
+      )
+    end
+
+    it "is rendered in the archive too" do
+      lobeda = create(:registered_address_district, name: "Lobeda")
+      create(:map_location, mappable: lobeda, features: area)
+
+      get archive_municipal_plans_path
+
+      expect(map_wrapper).to be_present
+    end
+  end
 end

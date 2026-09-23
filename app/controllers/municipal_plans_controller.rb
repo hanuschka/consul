@@ -36,6 +36,11 @@ class MunicipalPlansController < ApplicationController
         scope.includes(:topics, :districts), filter_params
       ).call
       @municipal_plans = @municipal_plans.pg_search(@search_terms) if @search_terms.present?
+
+      @overview_map = MunicipalPlans::OverviewMapService.new(
+        @municipal_plans, districts: @districts, selected_district_ids: Array(filter_params[:districts])
+      )
+
       @municipal_plans = apply_order(@municipal_plans).page(params[:page])
     end
 

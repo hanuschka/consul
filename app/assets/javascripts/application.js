@@ -183,6 +183,7 @@ var initialize_modules = function() {
   App.Map.initialize();
   App.PollMapPoints.initialize();
   App.PollMapResults.initialize();
+  App.MunicipalPlansMap.initialize();
   App.Polls.initialize();
   App.Sortable.initialize();
   App.TableSortable.initialize();

@@ -23,6 +23,13 @@
         </p>
       </div>
 
+      <% if @overview_map.show? %>
+        <%= tag.div class: "js-municipal-plans-map margin-bottom",
+                    data: { areas: @overview_map.areas, markers: @overview_map.markers } do %>
+          <%= render Shared::MapComponent.new(process: "municipal_plans", features: {}) %>
+        <% end %>
+      <% end %>
+
       <p class="municipal-plans--result-count" role="status">
         <%= t("custom.municipal_plans.index.result_count", count: @municipal_plans.total_count) %>
       </p>

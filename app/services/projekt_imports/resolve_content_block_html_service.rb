@@ -39,15 +39,21 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
       templates_available: true
     )
   rescue StandardError => e
-    Rails.logger.error("[ProjektImports::ResolveContentBlockHtmlService] failed: #{e.message}")
-    Sentry.capture_exception(e, extra: sentry_context.merge(stage: "resolve_content_blocks")) if defined?(Sentry)
-    ServiceResult.failure(error: I18n.t("adm.projekts.imports.errors.resolve_content_blocks_failed", message: e.message))
+    ServiceResult.failure(
+      error: ProjektImports::FailureReporter.error_message(
+        e,
+        source: self.class.name,
+        stage: "resolve_content_blocks",
+        key: "resolve_content_blocks_failed",
+        sentry_context: sentry_context
+      )
+    )
   end
 
   private
 
   def sanitizer
-    @sanitizer ||= AdminWYSIWYGSanitizer.new
+    @sanitizer ||= ImportContentBlockSanitizer.new
   end
 
   # Returns the matched templates and whether the catalogue answered at all, because

@@ -8,7 +8,7 @@
         <%= render "custom/projekts/partials/projekt_question_list", projekt: @projekt, projekt_questions: @projekt_questions %>
       <% else %>
         <div class="callout primary">
-          Aktuell ist ist keine Frage vorhanden
+          <%= t("custom.projekts.projekt_questions.no_question_available") %>
         </div>
       <% end %>
     <% else %>
@@ -16,14 +16,14 @@
         <%= render "custom/projekts/partials/projekt_question", projekt: @projekt, projekt_question: @projekt_question, projekt_question_answer: @projekt_question_answer %>
       <% else %>
         <div class="callout primary">
-          Aktuell ist ist keine Frage vorhanden
+          <%= t("custom.projekts.projekt_questions.no_question_available") %>
         </div>
       <% end %>
     <% end %>
   </div>
 <% else %>
   <div class='callout alert'>
-    Die Phase ist nicht aktiviert
+    <%= t("custom.projekts.projekt_questions.participation_not_allowed.phase_not_active") %>
   </div>
 <% end %>
 </div>

@@ -10,13 +10,16 @@ class FormularField < ApplicationRecord
 
   CUSTOM_ATTRIBUTES.each { |attr| attr_accessor attr }
 
+  translates :name, :description, touch: true
+  include MachineTranslatable
+
   belongs_to :formular
   delegate :projekt_phase, to: :formular
 
   before_validation :merge_custom_attributes_to_options
   after_create :set_key, :set_options
 
-  validates :name, presence: true, uniqueness: { scope: :formular_id }
+  validates :name, presence: true
   validates :kind, presence: true, inclusion: { in: KINDS }
 
   default_scope { order(:follow_up, :given_order) }

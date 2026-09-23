@@ -1,6 +1,4 @@
 class ProjektImports::ChatSystemPromptService < ApplicationService
-  EXTRACT_LIMIT = 80_000
-
   attr_reader :projekt_import
 
   def initialize(projekt_import:)
@@ -47,8 +45,13 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
       notifications and content blocks are NOT shown here — read them with the
       read_import_data tool whenever you need their actual contents.
 
-      ## Original Document Text
-      #{projekt_import.extracted_text.to_s.truncate(EXTRACT_LIMIT)}
+      ## Original document
+      The document the data was extracted from is NOT included here. When the
+      user asks what the document says, or you need to check a value against
+      it, call the read_source_document tool. Attached documents arrive inside
+      the user's message.
+
+      #{ProjektImports::UntrustedContentPolicy.section}
 
       ## Data model rules
 
@@ -99,6 +102,11 @@ class ProjektImports::ChatSystemPromptService < ApplicationService
         whole block list. Send every element back, including the ones you are not
         changing, or they are deleted.
       - Only call remove_import_phase when the user explicitly asked to delete a phase.
+      - remove_import_phase and set_import_content_blocks do not change anything by
+        themselves: they record a proposal that the user applies or discards with a
+        button under your message. After calling one, tell the user in one sentence
+        to confirm it there, and never repeat the same proposal while it is pending.
+        The history marks each proposal as pending, applied or discarded.
       - After a tool succeeds, tell the user in one short sentence what changed.
     PROMPT
   end

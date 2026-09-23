@@ -17,7 +17,8 @@ export default class extends Controller {
       draggable: true,
       openEffect: "fade",
       closeEffect: "fade",
-      slideEffect: "fade"
+      slideEffect: "fade",
+      plyr: window.App.GlightboxPlyrOptions()
     })
   }
 

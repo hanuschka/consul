@@ -19,7 +19,7 @@
 
           <% if show_documents_input? %>
             <%= render(Shared::SidebarCardComponent.new(
-              title: "Dokumente hinzufügen",
+              title: t("custom.user_resources.form.documents_card_title"),
               icon_name: "file")) do %>
               <div class="documents" id="attach-documents">
                 <%= render "documents/nested_documents", f: f %>
@@ -27,28 +27,15 @@
             <% end %>
           <% end %>
 
-          <% if translations_interface_enabled? %>
-            <%= render(Shared::SidebarCardComponent.new(
-              title: "Sprachen",
-              opened_on_mobile: true,
-              icon_name: "language")) do %>
-              <p>
-              Wählen Sie aus, in welcher Sprache/welchen Sprachen Ihre Diskussion stattfinden soll:
-              </p>
-              <%= render "shared/globalize_locales", resource: resource %>
-            <% end %>
-          <% end %>
-
           <% if show_external_video_input? %>
             <%= render(Shared::SidebarCardComponent.new(
-              title: "Video hinzufügen",
+              title: t("custom.user_resources.form.video_card_title"),
               opened_on_mobile: true,
               icon_name: "video")) do %>
               <p>
-              Gibt es Videos, die Ihre Argumentation und Sichtweise stützen?
-              Dann fügen Sie diese über einen Link hinzu.
+              <%= t("custom.user_resources.form.video_card_hint") %>
               </p>
-              <%= f.text_field :video_url, label: false, placeholder: "YouTube oder Vimeo-Link eingeben", class: "light-input" %>
+              <%= f.text_field :video_url, label: false, placeholder: t("custom.user_resources.form.video_url_placeholder"), class: "light-input" %>
             <% end %>
           <% end %>
 
@@ -56,7 +43,7 @@
 
           <% if helpers.allowed_to_post_on_behalf_of?(current_user, resource) %>
             <%= render(Shared::SidebarCardComponent.new(
-              title: "Veröffentlichen für",
+              title: t("custom.user_resources.form.on_behalf_of_card_title"),
               opened_on_mobile: true,
               icon_name: "user")) do %>
               <p>

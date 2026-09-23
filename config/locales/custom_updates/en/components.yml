@@ -7,6 +7,9 @@ en:
         success: "Downloaded"
       image_with_lightbox_component:
         download_original: "Download original"
+    common_notifications:
+      list_item_component:
+        destroy_confirmation: "Do you really want to delete this notification?"
     images:
       ai_generated_field_component:
         label: "This image was created or edited with AI"

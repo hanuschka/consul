@@ -34,6 +34,8 @@ en:
       backlink: To the project overview
       errors:
         presence: Please select a project
+      list_item:
+        ongoing: Ongoing projekt
       index:
         current_projekts: Current projekts
         expired_projekts: Expired projekts
@@ -211,6 +213,7 @@ en:
           incoming: Incoming
           past: Past
       projekt_questions:
+        no_question_available: There is currently no question
         comments_button: Publish answer
         comments_count: "%{count} open answers"
         comment_votes_count: "%{count} up- & downvotes"

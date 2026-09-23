@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_10_130000) do
+ActiveRecord::Schema.define(version: 2026_09_10_172943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2383,8 +2383,13 @@ ActiveRecord::Schema.define(version: 2026_09_10_130000) do
     t.jsonb "source_images", default: [], null: false
     t.string "title_image_mode", default: "document", null: false
     t.integer "title_image_index"
+    t.string "source_kind", default: "file", null: false
+    t.string "source_url"
+    t.jsonb "source_overlay", default: {}, null: false
+    t.string "submit_stage"
     t.index ["created_at"], name: "index_projekt_imports_on_created_at"
     t.index ["projekt_id"], name: "index_projekt_imports_on_projekt_id"
+    t.index ["source_kind"], name: "index_projekt_imports_on_source_kind"
     t.index ["status"], name: "index_projekt_imports_on_status"
     t.index ["user_id"], name: "index_projekt_imports_on_user_id"
   end
@@ -2547,8 +2552,8 @@ ActiveRecord::Schema.define(version: 2026_09_10_130000) do
   create_table "projekt_phase_subscriptions", force: :cascade do |t|
     t.bigint "projekt_phase_id"
     t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["projekt_phase_id"], name: "index_projekt_phase_subscriptions_on_projekt_phase_id"
     t.index ["user_id"], name: "index_projekt_phase_subscriptions_on_user_id"
   end
@@ -2737,7 +2742,9 @@ ActiveRecord::Schema.define(version: 2026_09_10_130000) do
     t.boolean "active", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["projekt_id", "active"], name: "index_projekt_subscriptions_on_projekt_id_and_active"
     t.index ["projekt_id"], name: "index_projekt_subscriptions_on_projekt_id"
+    t.index ["user_id", "active"], name: "index_projekt_subscriptions_on_user_id_and_active"
     t.index ["user_id"], name: "index_projekt_subscriptions_on_user_id"
   end
 
@@ -3281,6 +3288,7 @@ ActiveRecord::Schema.define(version: 2026_09_10_130000) do
     t.integer "margin_bottom"
     t.jsonb "ai_generation_data"
     t.integer "newsletter_id"
+    t.index "((ai_generation_data ->> 'mode'::text)), ((ai_generation_data ->> 'status'::text))", name: "index_site_customization_content_blocks_on_ai_mode_and_status"
     t.index "((ai_generation_data ->> 'status'::text))", name: "index_site_customization_content_blocks_on_ai_status"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
     t.index ["newsletter_id"], name: "index_site_customization_content_blocks_on_newsletter_id"

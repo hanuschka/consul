@@ -1,4 +1,6 @@
 class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
+  include Adm::Projekts::ProjektImportScoped
+
   ALLOWED_COMMANDS = %w[regenerate summarize import start_over].freeze
   MAX_AGGREGATE_BYTES = 500.megabytes
 
@@ -23,7 +25,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
-      { name: t("adm.projekts.imports.from_files.new.title"), url: new_adm_projekts_import_path },
+      { name: t("adm.projekts.imports.index.title"), url: adm_projekts_imports_path },
       { name: t(".title") }
     ]
   end
@@ -44,6 +46,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       messages: combined.sort_by(&:id).map { |m| serialize_message(m) },
       import: {
         status: @projekt_import.status,
+        submit_stage: @projekt_import.submit_stage,
         error: @projekt_import.error_message,
         warnings: @projekt_import.warnings
       }
@@ -114,7 +117,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     case name
     when "start_over"
       @projekt_import.mark_abandoned!
-      render json: { status: "abandoned", redirect_path: new_adm_projekts_import_path }
+      render json: { status: "abandoned", redirect_path: helpers.import_source_new_path(@projekt_import) }
     when "import"
       ProjektImports::ExecuteImportJob.perform_later(@projekt_import.id)
 
@@ -186,10 +189,33 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
     }
   end
 
+  def apply_proposal
+    respond_to_proposal(ProjektImports::ApplyProposedEditService)
+  end
+
+  def discard_proposal
+    respond_to_proposal(ProjektImports::DiscardProposedEditService)
+  end
+
   private
 
   def authorize_create
     authorize [:adm, :projekts, Projekt], :create?
+  end
+
+  # The bubble is re-rendered server side and handed back, so the proposal's
+  # buttons, its resolved state and the applied-edit line come from one place.
+  def respond_to_proposal(service)
+    message = @ai_chat.ai_chat_messages.role_assistant.find(params[:message_id])
+    result = service.call(ai_chat_message: message, proposal_id: params[:proposal_id])
+
+    if !result.success?
+      render json: { error: result.error, messages: [serialize_message(message.reload)] },
+        status: :unprocessable_entity
+      return
+    end
+
+    render json: { status: "resolved", messages: [serialize_message(message.reload)] }
   end
 
   def pending_message_ids
@@ -205,7 +231,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
   end
 
   def find_projekt_import
-    @projekt_import = current_user.projekt_imports.find(params[:import_id])
+    @projekt_import = visible_projekt_imports.find(params[:import_id])
   end
 
   def import_redirect_path

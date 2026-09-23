@@ -1,0 +1,38 @@
+<!-- BlockID: D09 – Bild-Text-Karte: Bild oben (Vollbreite), Text darunter (Portrait-/Hochformat-Karte) -->
+<!-- Geeignet für: Karten-Grids (mehrere nebeneinander), Blog-artige Darstellung -->
+<!-- Hinweis: Dieses Template ist für .cell small-12 medium-4 gedacht – mehrere nebeneinander -->
+<!-- ANPASSEN: src-Attribut im img-Tag ersetzen -->
+
+<div style="background: #ffffff; border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.10), 0 12px 32px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)'">
+
+  <!-- Bild oben -->
+  <div style="height: 210px; position: relative; overflow: hidden;">
+    <img src="https://placehold.co/600x200/4f46e5/ffffff?text=Thema" alt="Thema" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+    <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);"></div>
+    <!-- Status-Badge auf Bild -->
+    <div style="position: absolute; top: 14px; left: 14px; background: rgba(255,255,255,0.85); backdrop-filter: blur(14px); color: #1a202c; border: 1px solid rgba(0,0,0,0.06); border-radius: 4px; padding: 4px 12px; font-size: 11px; font-weight: 700;">Aktiv</div>
+  </div>
+
+  <!-- Text darunter -->
+  <div style="padding: 24px 24px 26px 24px;">
+
+    <!-- Topic-Chips -->
+    <div style="display: flex; flex-wrap: wrap; margin-bottom: 12px;">
+      <div style="background: rgba(23,121,186,0.08); border: 1px solid rgba(23,121,186,0.16); border-radius: 4px; padding: 3px 10px; font-size: 11px; color: var(--brand-color, #1779ba); margin-right: 8px; margin-bottom: 4px; font-weight: 600;">Bildung</div>
+      <div style="background: rgba(23,121,186,0.08); border: 1px solid rgba(23,121,186,0.16); border-radius: 4px; padding: 3px 10px; font-size: 11px; color: var(--brand-color, #1779ba); margin-bottom: 4px; font-weight: 600;">Stadtentwicklung</div>
+    </div>
+
+    <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; margin-bottom: 10px; margin-top: 0; line-height: 1.3; letter-spacing: -0.3px; display: flex; align-items: center;"><div style="width: 8px; height: 8px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-right: 12px; flex-shrink: 0;"></div>Lebenslanges Lernen im Stadtquartier</h3>
+
+    <p style="font-size: 15px; color: #6b7280; line-height: 1.65; margin-bottom: 18px; margin-top: 0;">
+      Neue Bildungsangebote für alle Altersgruppen – von Sprachkursen bis zu digitalen Kompetenzen. Teilen Sie uns mit, was Sie benötigen.
+    </p>
+
+    <!-- Datum + CTA -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.06);">
+      <div style="font-size: 12px; color: #6b7280; margin-bottom: 6px;">01.04. – 30.06.2025</div>
+      <a href="#" style="color: var(--brand-color, #1779ba); font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 6px; min-height: 44px; display: inline-flex; align-items: center;">Details &rarr;</a>
+    </div>
+
+  </div>
+</div>

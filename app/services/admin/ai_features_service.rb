@@ -8,7 +8,8 @@ class Admin::AiFeaturesService < ApplicationService
       custom_endpoint: custom_endpoint,
       projekt_import_tools: projekt_import_tools,
       headless_browser_libraries: headless_browser_libraries,
-      image_ai_marking: image_ai_marking
+      image_ai_marking: image_ai_marking,
+      pgvector: ::Pgvector::ExtensionStatus.report
     }
   end
 

@@ -5,8 +5,6 @@ App.Studio.ContentBlocks.CodeEditMode = {
 
   initialize() {
     this.initEventListeners();
-    // Set Ace editor worker path
-    ace.config.set("workerPath", "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12");
   },
 
   initEventListeners() {

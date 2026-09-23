@@ -1,52 +1,34 @@
 class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseController
   MAX_AGGREGATE_BYTES = 500.megabytes
+  # A single document this large is rejected before the upload starts rather
+  # than after half a gigabyte has travelled to a worker that cannot read it.
+  MAX_FILE_BYTES = 100.megabytes
   ALLOWED_EXTENSIONS = %w[pdf docx odt txt md].freeze
 
-  STATUS_FILTERS = %w[in_progress failed completed].freeze
-
   before_action :authorize_create
-  before_action :find_projekt_import, only: [:show, :status, :reset, :destroy]
-
-  def index
-    load_import_lists
-
-    @breadcrumbs = [
-      { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
-      { name: t("adm.projekts.imports.index.title") }
-    ]
-  end
 
   def new
-    @projekt_import = current_user.projekt_imports.build
+    @projekt_import = current_user.projekt_imports.build(source_kind: "file")
     @missing_tools = ProjektImports::RequiredTools.missing
 
     @breadcrumbs = [
       { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
       { name: t("adm.projekts.imports.index.title"), url: adm_projekts_imports_path },
-      { name: t(".title") }
+      { name: t("adm.projekts.imports.from_files.new.title") }
     ]
   end
 
   def create
     files = Array(params[:files]).reject(&:blank?)
 
-    if files.empty?
-      respond_with_error(t("adm.projekts.imports.errors.no_files"))
-      return
-    end
-
-    if files.sum { |f| f.size.to_i } > MAX_AGGREGATE_BYTES
-      respond_with_error(t("adm.projekts.imports.errors.too_large"))
-      return
-    end
-
-    invalid = files.find { |f| !allowed_extension?(f) }
-    if invalid
-      respond_with_error(t("adm.projekts.imports.errors.unsupported_type", filename: invalid.original_filename))
+    error = validation_error_for(files)
+    if error.present?
+      respond_with_error(error)
       return
     end
 
     @projekt_import = current_user.projekt_imports.create!(
+      source_kind: "file",
       status: "pending",
       additional_user_instructions: params[:additional_user_instructions].presence
     )
@@ -61,108 +43,45 @@ class Adm::Projekts::Imports::FromFilesController < Adm::Projekts::BaseControlle
     }
   end
 
-  def show
-    if @projekt_import.chatting? || @projekt_import.submitting? || @projekt_import.completed?
-      redirect_to adm_projekts_import_chat_path(@projekt_import)
-      return
-    end
-
-    if @projekt_import.abandoned?
-      redirect_to new_adm_projekts_import_path
-      return
-    end
-
-    @stalled = @projekt_import.stalled?
-    @status_url = status_adm_projekts_import_path(@projekt_import)
-    @chat_url = adm_projekts_import_chat_path(@projekt_import)
-
-    @breadcrumbs = [
-      { name: t("adm.projekts.home.title"), url: adm_projekts_root_path },
-      { name: t("adm.projekts.imports.from_files.new.title"), url: new_adm_projekts_import_path },
-      { name: t("adm.projekts.imports.from_files.show.title") }
-    ]
-  end
-
-  def status
-    payload = { status: @projekt_import.status, warnings: @projekt_import.warnings }
-
-    payload[:chat_url] = adm_projekts_import_chat_path(@projekt_import) if @projekt_import.chatting?
-
-    payload[:error] = @projekt_import.error_message if @projekt_import.failed?
-
-    render json: payload
-  end
-
-  def reset
-    @projekt_import.mark_abandoned!
-
-    respond_to do |format|
-      format.json { render json: { status: @projekt_import.status, new_url: new_adm_projekts_import_path } }
-      format.html { redirect_to new_adm_projekts_import_path }
-    end
-  end
-
-  def destroy
-    authorize [:adm, :projekts, @projekt_import], :destroy?
-    @projekt_import.destroy
-
-    redirect_to adm_projekts_imports_path(status: params[:status].presence)
-  end
-
   private
 
-  def authorize_create
-    authorize [:adm, :projekts, Projekt], :create?
-  end
-
-  def find_projekt_import
-    @projekt_import = current_user.projekt_imports.find(params[:id])
-  end
-
-  def load_import_lists
-    imports = policy_scope(
-      ProjektImport, policy_scope_class: Adm::Projekts::ProjektImportPolicy::Scope
-    ).with_attached_source_files
-
-    @status_filter = params[:status].presence_in(STATUS_FILTERS)
-    @import_counts = {
-      "in_progress" => imports.in_progress.count,
-      "failed" => imports.failed.count,
-      "completed" => imports.completed.count
-    }
-
-    @imports = filtered_imports(imports).for_listing.page(params[:page]).per(20)
-    @created_projekts_by_id = created_projekts_map(@imports)
-  end
-
-  def filtered_imports(imports)
-    case @status_filter
-    when "in_progress" then imports.in_progress
-    when "failed" then imports.failed
-    when "completed" then imports.completed
-    else imports.where.not(status: "abandoned")
+    def authorize_create
+      authorize [:adm, :projekts, Projekt], :create?
     end
-  end
 
-  def created_projekts_map(imports)
-    ids = imports.flat_map { |import| import.created_projekt_ids + [import.projekt_id] }.compact.uniq
-    return {} if ids.empty?
+    def validation_error_for(files)
+      return t("adm.projekts.imports.errors.no_files") if files.empty?
 
-    Projekt.where(id: ids).includes(:page).index_by(&:id)
-  end
+      oversized = files.find { |file| file.size.to_i > MAX_FILE_BYTES }
+      if oversized
+        return t("adm.projekts.imports.errors.file_too_large",
+          filename: oversized.original_filename,
+          size: helpers.number_to_human_size(MAX_FILE_BYTES))
+      end
 
-  def allowed_extension?(file)
-    ext = File.extname(file.original_filename).delete(".").downcase
-    ALLOWED_EXTENSIONS.include?(ext)
-  end
+      total_bytes = files.sum { |file| file.size.to_i }
+      if total_bytes > MAX_AGGREGATE_BYTES
+        return t("adm.projekts.imports.errors.too_large")
+      end
 
-  def respond_with_error(message)
-    respond_to do |format|
-      format.json { render json: { error: message }, status: :unprocessable_entity }
-      format.html do
-        flash[:error] = message
-        redirect_to new_adm_projekts_import_path
+      invalid = files.find { |file| !allowed_extension?(file) }
+      return if invalid.blank?
+
+      t("adm.projekts.imports.errors.unsupported_type", filename: invalid.original_filename)
+    end
+
+    def allowed_extension?(file)
+      ext = File.extname(file.original_filename).delete(".").downcase
+      ALLOWED_EXTENSIONS.include?(ext)
+    end
+
+    def respond_with_error(message)
+      respond_to do |format|
+        format.json { render json: { error: message }, status: :unprocessable_entity }
+        format.html do
+          flash[:error] = message
+          redirect_to new_adm_projekts_imports_from_file_path
+        end
       end
     end
-  end
 end

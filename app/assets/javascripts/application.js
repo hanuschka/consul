@@ -140,6 +140,7 @@
 //= require_tree ./custom
 //= require lib/files/filter_serializer
 //= require vendor_asset_urls
+//= require maps/mapbox_loader
 //= require_tree ./maps
 
 var initialize_modules = function() {
@@ -247,6 +248,7 @@ var destroy_non_idempotent_modules = function() {
   App.HTMLEditor.destroy();
   App.LegislationAnnotatable.destroy();
   App.Map.destroy();
+  App.MunicipalPlansMap.destroy();
   App.SocialShare.destroy();
   App.StikyHeader.destroy();
   App.PollsCustom.destroy();

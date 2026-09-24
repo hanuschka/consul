@@ -30,6 +30,18 @@ class MunicipalPlans::OverviewMapService
     )
   end
 
+  def bounds
+    @bounds ||= begin
+      positions = areas[:features].flat_map { |feature| positions_of(feature[:geometry]["coordinates"]) }
+
+      if positions.any?
+        longitudes, latitudes = positions.transpose
+
+        { south: latitudes.min, west: longitudes.min, north: latitudes.max, east: longitudes.max }
+      end
+    end
+  end
+
   def markers
     @markers ||= feature_collection(
       pinned_plans.flat_map do |plan|
@@ -92,6 +104,13 @@ class MunicipalPlans::OverviewMapService
       return { "type" => "Polygon", "coordinates" => polygons.first } if polygons.one?
 
       { "type" => "MultiPolygon", "coordinates" => polygons }
+    end
+
+    def positions_of(coordinates)
+      return [] unless coordinates.is_a?(Array)
+      return [coordinates.first(2).map(&:to_f)] if coordinates.first.is_a?(Numeric)
+
+      coordinates.flat_map { |nested| positions_of(nested) }
     end
 
     def feature_collection(features)

@@ -109,6 +109,24 @@ describe MunicipalPlans::OverviewMapService do
     end
   end
 
+  describe "#bounds" do
+    it "spans every Ortsteil area" do
+      district_with_area("Lobeda")
+      district_with_geometry("Kernberge", {
+        "type" => "MultiPolygon",
+        "coordinates" => [[[[11.50, 50.90], [11.52, 50.90], [11.52, 50.96], [11.50, 50.90]]]]
+      })
+
+      expect(service_for({}).bounds).to eq(south: 50.90, west: 11.50, north: 50.96, east: 11.60)
+    end
+
+    it "is nil on an instance where no Ortsteil areas were loaded" do
+      create(:registered_address_district, name: "Lobeda")
+
+      expect(service_for({}).bounds).to be_nil
+    end
+  end
+
   describe "#show?" do
     it "is false on an instance where no Ortsteil areas were loaded" do
       create(:registered_address_district, name: "Lobeda")

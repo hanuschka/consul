@@ -6,15 +6,9 @@
     <%= hidden_field_tag :order, params[:order] %>
   <% end %>
 
-  <div role="search" aria-label="<%= t("custom.municipal_plans.index.sidebar.search.region_label") %>">
-    <%= render Shared::SidebarCardComponent.new(
-      title: t("custom.municipal_plans.index.sidebar.search.title"),
-      icon_name: "search",
-      opened_on_mobile: true
-    ) do %>
-      <%= render "municipal_plans/sidebar/search" %>
-    <% end %>
-  </div>
+  <% if params[:search].present? %>
+    <%= hidden_field_tag :search, params[:search] %>
+  <% end %>
 
   <%= render Sidebar::CheckboxFilterComponent.new(
     identifier: :districts,

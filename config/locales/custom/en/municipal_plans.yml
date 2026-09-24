@@ -19,14 +19,13 @@ en:
           given_order: Editorial order
           content_updated_at: Updated on
           title: Title
+        search_form:
+          placeholder: e.g. market square
+          button_title: Search plans
+        sidebar_information: The plan list gives an overview of the city's planned and ongoing plans. For each plan, you can send a note to the responsible office through the notice form.
         sidebar:
           apply: Apply filters
           reset: Reset all filters
-          search:
-            title: Search
-            region_label: Search plans
-            label: Search term
-            placeholder: e.g. market square
           districts:
             title: District
             empty: No districts have been set up.
@@ -44,6 +43,9 @@ en:
             title: Updated on
             from_label: Updated from
             to_label: Updated until
+        overview_map:
+          region_label: Map of the districts
+          note: The map shows the districts and where the plans are located. Every district can also be filtered through the "District" list.
         view_switch:
           label: View
           tiles: Tiles

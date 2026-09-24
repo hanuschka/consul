@@ -6,84 +6,83 @@
   var AREAS_LINE_LAYER_ID = "municipal-plans-areas-line";
   var MARKER_LIFT = 10;
   var FIT_PADDING = 20;
-  var MAP_WAIT_INTERVAL = 50;
-  var MAP_WAIT_ATTEMPTS = 200;
 
   App.MunicipalPlansMap = {
+    maps: [],
+
     initialize: function() {
-      document.querySelectorAll(".js-municipal-plans-map").forEach(function(wrapper) {
-        App.MunicipalPlansMap.setup(wrapper);
+      document.querySelectorAll(".js-municipal-plans-map .js-municipal-plans-map-container").forEach(function(container) {
+        App.MunicipalPlansMap.setup(container);
       });
     },
 
-    setup: function(wrapper) {
-      var container = wrapper.querySelector("[data-map]");
-      if (!container) {
+    destroy: function() {
+      App.MunicipalPlansMap.maps.forEach(function(entry) {
+        entry.destroyed = true;
+
+        if (entry.map) {
+          entry.map.remove();
+        }
+
+        delete entry.container.dataset.initialized;
+      });
+
+      App.MunicipalPlansMap.maps = [];
+    },
+
+    setup: function(container) {
+      if (container.dataset.initialized === "true") {
         return;
       }
 
-      var instance = App.MunicipalPlansMap.mapInstanceFor(container);
-      if (!instance || instance.municipalPlansMapBound) {
-        return;
-      }
-
-      var areas = App.MunicipalPlansMap.parseCollection(wrapper.dataset.areas);
+      var areas = App.MunicipalPlansMap.parseCollection(container.dataset.areas);
       if (areas.features.length === 0) {
         return;
       }
 
-      var markers = App.MunicipalPlansMap.parseCollection(wrapper.dataset.markers);
+      var markers = App.MunicipalPlansMap.parseCollection(container.dataset.markers);
 
-      instance.municipalPlansMapBound = true;
+      container.dataset.initialized = "true";
 
-      var renderer = container.classList.contains("mapbox") ?
+      var entry = { container: container, map: null, destroyed: false };
+      App.MunicipalPlansMap.maps.push(entry);
+
+      var settings = App.MunicipalPlansMap.settings(container);
+
+      var renderer = settings.library === "mapbox" ?
         App.MunicipalPlansMap.mapbox : App.MunicipalPlansMap.leaflet;
 
-      App.MunicipalPlansMap.whenMapReady(instance, function(map) {
-        renderer.render(map, areas, markers);
-      });
+      renderer.create(entry, settings, areas, markers);
     },
 
-    mapInstanceFor: function(container) {
-      var maps = (App.Map && App.Map.maps) || [];
+    settings: function(container) {
+      var data = container.dataset;
 
-      return maps.filter(function(instance) {
-        return instance.element === container;
-      })[0];
+      return {
+        library: data.library,
+        bounds: App.MunicipalPlansMap.parseJson(data.bounds),
+        latitude: parseFloat(data.latitude),
+        longitude: parseFloat(data.longitude),
+        zoom: parseFloat(data.zoom),
+        mapboxToken: data.mapboxToken,
+        mapboxStyle: data.mapboxStyle,
+        tileLayer: App.MunicipalPlansMap.parseJson(data.tileLayer)
+      };
     },
 
-    whenMapReady: function(instance, callback) {
-      if (instance.map) {
-        callback(instance.map);
-        return;
+    parseJson: function(value) {
+      try {
+        return JSON.parse(value || "null");
+      } catch (error) {
+        return null;
       }
-
-      var attempts = 0;
-
-      var timer = setInterval(function() {
-        attempts += 1;
-
-        var registered = ((App.Map && App.Map.maps) || []).indexOf(instance) !== -1;
-
-        if (!registered || attempts >= MAP_WAIT_ATTEMPTS) {
-          clearInterval(timer);
-        } else if (instance.map) {
-          clearInterval(timer);
-          callback(instance.map);
-        }
-      }, MAP_WAIT_INTERVAL);
     },
 
     parseCollection: function(value) {
       var empty = { type: "FeatureCollection", features: [] };
+      var collection = App.MunicipalPlansMap.parseJson(value);
 
-      try {
-        var collection = JSON.parse(value || "null");
-
-        return collection && Array.isArray(collection.features) ? collection : empty;
-      } catch (error) {
-        return empty;
-      }
+      return collection && Array.isArray(collection.features) ? collection : empty;
     },
 
     toggleDistrict: function(districtId) {
@@ -120,10 +119,58 @@
     },
 
     leaflet: {
+      create: function(entry, settings, areas, markers) {
+        var map = L.map(entry.container, { gestureHandling: true, zoomControl: true });
+        var bounds = settings.bounds;
+
+        entry.map = map;
+
+        if (bounds) {
+          map.fitBounds(
+            [[bounds.south, bounds.west], [bounds.north, bounds.east]],
+            { padding: [FIT_PADDING, FIT_PADDING] }
+          );
+        } else {
+          map.setView([settings.latitude, settings.longitude], settings.zoom);
+        }
+
+        App.MunicipalPlansMap.leaflet.baseLayer(settings.tileLayer).addTo(map);
+        App.MunicipalPlansMap.leaflet.render(map, areas, markers);
+      },
+
+      baseLayer: function(item) {
+        var zoomLimits = App.MapZoom;
+
+        if (!item) {
+          return L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors",
+            maxZoom: zoomLimits.MAX,
+            maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
+          });
+        }
+
+        if (item.protocol === "wms") {
+          return L.tileLayer.wms(item.provider, {
+            attribution: item.attribution,
+            layers: item.layer_names,
+            format: (item.transparent ? "image/png" : "image/jpeg"),
+            transparent: (item.transparent),
+            opacity: (item.opacity ? item.opacity : 1),
+            maxZoom: zoomLimits.MAX
+          });
+        }
+
+        return L.tileLayer(item.provider, {
+          attribution: item.attribution,
+          maxZoom: zoomLimits.MAX,
+          maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
+        });
+      },
+
       render: function(map, areas, markers) {
         var brand = App.MunicipalPlansMap.colors().brand;
 
-        var areasLayer = L.geoJSON(areas, {
+        L.geoJSON(areas, {
           style: function(feature) {
             var selected = feature.properties && feature.properties.selected === true;
 
@@ -160,29 +207,51 @@
             .bindPopup(App.MunicipalPlansMap.popupHtml(properties), { offset: L.point(0, -30) })
             .addTo(map);
         });
-
-        var bounds = areasLayer.getBounds();
-
-        if (bounds.isValid()) {
-          map.fitBounds(bounds, { padding: [FIT_PADDING, FIT_PADDING] });
-        }
       }
     },
 
     mapbox: {
-      render: function(map, areas, markers) {
-        if (!map.isStyleLoaded()) {
-          map.once("idle", function() {
+      create: function(entry, settings, areas, markers) {
+        App.MapboxLoader.load(function() {
+          if (entry.destroyed) {
+            return;
+          }
+
+          var bounds = settings.bounds;
+          var options = {
+            container: entry.container,
+            style: settings.mapboxStyle,
+            cooperativeGestures: true,
+            locale: {
+              "ScrollZoomBlocker.CtrlMessage": "Zum Zoomen der Karte Strg + Scrollen verwenden",
+              "ScrollZoomBlocker.CmdMessage": "⌘ gedrückt halten und scrollen, um die Karte zu zoomen",
+              "TouchPanBlocker.Message": "Zum Verschieben der Karte zwei Finger verwenden"
+            }
+          };
+
+          if (bounds) {
+            options.bounds = [[bounds.west, bounds.south], [bounds.east, bounds.north]];
+            options.fitBoundsOptions = { padding: FIT_PADDING };
+          } else {
+            options.center = [settings.longitude, settings.latitude];
+            options.zoom = settings.zoom;
+          }
+
+          window.mapboxgl.accessToken = settings.mapboxToken;
+
+          var map = new window.mapboxgl.Map(options);
+
+          entry.map = map;
+
+          map.addControl(new window.mapboxgl.NavigationControl({ showCompass: false }));
+
+          map.once("load", function() {
             App.MunicipalPlansMap.mapbox.render(map, areas, markers);
           });
+        });
+      },
 
-          return;
-        }
-
-        if (map.getSource(AREAS_SOURCE_ID)) {
-          return;
-        }
-
+      render: function(map, areas, markers) {
         var brand = App.MunicipalPlansMap.colors().brand;
         var selected = ["==", ["get", "selected"], true];
 
@@ -210,7 +279,6 @@
 
         App.MunicipalPlansMap.mapbox.bindAreaEvents(map);
         App.MunicipalPlansMap.mapbox.addMarkers(map, markers);
-        App.MunicipalPlansMap.mapbox.fitToAreas(map, areas);
       },
 
       bindAreaEvents: function(map) {
@@ -285,39 +353,6 @@
         element.appendChild(icon);
 
         return element;
-      },
-
-      fitToAreas: function(map, areas) {
-        var bounds = { minLng: Infinity, minLat: Infinity, maxLng: -Infinity, maxLat: -Infinity };
-
-        var extend = function(coordinates) {
-          if (!Array.isArray(coordinates)) {
-            return;
-          }
-
-          if (typeof coordinates[0] === "number") {
-            bounds.minLng = Math.min(bounds.minLng, coordinates[0]);
-            bounds.minLat = Math.min(bounds.minLat, coordinates[1]);
-            bounds.maxLng = Math.max(bounds.maxLng, coordinates[0]);
-            bounds.maxLat = Math.max(bounds.maxLat, coordinates[1]);
-            return;
-          }
-
-          coordinates.forEach(extend);
-        };
-
-        areas.features.forEach(function(feature) {
-          extend(feature.geometry && feature.geometry.coordinates);
-        });
-
-        if (!isFinite(bounds.minLng)) {
-          return;
-        }
-
-        map.fitBounds(
-          [[bounds.minLng, bounds.minLat], [bounds.maxLng, bounds.maxLat]],
-          { padding: FIT_PADDING, duration: 0 }
-        );
       }
     }
   };

@@ -19,14 +19,13 @@ de:
           given_order: redaktionelle Reihenfolge
           content_updated_at: Aktualisierungsdatum
           title: Titel
+        search_form:
+          placeholder: z. B. Marktplatz
+          button_title: Vorhaben durchsuchen
+        sidebar_information: Die Vorhabenliste gibt einen Überblick über geplante und laufende Vorhaben der Stadt. Zu jedem Vorhaben können Sie über das Hinweisformular eine Anmerkung an die zuständige Stelle senden.
         sidebar:
           apply: Filter anwenden
           reset: Alle Filter zurücksetzen
-          search:
-            title: Suche
-            region_label: Vorhaben durchsuchen
-            label: Suchbegriff
-            placeholder: z. B. Marktplatz
           districts:
             title: Ortsteil
             empty: Es sind keine Ortsteile hinterlegt.
@@ -44,6 +43,9 @@ de:
             title: Aktualisierungsdatum
             from_label: Aktualisiert ab
             to_label: Aktualisiert bis
+        overview_map:
+          region_label: Karte der Ortsteile
+          note: Die Karte zeigt die Ortsteile und die Lage der Vorhaben. Alle Ortsteile lassen sich auch über die Liste „Ortsteil“ filtern.
         view_switch:
           label: Ansicht
           tiles: Kacheln

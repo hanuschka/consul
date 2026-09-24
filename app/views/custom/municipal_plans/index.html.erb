@@ -7,12 +7,12 @@
 <% provide :title do %><%= page_title %><% end %>
 
 <main>
-  <h1><%= page_title %></h1>
+  <h1 class="padding-on-mobile"><%= page_title %></h1>
 
-  <div class="flex-layout">
+  <div class="flex-layout padding-on-mobile">
     <div class="main-column">
       <div class="resource-page--intro-text">
-        <p><%= intro_text %></p>
+        <%= render_custom_block(archive_view ? "municipal_plans_archive_welcome" : "municipal_plans_index_welcome", default_content: intro_text) %>
 
         <p class="municipal-plans--archive-link">
           <% if archive_view %>
@@ -22,24 +22,26 @@
           <% end %>
         </p>
       </div>
+    </div>
+  </div>
 
-      <% if @overview_map.show? %>
-        <%= tag.div class: "js-municipal-plans-map margin-bottom",
-                    data: { areas: @overview_map.areas, markers: @overview_map.markers } do %>
-          <%= render Shared::MapComponent.new(process: "municipal_plans", features: {}) %>
-        <% end %>
-      <% end %>
+  <%= render MunicipalPlans::OverviewMapComponent.new(overview_map: @overview_map) %>
 
+  <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
+    <div class="main-column">
       <p class="municipal-plans--result-count" role="status">
         <%= t("custom.municipal_plans.index.result_count", count: @municipal_plans.total_count) %>
       </p>
 
-      <%= render Resources::List::BaseComponent.new do |c| %>
+      <%= render Resources::List::BaseComponent.new(
+        empty_text: @municipal_plans.empty? ? empty_list_text : nil
+      ) do |c| %>
         <% c.with_toolbar(
           i18n_namespace: "custom.municipal_plans.index",
           filters: @valid_orders,
           current_filter: @current_order,
           param: "order",
+          text_search_enabled: true,
           hide_view_mode_button: true
         ) %>
 
@@ -68,10 +70,6 @@
               <%= render MunicipalPlans::ListItemComponent.new(municipal_plan: municipal_plan) %>
             <% end %>
           <% end %>
-        <% else %>
-          <p class="resources-list--not-items-message text-center">
-            <%= empty_list_text %>
-          </p>
         <% end %>
       <% end %>
 
@@ -79,6 +77,14 @@
     </div>
 
     <div id="municipal-plans-sidebar" class="sidebar">
+      <div class="hide-on-mobile">
+        <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle", opened_on_mobile: true) do %>
+          <div class="margin-bottom-half">
+            <%= render_custom_block "municipal_plans_index_sidebar", default_content: t("custom.municipal_plans.index.sidebar_information") %>
+          </div>
+        <% end %>
+      </div>
+
       <%= render "municipal_plans/filters", form_url: list_path %>
     </div>
   </div>

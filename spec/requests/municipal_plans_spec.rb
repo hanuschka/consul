@@ -441,7 +441,8 @@ describe "Vorhabenliste", type: :request do
     end
 
     def area_properties
-      JSON.parse(map_wrapper["data-areas"])["features"].map { |feature| feature["properties"] }
+      container = map_wrapper.at_css(".js-municipal-plans-map-container")
+      JSON.parse(container["data-areas"])["features"].map { |feature| feature["properties"] }
     end
 
     it "is not rendered on an instance where no Ortsteil areas were loaded" do
@@ -625,6 +626,89 @@ describe "Vorhabenliste", type: :request do
       expect(group.at_css("[aria-current=true]").text.strip)
         .to eq I18n.t("custom.municipal_plans.index.view_switch.tiles")
       expect(document.at_css(".js-resource-list-switch-view-button")).to be_nil
+    end
+  end
+
+  describe "the page layout" do
+    before { enable_module(true) }
+
+    def document
+      Nokogiri::HTML(response.body)
+    end
+
+    def hidden_values(form, name)
+      form.css("input[type=hidden][name='#{name}']").map { |input| input["value"] }
+    end
+
+    it "keeps the ticked filters when searching from the list toolbar" do
+      district = create(:registered_address_district, name: "Lobeda")
+      topic = create(:municipal_plan_topic)
+
+      get municipal_plans_path(districts: [district.id], topics: [topic.id], order: "title")
+
+      search_form = document.at_css(".resources-list .text-search-form")
+
+      expect(hidden_values(search_form, "districts[]")).to eq [district.id.to_s]
+      expect(hidden_values(search_form, "topics[]")).to eq [topic.id.to_s]
+      expect(hidden_values(search_form, "order")).to eq ["title"]
+    end
+
+    it "keeps the search term when the filters are applied" do
+      get municipal_plans_path(search: "Eichplatz")
+
+      filter_form = document.at_css(".municipal-plans-filter-form")
+
+      expect(hidden_values(filter_form, "search")).to eq ["Eichplatz"]
+      expect(document.at_css("#municipal-plans-sidebar input[type=text][name=search]")).to be_nil
+    end
+
+    it "shows the empty text once when nothing matches" do
+      get municipal_plans_path(search: "gibt es nicht")
+
+      expect(response.body.scan(I18n.t("custom.municipal_plans.index.empty_list_text")).size).to eq 1
+    end
+
+    it "shows no empty text under a filled table" do
+      plan
+      cookies["municipal_plans_view"] = "table"
+
+      get municipal_plans_path
+
+      expect(document.css("table tbody tr")).not_to be_empty
+      expect(response.body).not_to include(I18n.t("custom.municipal_plans.index.empty_list_text"))
+    end
+
+    it "renders the intro and the sidebar information as editable content blocks" do
+      get municipal_plans_path
+
+      expect(response.body).to include(I18n.t("custom.municipal_plans.index.intro_text"))
+      expect(document.at_css("#municipal-plans-sidebar").text)
+        .to include(I18n.t("custom.municipal_plans.index.sidebar_information"))
+      expect(SiteCustomization::ContentBlock.where(key: %w[municipal_plans_index_welcome
+                                                           municipal_plans_index_sidebar]).count).to eq 2
+    end
+
+    it "uses its own content block for the archive intro" do
+      get archive_municipal_plans_path
+
+      expect(response.body).to include(I18n.t("custom.municipal_plans.index.archive_intro_text"))
+      expect(SiteCustomization::ContentBlock.exists?(key: "municipal_plans_archive_welcome")).to be true
+    end
+
+    it "places the map across the full width, outside the list and sidebar row" do
+      district = create(:registered_address_district, name: "Lobeda")
+      create(:map_location, mappable: district, features: {
+        "type" => "FeatureCollection",
+        "features" => [{ "type" => "Feature", "properties" => {}, "geometry" => {
+          "type" => "Polygon",
+          "coordinates" => [[[11.58, 50.92], [11.60, 50.92], [11.60, 50.94], [11.58, 50.92]]]
+        }}]
+      })
+
+      get municipal_plans_path
+
+      expect(document.at_css("main > .js-municipal-plans-map")).to be_present
+      expect(document.at_css(".flex-layout .js-municipal-plans-map")).to be_nil
     end
   end
 end

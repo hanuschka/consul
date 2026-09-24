@@ -1,5 +1,6 @@
 class AiAnalytics::PollStatsRefresh < ApplicationJob
   queue_as :default
+  self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
 
   def perform(poll_id)
     poll = ::Poll.find(poll_id)

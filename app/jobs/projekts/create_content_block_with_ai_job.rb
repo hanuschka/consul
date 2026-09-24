@@ -1,5 +1,6 @@
 class Projekts::CreateContentBlockWithAiJob < ApplicationJob
   queue_as :default
+  self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
 
   def perform(content_block_id, mode)
     content_block = SiteCustomization::ContentBlock.unscoped.find_by(id: content_block_id)

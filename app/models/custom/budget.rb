@@ -23,6 +23,13 @@ class Budget < ApplicationRecord
     ].compact
   end
 
+  def selection_open?
+    return true if publishing_prices_or_later?
+    return false if phases.publishing_prices&.enabled?
+
+    Budget::Phase.kind_or_later("reviewing").include?(current_phase&.kind)
+  end
+
   def knapsack_voting?
     voting_style == "knapsack"
   end

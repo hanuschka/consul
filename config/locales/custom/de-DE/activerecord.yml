@@ -167,6 +167,7 @@ de:
         contact_phone: "Telefon der Ansprechperson"
         contact_email: "E-Mail der Ansprechperson"
         system_mailbox_email: "Systempostfach für Hinweise"
+        released_at: "Freigegeben am"
         formal_participation: "Bürgerbeteiligung formell"
         informal_participation: "Bürgerbeteiligung informell"
         formal_participation_reason: "Begründung zur formellen Bürgerbeteiligung"

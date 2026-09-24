@@ -71,6 +71,6 @@ class Adm::MunicipalPlans::OfficerGroupsController < Adm::MunicipalPlans::BaseCo
     end
 
     def officer_group_params
-      params.require(:municipal_plan_officer_group).permit(:name, :default_email, officer_ids: [])
+      params.require(:municipal_plan_officer_group).permit(:name, officer_ids: [])
     end
 end

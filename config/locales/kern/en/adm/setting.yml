@@ -258,6 +258,9 @@ en:
       external_video_description: >
         Allows users to embed external videos from YouTube or Vimeo in their ideas. Explainer videos, visualizations, or reference material can be shown directly inside the idea without uploading large files to the platform — and without additional storage requirements.
     municipal_plans:
+      officers_see_all: Visibility for officers
+      officers_see_all_description: >
+        Gives officers read access to all plans in the administration area, not only to the ones assigned to them. They can still edit, submit and archive only assigned plans. They may also change the order of the plan list. Enable this when officers need an overview of all plans, beyond their own responsibility.
       auto_archive: Archive plans automatically
       auto_archive_description: >
         Archives a plan by itself as soon as the archive date entered on it is reached. At that point it disappears from the public overview and stays reachable in the archive under the same address. Enable this when your departments reliably enter the end of a plan in advance and you want to save the manual archiving step.
@@ -351,6 +354,9 @@ en:
       projekts: Projects overview
       projekts_description: >
         Enables the projects overview page, on which all ongoing and completed participation projects are accessible to citizens. The overview offers filters and shows the current status of each project. Individual projects remain reachable via direct links even when the overview is disabled.
+      municipal_plans: Municipal plans
+      municipal_plans_description: >
+        Makes the municipal plan list publicly available: the overview of published plans, the archive, the detail pages and the notice form. While disabled, these pages are unreachable and the menu entry is hidden. The administration area of the plan list stays usable either way, so plans can be prepared before launch.
       deficiency_reports: Deficiency reporter
       deficiency_reports_description: >
         Enables the deficiency reporter, through which citizens can report damage, pollution, or other deficiencies in public space. Reports are captured with location, category, and description, and can be processed and responded to by officers.

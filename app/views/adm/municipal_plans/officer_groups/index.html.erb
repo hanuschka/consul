@@ -8,10 +8,8 @@
 
 <%
   headers = {
-    name:          Kern::Table::HeaderComponent.new(:name, t(".table.name"), data_field: "name"),
-    officers:      Kern::Table::HeaderComponent.new(:officers, t(".table.officers"), data_field: "officers"),
-    default_email: Kern::Table::HeaderComponent.new(:default_email, t(".table.default_email"),
-                                                    data_field: "default_email")
+    name:     Kern::Table::HeaderComponent.new(:name, t(".table.name"), data_field: "name"),
+    officers: Kern::Table::HeaderComponent.new(:officers, t(".table.officers"), data_field: "officers")
   }
 %>
 
@@ -22,7 +20,7 @@
         turbo_frame_id: "municipal_plan_officer_groups_table",
         records: @officer_groups,
         headers: headers,
-        column_count: 4,
+        column_count: 3,
         empty_state: {
           title: t(".no_items_title"),
           description: t(".no_items_description"),
@@ -32,7 +30,6 @@
     <% c.with_header_row do %>
       <%= render headers[:name] %>
       <%= render headers[:officers] %>
-      <%= render headers[:default_email] %>
       <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
     <% end %>
 
@@ -43,7 +40,6 @@
           <td class="kern-table__cell" data-field="officers">
             <%= officer_group.officers.map(&:name).join(", ") %>
           </td>
-          <td class="kern-table__cell" data-field="default_email"><%= officer_group.default_email %></td>
           <td class="kern-table__cell">
             <%= render Kern::Table::ActionsComponent.new do |actions| %>
               <% actions.with_action(

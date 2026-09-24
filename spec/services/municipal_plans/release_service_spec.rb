@@ -91,11 +91,83 @@ describe MunicipalPlans::ReleaseService do
       expect(plan.version).to eq("1.1")
     end
 
+    it "keeps an Archivdatum set on the released Vorhaben while the copy was open" do
+      plan.update!(archive_on: Date.current + 30.days)
+      copy.update!(short_description: "Neue Fassung", submitted_at: Time.current)
+      plan.update!(archive_on: Date.current + 60.days)
+
+      MunicipalPlans::ReleaseService.call(copy)
+
+      expect(plan.reload.archive_on).to eq(Date.current + 60.days)
+    end
+
     it "leaves the released text alone until it is released" do
       copy.update!(short_description: "Neue Fassung", submitted_at: Time.current)
 
       expect(plan.reload.short_description).to eq("Alte Fassung")
       expect(plan.content_updated_at).to eq(Date.current - 10.days)
+    end
+  end
+
+  describe "the change log" do
+    let(:admin) { create(:administrator).user }
+
+    def audited_fields(plan)
+      plan.own_and_associated_audits.where(action: "update").flat_map do |audit|
+        audit.audited_changes.keys.map { |field| [field, audit.user] }
+      end
+    end
+
+    it "records the first publication as a release by the administrator" do
+      plan = create(:municipal_plan, responsible: officer)
+      plan.update!(submitted_at: Time.current)
+
+      Audited.audit_class.as_user(admin) { MunicipalPlans::ReleaseService.call(plan) }
+
+      expect(audited_fields(plan.reload)).to include(["released_at", admin])
+      expect(plan.released_at).to be_present
+    end
+
+    describe "a later change" do
+      let!(:plan) do
+        create(:municipal_plan, :published, responsible: officer, short_description: "Alte Fassung",
+                                            internal_notes: "Alt")
+      end
+      let!(:copy) { MunicipalPlans::WorkingCopyService.call(plan) }
+
+      before do
+        Audited.audit_class.as_user(officer.user) do
+          copy.update!(short_description: "Neue Fassung", internal_notes: "Neu")
+          copy.update!(submitted_at: Time.current)
+        end
+
+        Audited.audit_class.as_user(admin) { MunicipalPlans::ReleaseService.call(copy) }
+      end
+
+      it "names the author of each change, once" do
+        fields = audited_fields(plan.reload)
+
+        expect(fields.count(["short_description", officer.user])).to eq(1)
+        expect(fields.count(["internal_notes", officer.user])).to eq(1)
+        expect(fields.map(&:first).count("short_description")).to eq(1)
+        expect(fields.map(&:first).count("internal_notes")).to eq(1)
+      end
+
+      it "adds one release entry by the administrator" do
+        release_audits = plan.reload.own_and_associated_audits.where(action: "update")
+                             .select { |audit| audit.audited_changes.key?("released_at") }
+
+        expect(release_audits.size).to eq(1)
+        expect(release_audits.first.user).to eq(admin)
+        expect(release_audits.first.audited_changes.keys).to eq(["released_at"])
+      end
+
+      it "leaves the copy's creation and removal out of the log" do
+        expect(plan.reload.own_and_associated_audits.where(action: %w[create destroy]).map(&:associated_id)
+                   .compact.uniq).to eq([plan.id])
+        expect(plan.own_and_associated_audits.where(action: "create", auditable_type: "MunicipalPlan").count)
+          .to eq(1)
+      end
     end
   end
 end

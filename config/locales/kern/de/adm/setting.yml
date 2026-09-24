@@ -261,6 +261,9 @@ de:
       external_video_description: >
         Ermöglicht es Nutzern, externe Videos von YouTube oder Vimeo in ihre Ideen einzubetten. So können z.B. Erklärvideos, Visualisierungen oder Anschauungsmaterial direkt in der Idee angezeigt werden, ohne dass große Dateien auf die Plattform hochgeladen werden müssen — und ohne zusätzlichen Speicherbedarf.
     municipal_plans:
+      officers_see_all: Sichtbarkeit für die Sachbearbeitung
+      officers_see_all_description: >
+        Gibt der Sachbearbeitung im Verwaltungsbereich Leserechte auf alle Vorhaben, nicht nur auf die ihr zugeordneten. Bearbeiten, einreichen und archivieren kann sie weiterhin nur zugeordnete Vorhaben. Zusätzlich darf sie die Reihenfolge der Vorhabenliste ändern. Aktivieren Sie diese Funktion, wenn die Sachbearbeitung einen Überblick über alle Vorhaben braucht, auch außerhalb ihrer eigenen Zuständigkeit.
       auto_archive: Vorhaben automatisch archivieren
       auto_archive_description: >
         Archiviert ein Vorhaben selbsttätig, sobald das an ihm hinterlegte Archivdatum erreicht ist. Im Frontend verschwindet es zu diesem Zeitpunkt aus der Übersicht und bleibt im Archivbereich unter derselben Adresse erreichbar. Aktivieren Sie diese Funktion, wenn Ihre Fachbereiche das Ende eines Vorhabens verlässlich im Voraus eintragen und Sie sich das manuelle Archivieren sparen wollen.
@@ -354,6 +357,9 @@ de:
       projekts: Projektübersicht
       projekts_description: >
         Aktiviert die Projektübersichtsseite, auf der alle laufenden und abgeschlossenen Beteiligungsprojekte für Bürger zugänglich sind. Die Übersicht bietet Filtermöglichkeiten und zeigt den aktuellen Stand jedes Projekts. Einzelne Projekte bleiben auch bei deaktivierter Übersicht über direkte Links erreichbar.
+      municipal_plans: Vorhabenliste
+      municipal_plans_description: >
+        Macht die Vorhabenliste öffentlich zugänglich: die Übersicht der veröffentlichten Vorhaben, das Archiv, die Detailseiten und das Hinweisformular. Ist die Einstellung deaktiviert, sind diese Seiten nicht erreichbar, und der Menüeintrag entfällt. Der Verwaltungsbereich der Vorhabenliste bleibt unabhängig davon nutzbar, sodass Vorhaben schon vor dem Start gepflegt werden können.
       deficiency_reports: Mängelmelder
       deficiency_reports_description: >
         Aktiviert den Mängelmelder, über den Bürger Schäden, Verschmutzungen oder andere Mängel im öffentlichen Raum melden können. Meldungen werden mit Standort, Kategorie und Beschreibung erfasst und können von Sachbearbeitern bearbeitet und beantwortet werden.

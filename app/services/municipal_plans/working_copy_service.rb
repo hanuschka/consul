@@ -14,6 +14,8 @@ module MunicipalPlans
       given_order
       released_plan_id
       submitted_at
+      archive_on
+      released_at
       tsv
       created_at
       updated_at

@@ -4,7 +4,7 @@ class Adm::MunicipalPlans::MenuComponent < Adm::BaseMenuComponent
   end
 
   def menu_items
-    [municipal_plans_item, officers_item, officer_groups_item, topics_item].compact
+    [municipal_plans_item, officers_item, officer_groups_item, topics_item, settings_item].compact
   end
 
   private
@@ -47,6 +47,16 @@ class Adm::MunicipalPlans::MenuComponent < Adm::BaseMenuComponent
         label: t("adm.municipal_plans.menu.items.topics"),
         icon: "category",
         path: adm_municipal_plans_topics_path
+      }
+    end
+
+    def settings_item
+      return unless Adm::MunicipalPlans::SettingPolicy.new(current_user, nil).show?
+
+      {
+        label: t("adm.municipal_plans.menu.items.settings"),
+        icon: "settings",
+        path: adm_municipal_plans_settings_path
       }
     end
 end

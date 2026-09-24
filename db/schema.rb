@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_23_100000) do
+ActiveRecord::Schema.define(version: 2026_09_24_110000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1902,7 +1902,6 @@ ActiveRecord::Schema.define(version: 2026_09_23_100000) do
 
   create_table "municipal_plan_officer_groups", force: :cascade do |t|
     t.string "name"
-    t.string "default_email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -1979,6 +1978,7 @@ ActiveRecord::Schema.define(version: 2026_09_23_100000) do
     t.datetime "submitted_at"
     t.bigint "released_plan_id"
     t.date "archive_on"
+    t.datetime "released_at"
     t.index ["given_order"], name: "index_municipal_plans_on_given_order"
     t.index ["released_plan_id"], name: "index_municipal_plans_on_released_plan_id"
     t.index ["responsible_type", "responsible_id"], name: "index_municipal_plans_on_responsible"

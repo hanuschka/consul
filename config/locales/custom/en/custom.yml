@@ -21,6 +21,7 @@ en:
         contact_phone: "Contact phone"
         contact_email: "Contact e-mail"
         system_mailbox_email: "System mailbox for notices"
+        released_at: "Released at"
         formal_participation: "Formal citizen participation"
         informal_participation: "Informal citizen participation"
         formal_participation_reason: "Reason for formal citizen participation"

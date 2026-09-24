@@ -9,6 +9,9 @@ de:
           officers: Sachbearbeitung
           officer_groups: Bearbeitergruppen
           topics: Themen
+          settings: Einstellungen
+      settings:
+        title: Einstellungen
       statuses:
         draft: Entwurf
         published: Veröffentlicht
@@ -283,7 +286,6 @@ de:
           table:
             name: Name
             officers: Mitglieder
-            default_email: Standard-E-Mail
         new:
           title: Neue Bearbeitergruppe
         edit:
@@ -299,9 +301,6 @@ de:
           name_label: Name
           name_hint: Der Name der Bearbeitergruppe erscheint in den Auswahllisten, in denen Sie einem Vorhaben die zuständige Stelle zuweisen. Wählen Sie eine eindeutige, sprechende Bezeichnung, die der Organisationsstruktur Ihrer Verwaltung entspricht, zum Beispiel „Stadtplanungsamt" oder „Amt für Stadtentwicklung". Der Name ist nur in der Verwaltung sichtbar.
           name_placeholder: z. B. Stadtplanungsamt
-          default_email_label: Standard-E-Mail
-          default_email_hint: An diese Adresse gehen alle Benachrichtigungen zu Vorhaben, für die diese Gruppe zuständig ist. Verwenden Sie möglichst eine Funktionsadresse wie stadtplanung@stadt.de, damit die Benachrichtigungen unabhängig von einzelnen Personen zugestellt werden.
-          default_email_placeholder: z. B. stadtplanung@stadt.de
           officers_label: Mitglieder
           officers_hint: Wählen Sie die Personen aus, die dieser Gruppe angehören sollen. Alle Mitglieder können die Vorhaben bearbeiten, für die die Gruppe zuständig ist. Personen können gleichzeitig mehreren Gruppen angehören.
           no_officers_title: Keine Sachbearbeitung hinterlegt

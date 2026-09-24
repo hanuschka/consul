@@ -35,6 +35,7 @@ class MunicipalPlan < ApplicationRecord
     given_order
     responsible_type
     responsible_id
+    released_at
   ]).freeze
 
   translates :title, touch: true

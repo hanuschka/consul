@@ -12,6 +12,8 @@ namespace :adm do
       patch :order_topics, on: :collection
     end
 
+    resource :settings, only: :show, controller: "settings"
+
     resources :municipal_plans, only: [:new, :create, :show, :edit, :update, :destroy], path: "" do
       collection do
         get :order

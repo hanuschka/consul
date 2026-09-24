@@ -11,20 +11,32 @@ module MunicipalPlans
     def call
       MunicipalPlan.transaction do
         associations_before = association_fingerprint
-        apply_content unless first_publication?
 
         # Archiving is the Sachbearbeitung's decision and stands on its own: releasing a change to
         # an archived Vorhaben updates its content without putting it back into the public list.
         released.status = "published" unless released.archived?
         released.submitted_at = nil
-        released.save!
+
+        if first_publication?
+          released.released_at = Time.current
+          released.save!
+        else
+          without_auditing do
+            apply_content
+            released.save!
+          end
+        end
 
         version_advanced = released.saved_change_to_version?
         associations_changed = association_fingerprint(reload: true) != associations_before
 
         released.register_content_change! if associations_changed && !version_advanced
 
-        submission.destroy! unless first_publication?
+        unless first_publication?
+          move_audits_to_released
+          released.update!(released_at: Time.current)
+          submission.destroy!
+        end
       end
 
       released
@@ -36,6 +48,24 @@ module MunicipalPlans
 
       def first_publication?
         submission == released
+      end
+
+      def without_auditing(&block)
+        MunicipalPlan.without_auditing do
+          MunicipalPlan.translation_class.without_auditing(&block)
+        end
+      end
+
+      def move_audits_to_released
+        submission.audits.where(action: "update").update_all(auditable_id: released.id)
+
+        submission.translations.each do |translation|
+          target = released.translations.find_by(locale: translation.locale)
+          next if target.blank?
+
+          translation.audits.where(action: "update")
+                     .update_all(auditable_id: target.id, associated_id: released.id)
+        end
       end
 
       def apply_content

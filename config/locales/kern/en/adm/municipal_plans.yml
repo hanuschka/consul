@@ -9,6 +9,9 @@ en:
           officers: Officers
           officer_groups: Officer groups
           topics: Topics
+          settings: Settings
+      settings:
+        title: Settings
       statuses:
         draft: Draft
         published: Published
@@ -283,7 +286,6 @@ en:
           table:
             name: Name
             officers: Members
-            default_email: Default email
         new:
           title: New officer group
         edit:
@@ -299,9 +301,6 @@ en:
           name_label: Name
           name_hint: The name of the officer group appears in the lists where you assign the responsible unit to a plan. Use a unique, descriptive name that matches your administration, for example "Urban planning department". The name is only visible in the admin area.
           name_placeholder: e.g. Urban planning department
-          default_email_label: Default email
-          default_email_hint: All notifications about plans this group is responsible for are sent to this address. Prefer a functional address so notifications are delivered independently of individual people.
-          default_email_placeholder: e.g. planning@city.example
           officers_label: Members
           officers_hint: Select the officers who belong to this group. All members can edit the plans the group is responsible for. An officer can belong to several groups.
           no_officers_title: No officers yet

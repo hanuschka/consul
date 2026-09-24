@@ -1,0 +1,12 @@
+<%= content_for :title, t("adm.municipal_plans.settings.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.municipal_plans.settings.title"),
+  breadcrumbs: @breadcrumbs
+) %>
+
+<div class="kern-container my-5">
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "process.municipal_plans"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "municipal_plans.officers_see_all"), :value, :boolean) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "municipal_plans.auto_archive"), :value, :boolean) %>
+</div>

@@ -42,6 +42,54 @@
       z-index: -1;
     }
   }
+
+  .sidebar-filter-checkbox {
+    ul {
+      list-style-type: none;
+      margin-bottom: 0;
+    }
+
+    label {
+      cursor: pointer;
+      position: relative;
+      color: #878787;
+    }
+
+    label:focus-within {
+      outline: 2px solid $dt-base;
+      outline-offset: 2px;
+    }
+
+    .checkmark {
+      position: absolute;
+      left: -19px;
+      top: 0;
+    }
+
+    .checkmark::before {
+       content: "\f0c8";
+       font-family: 'Font Awesome 5 Free';
+       font-weight: normal;
+    }
+
+    .selected-option {
+      label {
+        color: $dt-base;
+        font-weight: bold;
+      }
+
+      .checkmark::before {
+        color: $dt-base;
+        content: "\f14a";
+      }
+    }
+
+    input[type='checkbox'] {
+      position: absolute;
+      opacity: 0;
+      z-index: -1;
+    }
+  }
 }
 
 .geozone-filter {

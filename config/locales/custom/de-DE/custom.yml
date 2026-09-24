@@ -80,6 +80,8 @@ de:
       destroy_all:
         success: Alle Inhaltsblöcke gelöscht
     sidebar_filter:
+      checkbox:
+        updates_on_change: Die Liste wird bei jeder Auswahl neu geladen.
       my_posts:
         title: 'Meine Beiträge'
         all: 'Alle'

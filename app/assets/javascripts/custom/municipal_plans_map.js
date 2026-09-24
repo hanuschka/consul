@@ -96,18 +96,8 @@
         return;
       }
 
-      var form = checkbox.form;
-      if (!form) {
-        return;
-      }
-
-      checkbox.checked = !checkbox.checked;
-
-      if (form.requestSubmit) {
-        form.requestSubmit();
-      } else {
-        form.submit();
-      }
+      checkbox.dataset.skipFocusRestore = "true";
+      checkbox.click();
     },
 
     escapeHtml: function(value) {

@@ -16,33 +16,39 @@
     <% end %>
   </div>
 
-  <%= render Shared::SidebarCardComponent.new(
+  <%= render Sidebar::CheckboxFilterComponent.new(
+    identifier: :districts,
+    options: @districts.map { |d| [d.name_for_display, d.id] },
     title: t("custom.municipal_plans.index.sidebar.districts.title"),
-    icon_name: "map-marker-alt"
-  ) do %>
-    <%= render "municipal_plans/sidebar/districts" %>
-  <% end %>
+    icon: "map-marker-alt",
+    id_prefix: "filter_district",
+    empty_text: t("custom.municipal_plans.index.sidebar.districts.empty")
+  ) %>
 
-  <%= render Shared::SidebarCardComponent.new(
+  <%= render Sidebar::CheckboxFilterComponent.new(
+    identifier: :topics,
+    options: @topics.map { |t| [t.name, t.id] },
     title: t("custom.municipal_plans.index.sidebar.topics.title"),
-    icon_name: "tags"
-  ) do %>
-    <%= render "municipal_plans/sidebar/topics" %>
-  <% end %>
+    icon: "tags",
+    id_prefix: "filter_topic",
+    empty_text: t("custom.municipal_plans.index.sidebar.topics.empty")
+  ) %>
 
-  <%= render Shared::SidebarCardComponent.new(
+  <%= render Sidebar::CheckboxFilterComponent.new(
+    identifier: :participation,
+    options: MunicipalPlansQuery::PARTICIPATION_KINDS.map { |k| [t("custom.municipal_plans.index.sidebar.participation.options.#{k}"), k] },
     title: t("custom.municipal_plans.index.sidebar.participation.title"),
-    icon_name: "hands-helping"
-  ) do %>
-    <%= render "municipal_plans/sidebar/participation" %>
-  <% end %>
+    icon: "hands-helping",
+    id_prefix: "filter_participation"
+  ) %>
 
-  <%= render Shared::SidebarCardComponent.new(
+  <%= render Sidebar::CheckboxFilterComponent.new(
+    identifier: :recency,
+    options: MunicipalPlansQuery::RECENCY_VALUES.map { |v| [t("custom.municipal_plans.badges.#{v}"), v] },
     title: t("custom.municipal_plans.index.sidebar.recency.title"),
-    icon_name: "star"
-  ) do %>
-    <%= render "municipal_plans/sidebar/recency" %>
-  <% end %>
+    icon: "star",
+    id_prefix: "filter_recency"
+  ) %>
 
   <%= render Shared::SidebarCardComponent.new(
     title: t("custom.municipal_plans.index.sidebar.updated_range.title"),

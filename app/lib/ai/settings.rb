@@ -21,6 +21,10 @@ module Ai::Settings
     WHATSAPP_TIER_BIG, WHATSAPP_TIER_FAST, WHATSAPP_TIER_ULTRAFAST
   ].freeze
 
+  # An AI provider call that never answers would otherwise hold the worker,
+  # and every job queued behind it, for the worker-wide max_run_time.
+  JOB_MAX_RUN_TIME = 18.minutes
+
   def self.feature_enabled?
     Rails.application.secrets.dig(:ai, :enabled) == true
   end

@@ -1,5 +1,5 @@
 <% show_success = local_assigns.fetch(:show_success, false) %>
-<% phase_enabled = budget.publishing_prices_or_later? %>
+<% phase_enabled = budget.selection_open? %>
 
 <%= form_with model: investment,
       url: adm_projekts_phase_budget_investment_path(projekt_phase, investment),

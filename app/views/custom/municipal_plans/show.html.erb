@@ -1,6 +1,12 @@
 <%= content_for :body_class, "municipal-plans-show" %>
 <% provide :title do %><%= @municipal_plan.title %><% end %>
 <% content_for :meta_description do %><%= truncate(strip_tags(@municipal_plan.short_description.to_s), length: 300) %><% end %>
+<% provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+              social_url: municipal_plan_url(@municipal_plan),
+              social_title: @municipal_plan.title,
+              social_description: truncate(strip_tags(@municipal_plan.short_description.to_s), length: 300) %>
+<% end %>
 <% content_for :canonical do %>
   <%= render "shared/canonical", href: municipal_plan_url(@municipal_plan) %>
 <% end %>
@@ -8,197 +14,175 @@
 <% rich_text_present = ->(value) { strip_tags(value.to_s).strip.present? } %>
 <% map_location = @municipal_plan.map_location %>
 <% contact_rows = [
-     { label: t("custom.municipal_plans.show.contact_name"), value: @municipal_plan.contact_name },
-     { label: t("custom.municipal_plans.show.contact_role"), value: @municipal_plan.contact_role },
-     { label: t("custom.municipal_plans.show.contact_phone"), value: @municipal_plan.contact_phone },
-     { label: t("custom.municipal_plans.show.contact_email"), value: @municipal_plan.contact_email }
+     { type: :name, label: t("custom.municipal_plans.show.contact_name"), value: @municipal_plan.contact_name },
+     { type: :role, label: t("custom.municipal_plans.show.contact_role"), value: @municipal_plan.contact_role },
+     { type: :phone, label: t("custom.municipal_plans.show.contact_phone"), value: @municipal_plan.contact_phone },
+     { type: :email, label: t("custom.municipal_plans.show.contact_email"), value: @municipal_plan.contact_email }
    ].select { |row| row[:value].present? } %>
+<% linked_projekts = @municipal_plan.visible_projekts_for(current_user).select(&:page) %>
+<% banner_date = l(@municipal_plan.content_updated_at || @municipal_plan.created_at, format: "%d.%m.%Y") %>
 
 <main>
-  <div class="resource-page municipal-plan-page">
+  <div class="resource-page">
     <div class="flex-layout">
       <div class="main-column">
         <%= back_link_to(municipal_plans_path, t("custom.municipal_plans.show.back")) %>
 
-        <h1><%= @municipal_plan.title %></h1>
+        <div class="common-page-description">
+          <%= render_custom_block("municipal_plans_show_welcome_text") %>
+        </div>
+      </div>
+      <div class="sidebar-placeholder"></div>
+    </div>
 
-        <%= render MunicipalPlans::BadgesComponent.new(municipal_plan: @municipal_plan) %>
+    <div class="flex-layout">
+      <div class="main-column">
+        <%= render ResourcePage::BannerComponent.new(
+          resource: @municipal_plan,
+          date: t("custom.municipal_plans.show.updated_on", date: banner_date)
+        ) do |c| %>
+          <% if @municipal_plan.version.present? %>
+            <% c.with_additional_resource_detail do %>
+              <div class="resource-page-banner--detail">
+                <i class="fa fa-hashtag"></i>
+                <%= t("custom.municipal_plans.show.banner.version") %>: <%= @municipal_plan.version %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <% if @municipal_plan.topics.any? %>
+            <% c.with_additional_resource_detail do %>
+              <div class="resource-page-banner--detail">
+                <i class="fa fa-tags"></i>
+                <%= t("custom.municipal_plans.show.banner.topics") %>: <%= @municipal_plan.topics.map(&:name).join(", ") %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <% if @municipal_plan.districts.any? %>
+            <% c.with_additional_resource_detail do %>
+              <div class="resource-page-banner--detail">
+                <i class="fa fa-map-marker-alt"></i>
+                <%= t("custom.municipal_plans.show.banner.districts") %>: <%= @municipal_plan.districts.map(&:name_for_display).join(", ") %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <% if @municipal_plan.badges.any? %>
+            <% c.with_additional_resource_detail do %>
+              <div class="resource-page-banner--detail">
+                <%= render MunicipalPlans::BadgesComponent.new(municipal_plan: @municipal_plan) %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <% linked_projekts.each do |linked_projekt| %>
+            <% c.with_additional_resource_detail do %>
+              <div class="resource-page-banner--detail">
+                <%= link_to(page_path(linked_projekt.page.slug)) do %>
+                  <i class="fa fa-code-branch"></i>
+                  <%= t("custom.resource_page.banner_component.related_projekt") %>
+                  <%= linked_projekt.title %>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+
+          <% if @municipal_plan.archived? %>
+            <% c.with_additional_resource_detail do %>
+              <div class="resource-page-banner--detail">
+                <i class="fa fa-check-circle"></i>
+                <%= t("custom.municipal_plans.show.status_archived") %>
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% if rich_text_present.call(@municipal_plan.processing_status) %>
+          <div class="resource-page--description new-card main-content-card" style="background-color:#E3FCE7">
+            <h2><%= t("custom.municipal_plans.show.processing_status") %></h2>
+            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.processing_status) %>
+          </div>
+        <% end %>
 
         <% if rich_text_present.call(@municipal_plan.short_description) %>
-          <div class="municipal-plan-page--lead">
+          <div class="resource-page--description new-card main-content-card">
             <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.short_description) %>
           </div>
         <% end %>
 
-        <% if contact_rows.any? %>
-          <section class="municipal-plan-page--section">
-            <h2><%= t("custom.municipal_plans.show.contact") %></h2>
-            <dl class="municipal-plan-page--definitions">
-              <% contact_rows.each do |row| %>
-                <dt><%= row[:label] %></dt>
-                <dd>
-                  <% if row[:label] == t("custom.municipal_plans.show.contact_email") %>
-                    <%= mail_to row[:value] %>
-                  <% elsif row[:label] == t("custom.municipal_plans.show.contact_phone") %>
-                    <%= link_to row[:value], "tel:#{row[:value].gsub(/[^0-9+]/, "")}" %>
-                  <% else %>
-                    <%= row[:value] %>
-                  <% end %>
-                </dd>
-              <% end %>
-            </dl>
-          </section>
+        <% if rich_text_present.call(@municipal_plan.next_steps) %>
+          <div class="new-card main-content-card">
+            <h2><%= t("custom.municipal_plans.show.next_steps") %></h2>
+            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.next_steps) %>
+          </div>
         <% end %>
 
         <% if rich_text_present.call(@municipal_plan.last_resolution) %>
-          <section class="municipal-plan-page--section">
+          <div class="new-card main-content-card">
             <h2><%= t("custom.municipal_plans.show.last_resolution") %></h2>
             <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.last_resolution) %>
-          </section>
-        <% end %>
-
-        <% if rich_text_present.call(@municipal_plan.processing_status) %>
-          <section class="municipal-plan-page--section">
-            <h2><%= t("custom.municipal_plans.show.processing_status") %></h2>
-            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.processing_status) %>
-          </section>
-        <% end %>
-
-        <% if rich_text_present.call(@municipal_plan.next_steps) %>
-          <section class="municipal-plan-page--section">
-            <h2><%= t("custom.municipal_plans.show.next_steps") %></h2>
-            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.next_steps) %>
-          </section>
+          </div>
         <% end %>
 
         <% if rich_text_present.call(@municipal_plan.further_information) %>
-          <section class="municipal-plan-page--section">
+          <div class="new-card main-content-card">
             <h2><%= t("custom.municipal_plans.show.further_information") %></h2>
             <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.further_information) %>
-          </section>
-        <% end %>
-
-        <% if @municipal_plan.districts.any? %>
-          <section class="municipal-plan-page--section">
-            <h2><%= t("custom.municipal_plans.show.districts") %></h2>
-            <ul class="municipal-plan-page--list">
-              <% @municipal_plan.districts.each do |district| %>
-                <li><%= district.name_for_display %></li>
-              <% end %>
-            </ul>
-          </section>
-        <% end %>
-
-        <% if @municipal_plan.topics.any? %>
-          <section class="municipal-plan-page--section">
-            <h2><%= t("custom.municipal_plans.show.topics") %></h2>
-            <ul class="municipal-plan-page--list">
-              <% @municipal_plan.topics.each do |topic| %>
-                <li><%= topic.name %></li>
-              <% end %>
-            </ul>
-          </section>
+          </div>
         <% end %>
 
         <% if @municipal_plan.costs.present? %>
-          <section class="municipal-plan-page--section">
+          <div class="new-card main-content-card">
             <h2><%= t("custom.municipal_plans.show.costs") %></h2>
             <p><%= @municipal_plan.costs %></p>
-          </section>
+          </div>
         <% end %>
 
-        <section class="municipal-plan-page--section">
-          <h2><%= t("custom.municipal_plans.show.participation") %></h2>
-          <dl class="municipal-plan-page--definitions">
-            <dt><%= t("custom.municipal_plans.show.formal_participation") %></dt>
-            <dd>
-              <span class="municipal-plan-page--flag">
-                <i class="fas <%= @municipal_plan.formal_participation ? "fa-check" : "fa-times" %>" aria-hidden="true"></i>
-                <%= @municipal_plan.formal_participation ? t("custom.municipal_plans.participation.yes") : t("custom.municipal_plans.participation.no") %>
-              </span>
+        <% if @municipal_plan.formal_participation || @municipal_plan.informal_participation %>
+          <div class="new-card main-content-card">
+            <h2><%= t("custom.municipal_plans.show.participation") %></h2>
+            <% if @municipal_plan.formal_participation %>
+              <p>
+                <i class="fas fa-check" aria-hidden="true"></i>
+                <%= t("custom.municipal_plans.show.formal_participation") %>
+              </p>
               <% if @municipal_plan.formal_participation_reason.present? %>
-                <p class="municipal-plan-page--flag-reason"><%= @municipal_plan.formal_participation_reason %></p>
+                <p><%= @municipal_plan.formal_participation_reason %></p>
               <% end %>
-            </dd>
-
-            <dt><%= t("custom.municipal_plans.show.informal_participation") %></dt>
-            <dd>
-              <span class="municipal-plan-page--flag">
-                <i class="fas <%= @municipal_plan.informal_participation ? "fa-check" : "fa-times" %>" aria-hidden="true"></i>
-                <%= @municipal_plan.informal_participation ? t("custom.municipal_plans.participation.yes") : t("custom.municipal_plans.participation.no") %>
-              </span>
+            <% end %>
+            <% if @municipal_plan.informal_participation %>
+              <p>
+                <i class="fas fa-check" aria-hidden="true"></i>
+                <%= t("custom.municipal_plans.show.informal_participation") %>
+              </p>
               <% if @municipal_plan.informal_participation_reason.present? %>
-                <p class="municipal-plan-page--flag-reason"><%= @municipal_plan.informal_participation_reason %></p>
+                <p><%= @municipal_plan.informal_participation_reason %></p>
               <% end %>
-            </dd>
-          </dl>
-        </section>
-
-        <% linked_projekts = @municipal_plan.visible_projekts_for(current_user).select(&:page) %>
-        <% if linked_projekts.any? %>
-          <section class="municipal-plan-page--section">
-            <h2><%= t("custom.municipal_plans.show.projekts") %></h2>
-            <ul class="municipal-plan-page--list">
-              <% linked_projekts.each do |linked_projekt| %>
-                <li><%= link_to linked_projekt.title, page_path(linked_projekt.page.slug) %></li>
-              <% end %>
-            </ul>
-          </section>
-        <% end %>
-
-        <% if @municipal_plan.links.any? %>
-          <section class="municipal-plan-page--section">
-            <h2><%= t("custom.municipal_plans.show.links") %></h2>
-            <ul class="municipal-plan-page--list">
-              <% @municipal_plan.links.each do |link| %>
-                <li>
-                  <%= link_to link.url, target: "_blank", rel: "noopener" do %>
-                    <%= link.title.presence || link.url %>
-                    <span class="show-for-sr"><%= t("custom.municipal_plans.show.opens_in_new_tab") %></span>
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
-          </section>
+            <% end %>
+          </div>
         <% end %>
 
         <% if map_location.present? %>
-          <section class="municipal-plan-page--section">
-            <h2><%= t("custom.municipal_plans.show.map_location") %></h2>
+          <p>
+            <% if map_location.approximated_address.present? %>
+              <%= t("custom.municipal_plans.show.map_address", address: map_location.approximated_address) %>
+            <% else %>
+              <%= t("custom.municipal_plans.show.map_address_missing") %>
+            <% end %>
+          </p>
 
-            <p class="municipal-plan-page--map-address">
-              <% if map_location.approximated_address.present? %>
-                <%= t("custom.municipal_plans.show.map_address", address: map_location.approximated_address) %>
-              <% else %>
-                <%= t("custom.municipal_plans.show.map_address_missing") %>
-              <% end %>
-            </p>
-
-            <div class="margin-bottom not-print">
-              <%= render Shared::MapComponent.new(
-                mappable: @municipal_plan,
-                features: map_location.features_json_data
-              ) %>
-            </div>
-          </section>
+          <div class="margin-bottom not-print">
+            <%= render Shared::MapComponent.new(
+              mappable: @municipal_plan,
+              features: map_location.features_json_data
+            ) %>
+          </div>
         <% end %>
-
-        <dl class="municipal-plan-page--definitions municipal-plan-page--meta">
-          <% if @municipal_plan.content_updated_at.present? %>
-            <dt><%= t("custom.municipal_plans.show.content_updated_at") %></dt>
-            <dd><%= l(@municipal_plan.content_updated_at, format: "%d.%m.%Y") %></dd>
-          <% end %>
-
-          <% if @municipal_plan.version.present? %>
-            <dt><%= t("custom.municipal_plans.show.version") %></dt>
-            <dd><%= @municipal_plan.version %></dd>
-          <% end %>
-        </dl>
 
         <% if @municipal_plan.published? %>
           <% plan_notice = @notice || MunicipalPlan::Notice.new %>
-          <section class="municipal-plan-page--section municipal-plan-page--notice-form"
-                   id="municipal-plan-notice-form">
+          <div class="new-card main-content-card" id="municipal-plan-notice-form" tabindex="-1">
             <h2><%= t("custom.municipal_plans.notices.form.title") %></h2>
             <p><%= t("custom.municipal_plans.notices.form.intro") %></p>
 
@@ -237,10 +221,61 @@
 
               <%= f.submit t("custom.municipal_plans.notices.form.submit"), class: "button" %>
             <% end %>
-          </section>
+          </div>
         <% end %>
       </div>
-      <div class="sidebar-placeholder"></div>
+
+      <aside class="sidebar">
+        <% if contact_rows.any? %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.municipal_plans.show.contact"), icon_name: "user")) do %>
+            <dl>
+              <% contact_rows.each do |row| %>
+                <dt><%= row[:label] %></dt>
+                <dd>
+                  <% if row[:type] == :email %>
+                    <%= mail_to row[:value] %>
+                  <% elsif row[:type] == :phone && row[:value].match?(/\d/) %>
+                    <%= link_to row[:value], "tel:#{row[:value].gsub(/[^0-9+]/, "")}" %>
+                  <% else %>
+                    <%= row[:value] %>
+                  <% end %>
+                </dd>
+              <% end %>
+            </dl>
+          <% end %>
+        <% end %>
+
+        <% if @municipal_plan.links.any? %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.municipal_plans.show.links"), icon_name: "link")) do %>
+            <ul>
+              <% @municipal_plan.links.each do |link| %>
+                <li>
+                  <%= link_to link.url, target: "_blank", rel: "noopener" do %>
+                    <%= link.title.presence || link.url %>
+                    <span class="show-for-sr"><%= t("custom.municipal_plans.show.opens_in_new_tab") %></span>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        <% end %>
+
+        <% if @municipal_plan.published? %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.municipal_plans.show.notice_card.title"), icon_name: "envelope")) do %>
+            <p><%= t("custom.municipal_plans.show.notice_card.text") %></p>
+            <%= link_to t("custom.municipal_plans.show.notice_card.button"), "#municipal-plan-notice-form", class: "button" %>
+          <% end %>
+        <% end %>
+
+        <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.share"), icon_name: "share")) do |c| %>
+          <%= render "shared/social_share",
+            share_title: t("proposals.show.share"),
+            title: @municipal_plan.title,
+            url: municipal_plan_url(@municipal_plan),
+            description: @municipal_plan.title,
+            mobile: @municipal_plan.title %>
+        <% end %>
+      </aside>
     </div>
   </div>
 </main>

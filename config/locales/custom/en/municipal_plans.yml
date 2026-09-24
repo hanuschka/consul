@@ -79,10 +79,11 @@ en:
           submit: Send notice
           error_title: Your notice could not be sent
 
-      participation:
-        "yes": "Yes"
-        "no": "No"
       show:
+        banner:
+          version: Version
+          topics: Topics
+          districts: Districts
         back: Back to the plan list
         contact: Contact
         contact_name: Name
@@ -101,11 +102,14 @@ en:
         informal_participation: Informal citizen participation
         links: Links and documents
         opens_in_new_tab: (opens in a new tab)
-        map_location: Map position
         map_address: "The plan is located at the following address: %{address}"
         map_address_missing: No address is available for this plan. Its location is shown on the map only.
-        content_updated_at: Updated on
         version: Version
-        projekts: Participation on this plan
+        updated_on: "Updated on %{date}"
+        status_archived: "Status: Archived"
+        notice_card:
+          title: Submit a notice
+          text: Do you have a remark, a question or a correction? Write to the responsible department.
+          button: Go to the notice form
       projekt_sidebar:
         title: Related plan

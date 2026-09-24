@@ -5,10 +5,11 @@ class ResourcePage::BannerComponent < ApplicationComponent
 
   delegate :current_user, :projekt_feature?, :projekt_phase_feature?, :format_date_range, to: :helpers
 
-  def initialize(resource:, compact: false, heading_level: nil)
+  def initialize(resource:, compact: false, heading_level: nil, date: nil)
     @resource = resource
     @compact = compact
     @heading_level = heading_level
+    @date = date
   end
 
   def heading_level
@@ -16,7 +17,7 @@ class ResourcePage::BannerComponent < ApplicationComponent
   end
 
   def image_url
-    return nil unless resource.image&.attached?
+    return nil unless resource.respond_to?(:image) && resource.image&.attached?
 
     polymorphic_path(resource.image.attachment_variant(
       # TODO Resize to `[415, 260]` when image croping will be inroduced
@@ -30,7 +31,7 @@ class ResourcePage::BannerComponent < ApplicationComponent
   end
 
   def big_image_url
-    return nil unless resource.image&.attached?
+    return nil unless resource.respond_to?(:image) && resource.image&.attached?
 
     polymorphic_path(resource.image.attachment_variant(
       resize_to_limit: [1750, 900],
@@ -44,7 +45,7 @@ class ResourcePage::BannerComponent < ApplicationComponent
   def resource_class
     base_class = "-#{@resource.class.name.split("::").last.downcase}"
 
-    if @resource.image&.attached?
+    if @resource.respond_to?(:image) && @resource.image&.attached?
       base_class += " -with-image"
     end
 
@@ -56,6 +57,8 @@ class ResourcePage::BannerComponent < ApplicationComponent
   end
 
   def date_string
+    return @date if @date.present?
+
     if resource.is_a?(Poll)
       format_date_range(resource.projekt_phase.start_date, resource.projekt_phase.end_date, separator: t("custom.polls.poll.date.to"))
     else

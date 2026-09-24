@@ -128,17 +128,19 @@ describe "Vorhabenliste", type: :request do
 
       get municipal_plan_path(plan)
 
-      expect(response.body).to include(I18n.t("custom.municipal_plans.show.projekts"))
-      expect(response.body).to include(page_path(active.page.slug))
+      banner = Nokogiri::HTML(response.body).at_css(".resource-page-banner")
+
+      expect(banner.at_css("a[href='#{page_path(active.page.slug)}']").text)
+        .to include(I18n.t("custom.resource_page.banner_component.related_projekt"))
       expect(response.body).to include("Beteiligung Eichplatz")
       expect(response.body).not_to include("Deaktivierte Beteiligung")
       expect(response.body).not_to include("Gelöschte Beteiligung")
     end
 
-    it "shows no section when no project is linked" do
+    it "shows no related-project row when no project is linked" do
       get municipal_plan_path(plan)
 
-      expect(response.body).not_to include(I18n.t("custom.municipal_plans.show.projekts"))
+      expect(Nokogiri::HTML(response.body).css(".resource-page-banner .fa-code-branch")).to be_empty
     end
   end
 
@@ -709,6 +711,64 @@ describe "Vorhabenliste", type: :request do
 
       expect(document.at_css("main > .js-municipal-plans-map")).to be_present
       expect(document.at_css(".flex-layout .js-municipal-plans-map")).to be_nil
+    end
+  end
+
+  describe "the detail page layout" do
+    before { enable_module(true) }
+
+    def document
+      Nokogiri::HTML(response.body)
+    end
+
+    it "starts with the title as the first heading" do
+      plan.update!(processing_status: "<p>Die Entwurfsplanung läuft.</p>")
+
+      get municipal_plan_path(plan)
+
+      first_heading = document.css("main h1, main h2, main h3").first
+
+      expect(first_heading.name).to eq "h1"
+      expect(first_heading.text.strip).to eq plan.title
+    end
+
+    it "lets the notice link move focus into the form" do
+      get municipal_plan_path(plan)
+
+      expect(document.at_css("#municipal-plan-notice-form")["tabindex"]).to eq "-1"
+      expect(document.at_css(".sidebar a[href='#municipal-plan-notice-form']")).to be_present
+    end
+
+    it "links a phone number and leaves a phone note without digits as text" do
+      plan.update!(contact_phone: "03641 49-0")
+
+      get municipal_plan_path(plan)
+
+      expect(document.at_css(".sidebar a[href='tel:03641490']")).to be_present
+
+      plan.update!(contact_phone: "über die Zentrale")
+
+      get municipal_plan_path(plan)
+
+      expect(document.css(".sidebar a[href^='tel:']")).to be_empty
+      expect(document.at_css(".sidebar").text).to include("über die Zentrale")
+    end
+
+    it "keeps the address sentence out of the print-hidden map wrapper" do
+      get municipal_plan_path(plan)
+
+      sentence = I18n.t("custom.municipal_plans.show.map_address_missing")
+      paragraph = document.css("main p").find { |node| node.text.strip == sentence }
+
+      expect(paragraph).to be_present
+      expect(paragraph.ancestors(".not-print")).to be_empty
+    end
+
+    it "describes the Vorhaben for social media" do
+      get municipal_plan_path(plan)
+
+      expect(document.at_css("meta[property='og:title']")["content"]).to eq plan.title
+      expect(document.at_css("meta[property='og:url']")["content"]).to eq municipal_plan_url(plan)
     end
   end
 end

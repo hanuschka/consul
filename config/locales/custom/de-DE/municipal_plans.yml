@@ -79,10 +79,11 @@ de:
           submit: Hinweis absenden
           error_title: Ihr Hinweis konnte nicht abgeschickt werden
 
-      participation:
-        "yes": Ja
-        "no": Nein
       show:
+        banner:
+          version: Version
+          topics: Themen
+          districts: Ortsteile
         back: Zurück zur Vorhabenliste
         contact: Kontakt
         contact_name: Name
@@ -101,11 +102,14 @@ de:
         informal_participation: Bürgerbeteiligung informell
         links: Links und Dokumente
         opens_in_new_tab: (öffnet in einem neuen Tab)
-        map_location: Kartenposition
         map_address: "Das Vorhaben befindet sich bei folgender Adresse: %{address}"
         map_address_missing: Zu diesem Vorhaben liegt keine Adresse vor. Die Lage ist ausschließlich in der Karte dargestellt.
-        content_updated_at: Aktualisierungsdatum
         version: Versionsnummer
-        projekts: Beteiligung zu diesem Vorhaben
+        updated_on: "Aktualisiert am %{date}"
+        status_archived: "Status: Archiviert"
+        notice_card:
+          title: Hinweis senden
+          text: Haben Sie eine Anmerkung, Frage oder Korrektur? Schreiben Sie der zuständigen Stelle.
+          button: Zum Hinweisformular
       projekt_sidebar:
         title: Zugehöriges Vorhaben

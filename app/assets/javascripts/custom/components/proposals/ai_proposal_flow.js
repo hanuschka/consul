@@ -152,6 +152,14 @@
       this.scrollStepToMiddle($body.get(0));
     },
 
+    // The similar-contributions check submits step 2 by hand, so the step can
+    // come back to the citizen without a page load and the loader has to be
+    // taken down again.
+    hideLoader() {
+      $(".js-ai-flow-body").removeClass("-loading");
+      $(".js-ai-proposal-loader").attr("hidden", "hidden");
+    },
+
     scrollStepToMiddle(stepElement) {
       if (!stepElement) return;
 

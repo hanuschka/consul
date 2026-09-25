@@ -1,0 +1,30 @@
+/* Stylesheet half of packs/leaflet_vendor.js, loaded lazily alongside it by
+ * the /adm pack. The main app gets the same files through application.scss.
+ *
+ * Plain CSS on purpose: application.adm.css is built by the dart-sass CLI,
+ * which leaves an @import of a .css file as a literal @import rule rather
+ * than inlining it, so the browser resolves it against /assets and 404s in
+ * production.
+ *
+ *= require leaflet/dist/leaflet
+ *= require leaflet.markercluster/dist/MarkerCluster
+ *= require leaflet.markercluster/dist/MarkerCluster.Default
+ *= require leaflet.locatecontrol/dist/L.Control.Locate.min
+ *= require leaflet-geosearch/dist/geosearch
+ *= require leaflet-gesture-handling/dist/leaflet-gesture-handling.min
+ *= require @geoman-io/leaflet-geoman-free/dist/leaflet-geoman
+ */
+
+/* Leaflet's own rules point at images/*.png relative to the stylesheet, which
+ * resolves to /assets/images/* and is not a precompiled path. */
+.leaflet-control-layers-toggle {
+  background-image: url(<%= asset_path("leaflet/dist/images/layers.png") %>);
+}
+
+.leaflet-retina .leaflet-control-layers-toggle {
+  background-image: url(<%= asset_path("leaflet/dist/images/layers-2x.png") %>);
+}
+
+.leaflet-default-icon-path {
+  background-image: url(<%= asset_path("leaflet/dist/images/marker-icon.png") %>);
+}

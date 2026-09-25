@@ -1,13 +1,18 @@
 (function() {
   "use strict";
 
+  const REQUEST_TIMEOUT_MS = 15000;
+  const PREFETCH_TIMEOUT_MS = 2000;
+
   App.ContentBlockTemplatesSelector = {
-    cachedSections: {},
+    requests: {},
     activeSection: null,
     lastRequestedSection: null,
 
     initialize() {
       $(document).on("click", ".js-content-block-templates-retry", this.handleRetry.bind(this));
+
+      this.schedulePrefetch();
     },
 
     getContainer() {
@@ -22,17 +27,42 @@
       this.loadTemplatesContent(this.lastRequestedSection);
     },
 
-    loadTemplatesContent(section) {
-      const cacheKey = section || "default";
+    // The templates are ~320KB of live previews, too much to put in every page
+    // an admin loads. Warming the default section once the page is idle keeps
+    // that weight out of the document while still opening the dialog instantly.
+    //
+    // The selector shell sits in the global layout, so the trigger button is
+    // what tells us this page can actually open it — without that check every
+    // admin page view would fetch templates it will never show.
+    schedulePrefetch() {
+      if (document.querySelector(".js-show-content-block-templates") === null) return
 
-      this.lastRequestedSection = section;
+      const warm = () => this.requestTemplates(this.defaultSection());
 
-      if (this.cachedSections[cacheKey]) {
-        this.restoreFromCache(cacheKey);
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(warm, { timeout: PREFETCH_TIMEOUT_MS });
         return
       }
 
-      this.showSpinner();
+      setTimeout(warm, PREFETCH_TIMEOUT_MS);
+    },
+
+    defaultSection() {
+      const contentBlocksList = document.querySelector(".js-content-blocks-list");
+
+      if (contentBlocksList && contentBlocksList.dataset.templateSection) {
+        return contentBlocksList.dataset.templateSection
+      }
+
+      return "projekt_page"
+    },
+
+    // One in-flight request per section, reused as the cache once it resolves.
+    // A rejected request is dropped so the retry button issues a fresh one.
+    requestTemplates(section) {
+      const cacheKey = section || "default";
+
+      if (this.requests[cacheKey]) return this.requests[cacheKey]
 
       const ajaxData = {};
 
@@ -40,22 +70,42 @@
         ajaxData.section = section;
       }
 
-      $.ajax({
+      const request = $.ajax({
         url: "/projekt_content_block_templates",
         method: "GET",
         dataType: "html",
         data: ajaxData,
-        timeout: 20000
-      })
-        .then((html) => {
-          this.handleLoadSuccess(html, cacheKey);
-        })
-        .catch(() => {
-          this.handleLoadError();
-        });
+        timeout: REQUEST_TIMEOUT_MS
+      });
+
+      request.fail(() => delete this.requests[cacheKey]);
+
+      this.requests[cacheKey] = request;
+
+      return request
     },
 
-    handleLoadSuccess(html, cacheKey) {
+    isReady(cacheKey) {
+      return Boolean(this.requests[cacheKey] && this.requests[cacheKey].state() === "resolved")
+    },
+
+    loadTemplatesContent(section) {
+      const cacheKey = section || "default";
+
+      this.lastRequestedSection = section;
+
+      if (this.activeSection === cacheKey) return
+
+      if (!this.isReady(cacheKey)) {
+        this.showSpinner();
+      }
+
+      this.requestTemplates(section)
+        .then((html) => this.renderTemplates(html, cacheKey))
+        .catch(() => this.handleLoadError());
+    },
+
+    renderTemplates(html, cacheKey) {
       this.hideSpinner();
 
       const $container = this.getContainer();
@@ -63,39 +113,9 @@
 
       this.reinitContentComponents($container);
 
-      const isFallback = this.isFallbackContent($container);
-      this.toggleFallbackNote(isFallback);
-
-      if (!isFallback) {
-        this.cachedSections[cacheKey] = $container.html();
-      }
-
       this.activeSection = cacheKey;
 
       this.hydrateActivePanelMaps($container);
-    },
-
-    restoreFromCache(cacheKey) {
-      if (this.activeSection === cacheKey) return
-
-      this.hideSpinner();
-
-      const $container = this.getContainer();
-      $container.html(this.cachedSections[cacheKey]).show();
-
-      this.reinitContentComponents($container);
-      this.toggleFallbackNote(this.isFallbackContent($container));
-      this.activeSection = cacheKey;
-
-      this.hydrateActivePanelMaps($container);
-    },
-
-    isFallbackContent($container) {
-      return $container.find(".js-content-block-templates-fallback-marker").length > 0
-    },
-
-    toggleFallbackNote(visible) {
-      $(".js-content-block-templates-fallback-note").toggle(visible);
     },
 
     reinitContentComponents($container) {
@@ -151,20 +171,8 @@
     handleLoadError() {
       this.hideSpinner();
 
-      const $container = this.getContainer();
-      const fallbackTemplate = document.querySelector(".js-content-block-templates-fallback");
-
-      if (!fallbackTemplate) {
-        this.getErrorElement().show();
-        return
-      }
-
-      const fallbackContent = document.importNode(fallbackTemplate.content, true);
-      $container.empty().append(fallbackContent).show();
-
-      this.toggleFallbackNote(true);
-
-      this.reinitContentComponents($container);
+      this.getContainer().hide();
+      this.getErrorElement().show();
     }
   };
 }).call(this);

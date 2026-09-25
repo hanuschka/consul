@@ -72,24 +72,30 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
       question.max_votes.present?
   end
 
+  # Both read from Polls::AnswerAllowanceQuery, which is what the controller refuses
+  # a write against: a button the page leaves enabled past the maximum is a tap that
+  # is now rejected on arrival, and a selector offering more weight than is free is
+  # a number the write would reduce anyway.
+  #
+  # This one also gained the per-answer cap the form component always applied and
+  # this one never did — the two disagreed about max_votes_per_answer, and the
+  # stricter of them is the one the write honours.
   def available_vote_weight(question_answer)
-    return 0 unless current_user.present?
+    return 0 if current_user.blank?
 
-    if user_answer(question_answer).present?
-      question.max_votes -
-        question.answers.where(author_id: current_user.id).sum(:answer_weight) +
-        user_answer(question_answer).answer_weight
-    else
-      question.max_votes -
-        question.answers.where(author_id: current_user.id).sum(:answer_weight)
-    end
+    ::Polls::AnswerAllowanceQuery.remaining_weight(
+      question: question, user: current_user, title: question_answer.title,
+      recorded_answers: user_answers
+    )
   end
 
   def disable_answer?(question_answer)
-    return false unless current_user.present?
+    return false if current_user.blank?
 
-    (question.votation_type&.multiple? && user_answers.count == question.max_votes) ||
-      (question.votation_type&.multiple_with_weight? && available_vote_weight(question_answer) == 0)
+    !::Polls::AnswerAllowanceQuery.call(
+      question: question, user: current_user, title: question_answer.title,
+      recorded_answers: user_answers
+    )
   end
 
   def has_additional_info?(question_answer)

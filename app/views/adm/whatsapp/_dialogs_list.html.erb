@@ -1,0 +1,17 @@
+<% if @dialogs.any? %>
+  <ul class="adm-whatsapp-dialogs-list">
+    <%= render partial: "adm/whatsapp/dialog_item",
+      collection: @dialogs,
+      as: :account,
+      locals: {
+        message_counts: @dialog_message_counts,
+        last_messages: @dialog_last_messages
+      } %>
+  </ul>
+
+  <div class="my-5">
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+  </div>
+<% else %>
+  <%= empty_state(title: t("adm.whatsapp.dialogs.no_results"), icon: "filter_alt_off") %>
+<% end %>

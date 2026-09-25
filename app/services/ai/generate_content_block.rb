@@ -1,8 +1,6 @@
 class Ai::GenerateContentBlock < ApplicationService
   class AiCancelledError < StandardError; end
 
-  MAX_TOOL_ITERATIONS = 6
-
   def initialize(
     content_block:,
     projekt:,
@@ -33,6 +31,8 @@ class Ai::GenerateContentBlock < ApplicationService
     anchor_template = nil
 
     if @category_hint.present?
+      @content_block&.mark_ai_generation_step!("templates")
+
       dt_templates_by_category = fetch_dt_templates
       filtered_templates = filter_templates_by_category(dt_templates_by_category)
       anchor_template = fetch_anchor_template(dt_templates_by_category)
@@ -40,16 +40,24 @@ class Ai::GenerateContentBlock < ApplicationService
 
     chat = Ai::RubyLlmFactory.chat_with_json_output(output_schema, feature: "content_blocks.generate")
 
-    if filtered_templates.any?
+    # An anchor template arrives with its full HTML inlined below, so there is
+    # nothing left for the tool to fetch and no reason to pay a tool round.
+    # Reasoning is switched off for both branches: attaching tools used to be
+    # what did it, and adapting a given template does not need it either.
+    if anchor_template.present?
+      Ai::RubyLlmFactory.disable_reasoning(chat, Ai::ModelProfile.default)
+    elsif filtered_templates.any?
       tool = Ai::Tools::FetchContentBlockTemplates.new(
         templates_by_category: filtered_templates
       )
-      chat.with_tool(tool)
+      Ai::RubyLlmFactory.attach_tools(chat, [tool], Ai::ModelProfile.default)
     end
 
     instructions = build_system_instructions(filtered_templates, anchor_template)
 
     raise_if_cancelled!
+
+    @content_block&.mark_ai_generation_step!("generating")
 
     response =
       chat
@@ -57,6 +65,8 @@ class Ai::GenerateContentBlock < ApplicationService
         .ask(@prompt)
 
     raise_if_cancelled!
+
+    @content_block&.mark_ai_generation_step!("finishing")
 
     body_html = response.content&.dig("html")
 
@@ -85,7 +95,7 @@ class Ai::GenerateContentBlock < ApplicationService
 
   def apply_completion(body_html)
     if replace_mode?
-      @content_block.update_columns(
+      @content_block.update_without_validation!(
         body: body_html,
         ai_generation_data: nil
       )
@@ -101,7 +111,7 @@ class Ai::GenerateContentBlock < ApplicationService
           "projekt_content_block_#{@projekt.id}_#{Time.current.to_i}_#{@content_block.id}"
         end
 
-      @content_block.update_columns(
+      @content_block.update_without_validation!(
         body: body_html,
         key: new_key,
         ai_generation_data: nil
@@ -128,14 +138,7 @@ class Ai::GenerateContentBlock < ApplicationService
   end
 
   def fetch_dt_templates
-    response = DtApi::Client.new(use_cache: true).content_block_templates.all(section: @dt_template_section)
-
-    return [] if !response.success?
-
-    response.parsed_response.dig("content_block_templates_by_category") || []
-  rescue => e
-    Rails.logger.error("Failed to fetch DT templates: #{e.message}")
-    []
+    ContentBlockTemplates::Catalogue.call(section: @dt_template_section)
   end
 
   def filter_templates_by_category(dt_templates_by_category)
@@ -168,7 +171,12 @@ class Ai::GenerateContentBlock < ApplicationService
 
   def build_system_instructions(filtered_templates, anchor_template)
     base_prompt = fetch_base_prompt
-    templates_reference = @category_hint.present? ? build_templates_reference(filtered_templates) : ""
+    templates_reference =
+      if @category_hint.present? && anchor_template.blank?
+        build_templates_reference(filtered_templates)
+      else
+        ""
+      end
     anchor_section = build_anchor_section(anchor_template)
     projekt_context_section = build_projekt_context_section
     newsletter_context_section = build_newsletter_context_section
@@ -247,33 +255,25 @@ class Ai::GenerateContentBlock < ApplicationService
 
   def build_templates_reference(templates_by_category)
     lines = []
-    lines << "Use the following templates as inspiration. Pick the most relevant one and fetch its full HTML with the fetch_content_block_templates tool, then adapt it to the user's prompt."
-    lines << "Limit tool calls to at most #{MAX_TOOL_ITERATIONS} iterations."
+    lines << "Use the following templates as inspiration. Pick the most relevant one and adapt it to the user's prompt."
+    lines << "Make exactly ONE call to the fetch_content_block_templates tool and request everything you might use in it: pass the category ids to receive every template of a category, or the ids of the individual templates you want."
+    lines << "You get at most #{Ai::Tools::FetchContentBlockTemplates::MAX_CALLS} tool calls; after that you must answer with what you already have."
 
     if templates_by_category.any?
       lines << ""
       lines << "Templates from demokratie.today:"
       templates_by_category.each do |category_data|
         category_name = category_data.dig("category", "name_de") || category_data.dig("category", "name")
+        category_id = category_data.dig("category", "id")
         templates = category_data["templates"] || []
 
         if templates.any?
-          lines << "  Category: #{category_name}"
+          lines << "  Category: #{category_name} (category id: #{category_id})"
           templates.each do |template|
             info = "    - name: #{template['name']}, id: #{template['id']}"
             info += ", description: #{template['description']}" if template['description'].present?
             lines << info
           end
-        end
-      end
-    else
-      local_templates = fetch_local_templates_metadata
-      lines << ""
-      lines << "Local templates (names only — full HTML unavailable):"
-      local_templates.each do |category_name, template_names|
-        lines << "  Category: #{category_name}"
-        template_names.each do |name|
-          lines << "    - #{name}"
         end
       end
     end
@@ -282,23 +282,6 @@ class Ai::GenerateContentBlock < ApplicationService
   rescue => e
     Rails.logger.error("Failed to build templates reference: #{e.message}")
     ""
-  end
-
-  def fetch_local_templates_metadata
-    if @newsletter.present?
-      return {
-        "Email Defaults" => Newsletters::ContentBlockTemplatesSelectorComponent::EMAIL_TEMPLATE_NAMES
-      }
-    end
-
-    selector = Projekts::ContentBlockTemplatesSelectorComponent.new
-    {
-      "Basic Content" => selector.basic_content_templates,
-      "Status and Notes" => selector.status_and_notes_templates,
-      "Teasers and Promotions" => selector.teasers_and_promotions,
-      "Media and Resources" => selector.media_and_resources_templates,
-      "Messages" => selector.messages_content_block_templates
-    }
   end
 
   def fetch_base_prompt

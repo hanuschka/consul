@@ -5,7 +5,93 @@ class Setting < ApplicationRecord
     deficiency_reports.voice_assistant
   ].freeze
 
+  # Meta rejects template names with capitals, spaces or punctuation, and
+  # language codes that are not an ISO code with an optional region suffix.
+  # Both only fail at send time, so they are checked before they are stored.
+  WHATSAPP_TEMPLATE_NAME_FORMAT = /\A[a-z0-9_]{1,512}\z/.freeze
+  WHATSAPP_TEMPLATE_LANGUAGE_FORMAT = /\A[a-z]{2}(_[A-Z]{2})?\z/.freeze
+
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
+
+  validate :validate_whatsapp_template_name
+  validate :validate_whatsapp_template_language
+  validate :validate_whatsapp_address_form
+  validate :validate_whatsapp_default_locale
+  validate :validate_whatsapp_positive_integer
+
+  WHATSAPP_TEMPLATE_NAME_KEYS = %w[
+    whatsapp.broadcast_template
+    whatsapp.broadcast_card_template
+    whatsapp.deadline_approaching_template
+    whatsapp.deadline_passed_template
+    whatsapp.status_change_template
+    whatsapp.voting_started_template
+    whatsapp.voting_started_action_template
+    whatsapp.voting_started_link_template
+    whatsapp.voting_ending_template
+    whatsapp.voting_ending_action_template
+    whatsapp.voting_ending_link_template
+  ].freeze
+
+  def validate_whatsapp_template_name
+    return if !WHATSAPP_TEMPLATE_NAME_KEYS.include?(key)
+    return if value.blank?
+    return if value.match?(WHATSAPP_TEMPLATE_NAME_FORMAT)
+
+    errors.add(:value, :whatsapp_template_name_invalid, field: whatsapp_field_name)
+  end
+
+  def validate_whatsapp_template_language
+    return if key != "whatsapp.broadcast_template_language"
+    return if value.blank?
+    return if value.match?(WHATSAPP_TEMPLATE_LANGUAGE_FORMAT)
+
+    errors.add(:value, :whatsapp_template_language_invalid, field: whatsapp_field_name)
+  end
+
+  # The field is free text in /adm, and anything the bot does not recognise
+  # falls back to the formal form — silently, which is the same thing as the
+  # setting not working. Refused here instead.
+  def validate_whatsapp_address_form
+    return if key != "whatsapp.address_form"
+    return if value.blank?
+    return if ::Whatsapp::ADDRESS_FORMS.include?(value.to_s.downcase)
+
+    errors.add(:value, :whatsapp_address_form_invalid, field: whatsapp_field_name)
+  end
+
+  # An unavailable code leaves the bot on the platform default, so the value
+  # reads as saved while nothing about the bot changes. Refused here instead.
+  def validate_whatsapp_default_locale
+    return if key != "whatsapp.default_locale"
+    return if value.blank?
+    return if ::Whatsapp.available_locale?(value.to_s)
+
+    errors.add(:value, :whatsapp_locale_unavailable, field: whatsapp_field_name)
+  end
+
+  WHATSAPP_POSITIVE_INTEGER_KEYS = %w[
+    whatsapp.message_retention_days
+    whatsapp.max_voice_megabytes
+  ].freeze
+
+  # Both are read through a to_i that discards anything below one, so "drei
+  # Monate" and "0" leave the built-in default in place without saying so.
+  def validate_whatsapp_positive_integer
+    return if !WHATSAPP_POSITIVE_INTEGER_KEYS.include?(key)
+    return if value.blank?
+    return if value.to_s.match?(/\A[1-9][0-9]*\z/)
+
+    errors.add(:value, :whatsapp_positive_integer_invalid, field: whatsapp_field_name)
+  end
+
+  # Every one of these errors reaches the admin as a standalone sentence — in
+  # the field's own error line and in the flash — so it has to name the field
+  # itself. The column is called "value" for all of them, which names nothing.
+  def whatsapp_field_name
+    I18n.t("setting.#{key}", default: key)
+  end
+  private :whatsapp_field_name
 
   def ai_gated?
     AI_GATED_KEYS.include?(key)
@@ -123,7 +209,6 @@ class Setting < ApplicationRecord
         "feature.allow_attached_documents": true,
         "feature.allow_images": true,
         "feature.help_page": true,
-        "feature.remote_translations": nil,
         "feature.translation_interface": nil,
         "feature.remote_census": nil,
         "feature.valuation_comment_notification": true,
@@ -133,6 +218,7 @@ class Setting < ApplicationRecord
         "feature.matomo": false,
         "feature.melderegister": false,
         "feature.bund_id_verification": false,
+        "feature.whatsapp_bot": false,
 
         # "feature.remove_investments_supports": false,
         "homepage.widgets.feeds.active_projekts": true,
@@ -210,6 +296,8 @@ class Setting < ApplicationRecord
         "ai.llm_model": nil,
         "ai.llm_api_endpoint": nil,
         "ai.llm_custom_model": nil,
+        "ai.whatsapp_transport": nil,
+        "ai.whatsapp_model_tier": ::Ai::Settings::WHATSAPP_TIER_FAST,
         "ai.evaluation_context": nil,
         "postal_codes": "",
         "remote_census.general.endpoint": "",
@@ -234,6 +322,26 @@ class Setting < ApplicationRecord
         "sdg.process.projekts": true,
 
         "welcomepage.share_buttons": "",
+
+        "whatsapp.default_locale": nil,
+        "whatsapp.address_form": "sie",
+        "whatsapp.broadcast_template": nil,
+        "whatsapp.broadcast_card_template": nil,
+        "whatsapp.deadline_approaching_template": nil,
+        "whatsapp.deadline_passed_template": nil,
+        "whatsapp.status_change_template": nil,
+        "whatsapp.voting_started_template": nil,
+        "whatsapp.voting_started_action_template": nil,
+        "whatsapp.voting_started_link_template": nil,
+        "whatsapp.voting_ending_template": nil,
+        "whatsapp.voting_ending_action_template": nil,
+        "whatsapp.voting_ending_link_template": nil,
+        "whatsapp.deadline_notifications_enabled": false,
+        "whatsapp.broadcast_template_language": "de",
+        "whatsapp.auto_broadcast_new_projekts": false,
+        "whatsapp.transcription_model": nil,
+        "whatsapp.message_retention_days": 90,
+        "whatsapp.max_voice_megabytes": 16,
 
         "deficiency_reports.admins_must_assign_officer": false,
         "deficiency_reports.intake_channel_required_for_on_behalf_of": false,

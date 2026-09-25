@@ -9,7 +9,7 @@ module ProjektsHelper
     end
 
     base_projekt.breadcrumb_trail.each do |projekt|
-      if !projekt.page.published? || (projekt == base_projekt && home_page_link)
+      if !projekt.visible_for?(current_user) || (projekt == base_projekt && home_page_link)
         items << content_tag(:span, projekt.title, class: 'breadcrumbs-item', "aria-current": "page")
       else
         items << link_to(projekt.page.title, projekt.page.url, class: 'breadcrumbs-item')
@@ -42,9 +42,9 @@ module ProjektsHelper
 
     url = projekt.page.url
 
-    if projekt.page.published? && placement == "desktop"
+    if projekt.visible_for?(current_user) && placement == "desktop"
       link_to projekt.page.title, url, class: classes.join(" "), data: { turbolinks: false }
-    elsif projekt.page.published? && placement == "mobile"
+    elsif projekt.visible_for?(current_user) && placement == "mobile"
       link_to projekt.page.title, url, class: classes.join(" ")
     else
       projekt.page.title

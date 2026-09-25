@@ -11,6 +11,7 @@ scope "proposals/generate", as: :generate_proposal do
   post  ":projekt_phase_id/draft", to: "proposals/generate#generate_draft", as: :draft
   get   ":id/edit_draft",   to: "proposals/generate#edit_draft",     as: :edit_draft
   patch ":id/update_draft", to: "proposals/generate#update_draft",   as: :update_draft
+  patch ":id/publish_checked", to: "proposals/generate#publish_checked", as: :publish_checked
   get   ":id/evaluation",   to: "proposals/generate#evaluation",     as: :evaluation
   patch ":id/publish",      to: "proposals/generate#publish",        as: :publish
   get   ":id/success",      to: "proposals/generate#success",        as: :success
@@ -21,6 +22,7 @@ scope "budget_investments/generate", as: :generate_budget_investment do
   post  ":projekt_phase_id/draft", to: "budget_investments/generate#generate_draft", as: :draft
   get   ":id/edit_draft",   to: "budget_investments/generate#edit_draft",     as: :edit_draft
   patch ":id/update_draft", to: "budget_investments/generate#update_draft",   as: :update_draft
+  patch ":id/publish_checked", to: "budget_investments/generate#publish_checked", as: :publish_checked
   get   ":id/evaluation",   to: "budget_investments/generate#evaluation",     as: :evaluation
   patch ":id/publish",      to: "budget_investments/generate#publish",        as: :publish
   get   ":id/success",      to: "budget_investments/generate#success",        as: :success
@@ -138,3 +140,14 @@ get "projekts_map_embed", to: "projekt_map_embeds#index", as: :projekts_map_embe
 get "projekts/:projekt_id/map_embed", to: "projekt_map_embeds#show", as: :projekt_map_embed
 
 post "session_keepalive/ping", to: "session_keepalive#ping", as: :session_keepalive_ping
+
+get    "whatsapp/link",         to: "whatsapp/links#show",           as: :whatsapp_link
+post   "whatsapp/link",         to: "whatsapp/links#create"
+post   "whatsapp/subscription", to: "whatsapp/subscriptions#create",  as: :whatsapp_subscription
+delete "whatsapp/subscription", to: "whatsapp/subscriptions#destroy"
+
+namespace :api do
+  namespace :masterportal do
+    resources :category_icons, only: [:create]
+  end
+end

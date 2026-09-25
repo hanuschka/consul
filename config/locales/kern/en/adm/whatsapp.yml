@@ -1,0 +1,647 @@
+en:
+  adm:
+    whatsapp:
+      greeting: Hallo
+      prefilled_text: Projekt %{token}
+      token: Identifier
+      number: WhatsApp number
+      link: Direct link
+      qr_code: QR code
+      copy_token: Copy identifier
+      copy_number: Copy WhatsApp number
+      copy_link: Copy direct link
+      link_hint: >-
+        Opens the chat with the bot and puts a first message ready to send. Use it wherever a QR code
+        cannot be scanned — on the website, in emails or in social media posts.
+      qr_hint: For print, download the QR code as a JPEG.
+      download_jpeg: Download JPEG
+      download_pdf: PDF notice
+      poster:
+        lead: Take part via WhatsApp — just scan the QR code with your phone camera.
+        steps: The chat opens right away. Send a quick "Hallo" and the bot guides you through.
+        number: 'WhatsApp number: %{number}'
+      missing_number: No WhatsApp number is configured (secret "whatsapp.business_number").
+      not_configured: WhatsApp is not fully configured.
+      test_message:
+        body: Test message from the participation platform. If you can read this, sending works.
+        sent: >-
+          Test message handed to WhatsApp for %{phone}. Check arrival — outside the 24-hour window
+          WhatsApp rejects the send.
+        failed: Sending failed
+        phone_missing: Please enter a number.
+        details:
+          status: HTTP status
+          url: Requested URL
+          response: 360dialog response
+          message_id: Message ID
+          exception: Exception
+          missing_secrets: Missing credentials
+      template:
+        submitted: >-
+          Template submitted to 360dialog and set as the notification template. Meta approval can
+          take several hours.
+        selected: '"%{name}" is now used for project notifications.'
+        notification_submitted: >-
+          Template submitted to 360dialog. Meta approval can take several hours; the push starts
+          going out once you activate the template here.
+        notification_failed: 'Template could not be submitted: %{error}'
+        notification_selected: '"%{name}" is now used for this notification.'
+        deleted: Template "%{name}" was deleted at 360dialog.
+        delete_failed: 'Template could not be deleted: %{error}'
+        delete_refused_in_use: >-
+          "%{name}" is still in use and cannot be deleted. Point that slot at another template
+          first.
+        resubmitted: >-
+          Rejected template "%{name}" was deleted and submitted again to 360dialog. Meta approval
+          can take several hours; the push starts going out once you activate the template here
+          afterwards.
+        resubmit_failed: >-
+          The rejected template was deleted, but the new one could not be submitted: %{error}. The
+          slot is empty now — submit the template again.
+        delete_refused_not_rejected: >-
+          Only rejected templates can be deleted here. "%{name}" has a different status.
+        resubmit_refused_not_rejected: >-
+          Only rejected templates can be submitted again. "%{name}" has a different status.
+      api_errors:
+        placeholder_position: >-
+          Meta does not accept a template whose text begins or ends with a placeholder. Put static
+          words before {{1}} and after {{2}}.
+      steps:
+        idle: No active flow
+        awaiting_link: Waiting for account link
+        awaiting_phase_choice: Choosing a phase
+        awaiting_idea: Writing the contribution
+        awaiting_duplicate_decision: Deciding on a similar contribution
+        awaiting_draft_decision: Deciding on the draft
+        awaiting_sentiment: Choosing a sentiment
+        awaiting_image_choice: Deciding on a picture
+        awaiting_image_upload: Sending a photo
+        awaiting_final_confirmation: Confirming the submission
+        awaiting_revision: Revising the draft
+        awaiting_link_decision: Deciding whether to link
+        awaiting_unlink_confirmation: Confirming unlink
+        awaiting_category: Choosing a category
+        awaiting_comment: Writing a comment
+        awaiting_notification_settings: Changing notifications
+        awaiting_resume_decision: Deciding whether to continue
+        awaiting_terms_consent: Accepting the terms
+        awaiting_participation_projekt: Choosing a projekt
+        awaiting_location: Sharing a location
+        awaiting_continue_decision: Deciding whether to carry on
+      kinds:
+        text: Text
+        audio: Voice message
+        image: Image
+        interactive: Choice
+        location: Location
+        template: Notification template
+        welcome: Chat opened
+        unsupported: Unsupported
+      phase_codes:
+        title: Codes for single phases
+        intro: >-
+          Every running phase that accepts contributions by chat, each with its own code. A scan
+          leads straight into that phase's submission flow with no menu in between.
+        card_subline: 'Projekt: %{projekt}'
+        empty_title: There are no phase codes right now
+        empty_body: >-
+          A code appears here as soon as a proposal or budget phase is running whose projekt is
+          published and which has the "WhatsApp bot: allow submissions" setting switched on. If a
+          phase you expect is missing, one of those conditions is the reason and not a fault.
+      reach:
+        contacts_title: Contacts
+        contacts_intro: >-
+          Every number that has messaged the bot — and how many of them are linked, subscribed or
+          have opted out again.
+        total: Contacts total
+        linked: Linked
+        subscribed: Subscribed
+        opted_out: Opted out
+        verified: Verified numbers
+        link_pending: Link pending
+        unlinked: Without account
+        contacts_breakdown_title: By link status
+        activity_title: Activity
+        activity_intro: How many contacts wrote recently and how many were added over the last 30
+          days.
+        active_recent: Active (7 days)
+        active_growth: Active (30 days)
+        new_verified: Newly linked (30 days)
+        new_opt_ins: New subscriptions (30 days)
+        messages_title: Messages
+        messages_intro: >-
+          Overall message volume. Older messages are deleted automatically once the configured retention
+          period passes.
+        inbound: Inbound
+        outbound: Outbound
+        failed_outbound: Failed to send
+        last_30_days: '%{count} in 30 days'
+        by_kind_title: By message type
+        broadcasts_title: Project notifications
+        broadcasts_intro: >-
+          Template messages sent per project. Failed deliveries point to expired numbers or a template
+          that is not approved.
+        projekt: Project
+        sent: Delivered
+        failed: Failed
+        last_sent_at: Last sent
+        no_broadcasts: No project notifications have been sent yet.
+        flows_title: Flows in progress
+        flows_intro: Contacts currently in the middle of a bot flow, by step.
+        no_flows: Nobody is in an active flow right now.
+      dialogs:
+        title: Dialogs
+        intro: >-
+          Every chat history with the bot. Open a thread to read the full exchange and reply if needed.
+        none_title: No dialogs yet
+        none_body: As soon as someone messages the bot, the thread appears here.
+        no_results: No dialogs match these filters.
+        contact: Contact
+        status: Status
+        step: Step
+        steps_idle: –
+        message_count: Messages
+        last_message: Last message
+        last_active: Last active
+        never: never
+        open: Open
+        subscribed: Subscribed
+        states:
+          unlinked: Without account
+          link_pending: Link pending
+          linked: Linked
+        directions:
+          inbound: Inbound
+          outbound: Outbound
+        statuses:
+          sent: delivered
+          failed: failed
+        filters:
+          search_label: Search
+          search_placeholder: Number or profile name
+          state_label: Status
+          step_label: Step
+          activity_label: Activity
+          any: All
+          reset: Reset
+        activity_options:
+          recent: Active (7 days)
+          month: Active (30 days)
+          stale: Inactive for longer
+        thread_title: Dialog with %{contact}
+        thread_hint: >-
+          Full chat history with this contact. Free-form replies only reach WhatsApp within 24 hours
+          of the last inbound message.
+        truncated: Showing the last %{shown} of %{total} messages.
+        no_messages: This dialog has no messages yet.
+        time_format: '%H:%M'
+        profile_name: Profile name
+        phone: Number
+        account: User account
+        no_account: not linked
+        unknown: unknown
+        active_phase: Active phase
+        verified_at: Linked on
+        reply_label: Send a reply
+        reply_hint: Sent as a plain text message from the portal account and shown right in the thread.
+        reply_placeholder: Reply to this contact …
+        reply_submit: Send reply
+        reply_blank: Please enter some text.
+        reply_sent: Reply has been handed over.
+        reply_failed: 'Reply could not be sent: %{error}'
+        reply_window_closed: The 24-hour reply window has closed in the meantime.
+        window_closed_title: Reply window closed
+        window_closed_body: >-
+          The last inbound message is more than 24 hours old. WhatsApp only allows free-form text
+          messages again once the contact writes back.
+      show:
+        title: WhatsApp
+        hint_text: >-
+          General entry point to the WhatsApp bot. This QR code lets citizens link their number and
+          subscribe to notifications about new projects. Submitting a proposal requires a project
+          or phase QR code.
+        unavailable_title: WhatsApp is not set up for this portal
+        unavailable_body: >-
+          The connection to the WhatsApp service has to be configured on the server. Contact the Demokratie
+          Today administrators to have the feature set up and enabled.
+        explanation_title: What the WhatsApp bot does
+        explanation_intro: >-
+          The bot connects the participation platform to WhatsApp: citizens take part where they already
+          write, without signing in through a browser.
+        explanation_items:
+        - title: Link a number to an account
+          body: >-
+            A QR code or direct link opens the chat with the platform. The number is tied to the user
+            account and can be unlinked again at any time.
+        - title: Submit proposals by chat
+          body: >-
+            In phases with AI submission enabled, citizens write or record their proposal. Voice messages
+            are transcribed automatically, the bot asks for anything missing and creates the proposal
+            in the project.
+        - title: Notifications about new projects
+          body: >-
+            Anyone who opts in receives a short message with a link whenever a new participation project
+            starts, sent through a Meta-approved message template.
+        - title: QR codes for posters and notices
+          body: >-
+            Printable QR codes are available for the platform as a whole, for single projects and
+            for single phases — made for on-site notices.
+        explanation_outro: >-
+          Running the bot requires a business account with the provider 360dialog; the credentials
+          are configured on the server. Once they are in place, the settings, the QR code, the webhook
+          check and the message test appear here.
+        tabs:
+          connection: Connection
+          settings: Settings
+          templates: Bot message templates
+          qr_code: QR code
+          reach: Reach
+          dialogs: Dialogs
+        feature_title: WhatsApp bot
+        model_tier_title: Bot language model (temporary)
+        settings_title: Settings
+        settings_intro: Template, speech model and retention for the WhatsApp bot. Changes take effect
+          immediately.
+        settings_mirrored_value_empty: No template active
+        settings_templates_link: Manage templates
+        auto_broadcast_title: Automatic project notification
+        auto_broadcast_intro: >-
+          When this is on, the platform sends the WhatsApp notification by itself as soon as a projekt
+          is published — that is, activated and backed by a published projekt page. Projekts restricted
+          to individual districts are skipped; for those the button on the projekt page remains available.
+        auto_broadcast_missing_template_title: Automatic sending has no effect
+        auto_broadcast_missing_template_body: >-
+          As long as no approved message template is active, nothing is sent even with the switch
+          on. Submit a template in the "Templates" tab and activate it there.
+        draft_evaluation_title: AI draft check
+        draft_evaluation_body: >-
+          When a projekt phase defines evaluation criteria, the bot checks every draft against all
+          of them in a single AI call before the citizen decides on it: a failed hard criterion
+          rejects the draft with an explanation and invites a revision, soft criteria add a score
+          with feedback to the draft card. The criteria — and the instructions the AI applies —
+          are maintained per phase in the projekt's "AI flow assistant" tab.
+        draft_evaluation_link: Open projekt list
+        template_missing_title: No message template configured
+        template_missing_body: >-
+          Without an approved 360dialog template no project notifications can be sent. Submit a template
+          below and activate it afterwards.
+        qr_title: General QR code
+        qr_subline: Opens a general Consul chat.
+        webhook_title: Webhook
+        webhook_ok_title: Webhook registered correctly
+        webhook_ok_body: 360dialog delivers inbound messages to %{url} with a matching security header.
+        webhook_mismatch_title: Webhook does not match
+        webhook_mismatch_body: >-
+          Registered: %{registered}. Expected: %{expected}. Switch the feature off and on again to
+          re-register it.
+        webhook_unreachable_title: Webhook status unavailable
+        webhook_unreachable_body: The configuration could not be read from 360dialog. Check the API
+          key in config/secrets.yml.
+        webhook_none: no webhook registered
+        webhook_summary: 'Registered: %{url} · Header: %{header} · checked %{checked_at}'
+        webhook_header_chars:
+          zero: not set
+          one: 1 character
+          other: "%{count} characters"
+        test_title: Test message
+        test_intro: >-
+          Sends a short message to a number. Free-text messages only reach people who wrote in the
+          last 24 hours.
+        test_phone_label: Number
+        test_phone_hint: Digits only, including country code, e.g. 49177XXXXXXX.
+        test_submit: Send test message
+        test_pending: Sending message …
+        templates_intro: >-
+          Project notifications need a Meta-approved template with exactly two placeholders: project
+          name and project link.
+        template_unknown_title: Configured template does not exist at 360dialog
+        template_unknown_body: >-
+          Configured is "%{name}" (%{language}), but no template exists there under that name and
+          language. Project notifications would fail. Create the template below or pick an existing
+          one.
+        template_pending_title: Template not approved yet
+        template_pending_body: >-
+          "%{name}" has the status "%{status}" at Meta. Until it is approved, project notifications
+          reach nobody.
+        template_name: Name
+        template_kind: Kind
+        template_kind_text: Text
+        template_kind_card: Card with image
+        template_language: Language
+        template_status: Status
+        template_use: Use
+        template_in_use: in use
+        template_language_mismatch: language mismatch (%{language} configured)
+        template_name_label: Name of the new template
+        template_name_hint: Lowercase letters and underscores only; spaces are converted.
+        template_language_label: Language
+        template_language_hint: Language code of the template, e.g. "de". Must match the code registered
+          in 360dialog.
+        template_body_label: Template text
+        template_body_hint: >-
+          {{1}} is replaced by the project name, {{2}} by the link. Both placeholders must appear,
+          and the text may neither begin nor end with one — Meta rejects that.
+        template_body_default: 'New participation project: {{1}}. All the details and how to join:
+          {{2}} — see you there!'
+        template_submit: Submit template
+        template_failed_title: Template could not be submitted
+        template_error_name_blank: Enter a name for the template.
+        template_error_name_format: Only lowercase letters, digits and underscores are allowed.
+        template_error_language_blank: Enter a language code.
+        template_error_language_format: Use a language code such as "de", "en" or "de_DE".
+        template_error_body_blank: Enter the template text.
+        template_error_body_too_long: The text may be at most %{count} characters long.
+        template_error_body_placeholders: The text must contain exactly the two placeholders {{1}}
+          and {{2}}.
+        template_error_body_placeholder_edges: >-
+          The text may neither begin nor end with a placeholder. Put static words before {{1}} and
+          after {{2}}.
+        notification_templates_title: Push notifications
+        notification_templates_intro: >-
+          The messages the platform sends by itself: around the end of a proposal phase, when
+          something happens on someone's own proposal, and around a vote. Each needs its own
+          approved template, submitted in %{language} with the wording below. Until one is
+          submitted and activated here, that notification reaches nobody.
+        notification_templates_voting_intro: >-
+          A vote has three variants per moment. With the "Vote now" button variant active, citizens
+          vote right in the chat wherever the poll is one a chat can ask; where it is not, the
+          "Open the ballot" variant goes out instead, and with neither approved, the variant
+          without a button.
+        notification_template_column: Notification
+        notification_template_kinds:
+          deadline_approaching: Deadline approaching
+          deadline_passed: Deadline passed
+          status_change: Update on own proposal
+          voting_started: Vote started
+          voting_started_action: Vote started (button, vote in the chat)
+          voting_started_link: Vote started (button, open the ballot)
+          voting_ending: Vote closing soon
+          voting_ending_action: Vote closing soon (button, vote in the chat)
+          voting_ending_link: Vote closing soon (button, open the ballot)
+        notification_template_button: 'Button: %{label}'
+        notification_template_not_submitted: not submitted yet
+        notification_template_submit: Submit
+        notification_template_other_in_use: 'currently active: %{name}'
+        template_statuses:
+          approved: approved
+          pending: under review
+          submitted: submitted
+          in_appeal: appeal pending
+          pending_deletion: being deleted
+          flagged: flagged
+          rejected: rejected
+          paused: paused
+          disabled: disabled
+        slots_title: What is being sent right now
+        slots_intro: >-
+          Each row is a slot that needs an approved template. While a slot is empty or its template
+          is not approved, that message reaches nobody.
+        slots_armed_summary:
+          zero: No slot is ready to send.
+          one: 1 of %{total} slots is ready to send.
+          other: "%{count} of %{total} slots are ready to send."
+        slot_column: Slot
+        slot_purpose_broadcast: Projekt broadcast
+        slot_purpose_notification: Push notification
+        slot_not_configured: no template configured
+        template_form_title: Submit a new broadcast template
+        template_submit_hint: >-
+          After submitting, the template takes up to a minute to appear in the account list below.
+          Meta approval takes considerably longer — usually several hours.
+        account_list_title: All templates on the account
+        account_list_summary:
+          zero: All templates on the account (none)
+          one: All templates on the account (1)
+          other: All templates on the account (%{count})
+        account_list_intro: >-
+          Everything held at 360dialog under this account, including templates this portal never
+          submitted. Rejected templates count against the account quota and can be deleted here.
+        template_delete: Delete
+        notification_template_resubmit: Submit again
+        notification_template_resubmit_confirm: >-
+          The rejected template will be deleted at 360dialog and submitted again with the current
+          wording. Continue?
+        template_delete_confirm: Permanently delete this rejected template at 360dialog?
+        notification_template_placeholder_hint: >-
+          %{placeholder} is replaced with the link to the contribution when the push is sent. What
+          it is about is deliberately left out of the message — it arrives on a lock screen other
+          people can read.
+      pages:
+        connection:
+          hint: Whether the bot is live, whether Meta can reach it, and what a citizen meets first.
+          description_title: What this page is for
+          description:
+          - >-
+            This page decides whether the WhatsApp bot exists at all for your portal, and what a citizen
+            meets in the first seconds of their first conversation. The feature switch at the top
+            is the master control: with it off, incoming messages are still received and stored but
+            nothing is answered, and no broadcast leaves the system. Turning it on takes effect immediately
+            — there is no separate publish step.
+          - >-
+            Below it, the connection status reports whether Meta can actually reach this installation.
+            The webhook is the address WhatsApp posts every incoming message to, and it is registered
+            once per phone number. A failing status here almost always means one of three things:
+            the callback URL registered with 360dialog points at a different host than this one, the
+            shared secret no longer matches, or the application sits behind something the request
+            cannot cross. The check runs against the host you are currently browsing, so opening this
+            page from a staging URL reports staging's address rather than production's.
+          - >-
+            Below that, the message test sends one real WhatsApp message to a number you type, through
+            the same code path as everything else the bot sends. A failure reports the error Meta
+            returned, and one of them catches most people out: a number that has never written to
+            the portal cannot be sent a freeform message at all. So if you are testing with your own
+            phone and have never messaged the portal's number from it, the send fails no matter how
+            correct the configuration is. Message the number once from that phone, then run the test
+            again.
+          - >-
+            The test creates a conversation record for the number if none exists, so a tested number
+            appears in the conversation list afterwards. That is expected, and it is the quickest
+            way to confirm the inbound side works too: reply to the test message and watch it arrive.
+        settings:
+          hint: Values the bot reads while it runs. Every field has a default when left empty.
+          description_title: What this page is for
+          description:
+          - >-
+            Everything on this page is a value the bot reads while running rather than something a
+            citizen ever sees directly. None of it has to be set for the bot to work; each field falls
+            back to a sensible default when left empty.
+          - >-
+            The default language decides which translation an unlinked number is answered in. Once
+            a number is linked to an account the bot follows that citizen's own language setting instead,
+            so this value governs first contact and anyone who declined to link, and nothing else.
+          - >-
+            The two template names point at approved Meta templates and are what a broadcast actually
+            sends. The text variant is the plain fallback; the card variant carries the projekt image
+            and puts the link in a button. Both are chosen on the templates page rather than typed
+            here, and these fields show which is currently active. The template language has to match
+            the language the template was approved in — a mismatch is rejected at send time, not here.
+          - >-
+            The transcription model handles voice messages. Citizens send them often, and each one
+            costs a transcription call before its text reaches the flow. Leaving the field empty uses
+            the default, which is the cheapest model that handles German reliably.
+          - >-
+            Retention and voice size are the two limits worth reviewing periodically. Messages older
+            than the retention window are deleted nightly, which is a data-protection obligation rather
+            than housekeeping; the default is ninety days. The voice limit is checked before a file
+            is downloaded, so raising it raises what the portal is willing to fetch and pay to transcribe,
+            while lowering it makes long messages fail quietly.
+          - >-
+            Automatic broadcasting sends a message to every subscribed number whenever a projekt is
+            published. It is off by default, and it is the one setting here that can reach thousands
+            of people through a single click made elsewhere in the admin.
+        templates:
+          hint: Approved Meta templates — the only way to message someone outside the 24-hour window.
+          description_title: What this page is for
+          description:
+          - >-
+            WhatsApp does not let a business message someone who has not written in the last twenty-four
+            hours. Outside that window only a template Meta has reviewed and approved may be sent,
+            which is why every notification this portal pushes has to exist here first.
+          - >-
+            The form creates a template and submits it for review. A name may contain only lowercase
+            letters, digits and underscores; the language must match the text you write; and the body
+            carries placeholders in the form of double braces that the portal fills at send time.
+            Submitting is not activating — approval takes anywhere from a few minutes to a couple
+            of days, and broadcasting with a template that is still pending simply fails.
+          - >-
+            The list below shows every template on the account with its current status. Approved ones
+            can be activated with the button beside them, which writes both the name and its language
+            into the settings the sending code reads, so the two cannot drift apart. Only one template
+            per kind is active at a time.
+          - >-
+            The three push notifications at the bottom work the same way but leave nothing to write.
+            Their wording is fixed, and deliberately so: each carries a link and nothing else — no
+            projekt name, no proposal title, no support count — because a push arrives on a lock
+            screen that other people can read. What the message is about becomes visible only after
+            tapping through.
+          - >-
+            Meta classifies templates, and the classification matters more than it appears to. Announcing
+            a new projekt is marketing, and submitting it as a utility message gets it reclassified
+            or rejected outright. Repeated misclassification lowers the phone number's quality rating,
+            which reduces how many messages that number may send per day — a limit that is slow and
+            difficult to recover from once it drops.
+          - >-
+            Rejected templates cannot be edited; a replacement has to be submitted under a different
+            name. Meta rejects most often for placeholder problems: a body that begins or ends with
+            a placeholder, two placeholders next to each other, or example values that do not match
+            the number of parameters in the text.
+        qr_code:
+          hint: >-
+            Every code in one place: the portal-wide one, plus one per running phase that accepts
+            chat submissions.
+          description_title: What this page is for
+          description:
+          - >-
+            The QR code on this page opens a WhatsApp conversation with the portal's number and pre-fills
+            the first message, so a citizen who scans it lands in the bot without needing to know
+            the number or what to type.
+          - >-
+            This is the portal-wide code. Scanning it starts a general conversation: the bot greets,
+            offers to link the account, and then shows what is currently open for participation. It
+            carries no projekt and no phase, which makes it the right code for a poster in a town
+            hall, a footer on a printed newsletter, or a sticker somewhere permanent.
+          - >-
+            Below it, every running phase that accepts contributions by chat has its own code. Those
+            carry a signed token, so a scan drops the citizen straight into the submission flow for
+            that phase with no menu in between. Use them for signage at the place a projekt is
+            actually about — a construction hoarding, a park noticeboard, a public meeting. The
+            projekt-wide code for one projekt still lives on that projekt's own WhatsApp page.
+          - >-
+            The link beneath the code is the same address in text form. It works everywhere a printed
+            code cannot: an email, a button on the website, a post on social media. Both go through
+            WhatsApp's own redirector, so the destination stays correct even if the portal later moves
+            to a different number.
+          - >-
+            The code contains no personal data and does not expire, so it can be printed, photographed
+            and reproduced freely. What it cannot do is prove who scanned it. A citizen still has
+            to link their account before they can submit or support anything, which is the step the
+            bot offers immediately after its first message.
+        reach:
+          hint: How many people this channel can reach, and how many are using it.
+          description_title: What this page is for
+          description:
+          - >-
+            This page answers one question: how many people can this channel actually reach, and how
+            many of them are using it.
+          - >-
+            The first row counts numbers by their linking state. Unlinked numbers have written to
+            the bot but have not connected an account — they can read what the portal offers but cannot
+            submit, support, or receive personal notifications. Pending numbers have been sent a login
+            link and have not completed it. That link expires after an hour, so a large pending count
+            usually means people are dropping out at the login page rather than that they are still
+            deciding.
+          - >-
+            Subscribed is the number that matters for broadcasting. It counts only accounts that are
+            verified, linked to a user who still exists, and have not opted out. A broadcast reaches
+            exactly this set, minus anyone who has switched off that particular notification type.
+            It is always smaller than the total, and the gap between the two is the honest measure
+            of how much of the audience a push actually gets to.
+          - >-
+            Flows in progress counts conversations that are part-way through something — writing a
+            proposal, deciding on a draft, choosing a category. A figure here that never falls is
+            worth investigating: it usually means citizens are abandoning at one particular step rather
+            than that many people happen to be mid-submission at once.
+          - >-
+            Which participation phases currently accept a submission through the bot is not answered
+            here but on the QR code page, where each of them is listed with its own code. Reach says
+            how many people this channel gets to; which codes exist is a different question.
+        dialogs:
+          hint: Every conversation the bot has had, with filters and a way to reply.
+          description_title: What this page is for
+          description:
+          - >-
+            Every conversation the bot has had is listed here, most recent activity first. This is
+            the closest thing the portal has to a support inbox, and it is the only place a person
+            can read what a citizen actually wrote.
+          - >-
+            The filters narrow the list three ways. State is the linking status of the number. Step
+            is where the conversation currently sits; idle conversations are hidden, so this filter
+            only ever surfaces people who are part-way through something. Activity narrows by recency,
+            which is the fastest route to the conversations that need attention now rather than those
+            that ended weeks ago.
+          - >-
+            Opening a conversation shows its full message history in both directions, with delivery
+            status on everything the bot sent. A message marked failed was rejected by WhatsApp rather
+            than lost. The usual reason is that the twenty-four hour window had closed, which the
+            bot checks before sending, though a number that has blocked the business will fail as
+            well.
+          - >-
+            You can reply directly from a conversation. That reply is an ordinary freeform message
+            and is subject to the same twenty-four hour rule: if the citizen has not written in the
+            last day it will not go out, and the failure appears in the history. There is no way around
+            this from here — reaching someone outside the window needs an approved template, which
+            is a broadcast rather than a reply.
+          - >-
+            Conversations are not kept indefinitely. Messages older than the retention window configured
+            on the settings page are deleted nightly, so this list thins out over time by design.
+            Export anything you need to keep as a record before it ages out.
+    projekts:
+      projekts:
+        tabs:
+          whatsapp: WhatsApp
+        whatsapp:
+          title: WhatsApp
+          hint_text: >-
+            QR code for this whole project. With exactly one phase accepting WhatsApp submissions,
+            citizens land there directly. With several, the bot asks which one.
+          qr_title: Project QR code
+          qr_subline: For posters and flyers about this project.
+          eligible_phases_title: Phases accepting submissions
+          all_phase_codes_link: See every phase QR code on the QR code page
+          eligible_phases_intro:
+            one: One phase accepts WhatsApp proposals — submissions go straight there.
+            other: '%{count} phases accept WhatsApp proposals — the bot will ask which one.'
+          no_eligible_phases_title: No phase currently accepts WhatsApp submissions
+          no_eligible_phases_body: >-
+            No phase with WhatsApp submissions enabled is running. Anyone scanning this QR code
+            can link their number but cannot submit a proposal.
+      phases:
+        projekt_phase:
+          whatsapp: WhatsApp
+        whatsapp:
+          title: WhatsApp
+          qr_title: Phase QR code
+          qr_subline: Leads straight into this phase, no questions asked. Best for on-site posters.
+          submissions_disabled_title: WhatsApp submissions are disabled for this phase
+          submissions_disabled_body: Anyone scanning this QR code is currently turned away. Switch
+            the setting above on so the phase accepts submissions through the bot.

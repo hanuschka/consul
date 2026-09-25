@@ -15,7 +15,7 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
   end
 
   def user_answer(question_answer)
-    user_answers_by_title[question_answer.title]
+    user_answers_by_question_answer_id[question_answer.id]
   end
 
   def disable_answer?(question_answer)
@@ -28,7 +28,7 @@ class Polls::Questions::AnswersComponent < ApplicationComponent
       @user_answers ||= helpers.poll_answers_by_question_for_current_user(question.poll)[question.id] || []
     end
 
-    def user_answers_by_title
-      @user_answers_by_title ||= user_answers.index_by(&:answer)
+    def user_answers_by_question_answer_id
+      @user_answers_by_question_answer_id ||= user_answers.index_by(&:question_answer_id)
     end
 end

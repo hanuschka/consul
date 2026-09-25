@@ -96,11 +96,20 @@ class PollsController < ApplicationController
     @poll_questions_answers = Poll::Question::Answer.where(question: @poll.questions)
 
     if @poll.in_wizard_mode?
-      context_source_ids = @poll.questions.where.not(contextualize_by_poll_question_id: nil)
-                                .reorder(nil).distinct.pluck(:contextualize_by_poll_question_id)
-      @wizard_map = Polls::WizardMap.call(@questions, context_source_ids)
-                                    .map { |entry| entry.merge(url: wizard_step_question_path(entry[:id])) }
+      # Only the first question is rendered; each one after it is asked for by id
+      # from Polls::QuestionsController#wizard_next, which is where the order, the
+      # contexted clones, the branching and the answer that ends a ballot are all
+      # decided. The ids travel for the progress bar alone — the browser used to
+      # carry a map of the whole poll and work the traversal out from it, which put
+      # every rule about which questions a citizen sees in two places.
+      traversal = ::Polls::BallotTraversalQuery.for(
+        poll: @poll, user: current_user, order_seed: poll_participant_order_seed
+      )
+
+      @wizard_question_ids = traversal.path.map(&:id)
       @wizard_questions = @questions.first(1)
+      @wizard_first_has_next = @wizard_questions.first.present? &&
+        traversal.next_after?(@wizard_questions.first)
     end
 
     @answers_by_question_id = {}

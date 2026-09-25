@@ -6,6 +6,11 @@ class ProjektPhaseSetting < ApplicationRecord
 
   AI_GATED_KEYS = %w[
     feature.form.voice_assistant
+    feature.general.similar_contributions_check
+  ].freeze
+
+  AI_SETTINGS_TAB_KEYS = %w[
+    feature.form.voice_assistant
   ].freeze
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
@@ -45,8 +50,14 @@ class ProjektPhaseSetting < ApplicationRecord
     end
   end
 
+  # Nil rather than "translation missing" when a setting has no label yet: the
+  # WhatsApp assistant reads these to answer a citizen's question about the
+  # phase, and a missing label there has to fall back to the key rather than be
+  # read out as prose.
   def translated_name
-    I18n.t("custom.projekt_phase_settings.#{projekt_phase.resources_name}.#{key}")
+    I18n.t(
+      "custom.projekt_phase_settings.#{projekt_phase.resources_name}.#{key}", default: nil
+    )
   end
 
   class << self
@@ -70,6 +81,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.require_admin_acceptance": "",
           "feature.general.public_kpi_stats": "",
           "feature.general.public_ai_stats": "",
+          "feature.general.similar_contributions_check": "",
+          "feature.general.whatsapp_submissions": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -126,6 +139,8 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.general.browse_mode_in_phase_footer_by_default": "",
           "feature.general.public_kpi_stats": "",
           "feature.general.public_ai_stats": "",
+          "feature.general.similar_contributions_check": "",
+          "feature.general.whatsapp_submissions": "",
           "selectable_setting.general.default_order": "random",
 
           "feature.form.allow_attached_image": "active",
@@ -189,6 +204,10 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::FormularPhase" => {
           "option.general.primary_formular_cutoff_date": "",
           "option.general.submissions_limit": "1"
+        },
+
+        "ProjektPhase::MitmachboxPhase" => {
+          "feature.general.answer_survey_online": ""
         },
 
         "ProjektPhase::IframePhase" => {

@@ -1,19 +1,109 @@
 module Ai::RubyLlmFactory
+  # The one builder. A chat is pinned to the model its profile chose and carries
+  # the tools it was asked for in the same call, so the model it talks to and the
+  # effort those tools are named with are always answers from the same profile —
+  # a caller holding the two apart is a caller that can let them drift.
+  def self.chat_for(
+    profile, feature: AiUsageRecord::UNKNOWN_FEATURE, request_timeout: nil, tools: []
+  )
+    chat = build_chat(
+      context_for(request_timeout), feature: feature, gpt_model: profile.model
+    )
+
+    return chat if tools.blank?
+
+    attach_tools(chat, tools, profile)
+  end
+
   def self.chat(feature: AiUsageRecord::UNKNOWN_FEATURE)
-    model = Ai::Settings.current_llm_model
+    chat_for(::Ai::ModelProfile.default, feature: feature)
+  end
+
+  def self.chat_with_json_output(
+    output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE, request_timeout: nil
+  )
+    chat_for(::Ai::ModelProfile.default, feature: feature, request_timeout: request_timeout)
+      .with_schema(output_schema)
+  end
+
+  def self.context_for(request_timeout)
+    return init if request_timeout.blank?
+
+    context_with_request_timeout(request_timeout)
+  end
+
+  # Kept apart from chat_for only because the warning below belongs next to the
+  # attachment rather than in the middle of building a chat: whether an effort
+  # may be named alongside tools is the profile's answer, not the caller's, and
+  # a caller that got it wrong only found out from a 400 in production.
+  def self.attach_tools(chat, tools, profile)
+    warn_unsupported_tools(profile)
+
+    chat.with_tools(*tools)
+
+    disable_reasoning(chat, profile)
+  end
+
+  # The same effort attach_tools names, for a call that attaches no tools and
+  # still has no reasoning to pay for. Reading it off the profile rather than a
+  # constant is what keeps the two from drifting apart.
+  def self.disable_reasoning(chat, profile)
+    return chat if profile.reasoning_effort.blank?
+
+    chat.with_thinking(effort: profile.reasoning_effort)
+  end
+
+  # Logged rather than enforced: the registry is a snapshot shipped with the
+  # gem, so a model missing from it is far likelier to be newer than the
+  # snapshot than to be one that cannot call tools at all.
+  def self.warn_unsupported_tools(profile)
+    return if profile.tools_supported?
+
+    Rails.logger.warn(
+      "[Ai::RubyLlmFactory] #{profile.model} is listed without function " \
+      "calling; attaching tools anyway"
+    )
+  end
+
+  # Embeddings are a provider call like any other, so they are wired here too
+  # rather than in a caller: only openai is configured with an embedding model,
+  # and embeddable? is what retrieval checks before relying on vectors.
+  def self.embed(input, model:, dimensions:, feature: AiUsageRecord::UNKNOWN_FEATURE)
     provider = Ai::Settings.current_llm_provider
 
-    chat = init.chat(
+    embedding = init.embed(
+      input,
+      model: model,
+      provider: provider.to_sym,
+      assume_model_exists: true,
+      dimensions: dimensions
+    )
+
+    AiUsageRecords::RecordEmbeddingUsage.call(
+      embedding: embedding,
+      feature: feature,
+      provider: provider,
+      requested_model: model
+    )
+
+    embedding
+  end
+
+  def self.embeddable?
+    Ai::Settings.current_llm_provider == "openai"
+  end
+
+  def self.build_chat(context, feature:, gpt_model: nil)
+    model = model_for(gpt_model)
+    provider = Ai::Settings.current_llm_provider
+
+    chat = context.chat(
       model: model,
       provider: provider.to_sym,
       assume_model_exists: true
     )
 
     record_usage_from(chat, feature: feature, provider: provider, model: model)
-  end
-
-  def self.chat_with_json_output(output_schema, feature: AiUsageRecord::UNKNOWN_FEATURE)
-    chat(feature: feature).with_schema(output_schema)
   end
 
   def self.record_usage_from(chat, feature:, provider:, model:)
@@ -29,6 +119,30 @@ module Ai::RubyLlmFactory
     end
 
     chat
+  end
+
+  # A model id named for one provider means nothing to another, and an
+  # OpenAI-compatible endpoint serves its own catalogue under its own names, so
+  # a caller's preference holds only on OpenAI itself. Everywhere else the
+  # configured model is the only one the instance is known to be able to reach.
+  def self.model_for(gpt_model)
+    return Ai::Settings.current_llm_model if gpt_model.blank?
+    return Ai::Settings.current_llm_model if !Ai::Settings.standard_openai?
+
+    gpt_model
+  end
+
+  # An unrecognised provider leaves init returning the RubyLLM module itself,
+  # whose config is the global one — writing a timeout there would shorten it
+  # for every other caller in the process.
+  def self.context_with_request_timeout(seconds)
+    context = init
+
+    return context if !context.is_a?(RubyLLM::Context)
+
+    context.config.request_timeout = seconds
+
+    context
   end
 
   def self.init
@@ -56,7 +170,7 @@ module Ai::RubyLlmFactory
     when "ollama"
       ollama_context
     else
-      RubyLLM
+      RubyLLM.context
     end
   end
 

@@ -42,7 +42,6 @@ class Api::ProjektsController < Api::BaseController
       projekts =
         Projekt
           .activated
-          .with_published_custom_page
           .show_in_overview_page
     else
       projekts = Projekt.regular
@@ -76,7 +75,7 @@ class Api::ProjektsController < Api::BaseController
     paginating = params[:page].present? || params[:per_page].present?
 
     if paginating
-      projekts = paginate_projekts(projekts)
+      projekts = paginate(projekts, default_per_page: DEFAULT_PROJEKTS_PER_PAGE)
     end
 
     projekts = eager_load_projekt_associations(projekts, includes_hash)
@@ -107,10 +106,9 @@ class Api::ProjektsController < Api::BaseController
     check_read_access!
 
     if current_client.public_data?
-      page_published = @projekt.page&.status == 'published'
       show_in_overview = @projekt.projekt_settings.find_by(key: 'projekt_feature.general.show_in_overview_page')&.value == 'active'
 
-      unless @projekt.activated? && page_published && show_in_overview
+      unless @projekt.activated? && show_in_overview
         return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
       end
     end
@@ -304,12 +302,6 @@ class Api::ProjektsController < Api::BaseController
     SORT_EXPRESSIONS[sort_column] || "projekts.#{sort_column}"
   end
 
-  def paginate_projekts(projekts)
-    per_page = (params[:per_page].presence || DEFAULT_PROJEKTS_PER_PAGE).to_i
-
-    projekts.page(params[:page]).per(per_page)
-  end
-
   def image_variant_versions
     return nil if params[:image_variant_versions].blank?
 
@@ -320,15 +312,6 @@ class Api::ProjektsController < Api::BaseController
     return projekts if includes_hash.blank?
 
     projekts.includes(includes_hash)
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 
   def projekt_params

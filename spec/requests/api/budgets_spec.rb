@@ -13,8 +13,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all participatory budgets across all projects. Includes budget details (name, currency, slug) and associated investment information. Useful for overview pages and budget selection. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of budgets per page (**default:** 100, max: 500)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'budgets found and returned' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
@@ -58,8 +58,8 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all budgets associated with a specific projekt phase. Each budget within a phase represents a separate participatory budgeting instance with its own investments and voting. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number for pagination (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of budgets per page (**default:** 100, max: 500)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'budgets found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

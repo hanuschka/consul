@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   draw :idea_management
   draw :internal_api
   draw :api
+  draw :whatsapp_api
   draw :custom
 
   root "welcome#index"
@@ -55,7 +56,6 @@ Rails.application.routes.draw do
   resources :images, only: [:destroy]
   resources :documents, only: [:destroy]
   resources :follows, only: [:create, :destroy]
-  resources :remote_translations, only: [:create]
 
   # Deficiency reports
   resources :deficiency_reports, only: [:index, :show, :new, :create, :destroy] do

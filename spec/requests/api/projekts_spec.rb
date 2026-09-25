@@ -11,7 +11,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a list of all projekts. By default ordered by creation date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring next at the top). By default returns only public projekts (activated with published pages). Users with public_data access level can only access public projekts. Pagination is optional: by default all matching projekts are returned, but supplying 'page' (and optionally 'per_page', default 20) paginates the results and adds a 'pagination' object to the response. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a list of all projekts. By default ordered by creation date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring next at the top). By default returns only public projekts (activated and shown in the overview). Users with public_data access level can only access public projekts. Pagination is optional: by default all matching projekts are returned, but supplying 'page' (and optionally 'per_page', default 20) paginates the results and adds a 'pagination' object to the response. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :filter, in: :query, type: :string, required: false,
                 description: <<~DESC
                   Filter projekts by lifecycle stage or special status. Valid values:
@@ -23,7 +23,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                   - 'index_order_expired': Projekts past their end date. Shows completed projects.
 
                   **Special status filters**:
-                  - 'index_order_all': All activated projekts with published pages shown in overview. Broader view excluding special lists.
+                  - 'index_order_all': All activated projekts shown in overview. Broader view excluding special lists.
                   - 'index_order_individual_list': Projekts configured to appear in individual lists (separate display area). Requires 'show_in_individual_list' setting.
                   - 'index_order_drafts': Draft or inactive projekts (not activated). Admin only. Useful for content management and previewing unpublished projects.
 
@@ -52,7 +52,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 DESC
       parameter name: :only_public, in: :query, type: :boolean, required: false,
                 description: <<~DESC
-                  If false, returns all projekts (admin only); true returns only activated projekts with published pages shown in overview. Users with public_data access can only access public projekts.
+                  If false, returns all projekts (admin only); true returns only activated projekts shown in overview. Users with public_data access can only access public projekts.
 
                   **Default:** true (only public projekts).
                 DESC
@@ -90,7 +90,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 description: <<~DESC
                   Number of projekts per page when paginating. Only applies when page or per_page is provided.
 
-                  **Default:** 20.
+                  **Default:** 20. **Max:** 2000 (higher values are clamped).
                 DESC
       parameter name: :image_variant_versions, in: :query, type: :string, required: false,
                 description: <<~DESC

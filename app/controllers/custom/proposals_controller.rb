@@ -9,6 +9,7 @@ class ProposalsController
   include CustomHelper
   include LandingPageResolvable
   include OnBehalfOfAccountLinking
+  include SimilarContributionsCheck
 
   MAP_PINS_LAZY_LOAD_THRESHOLD = 50
 
@@ -19,6 +20,10 @@ class ProposalsController
   before_action :set_projekts_for_selector, only: [:new, :edit, :create, :update]
   before_action :set_random_seed, only: :index
   prepend_before_action :load_draft_proposal_for_admin, only: :show
+
+  skip_load_and_authorize_resource only: [:similar_contributions_status, :publish_draft]
+  skip_authorization_check only: [:similar_contributions_status, :publish_draft]
+  before_action :load_own_similarity_draft, only: [:similar_contributions_status, :publish_draft]
 
   def index_customization
     resolve_landing_page_from_slug
@@ -162,28 +167,37 @@ class ProposalsController
     @projekt_phase = @proposal.projekt_phase
     @proposal.admin_accepted = false if @projekt_phase.feature?("general.require_admin_acceptance")
 
-    if @proposal.valid? && link_on_behalf_of_account(@proposal) && @proposal.save
-      if params[:save_draft].present?
-        redirect_to proposal_path(@proposal),
-          notice: I18n.t("flash.actions.create.proposal")
-
-      else
-        @proposal.publish
-
-        Mailer.proposal_created(@proposal).deliver_later
-
-        redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
-      end
-    else
-      params[:projekt_phase_id] = @proposal&.projekt_phase&.id
-      params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
-
-      if @projekt_phase.present?
-        resolve_landing_page_for_projekt(@projekt_phase.projekt)
-      end
-
-      render :new
+    if @proposal.invalid? || !link_on_behalf_of_account(@proposal)
+      return respond_with_invalid_proposal
     end
+
+    if similar_contributions_check_requested?(@projekt_phase)
+      return respond_with_invalid_proposal if !start_similar_contributions_check(@proposal)
+
+      return respond_with_started_check
+    end
+
+    return respond_with_invalid_proposal if !@proposal.save
+
+    if params[:save_draft].present?
+      redirect_to proposal_path(@proposal),
+        notice: I18n.t("flash.actions.create.proposal")
+
+    else
+      publish_checked_proposal
+
+      respond_with_published_proposal
+    end
+  end
+
+  def similar_contributions_status
+    render json: similar_contributions_status_payload(@proposal)
+  end
+
+  def publish_draft
+    publish_checked_proposal
+
+    respond_with_published_proposal
   end
 
   def publish
@@ -210,13 +224,7 @@ class ProposalsController
       return
     end
 
-    # Acceptance is gated here rather than in CanCan, so the signed link from an on-behalf-of account
-    # mail has to be admitted here too — otherwise that mail sends its recipient to a page that turns
-    # them away. :preview rather than :show because every proposal is :read-able to everyone, so only
-    # an action nothing else grants can single out the record that link names.
-    if !@proposal.admin_accepted? &&
-        !current_user&.has_pm_permission_to?(:manage, @projekt) &&
-        !can?(:preview, @proposal)
+    if !@proposal.admin_accepted? && !allowed_to_preview_pending?
       redirect_to proposals_path, notice: t("proposals.notice.pending_acceptance") and return
     end
 
@@ -290,6 +298,24 @@ class ProposalsController
 
   private
 
+    # A proposal awaiting moderation is hidden from the portal, but not from the
+    # person who wrote it: they are the one party who already knows it exists and
+    # has the most reason to check what was submitted. This is the only way a
+    # WhatsApp submitter can see their own pending proposal at all — the chat
+    # sends them the link, and it stops being a dead end once they are logged in.
+    #
+    # Acceptance is gated here rather than in CanCan, so the signed link from an
+    # on-behalf-of account mail has to be admitted here too — otherwise that mail
+    # sends its recipient to a page that turns them away. :preview rather than
+    # :show because every proposal is :read-able to everyone, so only an action
+    # nothing else grants can single out the record that link names.
+    def allowed_to_preview_pending?
+      return true if current_user&.has_pm_permission_to?(:manage, @projekt)
+      return true if can?(:preview, @proposal)
+
+      current_user.present? && @proposal.author_id == current_user.id
+    end
+
     # The support and withdraw buttons carry the ids of the cards that were on screen, so the
     # response can refresh all of them. Only the clicked card is re-rendered otherwise, and
     # crossing the phase's supports limit changes what every other card in the phase shows.
@@ -345,6 +371,67 @@ class ProposalsController
                     map_location_attributes:]
       translations_attributes = translation_params(Proposal, except: :retired_explanation)
       params.require(:proposal).permit(attributes, translations_attributes)
+    end
+
+    # The draft default scope hides unpublished contributions, so the citizen's
+    # own in-flight draft has to be looked up past it.
+    def load_own_similarity_draft
+      @proposal = Proposal
+        .unscope(where: :draft)
+        .where(author: current_user)
+        .find(params[:id])
+      @projekt_phase = @proposal.projekt_phase
+    end
+
+    def publish_checked_proposal
+      UserResources::PublishService.call(@proposal)
+    end
+
+    def respond_with_invalid_proposal
+      respond_to do |format|
+        format.html { render_new_form }
+        format.json do
+          render json: similar_contributions_invalid_payload(@proposal),
+                 status: :unprocessable_entity
+        end
+      end
+    end
+
+    def respond_with_started_check
+      respond_to do |format|
+        format.html { render_new_form }
+        format.json do
+          render json: similar_contributions_check_started_payload(
+            @proposal,
+            publish_url: publish_draft_proposal_path(@proposal)
+          )
+        end
+      end
+    end
+
+    def respond_with_published_proposal
+      respond_to do |format|
+        format.html do
+          redirect_to proposal_path(@proposal), notice: t("proposals.notice.published")
+        end
+
+        format.json do
+          flash[:notice] = t("proposals.notice.published")
+
+          render json: { status: "published", redirect_url: proposal_path(@proposal) }
+        end
+      end
+    end
+
+    def render_new_form
+      params[:projekt_phase_id] = @proposal&.projekt_phase&.id
+      params[:projekt_id] = @proposal&.projekt_phase&.projekt&.id
+
+      if @projekt_phase.present?
+        resolve_landing_page_for_projekt(@projekt_phase.projekt)
+      end
+
+      render :new
     end
 
     def voting_user

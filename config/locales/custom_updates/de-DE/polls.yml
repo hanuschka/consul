@@ -48,6 +48,7 @@ de:
         question_answer_details_tooltip: Einzelauswertung
         question_answer_details_csv_link: Kreuztabellen-Auswertung herunterladen
         open_answers_csv_link: Offene Antworten herunterladen
+        export_in_progress: "Export wird vorbereitet. Sie erhalten eine E-Mail, sobald der Export fertig ist."
         table:
           votes: Stimmen
           answer: Antwort

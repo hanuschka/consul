@@ -8,7 +8,7 @@
     <p class="image-cropper--instructions"><%= t("custom.shared.image_cropper.instructions") %></p>
 
     <div class="image-cropper--canvas-wrapper">
-      <img class="image-cropper--image js-image-cropper--image" alt="">
+      <%= render Shared::CropperCanvasComponent.new %>
     </div>
 
     <div class="image-cropper--actions">

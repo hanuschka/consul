@@ -30,7 +30,7 @@
 %>
 
 <% if mobile_header_attachment_to_use&.attached? %>
-  <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [nil, 550], saver: { quality: 90 }, strip: true, format: 'jpeg') %>
+  <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [nil, 1400], saver: { quality: 90 }, strip: true, format: 'jpeg') %>
 
   <style>
     @media(max-width: 750px) {
@@ -118,13 +118,13 @@
           <% if @custom_page&.landing? %>
            <%= @custom_page.header_title %>
           <% else %>
-            <%= Setting["extended_option.general.title"] %>
+            <%= setting_text("extended_option.general.title") %>
           <% end %>
           <br>
           <% if @custom_page&.landing? %>
            <b><%= @custom_page.subtitle %></b>
           <% else %>
-            <b><%= Setting["extended_option.general.subtitle"] %></b>
+            <b><%= setting_text("extended_option.general.subtitle") %></b>
           <% end %>
       </h1>
     <% end %>

@@ -16,8 +16,36 @@ en:
       wordpress_login_description: "Adds a Wordpress button to the sign-in and registration pages, letting users sign in and register with their Wordpress account. Enable it when your users have an account there. Requires the credentials to be configured on the server."
       kobil_login: "Enable KOBIL login"
       kobil_login_description: "Adds a button with the KOBIL logo to the sign-in and registration pages, letting users sign in with a KOBIL account (OpenID Connect). Enable it when KOBIL is your central identity system. Requires the credentials to be configured on the server."
+      whatsapp_bot: "Enable WhatsApp bot"
+      whatsapp_bot_description: "Turns on the WhatsApp bot for citizens. Only takes effect once your technical team has set up the WhatsApp business account on the server."
       kobil_address_verification: "KOBIL address verification"
       kobil_address_verification_description: "Imports the address from the KOBIL account (street, postal code, city) into the user profile without linking it to the address register. It unlocks no district-restricted phases. Enable it to spare users typing."
+    ai:
+      whatsapp_model_tier: "WhatsApp bot language model (temporary)"
+      whatsapp_model_tier_description: "Decides which of the three OpenAI models writes the bot's replies. A larger model answers more carefully, costs more per message and takes longer to appear in the chat. The choice exists for a comparison on the staging system and is removed afterwards. It only appears while OpenAI is used without a custom API endpoint; under any other provider the model configured there still applies. The default is the fast model."
+      whatsapp_model_tier_options:
+        big: "Main model (%{model})"
+        fast: "Fast model (%{model})"
+        ultrafast: "Ultrafast model (%{model})"
+    whatsapp:
+      default_locale: "Bot default language"
+      default_locale_description: "Sets the language the bot speaks to numbers that have not linked an account yet. Once a number is linked to an account, the bot follows that person's own language setting instead. Enter a language code the platform offers, for example de or en. Empty or an unknown code means the platform's default language."
+      address_form: "Bot form of address"
+      address_form_description: "Decides whether the bot addresses citizens formally or informally. Exactly two values are allowed: sie or du. The setting applies to every text the AI writes itself, in the chat and equally in the two-stage assessment of proposals, and to the bot's fixed copy as well, which exists in both forms of address. Set du for youth participation, sie for a city administration. Empty or any other value means sie."
+      broadcast_template: "Active template for project broadcasts"
+      broadcast_template_description: "Shows which Meta-approved template a broadcast sends. While this field is empty no broadcast can go out and the button for it does not appear on the project page. Choose the template on the Bot message templates page rather than typing a name here: a name Meta has not approved makes every send fail."
+      broadcast_card_template: "Active card template for project broadcasts"
+      broadcast_card_template_description: "The variant carrying the project image with the link on a button. It is optional: while this field is empty every broadcast goes out as plain text, and projects without an image fall back to the text variant anyway. It is chosen on the Bot message templates page as well."
+      broadcast_template_language: "Template language"
+      broadcast_template_language_description: "Has to match the language the template was approved in at Meta. A mismatch only surfaces at send time and is rejected there. Activating a template writes this value along with it, so the name and the language cannot drift apart. Empty means de."
+      transcription_model: "Model for voice messages"
+      transcription_model_description: "Turns incoming voice messages into text before the bot processes them. Citizens send them often, and each one costs a call. Empty means gpt-4o-mini-transcribe, the cheapest model that handles German reliably. Change the value only when another model demonstrably transcribes better."
+      message_retention_days: "Message retention in days"
+      message_retention_days_description: "Messages older than this period are deleted nightly at 3:15. This is a data-protection obligation, not a matter of tidiness. Enter a whole number greater than zero; empty, zero or anything that is not a number means ninety days. Shorten the period when your deletion policy requires it — the list on the Dialogs page thins out accordingly."
+      max_voice_megabytes: "Size limit for voice messages in MB"
+      max_voice_megabytes_description: "Checked before a voice message is downloaded from WhatsApp. A higher value allows longer messages; one that is too low makes them fail without the reason being visible — the person only gets the request to write their idea as text. Empty, zero or anything that is not a number means 16."
+      auto_broadcast_new_projekts: "Broadcast on every project publication"
+      auto_broadcast_new_projekts_description: "Sends a message to every subscribed number automatically whenever a project is published. Off by default, and the only setting on this page that can reach thousands of people through a single click elsewhere. Enable it only when your publications are deliberate and a template is active."
     projekt_option:
       general:
         external_participation_link: "Use an alternative link in the project resources"
@@ -166,6 +194,8 @@ en:
         two_click_iframe_solution: "Two-click solution for iframes"
         two_click_iframe_solution_description: "Enable this option to use a GDPR-compliant blur effect for embedded content (e.g. maps or videos). The content is only loaded after an active click by the user (the 'two-click solution'). This ensures that no data is sent to third-party providers before consent has been given."
       general:
+        language_switcher_in_menu: Language switcher in navigation
+        language_switcher_in_menu_description: "Shows a picker for all available languages in the navigation bar. Cannot be used together with Google Translate — if Google Translate is on, the switcher is hidden."
         enable_google_translate: Enable Google Translate
         enable_google_translate_description: 'Embeds the Google Translate widget. A language icon appears in the main menu and the platform''s own language selector is dropped. Enable it for many languages, and first agree to the <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform" target="_blank" rel="noopener">terms of use</a>.'
         show_guest_login_links: Show guest login

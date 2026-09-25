@@ -8,18 +8,18 @@ class Api::DeficiencyReportsController < Api::BaseController
 
   def index
     check_read_access!
-    deficiency_reports = DeficiencyReport
-      .includes(
-        :author,
-        :tags,
-        :category,
-        :status,
-        :responsible,
-        :map_location
-      )
-      .admin_accepted
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+    deficiency_reports = paginate(
+      DeficiencyReport
+        .includes(
+          :author,
+          :tags,
+          :category,
+          :status,
+          :responsible,
+          :map_location
+        )
+        .admin_accepted
+    )
 
     deficiency_reports = apply_filters(deficiency_reports)
     deficiency_reports = apply_sorting(deficiency_reports)
@@ -166,15 +166,6 @@ class Api::DeficiencyReportsController < Api::BaseController
     else
       deficiency_reports.sort_by_newest
     end
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end
 

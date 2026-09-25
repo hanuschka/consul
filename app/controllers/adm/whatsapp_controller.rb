@@ -1,0 +1,590 @@
+module Adm
+  class WhatsappController < Adm::BaseController
+    FEATURE_SETTING_KEYS = %w[
+      feature.whatsapp_bot
+    ].freeze
+
+    AUTO_BROADCAST_SETTING_KEY = "whatsapp.auto_broadcast_new_projekts".freeze
+
+    TEXT_SETTING_KEYS = %w[
+      whatsapp.default_locale
+      whatsapp.address_form
+      whatsapp.broadcast_template
+      whatsapp.broadcast_card_template
+      whatsapp.broadcast_template_language
+      whatsapp.transcription_model
+      whatsapp.message_retention_days
+      whatsapp.max_voice_megabytes
+    ].freeze
+
+    # Mirrored from the templates tab, which is the only place that can vouch
+    # for a name Meta has approved. Typing one here made every broadcast fail,
+    # so the page shows them and links onwards instead of offering an input.
+    READ_ONLY_TEMPLATE_SETTING_KEYS = %w[
+      whatsapp.broadcast_template
+      whatsapp.broadcast_card_template
+      whatsapp.broadcast_template_language
+    ].freeze
+
+    DIALOGS_PER_PAGE = 20
+    DIALOGS_FRAME_ID = "whatsapp_dialogs".freeze
+
+    TEMPLATES_TAB = "templates".freeze
+    DEFAULT_TEMPLATE_NAME = "neues_projekt".freeze
+
+    # PDF QR poster disabled for now. Restoring it means uncommenting, in this
+    # file: the constant below, the `except: :qr_poster` filter, the qr_poster
+    # action and the four private helpers at the bottom — plus the route in
+    # config/routes/adm.rb and the download button in
+    # Adm::WhatsappQrCodeComponent. It also needs `qr_token_subject` back: read
+    # the token through QrToken.projekt_phase_id_from, else projekt_id_from, and
+    # return the ProjektPhase or Projekt it names, so a poster request cannot be
+    # pointed at an arbitrary projekt by editing the URL.
+    # QR_POSTER_MODULE_SIZE = 14
+
+    before_action :authorize_settings # , except: :qr_poster
+    before_action :load_configured_state
+
+    # The landing route. Configured portals have nothing to show here that the
+    # first page does not, so it hands straight over rather than duplicating it;
+    # unconfigured ones get the explanation, which is the only thing there is to
+    # say before credentials exist.
+    def show
+      return redirect_to connection_adm_whatsapp_path if @configured
+
+      load_page_chrome
+    end
+
+    def connection
+      load_page_chrome
+      load_settings
+      load_webhook_status
+    end
+
+    def settings
+      load_page_chrome
+      load_settings
+    end
+
+    def templates
+      load_page_chrome
+      load_templates
+      load_notification_templates
+      load_template_slots
+      load_template_form
+    end
+
+    def qr_code
+      load_page_chrome
+      load_eligible_phases
+    end
+
+    def reach
+      load_page_chrome
+      load_reach_stats
+    end
+
+    # The only page whose own controls re-request it: filtering and paginating
+    # happen inside the turbo-frame, which renders the list alone.
+    def dialogs
+      return render_dialogs_frame if dialogs_frame_request?
+
+      load_page_chrome
+      load_dialogs
+    end
+
+    # The test message now lives as a section of the connection page, next to
+    # the webhook status: one asks whether Meta can reach this installation,
+    # the other whether it actually delivers. The route stays so a bookmark
+    # from when this was a tab of its own still arrives somewhere useful.
+    def test_message
+      redirect_to connection_adm_whatsapp_path
+    end
+
+    def send_test_message
+      return head :forbidden if !@configured
+
+      result =
+        ::Whatsapp::Platform::SendTestMessageService.call(
+          phone: params.dig(:test, :phone),
+          body: t("adm.whatsapp.test_message.body")
+        )
+
+      render json: result
+    end
+
+    # def qr_poster
+    #   token = params[:token].presence
+    #   subject = token.present? ? qr_token_subject(token) : nil
+    #
+    #   if token.present? && subject.blank?
+    #     raise ActiveRecord::RecordNotFound
+    #   end
+    #
+    #   authorize_qr_poster(subject)
+    #
+    #   send_data qr_poster_pdf(token, subject),
+    #     filename: "#{["whatsapp-qr", token].compact.join("-").parameterize}.pdf",
+    #     type: "application/pdf",
+    #     disposition: "attachment"
+    # end
+
+    def create_template
+      @template_form = ::Whatsapp::TemplateForm.new(template_params)
+
+      return render_template_form_errors if @template_form.invalid?
+
+      response =
+        ::Whatsapp::BroadcastTemplates.create(
+          name: @template_form.name,
+          language: @template_form.language,
+          body: @template_form.body
+        )
+
+      if !response&.success?
+        @template_form.errors.add(
+          :base,
+          response&.admin_error_message || t("adm.whatsapp.not_configured")
+        )
+
+        return render_template_form_errors
+      end
+
+      flash[:success] = t("adm.whatsapp.template.submitted")
+
+      redirect_to templates_adm_whatsapp_path
+    end
+
+    # The push counterpart of create_template. Nothing to fill in: the body is
+    # the catalog's, the name follows from the kind and the language from the
+    # broadcast setting the sending code reads, so the only decision left is
+    # which of them to submit — including which button shape, for a voting push.
+    def create_notification_template
+      kind = notification_template_kind
+
+      return head :bad_request if kind.blank?
+
+      response = ::Whatsapp::NotificationTemplates.create(kind: kind)
+
+      if response&.success?
+        flash[:success] = t("adm.whatsapp.template.notification_submitted")
+      else
+        flash[:error] = t("adm.whatsapp.template.notification_failed",
+          error: response&.admin_error_message || t("adm.whatsapp.not_configured"))
+      end
+
+      redirect_to templates_adm_whatsapp_path
+    end
+
+    # Arms one of the pushes. The name is derived from the kind rather
+    # than taken from the request: this writes a Setting, and the only template
+    # the tab can vouch for is the one it submitted itself.
+    def use_notification_template
+      kind = notification_template_kind
+
+      return head :bad_request if kind.blank?
+
+      name = ::Whatsapp::NotificationTemplates.submission_name(kind)
+      Setting[::Whatsapp::NotificationTemplates::SETTING_KEYS_BY_KIND.fetch(kind)] = name
+
+      flash[:success] = t("adm.whatsapp.template.notification_selected", name: name)
+
+      redirect_to templates_adm_whatsapp_path
+    end
+
+    # The only path that activates a broadcast template, now that creating one
+    # no longer does: it runs after Meta reports the template approved, and it
+    # writes the language alongside the name so the pair cannot drift.
+    def use_template
+      setting_key = ::Whatsapp::BroadcastTemplates::SETTING_KEYS_BY_KIND[template_kind]
+
+      Setting[setting_key] = params[:name].to_s
+      Setting["whatsapp.broadcast_template_language"] = params[:language].to_s
+
+      flash[:success] = t("adm.whatsapp.template.selected", name: params[:name])
+
+      redirect_to templates_adm_whatsapp_path
+    end
+
+    # Clears a rejected template off the account, which is the only reason to
+    # delete one from here: Meta keeps it forever and counts it against the
+    # account's limit, while nothing can ever send with it.
+    #
+    # Both guards run here rather than only hiding the button. The listing this
+    # checks against is cached for a minute, so an admin can hold a page whose
+    # buttons describe a state that has since changed — and the request is
+    # unrecoverable at 360dialog.
+    def delete_template
+      name = params[:name].to_s
+
+      return head :bad_request if name.blank?
+      return refuse_template_delete(:delete_refused_in_use, name) if template_in_use?(name)
+      return refuse_template_delete(:delete_refused_not_rejected, name) if !template_rejected?(name)
+
+      response = ::Whatsapp::BroadcastTemplates.delete(name: name)
+
+      if response&.success?
+        expire_template_listing
+
+        flash[:success] = t("adm.whatsapp.template.deleted", name: name)
+      else
+        flash[:error] = t("adm.whatsapp.template.delete_failed",
+          error: response&.admin_error_message || t("adm.whatsapp.not_configured"))
+      end
+
+      redirect_to templates_adm_whatsapp_path
+    end
+
+    # A rejected push cannot simply be submitted again: the rejected template
+    # still occupies the name the kind submits under, so Meta would see a
+    # duplicate. The rejected one is deleted first, which is also the only way to
+    # stop it counting against the account's template limit.
+    #
+    # Pushes only. A broadcast template's name and wording are typed into the
+    # form above, so there is no fixed content for this to resend — a rejected
+    # broadcast row offers delete, and the form is how the next one is written.
+    def resubmit_notification_template
+      kind = notification_template_kind
+
+      return head :bad_request if kind.blank?
+
+      name = ::Whatsapp::NotificationTemplates.submission_name(kind)
+
+      # No in-use guard here, unlike delete_template. A push is armed under the
+      # name its kind submits under, so a template Meta rejected after it was
+      # armed is both in use and rejected — and refusing it would leave that slot
+      # with no way out at all. Resubmitting keeps the name, so the setting stays
+      # correct, and an already-rejected template sends nothing either way.
+      return refuse_template_delete(:resubmit_refused_not_rejected, name) if !template_rejected?(name)
+
+      delete_response = ::Whatsapp::BroadcastTemplates.delete(name: name)
+
+      if !delete_response&.success?
+        flash[:error] = t("adm.whatsapp.template.delete_failed",
+          error: delete_response&.admin_error_message || t("adm.whatsapp.not_configured"))
+
+        return redirect_to templates_adm_whatsapp_path
+      end
+
+      # Dropped before the submission rather than after it: the name is gone at
+      # 360dialog either way now, and a create that fails must leave the page
+      # showing the slot as unsubmitted — which is what it truly is — rather than
+      # the rejected row the cache still holds.
+      expire_template_listing
+
+      resubmit_notification_template_as(kind, name)
+    end
+
+    private
+
+      # Split out so the two provider round-trips read as two steps rather than
+      # one method deciding four outcomes.
+      def resubmit_notification_template_as(kind, name)
+        response = ::Whatsapp::NotificationTemplates.create(kind: kind)
+
+        if response&.success?
+          flash[:success] = t("adm.whatsapp.template.resubmitted", name: name)
+        else
+          # The delete already happened, so this is not a no-op failure: the slot
+          # is now empty and the row will offer a plain submission again. Said
+          # explicitly, because "could not submit" alone would suggest nothing
+          # had changed.
+          flash[:error] = t("adm.whatsapp.template.resubmit_failed",
+            error: response&.admin_error_message || t("adm.whatsapp.not_configured"))
+        end
+
+        redirect_to templates_adm_whatsapp_path
+      end
+
+      # The listing every template row is rendered from, cached for a minute. A
+      # write that changes what 360dialog holds has to drop it, or the page comes
+      # back describing the state from before the write.
+      def expire_template_listing
+        Rails.cache.delete("whatsapp/integration_state/templates")
+        @templates = nil
+      end
+
+      def refuse_template_delete(key, name)
+        flash[:error] = t("adm.whatsapp.template.#{key}", name: name)
+
+        redirect_to templates_adm_whatsapp_path
+      end
+
+      # Every slot in both catalogs, so a template armed for a push is as
+      # protected as the one the broadcast job reads.
+      def template_in_use?(name)
+        ::Whatsapp::BroadcastTemplates.configured_names.include?(name)
+      end
+
+      # Read from the listing rather than trusted from the form: the status is
+      # Meta's answer, and the button that submitted this was rendered from a
+      # cached copy of it.
+      def template_rejected?(name)
+        load_templates
+
+        @templates.any? do |template|
+          template[:name] == name &&
+            template[:status] == ::Whatsapp::BroadcastTemplates::REJECTED_STATUS
+        end
+      end
+
+      def authorize_settings
+        authorize [:adm, Setting], :update?
+      end
+
+      # No default here, unlike the broadcast kinds: the pushes have no obvious
+      # fallback, and guessing one would submit or arm the wrong notification.
+      def notification_template_kind
+        kind = params[:kind].to_s
+
+        return kind if ::Whatsapp::NotificationTemplates::KINDS.include?(kind)
+
+        nil
+      end
+
+      # Anything unrecognised is the text template: a wrong kind would write the
+      # name into the setting the other variant reads.
+      def template_kind
+        kind = params[:kind].to_s
+
+        return kind if ::Whatsapp::BroadcastTemplates::SETTING_KEYS_BY_KIND.key?(kind)
+
+        ::Whatsapp::BroadcastTemplates::TEXT_KIND
+      end
+
+      # def authorize_qr_poster(subject)
+      #   projekt = subject.is_a?(ProjektPhase) ? subject.projekt : subject
+      #
+      #   return authorize [:adm, :projekts, projekt], :show? if projekt.present?
+      #
+      #   authorize_settings
+      # end
+      #
+      # def qr_poster_pdf(token, subject)
+      #   deep_link = ::Whatsapp.deep_link_url_for(token)
+      #   html = render_to_string(
+      #     template: "adm/whatsapp/qr_poster",
+      #     layout: "pdf_whatsapp_qr",
+      #     formats: [:html],
+      #     locals: {
+      #       headline: qr_poster_headline(subject),
+      #       preline: subject.is_a?(ProjektPhase) ? projekt_title(subject.projekt) : nil,
+      #       deep_link: deep_link,
+      #       qr_svg: ::Whatsapp.qr_svg(deep_link, module_size: QR_POSTER_MODULE_SIZE)
+      #     }
+      #   )
+      #
+      #   Grover.new(html, display_url: request.base_url).to_pdf
+      # end
+      #
+      # def qr_poster_headline(subject)
+      #   return subject.title if subject.is_a?(ProjektPhase)
+      #   return projekt_title(subject) if subject.is_a?(Projekt)
+      #
+      #   Setting["org_name"].presence || t("adm.whatsapp.show.title")
+      # end
+      #
+      # def projekt_title(projekt)
+      #   projekt.page&.title.presence || projekt.name
+      # end
+
+      def load_configured_state
+        @configured = ::Whatsapp.configured?
+      end
+
+      # Filtering and pagination happen inside the dialogs turbo-frame, so those
+      # requests render the list alone — skipping the six other tab panels and
+      # the 360dialog round-trip the connection page makes.
+      def dialogs_frame_request?
+        @configured && turbo_frame_request_id == DIALOGS_FRAME_ID
+      end
+
+      def render_dialogs_frame
+        load_dialogs
+
+        render partial: "adm/whatsapp/dialogs_frame", layout: false
+      end
+
+      # Everything every page needs and nothing any single one does: the tab
+      # strip reads @active_tab, the header reads @breadcrumbs.
+      def load_page_chrome
+        @active_tab = action_name
+        @breadcrumbs = [
+          { name: t("adm.menu.items.application"), icon: "desktop_windows" },
+          { name: t("adm.whatsapp.show.title") }
+        ]
+      end
+
+      def load_template_form
+        @template_form ||= ::Whatsapp::TemplateForm.new(
+          name: DEFAULT_TEMPLATE_NAME,
+          language: ::Whatsapp.broadcast_template_language,
+          body: t("adm.whatsapp.show.template_body_default")
+        )
+      end
+
+      def template_params
+        params.require(:template).permit(:name, :language, :body)
+      end
+
+      # Re-renders the page the form lives on, not the landing route, so the
+      # invalid values stay in the fields the admin typed them into.
+      def render_template_form_errors
+        load_page_chrome
+        @active_tab = TEMPLATES_TAB
+        load_templates
+        load_notification_templates
+        load_template_slots
+
+        render :templates, status: :unprocessable_entity
+      end
+
+      def load_settings
+        settings_by_key = Setting.where(key: all_setting_keys).index_by(&:key)
+
+        @feature_settings = FEATURE_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+        @text_settings = TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+        @auto_broadcast_setting = settings_by_key[AUTO_BROADCAST_SETTING_KEY]
+        @model_tier_setting = model_tier_setting_from(settings_by_key)
+        @model_tier_options = model_tier_options
+      end
+
+      def all_setting_keys
+        FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS +
+          [AUTO_BROADCAST_SETTING_KEY, ::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY]
+      end
+
+      # A temporary control for comparing the three model tiers on the staging
+      # system. The tiers are three separate models only on OpenAI's own
+      # catalogue, so the row is offered nowhere else — and the resolution
+      # ignores a stored value there as well.
+      def model_tier_setting_from(settings_by_key)
+        return if !::Ai::Settings.standard_openai?
+
+        settings_by_key[::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY]
+      end
+
+      # Each option names the model id it would send, so a tester reads the tier
+      # and the model in the same line instead of looking either up in the code.
+      def model_tier_options
+        ::Ai::Settings::WHATSAPP_MODEL_TIERS.map do |tier|
+          label = t(
+            "setting.ai.whatsapp_model_tier_options.#{tier}",
+            model: ::Ai::Settings.whatsapp_tier_model(tier)
+          )
+
+          [label, tier]
+        end
+      end
+
+      # Uncapped on purpose: the cap #call applies is how many rows fit in one
+      # WhatsApp list message, so reading it here would drop the eleventh open
+      # phase from a page whose whole point is that every code is on it.
+      def load_eligible_phases
+        @eligible_projekt_phases = ::Whatsapp::EligiblePhasesQuery.uncapped
+      end
+
+      # Two 360dialog round-trips, each retried three times with a sleep at a
+      # 20-second timeout, so a gateway returning 502 used to cost the page a
+      # couple of minutes with the worker blocked throughout. Both answers are
+      # configuration that changes on the order of hours, so they are cached for
+      # a minute — and only when the call actually came back, because both
+      # services report failure as an empty or unreachable value that must not
+      # be remembered.
+      INTEGRATION_STATE_TTL = 1.minute
+
+      # Split in two because the two answers are now read by two different
+      # pages: asking for the template list on the connection page would spend a
+      # round-trip on something nothing there renders.
+      def load_webhook_status
+        @webhook_status = cached_integration_state("webhook_status") do
+          ::Whatsapp::Platform::WebhookStatusService.call(expected_base_url: request.base_url)
+        end
+      end
+
+      def load_templates
+        @templates = cached_integration_state("templates") { ::Whatsapp::BroadcastTemplates.list }
+      end
+
+      # Reads the listing load_templates already fetched rather than asking
+      # 360dialog again: the push templates are rows of the same catalog, told
+      # apart by the name each kind is submitted under.
+      def load_notification_templates
+        @notification_templates = ::Whatsapp::NotificationTemplates.states(@templates)
+      end
+
+      # The eleven slot rows the page opens with, off the same listing again.
+      def load_template_slots
+        @template_slots = ::Whatsapp::TemplateSlots.all(@templates)
+        @armed_slot_count = ::Whatsapp::TemplateSlots.armed_count(@template_slots)
+      end
+
+      def cached_integration_state(key, &block)
+        cache_key = "whatsapp/integration_state/#{key}"
+        cached = Rails.cache.read(cache_key)
+
+        return cached if cached.present?
+
+        value = block.call
+
+        Rails.cache.write(cache_key, value, expires_in: INTEGRATION_STATE_TTL) if usable?(value)
+
+        value
+      end
+
+      def usable?(value)
+        return value[:reachable].present? if value.is_a?(Hash)
+
+        value.present?
+      end
+
+      def load_reach_stats
+        @reach_stats = ::Whatsapp::Platform::ReachStatsService.call
+        @reach_tiles = ::Whatsapp::Platform::ReachTilesService.call(@reach_stats)
+      end
+
+      def load_dialogs
+        @dialogs_present = ::Whatsapp::Account.exists?
+        scope = ::Whatsapp::Account.includes(:user, :whatsapp_conversation)
+
+        @pagy, @dialogs = pagy(
+          ::Adm::Whatsapp::DialogsQuery.call(scope, params),
+          limit: DIALOGS_PER_PAGE
+        )
+
+        @dialog_message_counts = dialog_message_counts
+        @dialog_last_messages = dialog_last_messages
+
+        assign_dialog_filter_options
+      end
+
+      def assign_dialog_filter_options
+        @dialog_state_options = ::Whatsapp::Account.states.keys.map do |state|
+          [t("adm.whatsapp.dialogs.states.#{state}"), state]
+        end
+
+        @dialog_step_options = ::Whatsapp::Conversation.steps.keys.excluding("idle").map do |step|
+          [t("adm.whatsapp.steps.#{step}"), step]
+        end
+
+        @dialog_activity_options = ::Adm::Whatsapp::DialogsQuery::ACTIVITY_OPTIONS.map do |option|
+          [t("adm.whatsapp.dialogs.activity_options.#{option}"), option]
+        end
+      end
+
+      def dialog_message_counts
+        ::Whatsapp::Message
+          .where(whatsapp_account_id: @dialogs.map(&:id))
+          .group(:whatsapp_account_id)
+          .count
+      end
+
+      def dialog_last_messages
+        ::Whatsapp::Message
+          .where(whatsapp_account_id: @dialogs.map(&:id))
+          .select("DISTINCT ON (whatsapp_account_id) whatsapp_messages.*")
+          .order(:whatsapp_account_id, created_at: :desc)
+          .index_by(&:whatsapp_account_id)
+      end
+  end
+end

@@ -38,7 +38,7 @@ class Projekts::ListItemComponent < ApplicationComponent
   def date_formated
     base_formated_date = helpers.format_date_range(projekt.total_duration_start, projekt.total_duration_end)
 
-    base_formated_date.presence || "Fortlaufendes Projekt"
+    base_formated_date.presence || t("custom.projekts.list_item.ongoing")
   end
 
   def phase_icon_class(phase)

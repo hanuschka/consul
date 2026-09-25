@@ -1,0 +1,7 @@
+de:
+  adm:
+    projekts:
+      similar_contributions:
+        excluded: Der Beitrag wurde aus der Duplikatgruppe entfernt.
+        popup:
+          empty: Für diesen Eintrag sind keine ähnlichen Beiträge gespeichert.

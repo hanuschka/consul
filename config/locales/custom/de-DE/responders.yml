@@ -29,6 +29,7 @@ de:
         topic: "Thema erfolgreich aktualisiert."
         valuator_group: "Gutachtergruppe wurde erfolgreich aktualisiert"
         translation: "Übersetzung erfolgreich hochgeladen"
+        translation_locked: "Die maschinelle Übersetzung ist aktiv, daher wurden die Übersetzungen für %{locales} beibehalten."
       destroy:
         budget_investment: "Investitionsprojekt erfolgreich gelöscht."
         error: "Konnte nicht gelöscht werden"

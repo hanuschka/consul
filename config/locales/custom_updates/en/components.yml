@@ -7,6 +7,9 @@ en:
         success: "Downloaded"
       image_with_lightbox_component:
         download_original: "Download original"
+    common_notifications:
+      list_item_component:
+        destroy_confirmation: "Do you really want to delete this notification?"
     images:
       ai_generated_field_component:
         label: "This image was created or edited with AI"
@@ -20,3 +23,41 @@ en:
       ai_image_label_component:
         text: "AI-generated image"
         tooltip: "This image was created or edited with artificial intelligence and does not show a real photograph. The notice is required by law."
+    similar_contributions:
+      check_section_component:
+        checking_hint: "Your contribution is being compared with the ones already submitted in this phase. This only takes a moment."
+      progress_component:
+        checking: "Checking proposal …"
+      decision_component:
+        intro: "Please check whether your concern is already covered there before submitting your contribution."
+        show_duplicates: "Show similar contributions"
+        hide_duplicates: "Hide similar contributions"
+        submit_anyway: "Submit anyway"
+      notice_component:
+        title:
+          one: "%{count} similar contribution found"
+          other: "%{count} similar contributions found"
+        intro:
+          one: "There is already a contribution with similar content. You can support it instead, or submit your contribution anyway."
+          other: "There are already contributions with similar content. You can support one of them instead, or submit your contribution anyway."
+        back_to_form: "Back to the form"
+        supported_link: "Go to the supported contribution"
+        submit_anyway: "Submit anyway"
+      list_component:
+        title: "Similar contributions"
+        not_a_duplicate: "Not a duplicate"
+        not_a_duplicate_confirm: "Remove this contribution from the duplicate set? It will not be grouped with this one again."
+        empty: "No contributions with similar content were found."
+      match_item_component:
+        no_answer: "No published answer yet."
+        copy_answer: "Copy this answer"
+        answer_without_text: "Answer without text — an image or an embed only."
+        open_in_backend: "Open in backend"
+      match_status:
+        answered: "Answered"
+        open: "In progress"
+        retired: "Retired"
+        unfeasible: "Unfeasible"
+      badge:
+        one: "%{count} similar contribution"
+        other: "%{count} similar contributions"

@@ -43,11 +43,11 @@ class Api::ProposalsController < Api::BaseController
         proposals.order(created_at: :asc)
       end
 
-    proposals =
+    proposals = paginate(
       proposals
-        .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
-        .page(params[:page])
-        .per(params[:per_page] || DEFAULT_PER_PAGE)
+        .includes(:author, :tags, :geozone, :projekt_labels, :sentiment,
+                  projekt_phase: [:settings, { projekt: :page }])
+    )
 
     serialized_proposals = ProposalSerializer.serialize_collection(proposals)
 
@@ -176,17 +176,9 @@ class Api::ProposalsController < Api::BaseController
 
   def find_proposal
     @proposal = Proposal
-      .includes(:author, :tags, :geozone, :projekt_labels, :sentiment, projekt_phase: { projekt: :page })
+      .includes(:author, :tags, :geozone, :projekt_labels, :sentiment,
+                  projekt_phase: [:settings, { projekt: :page }])
       .find(params[:id])
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end
 

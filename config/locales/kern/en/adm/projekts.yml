@@ -21,7 +21,6 @@ en:
           projekts: Projects
           managers: Team
           inspiration: Project inspirations
-          instance_import: Copy external projekt
           landing_pages: Topic pages
           settings: Configuration
       inspiration:
@@ -99,25 +98,6 @@ en:
             note: Participant contributions, votes, comments and subscriptions.
           status_processing: Copying …
           status_failed: Copy failed
-        instance_import:
-          action: Import project
-          pending_name: Imported project (in progress)
-          url_label: Reuse a project from another platform
-          url_hint: >
-            Paste the address of a project you found under Project
-            inspirations. Its phases, settings, content and maps are copied into
-            a new deactivated draft on this platform. Images, videos and
-            participant contributions are not copied — pictures arrive as
-            placeholders you can replace.
-          browse_inspiration: Browse project inspirations
-          url_field_label: Project address
-          url_placeholder: e.g. https://app.demokratie.today/beteiligung-innenstadt
-          invalid_url: Please paste a complete project address, including https://.
-          started: The project is being imported. This may take a moment.
-          finished: The imported project "%{name}" was created.
-          failed_notice: >
-            The project could not be imported. Please check the address and make
-            sure the project is published on app.demokratie.today.
         projekt:
           top_level_projekt: Top-level project
           frontend_page: Project page
@@ -147,6 +127,8 @@ en:
             the homepage title, project duration, assignment to topic pages, and
             geographic categorization. These details determine how the project is
             displayed and found on the platform.
+          activated_label: Project activated
+          activated_description: Releases the project on the platform. Only activated projects appear in the public projects overview and can be accessed by users. Deactivated projects are fully preserved and remain editable in the admin area.
           duration_label: Project duration
           duration_description: Defines the period during which the project is visible and accessible on the platform — regardless of whether an active participation phase is running. The start and end date determine when the project appears in the public projects overview and can be accessed by users.
           landing_pages_label: Assignment to topic pages

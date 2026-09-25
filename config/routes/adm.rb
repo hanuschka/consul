@@ -23,6 +23,33 @@ namespace :adm do
     get :file_settings, on: :collection
   end
   resource :features, controller: "features", only: [:show]
+  resource :whatsapp, controller: "whatsapp", only: [:show] do
+    # One page per tab rather than one page with seven panels: each loads only
+    # its own data, and the two 360dialog round-trips now cost only the pages
+    # that actually show their answer.
+    get :connection
+    get :settings
+    get :templates
+    get :qr_code
+    get :reach
+    get :dialogs
+    get :test_message
+
+    # Named apart from the GET page above, which owns `test_message`.
+    post :send_test_message
+    post :create_template
+    patch :use_template
+    post :create_notification_template
+    patch :use_notification_template
+    post :resubmit_notification_template
+    delete :delete_template
+    # PDF QR poster disabled for now — see Adm::WhatsappController.
+    # get :qr_poster
+
+    resources :dialogs, controller: "whatsapp_dialogs", only: [:show] do
+      post :reply, on: :member
+    end
+  end
   resources :registered_addresses, only: [:index]
   resources :registered_address_streets, only: [] do
     get :search, on: :collection
@@ -133,6 +160,7 @@ namespace :adm do
     patch :update_api_key, on: :collection
   end
   resources :external_api_keys, only: [:index, :show, :edit, :update]
+  resources :machine_translations, only: [:index, :destroy]
   resources :api_clients, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     post :regenerate_token, on: :member
     get :logs, on: :member
@@ -165,4 +193,10 @@ namespace :adm do
   get "projekts/overview_page/navigation", to: redirect("/adm/overview_pages/projekt")
   get "projekts/overview_page/footer",     to: redirect("/adm/overview_pages/projekt")
   get "projekts/overviews",                to: redirect("/adm/overview_pages/others")
+
+  # The cross-instance import lost its own tab and became one of the three
+  # sources behind "Projekt importieren"; bookmarks of the old screen land on
+  # the source that replaced it.
+  get "projekts/instance_import",     to: redirect("/adm/projekts/imports/from_consul_projekt/new")
+  get "projekts/instance_import/new", to: redirect("/adm/projekts/imports/from_consul_projekt/new")
 end

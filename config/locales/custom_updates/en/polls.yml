@@ -47,6 +47,7 @@ en:
         question_answer_details_tooltip: Crosssecrional details
         question_answer_details_csv_link: Download details about crossectional voting
         open_answers_csv_link: Download open answers
+        export_in_progress: "The export is being prepared. You will receive an email as soon as it is ready."
         table:
           votes: Votes
           answer: Answer

@@ -20,10 +20,12 @@ export default class extends Controller {
   static values = {
     createUrl: String,
     maxBytes: Number,
+    maxFileBytes: Number,
     allowed: String,
     csrf: String,
     progressExtracting: String,
     errorTooLarge: String,
+    errorFileTooLarge: String,
     errorUnsupported: String,
     errorNoFiles: String,
     errorSessionExpired: String,
@@ -101,6 +103,10 @@ export default class extends Controller {
       const ext = (file.name.split(".").pop() || "").toLowerCase()
       if (!allowed.includes(ext)) {
         this.showError(this.errorUnsupportedValue.replace("%{filename}", file.name))
+        continue
+      }
+      if (this.maxFileBytesValue > 0 && file.size > this.maxFileBytesValue) {
+        this.showError(this.errorFileTooLargeValue.replace("%{filename}", file.name))
         continue
       }
       if (totalBytes + file.size > this.maxBytesValue) {

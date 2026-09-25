@@ -103,7 +103,8 @@
 
     <% c.with_body do %>
       <% @investments.each do |investment| %>
-        <%= render "adm/projekts/phases/budget_investments/budget_investment", investment: investment, projekt_phase: @projekt_phase, budget: @budget %>
+        <%= render "adm/projekts/phases/budget_investments/budget_investment", investment: investment, projekt_phase: @projekt_phase, budget: @budget,
+              similar_contributions_counts: @similar_contributions_counts %>
       <% end %>
     <% end %>
   <% end %>

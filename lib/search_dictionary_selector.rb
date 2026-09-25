@@ -20,8 +20,13 @@ module SearchDictionarySelector
   }.freeze
 
   class << self
+    # Memoized per locale: the answer derives from I18n.default_locale and the
+    # server's installed dictionaries, neither of which moves while the process
+    # runs. Called from inside every search scope's lambda, so without this it
+    # is a round trip to pg_ts_config on every search the site performs.
     def call
-      find_from_i18n_default
+      @dictionaries ||= {}
+      @dictionaries[I18n.default_locale] ||= find_from_i18n_default
     end
 
     private

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Projekts::ProjektEvents::ListItemNewComponent < ApplicationComponent
-  delegate :render_image, to: :helpers
+  delegate :render_image, :current_user, to: :helpers
 
   attr_reader :projekt_event
 

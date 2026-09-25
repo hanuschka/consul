@@ -26,6 +26,7 @@ class Projekt < ApplicationRecord
 
   translates :description
   include Globalizable
+  include MachineTranslatable
 
   has_secure_token :preview_code
 
@@ -125,6 +126,8 @@ class Projekt < ApplicationRecord
 
   after_save :reset_visible_projekt_ids_cache
   after_destroy :reset_visible_projekt_ids_cache
+
+  after_commit :broadcast_publication_on_whatsapp
 
   after_update :sync_for_global_overview_if_changed #, on: :update
   # after_touch :sync_for_global_overview_if_changed
@@ -283,14 +286,12 @@ class Projekt < ApplicationRecord
 
   scope :index_order_all, ->() {
     activated
-      .with_published_custom_page
       .show_in_overview_page
       .order("projekts.created_at DESC")
   }
 
   scope :index_order_underway, ->(timestamp = Time.zone.today) {
     current(timestamp)
-      .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
       .where(current_regular_phase_exists(timestamp).or(consider_underway_setting_exists))
@@ -299,7 +300,6 @@ class Projekt < ApplicationRecord
 
   scope :index_order_ongoing, ->(timestamp = Time.zone.today) {
     current(timestamp)
-      .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
       .where(Arel::Nodes::Not.new(current_regular_phase_exists(timestamp)))
@@ -308,7 +308,6 @@ class Projekt < ApplicationRecord
 
   scope :index_order_upcoming, ->(timestamp = Time.zone.today) {
     activated
-      .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
       .where("total_duration_start > ?", timestamp)
@@ -317,15 +316,13 @@ class Projekt < ApplicationRecord
 
   scope :index_order_expired, ->(timestamp = Time.zone.today) {
     expired
-      .with_published_custom_page
       .show_in_overview_page
       .not_in_individual_list
       .order("projekts.created_at DESC")
   }
 
   scope :index_order_individual_list, -> {
-    with_published_custom_page
-      .show_in_overview_page
+    show_in_overview_page
       .in_individual_list
       .order("projekts.created_at DESC")
   }
@@ -484,11 +481,6 @@ class Projekt < ApplicationRecord
     individual_list
   }
 
-  scope :with_published_custom_page, -> {
-    joins(:page)
-      .where(site_customization_pages: { status: "published" })
-  }
-
   def self.overview_page
     find_by(
       special_name: "projekt_overview_page",
@@ -560,8 +552,35 @@ class Projekt < ApplicationRecord
   def meets_publish_criteria?
     !special? &&
       activated? &&
-      hard_individual_group_values.none? &&
-      page&.published?
+      hard_individual_group_values.none?
+  end
+
+  # Geo-restricted projekts are left out: most subscribers live outside the
+  # affiliated districts and could not take part in what they were notified
+  # about. Staff can still send those from the projekt details page.
+  def eligible_for_whatsapp_publication_broadcast?
+    published_at.present? &&
+      geozone_affiliated != "only_geozones"
+  end
+
+  # The broadcast carries the projekt link, so a projekt that moved to a new
+  # slug is worth announcing again; publishing twice under the same slug is not.
+  def whatsapp_broadcast_sent_for_current_slug?
+    whatsapp_broadcast_sent_at.present? &&
+      whatsapp_broadcast_slug == page&.slug
+  end
+
+  # Written with update_columns on purpose: this is bookkeeping, and
+  # `content_updated_at` must keep meaning "an editor changed something".
+  def mark_whatsapp_broadcast_sent!
+    update_columns(
+      whatsapp_broadcast_sent_at: Time.current,
+      whatsapp_broadcast_slug: page&.slug
+    )
+  end
+
+  def reset_whatsapp_broadcast!
+    update_columns(whatsapp_broadcast_sent_at: nil, whatsapp_broadcast_slug: nil)
   end
 
   def activated_children
@@ -829,7 +848,6 @@ class Projekt < ApplicationRecord
 
   def acceptable_to_be_exported_for_global_overview?
     !special &&
-      page&.published? &&
       activated? &&
       feature?("general.show_in_overview_page")
   end
@@ -842,10 +860,11 @@ class Projekt < ApplicationRecord
 
   def page_content
     if new_content_block_mode?
-      content_blocks_content =
-        content_blocks
-          .map(&:body)
-          .reduce(&:concat)
+      # join, never reduce(:concat): concat mutates the receiver, so reducing
+      # over the bodies appended the whole page into the first content block's
+      # in-memory body and left the record dirty, one save away from
+      # overwriting it.
+      content_blocks_content = content_blocks.map(&:body).join
 
       ActionView::Base.full_sanitizer.sanitize(content_blocks_content, tags: ["h1", "h2" "h3", "h4", "ul", "li"])
     else
@@ -890,6 +909,26 @@ class Projekt < ApplicationRecord
       elsif Projekt.with_hidden.where(id: parent_id).where.not(parent_id: nil).exists?
         errors.add(:parent_id, :must_be_top_level)
       end
+    end
+
+    # Rides on `published_at` so the trigger stays whatever
+    # `meets_publish_criteria?` says publishing is. Enqueued after commit so
+    # the job never reads a projekt the transaction still rolls back.
+    #
+    # Delayed by PUBLICATION_BROADCAST_DELAY (20 minutes) rather than sent at
+    # once: publishing is usually followed by a few minutes of last-minute
+    # edits to the title, image and content blocks, and the message carries
+    # the title plus a link people open immediately. The delay lets those
+    # edits land first. Note it is an offset, not a cancel window —
+    # deactivating the projekt again within it does not stop the queued job.
+    def broadcast_publication_on_whatsapp
+      return if !saved_change_to_published_at?
+      return if !eligible_for_whatsapp_publication_broadcast?
+      return if !::Whatsapp.auto_broadcast_new_projekts?
+
+      ::Whatsapp::BroadcastProjektJob
+        .set(wait: ::Whatsapp::PUBLICATION_BROADCAST_DELAY)
+        .perform_later(id)
     end
 
     def create_corresponding_page

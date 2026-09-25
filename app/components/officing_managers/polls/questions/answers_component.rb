@@ -19,7 +19,7 @@ class OfficingManagers::Polls::Questions::AnswersComponent < ApplicationComponen
   end
 
   def user_answer(question_answer)
-    user_answers.find_by(answer: question_answer.title)
+    user_answers.find_by(question_answer_id: question_answer.id)
   end
 
   def should_show_answer_weight?

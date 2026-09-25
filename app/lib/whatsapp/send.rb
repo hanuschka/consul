@@ -1,0 +1,666 @@
+module Whatsapp::Send
+  # Every dead end offers a way out, so a citizen never has to guess what the
+  # bot expects next. Ids are global: they are handled before the step
+  # dispatcher, so a button works from whatever state the flow is in.
+  # `help` replaced `menu` when the portal-wide list menu was archived: the
+  # catalog's way out of a dead end is the help overview, and a button that
+  # opened a menu which no longer exists would be the dead end itself.
+  # `retry` and `link_retry` are two different offers wearing one word. The first
+  # replays the turn the assistant could not answer, which the inbound chain does
+  # from a snapshot it holds; the second asks the citizen to follow their login
+  # link again, which no snapshot has anything to do with. One id for both had a
+  # tap on the link pill answered with whatever turn had last failed.
+  RECOVERY_ACTION_IDS = {
+    retry: "whatsapp_retry",
+    link_retry: "whatsapp_link_retry",
+    cancel: "whatsapp_cancel",
+    help: "whatsapp_help"
+  }.freeze
+
+  # The protocol cap applies here too, and a recovery line is one of the few sends
+  # that still carries the start-over pill: with_main_menu drops it once three pills
+  # are named, so a third recovery pill costs the way back and a fourth is lost.
+  MAX_RECOVERY_BUTTONS = ::Whatsapp::MAX_BUTTONS
+
+  module_function
+
+  def text(account:, body:)
+    deliver_within_service_window(account: account, kind: "text", body: body) do |messages|
+      messages.send_text(to: account.wa_id, body: body)
+    end
+  end
+
+  # A block composed from a record — a draft, a comment, a support — on its way out
+  # as however many messages it needs. Every caller that sends one did exactly this
+  # by hand, the blank guard included, and the guard is not optional: a block
+  # composes to nil whenever the record behind it has nothing to show, and a blank
+  # body is the one value WhatsApp refuses the whole send over.
+  #
+  # Here rather than beside the splitting in MessageBlock, which composes and knows
+  # nothing about delivery — and already gets called from this side for the
+  # interactive limit.
+  def message_block(account:, block:)
+    return if block.blank?
+
+    ::Whatsapp::MessageBlock.chunks(block).each do |part|
+      text(account: account, body: part)
+    end
+  end
+
+  # The bot's own locale copy, put into the citizen's language on its way out. Only
+  # ever for the fixed lines: what the assistant writes is already in the language it
+  # was asked to answer in, and a round trip through a second model could only lose
+  # it.
+  def locale_text(account:, body:)
+    text(
+      account: account,
+      body: ::Whatsapp::AiAssistant::BotCopyService.line(account: account, body: body)
+    )
+  end
+
+  def buttons(account:, body:, buttons:, header_image_url: nil)
+    offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
+
+    return refuse_empty_interactive(account: account, body: body) if offered.empty?
+
+    message = deliver_buttons(
+      account: account, body: body, offered: offered, header_image_url: header_image_url
+    )
+
+    remember_confirmations(account: account, entries: offered, message: message)
+  end
+
+  # The same send where the conversation has actually run out: a step the bot could
+  # not complete, a finished submission, a message with nothing else on offer. Named
+  # rather than switched on a parameter, because "this is a dead end" is what the
+  # call site is saying and `buttons(..., true)` would not say it.
+  def buttons_with_way_out(account:, body:, buttons:, header_image_url: nil)
+    buttons(
+      account: account,
+      body: body,
+      buttons: with_main_menu(account: account, buttons: buttons),
+      header_image_url: header_image_url
+    )
+  end
+
+  # The same send without the confirmation record, for the recovery lines. Their
+  # pills are locale copy from a fixed list and never irreversible, so there is
+  # nothing here to remember — but going through `buttons` would still overwrite
+  # what the previous message offered with an empty list, and the citizen's screen
+  # still shows that message. A "could not answer" line under a comment awaiting a
+  # yes would have thrown the yes away.
+  #
+  # Every recovery line is a dead end by definition — it is sent because the bot
+  # could not do what was asked — so this is the one send that still carries the way
+  # back for all of its callers at once.
+  def recovery_buttons_message(account:, body:, buttons:)
+    deliver_buttons(
+      account: account,
+      body: body,
+      offered: with_main_menu(account: account, buttons: buttons),
+      header_image_url: nil
+    )
+  end
+
+  def deliver_buttons(account:, body:, offered:, header_image_url:)
+    fitting = within_interactive_body(account: account, body: body)
+
+    deliver_within_service_window(
+      account: account, kind: "interactive", body: fitting
+    ) do |messages|
+      messages.send_buttons(
+        to: account.wa_id,
+        body: fitting,
+        buttons: offered,
+        header_image_url: header_image_url
+      )
+    end
+  end
+
+  # For a picture that exists only on an unpublished record. Uploading it to
+  # WhatsApp first means nothing about the send depends on Meta being able to
+  # reach us, which on an access-restricted environment it cannot.
+  def buttons_with_media_header(account:, body:, buttons:, header_media_id:)
+    offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
+
+    return refuse_empty_interactive(account: account, body: body) if offered.empty?
+
+    fitting = within_interactive_body(account: account, body: body)
+
+    message = deliver_within_service_window(
+      account: account, kind: "interactive", body: fitting
+    ) do |messages|
+      messages.send_buttons_with_media_header(
+        to: account.wa_id,
+        body: fitting,
+        buttons: offered,
+        header_media_id: header_media_id
+      )
+    end
+
+    remember_confirmations(account: account, entries: offered, message: message)
+  end
+
+  # A message that carries a picture, and what to do when WhatsApp will not take
+  # it. Which route works is a property of the transport rather than of the flow
+  # asking, so the ladder is walked here: the media id first, because an
+  # uploaded picture travels with the send and needs nothing fetched from us;
+  # the blob URL second, which WhatsApp fetches mid-send and which it refuses
+  # the whole message over when our host is not reachable from its network — an
+  # access-restricted environment, every time.
+  #
+  # A refused send is repeated without the picture rather than left undelivered:
+  # the citizen is standing at a step that expects an answer, and no message at
+  # all is the one outcome worse than a message they cannot see the photo in.
+  # Nil for both routes is simply the message, which is what the caller wants
+  # when there was no showable picture to begin with.
+  def buttons_with_picture(account:, body:, buttons:, media_id: nil, image_url: nil)
+    # Ahead of the ladder rather than left to the sends it walks: a message with no
+    # options is refused by both rungs, and the second refusal would be recorded as
+    # a picture WhatsApp would not take when the picture was never the problem.
+    if Array(buttons).compact.empty?
+      return refuse_empty_interactive(account: account, body: body)
+    end
+
+    return buttons_with_media_header(
+      account: account, body: body, buttons: buttons, header_media_id: media_id
+    ) if media_id.present?
+
+    return buttons(account: account, body: body, buttons: buttons) if image_url.blank?
+
+    message = buttons(account: account, body: body, buttons: buttons, header_image_url: image_url)
+
+    return message if message&.status != "failed"
+
+    Rails.logger.info("[Whatsapp] picture header refused, message re-sent without it")
+
+    buttons(account: account, body: body, buttons: buttons)
+  end
+
+  # The caption is recorded as the message body: the dialog history in /adm is
+  # read to find out what the bot said, and "image" alone answers nothing.
+  def image(account:, image_url:, caption: nil)
+    deliver_within_service_window(account: account, kind: "image", body: caption.to_s) do |messages|
+      messages.send_image(to: account.wa_id, image_url: image_url, caption: caption)
+    end
+  end
+
+  def image_from_media(account:, media_id:, caption: nil)
+    deliver_within_service_window(account: account, kind: "image", body: caption.to_s) do |messages|
+      messages.send_image_by_media_id(to: account.wa_id, media_id: media_id, caption: caption)
+    end
+  end
+
+  # A captioned picture and what to do when WhatsApp will not take it — the same
+  # ladder buttons_with_picture walks, and for the same reasons: the uploaded media
+  # id first because it travels with the send, the blob URL second because WhatsApp
+  # has to fetch it from a host its network may not reach.
+  #
+  # Nil when neither route arrived, which is the caller's signal to say the same
+  # thing in text. Unlike the button card there is nothing to re-send without the
+  # picture: a picture message without its picture is not a message.
+  def picture(account:, media_id: nil, image_url: nil, caption: nil)
+    uploaded =
+      if media_id.present?
+        image_from_media(account: account, media_id: media_id, caption: caption)
+      end
+
+    return uploaded if delivered?(uploaded)
+    return if image_url.blank?
+
+    fetched = image(account: account, image_url: image_url, caption: caption)
+
+    return fetched if delivered?(fetched)
+
+    Rails.logger.info("[Whatsapp] picture refused by both routes, nothing sent")
+
+    nil
+  end
+
+  def delivered?(message)
+    message.present? && message.status != "failed"
+  end
+
+  # A message WhatsApp rejected, as distinct from one that was never attempted:
+  # a refused send is recorded as a failed row and returns like any other, so a
+  # caller that does not ask reports a reply the citizen never saw. A closed
+  # service window returns nil instead and is not a refusal — nothing can be
+  # delivered at all until the citizen writes again, so there is nothing for a
+  # caller to do differently.
+  def refused?(message)
+    message.present? && message.status == "failed"
+  end
+
+  def list(account:, body:, button_label:, rows:)
+    listed = Array(rows).compact.first(::Whatsapp::MAX_OFFERED_LIST_ROWS)
+
+    return refuse_empty_interactive(account: account, body: body) if listed.empty?
+
+    fitting = within_interactive_body(account: account, body: body)
+
+    message = deliver_within_service_window(
+      account: account, kind: "interactive", body: fitting
+    ) do |messages|
+      messages.send_list(to: account.wa_id, body: fitting, button_label: button_label, rows: listed)
+    end
+
+    remember_confirmations(account: account, entries: listed, message: message)
+  end
+
+  # For a list long enough that ungrouped rows read as a wall. Sections are
+  # {title:, rows:}; the ten-row limit is shared across all of them.
+  def sectioned_list(account:, body:, button_label:, sections:)
+    listed = with_main_menu_section(account: account, sections: sections)
+    listed_rows = listed.flat_map { |section| Array(section[:rows]) }
+
+    return refuse_empty_interactive(account: account, body: body) if listed_rows.empty?
+
+    fitting = within_interactive_body(account: account, body: body)
+
+    message = deliver_within_service_window(
+      account: account, kind: "interactive", body: fitting
+    ) do |messages|
+      messages.send_sectioned_list(
+        to: account.wa_id, body: fitting, button_label: button_label, sections: listed
+      )
+    end
+
+    remember_confirmations(
+      account: account,
+      entries: Array(listed).flat_map { |section| Array(section[:rows]) },
+      message: message
+    )
+  end
+
+  # The native location picker. Recorded as an interactive message like every
+  # other tappable one, so the dialog history in /adm reads in order.
+  def location_request(account:, body:)
+    fitting = within_interactive_body(account: account, body: body)
+
+    deliver_within_service_window(
+      account: account, kind: "interactive", body: fitting
+    ) do |messages|
+      messages.send_location_request(to: account.wa_id, body: fitting)
+    end
+  end
+
+  def cta_url(account:, body:, button_label:, url:)
+    fitting = within_interactive_body(account: account, body: body)
+
+    deliver_within_service_window(
+      account: account, kind: "interactive", body: fitting
+    ) do |messages|
+      messages.send_cta_url(to: account.wa_id, body: fitting, button_label: button_label, url: url)
+    end
+  end
+
+  # No service-window guard: an approved template is the only thing WhatsApp
+  # accepts once the 24-hour window has closed, which is the whole reason to
+  # send one.
+  def template(account:, name:, variables: [], language: nil, projekt_id: nil)
+    language ||= ::Whatsapp.broadcast_template_language
+
+    deliver(
+      account: account,
+      kind: "template",
+      body: "#{name}: #{variables.join(" | ")}",
+      projekt_id: projekt_id
+    ) do |messages|
+      messages.send_template(to: account.wa_id, name: name, language: language, variables: variables)
+    end
+  end
+
+  # A notification whose action is a tap the bot then answers. Same no-guard
+  # reasoning as `template`: the button is part of the approved shape, so this is
+  # still the only thing WhatsApp accepts outside the service window — and the tap
+  # arrives as an inbound message, which is what opens the window the reply needs.
+  #
+  # The payload is a Whatsapp::FlowActions id, so what the tap does is decided by
+  # the same parser every pill goes through rather than by a branch of its own.
+  def reply_button_template(account:, name:, payload:, language: nil, projekt_id: nil)
+    language ||= ::Whatsapp.broadcast_template_language
+
+    deliver(
+      account: account,
+      kind: "template",
+      body: "#{name}: #{payload}",
+      projekt_id: projekt_id
+    ) do |messages|
+      messages.send_reply_button_template(
+        to: account.wa_id, name: name, language: language, payload: payload
+      )
+    end
+  end
+
+  # The same notification where the action is a page: the button variable is
+  # appended to the fixed URL prefix the template was approved with.
+  def link_button_template(account:, name:, button_variable:, language: nil, projekt_id: nil)
+    language ||= ::Whatsapp.broadcast_template_language
+
+    deliver(
+      account: account,
+      kind: "template",
+      body: "#{name}: #{button_variable}",
+      projekt_id: projekt_id
+    ) do |messages|
+      messages.send_link_button_template(
+        to: account.wa_id, name: name, language: language, button_variable: button_variable
+      )
+    end
+  end
+
+  # The projekt card: same no-guard reasoning as `template`, plus an image the
+  # recipient's phone fetches from us and a button variable the template appends
+  # to its own fixed URL prefix.
+  def card_template(
+    account:, name:, image_url:, variables:, button_variable:, language: nil, projekt_id: nil
+  )
+    language ||= ::Whatsapp.broadcast_template_language
+
+    deliver(
+      account: account,
+      kind: "template",
+      body: "#{name}: #{variables.join(" | ")}",
+      projekt_id: projekt_id
+    ) do |messages|
+      messages.send_card_template(
+        to: account.wa_id,
+        name: name,
+        language: language,
+        image_url: image_url,
+        variables: variables,
+        button_variable: button_variable
+      )
+    end
+  end
+
+  # The same shape when the way out is a retry or a cancel rather than a pill of the
+  # bot's own. It is the whole deterministic surface left: everything else the
+  # citizen reads is written by the assistant, and this is what speaks when the
+  # assistant cannot.
+  #
+  # The sentence and the labels under it are put into the citizen's language in one
+  # call rather than three, so a body and its buttons can never come back in two
+  # different ones.
+  def recovery(conversation:, body:, actions:)
+    pills = recovery_buttons(actions)
+    lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+      account: conversation.whatsapp_account,
+      lines: [body, *pills.map { |pill| pill[:title] }]
+    )
+
+    recovery_buttons_message(
+      account: conversation.whatsapp_account,
+      body: lines.first,
+      buttons: pills.zip(lines.drop(1)).map do |pill, title|
+        pill.merge(
+          title: ::Whatsapp::AssistantActions.fitting_label(
+            translated: title, original: pill[:title]
+          )
+        )
+      end
+    )
+  end
+
+  # The one message that cannot be put into the citizen's language, because it is sent
+  # precisely when the assistant did not answer: asking the same provider to translate
+  # it would spend a second timeout on the reply that exists to survive the first one.
+  # It goes out in the portal's own language, which is the point of there being fixed
+  # copy at all.
+  def recovery_without_assistant(conversation:, body:, actions:)
+    recovery_buttons_message(
+      account: conversation.whatsapp_account, body: body, buttons: recovery_buttons(actions)
+    )
+  end
+
+  # ── The main-menu pill, on the sends that end the conversation ──────────
+  # Offered where the bot has nothing further to give: a step it could not complete,
+  # a finished submission, a message with nothing else on it. Everywhere else it was
+  # noise standing between the citizen and the answer they were being asked for —
+  # under a survey question's own options most of all, where it read as one of them.
+  #
+  # Not injected into every send any more, so a caller that wants it says so. The
+  # cost of that is a new dead-end path having to remember; the guard against it is
+  # that the recovery family funnels through one method, and asking to start over in
+  # words works from every state regardless.
+  #
+  # It takes a slot rather than filling a spare one: a message that already names
+  # three ways on is not a dead end, so the caller's own pills win and the pill is
+  # dropped. Which is also why the trim keeps them.
+  #
+  # The label is read at the account's own locale rather than translated through
+  # BotCopyService. Two reasons: this runs on the path that must survive the model
+  # being unreachable, and it is one fixed word — a citizen writing a language the
+  # portal has no copy for reads the start-over pill in the portal's language and every
+  # other line of the message in their own, which is the cheap half of the trade.
+  def with_main_menu(account:, buttons:)
+    offered = Array(buttons).compact.first(::Whatsapp::MAX_BUTTONS)
+
+    return offered if offered.size >= ::Whatsapp::MAX_BUTTONS
+    return offered if offered.any? { |button| main_menu_button?(button) }
+
+    offered + [main_menu_pill(account)]
+  end
+
+  # A section of its own rather than a row appended to the last one: the sections
+  # carry titles saying what their rows have in common, and the way out belongs to
+  # none of them. Titled, because WhatsApp requires a title on every section of a
+  # multi-section list and rejects the whole message without one — and the protocol
+  # edge drops a blank title rather than refusing, so an untitled section here would
+  # have failed as the entire list.
+  def with_main_menu_section(account:, sections:)
+    listed = Array(sections).compact
+    rows = listed.flat_map { |section| Array(section[:rows]) }
+
+    return listed if rows.any? { |row| main_menu_button?(row) }
+
+    menu = main_menu_pill(account)
+
+    trimmed_sections(listed) + [{ title: menu[:title], rows: [menu] }]
+  end
+
+  # Trimmed from the end, one row at a time, because the ten-row cap is shared
+  # across every section and the last section is the least prominent. It reserves the
+  # row the menu section is about to take rather than reading the offered cap, which
+  # is now the whole ten: a list that carries the pill is the one place a row is
+  # still spoken for.
+  def trimmed_sections(sections)
+    kept_rows = ::Whatsapp::MAX_LIST_ROWS - 1
+    rows = sections.sum { |section| Array(section[:rows]).size }
+
+    return sections if rows <= kept_rows
+
+    over = rows - kept_rows
+
+    sections.reverse.map do |section|
+      kept = Array(section[:rows])
+      dropping = [over, kept.size].min
+      over -= dropping
+
+      section.merge(rows: kept.first(kept.size - dropping))
+    end.reverse.reject { |section| Array(section[:rows]).empty? }
+  end
+
+  # Public because a caller that composes its own buttons may still find itself at a
+  # dead end — a card for a projekt with nothing to act on — and the way-out sends
+  # cannot help it: the pill has to go into the array before the send that carries
+  # the picture with it.
+  def main_menu_pill(account)
+    {
+      id: ::Whatsapp::FlowActions.id_for(action: :main_menu),
+      title: I18n.t(
+        "whatsapp.bot.buttons.main_menu", locale: ::Whatsapp.locale_for(account)
+      )
+    }
+  end
+
+  # Matched on the id rather than the label, because a caller that offered the way
+  # back in the model's own words must not have a second one stacked under it.
+  def main_menu_button?(button)
+    button.is_a?(Hash) &&
+      button[:id].to_s == ::Whatsapp::FlowActions.id_for(action: :main_menu)
+  end
+
+  def recovery_action_from(button_reply_id)
+    RECOVERY_ACTION_IDS.key(button_reply_id.to_s)
+  end
+
+  # One recovery pill on its own, for the deterministic messages that offer a way
+  # out. Its label is locale copy rather than the assistant's, which is the whole
+  # point of the recovery namespace: these are the buttons that have to be readable
+  # when nothing else is.
+  def recovery_button(action)
+    { id: RECOVERY_ACTION_IDS.fetch(action), title: ::Whatsapp.copy("whatsapp.bot.buttons.#{action}") }
+  end
+
+  def recovery_buttons(actions)
+    actions.first(MAX_RECOVERY_BUTTONS).map { |action| recovery_button(action) }
+  end
+
+  # WhatsApp dismisses the bubble after this long, and there is no way to extend
+  # it — the indicator belongs to one inbound message. A turn that outruns it
+  # asks for it again rather than going quiet, which is what the tool loop does
+  # on every call it makes.
+  TYPING_INDICATOR_SECONDS = 25
+
+  # Shown only on the turns that make the citizen wait: an LLM call, a draft, a
+  # criteria evaluation. Deliberately not routed through `deliver` — this is not
+  # a message, so it gets no whatsapp_messages row and never appears in the
+  # dialog history the admin pages read.
+  #
+  # Never raises. The bubble is cosmetic: someone who does not see it waits
+  # exactly as long, whereas an exception here would cost them the reply itself.
+  #
+  # The refusal is read rather than discarded. A rejected indicator comes back as
+  # a plain non-success — the client reports it, but under the path every send
+  # shares, so a bubble that never appears is otherwise indistinguishable from
+  # any other failed message. This line names the indicator and the inbound it
+  # was asked for, which is what a report of "no bubble after tapping" needs.
+  def typing(message_id:)
+    return if message_id.blank?
+
+    response = WhatsappApi::Client.new.messages.send_typing_indicator(message_id: message_id)
+
+    if !response.success?
+      Rails.logger.warn(
+        "[Whatsapp] typing indicator refused for #{message_id}: " \
+        "#{response.code} - #{response.body.to_s.first(500)}"
+      )
+    end
+
+    response
+  rescue StandardError => e
+    Rails.logger.info("[Whatsapp] typing indicator failed: #{e.class} - #{e.message}")
+
+    nil
+  end
+
+  # Which of an interactive message's buttons offered something that cannot be taken
+  # back — publishing, posting a comment, severing the account link. Written onto
+  # the conversation for every interactive send, so the tools that must not act
+  # without having asked first can tell whether they asked: an assistant is
+  # perfectly capable of deciding it has already confirmed something it never
+  # mentioned.
+  #
+  # Overwritten rather than appended, which is the point: it names what the bot's
+  # last message put in front of the citizen. A pill from four messages ago is a tap
+  # they can still make — the dispatcher re-resolves it — but not a confirmation the
+  # assistant may infer from words.
+  #
+  # A send that never happened offers nothing: outside the service window
+  # `deliver_within_service_window` returns nil, and a refused send comes back as a
+  # failed message. Either way the previous offer stands, because the citizen's
+  # screen still shows it.
+  def remember_confirmations(account:, entries:, message:)
+    return message if message.blank? || message.status == "failed"
+
+    conversation = account.conversation
+
+    return message if conversation.blank?
+
+    conversation.remember_confirmations!(irreversible_ids(entries))
+
+    message
+  end
+
+  # The record the irreversible tools read back to answer "did we actually ask
+  # them this". A parameterised action keeps its parameter, because for those the
+  # question is not whether the bot asked but *what about*: "support" recorded
+  # bare is satisfied by an offer for any proposal, so a pill shown for one and a
+  # tool called with another looked identical from here.
+  def irreversible_ids(entries)
+    Array(entries).filter_map do |entry|
+      parsed = ::Whatsapp::FlowActions.parse(entry[:id])
+      action = parsed&.fetch(:action)
+
+      next if action.blank?
+      next if !::Whatsapp::AssistantActions::IRREVERSIBLE_ACTIONS.include?(action)
+
+      [action, parsed[:param]].compact_blank.join(::Whatsapp::FlowActions::SEPARATOR)
+    end
+  end
+
+  # ── A body too long for one interactive message ─────────────────────────
+  # An interactive message is one bubble with its buttons attached, so a body
+  # WhatsApp will not take cannot be split the way a text message can: what
+  # does not fit goes ahead of it as ordinary text and the interactive message
+  # keeps the tail, which is where the buttons belong.
+  #
+  # Nothing is cut. The alternative is not a shorter message — it is WhatsApp
+  # refusing the whole send over its 1024-character body limit, which is
+  # recorded as a failed row and reaches the citizen as no reply at all.
+  #
+  # Placed here rather than at each caller for the same reason the main-menu
+  # pill is: it is a property of the transport, so a tool added next month
+  # inherits it without knowing it exists.
+  def within_interactive_body(account:, body:)
+    chunks = ::Whatsapp::MessageBlock.chunks(
+      body.to_s, limit: ::Whatsapp::MAX_INTERACTIVE_BODY_LENGTH
+    )
+
+    chunks[..-2].to_a.each { |chunk| text(account: account, body: chunk) }
+
+    chunks.last.to_s
+  end
+
+  # An interactive message with nothing on it, refused here rather than at Meta.
+  # WhatsApp rejects the whole send over an empty button or row list, so the round
+  # trip only ever buys the same failure a request later — and it buys it in a
+  # tenant's message log, where a composition bug is read as a delivery problem.
+  # Answered with the failed row the caller already knows how to read, so nothing
+  # downstream needs a third outcome beside delivered and refused.
+  def refuse_empty_interactive(account:, body:)
+    Rails.logger.warn("[Whatsapp] interactive message composed with no options, not sent")
+
+    ::Whatsapp::Message.record_unsent!(
+      account: account,
+      kind: "interactive",
+      body: body.to_s,
+      error: { message: "Interactive message composed with no buttons or rows" }
+    )
+  end
+
+  def deliver_within_service_window(account:, kind:, body:, &block)
+    return if !Whatsapp::ServiceWindow.deliverable?(account, kind)
+
+    deliver(account: account, kind: kind, body: body, &block)
+  end
+
+  def deliver(account:, kind:, body:, projekt_id: nil)
+    response = yield(WhatsappApi::Client.new.messages)
+
+    Whatsapp::Message.record_outbound!(
+      account: account,
+      kind: kind,
+      body: body,
+      projekt_id: projekt_id,
+      response: response
+    )
+  end
+
+  private_class_method :recovery_buttons, :deliver_within_service_window, :deliver
+  private_class_method :with_main_menu, :with_main_menu_section
+  private_class_method :trimmed_sections, :main_menu_button?
+  private_class_method :deliver_buttons, :remember_confirmations, :irreversible_ids
+  private_class_method :within_interactive_body, :delivered?, :refuse_empty_interactive
+end

@@ -9,10 +9,10 @@ class Api::PollQuestionAnswersController < Api::BaseController
   def index
     check_read_access!
 
-    answers = @question.question_answers
-      .order(given_order: :asc)
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_ANSWERS_PER_PAGE)
+    answers = paginate(
+      @question.question_answers.order(given_order: :asc),
+      default_per_page: DEFAULT_ANSWERS_PER_PAGE
+    )
 
     serialized_answers = Poll::Question::AnswerSerializer.serialize_collection(answers)
 
@@ -98,14 +98,5 @@ class Api::PollQuestionAnswersController < Api::BaseController
 
     def find_answer
       @answer = Poll::Question::Answer.find(params[:id])
-    end
-
-    def pagination_meta(collection)
-      {
-        current_page: collection.current_page,
-        total_pages: collection.total_pages,
-        total_count: collection.total_count,
-        per_page: collection.limit_value
-      }
     end
 end

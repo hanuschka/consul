@@ -1,0 +1,90 @@
+<%= render "adm/whatsapp/page_header", key: "connection" %>
+
+<div class="kern-container my-3 adm-whatsapp-page">
+  <%= render "adm/whatsapp/page_description", key: "connection" %>
+
+  <section class="mb-5">
+    <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.feature_title") %></h2>
+
+    <% @feature_settings.each do |setting| %>
+      <%= render Adm::AttributeEditorComponent.new(setting, :value, :boolean) %>
+    <% end %>
+  </section>
+
+  <% if @model_tier_setting.present? %>
+    <section class="mb-5">
+      <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.model_tier_title") %></h2>
+
+      <%= render Adm::AttributeEditorComponent.new(
+        @model_tier_setting, :value, :select, select_options: @model_tier_options
+      ) %>
+    </section>
+  <% end %>
+
+  <section class="mb-5">
+    <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.webhook_title") %></h2>
+
+    <% if !@webhook_status[:reachable] %>
+      <%= kern_alert(title: t("adm.whatsapp.show.webhook_unreachable_title"), style: :danger) do %>
+        <p class="kern-body"><%= t("adm.whatsapp.show.webhook_unreachable_body") %></p>
+      <% end %>
+    <% elsif @webhook_status[:url_matches] && @webhook_status[:header_matches] %>
+      <%= kern_alert(title: t("adm.whatsapp.show.webhook_ok_title"), style: :success) do %>
+        <p class="kern-body">
+          <%= t("adm.whatsapp.show.webhook_ok_body", url: @webhook_status[:registered_url]) %>
+        </p>
+      <% end %>
+    <% else %>
+      <%= kern_alert(title: t("adm.whatsapp.show.webhook_mismatch_title"), style: :warning) do %>
+        <p class="kern-body">
+          <%= t("adm.whatsapp.show.webhook_mismatch_body",
+            registered: @webhook_status[:registered_url].presence || t("adm.whatsapp.show.webhook_none"),
+            expected: @webhook_status[:expected_url]) %>
+        </p>
+      <% end %>
+    <% end %>
+
+    <%# The alert above carries the verdict, so this line carries only the three
+        facts behind it and states each of them once. %>
+    <p class="kern-body kern-body--small mt-2">
+      <%= t("adm.whatsapp.show.webhook_summary",
+        url: @webhook_status[:registered_url].presence || t("adm.whatsapp.show.webhook_none"),
+        header: t("adm.whatsapp.show.webhook_header_chars",
+          count: @webhook_status[:header_length].to_i),
+        checked_at: l(@webhook_status[:checked_at], format: :short)) %>
+    </p>
+  </section>
+
+  <%# Placed under the webhook block because the two answer the halves of one
+      question: whether Meta can reach this installation, and whether this
+      installation actually delivers. %>
+  <section class="mb-5">
+    <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.test_title") %></h2>
+    <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.show.test_intro") %></p>
+
+    <div
+      class="adm-whatsapp-page--form"
+      data-controller="adm--whatsapp-test-message"
+      data-adm--whatsapp-test-message-url-value="<%= send_test_message_adm_whatsapp_path %>"
+      data-adm--whatsapp-test-message-pending-title-value="<%= t("adm.whatsapp.show.test_pending") %>"
+    >
+      <%= form_with url: send_test_message_adm_whatsapp_path, scope: :test, method: :post,
+        data: { turbo: false, action: "submit->adm--whatsapp-test-message#send" } do |f| %>
+        <%= f.telephone_field :phone,
+          label: t("adm.whatsapp.show.test_phone_label"),
+          hint: t("adm.whatsapp.show.test_phone_hint"),
+          autocomplete: "tel",
+          value: nil,
+          data: { "adm--whatsapp-test-message-target": "phone" } %>
+
+        <%= form_submit_button(
+          text: t("adm.whatsapp.show.test_submit"),
+          icon: "send",
+          data: { "adm--whatsapp-test-message-target": "submit" }
+        ) %>
+      <% end %>
+
+      <div class="adm-whatsapp-page--result" data-adm--whatsapp-test-message-target="result"></div>
+    </div>
+  </section>
+</div>

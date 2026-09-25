@@ -72,6 +72,7 @@ namespace :internal_api do
   patch "connection/sync_client_domain", to: "connection#sync_client_domain"
 
   get "stats", to: "stats#show"
+  get "stats/memory", to: "stats#memory"
 
   get "ai_features", to: "ai_features#show"
 end

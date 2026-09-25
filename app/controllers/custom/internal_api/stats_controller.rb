@@ -9,4 +9,11 @@ class InternalApi::StatsController < InternalApi::BaseController
       features:       Admin::FeaturesService.call
     }
   end
+
+  def memory
+    render json: {
+      checked_at: Time.current.iso8601,
+      memory:     Admin::MemoryStatsService.call
+    }
+  end
 end

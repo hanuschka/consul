@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_10_172943) do
+ActiveRecord::Schema.define(version: 2026_09_23_100000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -258,6 +258,11 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "version", default: 0, null: false
+    t.decimal "cost_input", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_output", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_cache_read", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_cache_write", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_thinking", precision: 14, scale: 6, default: "0.0", null: false
     t.index ["period_month", "feature", "provider", "model"], name: "index_ai_usage_records_on_period_and_breakdown", unique: true
     t.index ["period_month"], name: "index_ai_usage_records_on_period_month"
   end

@@ -1,0 +1,14 @@
+<%= render "adm/whatsapp/page_header", key: "templates" %>
+
+<div class="kern-container my-3 adm-whatsapp-page">
+  <%= render "adm/whatsapp/page_description", key: "templates" %>
+
+  <%# Top to bottom: what is active, then what you can submit, then the account's
+      full inventory. The inventory used to be first, which answered "what does
+      this account hold" before "what is being sent". %>
+  <%= render "adm/whatsapp/template_alerts" %>
+  <%= render "adm/whatsapp/template_slots" %>
+  <%= render "adm/whatsapp/template_form" %>
+  <%= render "adm/whatsapp/notification_templates" %>
+  <%= render "adm/whatsapp/template_account_list" %>
+</div>

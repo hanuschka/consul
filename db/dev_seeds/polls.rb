@@ -98,6 +98,68 @@ section "Creating Poll Votation types" do
   end
 end
 
+section "Creating Poll map point questions" do
+  def create_map_point_question!(poll, title, max_points)
+    question = Poll::Question.new(author: User.all.sample, title: title, poll: poll)
+
+    I18n.available_locales.map do |locale|
+      Globalize.with_locale(locale) do
+        question.title = "#{title} (#{locale})"
+      end
+    end
+
+    question.votation_type = VotationType.new(vote_type: "map_points", max_votes: max_points)
+    question.save!
+
+    question
+  end
+
+  def create_map_point_boundary!(question, half_extent)
+    center = MapLocation.default
+    latitude = center.latitude.to_f
+    longitude = center.longitude.to_f
+
+    map_location = MapLocation.new(
+      mappable: question,
+      latitude: latitude,
+      longitude: longitude,
+      zoom: center.zoom,
+      features: boundary_features(latitude, longitude, half_extent)
+    )
+    map_location.skip_masterportal_geocoding = true
+
+    map_location.save!
+  end
+
+  def boundary_features(latitude, longitude, half_extent)
+    corners = [
+      [longitude - half_extent, latitude - half_extent],
+      [longitude + half_extent, latitude - half_extent],
+      [longitude + half_extent, latitude + half_extent],
+      [longitude - half_extent, latitude + half_extent],
+      [longitude - half_extent, latitude - half_extent]
+    ]
+
+    {
+      "type" => "FeatureCollection",
+      "features" => [
+        {
+          "type" => "Feature",
+          "geometry" => { "type" => "Polygon", "coordinates" => [corners] },
+          "properties" => {}
+        }
+      ]
+    }
+  end
+
+  poll = Poll.first
+
+  create_map_point_question!(poll, "Where exactly? (anywhere)", 2)
+
+  bounded = create_map_point_question!(poll, "Where exactly? (inside the area)", 1)
+  create_map_point_boundary!(bounded, 0.1)
+end
+
 section "Creating Poll Booths & BoothAssignments" do
   20.times do |i|
     Poll::Booth.create(name: "Booth #{i}",
@@ -165,6 +227,7 @@ section "Creating Poll Voters" do
 
   def randomly_answer_questions(poll, user)
     poll.questions.each do |question|
+      next if question.question_answers.empty?
       next unless [true, false].sample
 
       Poll::Answer.create!(question_id: question.id,

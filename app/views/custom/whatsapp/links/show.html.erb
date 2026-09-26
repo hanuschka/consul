@@ -1,0 +1,30 @@
+<div class="row column">
+  <div class="whatsapp-link-page">
+    <h1 class="whatsapp-link-page--title"><%= t("whatsapp.link.page.title") %></h1>
+
+    <p class="whatsapp-link-page--intro"><%= t("whatsapp.link.page.intro") %></p>
+
+    <div class="whatsapp-link-page--number">
+      <span class="whatsapp-link-page--number-label">
+        <%= t("whatsapp.link.page.number_label") %>
+      </span>
+      <span class="whatsapp-link-page--number-value">+<%= @account.phone %></span>
+    </div>
+
+    <%= form_with url: whatsapp_link_path, method: :post, local: true do |f| %>
+      <%= hidden_field_tag :token, @token %>
+
+      <label class="checkbox-label--aligned whatsapp-link-page--consent" for="broadcast_consent">
+        <%= check_box_tag :broadcast_consent, "1", false %>
+        <span><%= t("whatsapp.link.page.broadcast_consent") %></span>
+      </label>
+
+      <p class="whatsapp-link-page--consent-note">
+        <%= t("whatsapp.link.page.consent_note") %>
+      </p>
+
+      <%= f.submit t("whatsapp.link.page.confirm"),
+        class: "button whatsapp-link-page--submit" %>
+    <% end %>
+  </div>
+</div>

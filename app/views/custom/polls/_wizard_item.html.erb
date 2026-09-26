@@ -1,7 +1,13 @@
 <% first = defined?(question_counter) && question_counter.zero? %>
+<%# has_next says whether the button under this question reads "next" or "finish".
+    It is the server's answer (Polls::BallotTraversalQuery) rather than something the
+    browser works out from a map of the poll, and it is refreshed after every answer,
+    because an answer can branch, end the ballot, or reveal a contexted question. %>
 <div
     class="question-wizard-item js-question-wizard-item <%= "-visible" if first %>"
     data-question-id="<%= question.id %>"
+    data-has-next="<%= has_next %>"
+    data-next-url="<%= wizard_next_question_path(question) %>"
 >
   <%= render Polls::Questions::QuestionComponent.new(question: question) %>
 </div>

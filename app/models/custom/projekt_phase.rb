@@ -67,6 +67,43 @@ class ProjektPhase < ApplicationRecord
 
   FOOTER_HIDDEN_EVALUATION_SECTIONS = %w[kpis heatmap].freeze
 
+  # Every place a citizen can start a submission, and so every place the
+  # per-user submission cap has to be enforced. The bot belongs here for the
+  # same reason the new-proposal button does: naming only one of them lets the
+  # other channel publish past the limit.
+  SUBMISSION_LOCATIONS = %i[new_button_component whatsapp_bot].freeze
+
+  # A guest phase waives its own participation restrictions, which is right for
+  # a form the citizen fills in on the projekt page: they got there through the
+  # projekt, and the page is the gate. A channel that accepts submissions from
+  # anywhere has no such gate, so the restrictions are asked for after all.
+  #
+  # Named as a location rather than checked at the call site so the order of the
+  # checks above it — phase active, not expired, still current — stays the one
+  # canonical sequence every channel runs.
+  GUEST_WAIVER_EXEMPT_LOCATIONS = %i[whatsapp_bot].freeze
+
+  # Phase types the AI drafting flow exists for override this with their own
+  # feature key. Nil means the type has no such flow, which is what every
+  # caller — the new-proposal button and the /adm toggle — has to branch on, so
+  # the branch lives here rather than once per caller.
+  def ai_flow_feature_key
+    nil
+  end
+
+  # Whether the WhatsApp bot may carry a submission into this phase, which is a
+  # decision of its own: the phase types that have a bot flow override this, and
+  # a type that has none answers false here rather than being listed elsewhere.
+  #
+  # Deliberately unrelated to #ai_flow_feature_key above. That flag is the
+  # projekt page's own AI drafting button, and reading it here left a phase
+  # openly taking proposals on the website invisible to the bot.
+  WHATSAPP_SUBMISSIONS_FEATURE_KEY = "general.whatsapp_submissions".freeze
+
+  def whatsapp_submissions_enabled?
+    false
+  end
+
   PHASE_FA_ICONS = {
     "ProjektPhase::CommentPhase" => "fa-comment",
     "ProjektPhase::ProposalPhase" => "fa-lightbulb",
@@ -138,6 +175,14 @@ class ProjektPhase < ApplicationRecord
   has_many :registered_address_street_projekt_phase, dependent: :destroy
   has_many :registered_address_streets, through: :registered_address_street_projekt_phase
 
+  # The further projekts whose contributions the similarity check searches as
+  # well. The selection is kept as the admin made it -- what the search reads is
+  # #published_similar_search_projekts, so a projekt unpublished after the fact
+  # drops out of the search without the next form save discarding the choice.
+  has_many :projekt_phase_similar_search_projekts, dependent: :destroy
+  has_many :similar_search_projekts,
+           through: :projekt_phase_similar_search_projekts, source: :projekt
+
   has_many :subscriptions, class_name: "ProjektPhaseSubscription", dependent: :destroy
   has_many :subscribers, through: :subscriptions, source: :user
 
@@ -171,6 +216,14 @@ class ProjektPhase < ApplicationRecord
     completed: "completed",
     failed: "failed"
   }, _prefix: :ai_stats_refresh
+
+  # Nil is the fourth state and the one every phase starts in: no re-check of
+  # the already published contributions has ever been asked for.
+  enum similar_search_recheck_status: {
+    processing: "processing",
+    completed: "completed",
+    failed: "failed"
+  }, _prefix: :similar_search_recheck
 
   enum masterportal_import_status: {
     pending: "pending",
@@ -244,6 +297,15 @@ class ProjektPhase < ApplicationRecord
       .where("end_date IS NULL OR end_date >= ?", timestamp)
   }
 
+  # Phases of a projekt a visitor can actually reach: activated, and with its
+  # page published. Anything offered outside a session — the WhatsApp bot, a
+  # digest — has to narrow by this before it links to a phase.
+  scope :of_publicly_visible_projekt, -> {
+    joins(projekt: :page)
+      .where(site_customization_pages: { status: "published" })
+      .merge(Projekt.activated)
+  }
+
   scope :has_resources, -> {
     ids_with_resources = joins(:resources).select(:id)
     where(id: ids_with_resources)
@@ -255,6 +317,30 @@ class ProjektPhase < ApplicationRecord
     joins(:settings)
       .where("projekt_phase_settings.key = ?", "feature.#{feature_key}")
       .where(projekt_phase_settings: { value: (state == "on" ? "active" : [nil, ""]) })
+  }
+
+  # The database half of #feature?, for callers that would otherwise load every
+  # candidate phase to ask it in Ruby. Two differences from :with_feature, both
+  # deliberate:
+  #
+  # EXISTS rather than a join, because a query narrowing on two feature keys
+  # would otherwise put two contradictory conditions on one settings alias and
+  # match nothing.
+  #
+  # Any non-blank value rather than "active", because #feature? asks .present?.
+  # The toggle only ever writes "active" or "", but a row carrying anything else
+  # counts as on in Ruby, and a prefilter that dropped it would hide a phase the
+  # Ruby check keeps.
+  scope :with_present_feature, ->(feature_key) {
+    where(
+      ProjektPhaseSetting
+        .select("1")
+        .where("projekt_phase_settings.projekt_phase_id = projekt_phases.id")
+        .where(key: "feature.#{feature_key}")
+        .where("btrim(projekt_phase_settings.value) <> ''")
+        .arel
+        .exists
+    )
   }
 
   def self.order_phases(ordered_array)
@@ -330,6 +416,13 @@ class ProjektPhase < ApplicationRecord
   # answer is cached while the vote row still does not exist.
   def reset_permission_problem_cache!
     @permission_problem_cache = nil
+  end
+
+  # Whether this phase accepts submissions from someone with no account. Asked
+  # in enough places — the bot's dispatcher, its author resolution, its eligible
+  # phases query — that the string comparison is worth having exactly once.
+  def guest_participation?
+    user_status == "guest"
   end
 
   def geozone_allowed?(user)
@@ -412,6 +505,14 @@ class ProjektPhase < ApplicationRecord
 
   def feature?(key)
     settings_by_key["feature.#{key}"].present?
+  end
+
+  # What the similarity check may actually search beyond this phase: a selected
+  # projekt that has since been deleted is no longer something staff should be
+  # shown matches from, and dropping it here keeps every caller -- the find,
+  # the badge, the re-check -- from repeating the filter.
+  def published_similar_search_projekts
+    similar_search_projekts
   end
 
   # Mirrors the footer partials' map gate: proposal/budget phases render their
@@ -664,11 +765,19 @@ class ProjektPhase < ApplicationRecord
         return :phase_not_current if not_current?
       end
 
-      return :guest_not_logged_in if user_status == "guest" && !user
-      return if user_status == "guest"
-      return :not_logged_in if !user || user&.guest?
+      return :guest_not_logged_in if guest_participation? && !user
+      return if guest_participation? && !GUEST_WAIVER_EXEMPT_LOCATIONS.include?(location)
+      return :not_logged_in if user.blank? || (user.guest? && !guest_participation?)
       return :not_verified if user_status == "verified" && !user.level_three_verified?
 
+      restriction_problem(user, location: location)
+    end
+
+    # The who-may-take-part restrictions on their own, below the account rules
+    # that precede them. Split out of the sequence above so the guest waiver can
+    # skip exactly these and nothing else — the phase-lifecycle checks are not
+    # waivable by anyone.
+    def restriction_problem(user, location: nil)
       phase_specific_problem = phase_specific_permission_problems(user, location)
       return phase_specific_problem if phase_specific_problem.present?
 
@@ -678,10 +787,7 @@ class ProjektPhase < ApplicationRecord
       advanced_geozone_problem = advanced_geozone_restriction_permission_problem(user)
       return advanced_geozone_problem if advanced_geozone_problem.present?
 
-      individual_group_problem = individual_group_value_permission_problem(user)
-      return individual_group_problem if individual_group_problem.present?
-
-      nil
+      individual_group_value_permission_problem(user)
     end
 
     def phase_specific_permission_problems(user, location)

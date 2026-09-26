@@ -39,24 +39,12 @@ class Masterportal::Converters::ProposalBuilder < ApplicationService
         latitude: @pin.latitude,
         longitude: @pin.longitude,
         zoom: default_zoom,
-        features: point_feature_collection,
+        features: MapLocation.point_feature_collection(
+          latitude: @pin.latitude, longitude: @pin.longitude
+        ),
         geocoder_data: Masterportal::GeocoderDataBuilder.call(pin: @pin),
         skip_masterportal_geocoding: true
       )
-    end
-
-    def point_feature_collection
-      {
-        "type" => "FeatureCollection",
-        "features" => [{
-          "type" => "Feature",
-          "geometry" => {
-            "type" => "Point",
-            "coordinates" => [@pin.longitude.to_f, @pin.latitude.to_f]
-          },
-          "properties" => {}
-        }]
-      }
     end
 
     def default_zoom

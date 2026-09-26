@@ -28,6 +28,9 @@ application.register("adm--ai-question-row", AdmAiQuestionRowController)
 import AdmMenuPopoverController from "./adm/menu_popover_controller"
 application.register("adm--menu-popover", AdmMenuPopoverController)
 
+import AdmSimilarContributionsPopupController from "./adm/similar_contributions_popup_controller"
+application.register("adm--similar-contributions-popup", AdmSimilarContributionsPopupController)
+
 
 import AdmVisibilityGroupController from "./adm/visibility_group_controller"
 application.register("adm--visibility-group", AdmVisibilityGroupController)
@@ -199,6 +202,12 @@ application.register("adm-dashboard-notice", AdmDashboardNoticeController)
 import AdmAutogrowController from "./adm/autogrow_controller"
 application.register("adm-autogrow", AdmAutogrowController)
 
+import AdmMemoController from "./adm/memo_controller"
+application.register("adm--memo", AdmMemoController)
+
+import AdmMemoFormController from "./adm/memo_form_controller"
+application.register("adm--memo-form", AdmMemoFormController)
+
 import AdmUserSelectController from "./adm/user_select_controller"
 application.register("adm-user-select", AdmUserSelectController)
 
@@ -235,6 +244,9 @@ application.register("poll-question-imports--preview", PollQuestionImportsPrevie
 import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
 application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
 
+import AdmCheckboxFilterController from "./adm/checkbox_filter_controller"
+application.register("adm--checkbox-filter", AdmCheckboxFilterController)
+
 import AdmEvaluationPdfDownloadController from "./adm/evaluation_pdf_download_controller"
 application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadController)
 
@@ -244,6 +256,11 @@ application.register("adm--evaluation-tabs", AdmEvaluationTabsController)
 import AdmBudgetResultsController from "./adm/budget_results_controller"
 application.register("adm--budget-results", AdmBudgetResultsController)
 
+import AdmWhatsappTestMessageController from "./adm/whatsapp_test_message_controller"
+application.register("adm--whatsapp-test-message", AdmWhatsappTestMessageController)
+
+import AdmWhatsappQrDownloadController from "./adm/whatsapp_qr_download_controller"
+application.register("adm--whatsapp-qr-download", AdmWhatsappQrDownloadController)
 
 import ProjektImportsChatController from "./projekt_imports/chat_controller"
 application.register("projekt-imports--chat", ProjektImportsChatController)

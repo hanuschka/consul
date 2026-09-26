@@ -9,6 +9,8 @@
   <%= render "adm/deficiency_reports/deficiency_reports/action_row", deficiency_report: @deficiency_report %>
 
   <%# === Section 1: Interne Notizen === %>
+  <%= render "adm/memos/memoable_title", memoable: @deficiency_report %>
+
   <section class="adm-detail-section">
     <%= render "adm/memos/memos", memoable: @deficiency_report %>
   </section>

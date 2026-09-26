@@ -1,0 +1,403 @@
+de:
+  whatsapp:
+    account:
+      title: WhatsApp
+      not_linked: >-
+        Ihre WhatsApp-Nummer ist noch nicht mit diesem Konto verbunden. Schreiben Sie dem
+        Beteiligungs-Bot auf WhatsApp, um die Verbindung zu starten.
+      subscribed: 'Verbundene Nummer: %{phone}. Sie erhalten Benachrichtigungen zu neuen Projekten.'
+      opted_out: 'Verbundene Nummer: %{phone}. Sie erhalten derzeit keine Benachrichtigungen.'
+      opt_in: Benachrichtigungen aktivieren
+      opt_out: Keine Benachrichtigungen mehr erhalten
+    link:
+      success: Ihre WhatsApp-Nummer ist jetzt mit Ihrem Konto verbunden.
+      failure: >-
+        Dieser Link ist nicht mehr gültig. Schreiben Sie dem Bot erneut auf WhatsApp, um einen neuen
+        zu erhalten.
+      page:
+        title: WhatsApp-Nummer verbinden
+        intro: >-
+          Sobald Ihre Nummer verbunden ist, werden Beiträge, die Sie per WhatsApp einreichen,
+          Ihrem Konto zugeordnet.
+        number_label: WhatsApp-Nummer
+        broadcast_consent: Ich möchte per WhatsApp benachrichtigt werden, wenn ein neues Beteiligungsprojekt
+          startet.
+        consent_note: >-
+          Ohne dieses Häkchen können Sie weiterhin Beiträge per WhatsApp einreichen, erhalten aber
+          keine Benachrichtigungen. Sie können die Auswahl jederzeit in Ihrem Konto oder mit der
+          Nachricht STOPP ändern.
+        confirm: Nummer verbinden
+      expired: >-
+        Dieser Link ist nicht mehr gültig. Schreiben Sie dem Bot erneut auf WhatsApp, um einen neuen
+        zu erhalten.
+      already_linked: Ihr Konto ist bereits mit einer anderen WhatsApp-Nummer verknüpft.
+      number_taken: >-
+        Diese WhatsApp-Nummer ist bereits mit einem anderen Konto verknüpft. Die Verknüpfung lässt
+        sich nur im WhatsApp-Chat dieser Nummer lösen.
+    subscription:
+      opted_in: Sie erhalten wieder WhatsApp-Benachrichtigungen.
+      opted_out: Sie erhalten keine WhatsApp-Benachrichtigungen mehr.
+      not_linked: Für Ihr Konto ist keine WhatsApp-Nummer verbunden.
+    # Only what the assistant does not write. Everything the bot says in
+    # conversation is now written per message by the model, so what is left here is
+    # the copy that has to exist when no model is involved: the formats a date is
+    # rendered in, the WhatsApp-side configuration of the number itself, the
+    # notifications the portal pushes on its own initiative, the legal disclosures,
+    # and the one sentence that speaks when the assistant cannot.
+    bot:
+      date:
+        absolute_format: "%-d. %B %Y"
+        absolute_with_time_format: "%-d. %B %Y, %H:%M Uhr"
+        today: heute
+        past:
+          days:
+            one: vor einem Tag
+            other: vor %{count} Tagen
+          months:
+            one: vor einem Monat
+            other: vor %{count} Monaten
+          years:
+            one: vor einem Jahr
+            other: vor %{count} Jahren
+        future:
+          days:
+            one: in einem Tag
+            other: in %{count} Tagen
+          months:
+            one: in einem Monat
+            other: in %{count} Monaten
+          years:
+            one: in einem Jahr
+            other: in %{count} Jahren
+      portal_fallback_name: das Beteiligungsportal
+      transcription_failed: >-
+        Ich konnte die Sprachnachricht nicht verstehen. Schreiben Sie Ihre Idee bitte als Text.
+      assistant_unavailable: >-
+        Ich kann Ihnen gerade nicht antworten — das ist hoffentlich nur vorübergehend.
+        Versuchen Sie es in ein paar Minuten noch einmal.
+      assistant_unavailable_retryable: >-
+        Ich kann Ihnen gerade nicht antworten — das ist hoffentlich nur vorübergehend.
+        Tippen Sie auf „Nochmal versuchen“, dann mache ich genau dort weiter.
+      cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
+      opted_in: Sie erhalten wieder Nachrichten von uns.
+      compliance:
+        disclosure: 👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet Ihnen kein Mensch direkt.
+        opted_out: Verstanden, Sie erhalten keine Nachrichten mehr von uns.
+        opted_out_reminder: >-
+          Sie haben sich von unseren Nachrichten abgemeldet, deshalb kann ich Ihnen hier
+          nicht weiterhelfen. Schreiben Sie %{keyword}, wenn Sie wieder Nachrichten
+          erhalten möchten.
+      # The block Whatsapp::CommentPreview puts in front of a citizen before their
+      # comment goes on a public page, and the single sentence that follows once it
+      # is there. The comment itself is their own and is never translated.
+      # online and awaiting_review each stand alone as that whole second message,
+      # so both have to read as a full sentence with nothing above them.
+      # Der Block, den Whatsapp::UnlinkPreview vor die Bestätigungsfrage stellt. Diese
+      # beiden Zeilen schreibt ausdrücklich nicht das Modell: Das Aufheben der
+      # Verknüpfung löst nur die Nummer vom Konto, und eine Formulierung, die je nach
+      # Antwort mal eine Löschung verspricht und mal nicht, ist genau das, was hier
+      # nicht passieren darf. erasure steht für sich, die Adresse kommt in der Zeile
+      # darunter.
+      unlink:
+        consequence: >-
+          Wenn Sie die Verknüpfung lösen, wird nur diese Nummer von Ihrem Konto getrennt. Ihr
+          Konto im Portal bleibt bestehen, und alle Beiträge, die Sie veröffentlicht haben,
+          bleiben unverändert online.
+        erasure: >-
+          Wenn Sie Ihr Konto und Ihre Daten wirklich löschen möchten, geht das im Portal unter
+          „Konto löschen“:
+      comment:
+        on_proposal: "Kommentar zu"
+        online: "Ihr Kommentar steht jetzt auf der Seite:"
+        awaiting_review: >-
+          Ihr Kommentar ist eingegangen und wird noch geprüft. Sobald er freigegeben ist,
+          erscheint er auf der Seite — einen Link dazu gibt es deshalb noch nicht.
+      # The block Whatsapp::SupportRecap sends once a support has been registered or
+      # taken back again. Both directions are the same three lines with the number
+      # moved, so they share the count label.
+      support:
+        registered: Unterstützt
+        withdrawn: Unterstützung zurückgenommen
+        supports: Unterstützungen
+      # The block Whatsapp::DraftPreview puts in front of a citizen before they
+      # confirm a contribution, and the single sentence that follows once it has
+      # gone in. Only the labels are here: the title and the text are the
+      # citizen's own and are copied out of the record untouched.
+      # online and awaiting_review each stand alone as that whole second message,
+      # so both have to read as a full sentence with nothing above them.
+      preview:
+        projekt: Projekt
+        phase: Beteiligung
+        attachments: Angehängt
+        photo: Foto
+        location: Standort
+        online: "Ihr Beitrag ist jetzt online:"
+        awaiting_review: >-
+          Ihr Beitrag ist eingegangen und liegt jetzt zur Prüfung bei der Verwaltung. Sobald er
+          freigegeben ist, erscheint er auf der Seite — einen Link dazu gibt es deshalb noch
+          nicht.
+      proposal:
+        # A legal notice rather than the bot's voice, which is why it survived the copy
+        # that did not: Ai::Tools::WhatsappAiAssistant::RequestPhoto appends it to every
+        # request for a photo so the assistant cannot write one without it.
+        image_rights_notice: >-
+          Bitte senden Sie nur Bilder, für die Sie die Rechte haben und auf denen keine
+          Personen erkennbar sind, die damit nicht einverstanden sind.
+        # The counterpart for the generated answer, appended to the same request: the
+        # picture the portal makes is published under the citizen's name like their own
+        # would be, so they are told it is machine-made before they choose that answer
+        # rather than after they see the picture.
+        image_generation_notice: >-
+          Ein erzeugtes Bild wird von einer KI erstellt und nicht von einem Menschen
+          aufgenommen.
+        location_optional: Ein Ort ist freiwillig. Sie können auch ohne weitermachen.
+      # The lines under a tap on one of the projekt card's phase pills. They are sent
+      # from Whatsapp::Inbound::ProcessMessageService rather than written by the
+      # assistant, because a card that names an action has to perform it on the tap —
+      # a model asked what the tap meant is the selection step the card removed.
+      phase:
+        open: "Hier können Sie bei „%{phase}“ mitmachen:"
+        # What the message naming a phase's entries opens with, keyed by the phase's
+        # own type name the way the card's buttons are. "Eingegangen" is the
+        # proposal box talking: a milestone phase answering with it has the bot
+        # calling its own timeline a pile of submissions, and an event phase
+        # describing next month's dates as something that has arrived. Read with the
+        # fallback below rather than a nil default — a phase type nobody wrote a line
+        # for still needs a sentence over its entries.
+        contributions_intro:
+          proposal_phase: "Das ist bisher bei „%{phase}“ eingegangen"
+          budget_phase: "Das ist bisher bei „%{phase}“ eingegangen"
+          voting_phase: "Darüber wird bei „%{phase}“ abgestimmt"
+          event_phase: "Das steht bei „%{phase}“ an"
+          milestone_phase: "Das ist bei „%{phase}“ bisher passiert"
+          projekt_notification_phase: "Das wurde bei „%{phase}“ mitgeteilt"
+        contributions_intro_fallback: "Das ist bisher bei „%{phase}“ eingegangen"
+        # The intro either closes its own sentence or accounts for what the message
+        # leaves out. Named only where there is a remainder: naming three of three
+        # and saying so reads as an apology for a complete answer.
+        contributions_all: "%{intro}:"
+        contributions_newest: "%{intro} — hier die %{shown} neuesten von insgesamt %{total}:"
+        contributions_page: "Hier finden Sie alles dazu:"
+        contributions_hint: >-
+          Einen einzelnen Beitrag öffnen Sie über „Beitrag auswählen“ — oder Sie fragen mich
+          einfach danach.
+        results: "Die Ergebnisse zu „%{phase}“:"
+      # The two ways a row naming one of the citizen's own contributions is
+      # answered. A proposal submitted into a moderated phase has no public page
+      # until it is accepted, and the row is still offered — so the reason has to
+      # be sayable.
+      contribution:
+        open: "Ihr Beitrag „%{contribution}“:"
+        # The same pill is offered by a phase's list of everyone's contributions,
+        # where the citizen is the reader rather than the author.
+        open_other: "Der Beitrag „%{contribution}“:"
+        in_review: >-
+          „%{contribution}“ wird noch geprüft und hat deshalb noch keine öffentliche Seite.
+          Sobald der Beitrag freigegeben ist, können Sie ihn öffnen.
+      # The two lines around a vote cast in the chat. The question itself and the
+      # answer options are not here and never will be: they are the ballot as the
+      # portal published it, and a ballot answered in a paraphrase of itself is not
+      # the one that was published.
+      poll:
+        login_prompt: >-
+          Zum Abstimmen bei „%{poll}“ brauchen Sie ein Konto. Zum Anmelden hier tippen —
+          danach geht es mit der Abstimmung gleich weiter. Mit dem Öffnen des Links
+          willigen Sie in die Verarbeitung Ihrer Telefonnummer gemäß unserer
+          Datenschutzerklärung ein: %{privacy_url}
+        # Wo in der Abstimmung die Bürgerin gerade steht. Auf der Seite macht das der
+        # Fortschrittsbalken; im Chat kommt jede Frage als eigene Nachricht, und ohne
+        # diese Zeile ist die Länge des Stimmzettels nicht zu erkennen.
+        progress: "Frage %{number} von %{total}"
+        choices: >-
+          Sie können bis zu %{maximum} Antworten auswählen und die Auswahl danach
+          abschließen.
+        # Wo die Antwort gegeben wird. Passt eine Frage nicht auf drei Schaltflächen,
+        # legt WhatsApp die Antworten hinter eine Auswahl, die erst geöffnet werden
+        # muss — die Antworten stehen dann im Text, und diese Zeile sagt, wo getippt
+        # wird.
+        options_hint: "Ihre Antwort wählen Sie unten aus."
+        open_prompt: "Bitte schreiben Sie Ihre Antwort als Nachricht."
+        maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Antworten möglich."
+        # Was die beiden Enden einer Skala bedeuten. Auf der Seite steht die Beschriftung
+        # links und rechts neben der Reihe der Stufen; im Chat kommen die Stufen als
+        # Spalte, an der nichts links oder rechts steht — also darüber. Die Beschriftungen
+        # selbst sind die Formulierung des Portals und werden nicht übersetzt.
+        scale: "Von „%{minimum}“ bis „%{maximum}“."
+        weight_prompt: >-
+          Wie viel Gewicht soll diese Antwort bekommen? Möglich sind 0 bis %{maximum}.
+        weight_maximum_reached: >-
+          So viel Gewicht ist hier nicht mehr frei — für diese Antwort sind es noch
+          %{remaining}.
+        location_prompt: "Bitte senden Sie den Ort als Standort."
+        location_prompt_remaining: >-
+          Bitte senden Sie den Ort als Standort. Sie können noch %{remaining} Orte angeben.
+        location_optional: "Wenn Sie keinen Ort angeben möchten, hier tippen."
+        location_recorded: "✅ Ort gespeichert."
+        location_remaining: "Sie können noch %{remaining} Orte angeben."
+        location_outside_area: >-
+          Dieser Ort liegt außerhalb des Gebiets, das für diese Frage festgelegt wurde.
+          Bitte senden Sie einen Ort innerhalb des Gebiets.
+        location_maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Orte möglich."
+        completed: "Vielen Dank — Ihre Stimmen bei „%{poll}“ sind gezählt."
+        already_answered: >-
+          Sie haben bei „%{poll}“ bereits abgestimmt. Ihre Antworten sind gespeichert und
+          bleiben unverändert — ein zweites Mal ist die Abstimmung nicht möglich.
+        # Was der Bot aus einer geschriebenen Antwort gelesen hat. Beim Tippen auf eine
+        # Schaltfläche braucht es das nicht — da sieht die Bürgerin selbst, was sie
+        # gewählt hat. Sagt die Lesart, nicht das Ergebnis: die Stimme kann darunter
+        # noch abgelehnt werden, und die Ablehnung sagt ihr eigenes Wort danach.
+        typed_answer_read: "Ich habe Ihre Antwort als „%{answer}“ gelesen."
+        # Wenn eine laufende Abstimmung für eine andere verlassen wurde. Ohne diese Zeile
+        # steht die Bürgerin plötzlich bei Frage 1 von etwas anderem.
+        left_for_other: >-
+          Die Abstimmung „%{poll}“ haben wir hier verlassen. Ihre bisherigen Antworten sind
+          gespeichert — Sie können jederzeit dort weitermachen.
+      onboarding:
+        login_prompt: >-
+          Zum Anmelden hier tippen. Mit dem Öffnen des Links willigen Sie in die Verarbeitung
+          Ihrer Telefonnummer gemäß unserer Datenschutzerklärung ein: %{privacy_url}
+        linked: >-
+          ✅ Verknüpfung erfolgreich! Ab jetzt können Sie hier direkt Beiträge einreichen, unterstützen
+          und Benachrichtigungen erhalten.
+        unlinked: >-
+          ✅ Verknüpfung aufgehoben. Diese Nummer ist keinem Konto mehr zugeordnet. Ihr Konto im
+          Portal und alle Beiträge, die Sie veröffentlicht haben, bleiben bestehen. Nummer und
+          Chatverlauf bleiben für die übliche Speicherdauer erhalten. Sie können jederzeit erneut
+          verknüpfen. Wenn Sie Ihr Konto und Ihre Daten löschen möchten, geht das hier:
+          %{delete_account_url}
+        no_account: >-
+          Für die Verknüpfung brauchen Sie ein Konto. Die Registrierung dauert 2 Minuten: %{register_url}
+        expired: >-
+          Das hat leider nicht geklappt — der Link ist womöglich abgelaufen. Versuchen Sie es noch
+          einmal:
+        already_linked: >-
+          Ihr Konto ist bereits mit einer anderen WhatsApp-Nummer verknüpft. Lösen Sie diese
+          Verknüpfung zuerst, dann klappt es hier.
+        number_taken: Diese Nummer ist bereits mit einem anderen Konto verknüpft. Möchten Sie wechseln?
+      buttons:
+        retry: Nochmal versuchen
+        link_retry: Nochmal versuchen
+        cancel: Abbrechen
+        help: Hilfe
+        login: 🔗 Anmelden
+        open_page: Seite öffnen
+        choose: Auswählen
+        take_part: Jetzt mitmachen
+        poll_done: Fertig
+        poll_skip: Überspringen
+        # What each of a projekt's open phases is called on the card, worded as the
+        # action rather than as the phase. Keyed by the phase's own type name and not
+        # read from its title: a portal renaming a phase renames what it is called,
+        # never what taking part in it does — and a title is a noun where a button has
+        # to be an instruction. Every one of them has to stay inside the 20 characters
+        # WhatsApp allows a button title, which it truncates mid-word and without an
+        # ellipsis past.
+        phase_action:
+          proposal_phase: Vorschlag erstellen
+          budget_phase: Vorschlag erstellen
+          voting_phase: Jetzt abstimmen
+          formular_phase: Formular ausfüllen
+          point_of_interest_phase: Mangel melden
+        # Welche Phasenarten überhaupt als "schon erledigt" markiert werden können, und
+        # zugleich das Wort, das die Karte dafür verwendet. Ein eigener Zweig neben
+        # phase_action und nicht darin, weil Whatsapp::ProjektCardActions aus dessen
+        # Schlüsseln ableitet, welche Phasenarten eine Aktion bekommen — ein Schlüssel
+        # mehr dort wäre eine erfundene Phasenart.
+        #
+        # Auf der Karte steht dieses Wort inzwischen in der Zeile unter dem Titel und
+        # nicht mehr im Titel selbst: als Titel stand es bei einem Projekt mit vier
+        # Abstimmungen viermal gleichlautend da. Als Beschriftung einer einzelnen
+        # Schaltfläche des Assistenten wird es weiterhin so verwendet, dort gelten die
+        # 20 Zeichen, die WhatsApp einer Schaltfläche lässt.
+        phase_action_voted:
+          voting_phase: Bereits abgestimmt
+        # Der Titel der Zeile, wenn diese Person schon abgestimmt hat: der Name der
+        # Abstimmung selbst, mit einem Haken davor. Der Name und nicht das Wort oben,
+        # weil nur der Name die vier Abstimmungen eines Projekts voneinander
+        # unterscheidet — und die Beschreibungszeile, die das bisher allein tat, wird
+        # von einer Antwortschaltfläche überhaupt nicht angezeigt. Der Haken zählt wie
+        # jedes andere Zeichen gegen die 24, die WhatsApp einer Listenzeile lässt.
+        phase_action_voted_title: "✓ %{name}"
+        phase_contributions: Beiträge ansehen
+        contribution_choose: Beitrag auswählen
+        view_projekt: Projekt ansehen
+        my_contributions: Meine Beiträge
+        location_skip: Ohne Ort weiter
+        main_menu: Von vorne loslegen
+        show_more: Weitere anzeigen
+        image_upload: Foto hinzufügen
+        image_generate: Bild erzeugen
+        # The two faces of one pill, and two of the labels the assistant is not allowed
+        # to write itself: the same button gives a support or takes it back depending
+        # on the vote, so words it chose a message ago could say the opposite of what
+        # tapping it does. Both have to stay inside the 20 characters WhatsApp allows
+        # a button title — it truncates mid-word and without an ellipsis past that,
+        # which is why the fuller phrase lives on the message and not on the button.
+        support: Jetzt unterstützen
+        support_withdraw: Zurücknehmen
+        # Die beiden Schaltflächen, die etwas Unwiderrufliches auslösen: Ein Kommentar
+        # steht danach unter dem Namen dieser Person auf einer öffentlichen Seite, ein
+        # Beitrag ist eingereicht. Dass die Beschriftung das auch sagt, stand vorher
+        # nur als Satz in der Werkzeugbeschreibung — ein „Weiter“ auf der Schaltfläche,
+        # die veröffentlicht, ist eine Person, die nicht gefragt wurde. Auch hier
+        # gelten die 20 Zeichen.
+        comment_post: Jetzt kommentieren
+        draft_publish: Jetzt einreichen
+        image_skip: Ohne Foto weiter
+        # Die einzige Beschriftung, die das Modell nicht einmal anbieten darf: Die
+        # Schaltfläche löst die Verknüpfung, und was das bedeutet, steht im Block
+        # darüber. Auch sie muss in die 20 Zeichen passen, die WhatsApp einer
+        # Beschriftung lässt.
+        unlink_confirm: Verknüpfung lösen
+      notifications:
+        follow_up:
+          deadline_approaching: Sie können hier noch mitmachen, bis die Frist abläuft.
+          deadline_passed: Die Frist ist abgelaufen. Sie können sich ansehen, was eingegangen ist.
+          status_change: Bei Ihrem Beitrag hat sich etwas getan.
+        types:
+          new_projekt:
+            short: Neues Projekt
+            label: Neues Projekt
+          deadline_approaching:
+            short: Frist bald
+            label: Frist läuft bald ab
+          deadline_passed:
+            short: Frist vorbei
+            label: Frist abgelaufen
+          new_supports:
+            short: Unterstützung
+            label: Neue Unterstützung für meinen Beitrag
+          new_comments:
+            short: Kommentare
+            label: Neue Kommentare zu meinem Beitrag
+          moderation_decision:
+            short: Moderation
+            label: Entscheidung der Moderation
+        push:
+          new_projekt: |-
+            📣 Es gibt ein neues Beteiligungsprojekt bei %{portal_name}.
+            %{url}
+          deadline_approaching: |-
+            ⏳ Nur noch wenige Tage: Die Frist für Beiträge läuft bald ab.
+            %{url}
+          deadline_passed: |-
+            🏁 Die Frist ist abgelaufen. Hier ist das Ergebnis:
+            %{url}
+          status_change: |-
+            🔔 Es gibt eine Neuigkeit zu Ihrem Beitrag.
+            %{url}
+          voting_started: |-
+            🗳️ Eine neue Abstimmung ist gestartet.
+            %{url}
+          voting_ending: |-
+            ⏳ Nur noch wenige Tage: Die Abstimmung endet bald.
+            %{url}
+          # Die beiden Vorlagen mit Button tragen den Link im Button und deshalb
+          # keine Variable im Text.
+          voting_started_action: "🗳️ Eine neue Abstimmung ist gestartet. Sie können direkt hier im Chat abstimmen."
+          voting_started_link: "🗳️ Eine neue Abstimmung ist gestartet."
+          voting_ending_action: "⏳ Nur noch wenige Tage: Die Abstimmung endet bald. Sie können direkt hier im Chat abstimmen."
+          voting_ending_link: "⏳ Nur noch wenige Tage: Die Abstimmung endet bald."
+          buttons:
+            vote_now: Jetzt abstimmen
+            open_ballot: Abstimmung öffnen

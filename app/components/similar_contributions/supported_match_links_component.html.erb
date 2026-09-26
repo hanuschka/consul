@@ -1,0 +1,9 @@
+<% matches.each do |match| %>
+  <% if supporting_available?(match.resource) %>
+    <%= link_to t("components.similar_contributions.notice_component.supported_link"),
+          path_for(match.resource),
+          class: link_class,
+          data: { votes_container: votes_container_id(match.resource) },
+          hidden: true %>
+  <% end %>
+<% end %>

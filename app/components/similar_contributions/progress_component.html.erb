@@ -1,0 +1,8 @@
+<div class="similar-contributions-progress js-similar-contributions-progress"
+     role="status"
+     <%= "hidden" if !check_processing? %>>
+  <%= render Shared::LoadingSpinnerComponent.new(
+    message: t("components.similar_contributions.progress_component.checking"),
+    size: "small"
+  ) %>
+</div>

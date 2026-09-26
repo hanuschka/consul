@@ -57,6 +57,7 @@ de:
           connection: DT-Verbindung
           ai_settings: KI-Einstellungen
           external_api_keys: API-Schlüssel
+          whatsapp: WhatsApp
           machine_translations: Maschinelle Übersetzung
     email_templates:
       send_test:

@@ -7,6 +7,7 @@ class Budget
     include Sentimentable
     include Memoable
     include ConditionallyVotable
+    include SimilarContributionsCheckable
 
     default_scope { where(draft: false) }
 

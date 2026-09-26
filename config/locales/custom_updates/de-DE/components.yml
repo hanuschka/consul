@@ -23,3 +23,41 @@ de:
       ai_image_label_component:
         text: "KI-generiertes Bild"
         tooltip: "Dieses Bild wurde mit künstlicher Intelligenz erstellt oder bearbeitet und zeigt keine reale Aufnahme. Der Hinweis ist gesetzlich vorgeschrieben."
+    similar_contributions:
+      check_section_component:
+        checking_hint: "Ihr Beitrag wird mit den bereits eingereichten Beiträgen dieser Phase verglichen. Das dauert nur einen Moment."
+      progress_component:
+        checking: "Beitrag wird geprüft …"
+      decision_component:
+        intro: "Bitte prüfen Sie, ob Ihr Anliegen dort schon aufgegriffen wurde, bevor Sie Ihren Beitrag einreichen."
+        show_duplicates: "Ähnliche Beiträge anzeigen"
+        hide_duplicates: "Ähnliche Beiträge ausblenden"
+        submit_anyway: "Beitrag trotzdem einreichen"
+      notice_component:
+        title:
+          one: "%{count} ähnlicher Beitrag gefunden"
+          other: "%{count} ähnliche Beiträge gefunden"
+        intro:
+          one: "Zu Ihrem Beitrag gibt es bereits einen inhaltlich ähnlichen Beitrag. Sie können ihn stattdessen unterstützen oder Ihren Beitrag trotzdem einreichen."
+          other: "Zu Ihrem Beitrag gibt es bereits ähnliche Beiträge. Sie können einen davon stattdessen unterstützen oder Ihren Beitrag trotzdem einreichen."
+        back_to_form: "Zurück zum Formular"
+        supported_link: "Zum unterstützten Beitrag"
+        submit_anyway: "Beitrag trotzdem einreichen"
+      list_component:
+        title: "Ähnliche Beiträge"
+        not_a_duplicate: "Kein Duplikat"
+        not_a_duplicate_confirm: "Diesen Beitrag aus der Duplikatgruppe entfernen? Er wird nicht erneut mit diesem Beitrag gruppiert."
+        empty: "Es wurden keine inhaltlich ähnlichen Beiträge gefunden."
+      match_item_component:
+        no_answer: "Noch keine veröffentlichte Antwort."
+        copy_answer: "Diese Antwort kopieren"
+        answer_without_text: "Antwort ohne Text — nur ein Bild oder eine Einbettung."
+        open_in_backend: "Im Backend öffnen"
+      match_status:
+        answered: "Beantwortet"
+        open: "In Bearbeitung"
+        retired: "Zurückgezogen"
+        unfeasible: "Nicht umsetzbar"
+      badge:
+        one: "%{count} ähnlicher Beitrag"
+        other: "%{count} ähnliche Beiträge"

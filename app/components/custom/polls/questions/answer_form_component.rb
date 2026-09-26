@@ -19,23 +19,33 @@ class Polls::Questions::AnswerFormComponent < ApplicationComponent
       question.max_votes.present?
   end
 
+  # How much of a weighted question's budget this option may still be given, from
+  # Polls::AnswerAllowanceQuery — the same reading the controller refuses a write
+  # against, so the selector cannot offer a number the write would then reject.
   def available_vote_weight
-    return 0 unless current_user.present?
-    unless question.votation_type&.multiple_with_weight?
+    return 0 if current_user.blank?
+
+    if !question.votation_type&.multiple_with_weight?
       raise "available_vote_weight called for a non multiple_with_weight question"
     end
 
-    available_weight = question.max_votes - user_answers.sum { |answer| answer.answer_weight.to_i }
-    available_weight += user_answer.answer_weight if user_answer.present?
-
-    [available_weight, question.votation_type.max_votes_per_answer].compact.min
+    ::Polls::AnswerAllowanceQuery.remaining_weight(
+      question: question, user: current_user, title: question_answer.title,
+      recorded_answers: user_answers
+    )
   end
 
+  # Only asked of an option not yet chosen — an answered one renders the other
+  # branch — so it is the same question as "may one more of these be recorded".
+  # The citizen's rows travel with it: asked without them, a question would count
+  # the same rows once per button on the page.
   def disable_answer?
-    return false unless current_user.present?
+    return false if current_user.blank?
 
-    (question.votation_type&.multiple? && user_answers.count == question.max_votes) ||
-      (question.votation_type&.multiple_with_weight? && available_vote_weight == 0)
+    !::Polls::AnswerAllowanceQuery.call(
+      question: question, user: current_user, title: question_answer.title,
+      recorded_answers: user_answers
+    )
   end
 
   def button_not_answered_class

@@ -5,9 +5,7 @@ class Api::MilestoneStatusesController < Api::BaseController
   def index
     check_read_access!
 
-    milestone_statuses = Milestone::Status.all
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+    milestone_statuses = paginate(Milestone::Status.all)
 
     serialized_statuses = MilestoneStatusSerializer.serialize_collection(milestone_statuses)
 
@@ -72,14 +70,5 @@ class Api::MilestoneStatusesController < Api::BaseController
 
   def find_milestone_status
     @milestone_status = Milestone::Status.find(params[:id])
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end

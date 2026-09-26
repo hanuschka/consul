@@ -11,9 +11,7 @@ class Api::PointOfInterestCategoriesController < Api::BaseController
       ProjektPointOfInterestCategory.includes(:projekt_phase, projekt_phase: :projekt)
     end
 
-    categories = categories
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+    categories = paginate(categories)
 
     serialized_categories = PointOfInterestCategorySerializer.serialize_collection(categories)
 
@@ -80,15 +78,6 @@ class Api::PointOfInterestCategoriesController < Api::BaseController
 
   def find_category
     @category = ProjektPointOfInterestCategory.includes(:projekt_phase, projekt_phase: :projekt).find(params[:id])
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end
 

@@ -1,7 +1,7 @@
 module Adm::MemoActions
   extend ActiveSupport::Concern
 
-  ALLOWED_MEMOABLE_TYPES = %w[DeficiencyReport Idea Budget::Investment Memo].freeze
+  ALLOWED_MEMOABLE_TYPES = %w[DeficiencyReport Idea Budget::Investment Proposal Memo].freeze
 
   def create
     @memoable = find_memoable

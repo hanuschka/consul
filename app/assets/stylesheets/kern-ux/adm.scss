@@ -25,6 +25,7 @@
 @use "adm/components/connection";
 @use "adm/components/matomo";
 @use "adm/components/criteria_list";
+@use "adm/components/similar_search_projekts";
 @use "adm/components/memos";
 @use "adm/components/column_selector";
 @use "adm/components/icon_rail";
@@ -83,6 +84,11 @@
 @use "adm/components/projekts_inspiration";
 @use "adm/components/budget_results_tab";
 @use "adm/components/loader";
+@use "adm/components/whatsapp_deep_link";
+@use "adm/components/whatsapp_page";
+@use "adm/components/whatsapp_qr_code_component";
+@use "adm/components/whatsapp_stats";
+@use "adm/components/whatsapp_dialogs";
 @use "adm/components/poll_question_imports";
 
 @use "adm/partials/navbar_items";

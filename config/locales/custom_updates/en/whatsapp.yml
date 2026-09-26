@@ -1,0 +1,333 @@
+en:
+  whatsapp:
+    account:
+      title: WhatsApp
+      not_linked: >-
+        Your WhatsApp number is not linked to this account yet. Message the participation bot on WhatsApp
+        to start linking.
+      subscribed: 'Linked number: %{phone}. You receive notifications about new projects.'
+      opted_out: 'Linked number: %{phone}. You currently receive no notifications.'
+      opt_in: Enable notifications
+      opt_out: Stop receiving notifications
+    link:
+      success: Your WhatsApp number is now linked to your account.
+      failure: This link is no longer valid. Message the bot on WhatsApp again to get a new one.
+      page:
+        title: Link your WhatsApp number
+        intro: Once linked, contributions you submit by WhatsApp are attributed to your account.
+        number_label: WhatsApp number
+        broadcast_consent: I want to be notified on WhatsApp when a new participation project starts.
+        consent_note: >-
+          Without this box you can still submit contributions via WhatsApp, you just receive no
+          notifications.
+          You can change this any time in your account or by sending STOP.
+        confirm: Link number
+      expired: This link is no longer valid. Message the bot on WhatsApp again to get a new one.
+      already_linked: Your account is already linked to a different WhatsApp number.
+      number_taken: >-
+        This WhatsApp number is already linked to a different account. The link can only be released
+        from that number's WhatsApp chat.
+    subscription:
+      opted_in: You will receive WhatsApp notifications again.
+      opted_out: You will no longer receive WhatsApp notifications.
+      not_linked: No WhatsApp number is linked to your account.
+    # Only what the assistant does not write. Everything the bot says in
+    # conversation is now written per message by the model, so what is left here is
+    # the copy that has to exist when no model is involved: the formats a date is
+    # rendered in, the WhatsApp-side configuration of the number itself, the
+    # notifications the portal pushes on its own initiative, the legal disclosures,
+    # and the one sentence that speaks when the assistant cannot.
+    bot:
+      date:
+        absolute_format: "%B %-d, %Y"
+        absolute_with_time_format: "%B %-d, %Y at %H:%M"
+        today: today
+        past:
+          days:
+            one: 1 day ago
+            other: '%{count} days ago'
+          months:
+            one: 1 month ago
+            other: '%{count} months ago'
+          years:
+            one: 1 year ago
+            other: '%{count} years ago'
+        future:
+          days:
+            one: in 1 day
+            other: in %{count} days
+          months:
+            one: in 1 month
+            other: in %{count} months
+          years:
+            one: in 1 year
+            other: in %{count} years
+      portal_fallback_name: the participation portal
+      transcription_failed: I could not understand the voice message. Please write your idea as text.
+      assistant_unavailable: >-
+        I can't answer you right now — hopefully only for a moment. Please try again in a
+        few minutes.
+      assistant_unavailable_retryable: >-
+        I can't answer you right now — hopefully only for a moment. Tap "Try again" and I'll
+        pick up right where we were.
+      cancelled: OK, cancelled. Just message me again whenever you'd like.
+      opted_in: You will receive messages from us again.
+      compliance:
+        disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
+        opted_out: Understood, you won't receive any more messages from us.
+        opted_out_reminder: >-
+          You unsubscribed from our messages, so I can't help you here. Write %{keyword}
+          if you would like to receive messages again.
+      # The block Whatsapp::CommentPreview puts in front of a citizen before their
+      # comment goes on a public page, and the single sentence that follows once it
+      # is there. The comment itself is their own and is never translated.
+      # online and awaiting_review each stand alone as that whole second message,
+      # so both have to read as a full sentence with nothing above them.
+      # The block Whatsapp::UnlinkPreview puts in front of the confirmation question.
+      # These two lines are explicitly not the model's: unlinking detaches the number
+      # and nothing else, and wording that promises an erasure on one reply and denies
+      # it on the next is the whole reason they are fixed here. erasure stands on its
+      # own, with the address on the line below it.
+      unlink:
+        consequence: >-
+          Unlinking only disconnects this number from your account. Your portal account stays,
+          and every contribution you have published stays online unchanged.
+        erasure: >-
+          If you want your account and your data actually deleted, you can do that in the portal
+          under "Delete account":
+      comment:
+        on_proposal: Comment on
+        online: "Your comment is now on the page:"
+        awaiting_review: >-
+          Your comment has arrived and is still being reviewed. It will appear on the page once it
+          has been approved — which is why there is no link to it yet.
+      # The block Whatsapp::SupportRecap sends once a support has been registered.
+      support:
+        registered: Supported
+        withdrawn: Support withdrawn
+        supports: Supports
+      # The block Whatsapp::DraftPreview puts in front of a citizen before they
+      # confirm a contribution, and the single sentence that follows once it has
+      # gone in. Only the labels are here: the title and the text are the
+      # citizen's own and are copied out of the record untouched.
+      # online and awaiting_review each stand alone as that whole second message,
+      # so both have to read as a full sentence with nothing above them.
+      preview:
+        projekt: Project
+        phase: Participation
+        attachments: Attached
+        photo: Photo
+        location: Location
+        online: "Your contribution is now online:"
+        awaiting_review: >-
+          Your contribution has arrived and is now with the municipality for review. It will appear
+          on the page once it has been approved — which is why there is no link to it yet.
+      proposal:
+        # A legal notice rather than the bot's voice, which is why it survived the copy
+        # that did not: Ai::Tools::WhatsappAiAssistant::RequestPhoto appends it to every
+        # request for a photo so the assistant cannot write one without it.
+        image_rights_notice: >-
+          Please only send pictures you hold the rights to, and none showing people who
+          have not agreed to it.
+        # The counterpart for the generated answer, appended to the same request: the
+        # picture the portal makes is published under the citizen's name like their own
+        # would be, so they are told it is machine-made before they choose that answer
+        # rather than after they see the picture.
+        image_generation_notice: >-
+          A generated picture is created by an AI rather than taken by a person.
+        location_optional: A location is optional. You can also carry on without one.
+      phase:
+        open: "Here is where you can take part in “%{phase}”:"
+        contributions_intro:
+          proposal_phase: "Here is what has come in for “%{phase}” so far"
+          budget_phase: "Here is what has come in for “%{phase}” so far"
+          voting_phase: "Here is what “%{phase}” has to vote on"
+          event_phase: "Here is what is coming up in “%{phase}”"
+          milestone_phase: "Here is what has happened in “%{phase}” so far"
+          projekt_notification_phase: "Here is what has been announced in “%{phase}”"
+        contributions_intro_fallback: "Here is what has come in for “%{phase}” so far"
+        contributions_all: "%{intro}:"
+        contributions_newest: "%{intro} — the %{shown} newest of %{total} altogether:"
+        contributions_page: "You can find everything about it here:"
+        contributions_hint: >-
+          To open a single contribution, use “Choose contribution” — or simply ask me about it.
+        results: "The results for “%{phase}”:"
+      contribution:
+        open: "Your contribution “%{contribution}”:"
+        open_other: "The contribution “%{contribution}”:"
+        in_review: >-
+          “%{contribution}” is still being reviewed, so it has no public page yet. You will be
+          able to open it once it has been approved.
+      poll:
+        login_prompt: >-
+          Voting in “%{poll}” needs an account. Tap here to log in — I'll pick the vote up
+          again straight afterwards. Opening the link means agreeing to your phone
+          number being processed under our privacy policy: %{privacy_url}
+        # Where in the ballot the citizen has got to. On the page that is what the
+        # progress bar says; in a chat each question is its own message, and without
+        # this line the length of the ballot cannot be seen at all.
+        progress: "Question %{number} of %{total}"
+        choices: >-
+          You can pick up to %{maximum} answers, then finish your selection.
+        # Where the answer is given. Past three buttons WhatsApp puts the answers
+        # behind a picker that has to be opened first — the answers are then printed
+        # in the text, and this line says where to tap.
+        options_hint: "Pick your answer below."
+        open_prompt: "Please write your answer as a message."
+        maximum_reached: "This question takes at most %{maximum} answers."
+        # What the two ends of a scale mean. On the page the wording sits to the left and
+        # the right of the row of steps; in a chat the steps arrive as a column with
+        # nothing to either side of them, so it goes above. The labels themselves are the
+        # portal's own wording and are never translated.
+        scale: "From “%{minimum}” to “%{maximum}”."
+        weight_prompt: >-
+          How much weight should this answer carry? Anything from 0 to %{maximum}.
+        weight_maximum_reached: >-
+          That much weight is no longer free — this answer can still take %{remaining}.
+        location_prompt: "Please send the place as a location."
+        location_prompt_remaining: >-
+          Please send the place as a location. You can still give %{remaining} places.
+        location_optional: "Tap here if you would rather not give a place."
+        location_recorded: "✅ Place saved."
+        location_remaining: "You can still give %{remaining} places."
+        location_outside_area: >-
+          That place is outside the area set for this question. Please send a place inside
+          the area.
+        location_maximum_reached: "This question takes at most %{maximum} places."
+        completed: "Thank you — your votes in “%{poll}” are counted."
+        already_answered: >-
+          You have already voted in “%{poll}”. Your answers are recorded and stay as they
+          are — this vote cannot be answered a second time.
+        typed_answer_read: "I read your answer as “%{answer}”."
+        left_for_other: >-
+          We have left the vote “%{poll}” here. The answers you gave are recorded — you can
+          pick it up again whenever you like.
+      onboarding:
+        login_prompt: >-
+          Tap below to log in. By opening the link you consent to the processing of your phone
+          number under our privacy policy: %{privacy_url}
+        linked: >-
+          ✅ Successfully linked! From now on you can submit contributions, support them, and receive notifications
+          directly here.
+        unlinked: >-
+          ✅ Account unlinked. This number is no longer tied to an account. Your portal account and
+          every contribution you have published stay as they are. The number and the chat history
+          are kept for the usual retention period. You can link again at any time. If you want your
+          account and your data deleted, you can do that here: %{delete_account_url}
+        no_account: You need an account to link. You can register in 2 minutes at %{register_url}.
+        expired: 'That didn''t work — the link may have expired. Try again:'
+        already_linked: >-
+          Your account is already linked to a different WhatsApp number. Release that link first and
+          this will work.
+        number_taken: This number is already linked to a different account. Would you like to switch?
+      buttons:
+        retry: Try again
+        link_retry: Try again
+        cancel: Cancel
+        help: Help
+        login: 🔗 Log in
+        open_page: Open page
+        choose: Choose
+        take_part: Take part now
+        poll_done: Done
+        poll_skip: Skip
+        phase_action:
+          proposal_phase: Submit an idea
+          budget_phase: Submit an idea
+          voting_phase: Vote now
+          formular_phase: Fill in the form
+          point_of_interest_phase: Report a defect
+        # Which phase types can be marked as already done at all, and the word the card
+        # uses for it. A sibling of phase_action rather than a key inside it, because
+        # Whatsapp::ProjektCardActions reads that scope's keys as the register of which
+        # phase types get an action at all — one key more there would be an invented phase
+        # type.
+        #
+        # On the card this word now sits on the line under the title rather than in the
+        # title: as a title it read the same four times over on a projekt running four
+        # ballots. It is still the whole of a single assistant pill, where the 20
+        # characters WhatsApp allows a button title apply.
+        phase_action_voted:
+          voting_phase: Already voted
+        # The row's title where this citizen has already voted: the ballot's own name
+        # with a mark in front of it. The name rather than the word above, because the
+        # name is the only thing that tells one of a projekt's four ballots from
+        # another — and the description line that used to carry it alone is not shown
+        # on a reply button at all. The mark counts against the 24 characters WhatsApp
+        # allows a list row title like any other character.
+        phase_action_voted_title: "✓ %{name}"
+        phase_contributions: See what's in
+        contribution_choose: Choose contribution
+        view_projekt: View project
+        my_contributions: My contributions
+        location_skip: Continue without
+        main_menu: Start over
+        show_more: Show more
+        image_upload: Add a photo
+        image_generate: Generate a picture
+        support: Support now
+        support_withdraw: Withdraw
+        image_skip: Continue without
+        # The one label the model may not even offer: the button severs the link, and
+        # what that means is stated in the block above it. It has to fit the 20
+        # characters WhatsApp allows a button title.
+        unlink_confirm: Unlink number
+        # The two buttons that do something irreversible: a comment goes onto a public
+        # page under this citizen's name, a contribution goes in. That the label says
+        # so used to live as a sentence in the tool descriptions — a "Continue" on the
+        # button that publishes is a citizen who was not asked. The same 20 characters
+        # apply.
+        comment_post: Post comment
+        draft_publish: Submit now
+      notifications:
+        follow_up:
+          deadline_approaching: You can still take part here until the deadline passes.
+          deadline_passed: The deadline has passed. You can look at what came in.
+          status_change: Something has happened to your contribution.
+        types:
+          new_projekt:
+            short: New project
+            label: New project
+          deadline_approaching:
+            short: Deadline soon
+            label: Deadline approaching
+          deadline_passed:
+            short: Deadline passed
+            label: Deadline passed
+          new_supports:
+            short: New supports
+            label: New supports on my contribution
+          new_comments:
+            short: New comments
+            label: New comments on my contribution
+          moderation_decision:
+            short: Moderation
+            label: Moderation decision
+        push:
+          new_projekt: |-
+            📣 There's a new participation project on %{portal_name}.
+            %{url}
+          deadline_approaching: |-
+            ⏳ Only a few days left: the contribution submission deadline is coming up soon.
+            %{url}
+          deadline_passed: |-
+            🏁 The deadline has passed. See the result:
+            %{url}
+          status_change: |-
+            🔔 There's an update on your contribution.
+            %{url}
+          voting_started: |-
+            🗳️ A new vote has started.
+            %{url}
+          voting_ending: |-
+            ⏳ Only a few days left: the vote closes soon.
+            %{url}
+          # The two button templates carry the link in the button, so they carry
+          # no variable in the text.
+          voting_started_action: "🗳️ A new vote has started. You can vote right here in the chat."
+          voting_started_link: "🗳️ A new vote has started."
+          voting_ending_action: "⏳ Only a few days left: the vote closes soon. You can vote right here in the chat."
+          voting_ending_link: "⏳ Only a few days left: the vote closes soon."
+          buttons:
+            vote_now: Vote now
+            open_ballot: Open the ballot

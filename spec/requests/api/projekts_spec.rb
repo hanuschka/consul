@@ -90,7 +90,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 description: <<~DESC
                   Number of projekts per page when paginating. Only applies when page or per_page is provided.
 
-                  **Default:** 20.
+                  **Default:** 20. **Max:** 2000 (higher values are clamped).
                 DESC
       parameter name: :image_variant_versions, in: :query, type: :string, required: false,
                 description: <<~DESC

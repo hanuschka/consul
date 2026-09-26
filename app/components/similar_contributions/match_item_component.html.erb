@@ -1,0 +1,97 @@
+<li class="<%= css_class %>">
+  <div class="similar-contributions-match--thumb">
+    <%# aria-hidden and out of the tab order: the title beside it is the same
+        link, and a second one only lengthens the path through each match. %>
+    <%= link_to path, target: "_blank", data: { turbo: false },
+          tabindex: -1, aria: { hidden: true } do %>
+      <% if image_attached? %>
+        <%= image_tag image_url, alt: resource.title, loading: "lazy" %>
+      <% else %>
+        <span class="similar-contributions-match--thumb-placeholder">
+          <i class="fas <%= PLACEHOLDER_ICON_CLASS %>"></i>
+        </span>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="similar-contributions-match--body">
+    <%= meta %>
+
+    <% if processing_status.present? %>
+      <p class="similar-contributions-match--status"><%= processing_status %></p>
+    <% end %>
+
+    <% if resource.sentiment.present? || labels.any? %>
+      <div class="similar-contributions-match--tags">
+        <% if resource.sentiment.present? %>
+          <span class="similar-contributions-match--sentiment" style="<%= sentiment_style %>">
+            <%= resource.sentiment.name %>
+          </span>
+        <% end %>
+
+        <% labels.each do |label| %>
+          <span class="similar-contributions-match--label">
+            <i class="fas fa-<%= label.icon %>" aria-hidden="true"></i>
+            <%= label.name %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <p class="similar-contributions-match--title">
+      <%= link_to path, target: "_blank", data: { turbo: false },
+            title: t("shared.target_blank") do %>
+        <%= resource.title %>
+        <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+      <% end %>
+    </p>
+
+    <p class="similar-contributions-match--excerpt"><%= excerpt %></p>
+
+    <% if shows_answer? %>
+      <% if answer_present? %>
+        <div class="similar-contributions-match--answer-row" data-controller="clipboard">
+          <% if answer_excerpt.present? %>
+            <blockquote class="similar-contributions-match--answer"><%= answer_excerpt %></blockquote>
+          <% else %>
+            <%# Nothing but an image or an embed strips down to no text at all,
+                and an empty quote would read as a missing answer -- while the
+                copy button still has a whole answer to hand over. %>
+            <p class="similar-contributions-match--answer-without-text">
+              <%= t(".answer_without_text") %>
+            </p>
+          <% end %>
+
+          <%# The full answer rides along in a <template>: its contents stay
+              inert -- no iframe is fetched, nothing lands in the accessibility
+              tree -- while the clipboard controller can still serialise them
+              inside the click's own user gesture. %>
+          <template data-clipboard-target="htmlSource"><%= answer_html %></template>
+
+          <button type="button"
+                  class="kern-btn kern-btn--tertiary similar-contributions-match--copy-answer"
+                  data-action="clipboard#copy"
+                  title="<%= t(".copy_answer") %>">
+            <span class="kern-label material-symbols-outlined" aria-hidden="true">content_copy</span>
+            <span class="kern-label kern-sr-only"><%= t(".copy_answer") %></span>
+          </button>
+        </div>
+      <% else %>
+        <p class="similar-contributions-match--no-answer"><%= t(".no_answer") %></p>
+      <% end %>
+    <% end %>
+
+    <% if backend_path.present? %>
+      <p class="similar-contributions-match--backend">
+        <%= link_to backend_path, target: "_blank", data: { turbo: false },
+              class: "similar-contributions-match--backend-link",
+              title: t("shared.target_blank") do %>
+          <span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
+          <span><%= t(".open_in_backend") %></span>
+        <% end %>
+      </p>
+    <% end %>
+
+    <%= footer %>
+  </div>
+</li>

@@ -47,6 +47,6 @@ class Ability
       can [:show, :preview], previewable, id: previewed.model_id.to_i if previewable
     end
 
-    alias_action :wizard_step, to: :read
+    alias_action :wizard_next, to: :read
   end
 end

@@ -1,0 +1,138 @@
+module Whatsapp::AiAssistant::DecisionLog
+  # Why a turn went where it did, in one greppable line per decision. Until
+  # this existed the assistant's reply was the only evidence of its own
+  # reasoning, and it reads plausibly whichever tool was picked — a misroute,
+  # a button silently dropped and a rewrite thrown out by its own guardrails
+  # all looked like an ordinary answer from the outside.
+  #
+  # Every line carries the same shape, so `grep '\[Whatsapp\]\[assistant\]'`
+  # over a day of logs is a table: event first, then the conversation, then
+  # whatever that event has to say for itself.
+  TAG = "[Whatsapp][assistant]".freeze
+
+  # Rejections mean nothing without the denominator, so the accepted cases are
+  # counted too: two dropped pills is a bug at ten a day and a working guardrail
+  # at ten thousand.
+  #
+  # `irreversible_offered` is the one event that exists for the record rather
+  # than for a rate. Publishing a draft, posting a comment and confirming an
+  # unlink cannot be taken back from a chat, and the reply that offered the pill
+  # reads perfectly reasonably whether the offer was right or wrong — so a
+  # mis-offer is only findable if the offer itself was written down.
+  #
+  # `tap_unhandled` is a pill from an older deploy, still sitting in someone's
+  # chat history and still tappable forever. It rising is how a vocabulary change
+  # is noticed from the outside.
+  #
+  # `actions_missed` is the only event here that records what the assistant did
+  # *not* do: a reply that went out as plain text where next steps existed. It is
+  # measured rather than prevented, because the alternative is code deciding a
+  # reply must carry a pill — and some replies genuinely end the exchange. A rate
+  # is what tells those apart from the ones where the citizen was left typing;
+  # a single line never could.
+  #
+  # `start_over` is the citizen asking to be put back at the beginning, and it is
+  # counted for what it says about the replies before it: a bot that answers well
+  # is one nobody has to escape from, so this rising is the readable sign that
+  # they are being led somewhere they did not want to go.
+  #
+  # `send_refused` is a reply WhatsApp rejected outright. It is the one failure
+  # that used to leave no trace anywhere: the send is recorded as a failed row,
+  # the turn was stored as though it had answered, and the citizen saw nothing —
+  # so a rate here is how a body the model writes too long for one message, or a
+  # number that has blocked us, becomes visible at all.
+  #
+  # `label_truncated` is a button or row label the model wrote past what the
+  # surface holds. It is the one event here whose subject is the prompt rather
+  # than the code: the label still ships, marked, so nothing is broken by it —
+  # but the rate is the only way to tell a budget the model can write to from one
+  # it is told and routinely misses, and it is what says whether wording the
+  # instruction differently changed anything.
+  #
+  # `translation_discarded` is its counterpart for the lines Ruby sends itself: a
+  # fixed label whose translation did not fit, so the citizen read that one button
+  # in German. It is counted separately because the remedy is the opposite one —
+  # nothing the model does affects it, and what has to give is the German source
+  # line being too long to survive being translated.
+  EVENTS = %i[
+    tool_called
+    action_dropped
+    actions_unusable
+    actions_missed
+    irreversible_offered
+    label_truncated
+    translation_discarded
+    tap_dispatched
+    tap_unhandled
+    start_over
+    assistant_unavailable
+    send_refused
+  ].freeze
+
+  COUNTER_TTL = 40.days
+
+  module_function
+
+  # Never raises and never blocks the reply: this watches the conversation, it
+  # is not part of it. An unreachable cache costs the count, not the message.
+  def record(event:, conversation: nil, **details)
+    Rails.logger.info(line(event: event, conversation: conversation, **details))
+
+    increment(event)
+
+    nil
+  rescue StandardError => e
+    Rails.logger.info("#{TAG} decision log failed: #{e.class} - #{e.message}")
+
+    nil
+  end
+
+  # One day's counts, for reading back from a console or an admin page later.
+  # Nil per event rather than zero when nothing was counted: "not recorded" and
+  # "recorded none" are different answers, and the cache cannot tell them apart
+  # after the TTL.
+  def counts(date: Time.zone.today)
+    EVENTS.index_with { |event| Rails.cache.read(counter_key(event, date), raw: true)&.to_i }
+  end
+
+  def line(event:, conversation:, **details)
+    pairs = { event: event, conversation: conversation&.id }
+      .merge(details)
+      .compact
+      .map { |key, value| "#{key}=#{loggable(value)}" }
+
+    "#{TAG} #{pairs.join(" ")}"
+  end
+
+  # Squished and cut because the citizen's own words end up here and a chat
+  # message is not a log line: what matters is which decision it produced.
+  def loggable(value)
+    text = value.to_s.squish.truncate(80)
+
+    return text if text.exclude?(" ")
+
+    "\"#{text}\""
+  end
+
+  # `increment` on a key that does not exist yet answers differently per store —
+  # memcached creates it, the in-memory store returns nil and writes nothing —
+  # so the first count of the day is written explicitly. Raw, because a
+  # marshalled value cannot be incremented afterwards on memcached.
+  #
+  # Two processes racing the first count of an event lose one of them. That is
+  # the right trade for a number read as a rate: a lock per log line would cost
+  # more than the count is worth.
+  def increment(event)
+    return if Rails.cache.is_a?(ActiveSupport::Cache::NullStore)
+
+    key = counter_key(event, Time.zone.today)
+
+    return if Rails.cache.increment(key, 1, expires_in: COUNTER_TTL).present?
+
+    Rails.cache.write(key, 1, expires_in: COUNTER_TTL, raw: true)
+  end
+
+  def counter_key(event, date)
+    "whatsapp/assistant/#{date.iso8601}/#{event}"
+  end
+end

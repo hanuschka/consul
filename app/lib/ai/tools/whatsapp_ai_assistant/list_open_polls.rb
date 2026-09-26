@@ -1,0 +1,91 @@
+class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssistant::BaseTool
+  description "Lists the votes and surveys open right now, each with the projekt_phase_id that " \
+              "starts it, whether it can be answered in the chat, the address of its ballot and " \
+              "the date it closes. Name a project for its own, or pass null for the whole " \
+              "portal. Where votable_in_chat is true, voting happens here: call start_poll_vote " \
+              "with the projekt_phase_id rather than handing out the address, and offer that for " \
+              "every row that can be. Where it is false the ballot_url is the way through — send " \
+              "it with send_link. A row marked already_voted is one this citizen took part in " \
+              "earlier: say so where you name it and never offer to start it — they cannot " \
+              "answer it again. Every row without that mark is a vote this citizen has NOT " \
+              "answered, and a vote that is not in the list is simply not open — never tell " \
+              "the citizen they took part in something the list does not mark as " \
+              "already_voted. covers says what total counts: 'projekt' when a project was " \
+              "named, 'portal' for the whole portal — say which when you name the number. " \
+              "Returns facts for you to answer in your own words: it sends nothing to the " \
+              "citizen itself. #{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: where there " \
+              "are more, say how many and offer more_action_id as a button."
+
+  MORE_SCOPE = "polls".freeze
+
+  # What the count covers, said in the result rather than left to the model to
+  # remember from its own arguments: the same total read as a portal's and as one
+  # projekt's is the difference between "four votes are running here" and "four
+  # votes are running", and the citizen hears only the sentence.
+  PROJEKT_COVERAGE = "projekt".freeze
+  PORTAL_COVERAGE = "portal".freeze
+
+  params do
+    optional :projekt_name,
+      description: "The project name as the citizen wrote it, or null for the whole portal" do
+      string
+    end
+    optional :from, description: FROM_DESCRIPTION do
+      integer
+    end
+  end
+
+  def execute(projekt_name: nil, from: 0)
+    for_named_projekt(projekt_name) do |projekt|
+      query = ::Whatsapp::OpenPollsQuery.new(projekt: projekt, from: from)
+      polls = query.call
+      votable_ids = ::Whatsapp::VotableBallotQuery.votable_poll_ids(polls)
+      voted_ids = ::Whatsapp::BallotParticipation.completed_poll_ids(
+        polls: polls, user: conversation.user
+      )
+
+      {
+        covers: projekt.present? ? PROJEKT_COVERAGE : PORTAL_COVERAGE,
+        polls: polls.map { |poll| row_for(poll, votable_ids, voted_ids) },
+        **::Whatsapp::ListWindow.report(
+          scope: MORE_SCOPE, from: from, shown: polls.size, total: query.total
+        )
+      }
+    end
+  end
+
+  private
+
+    # The phase's id travels beside the poll because it is the phase, not the poll,
+    # that start_poll_vote takes: a voting phase carries exactly one ballot and every
+    # rule about who may answer it — the dates, the districts, the age — belongs to
+    # the phase.
+    #
+    # Whether the chat can ask it is answered per row rather than left to the model to
+    # infer, because the answer is a whole traversal of the poll's questions and
+    # nothing in a row's other fields hints at it. The set arrives ready-made:
+    # Whatsapp::VotableBallotQuery.votable_poll_ids answers the whole page for what
+    # asking one poll costs, where asking row by row paid it nine times over.
+    #
+    # Whether the citizen has taken part is answered for the whole page at once for the
+    # same reason, and it travels only where it is true: a false on every row of a list
+    # nobody has voted in is the one fact repeated ten times, and #compact drops it.
+    #
+    # The address is the row's own poll rather than its phase's, because the row
+    # names that poll — on a phase that has somehow ended up with two, a link to the
+    # other one would answer about a ballot nobody was shown.
+    def row_for(poll, votable_ids, voted_ids)
+      projekt_phase = poll.projekt_phase
+
+      {
+        title: poll.name,
+        projekt_phase_id: projekt_phase.id,
+        votable_in_chat: votable_ids.include?(poll.id),
+        already_voted: (true if voted_ids.include?(poll.id)),
+        closes_on: ::Whatsapp::DatePhrase.absolute(poll.ends_at),
+        closes_in: ::Whatsapp::DatePhrase.relative(poll.ends_at),
+        projekt: projekt_title(projekt_phase.projekt),
+        ballot_url: ::Whatsapp::ProjektLink.poll_ballot_url(poll)
+      }.compact
+    end
+end

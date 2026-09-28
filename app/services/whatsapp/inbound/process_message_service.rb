@@ -94,8 +94,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return if handle_poll_done_tap
     return if handle_poll_skip_tap
     return if handle_poll_location
-    return if handle_open_answer_text
-    return if handle_typed_ballot_answer
 
     apply_start_over_tap
 
@@ -197,8 +195,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Held back too where the turn swapped the ballot for another one. That is said
     # by Whatsapp::Polls::OfferBallotService as it begins the second, which is the
     # only moment both are still nameable and the new question has not gone out yet.
+    # And where the turn recorded a typed answer: the tool that recorded it has
+    # already sent the ballot's next message.
     def resume_ballot(poll_id)
       return if poll_id.blank?
+      return if ::Current.whatsapp_ballot_message_sent_in_turn
       return if conversation.reload.active_poll_id != poll_id
       return if conversation.unsaved_submission?
 
@@ -751,65 +752,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         conversation: conversation,
         latitude: location["latitude"],
         longitude: location["longitude"]
-      )
-    end
-
-    # The one place a plain message is not a question for the assistant: the bot has
-    # asked a free-text poll question and written down that it did, so the next words
-    # the citizen sends are the answer to it.
-    #
-    # A tapped pill is never taken as text — its label is not something the citizen
-    # wrote — and neither is a photo or a shared pin, which carry no words at all.
-    def handle_open_answer_text
-      return false if conversation.pending_open_question_id.blank?
-      return false if reading.tapped_reply_id.present?
-      return false if reading.text.blank?
-      return false if ::Whatsapp::QrToken.carried_in?(reading.text)
-
-      ::Whatsapp::Polls::RecordOpenAnswerService.call(
-        conversation: conversation, text: reading.text
-      )
-    end
-
-    # The same reading applied to a question that is answered by tapping. A citizen
-    # part-way through a ballot who writes "Ich bin dafuer" is answering it, and
-    # their words used to be taken as a fresh request instead — which threw them
-    # into a different ballot and recorded nothing of the one they were in.
-    #
-    # Only where the words name exactly one option
-    # (Whatsapp::Polls::TypedAnswerQuery). Anything else falls through to the
-    # assistant, which is what a citizen asking a question in the middle of a ballot
-    # must keep being able to do.
-    #
-    # What the bot read goes out before the answer is recorded, which a tap needs no
-    # equivalent of: the citizen saw which pill they pressed, where here a sentence
-    # has been interpreted for them. It says the reading rather than the result,
-    # because the record can still be refused underneath it — a poll closed between
-    # two messages, a maximum already spent — and those refusals say their own piece
-    # after it without contradicting it.
-    def handle_typed_ballot_answer
-      return false if conversation.active_poll_id.blank?
-      return false if reading.tapped_reply_id.present?
-      return false if reading.text.blank?
-      return false if ::Whatsapp::QrToken.carried_in?(reading.text)
-
-      question_answer = ::Whatsapp::Polls::TypedAnswerQuery.for(
-        conversation: conversation, text: reading.text
-      )
-
-      return false if question_answer.blank?
-
-      announce_typed_answer(question_answer)
-
-      ::Whatsapp::Polls::RecordAnswerService.call(
-        conversation: conversation, question_answer: question_answer
-      )
-    end
-
-    def announce_typed_answer(question_answer)
-      ::Whatsapp::Send.locale_text(
-        account: account,
-        body: ::Whatsapp.copy("whatsapp.bot.poll.typed_answer_read", answer: question_answer.title)
       )
     end
 

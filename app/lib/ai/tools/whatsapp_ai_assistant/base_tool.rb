@@ -385,6 +385,39 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       }
     end
 
+    # ── Typed ballot answers ────────────────────────────────────────────────
+    # What the two tools recording a typed ballot answer hand back. Shared because
+    # the ballot's record services answer both in the same three ways: false where
+    # the answer could not be taken, COMPLETED where it was the last one — said by
+    # this turn, since a completion reached inside one is left to it
+    # (Whatsapp::AiAssistant::ContinueConversationService) — and anything else
+    # where the ballot's next message has already gone out.
+    def ballot_answer_outcome(outcome, poll:)
+      return ballot_answer_refused_error if !outcome
+
+      if outcome == ::Whatsapp::Polls::AdvanceBallotService::COMPLETED
+        return { status: ::Whatsapp::CompletionNotes.ballot_finished(poll: poll) }
+      end
+
+      ::Current.whatsapp_ballot_message_sent_in_turn = true
+
+      halt("Handled: the ballot's next message has gone out and says where it stands, so " \
+           "nothing further is owed here.")
+    end
+
+    def no_ballot_question_error
+      { error: "No ballot question is waiting for an answer in this conversation, so there is " \
+               "nothing to record. Answer what the citizen wrote." }
+    end
+
+    def ballot_answer_refused_error
+      {
+        error: "The answer could not be recorded: this vote is no longer open to this citizen " \
+               "here — it may have closed, or they may no longer take part in it.",
+        hint: "Say so plainly. Do not put the question to them again."
+      }
+    end
+
     def participation_refused_error(reason)
       {
         error: "This citizen may not submit to this phase right now.",

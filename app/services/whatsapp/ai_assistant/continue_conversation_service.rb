@@ -24,9 +24,10 @@ class Whatsapp::AiAssistant::ContinueConversationService < ApplicationService
   # citizen reads is that turn's.
   #
   # Which means IN_TURN is only right for a caller reached from a tool that reports it.
-  # There is one — Whatsapp::Polls::OfferBallotService, through start_poll_vote — and a
-  # second in-turn caller that swallowed the outcome would be a completed action nobody
-  # confirmed.
+  # There are two — Whatsapp::Polls::OfferBallotService, through start_poll_vote, and
+  # the ballot's record services, through record_poll_answer and
+  # record_open_poll_answer — and another in-turn caller that swallowed the outcome
+  # would be a completed action nobody confirmed.
   CARRIED_ON = :carried_on
   IN_TURN = :in_turn
   UNAVAILABLE = :unavailable

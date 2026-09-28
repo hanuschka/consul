@@ -1,9 +1,9 @@
 class Whatsapp::Polls::RecordOpenAnswerService < ApplicationService
   # The citizen's own words, taken as the answer to the free-text question the bot
-  # last asked. It is the one place a plain message means something other than a
-  # question for the assistant, which is why the question has to have been written
-  # down before the words could arrive — Whatsapp::Conversation#pending_open_question_id
-  # is what says they were asked for.
+  # last asked. Whether a message is that answer rather than a question about the
+  # ballot is the assistant's to read (record_open_poll_answer), and the question
+  # still has to have been written down before the words could arrive —
+  # Whatsapp::Conversation#pending_open_question_id is what says they were asked for.
   #
   # The write is the portal's own two steps, in the portal's own order: the answer
   # row is created under the open option's *title*, the way any other answer is,

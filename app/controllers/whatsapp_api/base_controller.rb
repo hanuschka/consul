@@ -43,7 +43,12 @@ class WhatsappApi::BaseController < ActionController::API
       matches?(params[:url_secret], ::Whatsapp.url_secret)
     end
 
+    # Checked before the digest is computed rather than left to #matches?: an HMAC
+    # over an empty key is a perfectly valid digest, so without a secret anyone
+    # could sign a forged delivery with nothing and have it pass.
     def valid_signature?
+      return false if ::Whatsapp.webhook_signature_secret.blank?
+
       provided_signature = request.headers[SIGNATURE_HEADER].to_s.sub(SIGNATURE_PREFIX, "")
 
       matches?(provided_signature, expected_signature)
@@ -53,7 +58,7 @@ class WhatsappApi::BaseController < ActionController::API
     # bytes and never match.
     def expected_signature
       OpenSSL::HMAC.hexdigest(
-        "SHA256", ::Whatsapp.webhook_signature_secret.to_s, request.raw_post
+        "SHA256", ::Whatsapp.webhook_signature_secret, request.raw_post
       )
     end
 

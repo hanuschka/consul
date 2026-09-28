@@ -79,6 +79,23 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     true
   end
 
+  # What the message asking this question offers, in the order it prints and
+  # numbers them — read by the assistant's state, so a typed "2" names the option
+  # the message numbered 2. A weighted question shows every choice it holds.
+  def offered_options
+    return all_options if weighted?
+
+    offerable_options
+  end
+
+  # The first choice this citizen has given no weight to yet, in the order the
+  # portal set. A weight already given is not asked again in the same walk: the
+  # page lets a citizen go back and change one, and in a chat that is a new tap on
+  # a pill still sitting above.
+  def next_unweighted_choice
+    all_options.reject { |option| chosen_titles.include?(option.title) }.first
+  end
+
   private
 
     def question
@@ -121,14 +138,6 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
 
     def weighted?
       ::Whatsapp::VotableBallotQuery.weighted?(question)
-    end
-
-    # The first choice this citizen has given no weight to yet, in the order the
-    # portal set. A weight already given is not asked again in the same walk: the
-    # page lets a citizen go back and change one, and in a chat that is a new tap on
-    # a pill still sitting above.
-    def next_unweighted_choice
-      all_options.reject { |option| chosen_titles.include?(option.title) }.first
     end
 
     # What is still free for one choice, from the query the portal refuses a write

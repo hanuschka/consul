@@ -175,6 +175,49 @@ module Whatsapp
     Setting["feature.whatsapp_bot"].present? && configured?
   end
 
+  # The secret each way of authenticating a webhook delivery needs. A way whose
+  # secret is missing is unavailable, never passed
+  # (WhatsappApi::BaseController#authenticated?).
+  WEBHOOK_AUTHENTICATION_SECRET_KEYS = {
+    header_secret: :webhook_secret,
+    signature: :webhook_signature_secret,
+    url_secret: :url_secret
+  }.freeze
+
+  WEBHOOK_AUTHENTICATION_SETUP = "Set whatsapp.webhook_secret and re-register the webhook, so " \
+                                 "360dialog sends it back as a header; add " \
+                                 "whatsapp.webhook_signature_secret where 360dialog signs " \
+                                 "deliveries.".freeze
+
+  def self.webhook_authentication_methods
+    WEBHOOK_AUTHENTICATION_SECRET_KEYS.select { |_method, key| config[key].present? }.keys
+  end
+
+  # Said once at boot and read off the secrets alone: the feature setting lives
+  # in the database, which a boot for assets:precompile does not have. Silent
+  # where the instance holds no WhatsApp configuration at all. A configured
+  # instance always holds the header secret, so the one case with no way to
+  # authenticate a delivery is the unconfigured one, where the webhook refuses
+  # everything.
+  def self.report_webhook_authentication
+    return if config.blank?
+
+    if !configured?
+      message = "[Whatsapp] missing #{missing_required_credential_keys.join(", ")}: the bot is " \
+                "off and every webhook delivery is refused. #{WEBHOOK_AUTHENTICATION_SETUP}"
+
+      warn(message)
+      Rails.logger.error(message)
+
+      return
+    end
+
+    Rails.logger.info(
+      "[Whatsapp] webhook deliveries are authenticated by " \
+      "#{webhook_authentication_methods.join(", ")}"
+    )
+  end
+
   def self.deep_link_url(prefilled_text)
     return if business_number.blank?
 

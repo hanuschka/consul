@@ -176,7 +176,8 @@ class Mailer < ApplicationMailer
         "projekt_title" => @projekt&.name,
         "unfeasibility_explanation" => view_context.mailer_inline_html(
           @investment.valuator_explanation.presence || @investment.unfeasibility_explanation
-        )
+        ),
+        "investment_url" => budget_investment_url(@investment.budget, @investment)
       }, to: @email_to, default_subject: t("mailers.budget_investment_unfeasible.subject"))
     end
   end
@@ -192,7 +193,8 @@ class Mailer < ApplicationMailer
         "username" => @author.username,
         "investment_title" => @investment.title,
         "projekt_title" => @projekt&.name,
-        "feasibility_explanation" => view_context.mailer_inline_html(@investment.valuator_explanation)
+        "feasibility_explanation" => view_context.mailer_inline_html(@investment.valuator_explanation),
+        "investment_url" => budget_investment_url(@investment.budget, @investment)
       }, to: @email_to, default_subject: t("mailers.budget_investment_feasible.subject"))
     end
   end

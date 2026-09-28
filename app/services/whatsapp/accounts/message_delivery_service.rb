@@ -46,7 +46,7 @@ class Whatsapp::Accounts::MessageDeliveryService < ApplicationService
 
     # The sentence stays the locale copy's rather than the assistant's, for the reason
     # above; which language it reaches the citizen in is a separate question, and the
-    # answer to it is the one they wrote in.
+    # answer to it is the one the conversation is held in — never the keyword itself.
     def send_bot_line(body)
       ::Whatsapp::Send.locale_text(account: account, body: body)
     end

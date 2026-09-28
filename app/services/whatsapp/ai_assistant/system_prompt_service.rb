@@ -238,7 +238,11 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           show_draft_for_confirmation and show_comment_for_confirmation, and again afterwards by
           publish_draft and post_comment — so that what they read is what the platform holds,
           down to the word. A registered support is sent for you the same way. Your part is the
-          question underneath and the buttons beside it. What they wrote is theirs: you may say
+          question underneath and the buttons beside it. Once a draft or a comment has been
+          written or changed, that preview is the next thing the citizen gets: never a message
+          before it saying it is ready or asking whether they want to see it, because they would
+          be answering about a text they have not read. What you would have said in that
+          message goes into the preview's question instead. What they wrote is theirs: you may say
           what you think of it when they ask, but you do not tidy it, shorten it or restate it in
           passing.
 
@@ -318,10 +322,12 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         empty_draft_line,
         picture_waiting_line,
         location_waiting_line,
+        proposed_location_line,
         start_over_line,
         unavailable_recovery_line,
         "- Active participation phase: #{active_phase_description}",
         "- Contribution this conversation is about: #{active_proposal_description}",
+        ballot_line,
         "- Projekts running portal-wide: #{open_projekts_count}",
         typing_hint_line,
         confirmation_line,
@@ -419,6 +425,18 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       "- A location the citizen just shared is waiting to be attached to their draft"
     end
 
+    # A place read from their words is not on the draft until they say it is the
+    # right one, and nothing in the transcript shows that it was found — so without
+    # this line it is never asked about and simply never attached.
+    def proposed_location_line
+      place = @conversation.proposed_location
+
+      return if place.blank?
+
+      "- A place read from the citizen's words is waiting for them to confirm it before it " \
+        "goes on their draft: #{place["name"].presence || "unnamed place"}"
+    end
+
     # Permission to say it, not an instruction to: whether this particular message
     # presents a projekt or a phase is the model's to judge, because it is the model
     # that decides what the message is. Absent on every other turn, so nothing has
@@ -488,6 +506,76 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       return "none" if proposal.blank?
 
       "#{proposal.title} (id #{proposal.id})"
+    end
+
+    # The ballot question the citizen is looking at, with the ids its options are
+    # recorded by. A typed message used to be matched against the options' words
+    # before the model saw it, which stored "Nein danke, ich will gerade nicht
+    # abstimmen" as a vote for "Nein"; whether a message chose an option is now the
+    # model's to read, and this line is what it reads the options from. Absent
+    # outside a ballot.
+    def ballot_line
+      position = ::Whatsapp::Polls::OwedQuestionQuery.for(conversation: @conversation)
+
+      return if position.blank?
+
+      question = position.question
+      asking = ::Whatsapp::Polls::AskQuestionService.new(
+        conversation: @conversation, position: position
+      )
+
+      [
+        "- Ballot question in front of the citizen: \"#{question.title}\" " \
+        "(#{ballot_question_shape(question, asking)})",
+        ballot_options_lines(question, asking)
+      ].compact.join("\n")
+    end
+
+    def ballot_question_shape(question, asking)
+      if free_text_waiting?(question)
+        "answered in the citizen's own words, which are waiting to be written"
+      elsif question.map_points?
+        "answered by sharing a location on the map, not by typing"
+      elsif ::Whatsapp::VotableBallotQuery.weighted?(question)
+        weighted_question_shape(question, asking)
+      elsif question.multiple?
+        "up to #{question.max_votes} of the options can be chosen"
+      else
+        "one option is chosen"
+      end
+    end
+
+    def free_text_waiting?(question)
+      @conversation.pending_open_question_id == question.id
+    end
+
+    # The choice being weighted is named because the pills under the question carry
+    # a number and nothing else, so a typed "3" is points for this choice and no
+    # other.
+    def weighted_question_shape(question, asking)
+      choice = asking.next_unweighted_choice
+
+      return "points are given to each option in turn" if choice.blank?
+
+      free = ::Polls::AnswerAllowanceQuery.remaining_weight(
+        question: question, user: @conversation.user, title: choice.title
+      )
+
+      "points are given to each option in turn; the option being weighted now is " \
+        "\"#{choice.title}\" (id #{choice.id}), with up to #{free.to_i} points still free for it"
+    end
+
+    # Numbered as the question message numbers them, so a citizen answering with
+    # the number they read is answering with an option this line names.
+    def ballot_options_lines(question, asking)
+      return if free_text_waiting?(question)
+      return if question.map_points?
+
+      asking.offered_options.each_with_index.map do |option, index|
+        own_words = option.open_answer? ? ", stands for the citizen's own words" : ""
+
+        "  #{index + 1}. \"#{option.title}\" (id #{option.id}#{own_words})"
+      end.join("\n").presence
     end
 
     # In the state so the model knows whose participation it is acting on, not so

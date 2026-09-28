@@ -110,11 +110,11 @@ module Whatsapp::ProjektCardActions
     end
   end
 
-  # Read at the portal's own locale rather than at whichever is current, the way
-  # Whatsapp::Send reads the start-over pill: these are the fixed copy, and a set of
+  # Read at the portal's own locale rather than at whichever is current: a set of
   # types that changed with the locale would offer different actions to different
   # people. Only some locales carry the whole set — en falls back to de in production
-  # and nowhere else — so which types have an action has to be one answer.
+  # and nowhere else — so which types have an action has to be one answer. The
+  # labels themselves are worded in the conversation's language (#scoped_label).
   def actionable_phase_names
     I18n.t(ACTION_LABEL_SCOPE, locale: ::Whatsapp.default_locale, default: {}).keys.map(&:to_s)
   end
@@ -179,9 +179,7 @@ module Whatsapp::ProjektCardActions
     entry(
       action: :phase_contributions,
       projekt_phase: projekt_phase,
-      title: I18n.t(
-        "whatsapp.bot.buttons.phase_contributions", locale: ::Whatsapp.default_locale
-      ),
+      title: ::Whatsapp.copy("whatsapp.bot.buttons.phase_contributions"),
       description: facts[projekt_phase.id]&.name
     )
   end
@@ -272,14 +270,14 @@ module Whatsapp::ProjektCardActions
     end
   end
 
-  # Read at the portal's own locale like every other fixed word on the card, and with no
-  # default: a locale that does not carry the key answers nil, which #marked_row reads as
-  # the instruction to keep the wording the row had before rather than putting a raw
-  # translation-missing string on a title.
+  # Worded in the conversation's language like every other fixed word on the card, and
+  # with no default: a locale that does not carry the key answers nil, which #marked_row
+  # reads as the instruction to keep the wording the row had before rather than putting
+  # a raw translation-missing string on a title.
   def voted_title(name)
     return if name.blank?
 
-    I18n.t(VOTED_TITLE_KEY, name: name, locale: ::Whatsapp.default_locale, default: nil)
+    ::Whatsapp.copy(VOTED_TITLE_KEY, name: name, default: nil)
   end
 
   # Titles that repeat replaced by the thing that differs, which is the phase's own name,
@@ -358,9 +356,7 @@ module Whatsapp::ProjektCardActions
   end
 
   def scoped_label(scope, projekt_phase)
-    I18n.t(
-      "#{scope}.#{projekt_phase.name}", locale: ::Whatsapp.default_locale, default: nil
-    )
+    ::Whatsapp.copy("#{scope}.#{projekt_phase.name}", default: nil)
   end
 
   # The description travels on every entry and is read by whichever form the card

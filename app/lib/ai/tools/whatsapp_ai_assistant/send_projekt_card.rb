@@ -36,6 +36,10 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
   end
 
   def execute(projekt_name:, summary:)
+    refusal = refuse_before_preview
+
+    return refusal if refusal.present?
+
     projekt = readable_projekt(projekt_name)
 
     return unknown_projekt_error(projekt_name) if projekt.blank?

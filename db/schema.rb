@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_23_100000) do
+ActiveRecord::Schema.define(version: 2026_09_28_100945) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3776,6 +3776,8 @@ ActiveRecord::Schema.define(version: 2026_09_23_100000) do
     t.string "language"
     t.index ["created_at"], name: "index_whatsapp_messages_on_created_at"
     t.index ["wa_message_id"], name: "index_whatsapp_messages_on_wa_message_id", unique: true
+    t.index ["whatsapp_account_id", "id"], name: "index_whatsapp_messages_on_account_latest_inbound", order: { id: :desc }, where: "((direction)::text = 'inbound'::text)"
+    t.index ["whatsapp_account_id", "id"], name: "index_whatsapp_messages_on_account_latest_reply_language", order: { id: :desc }, where: "(((direction)::text = 'outbound'::text) AND (language IS NOT NULL))"
     t.index ["whatsapp_account_id", "projekt_id", "kind"], name: "index_whatsapp_messages_on_account_projekt_kind"
     t.index ["whatsapp_account_id"], name: "index_whatsapp_messages_on_whatsapp_account_id"
   end

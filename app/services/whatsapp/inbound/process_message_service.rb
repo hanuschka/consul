@@ -94,8 +94,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return if handle_poll_done_tap
     return if handle_poll_skip_tap
     return if handle_poll_location
-    return if handle_open_answer_text
-    return if handle_typed_ballot_answer
 
     apply_start_over_tap
 
@@ -112,7 +110,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # whole context with the assistant's own history, markers included.
     ballot_in_flight = conversation.active_poll_id
 
-    answer(inbound_note, inbound_message_id: reading.message_id)
+    answer(
+      inbound_note, inbound_message_id: reading.message_id, citizen_words: citizen_words
+    )
 
     resume_ballot(ballot_in_flight)
   end
@@ -131,12 +131,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # watching the message they have just sent, and that is the only one WhatsApp
     # will hang a typing indicator on — so the turn re-arms on the live inbound
     # while the assistant is asked about the snapshotted one.
-    def answer(inbound_text, inbound_message_id:)
+    def answer(inbound_text, inbound_message_id:, citizen_words:)
       return send_unavailable_line if !::Ai::Settings.ai_available?
 
       result = ::Whatsapp::AiAssistant::RouterService.call(
         conversation: conversation,
         inbound_text: inbound_text,
+        citizen_words: citizen_words,
         inbound_message_id: inbound_message_id,
         typing_message_id: reading.message_id,
         previous_inbound_at: previous_inbound_at
@@ -146,10 +147,24 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       # The note describing a tap is snapshotted as the text it is: what the retry
       # replays is the sentence the assistant was given, which already says which
-      # button was pressed.
-      conversation.store_retry_inbound!(text: inbound_text, message_id: inbound_message_id)
+      # button was pressed. The citizen's words travel with it, so a free-text
+      # answer whose turn failed can still be recorded from the retry.
+      conversation.store_retry_inbound!(
+        text: inbound_text, message_id: inbound_message_id, citizen_words: citizen_words
+      )
 
       send_retryable_unavailable_line
+    end
+
+    # The message as the citizen wrote it, where the turn answers their words
+    # rather than a note about them: never the label of a tapped pill, which is
+    # not something they wrote, and never a message carrying a QR token.
+    def citizen_words
+      return if reading.tapped_reply_id.present?
+      return if reading.text.blank?
+      return if ::Whatsapp::QrToken.carried_in?(reading.text)
+
+      reading.text
     end
 
     # The whole deterministic surface left, and it is one sentence with a way out.
@@ -197,8 +212,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Held back too where the turn swapped the ballot for another one. That is said
     # by Whatsapp::Polls::OfferBallotService as it begins the second, which is the
     # only moment both are still nameable and the new question has not gone out yet.
+    # And where the turn recorded a typed answer: the tool that recorded it has
+    # already sent the ballot's next message.
     def resume_ballot(poll_id)
       return if poll_id.blank?
+      return if ::Current.whatsapp_ballot_message_sent_in_turn
       return if conversation.reload.active_poll_id != poll_id
       return if conversation.unsaved_submission?
 
@@ -282,7 +300,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return if !way_back_in_due?
 
       send_bot_line(
-        I18n.t(
+        ::Whatsapp.copy(
           "whatsapp.bot.compliance.opted_out_reminder",
           keyword: OPT_IN_KEYWORDS.first.upcase
         )
@@ -302,7 +320,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return if account.ai_disclosed?
 
       send_bot_line(
-        I18n.t(
+        ::Whatsapp.copy(
           "whatsapp.bot.compliance.disclosure", portal_name: ::Whatsapp::PortalLinks.portal_name
         )
       )
@@ -754,65 +772,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
     end
 
-    # The one place a plain message is not a question for the assistant: the bot has
-    # asked a free-text poll question and written down that it did, so the next words
-    # the citizen sends are the answer to it.
-    #
-    # A tapped pill is never taken as text — its label is not something the citizen
-    # wrote — and neither is a photo or a shared pin, which carry no words at all.
-    def handle_open_answer_text
-      return false if conversation.pending_open_question_id.blank?
-      return false if reading.tapped_reply_id.present?
-      return false if reading.text.blank?
-      return false if ::Whatsapp::QrToken.carried_in?(reading.text)
-
-      ::Whatsapp::Polls::RecordOpenAnswerService.call(
-        conversation: conversation, text: reading.text
-      )
-    end
-
-    # The same reading applied to a question that is answered by tapping. A citizen
-    # part-way through a ballot who writes "Ich bin dafuer" is answering it, and
-    # their words used to be taken as a fresh request instead — which threw them
-    # into a different ballot and recorded nothing of the one they were in.
-    #
-    # Only where the words name exactly one option
-    # (Whatsapp::Polls::TypedAnswerQuery). Anything else falls through to the
-    # assistant, which is what a citizen asking a question in the middle of a ballot
-    # must keep being able to do.
-    #
-    # What the bot read goes out before the answer is recorded, which a tap needs no
-    # equivalent of: the citizen saw which pill they pressed, where here a sentence
-    # has been interpreted for them. It says the reading rather than the result,
-    # because the record can still be refused underneath it — a poll closed between
-    # two messages, a maximum already spent — and those refusals say their own piece
-    # after it without contradicting it.
-    def handle_typed_ballot_answer
-      return false if conversation.active_poll_id.blank?
-      return false if reading.tapped_reply_id.present?
-      return false if reading.text.blank?
-      return false if ::Whatsapp::QrToken.carried_in?(reading.text)
-
-      question_answer = ::Whatsapp::Polls::TypedAnswerQuery.for(
-        conversation: conversation, text: reading.text
-      )
-
-      return false if question_answer.blank?
-
-      announce_typed_answer(question_answer)
-
-      ::Whatsapp::Polls::RecordAnswerService.call(
-        conversation: conversation, question_answer: question_answer
-      )
-    end
-
-    def announce_typed_answer(question_answer)
-      ::Whatsapp::Send.locale_text(
-        account: account,
-        body: ::Whatsapp.copy("whatsapp.bot.poll.typed_answer_read", answer: question_answer.title)
-      )
-    end
-
     # Where the ballot goes after a pill that settled a question without answering
     # one. Re-resolves the poll rather than trusting the marker, because the marker
     # outlives the poll it names.
@@ -917,16 +876,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return ::Whatsapp.copy("whatsapp.bot.phase.contributions_all", intro: intro) if total <= shown
 
-      I18n.t(
+      ::Whatsapp.copy(
         "whatsapp.bot.phase.contributions_newest", intro: intro, shown: shown, total: total
       )
     end
 
     def phase_contributions_opening(projekt_phase)
-      I18n.t(
+      ::Whatsapp.copy(
         "#{CONTRIBUTIONS_INTRO_SCOPE}.#{projekt_phase.name}",
         phase: projekt_phase.title,
-        default: I18n.t(
+        default: ::Whatsapp.copy(
           "whatsapp.bot.phase.contributions_intro_fallback", phase: projekt_phase.title
         )
       )
@@ -1022,7 +981,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       url = ::Whatsapp::PublishedResourceUrl.call(contribution)
 
       return send_line_with_link(
-        line: I18n.t(contribution_opening_key(contribution), contribution: contribution.title),
+        line: ::Whatsapp.copy(
+          contribution_opening_key(contribution), contribution: contribution.title
+        ),
         url: url
       ) if url.present?
 
@@ -1075,7 +1036,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(:retry, nil)
 
-      answer(snapshot["text"], inbound_message_id: snapshot["message_id"])
+      answer(
+        snapshot["text"],
+        inbound_message_id: snapshot["message_id"],
+        citizen_words: snapshot["citizen_words"]
+      )
 
       true
     end

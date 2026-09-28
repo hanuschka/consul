@@ -56,6 +56,9 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
   end
 
   def execute(body:, button_label:, rows:)
+    refusal = refuse_before_preview
+
+    return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
 
     offered = Array(rows)

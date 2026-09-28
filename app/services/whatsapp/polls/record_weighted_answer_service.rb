@@ -75,7 +75,7 @@ class Whatsapp::Polls::RecordWeightedAnswerService < ApplicationService
     def refuse_over_maximum
       ::Whatsapp::Send.locale_text(
         account: @conversation.whatsapp_account,
-        body: I18n.t(
+        body: ::Whatsapp.copy(
           "whatsapp.bot.poll.weight_maximum_reached", remaining: remaining_weight
         )
       )

@@ -54,6 +54,12 @@ module Whatsapp::AiAssistant::DecisionLog
   # in German. It is counted separately because the remedy is the opposite one —
   # nothing the model does affects it, and what has to give is the German source
   # line being too long to survive being translated.
+  #
+  # `preview_required` is a send refused because a draft or a comment written in
+  # this turn had not been shown yet, and `preview_skipped` the one path that
+  # cannot be refused: a plain-text answer that went out before the preview
+  # anyway. Together they are the rate of the message that asked citizens to
+  # approve a text they had not read.
   EVENTS = %i[
     tool_called
     action_dropped
@@ -67,6 +73,8 @@ module Whatsapp::AiAssistant::DecisionLog
     start_over
     assistant_unavailable
     send_refused
+    preview_required
+    preview_skipped
   ].freeze
 
   COUNTER_TTL = 40.days

@@ -174,7 +174,7 @@ class Whatsapp::Polls::OfferBallotService < ApplicationService
       prompt, button_label = ::Whatsapp::AiAssistant::BotCopyService.call(
         account: account,
         lines: [
-          I18n.t(
+          ::Whatsapp.copy(
             "whatsapp.bot.poll.login_prompt",
             poll: poll.name, privacy_url: ::Whatsapp::PortalLinks.privacy_url
           ),

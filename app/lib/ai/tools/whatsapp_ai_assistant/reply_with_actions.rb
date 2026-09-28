@@ -20,10 +20,10 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
               "empty to use the record's own name, which is usually better than a paraphrase of " \
               "it. A button whose action is unknown or whose record no longer exists is " \
               "dropped. " \
-              "An action that cannot be undone — publishing, commenting — carries a fixed " \
-              "label saying what it does, so leave those labels empty; unlinking is not yours " \
-              "to offer at all. This sends the message itself: do not write one as well, and do " \
-              "not put a link in it when a button already leads there."
+              "Publishing a draft and posting a comment are offered only under their preview, " \
+              "by show_draft_for_confirmation and show_comment_for_confirmation, and unlinking " \
+              "is not yours to offer at all. This sends the message itself: do not write one as " \
+              "well, and do not put a link in it when a button already leads there."
 
   params do
     string :body,
@@ -39,6 +39,9 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
   end
 
   def execute(body:, buttons:)
+    refusal = refuse_before_preview
+
+    return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
 
     offerable = offerable_buttons(buttons)

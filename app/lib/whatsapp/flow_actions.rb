@@ -137,6 +137,19 @@ module Whatsapp::FlowActions
   # block, so the tool that unlinks can read the offer as proof the citizen saw it.
   PLATFORM_WORDED_ACTIONS = %i[unlink_confirm].freeze
 
+  # The pills that publish or post, withheld from every message but the preview of
+  # what they publish. Their label was already fixed — "Jetzt einreichen" — but the
+  # offer was not, and a fixed label on the wrong message is still a button that
+  # does not do what it says: offered under "your draft is ready, do you want to
+  # check it?", the tap was refused for want of a preview and answered by showing
+  # the draft instead. Tapped from the message directly under the text it
+  # publishes, it does what it says.
+  #
+  # Unlike `unlink_confirm` the sentence above them stays the model's, so they are
+  # not platform-worded: Whatsapp::AssistantActions#confirmation_button is where the
+  # two preview tools build them, and nowhere else can.
+  CONFIRMATION_ACTIONS = %i[draft_publish submit_final comment_post].freeze
+
   # The two pills that answer a tap on this side rather than by asking the assistant,
   # and the reason they are separated from the rest: the projekt card offers a phase's
   # own action, and the action has to begin on the tap — a note saying which button was
@@ -265,10 +278,14 @@ module Whatsapp::FlowActions
   # answer because every caller asking has the same question — may the model put this
   # on a button — and none of them cares which list said no.
   def unofferable
-    RETIRED_ACTIONS + BOT_ONLY_ACTIONS + PLATFORM_WORDED_ACTIONS
+    RETIRED_ACTIONS + BOT_ONLY_ACTIONS + PLATFORM_WORDED_ACTIONS + CONFIRMATION_ACTIONS
   end
 
   def unofferable?(action)
     unofferable.include?(action)
+  end
+
+  def confirmation?(action)
+    CONFIRMATION_ACTIONS.include?(action)
   end
 end

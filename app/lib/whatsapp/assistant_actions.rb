@@ -138,6 +138,35 @@ module Whatsapp::AssistantActions
     { id: ::Whatsapp::FlowActions.id_for(action: action), title: title }
   end
 
+  # The pill a preview tool builds, which is every pill #offered_button builds plus
+  # the one that acts on what the preview just showed
+  # (Whatsapp::FlowActions::CONFIRMATION_ACTIONS). `confirms` names which of those
+  # this preview may carry, so a comment's preview cannot arm publishing a draft and
+  # the reverse.
+  #
+  # The label is the fixed one whatever the model wrote, as it always was for these.
+  def confirmation_button(spec:, label:, conversation:, confirms:)
+    action, param = parse(spec)
+
+    if !confirmation?(action)
+      return offered_button(spec: spec, label: label, conversation: conversation)
+    end
+
+    if !confirms.include?(action)
+      return dropped(spec, conversation, :confirmation_elsewhere)
+    end
+
+    platform_button(
+      action: action,
+      title: truncated(forced_label(action: action, param: param, conversation: conversation)),
+      conversation: conversation
+    )
+  end
+
+  def confirmation?(action)
+    ::Whatsapp::FlowActions.confirmation?(action)
+  end
+
   # One tappable button from the action id and the label the model wrote, or nil
   # when that is not something it may offer. Nil rather than an exception on
   # purpose: one unusable pill in a set of three should cost that pill, not the
@@ -147,6 +176,11 @@ module Whatsapp::AssistantActions
 
     return dropped(spec, conversation, :unparseable) if action.blank?
     return dropped(spec, conversation, :unknown_action) if !::Whatsapp::FlowActions.known?(action)
+
+    if confirmation?(action)
+      return dropped(spec, conversation, :confirmation_only)
+    end
+
     return dropped(spec, conversation, :unofferable) if ::Whatsapp::FlowActions.unofferable?(action)
     return dropped(spec, conversation, :unknown_scope) if !known_scope?(action, param)
     return dropped(spec, conversation, :nothing_to_tell) if !tells_more?(action, param)
@@ -560,8 +594,10 @@ module Whatsapp::AssistantActions
   # Nil with a line saying why. Which reason it was decides what to do about it:
   # `unknown_action` is a name that is not one at all and belongs in the tool
   # description, `unlabelled` is a pill the model wrote no words for and whose
-  # record could not name it either, `unparseable` an empty or malformed spec, and
-  # `unknown_scope` a `show_more` naming a list the bot does not keep.
+  # record could not name it either, `unparseable` an empty or malformed spec,
+  # `unknown_scope` a `show_more` naming a list the bot does not keep,
+  # `confirmation_only` a publishing pill offered away from its preview, and
+  # `confirmation_elsewhere` one offered under the other preview.
   def dropped(spec, conversation, reason)
     ::Whatsapp::AiAssistant::DecisionLog.record(
       event: :action_dropped, conversation: conversation, spec: spec, reason: reason

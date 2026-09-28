@@ -91,8 +91,17 @@ de:
         audits:
           title: Änderungslog
         action_row:
+          title: Aktionen
           website: Website
           edit: Bearbeiten
+          hints:
+            website: "Öffnet die öffentliche Seite des Vorhabens in einem neuen Tab."
+            edit: "Ändert die Angaben. Bei einem veröffentlichten Vorhaben entsteht dabei eine Bearbeitungsfassung; die öffentliche Seite bleibt bis zur Freigabe unverändert."
+            submit: "Meldet der Administration, dass der Entwurf oder die Bearbeitungsfassung fertig ist und freigegeben werden kann."
+            release: "Veröffentlicht den Entwurf oder übernimmt die Änderungen der Bearbeitungsfassung in die öffentliche Seite."
+            archive: "Nimmt das Vorhaben aus der öffentlichen Übersicht; es bleibt im Archiv unter seiner Adresse erreichbar."
+            unarchive: "Holt das Vorhaben aus dem Archiv zurück, und zwar als veröffentlichtes Vorhaben, oder als Entwurf, wenn es nie freigegeben wurde."
+            convert: "Legt aus dem Vorhaben ein neues, zunächst deaktiviertes Beteiligungsprojekt an, das mit dem Vorhaben verknüpft bleibt."
         show:
           sections:
             content: Vorhaben
@@ -156,6 +165,11 @@ de:
             delete_confirm: "Möchten Sie den Hinweis vom %{date} wirklich löschen? Das kann nicht rückgängig gemacht werden."
             empty: Zu diesem Vorhaben liegen keine Hinweise vor.
         form_fields:
+          blocks:
+            basics: "Grunddaten"
+            progress: "Stand & Zeitplan"
+            participation: "Beteiligung & Kontext"
+            contact: "Kontakt & Zuständigkeit"
           errors_title: Das Vorhaben konnte nicht gespeichert werden
           not_set: Wird beim Speichern gesetzt
           automatic_intro: Diese Angaben werden automatisch gesetzt und können nicht bearbeitet werden.

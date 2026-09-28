@@ -2,60 +2,11 @@
 <% policy = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, @municipal_plan) %>
 <% may_update = policy.update? %>
 <% may_edit_archive_date = may_update && !@municipal_plan.working_copy? %>
-<% show_submit = @municipal_plan.draft? && !@municipal_plan.submitted_for_release? && policy.submit? %>
-<% show_release = @municipal_plan.draft? && policy.release? %>
-<% show_archive = @municipal_plan.published? && policy.archive? %>
-<% show_unarchive = @municipal_plan.archived? && policy.unarchive? %>
-<% show_convert = policy.convert? %>
-<% show_workflow_actions = may_update && (show_submit || show_release || show_archive || show_unarchive || show_convert) %>
 
 <%= content_for :title, @municipal_plan.title %>
 
 <%= render Adm::HeaderComponent.new(title: @municipal_plan.title, breadcrumbs: @breadcrumbs,
-                                    back_button_url: adm_municipal_plans_root_path) do |header| %>
-  <% if show_workflow_actions %>
-    <% header.with_actions do %>
-      <div class="ml-auto d-flex flex-wrap align-items-center gap-2">
-        <% if show_submit %>
-          <%= form_with url: submit_adm_municipal_plans_municipal_plan_path(@municipal_plan),
-                method: :patch do %>
-            <%= kern_button(type: :submit, text: t(".actions.submit"), icon: "outbox",
-                            style: :secondary) %>
-          <% end %>
-        <% end %>
-
-        <% if show_release %>
-          <%= form_with url: release_adm_municipal_plans_municipal_plan_path(@municipal_plan),
-                method: :patch do %>
-            <%= kern_button(type: :submit, text: t(".actions.release"), icon: "task_alt",
-                            style: :primary) %>
-          <% end %>
-        <% end %>
-
-        <% if show_archive %>
-          <%= form_with url: archive_adm_municipal_plans_municipal_plan_path(@municipal_plan),
-                method: :patch do %>
-            <%= kern_button(type: :submit, text: t(".actions.archive"), icon: "archive",
-                            style: :secondary) %>
-          <% end %>
-        <% end %>
-
-        <% if show_unarchive %>
-          <%= form_with url: unarchive_adm_municipal_plans_municipal_plan_path(@municipal_plan),
-                method: :patch do %>
-            <%= kern_button(type: :submit, text: t(".actions.unarchive"), icon: "unarchive",
-                            style: :secondary) %>
-          <% end %>
-        <% end %>
-
-        <% if show_convert %>
-          <%= kern_link_button(new_adm_municipal_plans_municipal_plan_projekt_conversion_path(@municipal_plan),
-                text: t(".actions.convert"), icon: "rocket_launch", style: :secondary) %>
-        <% end %>
-      </div>
-    <% end %>
-  <% end %>
-<% end %>
+                                    back_button_url: adm_municipal_plans_root_path) %>
 
 <%= render Adm::TabsComponent.new(tabs: municipal_plan_tabs(@municipal_plan)) %>
 

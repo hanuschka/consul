@@ -2,8 +2,30 @@
 <% show_website = Setting["process.municipal_plans"].present? && !municipal_plan.working_copy? &&
                   municipal_plan.status.in?(%w[published archived]) %>
 <% show_edit = policy.update? %>
+<% show_submit = show_edit && municipal_plan.draft? && !municipal_plan.submitted_for_release? && policy.submit? %>
+<% show_release = show_edit && municipal_plan.draft? && policy.release? %>
+<% show_archive = show_edit && municipal_plan.published? && policy.archive? %>
+<% show_unarchive = show_edit && municipal_plan.archived? && policy.unarchive? %>
+<% show_convert = show_edit && policy.convert? %>
+<% visible_actions = { website: show_website, edit: show_edit, submit: show_submit, release: show_release,
+                        archive: show_archive, unarchive: show_unarchive, convert: show_convert }.select { |_, shown| shown }.keys %>
 
 <% if show_website || show_edit %>
+  <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+    <h2 class="adm-detail-section-title m-0"><%= t("adm.municipal_plans.municipal_plans.action_row.title") %></h2>
+    <%= render Adm::HintComponent.new do %>
+      <ul class="adm-hint__list">
+        <% visible_actions.each do |action| %>
+          <% label_scope = action.in?(%i[website edit]) ? "action_row" : "show.actions" %>
+          <li>
+            <strong><%= t("adm.municipal_plans.municipal_plans.#{label_scope}.#{action}") %></strong>
+            <%= t("adm.municipal_plans.municipal_plans.action_row.hints.#{action}") %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+
   <div class="adm-detail-action-row d-flex align-items-center flex-wrap gap-2 mb-4">
     <% if show_website %>
       <%= kern_link_button(municipal_plan_path(municipal_plan),
@@ -14,6 +36,44 @@
     <% if show_edit %>
       <%= kern_link_button(edit_adm_municipal_plans_municipal_plan_path(municipal_plan),
             text: t(".edit"), icon: "edit", style: :secondary) %>
+    <% end %>
+
+    <% if show_submit %>
+      <%= form_with url: submit_adm_municipal_plans_municipal_plan_path(municipal_plan),
+            method: :patch, class: "d-flex" do %>
+        <%= kern_button(type: :submit, text: t("adm.municipal_plans.municipal_plans.show.actions.submit"),
+                        icon: "outbox", style: :secondary) %>
+      <% end %>
+    <% end %>
+
+    <% if show_release %>
+      <%= form_with url: release_adm_municipal_plans_municipal_plan_path(municipal_plan),
+            method: :patch, class: "d-flex" do %>
+        <%= kern_button(type: :submit, text: t("adm.municipal_plans.municipal_plans.show.actions.release"),
+                        icon: "task_alt", style: :secondary) %>
+      <% end %>
+    <% end %>
+
+    <% if show_archive %>
+      <%= form_with url: archive_adm_municipal_plans_municipal_plan_path(municipal_plan),
+            method: :patch, class: "d-flex" do %>
+        <%= kern_button(type: :submit, text: t("adm.municipal_plans.municipal_plans.show.actions.archive"),
+                        icon: "archive", style: :secondary) %>
+      <% end %>
+    <% end %>
+
+    <% if show_unarchive %>
+      <%= form_with url: unarchive_adm_municipal_plans_municipal_plan_path(municipal_plan),
+            method: :patch, class: "d-flex" do %>
+        <%= kern_button(type: :submit, text: t("adm.municipal_plans.municipal_plans.show.actions.unarchive"),
+                        icon: "unarchive", style: :secondary) %>
+      <% end %>
+    <% end %>
+
+    <% if show_convert %>
+      <%= kern_link_button(new_adm_municipal_plans_municipal_plan_projekt_conversion_path(municipal_plan),
+            text: t("adm.municipal_plans.municipal_plans.show.actions.convert"),
+            icon: "rocket_launch", style: :secondary) %>
     <% end %>
   </div>
 <% end %>

@@ -91,8 +91,17 @@ en:
         audits:
           title: Change log
         action_row:
+          title: Actions
           website: Website
           edit: Edit
+          hints:
+            website: "Opens the public page of the plan in a new tab."
+            edit: "Changes the details. For a published plan this creates a working copy; the public page stays unchanged until the changes are released."
+            submit: "Tells the administration that the draft or working copy is ready and can be released."
+            release: "Publishes the draft or applies the changes of the working copy to the public page."
+            archive: "Takes the plan out of the public overview; it stays reachable in the archive at its address."
+            unarchive: "Brings the plan back from the archive, as a published plan, or as a draft if it was never released."
+            convert: "Creates a new participation project from the plan, deactivated at first, that stays linked to the plan."
         show:
           sections:
             content: Plan
@@ -156,6 +165,11 @@ en:
             delete_confirm: "Do you really want to delete the notice from %{date}? This cannot be undone."
             empty: There are no notices for this plan.
         form_fields:
+          blocks:
+            basics: "Basic data"
+            progress: "Status & schedule"
+            participation: "Participation & context"
+            contact: "Contact & responsibility"
           errors_title: The plan could not be saved
           not_set: Set automatically on save
           automatic_intro: These details are set automatically and cannot be edited.

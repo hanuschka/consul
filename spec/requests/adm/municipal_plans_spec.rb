@@ -555,4 +555,56 @@ describe "Vorhaben in /adm", type: :request do
       expect(response.body).not_to include(%(href="#{municipal_plan_path(plan)}"))
     end
   end
+
+  describe "the form blocks" do
+    def open_blocks
+      Nokogiri::HTML(response.body).css("details.kern-accordion").map { |block| block["open"].present? }
+    end
+
+    it "opens only the first block for a new Vorhaben" do
+      get new_adm_municipal_plans_municipal_plan_path
+
+      expect(open_blocks).to eq([true, false, false, false])
+    end
+
+    it "keeps every block closed when editing" do
+      get edit_adm_municipal_plans_municipal_plan_path(plan)
+
+      expect(open_blocks).to eq([false, false, false, false])
+    end
+
+    def block_names
+      Nokogiri::HTML(response.body).css("details.kern-accordion").map { |block| block["name"] }
+    end
+
+    it "groups the blocks so only one is open at a time" do
+      get new_adm_municipal_plans_municipal_plan_path
+
+      expect(block_names.uniq).to eq(["municipal-plan-form"])
+    end
+
+    it "opens every block after a failed save, without grouping them" do
+      post adm_municipal_plans_municipal_plans_path, params: { municipal_plan: { title: "" } }
+
+      expect(open_blocks).to eq([true, true, true, true])
+      expect(block_names.compact).to be_empty
+    end
+  end
+
+  describe "the Hinweis on the actions" do
+    def hint_text
+      Nokogiri::HTML(response.body).at_css(".adm-hint__list").text
+    end
+
+    it "explains only the buttons that are shown" do
+      published = create(:municipal_plan, :published)
+
+      get adm_municipal_plans_municipal_plan_path(published)
+
+      scope = "adm.municipal_plans.municipal_plans.action_row.hints"
+      expect(hint_text).to include(I18n.t("#{scope}.archive"), I18n.t("#{scope}.edit"))
+      expect(hint_text).not_to include(I18n.t("#{scope}.unarchive"))
+      expect(hint_text).not_to include(I18n.t("#{scope}.release"))
+    end
+  end
 end

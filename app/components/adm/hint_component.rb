@@ -1,3 +1,7 @@
 class Adm::HintComponent < ApplicationComponent
-  def initialize; end
+  attr_reader :panel_id
+
+  def initialize
+    @panel_id = "adm-hint-panel-#{SecureRandom.hex(4)}"
+  end
 end

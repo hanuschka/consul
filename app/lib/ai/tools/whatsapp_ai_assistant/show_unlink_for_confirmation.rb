@@ -26,7 +26,8 @@ class Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation <
       description: "Up to two further buttons beside the confirm one, each " \
                    "{\"action_id\": ..., \"label\": ...}. The button that severs the link is " \
                    "added for you and comes first. Offer a way to keep the link among these " \
-                   "whenever you are asking the question at all. Parameterless action ids: " \
+                   "whenever you are asking the question at all. #{LABEL_BUDGET_DESCRIPTION} " \
+                   "Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}."
   end
 
@@ -41,6 +42,10 @@ class Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation <
   def execute(question:, buttons:)
     return not_linked_answer if user.blank?
     return blank_question_error if question.to_s.strip.blank?
+
+    overlong = refuse_overlong_button_labels(buttons)
+
+    return overlong if overlong.present?
 
     confirmation = ::Whatsapp::UnlinkPreview.confirmation(conversation: conversation)
 

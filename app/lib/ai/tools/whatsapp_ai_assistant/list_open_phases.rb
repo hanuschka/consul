@@ -6,7 +6,9 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPhases < Ai::Tools::WhatsappAiAssi
               "portal-wide — \"was ist gerade überall offen?\" — and for the phases of a projekt " \
               "already picked, where describe_projekt is the narrower answer. Returns the " \
               "projekt_phase_id that describe_projekt, check_participation_eligibility and " \
-              "start_draft expect. #{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: say how many " \
+              "start_draft expect. Phases sharing a name are told apart by their dates and by " \
+              "what they are about, never by a number. " \
+              "#{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: say how many " \
               "there are altogether, name " \
               "the ones that fit this moment, and offer more_action_id as a button so the rest " \
               "are one tap away rather than absent."
@@ -42,6 +44,8 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPhases < Ai::Tools::WhatsappAiAssi
         projekt_phase_id: projekt_phase.id,
         projekt: projekt_title(projekt_phase.projekt),
         phase: projekt_phase.title,
+        about: phase_about(projekt_phase),
+        starts_on: ::Whatsapp::DatePhrase.absolute(projekt_phase.start_date),
         ends_on: ::Whatsapp::DatePhrase.absolute(projekt_phase.end_date),
         ends_in: ::Whatsapp::DatePhrase.relative(projekt_phase.end_date),
         url: projekt_url(projekt_phase.projekt)

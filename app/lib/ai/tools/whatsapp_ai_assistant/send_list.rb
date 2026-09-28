@@ -39,15 +39,15 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       description: "What the button that opens the list says, at most " \
                    "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting " \
                    "spaces (\"Projekt wählen\", \"Auswählen\"). Count them: a longer one is " \
-                   "cut and arrives ending in \"…\"."
+                   "refused, and nothing is sent until it is shorter."
     array :rows,
       of: :object,
       description: "Up to ten rows, most useful first. Each is {\"action_id\": ..., " \
                    "\"label\": ..., \"description\": ...}, where description is optional. " \
                    "A row label holds " \
                    "#{::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH} characters counting " \
-                   "spaces and a longer one is cut and arrives ending in \"…\", so write the " \
-                   "words that tell this row from the others first; the description below it " \
+                   "spaces and a longer one is refused, so write the words that tell this row " \
+                   "from the others first and leave the rest out; the description below it " \
                    "holds #{MAX_DESCRIPTION_LENGTH} and is where the rest belongs. " \
                    "Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}. " \
@@ -60,6 +60,13 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
 
     return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
+
+    overlong =
+      refuse_overlong_button_labels(
+        rows, length: ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
+      ) || refuse_overlong_labels([button_label])
+
+    return overlong if overlong.present?
 
     offered = Array(rows)
     listed = listable_rows(offered)
@@ -92,9 +99,40 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
   private
 
     def listable_rows(rows)
-      built = Array(rows).filter_map { |row| build(row) }.uniq { |row| row[:id] }
+      with_pill_records(rows) do
+        built = Array(rows).filter_map { |row| build(row) }.uniq { |row| row[:id] }
 
-      distinguishable(built).first(MAX_ROWS)
+        distinguishable(dated_where_alike(built)).first(MAX_ROWS)
+      end
+    end
+
+    # The exception to a name-only row (#name_only?): two of them under one name,
+    # which is one projekt offered once per phase. The name cannot tell them apart,
+    # so each gets its phase's line — the phase's own name and dates — rather than
+    # the list being refused as alike and resent as "Vorschläge 1", "Vorschläge 2".
+    def dated_where_alike(rows)
+      repeated_titles =
+        rows
+          .map { |row| row[:title].to_s.downcase }
+          .tally
+          .select { |_title, count| count > 1 }
+          .keys
+
+      rows.map do |row|
+        alike = row[:description].blank? && repeated_titles.include?(row[:title].to_s.downcase)
+
+        alike ? with_phase_line(row) : row
+      end
+    end
+
+    def with_phase_line(row)
+      description = ::Whatsapp::AssistantActions.row_description(
+        spec: row[:id], conversation: conversation
+      )
+
+      return row if description.blank?
+
+      row.merge(description: description.truncate(MAX_DESCRIPTION_LENGTH))
     end
 
     # Told apart by everything the citizen can read on them, which is the label and
@@ -127,7 +165,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
 
       description =
         row_value(row, "description").to_s.squish.presence ||
-        ::Whatsapp::AssistantActions.row_description(spec: spec)
+        ::Whatsapp::AssistantActions.row_description(spec: spec, conversation: conversation)
 
       return button if description.blank?
 
@@ -137,7 +175,8 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
     # The phase and projekt selections: their row is the name alone. A second line
     # under a projekt's title says nothing that helps the citizen choose between
     # two projekts, and it is repeated back in their own reply. Enforced here
-    # rather than asked for in the description, so the model cannot write one.
+    # rather than asked for in the description, so the model cannot write one —
+    # the one line such a row can get is its phase's, from #dated_where_alike.
     def name_only?(button)
       ::Whatsapp::FlowActions.projekt_choice?([button[:id]])
     end

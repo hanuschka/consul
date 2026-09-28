@@ -138,6 +138,13 @@ class Whatsapp::Conversation < ApplicationRecord
     image_question_available? && !photo_declined?
   end
 
+  # Whether the draft on the table carries a picture. One predicate for the tools
+  # that talk about the picture and the prompt's draft line, so a request to replace
+  # it is answered from the same fact wherever it comes up.
+  def draft_picture_attached?
+    draft_resource&.image&.attachment&.attached? == true
+  end
+
   def location_question_pending?
     location_question_available? && !location_stated?
   end

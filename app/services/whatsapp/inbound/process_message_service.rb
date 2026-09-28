@@ -482,15 +482,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     REGISTERED_NOTE = "The citizen tapped the support button and their support is registered. " \
                       "The contribution, its new count and its address have already been sent " \
-                      "to them, so repeat none of it: say in one line that it is registered. Do " \
-                      "not invite them to support anything else, and do not say it is final or " \
-                      "cannot be taken back — the same button now takes it back.".freeze
+                      "to them, and that message is the confirmation: do not say again that it " \
+                      "is registered, and repeat none of it. Your reply is the way on only — a " \
+                      "short line on what they can do next, with its buttons. Do not invite " \
+                      "them to support anything else, and do not say it is final or cannot be " \
+                      "taken back — the same button now takes it back.".freeze
 
     WITHDRAWN_NOTE = "The citizen tapped the support button on a contribution they already " \
                      "supported, so the support has been taken back. The contribution, the " \
-                     "count as it now stands and its address have already been sent to them, so " \
-                     "repeat none of it: say in one line that it is withdrawn. Do not ask why " \
-                     "and do not talk them back into it — the same button supports it again.".freeze
+                     "count as it now stands and its address have already been sent to them, " \
+                     "and that message is the confirmation: do not say again that it is " \
+                     "withdrawn, and repeat none of it. Your reply is the way on only — a short " \
+                     "line on what they can do next, with its buttons. Do not ask why and do " \
+                     "not talk them back into it — the same button supports it again.".freeze
 
     ALREADY_SUPPORTED_NOTE = "They already support that contribution, and nothing changed. Say " \
                              "so plainly rather than as a failure.".freeze
@@ -946,7 +950,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return false if action != ::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION
 
-      contribution = ::Whatsapp::ContributionPill.resolve(flow_action[:param])
+      contribution = ::Whatsapp::ContributionPill.resolve(flow_action[:param], user: account.user)
 
       return false if contribution.blank?
 

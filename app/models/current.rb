@@ -24,4 +24,11 @@ class Current < ActiveSupport::CurrentAttributes
   # owed question again after every turn taken in the middle of a ballot and would
   # send the same question twice.
   attribute :whatsapp_ballot_message_sent_in_turn
+
+  # The records one WhatsApp message's pills point at, read at once while the
+  # message is built — set and cleared by
+  # Whatsapp::AssistantActions.with_records_preloaded around that one build. Here
+  # rather than an argument because the readers sit three calls below every tool
+  # that builds pills, and none of those calls has any other use for it.
+  attribute :whatsapp_pill_records
 end

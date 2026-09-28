@@ -18,7 +18,9 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
 
   params do
     optional :title,
-      description: "The revised title, or empty to keep the current one." do
+      description: "The revised title, or empty to keep the current one. It says what is " \
+                   "proposed, and where if the citizen said, in plain words — never a slogan, a " \
+                   "pun or a motto." do
       string
     end
     optional :text,

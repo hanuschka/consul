@@ -75,7 +75,7 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
 
     def image_question_settled?
       !conversation.image_question_pending? || conversation.image_notices_shown? ||
-        draft_resource&.image&.attachment&.attached? == true
+        conversation.draft_picture_attached?
     end
 
     # The guarantee the retired step machine made structurally: it had two steps that

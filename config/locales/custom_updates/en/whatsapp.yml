@@ -41,6 +41,9 @@ en:
       date:
         absolute_format: "%B %-d, %Y"
         absolute_with_time_format: "%B %-d, %Y at %H:%M"
+        range: "%{from} – %{to}"
+        until: "until %{to}"
+        since: "from %{from}"
         today: today
         past:
           days:
@@ -147,7 +150,9 @@ en:
         # The question above both notices when a photo arrived unasked: it is only used
         # once the citizen has read them and said yes.
         image_use_question: Should this photo be used for your contribution?
-        location_optional: A location is optional. You can also carry on without one.
+        location_optional: >-
+          A location is optional. You can also carry on without one. The pin can only be set in
+          the WhatsApp app on your phone — not in WhatsApp Web or on desktop.
       phase:
         open: "Here is where you can take part in “%{phase}”:"
         contributions_intro:
@@ -199,7 +204,9 @@ en:
         location_prompt: "Please send the place as a location."
         location_prompt_remaining: >-
           Please send the place as a location. You can still give %{remaining} places.
-        location_optional: "Tap here if you would rather not give a place."
+        location_optional: >-
+          The pin can only be set in the WhatsApp app on your phone — not in WhatsApp Web or on
+          desktop. Tap here if you would rather not give a place.
         location_recorded: "✅ Place saved."
         location_remaining: "You can still give %{remaining} places."
         location_outside_area: >-

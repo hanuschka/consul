@@ -338,6 +338,10 @@ module Whatsapp
   # caller's `default: nil` has to stay nil. Folded into a default list it no
   # longer does: I18n answers "Translation missing" once every entry of a list
   # comes back empty, which is a label on a button where nil drops the button.
+  #
+  # The informal lookup never falls back to another locale. The tree is German
+  # only and every locale here falls back to German, so an English turn asking for
+  # it was answered with the German "du" line rather than its own formal one.
   def self.copy(key, **options)
     return I18n.t(key, **options) if address_form == DEFAULT_ADDRESS_FORM
 
@@ -347,7 +351,7 @@ module Whatsapp
 
     informal = "#{INFORMAL_BOT_SCOPE}.#{key.to_s.delete_prefix(prefix)}"
 
-    I18n.t(informal, **options, default: nil) || I18n.t(key, **options)
+    I18n.t(informal, **options, default: nil, fallback: false) || I18n.t(key, **options)
   end
 
   # The sentence every prompt that writes German for a citizen carries. Written

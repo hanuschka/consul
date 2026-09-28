@@ -19,7 +19,9 @@ de:
       opted_in: "Du erhältst wieder Nachrichten von uns."
       compliance:
         disclosure: "👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet dir kein Mensch direkt."
-        opted_out: "Verstanden, du erhältst keine Nachrichten mehr von uns."
+        opted_out: >-
+          Verstanden, du erhältst keine Nachrichten mehr von uns. Schreib %{keyword},
+          wenn du wieder Nachrichten erhalten möchtest.
         opted_out_reminder: >-
           Du hast dich von unseren Nachrichten abgemeldet, deshalb kann ich dir hier nicht
           weiterhelfen. Schreib %{keyword}, wenn du wieder Nachrichten erhalten möchtest.

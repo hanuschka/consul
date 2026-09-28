@@ -379,6 +379,13 @@ en:
         notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
         notice_active: "Notice active"
         notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      municipal_plans:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
       projekts:
         intro_text: "Intro text"
         intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."

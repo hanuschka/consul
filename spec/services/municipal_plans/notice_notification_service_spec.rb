@@ -13,7 +13,7 @@ describe MunicipalPlans::NoticeNotificationService do
     MunicipalPlans::NoticeNotificationService.call(notice)
   end
 
-  it "mails every member of a Bearbeitergruppe" do
+  it "mails every member of a Sachbearbeitergruppe" do
     group = create(:municipal_plan_officer_group)
     members = create_list(:municipal_plan_officer, 2)
     members.each do |member|

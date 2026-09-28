@@ -3,7 +3,7 @@
 <% elsif value.blank? %>
   <%= t("adm.municipal_plans.municipal_plans.show.none") %>
 <% elsif kind == :rich_text %>
-  <%= auto_link_already_sanitized_html wysiwyg(value) %>
+  <%= auto_link_already_sanitized_html simple_format(value) %>
 <% elsif kind == :list %>
   <ul class="m-0">
     <% value.each do |entry| %>

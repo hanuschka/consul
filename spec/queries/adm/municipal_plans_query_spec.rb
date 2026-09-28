@@ -35,7 +35,7 @@ describe Adm::MunicipalPlansQuery do
   end
 
   describe "Zuständigkeit" do
-    it "filters to a Bearbeitergruppe" do
+    it "filters to a Sachbearbeitergruppe" do
       expect(resolve("responsible" => ["OfficerGroup:#{group.id}"])).to match_array([published])
     end
 
@@ -74,7 +74,7 @@ describe Adm::MunicipalPlansQuery do
       published.update!(given_order: 2)
       archived.update!(given_order: 3)
 
-      expect(resolve("sort_by" => "internal_notes").to_a).to eq([draft, published, archived])
+      expect(resolve("sort_by" => "unknown").to_a).to eq([draft, published, archived])
     end
 
     it "sorts Versionsnummer numerically, not lexicographically" do

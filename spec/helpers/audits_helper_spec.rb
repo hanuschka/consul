@@ -14,7 +14,7 @@ describe AuditsHelper do
     end
 
     it "keeps other values as they are" do
-      expect(helper.audit_value(plan, "internal_notes", "Neu")).to eq("Neu")
+      expect(helper.audit_value(plan, "contact_name", "Neu")).to eq("Neu")
     end
   end
 end

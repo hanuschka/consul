@@ -6,8 +6,9 @@ describe "Vorhabenliste", type: :request do
     create(:municipal_plan, :published,
            responsible: officer,
            title: "Weiterentwicklung des Eichplatz-Areals",
-           internal_notes: "Interner Vermerk der Sachbearbeitung",
-           system_mailbox_email: "postfach@jena.example")
+           system_mailbox_email: "postfach@jena.example").tap do |created|
+      created.memos.create!(user: officer.user, text: "Interner Vermerk der Sachbearbeitung")
+    end
   end
 
   before do

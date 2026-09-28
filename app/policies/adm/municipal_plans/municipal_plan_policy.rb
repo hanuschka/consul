@@ -15,6 +15,14 @@ class Adm::MunicipalPlans::MunicipalPlanPolicy < ApplicationPolicy
     assigned_officer?
   end
 
+  def audits?
+    show?
+  end
+
+  def add_memo?
+    show?
+  end
+
   def create?
     administrator_or_officer?
   end

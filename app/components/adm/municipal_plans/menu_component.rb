@@ -4,7 +4,7 @@ class Adm::MunicipalPlans::MenuComponent < Adm::BaseMenuComponent
   end
 
   def menu_items
-    [municipal_plans_item, officers_item, officer_groups_item, topics_item, settings_item].compact
+    [municipal_plans_item, officers_item, settings_item, officer_groups_item, topics_item].compact
   end
 
   private
@@ -13,10 +13,10 @@ class Adm::MunicipalPlans::MenuComponent < Adm::BaseMenuComponent
       return unless Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, nil).index?
 
       {
-        label: t("adm.municipal_plans.menu.items.municipal_plans"),
-        icon: "assignment",
+        label: t("adm.municipal_plans.menu.items.home"),
+        icon: "home",
         path: adm_municipal_plans_root_path,
-        active_pattern: %r{\A/adm/municipal_plans(/(new|\d+)(/.*)?)?\z}
+        active_pattern: %r{\A/adm/municipal_plans/(list|\d+)(/.*)?\z}
       }
     end
 

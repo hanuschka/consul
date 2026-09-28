@@ -1,6 +1,6 @@
 module MunicipalPlans
   # A Hinweis goes to the people who maintain the Vorhaben: the Sachbearbeitung it is assigned to,
-  # every member where that is a Bearbeitergruppe, and the Systempostfach on top where one is set.
+  # every member where that is a Sachbearbeitergruppe, and the Systempostfach on top where one is set.
   class NoticeNotificationService < ApplicationService
     def initialize(notice)
       @notice = notice

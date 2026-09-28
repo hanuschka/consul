@@ -101,34 +101,34 @@
         <% if rich_text_present.call(@municipal_plan.processing_status) %>
           <div class="resource-page--description new-card main-content-card" style="background-color:#E3FCE7">
             <h2><%= t("custom.municipal_plans.show.processing_status") %></h2>
-            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.processing_status) %>
+            <%= auto_link_already_sanitized_html simple_format(@municipal_plan.processing_status) %>
           </div>
         <% end %>
 
         <% if rich_text_present.call(@municipal_plan.short_description) %>
           <div class="resource-page--description new-card main-content-card">
-            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.short_description) %>
+            <%= auto_link_already_sanitized_html simple_format(@municipal_plan.short_description) %>
           </div>
         <% end %>
 
         <% if rich_text_present.call(@municipal_plan.next_steps) %>
           <div class="new-card main-content-card">
             <h2><%= t("custom.municipal_plans.show.next_steps") %></h2>
-            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.next_steps) %>
+            <%= auto_link_already_sanitized_html simple_format(@municipal_plan.next_steps) %>
           </div>
         <% end %>
 
         <% if rich_text_present.call(@municipal_plan.last_resolution) %>
           <div class="new-card main-content-card">
             <h2><%= t("custom.municipal_plans.show.last_resolution") %></h2>
-            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.last_resolution) %>
+            <%= auto_link_already_sanitized_html simple_format(@municipal_plan.last_resolution) %>
           </div>
         <% end %>
 
         <% if rich_text_present.call(@municipal_plan.further_information) %>
           <div class="new-card main-content-card">
             <h2><%= t("custom.municipal_plans.show.further_information") %></h2>
-            <%= auto_link_already_sanitized_html wysiwyg(@municipal_plan.further_information) %>
+            <%= auto_link_already_sanitized_html simple_format(@municipal_plan.further_information) %>
           </div>
         <% end %>
 

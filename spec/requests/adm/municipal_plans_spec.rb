@@ -143,7 +143,7 @@ describe "Vorhaben in /adm", type: :request do
     it "keeps working copies out of the Vorhaben list" do
       copy = ::MunicipalPlans::WorkingCopyService.call(released)
 
-      get adm_municipal_plans_root_path
+      get adm_municipal_plans_municipal_plans_list_path
 
       expect(response.body).not_to include(
         adm_municipal_plans_municipal_plan_path(copy)
@@ -517,6 +517,42 @@ describe "Vorhaben in /adm", type: :request do
       patch_plan(contact_name: "Kai Ostermann")
 
       expect(plan.reload.contact_name).to eq "Kai Ostermann"
+    end
+  end
+
+  describe "the Änderungslog tab" do
+    it "lists the changes of a Vorhaben" do
+      plan.update!(contact_name: "Kai Ostermann")
+
+      get audits_adm_municipal_plans_municipal_plan_path(plan)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("adm.municipal_plans.municipal_plans.tabs.audits"))
+      expect(response.body).to include("Kai Ostermann")
+    end
+
+    it "is closed to officers who may not see the Vorhaben" do
+      Setting["municipal_plans.officers_see_all"] = false
+      login_as(create(:municipal_plan_officer).user)
+
+      expect { get audits_adm_municipal_plans_municipal_plan_path(plan) }
+        .to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe "the Website button" do
+    it "links a published Vorhaben to its public page" do
+      published = create(:municipal_plan, :published)
+
+      get adm_municipal_plans_municipal_plan_path(published)
+
+      expect(response.body).to include(municipal_plan_path(published))
+    end
+
+    it "is left out for a draft" do
+      get adm_municipal_plans_municipal_plan_path(plan)
+
+      expect(response.body).not_to include(%(href="#{municipal_plan_path(plan)}"))
     end
   end
 end

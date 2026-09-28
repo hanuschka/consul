@@ -2,7 +2,7 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
   include MapLocationAttributes
 
   before_action :find_municipal_plan, only: [:show, :edit, :update, :destroy, :submit, :release,
-                                             :archive, :unarchive, :archive_date]
+                                             :archive, :unarchive, :archive_date, :audits]
   before_action :redirect_to_working_copy, only: [:edit, :update]
 
   def index
@@ -20,6 +20,10 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
   end
 
   def show
+    @breadcrumbs = breadcrumbs_for_action(@municipal_plan.title)
+  end
+
+  def audits
     @breadcrumbs = breadcrumbs_for_action(@municipal_plan.title)
   end
 
@@ -159,7 +163,7 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
     end
 
     def district_filter_options
-      RegisteredAddress::District.order(:name).to_h { |d| [d.id.to_s, d.name] }
+      ::RegisteredAddress::District.order(:name).to_h { |d| [d.id.to_s, d.name] }
     end
 
     def topic_filter_options
@@ -248,7 +252,7 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
         :given_order,
         :formal_participation, :informal_participation,
         :contact_name, :contact_phone, :contact_email,
-        :system_mailbox_email, :internal_notes,
+        :system_mailbox_email,
         :title, :short_description, :further_information, :last_resolution,
         :processing_status, :next_steps, :costs,
         :formal_participation_reason, :informal_participation_reason, :contact_role,

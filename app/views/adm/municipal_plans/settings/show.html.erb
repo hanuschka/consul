@@ -5,6 +5,8 @@
   breadcrumbs: @breadcrumbs
 ) %>
 
+<%= render "tabs", current: :features %>
+
 <div class="kern-container my-5">
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "process.municipal_plans"), :value, :boolean) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "municipal_plans.officers_see_all"), :value, :boolean) %>

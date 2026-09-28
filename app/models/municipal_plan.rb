@@ -1,6 +1,8 @@
 class MunicipalPlan < ApplicationRecord
   include Mappable
   include Searchable
+  include SectionTrackable
+  include Memoable
 
   STATUSES = %w[draft published archived].freeze
 
@@ -30,13 +32,14 @@ class MunicipalPlan < ApplicationRecord
   ].freeze
 
   AUDITED_ATTRIBUTES = (CONTENT_ATTRIBUTES + %w[
-    internal_notes
     status
     given_order
     responsible_type
     responsible_id
     released_at
   ]).freeze
+
+  SECTION_TRACKED_ATTRIBUTES = (AUDITED_ATTRIBUTES - %w[given_order released_at]).freeze
 
   translates :title, touch: true
   translates :short_description, touch: true
@@ -230,7 +233,26 @@ class MunicipalPlan < ApplicationRecord
     CONTENT_ATTRIBUTES + translated_attribute_names.map(&:to_s)
   end
 
+  def section_tracking_section
+    "municipal_plans"
+  end
+
+  def section_tracking_user
+    nil
+  end
+
   private
+
+    def log_section_activity(action, metadata: {})
+      super unless working_copy?
+    end
+
+    def log_section_activity_updated
+      tracked_changes = saved_changes.keys & SECTION_TRACKED_ATTRIBUTES
+      return if tracked_changes.empty?
+
+      log_section_activity("updated", metadata: { "changed_fields" => tracked_changes })
+    end
 
     def content_change?
       (changed & self.class.content_attribute_names).any?

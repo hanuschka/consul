@@ -84,10 +84,6 @@ describe MunicipalPlan do
       expect(plan.reload.version).to eq("1.11")
     end
 
-    it "does not treat an internal note as a content change" do
-      expect { plan.update!(internal_notes: "Nur intern") }.not_to change { plan.reload.version }
-    end
-
     it "advances both when register_content_change! is called for an association edit" do
       expect { plan.register_content_change! }
         .to change { plan.reload.version }.from("0.1").to("0.2")
@@ -372,6 +368,32 @@ describe MunicipalPlan do
       plan.topic_assignments.clear
 
       expect(plan).to be_valid
+    end
+  end
+
+  describe "activity on the Vorhabenliste home" do
+    let!(:plan) { create(:municipal_plan, :published, responsible: officer) }
+
+    def activities
+      SectionActivity.for_section("municipal_plans").where(trackable: plan)
+    end
+
+    it "records the creation of a Vorhaben" do
+      expect(activities.pluck(:action)).to eq(["created"])
+    end
+
+    it "records a status change with the changed field" do
+      plan.update!(status: "archived")
+
+      expect(activities.find_by(action: "updated").metadata["changed_fields"]).to eq(["status"])
+    end
+
+    it "ignores a change of the editorial order" do
+      expect { plan.update!(given_order: 3) }.not_to change { SectionActivity.count }
+    end
+
+    it "ignores working copies" do
+      expect { MunicipalPlans::WorkingCopyService.call(plan) }.not_to change { SectionActivity.count }
     end
   end
 end

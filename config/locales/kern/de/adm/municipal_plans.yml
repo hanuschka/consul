@@ -2,16 +2,30 @@ de:
   adm:
     municipal_plans:
       title: Vorhabenliste
+      home:
+        title: Willkommen in der Vorhabenliste
+        stats:
+          total: Gesamt
+          new_this_week: Neu diese Woche
+          published: Veröffentlicht
+          archived: Archiviert
       menu:
         aria_label: Vorhabenliste Navigation
         items:
+          home: Home
           municipal_plans: Vorhaben
-          officers: Sachbearbeitung
-          officer_groups: Bearbeitergruppen
-          topics: Themen
-          settings: Einstellungen
+          officers: Team
+          officer_groups: Sachbearbeitergruppen
+          topics: Kategorien
+          settings: Konfiguration
       settings:
-        title: Einstellungen
+        title: Konfiguration
+        tabs:
+          features: Funktionen
+          dashboard: Dashboard-Einstellungen
+          contact_persons: Ansprechpartner
+        dashboard:
+          intro: "Konfigurieren Sie hier den Begrüßungstext und die Hinweismeldung, die auf der Startseite der Vorhabenliste in der Verwaltung angezeigt werden."
       statuses:
         draft: Entwurf
         published: Veröffentlicht
@@ -34,7 +48,7 @@ de:
             title: Titel
             status: Status
             districts: Ortsteile
-            topics: Themen
+            topics: Kategorien
             responsible: Zuständige Sachbearbeitung
             content_updated_at: Aktualisierungsdatum
             version: Versionsnummer
@@ -51,7 +65,7 @@ de:
             status: Status
             content_updated_at: Aktualisierungsdatum
         new:
-          title: Neues Vorhaben
+          title: Neues Vorhaben erstellen
         edit:
           title: Vorhaben bearbeiten
         create:
@@ -71,23 +85,27 @@ de:
           success: Das Vorhaben wurde archiviert.
         unarchive:
           success: Das Vorhaben wurde aus dem Archiv geholt.
+        tabs:
+          show: Verwalten
+          audits: Änderungslog
+        audits:
+          title: Änderungslog
+        action_row:
+          website: Website
+          edit: Bearbeiten
         show:
           sections:
             content: Vorhaben
-            assignment: Zuordnung
-            participation: Bürgerbeteiligung
-            revision: Aktualisierung
-            links: Links und Dokumente
-            contact: Kontakt
-            map: Kartenposition
             administration: Verwaltung
+          links: Links und Dokumente
+          map_label: Kartenposition
           further_information: Weitere Informationen
           last_resolution: Letzter Beschluss
           processing_status: Aktueller Bearbeitungsstand
           next_steps: Geplanter Zeitpunkt / nächste Schritte
           costs: Kosten soweit bezifferbar
           districts: Betroffenes Gebiet / Ortsteil
-          topics: Schwerpunktmäßig betroffene Themen
+          topics: Schwerpunktmäßig betroffene Kategorien
           formal_participation: Bürgerbeteiligung formell
           informal_participation: Bürgerbeteiligung informell
           content_updated_at: Aktualisierungsdatum
@@ -99,7 +117,6 @@ de:
           contact_email: E-Mail
           responsible: Zuständige Sachbearbeitung
           system_mailbox_email: Systempostfach für Hinweise
-          internal_notes: Interne Notizen
           status: Status
           none: "—"
           archive_date:
@@ -141,23 +158,15 @@ de:
         form_fields:
           errors_title: Das Vorhaben konnte nicht gespeichert werden
           not_set: Wird beim Speichern gesetzt
+          automatic_intro: Diese Angaben werden automatisch gesetzt und können nicht bearbeitet werden.
           add_link: Link hinzufügen
-          officer_groups: Bearbeitergruppen
+          officer_groups: Sachbearbeitergruppen
           officers: Sachbearbeitung
           no_responsible: "-- Keine Zuständigkeit --"
           no_districts_title: Keine Ortsteile vorhanden
           no_districts_description: Ortsteile werden aus den registrierten Adressen übernommen. Ohne Ortsteile kann kein Vorhaben gespeichert werden.
-          no_topics_title: Keine Themen vorhanden
-          no_topics_description: Legen Sie zunächst unter „Themen" ein Thema an. Ohne Thema kann kein Vorhaben gespeichert werden.
-          sections:
-            content: Vorhaben
-            assignment: Zuordnung
-            participation: Bürgerbeteiligung
-            revision: Aktualisierung
-            links: Links und Dokumente
-            contact: Kontakt
-            map: Kartenposition
-            administration: Verwaltung
+          no_topics_title: Keine Kategorien vorhanden
+          no_topics_description: Legen Sie zunächst unter „Kategorien" eine Kategorie an. Ohne Kategorie kann kein Vorhaben gespeichert werden.
           labels:
             title: Titel des Vorhabens
             short_description: Kurze Beschreibung
@@ -167,7 +176,7 @@ de:
             next_steps: Geplanter Zeitpunkt / nächste Schritte
             costs: Kosten soweit bezifferbar
             districts: Betroffenes Gebiet / Ortsteil
-            topics: Schwerpunktmäßig betroffene Themen
+            topics: Schwerpunktmäßig betroffene Kategorien
             formal_participation: Bürgerbeteiligung formell
             formal_participation_checkbox: Eine formelle Bürgerbeteiligung ist vorgesehen
             formal_participation_reason: Begründung zur formellen Bürgerbeteiligung
@@ -186,7 +195,6 @@ de:
             map_location: Kartenposition
             responsible: Zuständige Sachbearbeitung
             system_mailbox_email: Systempostfach für Hinweise
-            internal_notes: Interne Notizen
             status: Status
           hints:
             title: Der Titel benennt das Vorhaben so, wie es Bürgerinnen und Bürger in der Vorhabenliste sehen. Wählen Sie eine kurze, verständliche Bezeichnung ohne Aktenzeichen und Abkürzungen.
@@ -197,25 +205,26 @@ de:
             next_steps: Die geplanten nächsten Schritte mit Zeitangabe, soweit absehbar. Grobe Angaben wie „1. Halbjahr 2027" sind ausdrücklich erwünscht, wenn noch kein genaues Datum feststeht.
             costs: Die Kostenangabe ist ein freies Textfeld und reicht von einer konkreten Summe bis zu einer allgemeinen Aussage zur Finanzierung.
             districts: Wählen Sie die Ortsteile aus, die von dem Vorhaben betroffen sind. Es können höchstens vier Ortsteile ausgewählt werden; betrifft das Vorhaben mehr Gebiete, wählen Sie die vier wichtigsten.
-            topics: Ordnen Sie das Vorhaben den Themen zu, die schwerpunktmäßig betroffen sind. Die Themen dienen Bürgerinnen und Bürgern als Filter in der Vorhabenliste. Mindestens ein Thema ist erforderlich.
+            topics: Ordnen Sie das Vorhaben den Kategorien zu, die schwerpunktmäßig betroffen sind. Die Kategorien dienen Bürgerinnen und Bürgern als Filter in der Vorhabenliste. Mindestens eine Kategorie ist erforderlich.
             formal_participation: Eine formelle Bürgerbeteiligung ist gesetzlich vorgeschrieben, zum Beispiel die Offenlage im Bauleitplanverfahren.
             formal_participation_reason: Erläutern Sie kurz, welche formelle Beteiligung vorgesehen ist – oder warum keine stattfindet.
             informal_participation: Eine informelle Bürgerbeteiligung erfolgt freiwillig, zum Beispiel über Workshops, Befragungen oder Beteiligungsverfahren auf dieser Plattform.
             informal_participation_reason: Erläutern Sie kurz, welche informelle Beteiligung vorgesehen ist – oder warum keine stattfindet.
-            content_updated_at: Das Aktualisierungsdatum wird automatisch gesetzt, sobald sich inhaltliche Angaben des Vorhabens ändern. Es kann nicht von Hand gepflegt werden.
-            version: Die Versionsnummer erhöht sich automatisch bei jeder inhaltlichen Änderung und macht für Bürgerinnen und Bürger nachvollziehbar, dass das Vorhaben fortgeschrieben wurde.
             links: Verweisen Sie auf weiterführende Seiten und Dokumente, zum Beispiel Beschlussvorlagen, Pläne oder das Ratsinformationssystem. Jeder Eintrag benötigt eine Bezeichnung und eine vollständige Adresse.
             contact_name: Name der Ansprechperson, die Bürgerinnen und Bürger bei Rückfragen zu diesem Vorhaben erreichen.
             contact_role: Funktion oder Amtsbezeichnung der Ansprechperson, zum Beispiel „Projektleitung Stadtentwicklung".
             contact_phone: Telefonnummer der Ansprechperson. Verwenden Sie möglichst eine Durchwahl, die auch bei Abwesenheit erreichbar ist.
             contact_email: E-Mail-Adresse der Ansprechperson. Eine Funktionsadresse ist einer persönlichen Adresse vorzuziehen.
             map_location: Setzen Sie die Kartenposition des Vorhabens per Klick in die Karte. Die Position ist erforderlich und wird in der öffentlichen Kartenansicht angezeigt.
-            responsible: Legen Sie fest, wer das Vorhaben in der Verwaltung pflegt. Sie können eine einzelne Person aus der Sachbearbeitung oder eine ganze Bearbeitergruppe auswählen.
+            responsible: Legen Sie fest, wer das Vorhaben in der Verwaltung pflegt. Sie können eine einzelne Person aus der Sachbearbeitung oder eine ganze Sachbearbeitergruppe auswählen.
             system_mailbox_email: An dieses Postfach werden Hinweise von Bürgerinnen und Bürgern zu diesem Vorhaben weitergeleitet. Verwenden Sie eine Funktionsadresse, damit Hinweise auch bei Abwesenheit bearbeitet werden.
-            internal_notes: Interne Notizen sind ausschließlich in der Verwaltung sichtbar und werden nie öffentlich angezeigt. Nutzen Sie das Feld für Absprachen, Zuständigkeiten oder Hinweise an Kolleginnen und Kollegen.
-            status: "Der Status wird nicht im Formular gepflegt, sondern über die Schaltflächen auf der Detailseite des Vorhabens: Entwürfe werden zur Freigabe eingereicht und anschließend freigegeben, veröffentlichte Vorhaben können archiviert und später wieder aus dem Archiv geholt werden. Nur veröffentlichte Vorhaben erscheinen in der öffentlichen Vorhabenliste."
           placeholders:
             title: z. B. Neugestaltung des Marktplatzes
+            short_description: z. B. Der Marktplatz wird barrierefrei umgestaltet und erhält mehr Grün und Sitzplätze.
+            further_information: z. B. Hintergründe, Ziele und bisherige Planungsschritte
+            last_resolution: z. B. Beschluss des Stadtrats vom 12.03.2026 zur Vorplanung
+            processing_status: z. B. Die Entwurfsplanung ist abgeschlossen, die Ausschreibung wird vorbereitet.
+            next_steps: z. B. Vergabe der Bauleistungen im Frühjahr, Baubeginn im Sommer
             costs: z. B. ca. 50.000 € oder im Haushalt eingeplant
             formal_participation_reason: z. B. Offenlage nach § 3 Abs. 2 BauGB im 2. Quartal 2027
             informal_participation_reason: z. B. Bürgerwerkstatt im Herbst, Ergebnisse fließen in die Planung ein
@@ -226,7 +235,6 @@ de:
             contact_phone: z. B. 03641 49-0
             contact_email: z. B. stadtentwicklung@stadt.de
             system_mailbox_email: z. B. vorhaben@stadt.de
-            internal_notes: Nur intern sichtbar
       projekt_conversions:
         new:
           title: In Beteiligungsprojekt überführen
@@ -258,7 +266,7 @@ de:
           title: Sachbearbeitung
           page_hint: "Hier verwalten Sie die Personen, die Vorhaben bearbeiten dürfen. Suchen Sie über die E-Mail-Adresse nach einem bereits registrierten Nutzerkonto und nehmen Sie es in die Sachbearbeitung auf. Sachbearbeiterinnen und Sachbearbeiter pflegen die ihnen zugewiesenen Vorhaben und halten den Bearbeitungsstand aktuell. Nur bereits registrierte Nutzerkonten können aufgenommen werden."
           search_label: Nutzer suchen
-          search_description: Suchen Sie per E-Mail-Adresse nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können in die Sachbearbeitung aufgenommen werden. Sachbearbeiterinnen und Sachbearbeiter bearbeiten die Vorhaben, die ihnen oder ihrer Bearbeitergruppe zugewiesen sind.
+          search_description: Suchen Sie per E-Mail-Adresse nach registrierten Nutzern, die unter <a href="/adm/users" target="_blank">Nutzer</a> gelistet sind. Nur bereits registrierte Nutzer können in die Sachbearbeitung aufgenommen werden. Sachbearbeiterinnen und Sachbearbeiter bearbeiten die Vorhaben, die ihnen oder ihrer Sachbearbeitergruppe zugewiesen sind.
           no_items_title: Keine Sachbearbeitung hinterlegt
           no_items_description: Suchen Sie nach einem Nutzerkonto und nehmen Sie es in die Sachbearbeitung auf.
           table:
@@ -278,28 +286,28 @@ de:
           success: Die Person wurde aus der Sachbearbeitung entfernt.
       officer_groups:
         index:
-          title: Bearbeitergruppen
-          page_hint: "Hier verwalten Sie die Bearbeitergruppen der Vorhabenliste. Eine Gruppe fasst mehrere Personen aus der Sachbearbeitung zusammen und kann als zuständige Stelle für ein Vorhaben hinterlegt werden. Jede Gruppe hat eine Standard-E-Mail-Adresse, an die Benachrichtigungen gehen. Gruppen, denen noch Vorhaben zugeordnet sind, können nicht gelöscht werden."
-          new_officer_group: Neue Bearbeitergruppe
-          no_items_title: Keine Bearbeitergruppen vorhanden
-          no_items_description: Legen Sie eine Bearbeitergruppe an, um Zuständigkeiten für Vorhaben zu bündeln.
+          title: Sachbearbeitergruppen
+          page_hint: "Hier verwalten Sie die Sachbearbeitergruppen der Vorhabenliste. Eine Gruppe fasst mehrere Personen aus der Sachbearbeitung zusammen und kann als zuständige Stelle für ein Vorhaben hinterlegt werden. Jede Gruppe hat eine Standard-E-Mail-Adresse, an die Benachrichtigungen gehen. Gruppen, denen noch Vorhaben zugeordnet sind, können nicht gelöscht werden."
+          new_officer_group: Neue Sachbearbeitergruppe
+          no_items_title: Keine Sachbearbeitergruppen vorhanden
+          no_items_description: Legen Sie eine Sachbearbeitergruppe an, um Zuständigkeiten für Vorhaben zu bündeln.
           table:
             name: Name
             officers: Mitglieder
         new:
-          title: Neue Bearbeitergruppe
+          title: Neue Sachbearbeitergruppe
         edit:
-          title: Bearbeitergruppe bearbeiten
+          title: Sachbearbeitergruppe bearbeiten
         create:
-          success: Die Bearbeitergruppe wurde erstellt.
+          success: Die Sachbearbeitergruppe wurde erstellt.
         update:
-          success: Die Bearbeitergruppe wurde aktualisiert.
+          success: Die Sachbearbeitergruppe wurde aktualisiert.
         destroy:
-          success: Die Bearbeitergruppe wurde gelöscht.
-          cannot_destroy: Die Bearbeitergruppe kann nicht gelöscht werden, da ihr noch Vorhaben zugeordnet sind.
+          success: Die Sachbearbeitergruppe wurde gelöscht.
+          cannot_destroy: Die Sachbearbeitergruppe kann nicht gelöscht werden, da ihr noch Vorhaben zugeordnet sind.
         form:
           name_label: Name
-          name_hint: Der Name der Bearbeitergruppe erscheint in den Auswahllisten, in denen Sie einem Vorhaben die zuständige Stelle zuweisen. Wählen Sie eine eindeutige, sprechende Bezeichnung, die der Organisationsstruktur Ihrer Verwaltung entspricht, zum Beispiel „Stadtplanungsamt" oder „Amt für Stadtentwicklung". Der Name ist nur in der Verwaltung sichtbar.
+          name_hint: Der Name der Sachbearbeitergruppe erscheint in den Auswahllisten, in denen Sie einem Vorhaben die zuständige Stelle zuweisen. Wählen Sie eine eindeutige, sprechende Bezeichnung, die der Organisationsstruktur Ihrer Verwaltung entspricht, zum Beispiel „Stadtplanungsamt" oder „Amt für Stadtentwicklung". Der Name ist nur in der Verwaltung sichtbar.
           name_placeholder: z. B. Stadtplanungsamt
           officers_label: Mitglieder
           officers_hint: Wählen Sie die Personen aus, die dieser Gruppe angehören sollen. Alle Mitglieder können die Vorhaben bearbeiten, für die die Gruppe zuständig ist. Personen können gleichzeitig mehreren Gruppen angehören.
@@ -308,27 +316,27 @@ de:
           submit: Speichern
       topics:
         index:
-          title: Themen
-          page_hint: "Hier verwalten Sie die Themen der Vorhabenliste. Themen ordnen jedes Vorhaben einem inhaltlichen Bereich zu, zum Beispiel Mobilität, Bildung oder Stadtentwicklung, und dienen den Bürgerinnen und Bürgern als Filter. Per Drag & Drop legen Sie fest, in welcher Reihenfolge die Themen angezeigt werden. Themen, denen noch Vorhaben zugeordnet sind, können nicht gelöscht werden."
-          new_topic: Neues Thema
-          no_items_title: Keine Themen vorhanden
-          no_items_description: Legen Sie ein Thema an, um Vorhaben inhaltlich zuordnen zu können.
+          title: Kategorien
+          page_hint: "Hier verwalten Sie die Kategorien der Vorhabenliste. Kategorien ordnen jedes Vorhaben einem inhaltlichen Bereich zu, zum Beispiel Mobilität, Bildung oder Stadtentwicklung, und dienen den Bürgerinnen und Bürgern als Filter. Per Drag & Drop legen Sie fest, in welcher Reihenfolge die Kategorien angezeigt werden. Kategorien, denen noch Vorhaben zugeordnet sind, können nicht gelöscht werden."
+          new_topic: Neue Kategorie
+          no_items_title: Keine Kategorien vorhanden
+          no_items_description: Legen Sie eine Kategorie an, um Vorhaben inhaltlich zuordnen zu können.
           table:
             order: Reihenfolge
             name: Name
         new:
-          title: Neues Thema
+          title: Neue Kategorie
         edit:
-          title: Thema bearbeiten
+          title: Kategorie bearbeiten
         create:
-          success: Das Thema wurde erstellt.
+          success: Die Kategorie wurde erstellt.
         update:
-          success: Das Thema wurde aktualisiert.
+          success: Die Kategorie wurde aktualisiert.
         destroy:
-          success: Das Thema wurde gelöscht.
-          cannot_destroy: Das Thema kann nicht gelöscht werden, da ihm noch Vorhaben zugeordnet sind.
+          success: Die Kategorie wurde gelöscht.
+          cannot_destroy: Die Kategorie kann nicht gelöscht werden, da ihr noch Vorhaben zugeordnet sind.
         form:
           name_label: Name
-          name_hint: Der Name des Themas wird den Bürgerinnen und Bürgern in der Vorhabenliste als Filter angezeigt und erscheint bei jedem Vorhaben, dem dieses Thema zugeordnet ist. Wählen Sie einen kurzen, allgemein verständlichen Begriff wie „Mobilität und Verkehr" oder „Grün und Umwelt".
+          name_hint: Der Name der Kategorie wird den Bürgerinnen und Bürgern in der Vorhabenliste als Filter angezeigt und erscheint bei jedem Vorhaben, dem diese Kategorie zugeordnet ist. Wählen Sie einen kurzen, allgemein verständlichen Begriff wie „Mobilität und Verkehr" oder „Grün und Umwelt".
           name_placeholder: z. B. Mobilität und Verkehr
           submit: Speichern

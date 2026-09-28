@@ -36,7 +36,7 @@ module MunicipalPlans
       end
 
       def compared_fields
-        MunicipalPlan.content_attribute_names + %w[internal_notes]
+        MunicipalPlan.content_attribute_names
       end
 
       def attribute_changes

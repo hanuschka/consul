@@ -49,6 +49,10 @@
   width: 100%;
 }
 
+textarea.kern-form-input__input {
+  height: auto;
+}
+
 .kern-label--disabled {
   opacity: 0.5;
 }

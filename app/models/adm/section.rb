@@ -21,7 +21,7 @@ module Adm
       "projekts"           => :projekt_manager?,
       "ideas"              => :idea_manager?,
       "deficiency_reports" => :deficiency_report_manager?,
-      "municipal_plans"    => :municipal_plan_officer?,
+      "municipal_plans"    => :administrator?,
       "landing_pages"      => :landing_page_manager?,
       "moderation"         => :moderator?,
       "valuation"          => :valuator?,

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_24_110000) do
+ActiveRecord::Schema.define(version: 2026_09_28_100000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1969,7 +1969,6 @@ ActiveRecord::Schema.define(version: 2026_09_24_110000) do
     t.string "contact_phone"
     t.string "contact_email"
     t.string "system_mailbox_email"
-    t.text "internal_notes"
     t.string "responsible_type"
     t.bigint "responsible_id"
     t.datetime "created_at", precision: 6, null: false

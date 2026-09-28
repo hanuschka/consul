@@ -2,16 +2,30 @@ en:
   adm:
     municipal_plans:
       title: Municipal plans
+      home:
+        title: Welcome to the municipal plans
+        stats:
+          total: Total
+          new_this_week: New this week
+          published: Published
+          archived: Archived
       menu:
         aria_label: Municipal plans navigation
         items:
+          home: Home
           municipal_plans: Plans
-          officers: Officers
+          officers: Team
           officer_groups: Officer groups
-          topics: Topics
-          settings: Settings
+          topics: Categories
+          settings: Configuration
       settings:
-        title: Settings
+        title: Configuration
+        tabs:
+          features: Features
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
+        dashboard:
+          intro: "Configure the welcome text and the notice message shown on the admin home page of the municipal plans."
       statuses:
         draft: Draft
         published: Published
@@ -34,7 +48,7 @@ en:
             title: Title
             status: Status
             districts: Districts
-            topics: Topics
+            topics: Categories
             responsible: Responsible officer
             content_updated_at: Updated on
             version: Version
@@ -51,7 +65,7 @@ en:
             status: Status
             content_updated_at: Updated on
         new:
-          title: New plan
+          title: Create new plan
         edit:
           title: Edit plan
         create:
@@ -71,23 +85,27 @@ en:
           success: The plan was archived.
         unarchive:
           success: The plan was taken out of the archive.
+        tabs:
+          show: Manage
+          audits: Change log
+        audits:
+          title: Change log
+        action_row:
+          website: Website
+          edit: Edit
         show:
           sections:
             content: Plan
-            assignment: Classification
-            participation: Citizen participation
-            revision: Revision
-            links: Links and documents
-            contact: Contact
-            map: Map position
             administration: Administration
+          links: Links and documents
+          map_label: Map position
           further_information: Further information
           last_resolution: Last resolution
           processing_status: Current processing status
           next_steps: Schedule / next steps
           costs: Costs where quantifiable
           districts: Affected area / district
-          topics: Main topics affected
+          topics: Main categories affected
           formal_participation: Formal citizen participation
           informal_participation: Informal citizen participation
           content_updated_at: Updated on
@@ -99,7 +117,6 @@ en:
           contact_email: Email
           responsible: Responsible officer
           system_mailbox_email: System mailbox for notices
-          internal_notes: Internal notes
           status: Status
           none: "—"
           archive_date:
@@ -141,23 +158,15 @@ en:
         form_fields:
           errors_title: The plan could not be saved
           not_set: Set automatically on save
+          automatic_intro: These details are set automatically and cannot be edited.
           add_link: Add link
           officer_groups: Officer groups
           officers: Officers
           no_responsible: "-- No responsible officer --"
           no_districts_title: No districts yet
           no_districts_description: Districts are taken from the registered addresses. Without districts a plan cannot be saved.
-          no_topics_title: No topics yet
-          no_topics_description: Create a topic under "Topics" first. Without a topic a plan cannot be saved.
-          sections:
-            content: Plan
-            assignment: Classification
-            participation: Citizen participation
-            revision: Revision
-            links: Links and documents
-            contact: Contact
-            map: Map position
-            administration: Administration
+          no_topics_title: No categories yet
+          no_topics_description: Create a category under "Categories" first. Without a category a plan cannot be saved.
           labels:
             title: Plan title
             short_description: Short description
@@ -167,7 +176,7 @@ en:
             next_steps: Schedule / next steps
             costs: Costs where quantifiable
             districts: Affected area / district
-            topics: Main topics affected
+            topics: Main categories affected
             formal_participation: Formal citizen participation
             formal_participation_checkbox: Formal citizen participation is planned
             formal_participation_reason: Note on formal citizen participation
@@ -186,7 +195,6 @@ en:
             map_location: Map position
             responsible: Responsible officer
             system_mailbox_email: System mailbox for notices
-            internal_notes: Internal notes
             status: Status
           hints:
             title: The title names the plan the way citizens see it in the plan list. Use a short, understandable wording without file numbers or abbreviations.
@@ -197,13 +205,11 @@ en:
             next_steps: The planned next steps with a time frame, as far as foreseeable. Rough statements such as "first half of 2027" are welcome when no exact date is fixed.
             costs: The cost statement is a free text field and ranges from a concrete sum to a general statement about funding.
             districts: Select the districts affected by the plan. At most four districts can be selected; if more areas are affected, pick the four most relevant ones.
-            topics: Assign the plan to the topics that are mainly affected. Topics are used as a filter by citizens in the plan list. At least one topic is required.
+            topics: Assign the plan to the categories that are mainly affected. Categories are used as a filter by citizens in the plan list. At least one category is required.
             formal_participation: Formal citizen participation is required by law, for example the public display in a land-use planning procedure.
             formal_participation_reason: Briefly explain which formal participation is planned — or why none takes place.
             informal_participation: Informal citizen participation is voluntary, for example workshops, surveys or participation processes on this platform.
             informal_participation_reason: Briefly explain which informal participation is planned — or why none takes place.
-            content_updated_at: The update date is set automatically as soon as content of the plan changes. It cannot be edited by hand.
-            version: The version number is raised automatically on every content change and makes it visible to citizens that the plan has been revised.
             links: Link to further pages and documents, for example resolutions, plans or the council information system. Each entry needs a label and a full address.
             contact_name: Name of the contact person citizens can reach with questions about this plan.
             contact_role: Role or job title of the contact person, for example "Project lead urban development".
@@ -212,10 +218,13 @@ en:
             map_location: Set the map position of the plan by clicking on the map. The position is required and is shown in the public map view.
             responsible: Define who maintains the plan inside the administration. You can pick a single officer or a whole officer group.
             system_mailbox_email: Notices from citizens about this plan are forwarded to this mailbox. Use a functional address so notices are handled during absences.
-            internal_notes: Internal notes are visible inside the administration only and are never shown publicly. Use the field for arrangements, responsibilities or notes to colleagues.
-            status: "The status is not maintained in this form but through the buttons on the plan's detail page: drafts are submitted for release and then released, published plans can be archived and taken out of the archive again. Only published plans appear in the public plan list."
           placeholders:
             title: e.g. Redesign of the market square
+            short_description: e.g. The market square will be made barrier-free and get more greenery and seating.
+            further_information: e.g. Background, goals and planning steps so far
+            last_resolution: e.g. City council resolution of 12 March 2026 on the preliminary design
+            processing_status: e.g. The design is complete, the tender is being prepared.
+            next_steps: e.g. Award of construction contracts in spring, start of construction in summer
             costs: e.g. approx. EUR 50,000 or budgeted
             formal_participation_reason: e.g. public display in Q2 2027
             informal_participation_reason: e.g. citizens' workshop in autumn, results feed into the planning
@@ -226,7 +235,6 @@ en:
             contact_phone: e.g. +49 3641 49-0
             contact_email: e.g. urban-development@city.example
             system_mailbox_email: e.g. plans@city.example
-            internal_notes: Visible internally only
       projekt_conversions:
         new:
           title: Convert into project
@@ -308,27 +316,27 @@ en:
           submit: Save
       topics:
         index:
-          title: Topics
-          page_hint: "Manage the topics of the municipal plans module. Topics assign each plan to a subject area such as mobility, education or urban development and are used as a filter by citizens. Use drag and drop to set the order in which topics are displayed. Topics that still have plans assigned to them cannot be deleted."
-          new_topic: New topic
-          no_items_title: No topics yet
-          no_items_description: Create a topic so plans can be assigned to a subject area.
+          title: Categories
+          page_hint: "Manage the categories of the municipal plans module. Categories assign each plan to a subject area such as mobility, education or urban development and are used as a filter by citizens. Use drag and drop to set the order in which categories are displayed. Categories that still have plans assigned to them cannot be deleted."
+          new_topic: New category
+          no_items_title: No categories yet
+          no_items_description: Create a category so plans can be assigned to a subject area.
           table:
             order: Order
             name: Name
         new:
-          title: New topic
+          title: New category
         edit:
-          title: Edit topic
+          title: Edit category
         create:
-          success: The topic was created.
+          success: The category was created.
         update:
-          success: The topic was updated.
+          success: The category was updated.
         destroy:
-          success: The topic was deleted.
-          cannot_destroy: The topic cannot be deleted because plans are still assigned to it.
+          success: The category was deleted.
+          cannot_destroy: The category cannot be deleted because plans are still assigned to it.
         form:
           name_label: Name
-          name_hint: The name of the topic is shown to citizens as a filter in the municipal plans list and appears on every plan it is assigned to. Use a short, generally understandable term such as "Mobility and traffic".
+          name_hint: The name of the category is shown to citizens as a filter in the municipal plans list and appears on every plan it is assigned to. Use a short, generally understandable term such as "Mobility and traffic".
           name_placeholder: e.g. Mobility and traffic
           submit: Save

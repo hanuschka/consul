@@ -1,0 +1,19 @@
+<% policy = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, municipal_plan) %>
+<% show_website = Setting["process.municipal_plans"].present? && !municipal_plan.working_copy? &&
+                  municipal_plan.status.in?(%w[published archived]) %>
+<% show_edit = policy.update? %>
+
+<% if show_website || show_edit %>
+  <div class="adm-detail-action-row d-flex align-items-center flex-wrap gap-2 mb-4">
+    <% if show_website %>
+      <%= kern_link_button(municipal_plan_path(municipal_plan),
+            text: t(".website"), icon: "open_in_new", style: :secondary,
+            target: "_blank", rel: "noopener") %>
+    <% end %>
+
+    <% if show_edit %>
+      <%= kern_link_button(edit_adm_municipal_plans_municipal_plan_path(municipal_plan),
+            text: t(".edit"), icon: "edit", style: :secondary) %>
+    <% end %>
+  </div>
+<% end %>

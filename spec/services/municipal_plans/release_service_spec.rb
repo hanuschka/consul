@@ -131,13 +131,13 @@ describe MunicipalPlans::ReleaseService do
     describe "a later change" do
       let!(:plan) do
         create(:municipal_plan, :published, responsible: officer, short_description: "Alte Fassung",
-                                            internal_notes: "Alt")
+                                            contact_name: "Alt")
       end
       let!(:copy) { MunicipalPlans::WorkingCopyService.call(plan) }
 
       before do
         Audited.audit_class.as_user(officer.user) do
-          copy.update!(short_description: "Neue Fassung", internal_notes: "Neu")
+          copy.update!(short_description: "Neue Fassung", contact_name: "Neu")
           copy.update!(submitted_at: Time.current)
         end
 
@@ -148,9 +148,9 @@ describe MunicipalPlans::ReleaseService do
         fields = audited_fields(plan.reload)
 
         expect(fields.count(["short_description", officer.user])).to eq(1)
-        expect(fields.count(["internal_notes", officer.user])).to eq(1)
+        expect(fields.count(["contact_name", officer.user])).to eq(1)
         expect(fields.map(&:first).count("short_description")).to eq(1)
-        expect(fields.map(&:first).count("internal_notes")).to eq(1)
+        expect(fields.map(&:first).count("contact_name")).to eq(1)
       end
 
       it "adds one release entry by the administrator" do

@@ -11,6 +11,11 @@ class Geo::BoundingBox
     [min_longitude, min_latitude, max_longitude, max_latitude]
   end
 
+  def contains?(latitude, longitude)
+    latitude.to_f.between?(min_latitude, max_latitude) &&
+      longitude.to_f.between?(min_longitude, max_longitude)
+  end
+
   private
 
   def radius_latitude

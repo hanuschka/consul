@@ -405,7 +405,8 @@ module Whatsapp::Send
   # The one message that cannot be put into the citizen's language, because it is sent
   # precisely when the assistant did not answer: asking the same provider to translate
   # it would spend a second timeout on the reply that exists to survive the first one.
-  # It goes out in the portal's own language, which is the point of there being fixed
+  # It goes out as rendered — in the conversation's language where the portal has copy
+  # in it, in the portal's own otherwise — which is the point of there being fixed
   # copy at all.
   def recovery_without_assistant(conversation:, body:, actions:)
     recovery_buttons_message(
@@ -488,7 +489,7 @@ module Whatsapp::Send
   def main_menu_pill(account)
     {
       id: ::Whatsapp::FlowActions.id_for(action: :main_menu),
-      title: I18n.t(
+      title: ::Whatsapp.copy(
         "whatsapp.bot.buttons.main_menu", locale: ::Whatsapp.locale_for(account)
       )
     }

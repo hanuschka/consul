@@ -21,14 +21,33 @@ class WhatsappApi::BaseController < ActionController::API
     def authenticate_webhook!
       return if authenticated?
 
+      Rails.logger.warn("[Whatsapp] webhook delivery refused: #{refusal_reason}")
+
       head :unauthorized
     end
 
-    # Any one of the three is enough. Gating the others behind a configured
-    # signing secret looks stricter but means a single unused credential in
-    # secrets.yml silently rejects every delivery — an outage, not a defence.
+    # A configured signing secret makes the signature mandatory on top of the
+    # shared secret, so a leaked header value alone can no longer forge a
+    # delivery. The cost is that a wrong signing secret refuses every delivery
+    # until it is fixed; 360dialog retries them, and #refusal_reason says why.
     def authenticated?
-      valid_signature? || valid_url_secret? || valid_header_secret?
+      return false if signature_required? && !valid_signature?
+
+      valid_url_secret? || valid_header_secret?
+    end
+
+    def signature_required?
+      ::Whatsapp.webhook_signature_secret.present?
+    end
+
+    def refusal_reason
+      if signature_required? && provided_signature.blank?
+        "no x-360dialog-signature header"
+      elsif signature_required? && !valid_signature?
+        "signature does not match whatsapp.webhook_signature_secret"
+      else
+        "no valid webhook_secret header or url_secret"
+      end
     end
 
     def valid_header_secret?
@@ -49,9 +68,11 @@ class WhatsappApi::BaseController < ActionController::API
     def valid_signature?
       return false if ::Whatsapp.webhook_signature_secret.blank?
 
-      provided_signature = request.headers[SIGNATURE_HEADER].to_s.sub(SIGNATURE_PREFIX, "")
-
       matches?(provided_signature, expected_signature)
+    end
+
+    def provided_signature
+      request.headers[SIGNATURE_HEADER].to_s.sub(SIGNATURE_PREFIX, "")
     end
 
     # Signed over the raw body: re-serializing the parsed JSON would change the

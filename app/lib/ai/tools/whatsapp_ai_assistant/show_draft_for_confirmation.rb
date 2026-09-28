@@ -15,6 +15,10 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
   # would have to be cut to fit — which is the whole thing this exists to prevent.
   MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
+  # The only message the publishing pill can sit under, so that tapping it publishes
+  # what the citizen has just read rather than asking to show it to them first.
+  CONFIRMS = %i[draft_publish submit_final].freeze
+
   description "Shows the citizen their contribution exactly as it will be stored — its title and " \
               "text, which projekt and which participation phase it goes into, and whether a " \
               "photo or a place is attached — and then asks your question with up to three " \
@@ -125,8 +129,8 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
           spec = button["action_id"] || button[:action_id]
           label = button["label"] || button[:label]
 
-          ::Whatsapp::AssistantActions.offered_button(
-            spec: spec, label: label, conversation: conversation
+          ::Whatsapp::AssistantActions.confirmation_button(
+            spec: spec, label: label, conversation: conversation, confirms: CONFIRMS
           )
         end
         .uniq { |button| button[:id] }

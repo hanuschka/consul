@@ -23,9 +23,11 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
               "generation reads what they actually wrote. Call start_draft first if no phase has " \
               "been chosen. It also returns anything already submitted that looks like the same " \
               "idea, and the phase's own assessment of the draft where the phase sets criteria. " \
-              "Nothing is published by this. Show them the draft in your own words, raise any " \
-              "near-duplicate as a genuine question — supporting one that exists is often worth " \
-              "more than a second copy of it — and offer to revise or to publish."
+              "Nothing is published by this and nothing is sent. What the citizen sees next is " \
+              "the draft itself: call show_draft_for_confirmation straight away, with no message " \
+              "of your own announcing it first. Raise any near-duplicate in its question as a " \
+              "genuine one — supporting one that exists is often worth more than a second copy " \
+              "of it — and say there what the assessment found, offering to revise or to publish."
 
   params do
     string :text,
@@ -92,6 +94,11 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
     # The three things the model needs and cannot see: the draft as it stands, what
     # the portal already holds that resembles it, and how the phase's own criteria
     # judged it.
+    #
+    # The hint travels with them because the draft in this answer is the one thing
+    # the model is most tempted to announce rather than show: handed the text, it
+    # wrote "your draft is ready, do you want to check it?" above a draft the
+    # citizen had not seen, and was answered "Passt" by people who then read it.
     def answer(stored, safety)
       return invalid_draft_error(stored.errors) if stored.invalid?
       return missing_choice_answer(stored.missing) if stored.missing?
@@ -101,9 +108,15 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
         similar_contributions: similar_contributions(safety.search_terms),
         assessment: assessment_for(stored.resource),
         collects_picture: conversation.image_question_available?,
-        collects_location: conversation.location_question_available?
+        collects_location: conversation.location_question_available?,
+        hint: SHOW_DRAFT_HINT
       }.compact
     end
+
+    SHOW_DRAFT_HINT = "Call show_draft_for_confirmation now: the draft is the first thing the " \
+                      "citizen sees. Anything above about similar contributions, the " \
+                      "assessment, a picture or a place belongs in its question and its " \
+                      "buttons, not in a message before it.".freeze
 
     def draft_payload(resource)
       {

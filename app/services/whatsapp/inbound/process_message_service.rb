@@ -110,7 +110,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # whole context with the assistant's own history, markers included.
     ballot_in_flight = conversation.active_poll_id
 
-    answer(inbound_note, inbound_message_id: reading.message_id)
+    answer(
+      inbound_note, inbound_message_id: reading.message_id, citizen_words: citizen_words
+    )
 
     resume_ballot(ballot_in_flight)
   end
@@ -129,12 +131,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # watching the message they have just sent, and that is the only one WhatsApp
     # will hang a typing indicator on — so the turn re-arms on the live inbound
     # while the assistant is asked about the snapshotted one.
-    def answer(inbound_text, inbound_message_id:)
+    def answer(inbound_text, inbound_message_id:, citizen_words:)
       return send_unavailable_line if !::Ai::Settings.ai_available?
 
       result = ::Whatsapp::AiAssistant::RouterService.call(
         conversation: conversation,
         inbound_text: inbound_text,
+        citizen_words: citizen_words,
         inbound_message_id: inbound_message_id,
         typing_message_id: reading.message_id,
         previous_inbound_at: previous_inbound_at
@@ -144,10 +147,24 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       # The note describing a tap is snapshotted as the text it is: what the retry
       # replays is the sentence the assistant was given, which already says which
-      # button was pressed.
-      conversation.store_retry_inbound!(text: inbound_text, message_id: inbound_message_id)
+      # button was pressed. The citizen's words travel with it, so a free-text
+      # answer whose turn failed can still be recorded from the retry.
+      conversation.store_retry_inbound!(
+        text: inbound_text, message_id: inbound_message_id, citizen_words: citizen_words
+      )
 
       send_retryable_unavailable_line
+    end
+
+    # The message as the citizen wrote it, where the turn answers their words
+    # rather than a note about them: never the label of a tapped pill, which is
+    # not something they wrote, and never a message carrying a QR token.
+    def citizen_words
+      return if reading.tapped_reply_id.present?
+      return if reading.text.blank?
+      return if ::Whatsapp::QrToken.carried_in?(reading.text)
+
+      reading.text
     end
 
     # The whole deterministic surface left, and it is one sentence with a way out.
@@ -283,7 +300,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return if !way_back_in_due?
 
       send_bot_line(
-        I18n.t(
+        ::Whatsapp.copy(
           "whatsapp.bot.compliance.opted_out_reminder",
           keyword: OPT_IN_KEYWORDS.first.upcase
         )
@@ -303,7 +320,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return if account.ai_disclosed?
 
       send_bot_line(
-        I18n.t(
+        ::Whatsapp.copy(
           "whatsapp.bot.compliance.disclosure", portal_name: ::Whatsapp::PortalLinks.portal_name
         )
       )
@@ -859,16 +876,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return ::Whatsapp.copy("whatsapp.bot.phase.contributions_all", intro: intro) if total <= shown
 
-      I18n.t(
+      ::Whatsapp.copy(
         "whatsapp.bot.phase.contributions_newest", intro: intro, shown: shown, total: total
       )
     end
 
     def phase_contributions_opening(projekt_phase)
-      I18n.t(
+      ::Whatsapp.copy(
         "#{CONTRIBUTIONS_INTRO_SCOPE}.#{projekt_phase.name}",
         phase: projekt_phase.title,
-        default: I18n.t(
+        default: ::Whatsapp.copy(
           "whatsapp.bot.phase.contributions_intro_fallback", phase: projekt_phase.title
         )
       )
@@ -964,7 +981,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       url = ::Whatsapp::PublishedResourceUrl.call(contribution)
 
       return send_line_with_link(
-        line: I18n.t(contribution_opening_key(contribution), contribution: contribution.title),
+        line: ::Whatsapp.copy(
+          contribution_opening_key(contribution), contribution: contribution.title
+        ),
         url: url
       ) if url.present?
 
@@ -1017,7 +1036,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(:retry, nil)
 
-      answer(snapshot["text"], inbound_message_id: snapshot["message_id"])
+      answer(
+        snapshot["text"],
+        inbound_message_id: snapshot["message_id"],
+        citizen_words: snapshot["citizen_words"]
+      )
 
       true
     end

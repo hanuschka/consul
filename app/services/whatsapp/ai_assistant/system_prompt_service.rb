@@ -238,7 +238,11 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           show_draft_for_confirmation and show_comment_for_confirmation, and again afterwards by
           publish_draft and post_comment — so that what they read is what the platform holds,
           down to the word. A registered support is sent for you the same way. Your part is the
-          question underneath and the buttons beside it. What they wrote is theirs: you may say
+          question underneath and the buttons beside it. Once a draft or a comment has been
+          written or changed, that preview is the next thing the citizen gets: never a message
+          before it saying it is ready or asking whether they want to see it, because they would
+          be answering about a text they have not read. What you would have said in that
+          message goes into the preview's question instead. What they wrote is theirs: you may say
           what you think of it when they ask, but you do not tidy it, shorten it or restate it in
           passing.
 
@@ -318,6 +322,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         empty_draft_line,
         picture_waiting_line,
         location_waiting_line,
+        proposed_location_line,
         start_over_line,
         unavailable_recovery_line,
         "- Active participation phase: #{active_phase_description}",
@@ -418,6 +423,18 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       return if @conversation.shared_location.blank?
 
       "- A location the citizen just shared is waiting to be attached to their draft"
+    end
+
+    # A place read from their words is not on the draft until they say it is the
+    # right one, and nothing in the transcript shows that it was found — so without
+    # this line it is never asked about and simply never attached.
+    def proposed_location_line
+      place = @conversation.proposed_location
+
+      return if place.blank?
+
+      "- A place read from the citizen's words is waiting for them to confirm it before it " \
+        "goes on their draft: #{place["name"].presence || "unnamed place"}"
     end
 
     # Permission to say it, not an instruction to: whether this particular message

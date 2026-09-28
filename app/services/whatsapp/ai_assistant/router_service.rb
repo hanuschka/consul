@@ -58,12 +58,17 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   # asking for a bubble on a message that has been read for minutes. Required
   # rather than defaulted to nil: a turn with no bubble is the defect this
   # separation exists to prevent, and it must not be reachable by omission.
+  #
+  # `citizen_words` is `inbound_text` again where the citizen wrote it, and nil
+  # where the inbound is a note — a tap, a scan, a completion. The model cannot
+  # tell the two apart, and only the words may be stored as a free-text answer.
   def initialize(
     conversation:, inbound_text:, typing_message_id:, inbound_message_id: nil,
-    previous_inbound_at: nil
+    previous_inbound_at: nil, citizen_words: nil
   )
     @conversation = conversation
     @inbound_text = inbound_text
+    @citizen_words = citizen_words
     @inbound_message_id = inbound_message_id
     @typing_message_id = typing_message_id
     @previous_inbound_at = previous_inbound_at
@@ -73,7 +78,12 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   def call
     return ServiceResult.failure(error: BLANK_MESSAGE_ERROR) if @inbound_text.blank?
 
+    @last_message_id_before_turn = last_message_id
     keep_waiting_visible
+
+    # Before the model is asked, so what the tools write in this turn can be told
+    # apart from what was already there when it began.
+    @conversation.hold_preview_digests!
 
     turn = within_turn { ask }
     outcome = deliver(turn)
@@ -86,6 +96,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     return ServiceResult.failure(error: REFUSED_MESSAGE_ERROR) if outcome == :refused
 
     persist(turn)
+    record_reply_language
 
     ServiceResult.success(outcome: outcome)
   rescue StandardError => e
@@ -273,6 +284,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       body = retried.presence || body
 
       record_missed_actions
+      record_skipped_preview
 
       # Through the way-out send rather than text, and it is the one path that has to
       # use it: this composes no buttons of its own, so without the pill the message
@@ -318,7 +330,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
       keep_waiting_visible
 
-      response = turn.chat.ask(RETRY_FOR_ACTIONS)
+      response = turn.chat.ask(retry_prompt)
 
       if response.is_a?(::RubyLLM::Tool::Halt)
         turn.halt = response
@@ -331,6 +343,35 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       report(e)
 
       nil
+    end
+
+    # The same one extra request, asked for the preview rather than for buttons when
+    # this turn wrote something the citizen has not seen: a plain-text answer then is
+    # the announcement of a draft above a draft that is not there, and buttons added
+    # to it would only make it the same message with a publish pill it cannot carry.
+    def retry_prompt
+      kind = @conversation.unshown_preview_kind
+
+      return RETRY_FOR_ACTIONS if kind.blank?
+
+      tool = ::Ai::Tools::WhatsappAiAssistant::BaseTool::PREVIEW_TOOLS.fetch(kind)
+
+      "The citizen has not seen the #{kind} this turn wrote, so that reply was not sent. Call " \
+        "#{tool} now and put what you meant to say into its question."
+    end
+
+    # Plain text is the one send nothing can refuse, and it is not refused here
+    # either: a citizen left without any answer is worse than one answered before
+    # the preview. So it is counted instead — beside `preview_required`, it is how
+    # often the message that got a "Passt" to an unread text still goes out.
+    def record_skipped_preview
+      kind = @conversation.unshown_preview_kind
+
+      return if kind.blank?
+
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :preview_skipped, conversation: @conversation, kind: kind, step: @conversation.step
+      )
     end
 
     # Reaching here is a reply with nothing to tap: every tool that sends an
@@ -362,6 +403,23 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       record_diagnostic_step
     rescue StandardError => e
       report(e)
+    end
+
+    # After the reply has gone out and the turn is written down, so the citizen
+    # never waits on it. What it stores is what the fixed lines of every later
+    # message follow; it rescues its own failures, which leave the language the
+    # conversation already had.
+    def record_reply_language
+      ::Whatsapp::AiAssistant::ReplyLanguageService.call(
+        account: @conversation.whatsapp_account,
+        after_message_id: @last_message_id_before_turn
+      )
+    end
+
+    # Everything this turn sends is written after this id, which is how the
+    # reply's rows are told apart from the ones before it.
+    def last_message_id
+      ::Whatsapp::Message.where(whatsapp_account_id: @conversation.whatsapp_account_id).maximum(:id)
     end
 
     # Each transport keeps its own kind of state and drops the other's, so which
@@ -397,7 +455,10 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # the same instances after the turn — and because a tool that memoizes a query
     # should not throw it away between two calls of one turn.
     def tools
-      @tools ||= tool_classes.map { |tool_class| tool_class.new(conversation: @conversation) }
+      @tools ||=
+        tool_classes.map do |tool_class|
+          tool_class.new(conversation: @conversation, citizen_words: @citizen_words)
+        end
     end
 
     # Built once a turn and only for the transport that needs them: the ruby_llm
@@ -503,6 +564,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::AttachDraftImage,
       ::Ai::Tools::WhatsappAiAssistant::GenerateDraftImage,
       ::Ai::Tools::WhatsappAiAssistant::SetDraftLocation,
+      ::Ai::Tools::WhatsappAiAssistant::RemoveDraftLocation,
       ::Ai::Tools::WhatsappAiAssistant::PublishDraft,
       ::Ai::Tools::WhatsappAiAssistant::AbortSubmission
     ].freeze

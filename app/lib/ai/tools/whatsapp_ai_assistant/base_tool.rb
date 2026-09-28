@@ -13,8 +13,19 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
                                 "nothing written, trying again with no failed turn, or " \
                                 "reopening a login link that is not outstanding.".freeze
 
-  def initialize(conversation:)
+  # The tool that shows each kind of Whatsapp::Conversation#unshown_preview_kind,
+  # named in the refusal below and in the router's retry of a plain-text answer.
+  PREVIEW_TOOLS = {
+    draft: "show_draft_for_confirmation",
+    comment: "show_comment_for_confirmation"
+  }.freeze
+
+  # `citizen_words` is the message the turn answers when the citizen wrote it —
+  # nil for a tap, a scan, a photo or a completion note. Passed apart from the
+  # note the model reads, for the tool that stores what they wrote as it arrived.
+  def initialize(conversation:, citizen_words: nil)
     @conversation = conversation
+    @citizen_words = citizen_words
   end
 
   # RubyLLM derives the exposed name from the full class path, which would put
@@ -34,7 +45,7 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
 
   private
 
-    attr_reader :conversation
+    attr_reader :conversation, :citizen_words
 
     def account
       conversation.whatsapp_account
@@ -234,6 +245,38 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       }
     end
 
+    # The order the retired step machine kept by sequence: a contribution written or
+    # changed in this turn is shown before anything else is said about it. Told to
+    # the model in every drafting tool's answer, and still followed by a message
+    # announcing a draft the citizen had not seen — eight of nine new drafts on one
+    # day — so the tools that would send that message refuse instead.
+    #
+    # Only the send is refused. What the preview says underneath and which choices
+    # sit beside it stay the model's; this decides no more than that the text comes
+    # first. Scoped to the turn by Whatsapp::Conversation#unshown_preview_kind, so a
+    # citizen asking something else later is answered rather than shown the draft
+    # again.
+    def refuse_before_preview
+      kind = conversation.unshown_preview_kind
+
+      return if kind.blank?
+
+      preview_required_error(kind)
+    end
+
+    def preview_required_error(kind)
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :preview_required, conversation: conversation, tool: name, kind: kind
+      )
+
+      {
+        error: "The citizen's #{kind} was written or changed in this turn and they have not " \
+               "seen it yet, so nothing else was sent.",
+        hint: "Call #{PREVIEW_TOOLS.fetch(kind)} now. Put what you meant to say here into its " \
+              "question, and the next steps you meant to offer into its buttons."
+      }
+    end
+
     def unknown_phase_error
       { error: "No open participation phase with that id. Call list_open_phases first." }
     end
@@ -347,7 +390,8 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       {
         recorded: kind,
         draft_saved: true,
-        hint: "Nothing is outstanding. Show them the draft and ask whether it can go in."
+        hint: "Nothing is outstanding. Show them the draft with show_draft_for_confirmation and " \
+              "ask there whether it can go in."
       }
     end
 

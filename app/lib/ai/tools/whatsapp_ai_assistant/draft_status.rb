@@ -11,8 +11,9 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
   description "Returns everything about the draft in this conversation: its title and text as " \
               "they stand, which phase it belongs to, whether a category or sentiment is still " \
               "needed, whether a picture is attached, whether this phase collects a picture or a " \
-              "map pin at all, and whether the citizen has already said they have no photo or " \
-              "named the place in words. Call it before asking them for anything about the draft " \
+              "map pin at all, whether the citizen has already said they have no photo or " \
+              "named the place in words, and which place is attached or waiting for their " \
+              "answer. Call it before asking them for anything about the draft " \
               "— it is the only way to avoid asking for something they have already given — and " \
               "before publishing, to be sure nothing is outstanding. Sends nothing."
 
@@ -107,12 +108,38 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
       "still open"
     end
 
+    # The waiting pins come first because each needs something done, and a place
+    # read from the citizen's words is put ahead of one already attached: on a
+    # revision it may be the place they meant all along.
     def location_status
-      return "not collected by this phase" if !conversation.location_question_available?
-      return "the citizen already named the place in words" if conversation.location_stated?
-      return "a shared pin is waiting — call set_draft_location" if
-        conversation.shared_location.present?
+      if !conversation.location_question_available?
+        "not collected by this phase"
+      elsif conversation.shared_location.present?
+        "a shared pin is waiting — call set_draft_location"
+      elsif conversation.proposed_location.present?
+        proposed_location_status
+      elsif draft_resource&.map_location.present?
+        attached_location_status
+      elsif conversation.location_stated?
+        "the citizen already named the place in words"
+      else
+        "still open"
+      end
+    end
 
-      "still open"
+    def proposed_location_status
+      name = conversation.proposed_location["name"].presence || "unnamed place"
+
+      "a place read from the citizen's words is waiting for their answer: #{name}. Nothing " \
+        "is attached yet. Ask them whether that is the place they mean; set_draft_location " \
+        "attaches it once they agree, remove_draft_location drops it"
+    end
+
+    def attached_location_status
+      name = conversation.attached_location_name
+
+      return "a pin is attached" if name.blank?
+
+      "a pin is attached: #{name}"
     end
 end

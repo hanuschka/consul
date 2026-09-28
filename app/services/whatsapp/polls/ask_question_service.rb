@@ -464,7 +464,7 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     end
 
     def weight_prompt_text(choice)
-      I18n.t(
+      ::Whatsapp.copy(
         "whatsapp.bot.poll.weight_prompt",
         maximum: remaining_weights_for(choice).last
       )
@@ -482,7 +482,7 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     def location_prompt_text
       return ::Whatsapp.copy("whatsapp.bot.poll.location_prompt") if question.max_map_points < 2
 
-      I18n.t(
+      ::Whatsapp.copy(
         "whatsapp.bot.poll.location_prompt_remaining",
         remaining: question.max_map_points - placed_map_points
       )

@@ -43,6 +43,8 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
         projekt_phase_id: projekt_phase.id,
         projekt: projekt_title(projekt_phase.projekt),
         phase: projekt_phase.title,
+        about: phase_about(projekt_phase),
+        starts_on: ::Whatsapp::DatePhrase.absolute(projekt_phase.start_date),
         ends_in: ::Whatsapp::DatePhrase.relative(projekt_phase.end_date)
       }.compact
     end
@@ -98,7 +100,7 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
     end
 
     def picture_attached?
-      draft_resource&.image&.attachment&.attached? == true
+      conversation.draft_picture_attached?
     end
 
     def picture_status

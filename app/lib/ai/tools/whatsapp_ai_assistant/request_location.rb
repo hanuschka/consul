@@ -7,8 +7,10 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
               "words there is nothing to ask, and when they say they do not know it, publish " \
               "without one. This sends the picker itself — do not " \
               "write a message as well. The picker can carry no buttons of its own, so a second " \
-              "short message follows it with the way to go on without a pin; that is sent for " \
-              "you and you do not write it either."
+              "short message follows it with the way to go on without a pin and the note that a " \
+              "pin can only be set in the app on the phone — WhatsApp Web and Desktop cannot " \
+              "show the picker at all. That message is sent for you; do not write it, or the " \
+              "note, yourself."
 
   params do
     string :body,

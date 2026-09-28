@@ -13,6 +13,14 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
                                 "nothing written, trying again with no failed turn, or " \
                                 "reopening a login link that is not outstanding.".freeze
 
+  # The button budget, for every tool whose buttons carry labels the model writes.
+  # One wording because it warns about one refusal (#refuse_overlong_labels), and a
+  # description that left it out is how a label one character too long got written.
+  LABEL_BUDGET_DESCRIPTION = "Every label you write holds at most " \
+                             "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters " \
+                             "counting spaces. Count them: a longer one is refused, and nothing " \
+                             "is sent until it is shorter.".freeze
+
   # The tool that shows each kind of Whatsapp::Conversation#unshown_preview_kind,
   # named in the refusal below and in the router's retry of a plain-text answer.
   PREVIEW_TOOLS = {
@@ -136,6 +144,16 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       ::Whatsapp::ProjektLink.title(projekt)
     end
 
+    # What a phase is for, in the portal's words and cut to a line. Handed over with
+    # its dates wherever phases are listed, because a projekt may run three phases
+    # all called "Vorschläge", and a model with nothing but the name to go on tells
+    # them apart by numbering them.
+    def phase_about(projekt_phase)
+      ::Whatsapp.plain_text(projekt_phase.description, length: PHASE_ABOUT_LENGTH).presence
+    end
+
+    PHASE_ABOUT_LENGTH = 160
+
     def projekt_url(projekt)
       ::Whatsapp::ProjektLink.url(projekt)
     end
@@ -213,26 +231,40 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     # The pills under a preview: every one the model may offer anywhere, plus the
     # one that acts on what the preview just showed where `confirms` names it.
     def preview_buttons(buttons, confirms:)
-      built = Array(buttons).filter_map do |button|
-        ::Whatsapp::AssistantActions.confirmation_button(
-          spec: button_value(button, "action_id"),
-          label: button_value(button, "label"),
-          conversation: conversation,
-          confirms: confirms
-        )
+      built = with_pill_records(buttons) do
+        Array(buttons).filter_map do |button|
+          ::Whatsapp::AssistantActions.confirmation_button(
+            spec: button_value(button, "action_id"),
+            label: button_value(button, "label"),
+            conversation: conversation,
+            confirms: confirms
+          )
+        end
       end
 
       distinct_buttons(built)
     end
 
     def written_buttons(buttons)
-      Array(buttons).filter_map do |button|
-        ::Whatsapp::AssistantActions.offered_button(
-          spec: button_value(button, "action_id"),
-          label: button_value(button, "label"),
-          conversation: conversation
-        )
+      with_pill_records(buttons) do
+        Array(buttons).filter_map do |button|
+          ::Whatsapp::AssistantActions.offered_button(
+            spec: button_value(button, "action_id"),
+            label: button_value(button, "label"),
+            conversation: conversation
+          )
+        end
       end
+    end
+
+    # The records every pill of this message points at, read in one pass before
+    # the pills are built (Whatsapp::AssistantActions.with_records_preloaded).
+    def with_pill_records(buttons, &block)
+      specs = Array(buttons).map { |button| button_value(button, "action_id") }
+
+      ::Whatsapp::AssistantActions.with_records_preloaded(
+        specs, conversation: conversation, &block
+      )
     end
 
     # Deduplicated twice over, and both are silent-failure prevention rather than
@@ -262,6 +294,49 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     # chances for it to treat them as three different situations. Each says what
     # is wrong and what would fix it, because the model's next move is a sentence
     # to the citizen and it has nothing else to write it from.
+
+    # A label the model wrote that would arrive cut. Refused rather than cut: a cut
+    # label is a fragment ("Allgemein vorschlag…") under a sentence asking the
+    # citizen to tap it, and only the model can say the same in fewer words. Checked
+    # before anything is sent, so the retry is the same call with shorter words
+    # rather than a second message.
+    def refuse_overlong_button_labels(
+      buttons, length: ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH
+    )
+      labels = Array(buttons).filter_map do |button|
+        next if !::Whatsapp::AssistantActions.written_label?(button_value(button, "action_id"))
+
+        button_value(button, "label")
+      end
+
+      refuse_overlong_labels(labels, length: length)
+    end
+
+    def refuse_overlong_labels(labels, length: ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH)
+      overlong =
+        Array(labels)
+          .map { |label| label.to_s.squish }
+          .reject { |label| ::Whatsapp::AssistantActions.fits?(label, length) }
+
+      return if overlong.empty?
+
+      overlong_labels_error(overlong, length)
+    end
+
+    def overlong_labels_error(labels, length)
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :labels_too_long, conversation: conversation, labels: labels, length: length
+      )
+
+      counted = labels.map { |label| "\"#{label}\" (#{label.length})" }
+
+      {
+        error: "#{counted.join(", ")} #{labels.one? ? "is" : "are"} longer than the #{length} " \
+               "characters this label holds, spaces included, so nothing was sent.",
+        hint: "Say the same in fewer words — a shorter word or one word less, never a word cut " \
+              "off — and call this again with everything else unchanged."
+      }
+    end
 
     def no_proposal_match_error(title)
       {

@@ -26,7 +26,7 @@ class Ai::Tools::WhatsappAiAssistant::RequestTermsConsent <
       of: :object,
       description: "Up to two further buttons beside the accept one, each " \
                    "{\"action_id\": ..., \"label\": ...}. The button that accepts is added for " \
-                   "you and comes first. Parameterless action ids: " \
+                   "you and comes first. #{LABEL_BUDGET_DESCRIPTION} Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}."
   end
 
@@ -41,6 +41,10 @@ class Ai::Tools::WhatsappAiAssistant::RequestTermsConsent <
   def execute(question:, buttons:)
     return already_accepted_answer if account.terms_accepted?
     return blank_question_error if question.to_s.strip.blank?
+
+    overlong = refuse_overlong_button_labels(buttons)
+
+    return overlong if overlong.present?
 
     consent = ::Whatsapp::TermsConsentPreview.confirmation(conversation: conversation)
 

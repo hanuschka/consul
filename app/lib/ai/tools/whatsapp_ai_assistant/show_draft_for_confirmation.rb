@@ -38,7 +38,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
       description: "Up to three buttons, each {\"action_id\": ..., \"label\": ...}. Offer " \
                    "draft_publish among them whenever you are asking whether it can go in — " \
                    "nothing else arms publishing, and its label is written for you, so leave it " \
-                   "empty. Parameterless action ids: " \
+                   "empty. #{LABEL_BUDGET_DESCRIPTION} Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}."
   end
 
@@ -49,6 +49,10 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
   def execute(question:, buttons:)
     return no_draft_error if draft_resource.blank?
     return blank_question_error if question.to_s.strip.blank?
+
+    overlong = refuse_overlong_button_labels(buttons)
+
+    return overlong if overlong.present?
 
     offerable = preview_buttons(buttons, confirms: CONFIRMS)
 

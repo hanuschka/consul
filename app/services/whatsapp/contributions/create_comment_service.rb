@@ -20,11 +20,20 @@ class Whatsapp::Contributions::CreateCommentService < ApplicationService
   def self.refusal(proposal:, user:, body:)
     return :not_linked if user.blank?
     return :gone if proposal.blank?
+    return :gone if !publicly_listed?(proposal)
     return :blank if body.to_s.strip.blank?
     return :confirmation_only if confirmation_only?(body)
     return :closed if !comments_allowed?(proposal: proposal, user: user)
 
     nil
+  end
+
+  # A comment goes under what the portal lists, and nowhere else: the phase's
+  # own rule answers whether the thread is open, not whether moderation has let
+  # the proposal out yet. Answered as gone, author included — the portal offers
+  # no comment field on a proposal it does not list.
+  def self.publicly_listed?(proposal)
+    ::Whatsapp::ReachableContributionsQuery.actionable_proposals.exists?(id: proposal.id)
   end
 
   def self.confirmation_only?(body)

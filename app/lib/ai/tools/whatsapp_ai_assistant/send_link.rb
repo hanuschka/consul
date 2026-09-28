@@ -16,8 +16,8 @@ class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant:
     string :label,
       description: "What the button says, at most " \
                    "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting " \
-                   "spaces (\"Seite öffnen\", \"Anmelden\"). Count them: a longer one is cut " \
-                   "and arrives ending in \"…\"."
+                   "spaces (\"Seite öffnen\", \"Anmelden\"). Count them: a longer one is " \
+                   "refused, and nothing is sent until it is shorter."
     string :url, description: "The address, exactly as a tool returned it."
   end
 
@@ -27,6 +27,10 @@ class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant:
     return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
     return invalid_url_error if !openable?(url)
+
+    overlong = refuse_overlong_labels([label])
+
+    return overlong if overlong.present?
 
     text = body.strip
     button_label = ::Whatsapp::AssistantActions.truncated(label).presence ||

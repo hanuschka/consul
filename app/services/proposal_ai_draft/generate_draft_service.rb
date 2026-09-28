@@ -282,12 +282,31 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       }
     end
 
-    def base_schema_properties
-      {
-        title: {
+    # The chat's title names the proposal rather than selling it. "Compelling" read
+    # as an invitation to write copy, and a chat is where the title is all the
+    # citizen sees of the draft before its card: "Gut geladen in die Zukunft" says
+    # nothing about the charging points it proposes. The web keeps its wording —
+    # there the title sits in a form field the citizen edits anyway.
+    def title_schema
+      if required_taxonomy?
+        {
+          type: "string",
+          description: "The proposal's title: say what is proposed, and where if the citizen " \
+                       "said, in the plain words a neighbour would use (\"Mehr Fahrradbügel am " \
+                       "Bahnhof\"). Never a slogan, a pun, a motto or a headline written to sound " \
+                       "appealing."
+        }
+      else
+        {
           type: "string",
           description: "A concise, compelling title for the citizen proposal."
-        },
+        }
+      end
+    end
+
+    def base_schema_properties
+      {
+        title: title_schema,
         description: {
           type: "string",
           description: "A detailed description of the proposal explaining the problem, solution, and " \

@@ -12,7 +12,8 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
               "typing and it says what can happen next. Each button needs an action_id from the " \
               "list below and a label in the citizen's language of at most " \
               "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting spaces — " \
-              "count them, because a longer one is cut and arrives ending in \"…\". Name a " \
+              "count them, because a longer one is refused and nothing is sent until it is " \
+              "shorter. Name a " \
               "record-backed action as \"action-id\" using an id a tool in this conversation " \
               "returned (\"view_projekt-482\", \"notify_toggle-new_comments\"); leave its label " \
               "empty to use the record's own name, which is usually better than a paraphrase of " \
@@ -41,6 +42,10 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
     return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
+
+    overlong = refuse_overlong_button_labels(buttons)
+
+    return overlong if overlong.present?
 
     offerable = offerable_buttons(buttons)
 
@@ -80,7 +85,11 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
     end
 
     def offerable_buttons(buttons)
-      distinct_buttons(Array(buttons).filter_map { |button| build(button) })
+      built = with_pill_records(buttons) do
+        Array(buttons).filter_map { |button| build(button) }
+      end
+
+      distinct_buttons(built)
     end
 
     # A recovery id keeps its own namespace, read by the inbound side before the

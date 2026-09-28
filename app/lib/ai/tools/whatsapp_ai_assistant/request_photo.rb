@@ -17,7 +17,10 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
               "the request. Use it whenever you ask for a photo — never write the request " \
               "yourself, because the notices would be missing. draft_status says whether this " \
               "phase takes pictures at all and whether the citizen has already declined one; do " \
-              "not ask again if they have. A photo is always optional, and all three answers — " \
+              "not ask again if they have. Whether the draft already carries a picture is on " \
+              "the draft line of the state: where it has none, a request to replace one is a " \
+              "first photo, so ask for it as that and never talk about a picture that is not " \
+              "there. A photo is always optional, and all three answers — " \
               "send one, have one generated, or go on without — arrive as buttons of their own, " \
               "so do not offer them again in your sentence. A tap on the generate button comes " \
               "back to you as a message, and generate_draft_image is what you answer it with. " \

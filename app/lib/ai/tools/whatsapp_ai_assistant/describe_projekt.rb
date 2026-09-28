@@ -10,7 +10,9 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
               "running when its running field says so, whether or not it takes a written " \
               "contribution — a voting phase that is running is running. Every phase is a row " \
               "of its own, several of the same kind included, each with its own name and its " \
-              "own dates: never merge them. Where running_phases_not_listed is present, that " \
+              "own dates: never merge them, and where two share a name, tell them apart by " \
+              "their dates or by what they are about, never by a number. Where " \
+              "running_phases_not_listed is present, that " \
               "many more phases are running than the rows name — say so rather than " \
               "presenting the listed ones as all of them. " \
               "Identified by name rather than by id, so it reaches finished projekts as " \
@@ -83,6 +85,8 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
         {
           projekt_phase_id: candidate.id,
           phase: phase_facts.name,
+          about: phase_about(candidate),
+          starts_on: ::Whatsapp::DatePhrase.absolute(candidate.start_date),
           ends_on: ::Whatsapp::DatePhrase.absolute(phase_facts.ends_on),
           ends_in: ::Whatsapp::DatePhrase.relative(phase_facts.ends_on),
           running: candidate.current?,

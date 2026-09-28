@@ -17,6 +17,12 @@ module Adm
       whatsapp.max_voice_megabytes
     ].freeze
 
+    ADMINISTRATION_CONTACT_SETTING_KEYS = %w[
+      whatsapp.administration_contact_phone
+      whatsapp.administration_contact_email
+      whatsapp.administration_contact_url
+    ].freeze
+
     # Mirrored from the templates tab, which is the only place that can vouch
     # for a name Meta has approved. Typing one here made every broadcast fail,
     # so the page shows them and links onwards instead of offering an input.
@@ -444,13 +450,15 @@ module Adm
 
         @feature_settings = FEATURE_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
         @text_settings = TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
+        @administration_contact_settings =
+          ADMINISTRATION_CONTACT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
         @auto_broadcast_setting = settings_by_key[AUTO_BROADCAST_SETTING_KEY]
         @model_tier_setting = model_tier_setting_from(settings_by_key)
         @model_tier_options = model_tier_options
       end
 
       def all_setting_keys
-        FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS +
+        FEATURE_SETTING_KEYS + TEXT_SETTING_KEYS + ADMINISTRATION_CONTACT_SETTING_KEYS +
           [AUTO_BROADCAST_SETTING_KEY, ::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY]
       end
 

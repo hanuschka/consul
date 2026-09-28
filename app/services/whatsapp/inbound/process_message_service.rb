@@ -214,6 +214,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # only moment both are still nameable and the new question has not gone out yet.
     # And where the turn recorded a typed answer: the tool that recorded it has
     # already sent the ballot's next message.
+    #
+    # And once per question only. Put again after every detour, a question is a
+    # script running under the conversation rather than a part of it — a map
+    # question re-sent its picker under each reply until the citizen was trapped in
+    # it. After the one re-ask the question stays in the state, and bringing it
+    # back is the assistant's call (Whatsapp::Conversation#resumed_poll_question_ids).
     def resume_ballot(poll_id)
       return if poll_id.blank?
       return if ::Current.whatsapp_ballot_message_sent_in_turn
@@ -223,6 +229,15 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       poll = ::Poll.find_by(id: poll_id)
 
       return if poll.blank?
+
+      owed_question_id =
+        ::Whatsapp::Polls::OwedQuestionQuery.for(conversation: conversation)&.question&.id
+
+      return if conversation.resumed_poll_question_ids.include?(owed_question_id)
+
+      if owed_question_id.present?
+        conversation.record_resumed_poll_question!(owed_question_id)
+      end
 
       ::Whatsapp::Polls::AdvanceBallotService.call(conversation: conversation, poll: poll)
     end
@@ -345,7 +360,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return if tapped_id.blank?
 
-      return start_over_note if start_over_tap?
+      return ::Whatsapp::StartOverNotes.for(conversation) if start_over_tap?
 
       recovery = ::Whatsapp::Send.recovery_action_from(tapped_id)
 
@@ -357,6 +372,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(flow_action[:action], flow_action[:param])
       settle_slot_for(flow_action[:action])
+      discard_declined_photo(flow_action[:action])
 
       support_toggle_note(action: flow_action[:action], param: flow_action[:param]) ||
         tapped_line(action: flow_action[:action], param: flow_action[:param])
@@ -521,14 +537,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         unsaved: conversation.unsaved_submission?
       )
 
-      conversation.note_start_over!
-      conversation.clear_ballot!
-
-      if conversation.unsaved_submission?
-        conversation.request_start_over!
-      else
-        conversation.leave_projekt!
-      end
+      conversation.begin_start_over!
     end
 
     # One id from each namespace, which is why both are read here: the start-over pill
@@ -546,31 +555,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       START_OVER_ACTIONS.include?(action)
     end
-
-    # Said rather than left to the cleared state, because the state is not the only
-    # thing the model reads: the stored history is replayed every turn and still has
-    # the projekt in it, so a nil phase on its own is one line of evidence against
-    # ten. This note is the newest message in the turn, which is the only place a
-    # correction outweighs what came before it.
-    def start_over_note
-      return START_OVER_WITH_DRAFT_NOTE if conversation.unsaved_submission?
-
-      START_OVER_NOTE
-    end
-
-    START_OVER_NOTE = "The citizen asked to go back to the start. No projekt and no phase " \
-                      "is selected any more, and nothing said earlier in this conversation " \
-                      "about one carries into what follows: do not offer that projekt, its " \
-                      "phases or a contribution to it unless they name it again themselves. " \
-                      "Send them what applies right now — what is open to take part in, what " \
-                      "they have already done, what there is to read.".freeze
-
-    START_OVER_WITH_DRAFT_NOTE = "The citizen asked to go back to the start while part-way " \
-                                 "through a contribution. Nothing has been discarded and the " \
-                                 "projekt is still selected, because throwing away what they " \
-                                 "wrote cannot be taken back. Say in one line what is " \
-                                 "unsaved, and ask whether to discard it or carry on with " \
-                                 "it. Call abort_submission only if they say to discard.".freeze
 
     # Cancelling is the one tap that does its own work, and its gate is up in the
     # chain with the stop keyword for the same reason: abandoning a submission must
@@ -1086,6 +1070,15 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       conversation.settle_slot!(slot)
     end
 
+    # A photo that arrived unasked waits under the question about it, and the
+    # notices went out with that question — so a "no" that left it parked would
+    # let the next attach_draft_image put the photo they declined on the draft.
+    def discard_declined_photo(action)
+      return if action != :image_skip
+
+      conversation.clear_shared_image!
+    end
+
     # A pill from an older deploy, still sitting in someone's chat history and still
     # tappable forever. Answered rather than dropped: a tap that produces nothing at
     # all reads as a bot that has stopped working, and the citizen taps again. That it
@@ -1141,8 +1134,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     IMAGE_NOTE = "The citizen sent a photo with nothing written beside it. If a draft is open " \
-                 "and this phase takes pictures, attach it with attach_draft_image and say so. " \
-                 "Otherwise tell them there is nothing to attach it to right now.".freeze
+                 "and this phase takes pictures, call attach_draft_image: it attaches the " \
+                 "photo, or first sends the notices about pictures where they have not been " \
+                 "shown yet. Otherwise tell them there is nothing to attach it to right " \
+                 "now.".freeze
 
     LOCATION_NOTE = "The citizen shared a location with nothing written beside it. If a draft is " \
                     "open, attach it with set_draft_location and say so. Otherwise tell them " \

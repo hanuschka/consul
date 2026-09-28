@@ -6,8 +6,6 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
   # citizen taps and nothing happens, with no error anywhere. Nor does it choose the
   # words on the handful of pills whose label is a statement rather than a
   # signpost (Whatsapp::AssistantActions::FORCED_LABEL_ACTIONS).
-  MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
-
   description "Answers the citizen with a short text of your own and up to three tappable " \
               "buttons whose labels you write yourself — all three are yours to fill. Prefer it " \
               "over a plain text reply whenever there is an obvious next step: it saves them " \
@@ -81,17 +79,8 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
       ::Whatsapp::Send.buttons(account: account, body: body, buttons: buttons)
     end
 
-    # Deduplicated twice over, and both are silent-failure prevention rather than
-    # policy. WhatsApp refuses the whole message when two buttons share an id, so
-    # a repeat would cost the reply rather than the button. Two buttons sharing a
-    # *label* are accepted by WhatsApp and indistinguishable to the citizen, which
-    # is worse: one of the two gets tapped by accident.
     def offerable_buttons(buttons)
-      Array(buttons)
-        .filter_map { |button| build(button) }
-        .uniq { |button| button[:id] }
-        .uniq { |button| button[:title].downcase }
-        .first(MAX_ACTIONS)
+      distinct_buttons(Array(buttons).filter_map { |button| build(button) })
     end
 
     # A recovery id keeps its own namespace, read by the inbound side before the
@@ -121,15 +110,6 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
     def wording_offers(offerable)
       offerable.map { |button| [written_labels[button[:id]], button[:title]] }
-    end
-
-    # Providers disagree on whether an object array arrives with string or symbol
-    # keys, and a missing label is a legitimate value here rather than an error, so
-    # neither shape may raise.
-    def button_value(button, key)
-      return if !button.respond_to?(:[])
-
-      button[key] || button[key.to_sym]
     end
 
     def blank_body_error

@@ -197,6 +197,65 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       contribution.voted_up_by?(user)
     end
 
+    # The pills under a statement the model may not word — what unlinking does, what
+    # accepting the terms accepts. The platform's pill comes first and is built
+    # here, not filtered out of what the model passed: it is unofferable through the
+    # ordinary path, so a model naming it would have its pill dropped and the citizen
+    # would read the statement under a question with no way to say yes.
+    def buttons_under_statement(action:, title:, buttons:)
+      platform = ::Whatsapp::AssistantActions.platform_button(
+        action: action, title: title, conversation: conversation
+      )
+
+      distinct_buttons([platform, *written_buttons(buttons)])
+    end
+
+    # The pills under a preview: every one the model may offer anywhere, plus the
+    # one that acts on what the preview just showed where `confirms` names it.
+    def preview_buttons(buttons, confirms:)
+      built = Array(buttons).filter_map do |button|
+        ::Whatsapp::AssistantActions.confirmation_button(
+          spec: button_value(button, "action_id"),
+          label: button_value(button, "label"),
+          conversation: conversation,
+          confirms: confirms
+        )
+      end
+
+      distinct_buttons(built)
+    end
+
+    def written_buttons(buttons)
+      Array(buttons).filter_map do |button|
+        ::Whatsapp::AssistantActions.offered_button(
+          spec: button_value(button, "action_id"),
+          label: button_value(button, "label"),
+          conversation: conversation
+        )
+      end
+    end
+
+    # Deduplicated twice over, and both are silent-failure prevention rather than
+    # policy. WhatsApp refuses the whole message when two buttons share an id, so
+    # a repeat would cost the reply rather than the button. Two buttons sharing a
+    # *label* are accepted by WhatsApp and indistinguishable to the citizen, which
+    # is worse: one of the two gets tapped by accident.
+    def distinct_buttons(buttons)
+      buttons
+        .uniq { |button| button[:id] }
+        .uniq { |button| button[:title].downcase }
+        .first(::Whatsapp::MAX_BUTTONS)
+    end
+
+    # Providers disagree on whether an object array arrives with string or symbol
+    # keys, and a missing label is a legitimate value here rather than an error, so
+    # neither shape may raise.
+    def button_value(button, key)
+      return if !button.is_a?(Hash)
+
+      button[key] || button[key.to_sym]
+    end
+
     # ── Refusals ────────────────────────────────────────────────────────────
     # These reach the model, not the citizen, so one wording per rule matters
     # more than it looks: three phrasings of "this number is not linked" is three
@@ -349,11 +408,10 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
 
       {
         error: "This citizen has not accepted the terms and the privacy policy, which is a legal " \
-               "requirement before anything may be submitted. Show them the two links returned " \
-               "here, ask them to accept, and offer the terms_accept button. Nothing can be " \
-               "drafted or published until they have.",
-        conditions_url: ::Whatsapp::PortalLinks.conditions_url,
-        privacy_url: ::Whatsapp::PortalLinks.privacy_url
+               "requirement before anything may be submitted. Nothing can be drafted or " \
+               "published until they have.",
+        hint: "Ask them with request_terms_consent, which sends both links and the accept " \
+              "button. Do not write out the terms or the links yourself."
       }
     end
 

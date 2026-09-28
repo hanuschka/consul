@@ -22,6 +22,17 @@
     ) %>
   </section>
 
+  <% if @administration_contact_settings.any? %>
+    <section class="mb-5">
+      <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.administration_contact_title") %></h2>
+      <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.show.administration_contact_intro") %></p>
+
+      <% @administration_contact_settings.each do |setting| %>
+        <%= render Adm::AttributeEditorComponent.new(setting, :value, :string) %>
+      <% end %>
+    </section>
+  <% end %>
+
   <% if @auto_broadcast_setting.present? %>
     <section class="mb-5">
       <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.auto_broadcast_title") %></h2>

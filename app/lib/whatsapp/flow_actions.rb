@@ -76,6 +76,7 @@ module Whatsapp::FlowActions
     image_upload
     image_generate
     image_skip
+    image_attach
     location_share
     location_skip
     link_yes
@@ -95,6 +96,11 @@ module Whatsapp::FlowActions
   # did not already know it existed read a message naming two ways out and took one
   # of them. The middle answer is the whole reason the third slot is spent.
   IMAGE_ANSWERS = %i[image_upload image_generate image_skip].freeze
+
+  # The answers to a photo that arrived before the notices did: use it, or go on
+  # without one. Two, because the photo is already here — offering to send one
+  # would be offering what the citizen has just done.
+  UNASKED_IMAGE_ANSWERS = %i[image_attach image_skip].freeze
 
   # The ids that point at one record or setting. Their parameter is what the
   # dispatcher re-resolves, and it is also what names the pill when the assistant
@@ -135,7 +141,16 @@ module Whatsapp::FlowActions
   # sentence unavoidable rather than merely preferred: the pill exists only where
   # Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation has just sent the
   # block, so the tool that unlinks can read the offer as proof the citizen saw it.
-  PLATFORM_WORDED_ACTIONS = %i[unlink_confirm].freeze
+  #
+  # `terms_accept` for the same reason: the pill stands under the terms and the
+  # privacy policy, and Ai::Tools::WhatsappAiAssistant::RequestTermsConsent is the
+  # only thing that sends them. The picture answers stand under the two picture
+  # notices, and offered anywhere else they generated a picture nobody had been
+  # told about — so only Whatsapp::ImageQuestion, which sends the notices with
+  # them, can put them in front of the citizen.
+  PLATFORM_WORDED_ACTIONS = [
+    :unlink_confirm, :terms_accept, *IMAGE_ANSWERS, *UNASKED_IMAGE_ANSWERS
+  ].uniq.freeze
 
   # The pills that publish or post, withheld from every message but the preview of
   # what they publish. Their label was already fixed — "Jetzt einreichen" — but the

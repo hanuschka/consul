@@ -19,6 +19,8 @@ namespace :internal_api do
     resources :projekt_content_blocks, only: [:create]
   end
 
+  resources :municipal_plans, only: [:index, :show]
+
   resources :users, only: [] do
     member do
       patch :mark_as_on_dt

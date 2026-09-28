@@ -396,4 +396,41 @@ describe MunicipalPlan do
       expect { MunicipalPlans::WorkingCopyService.call(plan) }.not_to change { SectionActivity.count }
     end
   end
+
+  describe ".changed_since and #last_public_change_at" do
+    let!(:plan) do
+      travel_to(Time.zone.local(2026, 9, 1, 10)) do
+        create(:municipal_plan, :published, released_at: Time.current)
+      end
+    end
+
+    it "finds a Vorhaben released at or after the given time" do
+      expect(MunicipalPlan.changed_since(Time.zone.local(2026, 9, 1, 10))).to include(plan)
+      expect(MunicipalPlan.changed_since(Time.zone.local(2026, 9, 2))).not_to include(plan)
+    end
+
+    it "finds a Vorhaben archived or re-activated after its release" do
+      travel_to(Time.zone.local(2026, 9, 10, 8)) { plan.update!(status: "archived") }
+
+      expect(MunicipalPlan.changed_since(Time.zone.local(2026, 9, 10))).to include(plan)
+      expect(plan.last_public_change_at).to eq(Time.zone.local(2026, 9, 10, 8))
+    end
+
+    it "ignores changes that are not public" do
+      travel_to(Time.zone.local(2026, 9, 10, 8)) do
+        plan.update!(given_order: 5, archive_on: Date.new(2027, 1, 1))
+      end
+
+      expect(MunicipalPlan.changed_since(Time.zone.local(2026, 9, 10))).not_to include(plan)
+      expect(plan.last_public_change_at).to eq(Time.zone.local(2026, 9, 1, 10))
+    end
+
+    it "reads the same time from the list query" do
+      travel_to(Time.zone.local(2026, 9, 10, 8)) { plan.update!(status: "archived") }
+
+      listed = MunicipalPlan.with_last_status_change_at.find(plan.id)
+
+      expect(listed.last_public_change_at).to eq(plan.last_public_change_at)
+    end
+  end
 end

@@ -97,6 +97,21 @@ class MunicipalPlan < ApplicationRecord
   scope :released_versions, -> { where(released_plan_id: nil) }
   scope :archived, -> { where(status: "archived") }
   scope :publicly_visible, -> { where(status: %w[published archived]) }
+  STATUS_AUDITS_SQL = <<~SQL.squish.freeze
+    SELECT audits.created_at FROM audits
+    WHERE audits.auditable_type = 'MunicipalPlan'
+      AND audits.auditable_id = municipal_plans.id
+      AND audits.audited_changes ? 'status'
+  SQL
+
+  scope :changed_since, ->(time) {
+    where("municipal_plans.released_at >= :time " \
+          "OR EXISTS (#{STATUS_AUDITS_SQL} AND audits.created_at >= :time)", time: time)
+  }
+  scope :with_last_status_change_at, -> {
+    select("municipal_plans.*",
+           "(#{STATUS_AUDITS_SQL} ORDER BY audits.created_at DESC LIMIT 1) AS last_status_change_at")
+  }
   scope :due_for_archiving, -> { published.released_versions.where(archive_on: ..Date.current) }
   scope :sort_by_content_updated_at, -> { reorder(content_updated_at: :desc, id: :desc) }
   scope :newly_added, -> { where(created_at: RECENCY_WINDOW.ago..) }
@@ -177,6 +192,16 @@ class MunicipalPlan < ApplicationRecord
     return false if content_updated_at.blank?
 
     content_updated_at >= Date.current - RECENCY_WINDOW.in_days.to_i
+  end
+
+  def last_public_change_at
+    last_status_change_at = if has_attribute?(:last_status_change_at)
+                              self[:last_status_change_at]&.in_time_zone
+                            else
+                              audits.where("audited_changes ? 'status'").maximum(:created_at)
+                            end
+
+    [released_at, last_status_change_at].compact.max
   end
 
   def visible_projekts_for(user)

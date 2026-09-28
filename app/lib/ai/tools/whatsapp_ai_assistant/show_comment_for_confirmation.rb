@@ -6,6 +6,10 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
   # about this tool takes the comment's text.
   MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
+  # The only message the posting pill can sit under, for the same reason the draft
+  # preview is the only one carrying the publishing pill.
+  CONFIRMS = %i[comment_post].freeze
+
   description "Shows the citizen the comment written down for them — their words as they wrote " \
               "them, and which proposal it goes on — and then asks your question with up to three " \
               "buttons whose labels you write. The comment itself is composed and sent from what " \
@@ -81,8 +85,8 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
           spec = button["action_id"] || button[:action_id]
           label = button["label"] || button[:label]
 
-          ::Whatsapp::AssistantActions.offered_button(
-            spec: spec, label: label, conversation: conversation
+          ::Whatsapp::AssistantActions.confirmation_button(
+            spec: spec, label: label, conversation: conversation, confirms: CONFIRMS
           )
         end
         .uniq { |button| button[:id] }

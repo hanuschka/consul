@@ -175,6 +175,58 @@ module Whatsapp
     Setting["feature.whatsapp_bot"].present? && configured?
   end
 
+  # The secret each way of authenticating a webhook delivery needs. A way whose
+  # secret is missing is unavailable, never passed
+  # (WhatsappApi::BaseController#authenticated?).
+  WEBHOOK_AUTHENTICATION_SECRET_KEYS = {
+    header_secret: :webhook_secret,
+    signature: :webhook_signature_secret,
+    url_secret: :url_secret
+  }.freeze
+
+  WEBHOOK_AUTHENTICATION_SETUP = "Set whatsapp.webhook_secret and re-register the webhook, so " \
+                                 "360dialog sends it back as a header; add the 360dialog " \
+                                 "Hub platform secret as whatsapp.webhook_signature_secret " \
+                                 "to require signed deliveries on top.".freeze
+
+  def self.webhook_authentication_methods
+    WEBHOOK_AUTHENTICATION_SECRET_KEYS.select { |_method, key| config[key].present? }.keys
+  end
+
+  # Mirrors WhatsappApi::BaseController#authenticated?: a configured signature is
+  # required on top of either shared secret, never instead of it.
+  def self.webhook_authentication_summary
+    shared_secrets = (webhook_authentication_methods - [:signature]).join(" or ")
+
+    return shared_secrets if webhook_signature_secret.blank?
+
+    "signature plus #{shared_secrets}"
+  end
+
+  # Said once at boot and read off the secrets alone: the feature setting lives
+  # in the database, which a boot for assets:precompile does not have. Silent
+  # where the instance holds no WhatsApp configuration at all. A configured
+  # instance always holds the header secret, so the one case with no way to
+  # authenticate a delivery is the unconfigured one, where the webhook refuses
+  # everything.
+  def self.report_webhook_authentication
+    return if config.blank?
+
+    if !configured?
+      message = "[Whatsapp] missing #{missing_required_credential_keys.join(", ")}: the bot is " \
+                "off and every webhook delivery is refused. #{WEBHOOK_AUTHENTICATION_SETUP}"
+
+      warn(message)
+      Rails.logger.error(message)
+
+      return
+    end
+
+    Rails.logger.info(
+      "[Whatsapp] webhook deliveries are authenticated by #{webhook_authentication_summary}"
+    )
+  end
+
   def self.deep_link_url(prefilled_text)
     return if business_number.blank?
 
@@ -204,8 +256,8 @@ module Whatsapp
     )
   end
 
-  # Language for anyone the bot has no linked account for yet — the invitation
-  # that precedes linking, and every reply to an unlinked number.
+  # The language of the portal's own copy, and the one every fixed line falls
+  # back to before the assistant has written anything to a number.
   def self.default_locale
     configured_locale = Setting["whatsapp.default_locale"].to_s
 
@@ -218,15 +270,28 @@ module Whatsapp
     I18n.available_locales.map(&:to_s).include?(locale)
   end
 
-  # The language to answer this number in: the linked citizen's own, falling
-  # back to the portal default when they have none or it is not available.
-  # Every job that replies asks the same question, so it is answered here.
+  # The language the conversation is held in: the one the assistant last wrote
+  # in, which is a model's reading of the whole exchange rather than of a single
+  # word. A typed "START" or "Abbrechen" is answered by the keyword gate before
+  # any model is asked, so it cannot move this. Nil until the assistant has
+  # written something.
+  def self.conversation_language(account)
+    return if account.blank?
+
+    ::Whatsapp::Message.latest_reply_language(account: account)
+  end
+
+  # The locale the fixed copy is rendered in: the conversation's language where
+  # the portal has copy in it, and the portal's own otherwise. A language with no
+  # copy is translated from the portal's, which is the one that carries the
+  # du/Sie choice. Every job that replies asks the same question, so it is
+  # answered here.
   def self.locale_for(account)
-    user_locale = account&.user&.locale.to_s
+    language = conversation_language(account).to_s
 
-    return default_locale if !available_locale?(user_locale)
+    return default_locale if !available_locale?(language)
 
-    user_locale
+    language
   end
 
   # How the bot addresses the citizen. German splits this in two and every
@@ -263,6 +328,11 @@ module Whatsapp
   # The formal key goes in front of whatever default the caller passed rather than
   # replacing it: the formally written line is a better answer than a caller's
   # stand-in, and a caller's default overwriting it would have been silent.
+  #
+  # Two lookups rather than one with the formal key as a default, because a
+  # caller's `default: nil` has to stay nil. Folded into a default list it no
+  # longer does: I18n answers "Translation missing" once every entry of a list
+  # comes back empty, which is a label on a button where nil drops the button.
   def self.copy(key, **options)
     return I18n.t(key, **options) if address_form == DEFAULT_ADDRESS_FORM
 
@@ -272,7 +342,7 @@ module Whatsapp
 
     informal = "#{INFORMAL_BOT_SCOPE}.#{key.to_s.delete_prefix(prefix)}"
 
-    I18n.t(informal, **options, default: [key.to_s.to_sym, *options[:default]])
+    I18n.t(informal, **options, default: nil) || I18n.t(key, **options)
   end
 
   # The sentence every prompt that writes German for a citizen carries. Written

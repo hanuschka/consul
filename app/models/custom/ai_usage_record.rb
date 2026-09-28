@@ -33,11 +33,17 @@ class AiUsageRecord < ApplicationRecord
     similar_contributions.find_for_projekt
   ].push(UNKNOWN_FEATURE).freeze
 
-  COUNTER_COLUMNS = %i[
-    request_count unpriced_request_count
-    input_tokens output_tokens cache_read_tokens cache_write_tokens
-    thinking_tokens audio_seconds cost_total
-  ].freeze
+  COST_COMPONENT_COLUMNS = RubyLLM::Cost::COMPONENTS.to_h do |component|
+    [component, :"cost_#{component}"]
+  end.freeze
+
+  COUNTER_COLUMNS = (
+    %i[
+      request_count unpriced_request_count
+      input_tokens output_tokens cache_read_tokens cache_write_tokens
+      thinking_tokens audio_seconds cost_total
+    ] + COST_COMPONENT_COLUMNS.values
+  ).freeze
 
   validates :period_month, presence: true
   validates :feature, presence: true
@@ -57,5 +63,17 @@ class AiUsageRecord < ApplicationRecord
 
   def self.current_period_month
     period_month_for(Time.current)
+  end
+
+  def self.cost_counters(cost)
+    amounts = cost.to_h
+
+    return {} if !amounts.key?(:total)
+
+    component_costs = COST_COMPONENT_COLUMNS.to_h do |component, column|
+      [column, amounts.fetch(component, 0)]
+    end
+
+    { cost_total: amounts[:total], **component_costs }
   end
 end

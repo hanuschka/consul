@@ -35,22 +35,22 @@ class AiUsageRecords::RecordChatUsage < ApplicationService
 
       {
         request_count: 1,
-        unpriced_request_count: cost_total.nil? ? 1 : 0,
+        unpriced_request_count: cost_counters.empty? ? 1 : 0,
         input_tokens: tokens&.input.to_i,
         output_tokens: tokens&.output.to_i,
         cache_read_tokens: tokens&.cache_read.to_i,
         cache_write_tokens: tokens&.cache_write.to_i,
         thinking_tokens: tokens&.thinking.to_i,
-        cost_total: cost_total || 0
+        **cost_counters
       }
     end
 
-    def cost_total
-      return @cost_total if defined?(@cost_total)
+    def cost_counters
+      return @cost_counters if defined?(@cost_counters)
 
-      @cost_total = @message.cost.total
+      @cost_counters = AiUsageRecord.cost_counters(@message.cost)
     rescue StandardError
-      @cost_total = nil
+      @cost_counters = {}
     end
 
     def billed_model

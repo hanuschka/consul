@@ -21,7 +21,7 @@ class Ai::Tools::WhatsappAiAssistant::SendLoginLink < Ai::Tools::WhatsappAiAssis
     prompt, button_label = ::Whatsapp::AiAssistant::BotCopyService.call(
       account: account,
       lines: [
-        I18n.t(
+        ::Whatsapp.copy(
           "whatsapp.bot.onboarding.login_prompt",
           privacy_url: ::Whatsapp::PortalLinks.privacy_url
         ),

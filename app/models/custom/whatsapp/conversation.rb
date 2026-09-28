@@ -395,6 +395,56 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(shared_location: nil)
   end
 
+  # A place read from the citizen's own words, held until they say it is the right
+  # one: {"latitude", "longitude", "name"}. It used to be written onto the draft the
+  # moment it was found, and a chat has no map — so the citizen saw "Standort" and
+  # nothing else, and the contribution went online pinned in another town. Written
+  # by PersistDraftService on every draft and revision (nil drops a stale one), read
+  # by draft_status and set_draft_location.
+  def proposed_location
+    context["proposed_location"]
+  end
+
+  def store_proposed_location!(place)
+    if place.present? || context["proposed_location"].present?
+      merge_context!(proposed_location: place)
+    end
+  end
+
+  # What the pin on the draft is called, for the block the citizen confirms: a
+  # place is only confirmed by a name they recognise, and the coordinates are not
+  # one. Held here because map_locations has nowhere to keep it.
+  def attached_location_name
+    context["attached_location_name"]
+  end
+
+  # The four keys travel together: whatever was waiting is used up, the name
+  # belongs to the pin just written, and a yes given before it was a yes to a
+  # different contribution.
+  def record_attached_location!(name)
+    merge_context!(
+      shared_location: nil,
+      proposed_location: nil,
+      attached_location_name: name,
+      draft_preview_digest: nil
+    )
+  end
+
+  def record_removed_location!
+    merge_context!(
+      shared_location: nil,
+      proposed_location: nil,
+      attached_location_name: nil,
+      draft_preview_digest: nil
+    )
+  end
+
+  # A pin that could not be written, so that neither the shared nor the proposed
+  # one can be re-attached to whatever the citizen does next.
+  def clear_waiting_locations!
+    merge_context!(shared_location: nil, proposed_location: nil)
+  end
+
   # The photo the citizen sent, parked for the same reason: an image arrives as a
   # WhatsApp media id, and a media id copied by a model is one character away from
   # fetching nothing. The tool that attaches it reads it from here and clears it,
@@ -675,6 +725,34 @@ class Whatsapp::Conversation < ApplicationRecord
     @held_confirmations = pending_confirmations
   end
 
+  # The draft and the comment as they stood when the assistant's turn began, held
+  # in memory like the confirmations above. What they answer is whether this turn
+  # wrote or changed one, which neither the record nor the stored preview digest
+  # can say on its own: a digest that differs from the preview's may be a draft
+  # the citizen was never shown last week, and it is this turn's change that has
+  # to be shown before anything else is sent about it.
+  #
+  # Called by Whatsapp::AiAssistant::RouterService before the model is asked,
+  # because a turn is not always started by the inbound chain.
+  def hold_preview_digests!
+    @held_preview_digests = {
+      draft: ::Whatsapp::DraftPreview.digest(conversation: self),
+      comment: ::Whatsapp::CommentPreview.digest(conversation: self)
+    }
+  end
+
+  # :draft or :comment when this turn wrote or changed one the citizen has not
+  # been shown since, nil otherwise. Nil wherever nothing was held, which is every
+  # caller outside a turn: without the digest from the turn's start there is no
+  # telling a change from what was already there.
+  def unshown_preview_kind
+    return if @held_preview_digests.nil?
+    return :draft if unshown_draft_change?
+    return :comment if unshown_comment_change?
+
+    nil
+  end
+
   # That the citizen has just asked to start over, held in memory rather than
   # written down: it is true for the reply being composed and gone by the next
   # message. The inbound chain sets it and the system prompt reads it off the
@@ -734,9 +812,11 @@ class Whatsapp::Conversation < ApplicationRecord
     retry_inbound.to_h["text"].present?
   end
 
-  def store_retry_inbound!(text:, message_id:)
+  def store_retry_inbound!(text:, message_id:, citizen_words:)
     merge_context!(
-      retry_inbound: { "text" => text, "message_id" => message_id }.compact
+      retry_inbound: {
+        "text" => text, "message_id" => message_id, "citizen_words" => citizen_words
+      }.compact
     )
   end
 
@@ -830,6 +910,26 @@ class Whatsapp::Conversation < ApplicationRecord
     # it, and when it clears.
     def merge_context!(attributes)
       update!(context: context.merge(attributes.stringify_keys))
+    end
+
+    def unshown_draft_change?
+      unshown_change?(
+        ::Whatsapp::DraftPreview.digest(conversation: self),
+        held: @held_preview_digests[:draft],
+        shown: draft_preview_digest
+      )
+    end
+
+    def unshown_comment_change?
+      unshown_change?(
+        ::Whatsapp::CommentPreview.digest(conversation: self),
+        held: @held_preview_digests[:comment],
+        shown: comment_preview_digest
+      )
+    end
+
+    def unshown_change?(current, held:, shown:)
+      current.present? && current != held && current != shown
     end
 
     def ballot_keys

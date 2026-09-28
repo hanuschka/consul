@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_10_172943) do
+ActiveRecord::Schema.define(version: 2026_09_28_100945) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -258,6 +258,11 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "version", default: 0, null: false
+    t.decimal "cost_input", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_output", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_cache_read", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_cache_write", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_thinking", precision: 14, scale: 6, default: "0.0", null: false
     t.index ["period_month", "feature", "provider", "model"], name: "index_ai_usage_records_on_period_and_breakdown", unique: true
     t.index ["period_month"], name: "index_ai_usage_records_on_period_month"
   end
@@ -3771,6 +3776,8 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
     t.string "language"
     t.index ["created_at"], name: "index_whatsapp_messages_on_created_at"
     t.index ["wa_message_id"], name: "index_whatsapp_messages_on_wa_message_id", unique: true
+    t.index ["whatsapp_account_id", "id"], name: "index_whatsapp_messages_on_account_latest_inbound", order: { id: :desc }, where: "((direction)::text = 'inbound'::text)"
+    t.index ["whatsapp_account_id", "id"], name: "index_whatsapp_messages_on_account_latest_reply_language", order: { id: :desc }, where: "(((direction)::text = 'outbound'::text) AND (language IS NOT NULL))"
     t.index ["whatsapp_account_id", "projekt_id", "kind"], name: "index_whatsapp_messages_on_account_projekt_kind"
     t.index ["whatsapp_account_id"], name: "index_whatsapp_messages_on_whatsapp_account_id"
   end

@@ -20,6 +20,9 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
   end
 
   def execute(body:)
+    refusal = refuse_before_preview
+
+    return refusal if refusal.present?
     return no_draft_error if draft_resource.blank?
     return not_collected_error if !conversation.location_question_available?
     return blank_body_error if body.to_s.strip.blank?

@@ -106,6 +106,15 @@ de:
         erasure: >-
           Wenn Sie Ihr Konto und Ihre Daten wirklich löschen möchten, geht das im Portal unter
           „Konto löschen“:
+      # Der Block, den Whatsapp::TermsConsentPreview vor die Frage nach der Zustimmung
+      # stellt. Nicht vom Modell formuliert: Die Zustimmung ist eine rechtliche
+      # Erklärung, und beide Adressen folgen je in einer Zeile unter ihrem Namen.
+      terms:
+        statement: >-
+          Bevor Sie etwas einreichen können, brauchen wir Ihre Zustimmung zu unseren
+          Nutzungsbedingungen und unserer Datenschutzerklärung:
+        conditions: Nutzungsbedingungen
+        privacy: Datenschutzerklärung
       comment:
         on_proposal: "Kommentar zu"
         online: "Ihr Kommentar steht jetzt auf der Seite:"
@@ -150,6 +159,9 @@ de:
         image_generation_notice: >-
           Ein erzeugtes Bild wird von einer KI erstellt und nicht von einem Menschen
           aufgenommen.
+        # Die Frage über den beiden Hinweisen, wenn ein Foto ungefragt kam: Es wird
+        # erst verwendet, wenn die Person die Hinweise gelesen und ja gesagt hat.
+        image_use_question: Soll dieses Foto für Ihren Beitrag verwendet werden?
         location_optional: Ein Ort ist freiwillig. Sie können auch ohne weitermachen.
       # The lines under a tap on one of the projekt card's phase pills. They are sent
       # from Whatsapp::Inbound::ProcessMessageService rather than written by the
@@ -325,6 +337,11 @@ de:
         location_skip: Ohne Ort weiter
         main_menu: Von vorne loslegen
         show_more: Weitere anzeigen
+        # Die Zeile unter „Weitere anzeigen“ auf der Projektkarte, wenn die
+        # Karte nicht für jede Abstimmung eine Zeile hat. Sie öffnet die Liste
+        # aller Abstimmungen des Projekts, nicht nur der fehlenden — daher
+        # kein Zähler.
+        show_more_votes: Alle Abstimmungen dieses Projekts
         image_upload: Foto hinzufügen
         image_generate: Bild erzeugen
         # The two faces of one pill, and two of the labels the assistant is not allowed
@@ -349,6 +366,10 @@ de:
         # darüber. Auch sie muss in die 20 Zeichen passen, die WhatsApp einer
         # Beschriftung lässt.
         unlink_confirm: Verknüpfung lösen
+        # Ebenso fest: Die Zustimmung steht unter dem Block mit beiden Links, und das
+        # Modell darf sie nirgends sonst anbieten.
+        terms_accept: Zustimmen
+        image_attach: Foto verwenden
       notifications:
         follow_up:
           deadline_approaching: Sie können hier noch mitmachen, bis die Frist abläuft.

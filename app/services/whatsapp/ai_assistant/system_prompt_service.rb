@@ -27,11 +27,13 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
   # shared by every turn of every conversation.
   #
   # Within the volatile half, the day's date precedes the per-turn state for the
-  # same reason: it changes once a day, the state changes every message.
+  # same reason: it changes once a day, the state changes every message. The
+  # administration contact goes before both: it changes only when an admin edits it.
   def call
     [
       role_section,
       style_section,
+      administration_contact_section,
       dates_section,
       state_section,
       language_reminder
@@ -125,14 +127,21 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         which projekt it belongs to. A question about a projekt, a result, a date or a vote on
         this portal is never out of scope, including about one that has ended.
 
-        What is left after that lookup is off topic — city services, opening hours, the weather,
-        general knowledge — and is not yours to answer. Say so plainly and briefly, and do not
-        offer to put anyone through to a person: there is nobody else on this number. Never stop
-        there, though. In the same message, name what this portal does have open right now and
-        give them something to tap: a citizen told only what you cannot do has been handed a dead
-        end on the only channel they have to you. And never refuse twice with the same sentence —
-        what you already said is in the chat below, so the next refusal is worded afresh or the
-        citizen is reading a wall instead of a reply.
+        What is left after that lookup is outside participation — a new identity card, the town
+        hall's opening hours, a council service, the weather, general knowledge — and is not
+        yours to answer. Say so plainly and briefly. Where it is a matter for the administration,
+        tell them in the same message where the administration can be reached, from the
+        administration contact below and in your own words: that is their way onward, and a
+        citizen told only what you cannot do has been handed a dead end on the only channel they
+        have to you. Do not list, offer or advertise projekts in that reply — a projekt that has
+        nothing to do with what they asked reads as an advertisement, not as help.
+
+        A citizen who asks, beyond any one projekt, whom they can turn to, whether there is a
+        person to speak to, or whether they can call is given the same contact. Nobody takes calls
+        on this number and there is no one behind it to put them through to, so say that briefly
+        and name the administration's contact rather than leaving them there. Never refuse twice
+        with the same sentence — what you already said is in the chat below, so the next reply is
+        worded afresh or the citizen is reading a wall instead of a reply.
 
         A citizen who is informing themselves is not on their way to taking part. When they ask
         about a projekt, answer what they asked, and offer what plausibly follows from that
@@ -186,9 +195,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           each option needs a line explaining it, and the overview as the floor when nothing more
           specific applies. Never every option that exists, never the same complete list twice,
           never a button repeating what you just did. A reply is left with nothing to tap only
-          where there genuinely is no next step — a goodbye. A question that was not yours to
-          answer is not one of those: what this portal does have open is the next step, and it
-          is the whole of what there is still to talk about.
+          where there genuinely is no next step — a goodbye — or where the next step lies outside
+          this portal: a question that was not yours to answer is answered with where the
+          administration can be reached, and a button back into the portal beside it is the
+          advertisement they did not ask for.
         - Lead with the projekts, never with the phases. A phase named on its own — "four phases
           are open" — tells a citizen nothing about what they would be taking part in, so someone
           who says they want to participate is answered with the projekts that are running, from
@@ -266,6 +276,40 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       TEXT
     end
 
+    # What the portal entered as the way to reach its administration. Without it
+    # the model has nowhere to send a question it cannot answer, and invents a
+    # number or falls back to advertising projekts; with nothing entered it still
+    # gets the portal's own contact page rather than a gap to fill in itself.
+    def administration_contact_section
+      contact_lines = administration_contact_lines
+
+      return administration_contact_fallback if contact_lines.empty?
+
+      <<~TEXT.strip
+        Administration contact, as the portal entered it — where the administration takes
+        enquiries that are not about participation. Give these details exactly as written here,
+        inside a sentence of your own, and never any other number, address or page for it:
+        #{contact_lines.join("\n")}
+      TEXT
+    end
+
+    def administration_contact_lines
+      {
+        "Phone" => ::Whatsapp.administration_contact_phone,
+        "E-mail" => ::Whatsapp.administration_contact_email,
+        "Citizen service page" => ::Whatsapp.administration_contact_url
+      }.compact.map { |label, value| "- #{label}: #{value}" }
+    end
+
+    def administration_contact_fallback
+      <<~TEXT.strip
+        Administration contact: the portal has entered none. Never make up a number, an address or
+        a page for the administration. Where a citizen needs one, say plainly that you have no
+        contact on file for it and point them to #{::Whatsapp::PortalLinks.contact_url}, where
+        this portal says how to get in touch.
+      TEXT
+    end
+
     # The model has no clock, and every answer it works from carries dates: a phase
     # end, an event, a milestone. Without today's date "wie lange kann ich noch
     # mitmachen?" could only be answered by reading the deadline back out, which is
@@ -319,6 +363,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Terms and privacy accepted: #{@conversation.whatsapp_account.terms_accepted?}",
         "- Time since their previous message: #{gap_instruction_line}",
         "- Draft on the table: #{draft_description}",
+        stale_draft_line,
         empty_draft_line,
         picture_waiting_line,
         location_waiting_line,
@@ -453,6 +498,40 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       "- Saying a question can simply be typed is due: it has not been said recently"
     end
 
+    # A draft nobody has touched for a while, which is either one the citizen is
+    # coming back to or one they never meant to start — an unwanted draft was still
+    # open over an hour later and read every message as part of it. Whether this
+    # message is about it is the model's to judge; what the line adds is that the
+    # age is a reason to ask rather than to carry on. Banded the way the gap line is
+    # (Whatsapp::ConversationGap), so "a while" means the same in both.
+    def stale_draft_line
+      return if !@conversation.unsaved_submission?
+
+      age = STALE_DRAFT_AGES[::Whatsapp::ConversationGap.band(draft_touched_at)]
+
+      return if age.blank?
+
+      "- The draft on the table was last worked on #{age}: where this message is not " \
+        "about it, ask in one line whether to carry on with it or discard it before " \
+        "anything else, and call abort_submission only on their yes"
+    end
+
+    STALE_DRAFT_AGES = {
+      ::Whatsapp::ConversationGap::HOURS => "hours ago",
+      ::Whatsapp::ConversationGap::DAYS => "a day or more ago"
+    }.freeze
+
+    # The later of the two clocks a draft has: the stash is dated when it is
+    # generated, the record whenever anything on it changes.
+    def draft_touched_at
+      generated_at = @conversation.last_draft_at
+
+      [
+        generated_at.present? ? Time.zone.parse(generated_at) : nil,
+        @conversation.draft_resource&.updated_at
+      ].compact.max
+    end
+
     # The one state where writing outranks tapping, and the state itself is what was
     # missing: a phase entered for a contribution with nothing written into it reads
     # off "- Draft on the table: none" exactly like a conversation that never entered
@@ -527,8 +606,22 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       [
         "- Ballot question in front of the citizen: \"#{question.title}\" " \
         "(#{ballot_question_shape(question, asking)})",
-        ballot_options_lines(question, asking)
+        ballot_options_lines(question, asking),
+        ballot_resumed_line(question)
       ].compact.join("\n")
+    end
+
+    # The automatic re-ask after a detour is spent (Inbound::ProcessMessageService
+    # #resume_ballot), so from here the question only comes back when the model
+    # brings it back. Said with the phase id because that is what the tool that puts
+    # it in front of the citizen again takes.
+    def ballot_resumed_line(question)
+      return if !@conversation.resumed_poll_question_ids.include?(question.id)
+
+      "  It was already put to them again once after they turned to something else, so " \
+        "it is not sent again by itself. Answer what they write now; bring the question " \
+        "back only when they return to the vote — start_poll_vote with phase id " \
+        "#{question.poll&.projekt_phase_id} puts it in front of them again."
     end
 
     def ballot_question_shape(question, asking)

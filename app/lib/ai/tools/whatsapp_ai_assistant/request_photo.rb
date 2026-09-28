@@ -4,8 +4,9 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
   # public civic page under the citizen's name, and what they have to know about it
   # they have to know *before* they choose — that they must hold the rights to a photo
   # of their own, and that the alternative is drawn by a machine. Both lines are legal
-  # notices rather than the bot's voice, so they are appended here from the locale
-  # copy: the model writes the ask and cannot paraphrase them away or forget them.
+  # notices rather than the bot's voice, so Whatsapp::ImageQuestion appends them from
+  # the locale copy: the model writes the ask and cannot paraphrase them away or
+  # forget them.
   #
   # The scripted flow made the same guarantee by construction, joining the rights
   # notice onto every upload prompt so the ask, the re-ask and the failure all carried
@@ -39,69 +40,18 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
     return not_collected_error if !conversation.image_question_available?
     return blank_body_error if body.to_s.strip.blank?
 
-    ask, rights_notice, generation_notice, *labels = translated_lines(body.strip)
-
-    ::Whatsapp::Send.buttons(
-      account: account,
-      body: [ask, rights_notice, generation_notice].join("\n\n"),
-      buttons: image_answer_buttons(labels)
+    # Three answers, and the phase either collects pictures or this tool has
+    # already refused, so all three always apply.
+    ::Whatsapp::ImageQuestion.ask(
+      conversation: conversation,
+      body: body.strip,
+      answers: ::Whatsapp::FlowActions::IMAGE_ANSWERS
     )
 
     halt("Asked for a photo, with both notices and the three ways to answer.")
   end
 
   private
-
-    # The labels are locale copy rather than the model's, for the same reason the
-    # notices above them are: the citizen must always be able to decline a picture,
-    # and a set of options the model writes fresh each turn is a set it can also write
-    # its way out of. Three of them, and the phase either collects pictures or this
-    # tool has already refused, so all three always apply.
-    #
-    # The ask is the assistant's and already in the citizen's language; the notices and
-    # the labels are the locale copy's and have to be brought to the same one, or a
-    # Turkish request for a photo carries a German declaration about who owns it. One
-    # call for the whole message, because a body and the labels under it are one thing
-    # the citizen reads.
-    #
-    def translated_lines(body)
-      ::Whatsapp::AiAssistant::BotCopyService.call(
-        account: account,
-        lines: [body, *written_notices, *written_labels]
-      )
-    end
-
-    def written_notices
-      [
-        ::Whatsapp.copy("whatsapp.bot.proposal.image_rights_notice"),
-        ::Whatsapp.copy("whatsapp.bot.proposal.image_generation_notice")
-      ]
-    end
-
-    # The fit is decided after the translation, because the length that fits is a
-    # property of the label as sent rather than as written: eighteen characters in
-    # German is not eighteen in every language it is put into. Where the translation
-    # can only arrive shortened, fitting_label falls back to the written copy — the
-    # one thing the citizen must be able to read here in full is the option to go on
-    # without a picture.
-    def image_answer_buttons(labels)
-      ::Whatsapp::FlowActions::IMAGE_ANSWERS.zip(labels, written_labels).map do |answer|
-        action, translated, written = answer
-
-        {
-          id: ::Whatsapp::FlowActions.id_for(action: action),
-          title: ::Whatsapp::AssistantActions.fitting_label(
-            translated: translated, original: written
-          )
-        }
-      end
-    end
-
-    def written_labels
-      @written_labels ||= ::Whatsapp::FlowActions::IMAGE_ANSWERS.map do |action|
-        ::Whatsapp.copy("whatsapp.bot.buttons.#{action}")
-      end
-    end
 
     def not_collected_error
       { error: "This phase does not take pictures, so there is nothing to ask for. Tell the " \

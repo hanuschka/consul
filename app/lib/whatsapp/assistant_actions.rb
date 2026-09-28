@@ -39,8 +39,11 @@ module Whatsapp::AssistantActions
   # projekt page and now from the chat as well, so the ceremony that made it cost
   # two taps was protecting against a consequence that does not exist. What is left
   # here has no undo anywhere — a published contribution, a submitted one, a comment
-  # on a public page, a severed account link.
-  IRREVERSIBLE_ACTIONS = %i[draft_publish submit_final comment_post unlink_confirm].freeze
+  # on a public page, a severed account link, and consent to the terms, which is
+  # recorded once per number for good.
+  IRREVERSIBLE_ACTIONS = %i[
+    draft_publish submit_final comment_post unlink_confirm terms_accept
+  ].freeze
 
   # The pills the model may offer but not name. Every other label it offers is a
   # sentence it wrote, checked for length and nothing else, because the dispatcher

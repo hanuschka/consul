@@ -6,10 +6,10 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       variables: %w[username investment_title projekt_title investment_url]
     },
     "Mailer#budget_investment_feasible" => {
-      variables: %w[username investment_title projekt_title feasibility_explanation]
+      variables: %w[username investment_title projekt_title feasibility_explanation investment_url]
     },
     "Mailer#budget_investment_unfeasible" => {
-      variables: %w[username investment_title projekt_title unfeasibility_explanation]
+      variables: %w[username investment_title projekt_title unfeasibility_explanation investment_url]
     },
     "Mailer#budget_investment_selected" => {
       variables: %w[username investment_title investment_url]

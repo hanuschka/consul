@@ -543,6 +543,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::SendLoginLink,
       ::Ai::Tools::WhatsappAiAssistant::UnlinkAccount,
       ::Ai::Tools::WhatsappAiAssistant::StopMessages,
+      ::Ai::Tools::WhatsappAiAssistant::StartOver,
       ::Ai::Tools::WhatsappAiAssistant::StartPollVote,
       ::Ai::Tools::WhatsappAiAssistant::RecordPollAnswer,
       ::Ai::Tools::WhatsappAiAssistant::RecordOpenPollAnswer
@@ -569,8 +570,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::AbortSubmission
     ].freeze
 
-    # What plain text cannot express: the four interactive message types, and the one
-    # ordinary sentence that must carry a legal notice with it. A plain-text reply
+    # What plain text cannot express: the four interactive message types, and the two
+    # ordinary questions that must carry a legal notice with them. A plain-text reply
     # needs no tool at all — this service sends the model's own words when it calls
     # nothing.
     SEND_TOOLS = [
@@ -582,7 +583,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::RequestLocation,
-      ::Ai::Tools::WhatsappAiAssistant::RequestPhoto
+      ::Ai::Tools::WhatsappAiAssistant::RequestPhoto,
+      ::Ai::Tools::WhatsappAiAssistant::RequestTermsConsent
     ].freeze
 
     def report(exception)

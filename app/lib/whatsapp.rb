@@ -32,6 +32,11 @@ module Whatsapp
   # counting more as shown pages straight past them.
   MAX_OFFERED_LIST_ROWS = MAX_LIST_ROWS
 
+  # The line under a list row's title. WhatsappApi::Resources::Messages cuts it
+  # to this at the protocol edge, mid-word, so a caller that fits a name into it
+  # has to count to the same number.
+  MAX_ROW_DESCRIPTION_LENGTH = 72
+
   # A WhatsApp interactive message holds three reply buttons; anything longer
   # becomes a list instead. Declared beside the row cap for the same reason —
   # WhatsappApi::Resources::Messages enforces it again at the protocol edge.
@@ -394,6 +399,20 @@ module Whatsapp
 
   def self.transcription_model
     Setting["whatsapp.transcription_model"].presence || DEFAULT_TRANSCRIPTION_MODEL
+  end
+
+  # Where the administration takes enquiries that are not about participation.
+  # Every field is optional; the bot names whichever ones are filled in.
+  def self.administration_contact_phone
+    Setting["whatsapp.administration_contact_phone"].to_s.squish.presence
+  end
+
+  def self.administration_contact_email
+    Setting["whatsapp.administration_contact_email"].to_s.strip.presence
+  end
+
+  def self.administration_contact_url
+    Setting["whatsapp.administration_contact_url"].to_s.strip.presence
   end
 
   def self.retention_days

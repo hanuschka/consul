@@ -95,6 +95,15 @@ en:
         erasure: >-
           If you want your account and your data actually deleted, you can do that in the portal
           under "Delete account":
+      # The block Whatsapp::TermsConsentPreview puts in front of the consent question.
+      # Not the model's words: the acceptance is a legal declaration, and each address
+      # follows on a line of its own under its name.
+      terms:
+        statement: >-
+          Before you can submit anything, we need your consent to our terms of use and our
+          privacy policy:
+        conditions: Terms of use
+        privacy: Privacy policy
       comment:
         on_proposal: Comment on
         online: "Your comment is now on the page:"
@@ -135,6 +144,9 @@ en:
         # rather than after they see the picture.
         image_generation_notice: >-
           A generated picture is created by an AI rather than taken by a person.
+        # The question above both notices when a photo arrived unasked: it is only used
+        # once the citizen has read them and said yes.
+        image_use_question: Should this photo be used for your contribution?
         location_optional: A location is optional. You can also carry on without one.
       phase:
         open: "Here is where you can take part in “%{phase}”:"
@@ -263,6 +275,7 @@ en:
         location_skip: Continue without
         main_menu: Start over
         show_more: Show more
+        show_more_votes: All votes in this project
         image_upload: Add a photo
         image_generate: Generate a picture
         support: Support now
@@ -272,6 +285,10 @@ en:
         # what that means is stated in the block above it. It has to fit the 20
         # characters WhatsApp allows a button title.
         unlink_confirm: Unlink number
+        # Fixed as well: the acceptance stands under the block with both links, and the
+        # model may not offer it anywhere else.
+        terms_accept: I agree
+        image_attach: Use this photo
         # The two buttons that do something irreversible: a comment goes onto a public
         # page under this citizen's name, a contribution goes in. That the label says
         # so used to live as a sentence in the tool descriptions — a "Continue" on the

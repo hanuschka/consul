@@ -6,8 +6,6 @@ class Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation <
   # this is the one question in the conversation whose answer turns on a fact about
   # their data — and a fact worded differently from one sampling to the next is a
   # fact a citizen cannot rely on.
-  MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
-
   description "Tells the citizen what unlinking this number does — that it detaches the number " \
               "only, that their portal account and everything they have published stay, and " \
               "where a real deletion is asked for — and then asks your question with the " \
@@ -51,7 +49,11 @@ class Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation <
 
     send_block(confirmation[:block])
 
-    ask(question.strip, offerable_buttons(buttons, confirmation[:confirm_title]))
+    offerable = buttons_under_statement(
+      action: :unlink_confirm, title: confirmation[:confirm_title], buttons: buttons
+    )
+
+    ask(question.strip, offerable)
   end
 
   private
@@ -69,33 +71,6 @@ class Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation <
 
     def send_block(block)
       ::Whatsapp::Send.message_block(account: account, block: block)
-    end
-
-    # The confirm pill first and built here, not filtered out of what the model
-    # passed: it is unofferable through the ordinary path, so a model naming it would
-    # have its pill dropped and the citizen would read the statement under a question
-    # with no way to say yes.
-    def offerable_buttons(buttons, confirm_title)
-      confirm = ::Whatsapp::AssistantActions.platform_button(
-        action: :unlink_confirm, title: confirm_title, conversation: conversation
-      )
-
-      [confirm, *written_buttons(buttons)]
-        .uniq { |button| button[:id] }
-        .uniq { |button| button[:title].downcase }
-        .first(MAX_ACTIONS)
-    end
-
-    def written_buttons(buttons)
-      Array(buttons)
-        .filter_map do |button|
-          spec = button["action_id"] || button[:action_id]
-          label = button["label"] || button[:label]
-
-          ::Whatsapp::AssistantActions.offered_button(
-            spec: spec, label: label, conversation: conversation
-          )
-        end
     end
 
     def not_linked_answer

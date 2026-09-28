@@ -367,6 +367,22 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(subject_change_stamp.merge("start_over_requested" => true))
   end
 
+  # Going back to the beginning, from the pill and from the citizen saying so in
+  # their own words alike: one implementation, so the two cannot come to mean
+  # different things. The ballot goes and the phase goes; a submission in progress
+  # stays until the citizen says to discard it, because neither the tap nor the
+  # sentence is consent to losing what they wrote.
+  def begin_start_over!
+    note_start_over!
+    clear_ballot!
+
+    if unsaved_submission?
+      request_start_over!
+    else
+      leave_projekt!
+    end
+  end
+
   # Cleared on a revision, where the record is already persisted. Deliberately: a
   # declined photo carried over would hold for the life of the submission, so a
   # citizen who changed their mind while revising ("doch, ein Foto habe ich") would
@@ -393,6 +409,33 @@ class Whatsapp::Conversation < ApplicationRecord
     return if context["shared_location"].blank?
 
     merge_context!(shared_location: nil)
+  end
+
+  # That this draft's optional pin has been asked for. Asked once and never again,
+  # and held as a fact the tool checks rather than left to "never ask twice", which
+  # was a sentence the model was told and could talk itself past. Outside the
+  # settled slots on purpose, which clear on a revision — a revised text is still
+  # the same draft, and the pin was still asked for — and gone with the rest of the
+  # context when the draft ends.
+  def location_requested?
+    context["location_requested"] == true
+  end
+
+  def record_location_requested!
+    merge_context!(location_requested: true)
+  end
+
+  # That this draft's citizen has been shown both picture notices — the rights one
+  # and the generated-picture one — which every way a picture reaches the draft
+  # reads first. Held for the draft rather than for the last message like the
+  # irreversible offers, because a photo can arrive turns after it was asked for;
+  # gone with the rest of the context when the draft ends.
+  def image_notices_shown?
+    context["image_notices_shown"] == true
+  end
+
+  def record_image_notices_shown!
+    merge_context!(image_notices_shown: true)
   end
 
   # A place read from the citizen's own words, held until they say it is the right
@@ -645,6 +688,22 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(declined_poll_question_ids: declined_poll_question_ids + [question_id])
   end
 
+  # The questions of this ballot already put to the citizen again after they turned
+  # to something else. Once each: a question re-sent under every reply is a script
+  # talking over the conversation — a map question sent its picker and the way past
+  # it under "Welche Projekte gibt es?" for minutes on end. After that one time the
+  # question stays in the state and whether to bring it back is the assistant's.
+  # Scoped to the ballot like the declined questions, and cleared with them.
+  def resumed_poll_question_ids
+    Array(context["resumed_poll_question_ids"])
+  end
+
+  def record_resumed_poll_question!(question_id)
+    return if resumed_poll_question_ids.include?(question_id)
+
+    merge_context!(resumed_poll_question_ids: resumed_poll_question_ids + [question_id])
+  end
+
   # All of them in one write, for the end of a ballot and for starting over.
   # Separate clears would leave a window in which the poll was gone and a question
   # of it was still expecting an answer.
@@ -656,7 +715,8 @@ class Whatsapp::Conversation < ApplicationRecord
       open_multiple_question_id: nil,
       pending_open_question_id: nil,
       pending_map_question_id: nil,
-      declined_poll_question_ids: nil
+      declined_poll_question_ids: nil,
+      resumed_poll_question_ids: nil
     )
   end
 
@@ -935,7 +995,7 @@ class Whatsapp::Conversation < ApplicationRecord
     def ballot_keys
       %w[
         active_poll_id open_multiple_question_id pending_open_question_id
-        pending_map_question_id declined_poll_question_ids
+        pending_map_question_id declined_poll_question_ids resumed_poll_question_ids
       ]
     end
 

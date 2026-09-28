@@ -1,11 +1,14 @@
 class Ai::Tools::WhatsappAiAssistant::StartDraft < Ai::Tools::WhatsappAiAssistant::BaseTool
   description "Opens a submission against one participation phase, so everything drafted after " \
-              "it belongs to that phase. Call it once the citizen has said which projekt or phase " \
-              "they want to contribute to. It writes nothing the citizen can see and sends " \
-              "nothing — ask them for their idea in your own words afterwards, or call " \
-              "draft_proposal straight away when they have already told you it. Whatever draft " \
-              "was open is discarded, so do not call it while they are part-way through one " \
-              "unless they have said they want to start again."
+              "it belongs to that phase. Call it once the citizen has said they want to " \
+              "contribute and which projekt or phase it is for. A place name on its own, a " \
+              "reaction to something you showed them or a reply to a ballot question in front " \
+              "of them is not that — at most a reason to ask whether they want to contribute. " \
+              "It writes nothing the citizen can see and sends nothing — ask them for their " \
+              "idea in your own words afterwards, or call draft_proposal straight away when " \
+              "they have already told you it. It refuses while they are part-way through a " \
+              "contribution: going back to the beginning is start_over, and leaving this one " \
+              "for another is abort_submission first, once they have agreed to lose it."
 
   params do
     integer :projekt_phase_id,
@@ -20,6 +23,12 @@ class Ai::Tools::WhatsappAiAssistant::StartDraft < Ai::Tools::WhatsappAiAssistan
     candidate = eligible_phase(projekt_phase_id)
 
     return unknown_phase_error if candidate.blank?
+
+    # Starting a submission replaces the one in progress, and this used to do it
+    # without a word: a typed "von vorne" restarted the same contribution in the
+    # same projekt, where the citizen had asked to leave it. Losing what they wrote
+    # now takes their yes, through AbortSubmission, which is the one discard.
+    return submission_in_progress_error if conversation.unsaved_submission?
 
     conversation.start_draft!(candidate)
 
@@ -45,4 +54,16 @@ class Ai::Tools::WhatsappAiAssistant::StartDraft < Ai::Tools::WhatsappAiAssistan
                  "their own words."
     }
   end
+
+  private
+
+    def submission_in_progress_error
+      {
+        error: "The citizen is part-way through a contribution, so nothing was started: a new " \
+               "one would throw away what they have written.",
+        hint: "If they asked to go back to the beginning, call start_over. If they want to " \
+              "leave this contribution for another, say in one line what is unsaved and ask " \
+              "whether to discard it; call abort_submission only on their yes, then this."
+      }
+    end
 end

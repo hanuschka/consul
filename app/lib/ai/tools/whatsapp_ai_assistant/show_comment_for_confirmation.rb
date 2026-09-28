@@ -4,7 +4,6 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
   # the only thing that lets post_comment write anything. Composed from what
   # draft_comment wrote down, so what they read is what will be posted — nothing
   # about this tool takes the comment's text.
-  MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
   # The only message the posting pill can sit under, for the same reason the draft
   # preview is the only one carrying the publishing pill.
@@ -42,7 +41,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
     return nothing_written_error if conversation.pending_comment.blank?
     return blank_question_error if question.to_s.strip.blank?
 
-    offerable = offerable_buttons(buttons)
+    offerable = preview_buttons(buttons, confirms: CONFIRMS)
 
     return unusable_actions_error if offerable.empty?
 
@@ -77,21 +76,6 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
 
     def send_block(block)
       ::Whatsapp::Send.message_block(account: account, block: block)
-    end
-
-    def offerable_buttons(buttons)
-      Array(buttons)
-        .filter_map do |button|
-          spec = button["action_id"] || button[:action_id]
-          label = button["label"] || button[:label]
-
-          ::Whatsapp::AssistantActions.confirmation_button(
-            spec: spec, label: label, conversation: conversation, confirms: CONFIRMS
-          )
-        end
-        .uniq { |button| button[:id] }
-        .uniq { |button| button[:title].downcase }
-        .first(MAX_ACTIONS)
     end
 
     def nothing_written_error

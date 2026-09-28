@@ -1,5 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::AbortSubmission < Ai::Tools::WhatsappAiAssistant::BaseTool
-  description "Throws away the draft in progress. Call it the moment the citizen wants to " \
+  description "Throws away the draft in progress, or the comment not yet posted, or leaves the " \
+              "vote they are in the middle of. Call it the moment the citizen wants to " \
               "abandon what they are part-way through, however they phrase it — \"abbrechen\", " \
               "\"lass mal\", \"vergiss es\", \"ach doch nicht\". Declining one optional part is " \
               "not abandoning: no photo and no pin are answers to be gone on from, not reasons " \
@@ -12,8 +13,11 @@ class Ai::Tools::WhatsappAiAssistant::AbortSubmission < Ai::Tools::WhatsappAiAss
     ::Whatsapp::Conversation::Step::IDLE
   end
 
+  # The same reach as the cancel pill, which discards all three the same way: a
+  # citizen who answers "only the comment" to the stop question in words has to
+  # be able to leave it as surely as one who taps the pill.
   def execute
-    return nothing_open_answer if !conversation.unsaved_submission?
+    return nothing_open_answer if !conversation.step_in_progress?
 
     # Read before the discard, which replaces the context the request lives in.
     starting_over = conversation.start_over_requested?

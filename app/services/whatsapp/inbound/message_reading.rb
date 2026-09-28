@@ -39,8 +39,17 @@ class Whatsapp::Inbound::MessageReading
       end
   end
 
+  # What the keyword gate compares, so only the edges are trimmed: "STOPP!",
+  # "Stopp." and "🛑 stop" are the keyword written the way people write, and a
+  # transcribed voice note ends in a full stop as a rule. Anything inside the
+  # words stays, because "stopp bitte" is a sentence for the assistant to read
+  # rather than a keyword for Ruby to match. Missing a keyword here is not
+  # harmless: with no model reachable it leaves a number subscribed after it
+  # asked to stop.
+  SURROUNDING_NON_WORD_CHARACTERS = /\A[^\p{L}\p{N}]+|[^\p{L}\p{N}]+\z/
+
   def normalized_text
-    @normalized_text ||= text.to_s.strip.downcase
+    @normalized_text ||= text.to_s.downcase.gsub(SURROUNDING_NON_WORD_CHARACTERS, "")
   end
 
   # A voice note nothing could be read from. Asking forces the one

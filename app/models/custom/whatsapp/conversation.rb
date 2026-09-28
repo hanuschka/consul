@@ -114,6 +114,15 @@ class Whatsapp::Conversation < ApplicationRecord
     unsaved_submission? || pending_comment.present?
   end
 
+  # Wider again, for the one question that is about the citizen rather than about
+  # what a reset would lose: whether they are in the middle of something that
+  # "Stopp" could mean leaving. A ballot is saved answer by answer, so it is not
+  # unsaved work, but a citizen half-way through one is just as likely to mean the
+  # vote rather than the channel.
+  def step_in_progress?
+    unsaved_work? || active_poll_id.present?
+  end
+
   # What this phase collects besides the text, asked of the conversation because
   # two places each need one of the answers and they must not drift: the tool that
   # offers a pin and the drafting call that infers one from the citizen's wording
@@ -790,6 +799,34 @@ class Whatsapp::Conversation < ApplicationRecord
   # Called once at the top of the inbound chain, before anything can send.
   def hold_offered_confirmations!
     @held_confirmations = pending_confirmations
+  end
+
+  # Whether the bot had already asked "only this, or all messages?" when the
+  # citizen's message arrived. Asked once and only once: the next opt-out keyword
+  # is honoured without a model, and stop_messages acts on a plain yes. Held on
+  # arrival for the same reason as the confirmations above — the turn that asks
+  # must not be able to count its own question as answered.
+  def hold_stop_question!
+    @held_stop_question = context["stop_question_asked"].present?
+  end
+
+  def stop_question_asked?
+    return @held_stop_question if defined?(@held_stop_question)
+
+    context["stop_question_asked"].present?
+  end
+
+  def ask_stop_question!
+    merge_context!(stop_question_asked: true)
+  end
+
+  # Any message after the question answers it, so the question is settled
+  # whatever that answer was: a citizen who went on with their comment and
+  # typed "Stopp" an hour later is asked again rather than unsubscribed.
+  def clear_stop_question!
+    return if context["stop_question_asked"].blank?
+
+    merge_context!(stop_question_asked: nil)
   end
 
   # The draft and the comment as they stood when the assistant's turn began, held

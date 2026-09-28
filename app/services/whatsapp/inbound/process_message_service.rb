@@ -11,13 +11,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   nothing may allow, so leaving the channel cannot depend on a provider being
   #   reachable. That is also why the keyword list is the one piece of reading left
   #   in Ruby: it is deterministic on purpose, not for want of a better reader.
+  #   The one thing it does not decide is what "Stopp" means in the middle of a
+  #   contribution, a comment or a vote. That is handed on to the assistant, which
+  #   asks once, and the keyword falls back to leaving whenever no model answers.
   # - An unsubscribed number reaches no model and gets nothing about the portal
   #   answered: being conversed with is the one thing unsubscribing asked us not to
   #   do. It used to reach a classifier — a whole model call whose only question was
   #   whether the message was an opt-in, which the keyword above now answers. What
-  #   it does get, at most once a week, is the one line naming the word that brings
-  #   it back, because the keyword that took it out of the channel is also the
-  #   ordinary word for abandoning a draft.
+  #   it does get — on its first message after leaving, then at most once a day —
+  #   is the one line naming the word that brings it back, because the keyword that
+  #   took it out of the channel is also the ordinary word for abandoning a draft.
   # - A voice note is transcribed just ahead of the keyword gate, the first text
   #   consumer. The "could not read it" reply goes out there, but the chain runs on.
   # - Cancelling is read before anything else can act on the message, for the same
@@ -46,6 +49,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   # read this is Ruby.
   OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
 
+  # The one of them the citizen is told to write, by the confirmation of leaving
+  # and by the reminder after it — both have to name a word this list still reads.
+  def self.opt_in_keyword
+    OPT_IN_KEYWORDS.first.upcase
+  end
+
   # How many of a phase's contributions the reply names in words. Fewer than the ten
   # a list holds, and deliberately: each one is named over two lines with its own
   # address, and past five of those the body outgrows the 1024 characters an
@@ -73,6 +82,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Before anything can send: the tools that must not act on an irreversible offer
     # they made themselves read this rather than the record.
     conversation.hold_offered_confirmations!
+    conversation.hold_stop_question!
 
     # Every message is acknowledged, tapped ones included: a tap that produces no
     # bubble reads as a tap that did not arrive, and the citizen taps again.
@@ -82,6 +92,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     return if handle_channel_keywords
     return offer_way_back_in if account.opt_out_at.present?
+
+    settle_stop_question
 
     disclose_ai
 
@@ -103,7 +115,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     park_media
 
-    inbound_note = tap_note || entry_note(entry) || reading.text.presence || media_note
+    inbound_note =
+      tap_note || entry_note(entry) || deferred_opt_out_note || reading.text.presence ||
+      media_note
 
     # Read before the turn, because the turn is what may end the ballot: a citizen
     # who asks to submit something instead has left it, and start_draft! replaces the
@@ -144,6 +158,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       return conversation.clear_retry_inbound! if result.success?
+      return honour_deferred_opt_out if @opt_out_deferred
 
       # The note describing a tap is snapshotted as the text it is: what the retry
       # replays is the sentence the assistant was given, which already says which
@@ -220,8 +235,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # question re-sent its picker under each reply until the citizen was trapped in
     # it. After the one re-ask the question stays in the state, and bringing it
     # back is the assistant's call (Whatsapp::Conversation#resumed_poll_question_ids).
+    #
+    # Never under the stop question: the next ballot question sent after "only the
+    # vote, or all messages?" answers it on the citizen's behalf.
     def resume_ballot(poll_id)
       return if poll_id.blank?
+      return if @opt_out_deferred
       return if ::Current.whatsapp_ballot_message_sent_in_turn
       return if conversation.reload.active_poll_id != poll_id
       return if conversation.unsaved_submission?
@@ -272,20 +291,64 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     # The catalog uses one word for two things: "Stop" abandons what is in progress,
-    # and "STOP" ends all messages for good. Decided here rather than inside either
-    # service — getting it wrong means a citizen who wanted to cancel is silently
-    # unsubscribed instead.
+    # and "STOP" ends all messages for good. With nothing in progress it can only
+    # mean the second, and that is honoured here before any model is asked. In the
+    # middle of a contribution, a comment or a vote it can mean either, and which
+    # is the assistant's to read from the conversation rather than a rule's to
+    # guess: guessed "cancel", a citizen who wanted out stays subscribed; guessed
+    # "leave", a citizen who wanted to drop a comment is unsubscribed without a word.
+    #
+    # The assistant asks once. The keyword after that question is honoured here
+    # again, and so is one that arrives when no model can be reached to ask it.
     def handle_opt_out
-      if conversation.unsaved_submission?
-        conversation.discard_draft!
+      return defer_opt_out if opt_out_ambiguous?
 
-        send_cancelled_line
-      else
-        ::Whatsapp::Accounts::MessageDeliveryService.disable(conversation: conversation)
-      end
+      ::Whatsapp::Accounts::MessageDeliveryService.disable(conversation: conversation)
 
       true
     end
+
+    def opt_out_ambiguous?
+      conversation.step_in_progress? &&
+        !conversation.stop_question_asked? &&
+        ::Ai::Settings.ai_available?
+    end
+
+    # False, so the chain runs on: the disclosure still goes out ahead of the
+    # reply, and the reply is the assistant's.
+    def defer_opt_out
+      @opt_out_deferred = true
+      conversation.ask_stop_question!
+
+      false
+    end
+
+    # Any other message answers the question, whatever it said.
+    def settle_stop_question
+      return if @opt_out_deferred
+
+      conversation.clear_stop_question!
+    end
+
+    # The deferred keyword whose turn could not be written. Asking was the
+    # assistant's part, and without it the keyword means what it means everywhere
+    # else: leaving the channel must not depend on a provider being reachable.
+    # No retry is stored, because there is nothing left to retry.
+    def honour_deferred_opt_out
+      ::Whatsapp::Accounts::MessageDeliveryService.disable(conversation: conversation)
+    end
+
+    def deferred_opt_out_note
+      return if !@opt_out_deferred
+
+      sprintf(DEFERRED_OPT_OUT_NOTE, text: reading.text.to_s.squish)
+    end
+
+    DEFERRED_OPT_OUT_NOTE = "The citizen wrote \"%{text}\" while in the middle of a contribution, " \
+                            "a comment or a vote. It may mean stopping only that, or receiving " \
+                            "no more messages from us at all. Ask them once, in one short " \
+                            "question, which they mean, and offer the cancel button for stopping " \
+                            "only this. If they want no more messages, call stop_messages.".freeze
 
     def handle_opt_in
       return false if account.opt_out_at.blank?
@@ -305,11 +368,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # than to leave the channel; every message they wrote afterwards was dropped
     # without a word, and the way back was a keyword nobody had been told.
     #
-    # Throttled off the last thing the bot said to this number rather than off a
-    # column of its own, and the message log answers exactly this question for
-    # exactly this case: a broadcast skips an opted-out number and the assistant
-    # never reaches one, so the only thing that writes to one is this line.
-    OPT_OUT_REMINDER_INTERVAL = 7.days
+    # Throttled off what the bot has said to this number since it left rather than
+    # off a column of its own, and the message log answers exactly this question
+    # for exactly this case: a broadcast skips an opted-out number and the
+    # assistant never reaches one, so the only lines written to one are the
+    # confirmation of leaving and this one.
+    #
+    # The first message after leaving is always answered. Counting the
+    # confirmation as "the last thing said" is what held the way back for a week
+    # from the one citizen most likely to need it — the one who is still writing.
+    OPT_OUT_REMINDER_INTERVAL = 1.day
 
     def offer_way_back_in
       return if !way_back_in_due?
@@ -317,15 +385,26 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       send_bot_line(
         ::Whatsapp.copy(
           "whatsapp.bot.compliance.opted_out_reminder",
-          keyword: OPT_IN_KEYWORDS.first.upcase
+          keyword: self.class.opt_in_keyword
         )
       )
     end
 
+    # Two rows are enough to tell the cases apart: none or only the confirmation
+    # means no reminder yet, and otherwise the newest row is the last reminder.
     def way_back_in_due?
-      last_spoken_at = account.whatsapp_messages.outbound.maximum(:created_at)
+      spoken_since_opt_out_at =
+        account
+          .whatsapp_messages
+          .outbound
+          .where(created_at: account.opt_out_at..)
+          .order(created_at: :desc)
+          .limit(2)
+          .pluck(:created_at)
 
-      last_spoken_at.blank? || last_spoken_at < OPT_OUT_REMINDER_INTERVAL.ago
+      return true if spoken_since_opt_out_at.size < 2
+
+      spoken_since_opt_out_at.first < OPT_OUT_REMINDER_INTERVAL.ago
     end
 
     # Once per number rather than once per 24-hour window: a regular who reads it

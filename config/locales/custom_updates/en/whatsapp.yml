@@ -77,7 +77,9 @@ en:
       opted_in: You will receive messages from us again.
       compliance:
         disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
-        opted_out: Understood, you won't receive any more messages from us.
+        opted_out: >-
+          Understood, you won't receive any more messages from us. Write %{keyword} if
+          you would like to receive messages again.
         opted_out_reminder: >-
           You unsubscribed from our messages, so I can't help you here. Write %{keyword}
           if you would like to receive messages again.

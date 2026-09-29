@@ -8,10 +8,15 @@ describe "Poll question order", type: :request do
     [2, 3, 4, 6, 7].map { |order| create_question(order, randomize_position: true) }
   end
 
+  # With an option, because the wizard walks only questions that ask something
+  # (Polls::BallotTraversalQuery) and an option-less question asks nothing.
   def create_question(given_order, randomize_position:)
-    create(:poll_question, poll: poll, given_order: given_order,
-                           randomize_position: randomize_position,
-                           title: "Question #{given_order}")
+    question = create(:poll_question, poll: poll, given_order: given_order,
+                                      randomize_position: randomize_position,
+                                      title: "Question #{given_order}")
+    create(:poll_question_answer, question: question)
+
+    question
   end
 
   def configured_ids
@@ -84,12 +89,10 @@ describe "Poll question order", type: :request do
       poll.projekt_phase.settings
           .find_or_create_by!(key: "feature.resource.wizard_mode")
           .update!(value: "active")
-
-      [first_pinned, second_pinned, *flagged].each do |question|
-        create(:poll_question_answer, question: question)
-      end
     end
 
+    # The wizard only walks the clone of the option the citizen chose, so the
+    # context question is answered with that option first.
     it "places a contexted clone at the position configured for its template" do
       template = create(:poll_question, poll: poll, given_order: 8,
                                         contextualize_by_poll_question_id: first_pinned.id,
@@ -110,6 +113,19 @@ describe "Poll question order", type: :request do
 
       expect(wizard_ids).not_to include(template.id)
       expect(wizard_ids.last).to eq(clone.id)
+    end
+
+    # A bundle's heading has no options of its own; its sub-questions do.
+    it "keeps a bundle on the wizard path" do
+      bundle = create(:poll_question, poll: poll, given_order: 8, bundle_question: true,
+                                      title: "Bundle")
+      nested = create(:poll_question, poll: poll, parent_question_id: bundle.id,
+                                      title: "Nested question")
+      create(:poll_question_answer, question: nested)
+
+      visit_poll_as(create(:user))
+
+      expect(controller.view_assigns["wizard_question_ids"].last).to eq(bundle.id)
     end
 
     it "hands the wizard the same order it renders" do

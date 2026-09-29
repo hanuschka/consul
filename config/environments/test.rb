@@ -59,10 +59,13 @@ Rails.application.configure do
 
   config.cache_store = :null_store
 
+  # Skip per-query SQL logging; it wrote ~500 MB of test.log per day.
+  config.log_level = :info
+
   config.after_initialize do
-    Bullet.enable = true
-    Bullet.bullet_logger = true
     if ENV["BULLET"]
+      Bullet.enable = true
+      Bullet.bullet_logger = true
       Bullet.raise = true # raise an error if n+1 query occurs
     end
   end

@@ -1,34 +1,34 @@
+<% master = municipal_plan.released_plan || municipal_plan %>
 <% policy = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, municipal_plan) %>
-<% show_website = Setting["process.municipal_plans"].present? && !municipal_plan.working_copy? &&
-                  municipal_plan.status.in?(%w[published archived]) %>
+<% master_policy = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, master) %>
+<% show_website = Setting["process.municipal_plans"].present? && master.status.in?(%w[published archived]) %>
 <% show_edit = policy.update? %>
 <% show_submit = show_edit && municipal_plan.draft? && !municipal_plan.submitted_for_release? && policy.submit? %>
 <% show_release = show_edit && municipal_plan.draft? && policy.release? %>
 <% show_archive = show_edit && municipal_plan.published? && policy.archive? %>
-<% show_unarchive = show_edit && municipal_plan.archived? && policy.unarchive? %>
-<% show_convert = show_edit && policy.convert? %>
+<% show_discard = show_edit && policy.discard? %>
+<% show_unarchive = show_edit && master.archived? && master_policy.unarchive? %>
+<% show_convert = show_edit && master_policy.convert? %>
 <% visible_actions = { website: show_website, edit: show_edit, submit: show_submit, release: show_release,
-                        archive: show_archive, unarchive: show_unarchive, convert: show_convert }.select { |_, shown| shown }.keys %>
+                        discard: show_discard, archive: show_archive, unarchive: show_unarchive, convert: show_convert }.select { |_, shown| shown }.keys %>
 
 <% if show_website || show_edit %>
   <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
     <h2 class="adm-detail-section-title m-0"><%= t("adm.municipal_plans.municipal_plans.action_row.title") %></h2>
     <%= render Adm::HintComponent.new do %>
-      <ul class="adm-hint__list">
-        <% visible_actions.each do |action| %>
-          <% label_scope = action.in?(%i[website edit]) ? "action_row" : "show.actions" %>
-          <li>
-            <strong><%= t("adm.municipal_plans.municipal_plans.#{label_scope}.#{action}") %></strong>
-            <%= t("adm.municipal_plans.municipal_plans.action_row.hints.#{action}") %>
-          </li>
-        <% end %>
-      </ul>
+      <% visible_actions.each do |action| %>
+        <% label_scope = action.in?(%i[website edit]) ? "action_row" : "show.actions" %>
+        <p class="adm-hint__text<%= " mb-0" if action == visible_actions.last %>">
+          <strong><%= t("adm.municipal_plans.municipal_plans.#{label_scope}.#{action}") %></strong>
+          <%= t("adm.municipal_plans.municipal_plans.action_row.hints.#{action}") %>
+        </p>
+      <% end %>
     <% end %>
   </div>
 
   <div class="adm-detail-action-row d-flex align-items-center flex-wrap gap-2 mb-4">
     <% if show_website %>
-      <%= kern_link_button(municipal_plan_path(municipal_plan),
+      <%= kern_link_button(municipal_plan_path(master),
             text: t(".website"), icon: "open_in_new", style: :secondary,
             target: "_blank", rel: "noopener") %>
     <% end %>
@@ -54,6 +54,14 @@
       <% end %>
     <% end %>
 
+    <% if show_discard %>
+      <%= form_with url: discard_adm_municipal_plans_municipal_plan_path(municipal_plan), method: :delete,
+            class: "d-flex", data: { turbo_confirm: t("adm.municipal_plans.municipal_plans.show.actions.discard_confirm") } do %>
+        <%= kern_button(type: :submit, text: t("adm.municipal_plans.municipal_plans.show.actions.discard"),
+                        icon: "undo", style: :secondary) %>
+      <% end %>
+    <% end %>
+
     <% if show_archive %>
       <%= form_with url: archive_adm_municipal_plans_municipal_plan_path(municipal_plan),
             method: :patch, class: "d-flex" do %>
@@ -63,7 +71,7 @@
     <% end %>
 
     <% if show_unarchive %>
-      <%= form_with url: unarchive_adm_municipal_plans_municipal_plan_path(municipal_plan),
+      <%= form_with url: unarchive_adm_municipal_plans_municipal_plan_path(master),
             method: :patch, class: "d-flex" do %>
         <%= kern_button(type: :submit, text: t("adm.municipal_plans.municipal_plans.show.actions.unarchive"),
                         icon: "unarchive", style: :secondary) %>
@@ -71,7 +79,7 @@
     <% end %>
 
     <% if show_convert %>
-      <%= kern_link_button(new_adm_municipal_plans_municipal_plan_projekt_conversion_path(municipal_plan),
+      <%= kern_link_button(new_adm_municipal_plans_municipal_plan_projekt_conversion_path(master),
             text: t("adm.municipal_plans.municipal_plans.show.actions.convert"),
             icon: "rocket_launch", style: :secondary) %>
     <% end %>

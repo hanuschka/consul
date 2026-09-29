@@ -45,6 +45,7 @@ en:
           no_results_filtered_title: No matches
           no_results_filtered_description: No plans match the selected filters. Adjust the filters or reset them.
           table:
+            id: ID
             title: Title
             status: Status
             districts: Districts
@@ -83,6 +84,8 @@ en:
           success: The archive date was saved.
         archive:
           success: The plan was archived.
+        discard:
+          success: The changes were discarded.
         unarchive:
           success: The plan was taken out of the archive.
         tabs:
@@ -99,6 +102,7 @@ en:
             edit: "Changes the details. For a published plan this creates a working copy; the public page stays unchanged until the changes are released."
             submit: "Tells the administration that the draft or working copy is ready and can be released."
             release: "Publishes the draft or applies the changes of the working copy to the public page."
+            discard: "Deletes the working copy with all its changes; the released version stays public as it is."
             archive: "Takes the plan out of the public overview; it stays reachable in the archive at its address."
             unarchive: "Brings the plan back from the archive, as a published plan, or as a draft if it was never released."
             convert: "Creates a new participation project from the plan, deactivated at first, that stays linked to the plan."
@@ -137,19 +141,16 @@ en:
           actions:
             submit: Submit for release
             release: Release
+            discard: Discard changes
+            discard_confirm: "Do you really want to discard the changes in this working version? The released version stays as it is. This cannot be undone."
             archive: Archive
             unarchive: Take out of the archive
             convert: Convert into project
           projekts:
             title: Linked participation projects
-          release_pending:
-            title: A working version is waiting for release
-            body: This plan has a changed version that has not been released yet. Until it is released, the public plan list keeps showing this version.
-            link: Open working version
           working_copy:
             title: This is the working version
             body: This version is not public yet. It replaces the released plan as soon as it has been released.
-            link: Open released version
           changes:
             title: Changes against the released version
             field: Field
@@ -171,8 +172,6 @@ en:
             participation: "Participation & context"
             contact: "Contact & responsibility"
           errors_title: The plan could not be saved
-          not_set: Set automatically on save
-          automatic_intro: These details are set automatically and cannot be edited.
           add_link: Add link
           officer_groups: Officer groups
           officers: Officers
@@ -197,8 +196,6 @@ en:
             informal_participation: Informal citizen participation
             informal_participation_checkbox: Informal citizen participation is planned
             informal_participation_reason: Note on informal citizen participation
-            content_updated_at: Updated on
-            version: Version
             links: Links and documents
             link_title: Label
             link_url: Address (URL)
@@ -209,7 +206,6 @@ en:
             map_location: Map position
             responsible: Responsible officer
             system_mailbox_email: System mailbox for notices
-            status: Status
           hints:
             title: The title names the plan the way citizens see it in the plan list. Use a short, understandable wording without file numbers or abbreviations.
             short_description: The short description is the entry text in the public plan list and should summarise the plan in about 420 characters. Explain in a few sentences what it is about and why the city is pursuing it.

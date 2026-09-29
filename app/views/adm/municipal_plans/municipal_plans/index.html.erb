@@ -26,6 +26,8 @@
 
 <%
   headers = {
+    id:                 Kern::Table::HeaderComponent.new(:id, t(".table.id"),
+                          **@id_header_options),
     title:              Kern::Table::HeaderComponent.new(:title, t(".table.title"),
                           **@title_header_options.merge(data_field: "title")),
     status:             Kern::Table::HeaderComponent.new(:status, t(".table.status"),
@@ -50,7 +52,7 @@
         records: @municipal_plans,
         pagy: @pagy,
         headers: headers,
-        column_count: 8,
+        column_count: 9,
         column_selector: {
           storage_key: "adm-municipal-plans-columns-v2",
           defaults: "title,status,districts,topics,responsible,content_updated_at,version"
@@ -67,6 +69,7 @@
         }
       ) do |c| %>
     <% c.with_header_row do %>
+      <%= render headers[:id] %>
       <%= render headers[:title] %>
       <%= render headers[:status] %>
       <%= render headers[:districts] %>

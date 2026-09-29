@@ -1,3 +1,4 @@
+<% master = @municipal_plan.released_plan || @municipal_plan %>
 <%= content_for :title, t(".title") %>
 
 <%= render Adm::HeaderComponent.new(title: @municipal_plan.title, breadcrumbs: @breadcrumbs, back_button_url: adm_municipal_plans_root_path) %>
@@ -6,6 +7,6 @@
 
 <div class="kern-container my-5">
   <%= render "adm/shared/audits",
-    auditable: @municipal_plan,
-    audit_show_path: ->(audit) { adm_municipal_plans_municipal_plan_audit_path(@municipal_plan, audit) } %>
+    auditable: master,
+    audit_show_path: ->(audit) { adm_municipal_plans_municipal_plan_audit_path(master, audit) } %>
 </div>

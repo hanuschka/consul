@@ -45,6 +45,7 @@ de:
           no_results_filtered_title: Keine Treffer
           no_results_filtered_description: Für die gewählten Filter wurden keine Vorhaben gefunden. Passen Sie die Filter an oder setzen Sie sie zurück.
           table:
+            id: ID
             title: Titel
             status: Status
             districts: Ortsteile
@@ -83,6 +84,8 @@ de:
           success: Das Archivdatum wurde gespeichert.
         archive:
           success: Das Vorhaben wurde archiviert.
+        discard:
+          success: Die Änderungen wurden verworfen.
         unarchive:
           success: Das Vorhaben wurde aus dem Archiv geholt.
         tabs:
@@ -99,6 +102,7 @@ de:
             edit: "Ändert die Angaben. Bei einem veröffentlichten Vorhaben entsteht dabei eine Bearbeitungsfassung; die öffentliche Seite bleibt bis zur Freigabe unverändert."
             submit: "Meldet der Administration, dass der Entwurf oder die Bearbeitungsfassung fertig ist und freigegeben werden kann."
             release: "Veröffentlicht den Entwurf oder übernimmt die Änderungen der Bearbeitungsfassung in die öffentliche Seite."
+            discard: "Löscht die Bearbeitungsfassung mit allen ihren Änderungen; die freigegebene Fassung bleibt unverändert öffentlich."
             archive: "Nimmt das Vorhaben aus der öffentlichen Übersicht; es bleibt im Archiv unter seiner Adresse erreichbar."
             unarchive: "Holt das Vorhaben aus dem Archiv zurück, und zwar als veröffentlichtes Vorhaben, oder als Entwurf, wenn es nie freigegeben wurde."
             convert: "Legt aus dem Vorhaben ein neues, zunächst deaktiviertes Beteiligungsprojekt an, das mit dem Vorhaben verknüpft bleibt."
@@ -137,19 +141,16 @@ de:
           actions:
             submit: Zur Freigabe einreichen
             release: Freigeben
+            discard: Änderungen verwerfen
+            discard_confirm: "Möchten Sie die Änderungen dieser Bearbeitungsfassung wirklich verwerfen? Die freigegebene Fassung bleibt unverändert. Das kann nicht rückgängig gemacht werden."
             archive: Archivieren
             unarchive: Aus dem Archiv holen
             convert: In Beteiligungsprojekt überführen
           projekts:
             title: Verknüpfte Beteiligungsprojekte
-          release_pending:
-            title: Bearbeitungsfassung wartet auf Freigabe
-            body: Zu diesem Vorhaben liegt eine geänderte Fassung vor, die noch nicht freigegeben ist. Bis zur Freigabe bleibt in der öffentlichen Vorhabenliste diese Fassung sichtbar.
-            link: Bearbeitungsfassung öffnen
           working_copy:
             title: Dies ist die Bearbeitungsfassung
             body: Diese Fassung ist noch nicht öffentlich. Sie ersetzt das freigegebene Vorhaben, sobald sie freigegeben wurde.
-            link: Freigegebene Fassung öffnen
           changes:
             title: Änderungen gegenüber der freigegebenen Fassung
             field: Feld
@@ -171,8 +172,6 @@ de:
             participation: "Beteiligung & Kontext"
             contact: "Kontakt & Zuständigkeit"
           errors_title: Das Vorhaben konnte nicht gespeichert werden
-          not_set: Wird beim Speichern gesetzt
-          automatic_intro: Diese Angaben werden automatisch gesetzt und können nicht bearbeitet werden.
           add_link: Link hinzufügen
           officer_groups: Sachbearbeitergruppen
           officers: Sachbearbeitung
@@ -197,8 +196,6 @@ de:
             informal_participation: Bürgerbeteiligung informell
             informal_participation_checkbox: Eine informelle Bürgerbeteiligung ist vorgesehen
             informal_participation_reason: Begründung zur informellen Bürgerbeteiligung
-            content_updated_at: Aktualisierungsdatum
-            version: Versionsnummer
             links: Links und Dokumente
             link_title: Bezeichnung
             link_url: Adresse (URL)
@@ -209,7 +206,6 @@ de:
             map_location: Kartenposition
             responsible: Zuständige Sachbearbeitung
             system_mailbox_email: Systempostfach für Hinweise
-            status: Status
           hints:
             title: Der Titel benennt das Vorhaben so, wie es Bürgerinnen und Bürger in der Vorhabenliste sehen. Wählen Sie eine kurze, verständliche Bezeichnung ohne Aktenzeichen und Abkürzungen.
             short_description: Die Kurzbeschreibung ist der Einstiegstext in der öffentlichen Vorhabenliste und soll das Vorhaben in etwa 420 Zeichen zusammenfassen. Beschreiben Sie in wenigen Sätzen, worum es geht und warum die Stadt das Vorhaben verfolgt.

@@ -60,11 +60,18 @@ class Adm::MunicipalPlans::MunicipalPlanPolicy < ApplicationPolicy
   end
 
   def archive_date?
-    update?
+    update? && @record.is_a?(MunicipalPlan) && @record.published?
   end
 
   def release?
     @user&.administrator?
+  end
+
+  def discard?
+    return false unless @record.is_a?(MunicipalPlan) && @record.working_copy?
+    return true if @user&.administrator?
+
+    update? && !@record.submitted_for_release?
   end
 
   def convert?

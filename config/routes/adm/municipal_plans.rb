@@ -42,6 +42,7 @@ namespace :adm do
         patch :release
         patch :archive
         patch :unarchive
+        delete :discard
         patch :archive_date
         get :audits
       end

@@ -25,7 +25,7 @@
     <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.short_description"),
                                             hint: t(".hints.short_description"),
                                             required: true, stacked: true) do %>
-      <%= form.text_area :short_description, label: false, rows: 4,
+      <%= form.text_area :short_description, label: false, rows: 4, class: "mb-2",
             placeholder: t(".placeholders.short_description") %>
     <% end %>
 
@@ -33,7 +33,9 @@
                                             required: true, stacked: true) do %>
       <% topics = MunicipalPlan::Topic.all %>
       <% if topics.any? %>
-        <%= form.collection_check_boxes :topic_ids, topics, :id, :name %>
+        <div class="mb-2">
+          <%= form.collection_check_boxes :topic_ids, topics, :id, :name %>
+        </div>
       <% else %>
         <%= empty_state(title: t(".no_topics_title"), description: t(".no_topics_description"),
                         icon: "category") %>
@@ -42,7 +44,7 @@
 
     <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.further_information"),
                                             hint: t(".hints.further_information"), stacked: true) do %>
-      <%= form.text_area :further_information, label: false, rows: 4,
+      <%= form.text_area :further_information, label: false, rows: 4, class: "mb-2",
             placeholder: t(".placeholders.further_information") %>
     <% end %>
   </section>
@@ -53,21 +55,22 @@
   <section class="kern-accordion__body">
     <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.last_resolution"),
                                             hint: t(".hints.last_resolution"), stacked: true) do %>
-      <%= form.text_area :last_resolution, label: false, rows: 4,
+      <%= form.text_area :last_resolution, label: false, rows: 4, class: "mb-2",
             placeholder: t(".placeholders.last_resolution") %>
     <% end %>
 
     <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.processing_status"),
                                             hint: t(".hints.processing_status"),
                                             required: true, stacked: true) do %>
-      <%= form.text_area :processing_status, label: false, rows: 4,
+      <%= form.text_area :processing_status, label: false, rows: 4, class: "mb-2",
             placeholder: t(".placeholders.processing_status") %>
     <% end %>
 
     <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.next_steps"),
                                             hint: t(".hints.next_steps"),
                                             required: true, stacked: true) do %>
-      <%= form.text_area :next_steps, label: false, rows: 4, placeholder: t(".placeholders.next_steps") %>
+      <%= form.text_area :next_steps, label: false, rows: 4, class: "mb-2",
+            placeholder: t(".placeholders.next_steps") %>
     <% end %>
 
     <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.costs"),
@@ -88,7 +91,7 @@
     <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.formal_participation_reason"),
                                             hint: t(".hints.formal_participation_reason"),
                                             stacked: true) do %>
-      <%= form.text_area :formal_participation_reason, label: false, rows: 4,
+      <%= form.text_area :formal_participation_reason, label: false, rows: 4, class: "mb-2",
             placeholder: t(".placeholders.formal_participation_reason") %>
     <% end %>
 
@@ -100,7 +103,7 @@
     <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.informal_participation_reason"),
                                             hint: t(".hints.informal_participation_reason"),
                                             stacked: true) do %>
-      <%= form.text_area :informal_participation_reason, label: false, rows: 4,
+      <%= form.text_area :informal_participation_reason, label: false, rows: 4, class: "mb-2",
             placeholder: t(".placeholders.informal_participation_reason") %>
     <% end %>
 
@@ -109,7 +112,9 @@
                                             required: true, stacked: true) do %>
       <% districts = RegisteredAddress::District.all.sort_by(&:name_for_display) %>
       <% if districts.any? %>
-        <%= form.collection_check_boxes :district_ids, districts, :id, :name_for_display %>
+        <div class="mb-2">
+          <%= form.collection_check_boxes :district_ids, districts, :id, :name_for_display %>
+        </div>
       <% else %>
         <%= empty_state(title: t(".no_districts_title"), description: t(".no_districts_description"),
                         icon: "location_off") %>
@@ -206,25 +211,3 @@
     <% end %>
   </section>
 <% end %>
-
-<p class="kern-body mb-3 mt-4"><%= t(".automatic_intro") %></p>
-<div class="adm-detail-table">
-  <div class="adm-detail-table__row">
-    <div class="adm-detail-table__label"><%= t(".labels.status") %></div>
-    <div class="adm-detail-table__value"><%= t("adm.municipal_plans.statuses.#{form.object.status}") %></div>
-  </div>
-  <div class="adm-detail-table__row">
-    <div class="adm-detail-table__label"><%= t(".labels.content_updated_at") %></div>
-    <div class="adm-detail-table__value">
-      <% if form.object.content_updated_at.present? %>
-        <%= l(form.object.content_updated_at, format: "%d.%m.%Y") %>
-      <% else %>
-        <%= t(".not_set") %>
-      <% end %>
-    </div>
-  </div>
-  <div class="adm-detail-table__row">
-    <div class="adm-detail-table__label"><%= t(".labels.version") %></div>
-    <div class="adm-detail-table__value"><%= form.object.version.presence || t(".not_set") %></div>
-  </div>
-</div>

@@ -1,5 +1,5 @@
 class Adm::MunicipalPlansQuery < ApplicationQuery
-  SORTABLE_FIELDS = %i[content_updated_at version status].freeze
+  SORTABLE_FIELDS = %i[id content_updated_at version status].freeze
 
   def initialize(base_scope, params = {})
     @base_scope = base_scope

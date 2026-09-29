@@ -2,8 +2,10 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
   include MapLocationAttributes
 
   before_action :find_municipal_plan, only: [:show, :edit, :update, :destroy, :submit, :release,
-                                             :archive, :unarchive, :archive_date, :audits]
+                                             :archive, :unarchive, :archive_date, :audits,
+                                             :discard]
   before_action :redirect_to_working_copy, only: [:edit, :update]
+  before_action :redirect_to_pending_working_copy, only: [:show, :audits]
 
   def index
     authorize MunicipalPlan, :index?, policy_class: Adm::MunicipalPlans::MunicipalPlanPolicy
@@ -133,6 +135,13 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
     change_status("archived")
   end
 
+  def discard
+    released = @municipal_plan.released_plan
+    @municipal_plan.destroy!
+
+    redirect_to adm_municipal_plans_municipal_plan_path(released), notice: t(".success")
+  end
+
   # A Vorhaben that was released before returns to the public list as it was, without a new
   # release; one that never left Entwurf goes back to being an Entwurf.
   def unarchive
@@ -142,6 +151,7 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
   private
 
     def set_header_options
+      @id_header_options = { sort: true }
       @title_header_options = { search: true }
       @status_header_options = { sort: true, filter_options: status_filter_options }
       @responsible_header_options = { filter_options: responsible_filter_options }
@@ -196,6 +206,12 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
       redirect_to edit_adm_municipal_plans_municipal_plan_path(
         ::MunicipalPlans::WorkingCopyService.call(@municipal_plan)
       )
+    end
+
+    def redirect_to_pending_working_copy
+      return if @municipal_plan.working_copy.blank?
+
+      redirect_to url_for(action: action_name, id: @municipal_plan.working_copy)
     end
 
     def change_status(status)

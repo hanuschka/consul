@@ -1,7 +1,8 @@
 <% responsible_name = @municipal_plan.responsible&.name %>
-<% policy = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, @municipal_plan) %>
-<% may_update = policy.update? %>
-<% may_edit_archive_date = may_update && !@municipal_plan.working_copy? %>
+<% master = @municipal_plan.released_plan || @municipal_plan %>
+<% master_policy = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, master) %>
+<% may_update = master_policy.update? %>
+<% may_edit_archive_date = master_policy.archive_date? %>
 
 <%= content_for :title, @municipal_plan.title %>
 
@@ -14,20 +15,10 @@
 
   <%= render "adm/municipal_plans/municipal_plans/action_row", municipal_plan: @municipal_plan %>
 
-  <% if @municipal_plan.working_copy.present? %>
-    <div class="mb-5">
-      <%= kern_alert(title: t(".release_pending.title")) do %>
-        <p class="kern-body mb-3"><%= t(".release_pending.body") %></p>
-        <%= kern_link_button(adm_municipal_plans_municipal_plan_path(@municipal_plan.working_copy),
-              text: t(".release_pending.link"), icon: "arrow_forward") %>
-      <% end %>
-    </div>
-  <% elsif @municipal_plan.working_copy? %>
+  <% if @municipal_plan.working_copy? %>
     <div class="mb-5">
       <%= kern_alert(title: t(".working_copy.title")) do %>
-        <p class="kern-body mb-3"><%= t(".working_copy.body") %></p>
-        <%= kern_link_button(adm_municipal_plans_municipal_plan_path(@municipal_plan.released_plan),
-              text: t(".working_copy.link"), icon: "arrow_back") %>
+        <p class="kern-body mb-0"><%= t(".working_copy.body") %></p>
       <% end %>
     </div>
   <% end %>
@@ -73,7 +64,7 @@
   <% end %>
 
   <section class="adm-detail-section">
-    <%= render "adm/memos/memos", memoable: @municipal_plan.released_plan || @municipal_plan %>
+    <%= render "adm/memos/memos", memoable: master %>
   </section>
 
   <section class="adm-detail-section">
@@ -87,26 +78,6 @@
         </div>
       </div>
     </div>
-
-    <% if @municipal_plan.map_location.present? %>
-      <div class="adm-detail-media-grid mb-4">
-        <div class="adm-detail-media-card">
-          <div class="adm-detail-media-card__label">
-            <span class="material-symbols-outlined" aria-hidden="true">map</span>
-            <%= t(".map_label") %>
-          </div>
-          <% pin = @municipal_plan.map_location.pin_coordinates %>
-          <%= render Kern::MapComponent.new(
-            map_location: @municipal_plan.map_location,
-            gesture_handling: false,
-            height: 400,
-            latitude: pin&.dig(:latitude),
-            longitude: pin&.dig(:longitude),
-            zoom: pin ? 18 : nil
-          ) %>
-        </div>
-      </div>
-    <% end %>
 
     <%
       content_rows = []
@@ -216,6 +187,26 @@
         <div class="adm-detail-table__value"><%= @municipal_plan.contact_email.presence || t(".none") %></div>
       </div>
     </div>
+
+    <% if @municipal_plan.map_location.present? %>
+      <div class="adm-detail-media-grid mt-4">
+        <div class="adm-detail-media-card">
+          <div class="adm-detail-media-card__label">
+            <span class="material-symbols-outlined" aria-hidden="true">map</span>
+            <%= t(".map_label") %>
+          </div>
+          <% pin = @municipal_plan.map_location.pin_coordinates %>
+          <%= render Kern::MapComponent.new(
+            map_location: @municipal_plan.map_location,
+            gesture_handling: false,
+            height: 400,
+            latitude: pin&.dig(:latitude),
+            longitude: pin&.dig(:longitude),
+            zoom: pin ? 18 : nil
+          ) %>
+        </div>
+      </div>
+    <% end %>
   </section>
 
   <% linked_projekts = @municipal_plan.projekts.includes(page: :translations).to_a %>
@@ -259,8 +250,8 @@
         <div class="adm-detail-table__row">
           <div class="adm-detail-table__label"><%= t(".archive_date.label") %></div>
           <div class="adm-detail-table__value">
-            <% if @municipal_plan.archive_on.present? %>
-              <%= l(@municipal_plan.archive_on, format: "%d.%m.%Y") %>
+            <% if master.archive_on.present? %>
+              <%= l(master.archive_on, format: "%d.%m.%Y") %>
             <% else %>
               <%= t(".none") %>
             <% end %>
@@ -271,10 +262,10 @@
 
     <% if may_edit_archive_date %>
       <div class="mt-4">
-        <%= form_with url: archive_date_adm_municipal_plans_municipal_plan_path(@municipal_plan),
+        <%= form_with url: archive_date_adm_municipal_plans_municipal_plan_path(master),
               scope: :municipal_plan, method: :patch do |f| %>
           <div class="d-flex flex-wrap align-items-end gap-3">
-            <%= f.date_field :archive_on, value: @municipal_plan.archive_on,
+            <%= f.date_field :archive_on, value: master.archive_on,
                   label: t(".archive_date.label") %>
             <%= kern_button(type: :submit, text: t(".archive_date.submit"), icon: "event_available",
                             style: :secondary) %>
@@ -286,12 +277,12 @@
     <% end %>
   </section>
 
-  <% if may_update && !@municipal_plan.working_copy? %>
+  <% if may_update %>
     <section class="adm-detail-section">
       <h2 class="adm-detail-section-title mb-3"><%= t(".notices.title") %></h2>
 
-      <% if @municipal_plan.notices.any? %>
-        <% @municipal_plan.notices.each do |plan_notice| %>
+      <% if master.notices.any? %>
+        <% master.notices.each do |plan_notice| %>
           <% notice_date = l(plan_notice.created_at, format: "%d.%m.%Y") %>
           <div class="adm-content-card mb-3">
             <div class="adm-content-card__header d-flex flex-wrap align-items-center gap-3">
@@ -302,7 +293,7 @@
                 </p>
               </div>
 
-              <%= form_with url: adm_municipal_plans_municipal_plan_notice_path(@municipal_plan, plan_notice),
+              <%= form_with url: adm_municipal_plans_municipal_plan_notice_path(master, plan_notice),
                     method: :delete,
                     data: { turbo_confirm: t(".notices.delete_confirm", date: notice_date) } do %>
                 <%= kern_button(type: :submit, text: t(".notices.delete"), icon: "delete",

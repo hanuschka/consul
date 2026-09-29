@@ -237,15 +237,95 @@ describe "Vorhaben in /adm", type: :request do
   describe "the release workflow on the detail page" do
     let(:released) { create(:municipal_plan, :published, responsible: officer, version: "1.0") }
 
-    it "points an administrator at a pending version" do
+    it "shows the pending version in place of the released one" do
       copy = ::MunicipalPlans::WorkingCopyService.call(released)
 
       get adm_municipal_plans_municipal_plan_path(released)
+      expect(response).to redirect_to(adm_municipal_plans_municipal_plan_path(copy))
+
+      get audits_adm_municipal_plans_municipal_plan_path(released)
+      expect(response).to redirect_to(audits_adm_municipal_plans_municipal_plan_path(copy))
+    end
+
+    it "shows the released Vorhaben itself while nothing is pending" do
+      get adm_municipal_plans_municipal_plan_path(released)
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "offers the actions of the released Vorhaben on the pending version's page" do
+      copy = ::MunicipalPlans::WorkingCopyService.call(released)
+
+      get adm_municipal_plans_municipal_plan_path(copy)
 
       expect(response.body).to include(
-        I18n.t("adm.municipal_plans.municipal_plans.show.release_pending.title")
+        new_adm_municipal_plans_municipal_plan_projekt_conversion_path(released)
       )
-      expect(response.body).to include(adm_municipal_plans_municipal_plan_path(copy))
+      expect(response.body)
+        .not_to include(%(action="#{archive_adm_municipal_plans_municipal_plan_path(released)}"))
+      expect(response.body)
+        .not_to include(%(action="#{archive_adm_municipal_plans_municipal_plan_path(copy)}"))
+    end
+
+    describe "discarding the pending version" do
+      let!(:copy) { ::MunicipalPlans::WorkingCopyService.call(released) }
+
+      it "deletes the copy and leaves the released Vorhaben as it was" do
+        copy.update!(contact_name: "Lena Wolf")
+
+        expect { delete discard_adm_municipal_plans_municipal_plan_path(copy) }
+          .to change { MunicipalPlan.exists?(copy.id) }.from(true).to(false)
+
+        expect(response).to redirect_to(adm_municipal_plans_municipal_plan_path(released))
+        expect(released.reload.contact_name).not_to eq("Lena Wolf")
+        expect(released.working_copy).to be_nil
+      end
+
+      it "is offered on the pending version only" do
+        get adm_municipal_plans_municipal_plan_path(copy)
+        expect(response.body).to include(discard_adm_municipal_plans_municipal_plan_path(copy))
+
+        copy.destroy!
+        get adm_municipal_plans_municipal_plan_path(released)
+        expect(response.body).not_to include(discard_adm_municipal_plans_municipal_plan_path(released))
+      end
+
+      it "cannot be used on a released Vorhaben" do
+        copy.destroy!
+
+        delete discard_adm_municipal_plans_municipal_plan_path(released)
+
+        expect(response).to redirect_to(adm_root_path)
+        expect(MunicipalPlan.exists?(released.id)).to be true
+      end
+
+      it "lets the responsible Sachbearbeitung discard a copy that was not submitted" do
+        login_as(officer.user)
+
+        delete discard_adm_municipal_plans_municipal_plan_path(copy)
+
+        expect(MunicipalPlan.exists?(copy.id)).to be false
+      end
+
+      it "leaves a submitted copy to the administration" do
+        copy.update_column(:submitted_at, Time.current)
+        login_as(officer.user)
+
+        delete discard_adm_municipal_plans_municipal_plan_path(copy)
+
+        expect(response).to redirect_to(adm_root_path)
+        expect(MunicipalPlan.exists?(copy.id)).to be true
+      end
+    end
+
+    it "offers unarchiving instead of archiving once the released Vorhaben is archived" do
+      copy = ::MunicipalPlans::WorkingCopyService.call(released)
+      released.update!(status: "archived")
+
+      get adm_municipal_plans_municipal_plan_path(copy)
+
+      expect(response.body).to include(unarchive_adm_municipal_plans_municipal_plan_path(released))
+      expect(response.body).not_to include(archive_adm_municipal_plans_municipal_plan_path(released))
     end
 
     it "shows what the pending version changes" do
@@ -259,7 +339,6 @@ describe "Vorhaben in /adm", type: :request do
       )
       expect(response.body).to include(MunicipalPlan.human_attribute_name(:contact_name))
       expect(response.body).to include("Lena Wolf")
-      expect(response.body).to include(adm_municipal_plans_municipal_plan_path(released))
     end
 
     it "says so when the pending version changes nothing" do
@@ -421,16 +500,17 @@ describe "Vorhaben in /adm", type: :request do
       expect(response.body).to include("Ein Hinweis")
     end
 
-    it "shows no Hinweise section on a working copy" do
+    it "lists the released Vorhaben's Hinweise on the pending version's page" do
       released = create(:municipal_plan, :published, responsible: officer)
-      released.notices.create!(email: "lena@example.org", body: "Ein Hinweis")
+      released_notice = released.notices.create!(email: "lena@example.org", body: "Ein Hinweis")
       copy = ::MunicipalPlans::WorkingCopyService.call(released)
 
       get adm_municipal_plans_municipal_plan_path(copy)
 
+      expect(response.body).to include(I18n.t("adm.municipal_plans.municipal_plans.show.notices.title"))
+      expect(response.body).to include("Ein Hinweis")
       expect(response.body)
-        .not_to include(I18n.t("adm.municipal_plans.municipal_plans.show.notices.title"))
-      expect(response.body).not_to include("Ein Hinweis")
+        .to include(adm_municipal_plans_municipal_plan_notice_path(released, released_notice))
     end
 
     it "keeps a Sachbearbeitung away from another Vorhaben's Hinweise" do
@@ -467,7 +547,7 @@ describe "Vorhaben in /adm", type: :request do
       expect(released.content_updated_at).to eq(Date.current)
     end
 
-    it "is offered on the released Vorhaben and withheld on a working copy" do
+    it "is set on the released Vorhaben, also from the pending version's page" do
       get adm_municipal_plans_municipal_plan_path(released)
 
       expect(response.body)
@@ -478,7 +558,37 @@ describe "Vorhaben in /adm", type: :request do
       get adm_municipal_plans_municipal_plan_path(copy)
 
       expect(response.body)
+        .to include(archive_date_adm_municipal_plans_municipal_plan_path(released))
+      expect(response.body)
         .not_to include(archive_date_adm_municipal_plans_municipal_plan_path(copy))
+    end
+
+    it "is only offered while the released Vorhaben is published" do
+      released.update!(status: "archived")
+
+      get adm_municipal_plans_municipal_plan_path(released)
+
+      expect(response.body)
+        .not_to include(archive_date_adm_municipal_plans_municipal_plan_path(released))
+    end
+
+    it "is refused for a Vorhaben that is not published" do
+      released.update!(status: "archived")
+
+      set_archive_date("2027-03-01")
+
+      expect(response).to redirect_to(adm_root_path)
+      expect(released.reload.archive_on).to be_nil
+    end
+
+    it "is refused on a pending version" do
+      copy = ::MunicipalPlans::WorkingCopyService.call(released)
+
+      patch archive_date_adm_municipal_plans_municipal_plan_path(copy),
+            params: { municipal_plan: { archive_on: "2027-03-01" }}
+
+      expect(response).to redirect_to(adm_root_path)
+      expect(copy.reload.archive_on).to be_nil
     end
 
     it "can be cleared again" do
@@ -529,6 +639,19 @@ describe "Vorhaben in /adm", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(I18n.t("adm.municipal_plans.municipal_plans.tabs.audits"))
       expect(response.body).to include("Kai Ostermann")
+    end
+
+    it "shows the released Vorhaben's history on the pending version's page" do
+      released = create(:municipal_plan, :published, responsible: officer, contact_name: "Kai Ostermann")
+      copy = ::MunicipalPlans::WorkingCopyService.call(released)
+
+      get audits_adm_municipal_plans_municipal_plan_path(copy)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Kai Ostermann")
+      expect(response.body).to include(
+        adm_municipal_plans_municipal_plan_audit_path(released, released.audits.last)
+      )
     end
 
     it "is closed to officers who may not see the Vorhaben" do
@@ -593,7 +716,7 @@ describe "Vorhaben in /adm", type: :request do
 
   describe "the Hinweis on the actions" do
     def hint_text
-      Nokogiri::HTML(response.body).at_css(".adm-hint__list").text
+      Nokogiri::HTML(response.body).css(".adm-hint__text").text
     end
 
     it "explains only the buttons that are shown" do

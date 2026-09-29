@@ -1,6 +1,7 @@
 <% responsible_name = municipal_plan.responsible&.name %>
 
 <tr id="<%= dom_id(municipal_plan) %>" class="kern-table__row">
+  <td class="kern-table__cell"><%= municipal_plan.id %></td>
   <th scope="row" class="kern-table__header" data-field="title">
     <%= link_to municipal_plan.title, adm_municipal_plans_municipal_plan_path(municipal_plan),
           class: "kern-link", title: municipal_plan.title, data: { turbo_frame: "_top" } %>

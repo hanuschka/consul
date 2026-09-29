@@ -7,7 +7,7 @@ class Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility <
               "you to explain in your own words and sends nothing itself; where it names a way " \
               "forward, offer that rather than leaving them at a refusal."
 
-  params do
+  parameters do
     integer :projekt_phase_id, description: "Id of an open participation phase"
   end
 

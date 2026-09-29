@@ -17,7 +17,7 @@ class Ai::Tools::WhatsappAiAssistant::DraftComment < Ai::Tools::WhatsappAiAssist
               "once they have said yes. Calling this again replaces what is written down, which " \
               "is how a correction is made."
 
-  params do
+  parameters do
     integer :contribution_id,
       description: "Id of the proposal, exactly as find_contribution returned it"
     string :text, description: "The comment in the citizen's own words, as they wrote them"

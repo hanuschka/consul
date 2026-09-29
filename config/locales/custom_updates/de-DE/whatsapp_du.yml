@@ -15,6 +15,10 @@ de:
       assistant_unavailable_retryable: >-
         Ich kann dir gerade nicht antworten — das ist hoffentlich nur vorübergehend.
         Tippe auf „Nochmal versuchen“, dann mache ich genau dort weiter.
+      # Die Zeile nach einer Aktion, die geklappt hat, bevor die Antwort scheiterte.
+      assistant_unavailable_after_action: >-
+        Das hat geklappt — nur meine Antwort darauf kommt gerade nicht durch. Tippe auf
+        „Nochmal versuchen“, dann mache ich dort weiter.
       cancelled: "Alles klar, abgebrochen. Schreib mir einfach wieder, wann immer du möchtest."
       opted_in: "Du erhältst wieder Nachrichten von uns."
       compliance:

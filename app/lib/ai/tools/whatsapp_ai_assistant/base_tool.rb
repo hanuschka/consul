@@ -2,8 +2,16 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
   # Written once for the five tools that page a capped list. The wording is the
   # whole contract for how a citizen reaches row eleven, so five copies of it are
   # five chances for one of them to describe a different offset.
-  FROM_DESCRIPTION = "Which ten of the list to return: leave empty for the first ten, or pass " \
-                     "the next_from a previous call returned for the ten after those.".freeze
+  FROM_DESCRIPTION = "Which #{::Whatsapp::ListWindow::ROWS} of the list to return: leave empty " \
+                     "for the first #{::Whatsapp::ListWindow::ROWS}, or pass the next_from a " \
+                     "previous call returned for the ones after those.".freeze
+
+  # How the rest of a paged list is reached, for the same tools. A list carries no
+  # buttons beside it, so the one place more_action_id fits there is a row — which
+  # is the row a page leaves free (Whatsapp::ListWindow::ROWS).
+  MORE_ROWS_HINT = "#{::Whatsapp::ListWindow::ROWS} at a time: where next_from is present " \
+                   "there are more — offer more_action_id as the last row of a list, or as a " \
+                   "button under a reply in text.".freeze
 
   # Named in the "none of these can be offered" answer of the two tools whose set can
   # actually be emptied by it. Without the reason spelled out the model reads the
@@ -43,6 +51,34 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     self.class.name.demodulize.underscore
   end
 
+  # Both transports run a tool through here — RubyLLM's chat loop and
+  # OpenaiApi::ToolLoop alike — so this is the one place that sees what a call
+  # was made with and what it answered, which RouterService's tool_called line,
+  # written before the tool runs, never could.
+  #
+  # It is also where a completed action is noticed. A tool that has done something
+  # the citizen would want to know went through says so in the result the model
+  # reads — `completed: true` — and that same result is kept for the turn, so a turn
+  # that then fails to write its reply can tell the citizen it worked and hand the
+  # retry what the tool answered rather than the request that led to it.
+  def call(tool_call: nil, **arguments)
+    tool_result = super
+
+    ::Whatsapp::AiAssistant::DecisionLog.record(
+      event: :tool_result,
+      conversation: conversation,
+      tool: name,
+      **::Whatsapp::AiAssistant::ToolCallDigest.arguments(arguments),
+      **::Whatsapp::AiAssistant::ToolCallDigest.result(tool_result)
+    )
+
+    if completed_action?(tool_result)
+      conversation.note_completed_tool_result!(tool: name, result: tool_result)
+    end
+
+    tool_result
+  end
+
   # Which step this tool leaves the conversation looking like, for the diagnostic
   # column and nothing else — no tool reads it back, and the assistant decides
   # what comes next from the state it is told rather than from this. Nil for the
@@ -54,6 +90,18 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
   private
 
     attr_reader :conversation, :citizen_words
+
+    def completed_action?(tool_result)
+      tool_result.is_a?(Hash) && tool_result[:completed] == true
+    end
+
+    # For the tools that have answered the citizen themselves. Each of them declares
+    # `requires_approval`, which is what makes the router run it on its own and look
+    # at what came back before the model is asked anything else (see
+    # Whatsapp::AiAssistant::RouterService#run_approved_tools).
+    def halt(content)
+      ::ToolHalt.new(content)
+    end
 
     def account
       conversation.whatsapp_account

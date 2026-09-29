@@ -1,5 +1,7 @@
 class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
   Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # The one thing the citizen has to read before anything is published under their
   # name: the contribution itself. It replaces send_draft_card, which took the body
   # as a parameter and so left the text of the contribution to whichever words the
@@ -28,7 +30,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
               "cannot be undone, so the button that publishes carries a fixed label saying so and " \
               "whatever you write for it is discarded. This sends the messages itself."
 
-  params do
+  parameters do
     string :question,
       description: "What you ask the citizen underneath their contribution — whether it should go " \
                    "in as it stands. A sentence or two, in their language, and not a restatement " \

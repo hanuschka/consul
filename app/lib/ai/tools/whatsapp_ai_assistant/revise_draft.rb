@@ -16,7 +16,7 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
               "in the language the draft is written in. Returns the revised draft for you to show " \
               "them; nothing is published."
 
-  params do
+  parameters do
     optional :title,
       description: "The revised title, or empty to keep the current one. It says what is " \
                    "proposed, and where if the citizen said, in plain words — never a slogan, a " \

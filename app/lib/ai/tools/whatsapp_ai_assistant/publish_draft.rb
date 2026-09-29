@@ -150,6 +150,7 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       conversation.note_submission_completed!
 
       {
+        completed: true,
         published: true,
         awaiting_review: awaiting_review,
         url: awaiting_review ? nil : url,

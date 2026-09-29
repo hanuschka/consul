@@ -78,7 +78,7 @@ class Ai::ModelProfile
 
     return true if info.blank?
 
-    info.supports_functions?
+    info.supports?(:function_calling)
   end
 
   private

@@ -902,6 +902,26 @@ class Whatsapp::Conversation < ApplicationRecord
     @submission_completed == true
   end
 
+  # What this turn has already done, held the same way and for the same length of
+  # time: the result of every tool that reported `completed: true` — a comment
+  # posted, a support counted, a projekt followed — exactly as the model read it.
+  # Kept as JSON so the retry snapshot can store it unchanged. Read by
+  # Inbound::ProcessMessageService when the turn then fails, because a reply that
+  # could not be written must not be answered as though nothing had happened — nor
+  # retried as though it had not.
+  def note_completed_tool_result!(tool:, result:)
+    @completed_tool_results =
+      completed_tool_results + [{ "tool" => tool.to_s, "result" => result.as_json }]
+  end
+
+  def completed_tool_results
+    @completed_tool_results || []
+  end
+
+  def completed_tool_names
+    completed_tool_results.map { |entry| entry["tool"] }
+  end
+
   # Nothing to write on the common path: most messages offer nothing irreversible,
   # and clearing a key that was never set would cost an UPDATE per reply.
   def remember_confirmations!(action_ids)
@@ -916,6 +936,9 @@ class Whatsapp::Conversation < ApplicationRecord
   # Inbound::ProcessMessageService when a turn fails, read by its retry gate, and
   # cleared by the next turn that succeeds; a cancel wipes it with the rest of the
   # context. One snapshot only: a retry that fails again overwrites it with itself.
+  # Where the failed turn had already completed something, the snapshot holds a note
+  # saying so instead of the inbound, and the completed tool results beside it, so
+  # that a retry which fails as well can still tell the citizen it went through.
   def retry_inbound
     context["retry_inbound"]
   end
@@ -931,10 +954,13 @@ class Whatsapp::Conversation < ApplicationRecord
     retry_inbound.to_h["text"].present?
   end
 
-  def store_retry_inbound!(text:, message_id:, citizen_words:)
+  def store_retry_inbound!(text:, message_id:, citizen_words:, completed_tool_results: [])
     merge_context!(
       retry_inbound: {
-        "text" => text, "message_id" => message_id, "citizen_words" => citizen_words
+        "text" => text,
+        "message_id" => message_id,
+        "citizen_words" => citizen_words,
+        "completed_tool_results" => completed_tool_results.presence
       }.compact
     )
   end

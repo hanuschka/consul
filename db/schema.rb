@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_28_100945) do
+ActiveRecord::Schema.define(version: 2026_09_29_144659) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3071,6 +3071,29 @@ ActiveRecord::Schema.define(version: 2026_09_28_100945) do
     t.datetime "updated_at", null: false
     t.index ["sentiment_id"], name: "index_resource_sentiments_on_sentiment"
     t.index ["sentimentable_type", "sentimentable_id"], name: "index_resource_sentiments_on_sentimentable"
+  end
+
+  create_table "ruby_llm_models", force: :cascade do |t|
+    t.string "model_id", null: false
+    t.string "name", null: false
+    t.string "provider", null: false
+    t.string "family"
+    t.datetime "model_created_at"
+    t.integer "context_window"
+    t.integer "max_output_tokens"
+    t.date "knowledge_cutoff"
+    t.datetime "unlisted_at"
+    t.jsonb "modalities", default: {}
+    t.jsonb "capabilities", default: []
+    t.jsonb "pricing", default: {}
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["capabilities"], name: "index_ruby_llm_models_on_capabilities", using: :gin
+    t.index ["family"], name: "index_ruby_llm_models_on_family"
+    t.index ["modalities"], name: "index_ruby_llm_models_on_modalities", using: :gin
+    t.index ["provider", "model_id"], name: "index_ruby_llm_models_on_provider_and_model_id", unique: true
+    t.index ["provider"], name: "index_ruby_llm_models_on_provider"
   end
 
   create_table "saved_content_blocks", force: :cascade do |t|

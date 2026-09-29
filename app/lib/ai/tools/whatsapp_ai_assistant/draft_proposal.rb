@@ -33,7 +33,7 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
               "genuine one — supporting one that exists is often worth more than a second copy " \
               "of it — and say there what the assessment found, offering to revise or to publish."
 
-  params do
+  parameters do
     string :text,
       description: "What the citizen wrote, word for word, including everything they said about " \
                    "the place and any photo. Never a paraphrase."

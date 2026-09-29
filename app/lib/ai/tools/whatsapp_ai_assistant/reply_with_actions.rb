@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # The assistant's own message with the way onward attached. The sentence is its
   # words, and so is nearly every label. What it does not choose is the *id* behind a
   # button, because WhatsApp returns the id to the webhook and the inbound side is
@@ -24,7 +26,7 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
               "is not yours to offer at all. This sends the message itself: do not write one as " \
               "well, and do not put a link in it when a button already leads there."
 
-  params do
+  parameters do
     string :body,
       description: "The reply text, in the citizen's language, laid out as the style rules " \
                    "require."

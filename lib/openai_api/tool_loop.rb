@@ -9,7 +9,7 @@
 # what the provider is told they are. Building the second from the first is the
 # caller's job, so nothing in this transport has to know ruby_llm's schema DSL.
 class OpenaiApi::ToolLoop
-  # How one turn ended. `halt` carries the RubyLLM::Tool::Halt a tool returns
+  # How one turn ended. `halt` carries the ToolHalt a tool returns
   # when it has already spoken to the citizen itself, so a caller tells the two
   # endings apart exactly as it did before.
   #
@@ -134,7 +134,7 @@ class OpenaiApi::ToolLoop
 
       result = execute(function_call)
 
-      if result.is_a?(::RubyLLM::Tool::Halt)
+      if result.is_a?(::ToolHalt)
         @halt = result
       end
 
@@ -150,11 +150,16 @@ class OpenaiApi::ToolLoop
 
       return unknown_tool_error(function_call) if tool.blank?
 
-      tool.call(arguments_of(function_call))
+      tool.call(**arguments_of(function_call))
     end
 
+    # A Hash whatever the model sent, because the arguments are splatted into the
+    # tool as keywords: a literal `null` or a bare array would raise there rather
+    # than reach the invalid-arguments answer.
     def arguments_of(function_call)
-      JSON.parse(function_call.arguments.to_s.presence || "{}")
+      arguments = JSON.parse(function_call.arguments.to_s.presence || "{}")
+
+      arguments.is_a?(Hash) ? arguments : {}
     rescue JSON::ParserError
       {}
     end
@@ -180,7 +185,7 @@ class OpenaiApi::ToolLoop
     end
 
     def serialized(result)
-      return result.to_s if result.is_a?(::RubyLLM::Tool::Halt)
+      return result.to_s if result.is_a?(::ToolHalt)
       return result if result.is_a?(String)
 
       JSON.generate(result)

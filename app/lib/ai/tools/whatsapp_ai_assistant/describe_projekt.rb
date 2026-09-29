@@ -23,7 +23,7 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
               "answered by send_projekt_card, and the phases and deadlines this returns are " \
               "what its summary carries."
 
-  params do
+  parameters do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
   end
 

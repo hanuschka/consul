@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # One projekt as a card: the title as the portal writes it, the picture, the
   # link, and the summary the model wrote. The picture and the title come from the
   # record because they are facts about it; the summary is a sentence, so it is the
@@ -35,7 +37,7 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
               "one that opens what has already been contributed — so never offer taking part, a " \
               "phase to choose from or the existing contributions yourself alongside it."
 
-  params do
+  parameters do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
     string :summary,
       description: "What the projekt is about, then what can be done in it now and until when. " \
@@ -123,7 +125,8 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
 
       " The card had no row for every vote, so its last row opens them all: when the " \
         "citizen taps it (action show_more, id polls), call list_open_polls with the " \
-        "projekt name \"#{projekt_title(projekt)}\"."
+        "projekt name \"#{projekt_title(projekt)}\" and send its votes for them to pick " \
+        "from. The tap asks to see the votes, not to vote: start none they have not picked."
     end
 
     # Buttons rather than a caption on its own, which is what this sent before: a

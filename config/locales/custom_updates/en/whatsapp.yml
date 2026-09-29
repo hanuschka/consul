@@ -73,6 +73,11 @@ en:
       assistant_unavailable_retryable: >-
         I can't answer you right now — hopefully only for a moment. Tap "Try again" and I'll
         pick up right where we were.
+      # The same line after a turn that completed something before it failed. Sent
+      # untranslated, because it is sent precisely when the assistant did not answer.
+      assistant_unavailable_after_action: >-
+        That worked — only my reply to it isn't getting through right now. Tap "Try again" and
+        I'll pick up from there.
       cancelled: OK, cancelled. Just message me again whenever you'd like.
       opted_in: You will receive messages from us again.
       compliance:

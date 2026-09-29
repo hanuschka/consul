@@ -81,6 +81,11 @@ de:
       assistant_unavailable_retryable: >-
         Ich kann Ihnen gerade nicht antworten — das ist hoffentlich nur vorübergehend.
         Tippen Sie auf „Nochmal versuchen“, dann mache ich genau dort weiter.
+      # The same line after a turn that completed something before it failed. Sent
+      # untranslated, because it is sent precisely when the assistant did not answer.
+      assistant_unavailable_after_action: >-
+        Das hat geklappt — nur meine Antwort darauf kommt gerade nicht durch. Tippen Sie auf
+        „Nochmal versuchen“, dann mache ich dort weiter.
       cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
       opted_in: Sie erhalten wieder Nachrichten von uns.
       compliance:

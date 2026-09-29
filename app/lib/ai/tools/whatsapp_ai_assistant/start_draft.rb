@@ -10,7 +10,7 @@ class Ai::Tools::WhatsappAiAssistant::StartDraft < Ai::Tools::WhatsappAiAssistan
               "contribution: going back to the beginning is start_over, and leaving this one " \
               "for another is abort_submission first, once they have agreed to lose it."
 
-  params do
+  parameters do
     integer :projekt_phase_id,
       description: "Id of the open participation phase, from list_open_phases or describe_projekt"
   end

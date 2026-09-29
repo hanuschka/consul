@@ -75,7 +75,7 @@ class SimilarContributions::Ranking < ApplicationService
           .with_instructions(system_instructions)
           .ask(user_prompt)
 
-      Array(response.content["matches"])
+      Array(::Ai::StructuredOutput.content_of(response)["matches"])
     end
 
     def build_matches(ranked_entries)

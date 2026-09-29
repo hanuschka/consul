@@ -8,11 +8,12 @@ class Ai::Tools::WhatsappAiAssistant::MyContributions < Ai::Tools::WhatsappAiAss
               "online. Sends nothing. A proposal waiting for review has no public page yet, so " \
               "say that rather than offering a link that would answer with an error. Each " \
               "action_id opens the one contribution it belongs to: pass it to send_list to make " \
-              "every row tappable, one row per contribution, never the same id twice. " \
-              "#{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: where there are more, say how " \
-              "many there are altogether and offer more_action_id as a row. Whatever you send, " \
-              "the sentence above the list names how many rows it holds — never the total and " \
-              "never the number this returned."
+              "every row tappable, one row per contribution, never the same id twice. counts " \
+              "gives, for all of their contributions and not only the rows returned, how many " \
+              "there are, how many are public and how many still wait for review — take any " \
+              "number about their contributions as a whole from counts, never by counting rows. " \
+              "The sentence above the list names how many contributions it shows, which the " \
+              "row that loads more is not one of. #{MORE_ROWS_HINT}"
 
   params do
     optional :from, description: FROM_DESCRIPTION do
@@ -25,11 +26,13 @@ class Ai::Tools::WhatsappAiAssistant::MyContributions < Ai::Tools::WhatsappAiAss
 
     query = ::Whatsapp::UserContributionsQuery.new(user: user, from: from)
     contributions = query.call
+    counts = query.counts
 
     {
+      counts: counts,
       contributions: contributions.map { |resource| row_for(resource) },
       **::Whatsapp::ListWindow.report(
-        scope: MORE_SCOPE, from: from, shown: contributions.size, total: query.total
+        scope: MORE_SCOPE, from: from, shown: contributions.size, total: counts[:total]
       )
     }
   end

@@ -145,7 +145,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # watching the message they have just sent, and that is the only one WhatsApp
     # will hang a typing indicator on — so the turn re-arms on the live inbound
     # while the assistant is asked about the snapshotted one.
-    def answer(inbound_text, inbound_message_id:, citizen_words:)
+    #
+    # `replayed_actions` are the completed actions a retry snapshot carried: a retry
+    # that fails as well has done nothing itself, and must still say what went through.
+    def answer(inbound_text, inbound_message_id:, citizen_words:, replayed_actions: [])
       return send_unavailable_line if !::Ai::Settings.ai_available?
 
       result = ::Whatsapp::AiAssistant::RouterService.call(
@@ -160,6 +163,15 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return conversation.clear_retry_inbound! if result.success?
       return honour_deferred_opt_out if @opt_out_deferred
 
+      completed_actions =
+        (replayed_actions + conversation.completed_actions).uniq(&:to_snapshot)
+
+      if completed_actions.any?
+        return offer_retry_after_completed_actions(
+          completed_actions, inbound_message_id: inbound_message_id, reason: result.error
+        )
+      end
+
       # The note describing a tap is snapshotted as the text it is: what the retry
       # replays is the sentence the assistant was given, which already says which
       # button was pressed. The citizen's words travel with it, so a free-text
@@ -168,7 +180,32 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         text: inbound_text, message_id: inbound_message_id, citizen_words: citizen_words
       )
 
-      send_retryable_unavailable_line
+      send_retryable_unavailable_line(reason: result.error)
+    end
+
+    # A turn that put a comment on the page, counted a support or followed a projekt and
+    # only then failed to write its reply. The citizen is told what went through before
+    # being told what did not, because the bare "I can't answer you" under their own
+    # published comment leaves them unable to tell whether it went in.
+    #
+    # And the retry replays a note saying what was done instead of the inbound that asked
+    # for it. That turn was never stored, and the tools that completed have already used
+    # up what they acted on — the stashed comment, the draft — so the same request put
+    # again is answered with "nothing has been written down" about a comment that is on
+    # the page. The citizen's words stay out: the note is not something they wrote.
+    def offer_retry_after_completed_actions(completed_actions, inbound_message_id:, reason:)
+      conversation.store_retry_inbound!(
+        text: ::Whatsapp::CompletionNotes.retry_after_completed(completed_actions),
+        message_id: inbound_message_id,
+        citizen_words: nil,
+        completed_actions: completed_actions
+      )
+
+      send_unavailable_line_offering(
+        body: ::Whatsapp::CompletedAction.unavailable_body(completed_actions),
+        actions: %i[retry cancel],
+        reason: reason
+      )
     end
 
     # The message as the citizen wrote it, where the turn answers their words
@@ -191,21 +228,35 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Only the transient failures carry the retry pill, and only their sentence points
     # at it. A tenant with AI switched off cannot be helped by asking again, and a
     # button that never works is the dead end the pill exists to remove.
+    #
+    # Reported as a warning rather than an error: nothing broke in this turn, but a
+    # tenant whose citizens all read this line is one nobody would otherwise notice.
     def send_unavailable_line
+      ::Whatsapp::AiAssistant::TurnFailureReport.message(
+        reason: :ai_unavailable, conversation: conversation, level: :warning
+      )
+
       send_unavailable_line_offering(
-        body: ::Whatsapp.copy("whatsapp.bot.assistant_unavailable"), actions: [:cancel]
+        body: ::Whatsapp.copy("whatsapp.bot.assistant_unavailable"),
+        actions: [:cancel],
+        reason: "ai_unavailable"
       )
     end
 
-    def send_retryable_unavailable_line
+    def send_retryable_unavailable_line(reason:)
       send_unavailable_line_offering(
-        body: ::Whatsapp.copy("whatsapp.bot.assistant_unavailable_retryable"), actions: %i[retry cancel]
+        body: ::Whatsapp.copy("whatsapp.bot.assistant_unavailable_retryable"),
+        actions: %i[retry cancel],
+        reason: reason
       )
     end
 
-    def send_unavailable_line_offering(body:, actions:)
+    def send_unavailable_line_offering(body:, actions:, reason:)
       ::Whatsapp::AiAssistant::DecisionLog.record(
-        event: :assistant_unavailable, conversation: conversation
+        event: :assistant_unavailable,
+        conversation: conversation,
+        reason: reason,
+        completed: conversation.completed_actions.map(&:kind).join(",").presence
       )
 
       ::Whatsapp::Send.recovery_without_assistant(
@@ -526,6 +577,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         )
       )
 
+      conversation.note_action_completed!(
+        ::Whatsapp::CompletedAction.support_registered(proposal: proposal)
+      )
+
       REGISTERED_NOTE
     end
 
@@ -541,6 +596,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         block: ::Whatsapp::SupportRecap.withdrawn_block(
           account: account, proposal: proposal, supports: supports
         )
+      )
+
+      conversation.note_action_completed!(
+        ::Whatsapp::CompletedAction.support_withdrawn(proposal: proposal)
       )
 
       WITHDRAWN_NOTE
@@ -689,7 +748,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # whatever turn the assistant had last failed to write.
     #
     # Without a snapshot the tap falls through to the note path, where the assistant
-    # is the one that knows what "again" means.
+    # is the one that knows what "again" means. A snapshot taken after a completed action
+    # holds a note saying what was done rather than the request, so replaying it carries
+    # the conversation on instead of acting a second time.
     # The projekt card's own pills, and the one gate here that exists to answer rather
     # than to survive an outage. The card names each open phase's action — vote, fill
     # in the form, report a defect, see what is already there — and the point of
@@ -1125,7 +1186,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       answer(
         snapshot["text"],
         inbound_message_id: snapshot["message_id"],
-        citizen_words: snapshot["citizen_words"]
+        citizen_words: snapshot["citizen_words"],
+        replayed_actions: ::Whatsapp::CompletedAction.from_snapshot(snapshot["completed_actions"])
       )
 
       true

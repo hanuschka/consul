@@ -2,9 +2,11 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
   description "Starts voting in the chat on a voting phase's ballot: it sends the citizen the " \
               "first question as buttons and carries them through the rest of the poll one " \
               "question at a time, recording each answer as it is given. Call it whenever a " \
-              "citizen says they want to vote, picks a vote out of a list, or asks what is open " \
-              "to vote on and there is one — this is what taking part in a vote means now, so " \
-              "never hand out the link instead. Takes the projekt_phase_id that " \
+              "citizen says they want to vote in one, picks a vote out of a list, or asks what " \
+              "is open to vote on and exactly one vote is — this is what taking part in a vote " \
+              "means now, so never hand out the link instead. Never for a vote they did not " \
+              "pick: asking to see the votes, or tapping a row that shows more of them, is " \
+              "answered with the list, even where one of them is half answered. Takes the projekt_phase_id that " \
               "list_open_polls, list_open_phases and describe_projekt return. Not every poll " \
               "can be asked in a chat: one holding a rating scale, a weighted vote or a map " \
               "point comes back refused with its ballot's address, and that link is then the " \

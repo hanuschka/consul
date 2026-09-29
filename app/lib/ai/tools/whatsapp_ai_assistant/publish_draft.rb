@@ -148,6 +148,11 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
 
       conversation.complete_draft!
       conversation.note_submission_completed!
+      conversation.note_action_completed!(
+        ::Whatsapp::CompletedAction.contribution_published(
+          resource: resource, awaiting_review: awaiting_review
+        )
+      )
 
       {
         published: true,

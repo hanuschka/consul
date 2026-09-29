@@ -46,6 +46,7 @@ class Ai::Tools::WhatsappAiAssistant::UnlinkAccount < Ai::Tools::WhatsappAiAssis
 
     conversation.discard_draft!
     account.unlink!
+    conversation.note_action_completed!(::Whatsapp::CompletedAction.account_unlinked)
 
     halt("Unlinked the account and confirmed it.")
   end

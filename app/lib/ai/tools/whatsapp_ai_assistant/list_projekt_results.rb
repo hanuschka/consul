@@ -4,8 +4,7 @@ class Ai::Tools::WhatsappAiAssistant::ListProjektResults < Ai::Tools::WhatsappAi
               "its results, or pass null for the whole portal. Use it for questions like what " \
               "came of this, what was decided, or what the outcome was. Returns facts for you to " \
               "answer in your own words — it sends nothing to the citizen itself. " \
-              "#{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: " \
-              "where there are more, say how many and offer more_action_id as a button."
+              "Where there are more, say how many. #{MORE_ROWS_HINT}"
 
   MORE_SCOPE = "results".freeze
 

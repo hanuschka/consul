@@ -2,13 +2,18 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
   description "Lists the votes and surveys open right now, each with the projekt_phase_id that " \
               "starts it, whether it can be answered in the chat, the address of its ballot and " \
               "the date it closes. Name a project for its own, or pass null for the whole " \
-              "portal. Where votable_in_chat is true, voting happens here: call start_poll_vote " \
-              "with the projekt_phase_id rather than handing out the address, and offer that for " \
-              "every row that can be. Where it is false the ballot_url is the way through — send " \
-              "it with send_link. counts gives, for every open vote and not only the rows " \
+              "portal. It lists and never starts: a vote is started for the one the citizen " \
+              "picks, by tapping its row or naming it — asking to see the votes, or tapping a " \
+              "row that shows more of them, is asking for this list, so send it for them to " \
+              "choose from. Where votable_in_chat is true, voting happens here: offer the row as " \
+              "phase_open with its projekt_phase_id, or call start_poll_vote once they have " \
+              "named it, rather than handing out the address. Where it is false the ballot_url " \
+              "is the way through — send it with send_link. counts gives, for every open vote and not only the rows " \
               "shown, how many this citizen answered in full, how many they began and left " \
               "part-way, and how many they have not answered at all — take any number you say " \
-              "from counts, never by counting rows. Rows come partly answered first, then not " \
+              "about votes from counts, never by counting rows, on every page alike. shown and " \
+              "next_from only page through the rows: never say how many votes are on a later " \
+              "page or what state they are in. Rows come partly answered first, then not " \
               "answered, then answered. A row marked already_voted was answered in full " \
               "earlier: say so where you name it and do not offer to start it — it is not " \
               "asked again here, but until it closes they can change their answers on its " \
@@ -19,8 +24,7 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
               "mark. covers says what counts: 'projekt' when a project was named, 'portal' " \
               "for the whole portal — say which when you name a number. " \
               "Returns facts for you to answer in your own words: it sends nothing to the " \
-              "citizen itself. #{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: where there " \
-              "are more, say how many and offer more_action_id as a button."
+              "citizen itself. #{MORE_ROWS_HINT}"
 
   MORE_SCOPE = "polls".freeze
 
@@ -53,6 +57,11 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
   # on screen, and the page is cut from that ordering afterwards. Read off the page,
   # the same twenty-two open votes with eight answered came out as "fourteen still
   # missing" in one reply and as "two of the ones shown" in the next.
+  #
+  # The window's total and remaining are left out for the same reason: they count
+  # rows, and beside counts they were read as votes. Fifteen open, eight answered
+  # in full, three of them on the first page, and the five on the next page came
+  # out as "five more you have answered".
   def execute(projekt_name: nil, from: 0)
     for_named_projekt(projekt_name) do |projekt|
       all_polls = ::Whatsapp::OpenPollsQuery.new(projekt: projekt).all
@@ -68,7 +77,7 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
         polls: page.map { |poll| row_for(poll, votable_ids, states) },
         **::Whatsapp::ListWindow.report(
           scope: MORE_SCOPE, from: from, shown: page.size, total: all_polls.size
-        )
+        ).except(:total, :remaining)
       }
     end
   end

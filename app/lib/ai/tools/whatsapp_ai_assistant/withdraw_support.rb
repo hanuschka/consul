@@ -37,6 +37,10 @@ class Ai::Tools::WhatsappAiAssistant::WithdrawSupport < Ai::Tools::WhatsappAiAss
 
       send_recap(proposal: proposal, supports: supports)
 
+      conversation.note_action_completed!(
+        ::Whatsapp::CompletedAction.support_withdrawn(proposal: proposal)
+      )
+
       {
         withdrawn: true,
         supports: supports,

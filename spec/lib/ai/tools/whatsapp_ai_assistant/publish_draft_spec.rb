@@ -120,6 +120,8 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       allow(conversation).to receive(:draft_preview_digest).and_return("current-digest")
       allow(conversation).to receive(:complete_draft!)
       allow(conversation).to receive(:note_submission_completed!)
+      allow(conversation).to receive(:note_action_completed!)
+      allow(proposal).to receive(:title).and_return(nil)
 
       allow(Whatsapp::Drafting::CompleteDraftService).to receive(:call).and_return(
         double(:stored, invalid?: false, missing?: false, resource: proposal)

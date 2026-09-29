@@ -2,8 +2,16 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
   # Written once for the five tools that page a capped list. The wording is the
   # whole contract for how a citizen reaches row eleven, so five copies of it are
   # five chances for one of them to describe a different offset.
-  FROM_DESCRIPTION = "Which ten of the list to return: leave empty for the first ten, or pass " \
-                     "the next_from a previous call returned for the ten after those.".freeze
+  FROM_DESCRIPTION = "Which #{::Whatsapp::ListWindow::ROWS} of the list to return: leave empty " \
+                     "for the first #{::Whatsapp::ListWindow::ROWS}, or pass the next_from a " \
+                     "previous call returned for the ones after those.".freeze
+
+  # How the rest of a paged list is reached, for the same tools. A list carries no
+  # buttons beside it, so the one place more_action_id fits there is a row — which
+  # is the row a page leaves free (Whatsapp::ListWindow::ROWS).
+  MORE_ROWS_HINT = "#{::Whatsapp::ListWindow::ROWS} at a time: where next_from is present " \
+                   "there are more — offer more_action_id as the last row of a list, or as a " \
+                   "button under a reply in text.".freeze
 
   # Named in the "none of these can be offered" answer of the two tools whose set can
   # actually be emptied by it. Without the reason spelled out the model reads the
@@ -41,6 +49,24 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
   # enforce on a function name.
   def name
     self.class.name.demodulize.underscore
+  end
+
+  # Both transports run a tool through here — RubyLLM's chat loop and
+  # OpenaiApi::ToolLoop alike — so this is the one place that sees what a call
+  # was made with and what it answered, which RouterService's tool_called line,
+  # written before the tool runs, never could.
+  def call(args)
+    tool_result = super
+
+    ::Whatsapp::AiAssistant::DecisionLog.record(
+      event: :tool_result,
+      conversation: conversation,
+      tool: name,
+      **::Whatsapp::AiAssistant::ToolCallDigest.arguments(args),
+      **::Whatsapp::AiAssistant::ToolCallDigest.result(tool_result)
+    )
+
+    tool_result
   end
 
   # Which step this tool leaves the conversation looking like, for the diagnostic

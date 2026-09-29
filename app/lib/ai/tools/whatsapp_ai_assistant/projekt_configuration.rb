@@ -77,10 +77,12 @@ class Ai::Tools::WhatsappAiAssistant::ProjektConfiguration <
               "needed, how many contributions one person may submit and how many they may " \
               "support, when each phase starts and ends, whether a contribution is reviewed " \
               "before it goes online, whether a photo or a document may be attached, for a " \
-              "vote whether answers can still be changed and until when, what happens to " \
-              "answers already given and whether the results are public, and every other " \
-              "setting the phases carry. Call this for any question about the rules or " \
-              "conditions of a project rather than about its content. Whether a phase takes " \
+              "vote until when answers can still be changed and whether the results are " \
+              "public, and every other setting the phases carry. That answers are saved as " \
+              "given and can be changed until a vote closes is the portal's rule, the same on " \
+              "every vote, and needs no project looked up. Call this for any question about " \
+              "the rules or conditions of a project rather than about its content. Whether a " \
+              "phase takes " \
               "contributions at all is one of its settings; submission_through_this_chat only " \
               "says whether this chat can carry one there. What it does not return is " \
               "not set for that project: say so instead of filling the gap — but questions " \

@@ -53,11 +53,20 @@ class Ai::Tools::WhatsappAiAssistant::ToggleNotification <
     apply(notification_type, switch.to_s)
 
     enabled = account.notifies?(notification_type)
+    changed = enabled != was_enabled
+
+    if changed
+      conversation.note_action_completed!(
+        ::Whatsapp::CompletedAction.notification_switched(
+          notification_type: notification_type, enabled: enabled
+        )
+      )
+    end
 
     {
       type: notification_type.to_s,
       enabled: enabled,
-      changed: enabled != was_enabled,
+      changed: changed,
       hint: "Say which one it is and whether it is now on or off — if nothing changed, that " \
             "it already was. Do not list the rest."
     }

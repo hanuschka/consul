@@ -123,7 +123,8 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
 
       " The card had no row for every vote, so its last row opens them all: when the " \
         "citizen taps it (action show_more, id polls), call list_open_polls with the " \
-        "projekt name \"#{projekt_title(projekt)}\"."
+        "projekt name \"#{projekt_title(projekt)}\" and send its votes for them to pick " \
+        "from. The tap asks to see the votes, not to vote: start none they have not picked."
     end
 
     # Buttons rather than a caption on its own, which is what this sent before: a

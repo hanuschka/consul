@@ -43,6 +43,10 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
 
       send_recap(proposal: proposal, supports: supports)
 
+      conversation.note_action_completed!(
+        ::Whatsapp::CompletedAction.support_registered(proposal: proposal)
+      )
+
       {
         supported: true,
         supports: supports,

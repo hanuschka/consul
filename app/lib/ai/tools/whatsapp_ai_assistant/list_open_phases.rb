@@ -8,10 +8,8 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPhases < Ai::Tools::WhatsappAiAssi
               "projekt_phase_id that describe_projekt, check_participation_eligibility and " \
               "start_draft expect. Phases sharing a name are told apart by their dates and by " \
               "what they are about, never by a number. " \
-              "#{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: say how many " \
-              "there are altogether, name " \
-              "the ones that fit this moment, and offer more_action_id as a button so the rest " \
-              "are one tap away rather than absent."
+              "Say how many there are altogether and name the ones that fit this moment, so " \
+              "the rest are one tap away rather than absent. #{MORE_ROWS_HINT}"
 
   MORE_SCOPE = "eligible_phases".freeze
 

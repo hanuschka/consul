@@ -81,6 +81,21 @@ de:
       assistant_unavailable_retryable: >-
         Ich kann Ihnen gerade nicht antworten — das ist hoffentlich nur vorübergehend.
         Tippen Sie auf „Nochmal versuchen“, dann mache ich genau dort weiter.
+      # The same line after a turn that completed something before it failed: one
+      # sentence per completed action saying it went through, then retry_hint. Sent
+      # untranslated, because it is sent precisely when the assistant did not answer.
+      assistant_unavailable_after_action:
+        comment_posted: Ihr Kommentar ist gespeichert.
+        contribution_published: Ihr Beitrag ist eingereicht.
+        support_registered: Ihre Unterstützung ist eingetragen.
+        support_withdrawn: Ihre Unterstützung ist zurückgenommen.
+        projekt_followed: Sie folgen jetzt „%{projekt}“.
+        projekt_unfollowed: Sie folgen „%{projekt}“ nicht mehr.
+        notification_switched: Ihre Benachrichtigungseinstellung ist gespeichert.
+        account_unlinked: Ihr Konto ist nicht mehr mit dieser Nummer verknüpft.
+        retry_hint: >-
+          Nur meine Antwort darauf kommt gerade nicht durch. Tippen Sie auf „Nochmal versuchen“,
+          dann mache ich dort weiter.
       cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
       opted_in: Sie erhalten wieder Nachrichten von uns.
       compliance:

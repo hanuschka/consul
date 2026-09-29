@@ -12,17 +12,20 @@ module Whatsapp::CompletionNotes
   # actually acted in rather than a fixed set of exits.
   #
   # The rule is one string shared by every note rather than written into each. It is the
-  # same rule whatever finished, and a copy per note is a copy to drift.
+  # same rule whatever finished, and a copy per note is a copy to drift. Its second half
+  # stands alone as well, for the one note whose citizen has already been told what
+  # finished and must not be told it again.
+  ONWARD = "offer what this citizen plausibly does next from where they now stand — what is " \
+           "still open in the projekt they have just acted in, what they have already done in " \
+           "this chat — and make it something to tap. Never a fixed set of exits, never the " \
+           "wording you used the last time something finished here, and never an offer this " \
+           "chat already shows them turning down: where they have waved a follow-up off, " \
+           "confirm and leave it there. Where nothing is left open in that projekt, say so " \
+           "plainly and leave what is running elsewhere as the way onward instead of inventing " \
+           "a next step in it.".freeze
+
   CONTINUATION = "Confirm that in one line of your own and carry the conversation on from " \
-                 "it rather than closing it off: offer what this citizen plausibly does next " \
-                 "from where they now stand — what is still open in the projekt they have just " \
-                 "acted in, what they have already done in this chat — and make it something " \
-                 "to tap. Never a fixed set of exits, never the wording you used the last time " \
-                 "something finished here, and never an offer this chat already shows them " \
-                 "turning down: where they have waved a follow-up off, confirm and leave it " \
-                 "there. Where nothing is left open in that projekt, say so plainly and leave " \
-                 "what is running elsewhere as the way onward instead of inventing a next step " \
-                 "in it.".freeze
+                 "it rather than closing it off: #{ONWARD}".freeze
 
   module_function
 
@@ -63,5 +66,24 @@ module Whatsapp::CompletionNotes
       "linked to this number, so everything that needs an account is open to them from here " \
       "on. Whatever they were trying to do when the linking interrupted them is above in this " \
       "chat: pick that up rather than asking what they would like to do. #{CONTINUATION}"
+  end
+
+  # What the retry pill replays after a turn that did something and then could not write
+  # its reply. Not the inbound that asked for it: that turn was never stored, so the
+  # history has no trace of the tool call, and the same request put again would either
+  # act a second time or be told there is nothing left to act on — "no comment has been
+  # written down" about a comment the citizen can see on the page.
+  #
+  # Unlike every note above, the citizen has already been told what went through, by
+  # the tool's own message or by the fallback line itself, so the confirmation is the
+  # one thing this reply must not repeat. Joined with semicolons rather than
+  # to_sentence, whose connector would come out of the current locale.
+  def retry_after_completed(completed_actions)
+    facts = completed_actions.map(&:fact).uniq.join("; ")
+
+    "The citizen tapped \"try again\" after your reply to what they last did could not be " \
+      "sent. Before that reply failed, #{facts}, and they have already been told so — do not " \
+      "say it again and do not do any of it a second time. Carry the conversation on from " \
+      "there: #{ONWARD}"
   end
 end

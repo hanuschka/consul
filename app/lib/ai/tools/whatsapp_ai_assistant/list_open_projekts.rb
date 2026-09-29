@@ -7,9 +7,8 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenProjekts < Ai::Tools::WhatsappAiAs
               "send_projekt_card for that projekt, which carries its phases and deadlines in " \
               "the summary. A citizen who " \
               "already named a projekt has picked one, so answer about that projekt instead of " \
-              "listing these. #{::Whatsapp::MAX_OFFERED_LIST_ROWS} at a time: say how many there " \
-              "are altogether and offer " \
-              "more_action_id as a button so the rest are one tap away rather than absent."
+              "listing these. Say how many there are altogether so the rest are one tap away " \
+              "rather than absent. #{MORE_ROWS_HINT}"
 
   MORE_SCOPE = "open_projekts".freeze
 

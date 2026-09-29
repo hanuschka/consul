@@ -90,6 +90,11 @@ class Ai::Tools::WhatsappAiAssistant::PostComment < Ai::Tools::WhatsappAiAssista
       send_confirmation(url: url)
 
       conversation.clear_pending_comment!
+      conversation.note_action_completed!(
+        ::Whatsapp::CompletedAction.comment_posted(
+          proposal: comment.commentable, visible: !comment.hidden?
+        )
+      )
 
       {
         posted: true,
@@ -116,11 +121,13 @@ class Ai::Tools::WhatsappAiAssistant::PostComment < Ai::Tools::WhatsappAiAssista
 
     PENDING_HINT = "It is in but waiting to be looked at before it appears. They have already " \
                    "been told that, so do not say it again, do not repeat the comment and do not " \
-                   "offer a link.".freeze
+                   "offer a link. Your reply is the way on only — a short line on what they can " \
+                   "do next from here, with its buttons.".freeze
 
     PUBLISHED_HINT = "They have already been told that it is on the page, and its address has " \
                      "already been sent to them, so do not say either again and do not repeat " \
-                     "the comment.".freeze
+                     "the comment. Your reply is the way on only — a short line on what they " \
+                     "can do next from here, with its buttons.".freeze
 
     def nothing_written_error
       { error: "No comment has been written down in this conversation, so there is nothing to " \

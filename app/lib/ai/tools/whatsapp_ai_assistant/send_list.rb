@@ -24,8 +24,9 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
               "to tell the two apart refuses the whole list, because the sentence you wrote " \
               "above it " \
               "names a number of rows and a list that quietly held fewer would contradict it. " \
-              "That sentence names how many rows the list holds — not how many there are " \
-              "altogether, which belongs in the same sentence in words. A list carries no " \
+              "That sentence names how many of the things offered the list holds — a row that " \
+              "shows more or leads out of the question is not one of them — and not how many " \
+              "there are altogether, which belongs in the same sentence in words. A list carries no " \
               "buttons beside it, so any way out of the " \
               "question has to be a row of its own. Rows cannot hold links or markup — put a URL " \
               "in the body above if one is needed. This sends the message itself: do not write " \

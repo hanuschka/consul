@@ -26,29 +26,32 @@ module Whatsapp::TermsConsentPreview
   # arrive together, and two calls are two cache states — a statement in the
   # citizen's language under a button still in the portal's reads as a fault.
   def confirmation(conversation:)
+    account = conversation.whatsapp_account
     labels = ::Whatsapp::MessageBlock.labels(
-      account: conversation.whatsapp_account,
+      account: account,
       scope: SCOPE,
       keys: [STATEMENT_KEY, CONDITIONS_KEY, PRIVACY_KEY, ACCEPT_BUTTON_KEY]
     )
 
-    { block: statement_block(labels), accept_title: accept_title(labels) }
+    { block: statement_block(labels, account), accept_title: accept_title(labels) }
   end
 
   # The block is nothing without both addresses, so a missing one leaves it blank
   # and the tool refuses rather than asking for consent to half of it.
-  def statement_block(labels)
-    sections = [labels[STATEMENT_KEY], link_lines(labels)]
+  def statement_block(labels, account)
+    sections = [labels[STATEMENT_KEY], link_lines(labels, account)]
 
     return if sections.any?(&:blank?)
 
     ::Whatsapp::MessageBlock.compose(sections)
   end
 
-  def link_lines(labels)
+  # In the language the citizen is chatting in, the same as the block above them.
+  def link_lines(labels, account)
+    locale = ::Whatsapp.locale_for(account)
     pairs = [
-      [labels[CONDITIONS_KEY], ::Whatsapp::PortalLinks.conditions_url],
-      [labels[PRIVACY_KEY], ::Whatsapp::PortalLinks.privacy_url]
+      [labels[CONDITIONS_KEY], ::Whatsapp::PortalLinks.conditions_url(locale: locale)],
+      [labels[PRIVACY_KEY], ::Whatsapp::PortalLinks.privacy_url(locale: locale)]
     ]
 
     return if pairs.flatten.any?(&:blank?)

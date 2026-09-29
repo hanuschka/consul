@@ -76,13 +76,17 @@ class Ai::Tools::WhatsappAiAssistant::ProjektConfiguration <
               "part and under which restrictions, whether an account or a verified account is " \
               "needed, how many contributions one person may submit and how many they may " \
               "support, when each phase starts and ends, whether a contribution is reviewed " \
-              "before it goes online, whether a photo or a document may be attached, and every " \
-              "other setting the phases carry. Call this for any question about the rules or " \
+              "before it goes online, whether a photo or a document may be attached, for a " \
+              "vote whether answers can still be changed and until when, what happens to " \
+              "answers already given and whether the results are public, and every other " \
+              "setting the phases carry. Call this for any question about the rules or " \
               "conditions of a project rather than about its content. Whether a phase takes " \
               "contributions at all is one of its settings; submission_through_this_chat only " \
               "says whether this chat can carry one there. What it does not return is " \
-              "not set for that project: say so instead of filling the gap. Returns facts for " \
-              "you to answer in your own words — it sends nothing to the citizen itself."
+              "not set for that project: say so instead of filling the gap — but questions " \
+              "about personal data or who can read the chat are the portal's, answered by " \
+              "portal_data_protection, not by this. Returns facts for you to answer in your " \
+              "own words — it sends nothing to the citizen itself."
 
   params do
     string :projekt_name, description: "The project name as the citizen wrote it"
@@ -114,7 +118,10 @@ class Ai::Tools::WhatsappAiAssistant::ProjektConfiguration <
     # them, and closed ones included: "how long did I have" and "was that one
     # open to everybody" are asked after the fact at least as often as before it.
     def phases_of(projekt)
-      projekt_phases_of(projekt).map do |projekt_phase|
+      projekt_phases = projekt_phases_of(projekt)
+      ballots = ::Polls::PhaseBallotQuery.by_phase(projekt_phases.map(&:id))
+
+      projekt_phases.map do |projekt_phase|
         {
           projekt_phase_id: projekt_phase.id,
           phase: projekt_phase.title,
@@ -132,9 +139,31 @@ class Ai::Tools::WhatsappAiAssistant::ProjektConfiguration <
             ::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase),
           who_may_take_part: participation_conditions(projekt_phase),
           limits: limits_of(projekt_phase),
+          voting: voting_facts(projekt_phase, ballots),
           settings: settings_of(projekt_phase)
         }.compact
       end
+    end
+
+    # What becomes of the answers to a vote: whether and until when they can be
+    # changed, what happens to the ones already given, whether the results are
+    # public. None of it is a phase setting, so without this row the description's
+    # "what it does not return is not set" answered it as "nicht festgelegt".
+    def voting_facts(projekt_phase, ballots)
+      return if !projekt_phase.is_a?(::ProjektPhase::VotingPhase)
+
+      ::Whatsapp::BallotAnswerRules.facts(
+        projekt_phase: projekt_phase,
+        ballot_url: voting_address(projekt_phase, ballots)
+      )
+    end
+
+    # The one ballot where the phase carries one, and the phase's page where it
+    # carries several — PhaseBallotQuery leaves those unresolved, and the page is
+    # where the citizen picks which of them they meant.
+    def voting_address(projekt_phase, ballots)
+      ::Whatsapp::ProjektLink.poll_ballot_url(ballots[projekt_phase.id]) ||
+        ::Whatsapp::ProjektLink.phase_url(projekt_phase)
     end
 
     def projekt_phases_of(projekt)

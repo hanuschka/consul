@@ -217,8 +217,8 @@ en:
         location_maximum_reached: "This question takes at most %{maximum} places."
         completed: "Thank you — your votes in “%{poll}” are counted."
         already_answered: >-
-          You have already voted in “%{poll}”. Your answers are recorded and stay as they
-          are — this vote cannot be answered a second time.
+          You have already voted in “%{poll}”. Your answers are saved. Until the vote closes
+          you can change them on the ballot page: %{url}
         typed_answer_read: "I read your answer as “%{answer}”."
         left_for_other: >-
           We have left the vote “%{poll}” here. The answers you gave are recorded — you can

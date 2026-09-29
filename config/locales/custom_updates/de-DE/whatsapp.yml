@@ -261,8 +261,8 @@ de:
         location_maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Orte möglich."
         completed: "Vielen Dank — Ihre Stimmen bei „%{poll}“ sind gezählt."
         already_answered: >-
-          Sie haben bei „%{poll}“ bereits abgestimmt. Ihre Antworten sind gespeichert und
-          bleiben unverändert — ein zweites Mal ist die Abstimmung nicht möglich.
+          Sie haben bei „%{poll}“ bereits abgestimmt. Ihre Antworten sind gespeichert. Bis zum
+          Ende der Abstimmung können Sie sie auf der Abstimmungsseite ändern: %{url}
         # Was der Bot aus einer geschriebenen Antwort gelesen hat. Beim Tippen auf eine
         # Schaltfläche braucht es das nicht — da sieht die Bürgerin selbst, was sie
         # gewählt hat. Sagt die Lesart, nicht das Ergebnis: die Stimme kann darunter

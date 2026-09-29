@@ -148,8 +148,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     #
     # `replayed_tool_results` are the completed tool results a retry snapshot carried: a
     # retry that fails as well has done nothing itself, and must still say it went through.
+    # They are handed to the conversation before the turn, so the router's failure report
+    # names them as well.
     def answer(inbound_text, inbound_message_id:, citizen_words:, replayed_tool_results: [])
       return send_unavailable_line if !::Ai::Settings.ai_available?
+
+      if replayed_tool_results.any?
+        conversation.carry_completed_tool_results!(replayed_tool_results)
+      end
 
       result = ::Whatsapp::AiAssistant::RouterService.call(
         conversation: conversation,
@@ -163,7 +169,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return conversation.clear_retry_inbound! if result.success?
       return honour_deferred_opt_out if @opt_out_deferred
 
-      completed_tool_results = (replayed_tool_results + conversation.completed_tool_results).uniq
+      completed_tool_results = conversation.completed_tool_results.uniq
 
       if completed_tool_results.any?
         return offer_retry_after_completed_tools(
@@ -193,9 +199,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # again is answered with "nothing has been written down" about a comment that is on
     # the page. The citizen's words stay out: the note is not something they wrote.
     #
-    # The line itself says only that it worked. Which action it was is the one thing
-    # the citizen does not need told — they asked for it a moment ago — and what follows
-    # from it is the assistant's to say once it can answer again.
+    # The line names what went through in the model's own words where a tool sent
+    # nothing of its own — a followed projekt, a switched notification — because there
+    # the failed reply was the whole confirmation, and "that worked" under nothing says
+    # nothing. What follows from it is the assistant's to say once it can answer again.
     def offer_retry_after_completed_tools(completed_tool_results, inbound_message_id:, reason:)
       conversation.store_retry_inbound!(
         text: ::Whatsapp::CompletionNotes.retry_after_completed(completed_tool_results),
@@ -205,10 +212,26 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       send_unavailable_line_offering(
-        body: ::Whatsapp.copy("whatsapp.bot.assistant_unavailable_after_action"),
+        body: ::Whatsapp.copy(
+          "whatsapp.bot.assistant_unavailable_after_action",
+          completed: completed_actions_sentence(completed_tool_results)
+        ),
         actions: %i[retry cancel],
         reason: reason
       )
+    end
+
+    # The completion lines the model wrote with its calls — written before the reply
+    # that failed, so they are there when it is not. A tool that sent its own
+    # confirmation left none, and the plain "that worked" sits under that message.
+    def completed_actions_sentence(completed_tool_results)
+      completion_lines = completed_tool_results.filter_map { |entry| entry["completion_line"] }.uniq
+
+      if completion_lines.empty?
+        return ::Whatsapp.copy("whatsapp.bot.assistant_unavailable_action_done")
+      end
+
+      completion_lines.join(" ")
     end
 
     # The message as the citizen wrote it, where the turn answers their words

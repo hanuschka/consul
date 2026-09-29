@@ -28,9 +28,10 @@ class Ai::Tools::WhatsappAiAssistant::ToggleNotification <
         type: "string",
         enum: SWITCHES,
         description: "Whether to switch the notification on or off"
-      }
+      },
+      **COMPLETION_LINE_PARAMETER
     },
-    required: %w[type switch],
+    required: %w[type switch completion_line],
     additionalProperties: false
   )
 

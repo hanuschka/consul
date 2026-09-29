@@ -12,7 +12,9 @@ module Whatsapp::AiAssistant::TurnFailureReport
   #
   # The tools that completed an action travel with every report, because a failure
   # after the comment is on the page is not the same failure as one before anything
-  # happened, and nothing else in the event would say which it was.
+  # happened, and nothing else in the event would say which it was. As tags rather
+  # than extra, so the issue can be filtered down to the failures a citizen was told
+  # went through.
   FINGERPRINT = "whatsapp-assistant-turn-failed".freeze
 
   module_function
@@ -22,7 +24,9 @@ module Whatsapp::AiAssistant::TurnFailureReport
   def exception(error, conversation:, **details)
     Rails.logger.error("[Whatsapp] assistant routing failed: #{error.class} - #{error.message}")
 
-    Sentry.capture_exception(error, extra: extra_for(conversation, details))
+    Sentry.capture_exception(
+      error, tags: tags_for(conversation), extra: extra_for(conversation, details)
+    )
   rescue StandardError => e
     Rails.logger.error("[Whatsapp] turn failure report failed: #{e.class} - #{e.message}")
   end
@@ -34,16 +38,23 @@ module Whatsapp::AiAssistant::TurnFailureReport
       "WhatsApp assistant turn ended in the fallback: #{reason}",
       level: level,
       fingerprint: [FINGERPRINT, reason.to_s],
+      tags: tags_for(conversation),
       extra: extra_for(conversation, details)
     )
   rescue StandardError => e
     Rails.logger.error("[Whatsapp] turn failure report failed: #{e.class} - #{e.message}")
   end
 
-  def extra_for(conversation, details)
+  def tags_for(conversation)
+    completed_tools = Array(conversation&.completed_tool_names).uniq
+
     {
-      whatsapp_conversation_id: conversation&.id,
-      completed_tools: conversation&.completed_tool_names&.join(",").presence
-    }.merge(details).compact
+      after_completed_action: completed_tools.any?.to_s,
+      completed_tools: completed_tools.join(",").presence
+    }.compact
+  end
+
+  def extra_for(conversation, details)
+    { whatsapp_conversation_id: conversation&.id }.merge(details).compact
   end
 end

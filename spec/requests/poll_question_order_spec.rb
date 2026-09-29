@@ -84,20 +84,29 @@ describe "Poll question order", type: :request do
       poll.projekt_phase.settings
           .find_or_create_by!(key: "feature.resource.wizard_mode")
           .update!(value: "active")
+
+      [first_pinned, second_pinned, *flagged].each do |question|
+        create(:poll_question_answer, question: question)
+      end
     end
 
     it "places a contexted clone at the position configured for its template" do
       template = create(:poll_question, poll: poll, given_order: 8,
                                         contextualize_by_poll_question_id: first_pinned.id,
                                         title: "Contextualized question")
-      create(:poll_question_answer, question: first_pinned)
+      create(:poll_question_answer, question: template)
       template.regenerate_contexted_clones
       clone = template.contexted_clones.reload.first
       clone.update_column(:given_order, 0)
 
-      visit_poll_as(create(:user))
+      user = create(:user)
+      context = clone.context
+      Poll::Answer.create!(question: first_pinned, author: user,
+                           answer: context.title, question_answer: context)
 
-      wizard_ids = controller.view_assigns["wizard_map"].map { |entry| entry[:id] }
+      visit_poll_as(user)
+
+      wizard_ids = controller.view_assigns["wizard_question_ids"]
 
       expect(wizard_ids).not_to include(template.id)
       expect(wizard_ids.last).to eq(clone.id)
@@ -106,7 +115,7 @@ describe "Poll question order", type: :request do
     it "hands the wizard the same order it renders" do
       visit_poll_as(create(:user))
 
-      wizard_ids = controller.view_assigns["wizard_map"].map { |entry| entry[:id] }
+      wizard_ids = controller.view_assigns["wizard_question_ids"]
 
       expect(wizard_ids).to eq(rendered_question_ids)
       expect(wizard_ids.values_at(0, 4)).to eq([first_pinned.id, second_pinned.id])

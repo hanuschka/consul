@@ -308,9 +308,10 @@ class Whatsapp::Conversation < ApplicationRecord
   SETTLED_SLOT_KEYS = %w[photo_declined location_stated].freeze
 
   # One batched write, under the inbound job's advisory lock: the draft, the
-  # questions the citizen already answered unasked, and the drafting throttle
-  # clock. The settled slots ride under their own key because the stash is emptied
-  # at persist while the photo and location questions are asked after the record
+  # questions the citizen already answered unasked, what the draft added to their
+  # words, and the drafting throttle clock. The settled slots and the additions
+  # ride under their own keys because the stash is emptied at persist while the
+  # photo and location questions are asked, and the draft shown, after the record
   # exists.
   #
   # Replaced rather than merged, which matters on a revision: a revision reports
@@ -319,10 +320,24 @@ class Whatsapp::Conversation < ApplicationRecord
   # their mind while revising would have had no way to send one at all.
   def store_generated_draft!(generated)
     merge_context!(
-      draft_data: generated.except(*SETTLED_SLOT_KEYS),
+      draft_data: generated.except(*SETTLED_SLOT_KEYS, "additions_beyond_idea"),
       settled_slots: generated.slice(*SETTLED_SLOT_KEYS),
+      additions_beyond_idea: listed_additions(generated["additions_beyond_idea"]),
       last_draft_at: Time.current.iso8601
     )
+  end
+
+  # What the draft proposes that the citizen never said, as short phrases, so the
+  # question under the preview can tell them what goes in under their name. Written
+  # by the drafting call through store_generated_draft! and restated by
+  # revise_draft whenever the text changes; read by draft_proposal, revise_draft
+  # and draft_status. Empty when the draft only rephrases them.
+  def additions_beyond_idea
+    Array(context["additions_beyond_idea"])
+  end
+
+  def store_additions_beyond_idea!(additions)
+    merge_context!(additions_beyond_idea: listed_additions(additions))
   end
 
   def settled_slots
@@ -1014,6 +1029,10 @@ class Whatsapp::Conversation < ApplicationRecord
     # it, and when it clears.
     def merge_context!(attributes)
       update!(context: context.merge(attributes.stringify_keys))
+    end
+
+    def listed_additions(additions)
+      Array(additions).map { |addition| addition.to_s.squish }.compact_blank
     end
 
     def unshown_draft_change?

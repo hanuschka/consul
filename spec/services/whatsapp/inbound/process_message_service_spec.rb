@@ -5,7 +5,10 @@ describe Whatsapp::Inbound::ProcessMessageService do
   # endpoint is gone from WhatsappApi::Resources::Messages, so any attempt to
   # place one on a citizen's message fails here rather than reaching WhatsApp.
   let(:messages_api) do
-    instance_double(WhatsappApi::Resources::Messages, send_typing_indicator: true)
+    instance_double(
+      WhatsappApi::Resources::Messages,
+      send_typing_indicator: double(:response, success?: true)
+    )
   end
 
   let(:unsaved_submission) { false }
@@ -17,14 +20,17 @@ describe Whatsapp::Inbound::ProcessMessageService do
       last_inbound_at: nil,
       shared_image_id: nil,
       shared_location: nil,
-      unsaved_submission?: unsaved_submission
+      unsaved_submission?: unsaved_submission,
+      active_poll_id: nil,
+      pending_map_question_id: nil
     ).tap do |stub|
       allow(stub).to receive(:update!)
       allow(stub).to receive(:hold_offered_confirmations!)
-      allow(stub).to receive(:note_start_over!)
-      allow(stub).to receive(:request_start_over!)
-      allow(stub).to receive(:leave_projekt!)
+      allow(stub).to receive(:hold_stop_question!)
+      allow(stub).to receive(:clear_stop_question!)
+      allow(stub).to receive(:begin_start_over!)
       allow(stub).to receive(:discard_draft!)
+      allow(stub).to receive(:clear_retry_inbound!)
     end
   end
 
@@ -142,16 +148,18 @@ describe Whatsapp::Inbound::ProcessMessageService do
       tap_of(id: Whatsapp::Send::RECOVERY_ACTION_IDS.fetch(:help), title: "Hilfe")
     end
 
-    it "leaves the projekt on a main-menu tap" do
+    # What the reset clears is the conversation's own business
+    # (Whatsapp::Conversation#begin_start_over!), shared with the typed request.
+    it "starts over on a main-menu tap" do
       process(main_menu_tap)
 
-      expect(conversation).to have_received(:leave_projekt!)
+      expect(conversation).to have_received(:begin_start_over!)
     end
 
-    it "leaves the projekt on the help pill offered under a cancellation" do
+    it "starts over on the help pill offered under a cancellation" do
       process(help_tap)
 
-      expect(conversation).to have_received(:leave_projekt!)
+      expect(conversation).to have_received(:begin_start_over!)
     end
 
     # The reset is half of it. The other half is that the replayed history still
@@ -166,12 +174,6 @@ describe Whatsapp::Inbound::ProcessMessageService do
       process(main_menu_tap)
 
       expect(routed_notes.last).to include("what is open to take part in")
-    end
-
-    it "flags the turn so the system prompt can say so too" do
-      process(main_menu_tap)
-
-      expect(conversation).to have_received(:note_start_over!)
     end
 
     it "records it, because a citizen escaping a reply is worth counting" do
@@ -195,21 +197,14 @@ describe Whatsapp::Inbound::ProcessMessageService do
       expect(conversation).not_to have_received(:discard_draft!)
     end
 
-    it "remembers nothing when there was nothing in the way" do
-      process(main_menu_tap)
-
-      expect(conversation).not_to have_received(:request_start_over!)
-    end
-
     context "when a contribution is half-written" do
       let(:unsaved_submission) { true }
 
       # This pill is on every message the bot sends, so a tap on it may not be
       # what throws away text the citizen spent ten minutes writing.
-      it "resets nothing" do
+      it "discards nothing" do
         process(main_menu_tap)
 
-        expect(conversation).not_to have_received(:leave_projekt!)
         expect(conversation).not_to have_received(:discard_draft!)
       end
 
@@ -219,18 +214,10 @@ describe Whatsapp::Inbound::ProcessMessageService do
         expect(routed_notes.last).to include("Nothing has been discarded")
       end
 
-      it "still flags the turn, so the reply knows what was asked for" do
+      it "still starts over, so the reply knows what was asked for" do
         process(main_menu_tap)
 
-        expect(conversation).to have_received(:note_start_over!)
-      end
-
-      # The confirmation arrives in a later turn than the asking, so the request
-      # has to be written down or the discard ends the exchange on "it is gone".
-      it "remembers the request for the turn the discard is confirmed in" do
-        process(main_menu_tap)
-
-        expect(conversation).to have_received(:request_start_over!)
+        expect(conversation).to have_received(:begin_start_over!)
       end
     end
   end

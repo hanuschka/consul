@@ -82,9 +82,8 @@ describe Ai::Tools::WhatsappAiAssistant::PostComment do
       allow(Proposal).to receive(:find_by).and_return(double(:proposal))
       allow(Whatsapp::Contributions::CreateCommentService).to receive(:call).and_return(comment)
       allow(Whatsapp::PublishedResourceUrl).to receive(:call).and_return("https://example.org/p/1#comment_9")
-      allow(Whatsapp::CommentPreview).to receive(:posted_block).and_return("the comment")
-      allow(Whatsapp::MessageBlock).to receive(:chunks).and_return(["the comment"])
-      allow(Whatsapp::Send).to receive(:text)
+      allow(Whatsapp::CommentPreview).to receive(:posted_confirmation).and_return("posted")
+      allow(Whatsapp::Send).to receive(:message_block)
     end
 
     it "posts the stashed words, not anything the model passed" do
@@ -96,14 +95,18 @@ describe Ai::Tools::WhatsappAiAssistant::PostComment do
       tool.execute
     end
 
-    it "sends the comment back composed from the stash" do
-      expect(Whatsapp::Send).to receive(:text).with(account: account, body: "the comment")
+    it "sends where the words went, with the platform's own address" do
+      expect(Whatsapp::CommentPreview)
+        .to receive(:posted_confirmation)
+        .with(conversation: conversation, url: "https://example.org/p/1#comment_9")
+        .and_return("posted")
+      expect(Whatsapp::Send).to receive(:message_block).with(account: account, block: "posted")
 
       tool.execute
     end
 
-    it "sends the recap before the stash is cleared" do
-      expect(Whatsapp::CommentPreview).to receive(:posted_block).ordered
+    it "sends the confirmation before the stash is cleared" do
+      expect(Whatsapp::CommentPreview).to receive(:posted_confirmation).ordered
       expect(conversation).to receive(:clear_pending_comment!).ordered
 
       tool.execute
@@ -114,16 +117,16 @@ describe Ai::Tools::WhatsappAiAssistant::PostComment do
 
       before do
         allow(Whatsapp::PublishedResourceUrl).to receive(:call).and_return(nil)
-        allow(Whatsapp::CommentPreview).to receive(:awaiting_review_block).and_return("held")
+        allow(Whatsapp::CommentPreview).to receive(:awaiting_review_confirmation).and_return("held")
       end
 
       it "offers no address" do
         expect(tool.execute[:url]).to be_nil
       end
 
-      it "says plainly that it is waiting rather than sending the posted block" do
-        expect(Whatsapp::CommentPreview).to receive(:awaiting_review_block)
-        expect(Whatsapp::CommentPreview).not_to receive(:posted_block)
+      it "says plainly that it is waiting rather than sending the posted confirmation" do
+        expect(Whatsapp::CommentPreview).to receive(:awaiting_review_confirmation)
+        expect(Whatsapp::CommentPreview).not_to receive(:posted_confirmation)
 
         tool.execute
       end

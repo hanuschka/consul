@@ -10,10 +10,7 @@ en:
         archive_empty_list_text: There are no plans in the archive at the moment.
         archive_link: Go to the municipal plans archive
         overview_link: Back to the plan list
-        result_count:
-          zero: No plans found
-          one: 1 plan found
-          other: "%{count} plans found"
+        count: Plans
         orders:
           relevance: Relevance
           given_order: Editorial order
@@ -25,7 +22,6 @@ en:
         sidebar_information: The plan list gives an overview of the city's planned and ongoing plans. For each plan, you can send a note to the responsible office through the notice form.
         sidebar:
           apply: Apply filters
-          reset: Reset all filters
           districts:
             title: District
             empty: No districts have been set up.
@@ -43,23 +39,10 @@ en:
             title: Updated on
             from_label: Updated from
             to_label: Updated until
+            reset: Reset date range
         overview_map:
           region_label: Map of the districts
           note: The map shows the districts and where the plans are located. Every district can also be filtered through the "District" list.
-        view_switch:
-          label: View
-          tiles: Tiles
-          table: Table
-        table:
-          caption: Municipal plans
-          archive_caption: Municipal plans archive
-          region_label: Table of plans
-          columns:
-            name: Name
-            tags: Tags
-            content_updated_at: Updated on
-            topics: Topic
-            districts: District
       badges:
         new: new entry
         updated: updated entry

@@ -1,17 +1,18 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
-  <% if topic_names.any? %>
+  <% if topics.any? %>
     <% c.with_subheading do %>
-      <span class="municipal-plan-list-item--topics">
-        <i class="fas fa-tags" aria-hidden="true"></i>
-        <span class="show-for-sr"><%= t("custom.municipal_plans.show.topics") %>:</span>
-        <%= topic_names.to_sentence %>
-      </span>
+      <span class="show-for-sr"><%= t("custom.municipal_plans.show.topics") %>:</span>
+      <div class="resource-item--tags">
+        <% topics.each do |topic| %>
+          <%= link_to topic.name, topic_path(topic), class: "resource-item--tag", rel: "nofollow" %>
+        <% end %>
+      </div>
     <% end %>
   <% end %>
 
   <% if district_names.any? %>
     <% c.with_additional_body_section do %>
-      <span class="municipal-plan-list-item--districts">
+      <span>
         <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
         <span class="show-for-sr"><%= t("custom.municipal_plans.show.districts") %>:</span>
         <%= district_names.to_sentence %>

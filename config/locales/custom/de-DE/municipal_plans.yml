@@ -10,13 +10,10 @@ de:
         archive_empty_list_text: Im Archiv sind zurzeit keine Vorhaben abgelegt.
         archive_link: Zum Archiv der Vorhabenliste
         overview_link: Zurück zur Vorhabenliste
-        result_count:
-          zero: Keine Vorhaben gefunden
-          one: 1 Vorhaben gefunden
-          other: "%{count} Vorhaben gefunden"
+        count: Vorhaben
         orders:
           relevance: Relevanz
-          given_order: redaktionelle Reihenfolge
+          given_order: Redaktionelle Reihenfolge
           content_updated_at: Aktualisierungsdatum
           title: Titel
         search_form:
@@ -25,7 +22,6 @@ de:
         sidebar_information: Die Vorhabenliste gibt einen Überblick über geplante und laufende Vorhaben der Stadt. Zu jedem Vorhaben können Sie über das Hinweisformular eine Anmerkung an die zuständige Stelle senden.
         sidebar:
           apply: Filter anwenden
-          reset: Alle Filter zurücksetzen
           districts:
             title: Ortsteil
             empty: Es sind keine Ortsteile hinterlegt.
@@ -43,23 +39,10 @@ de:
             title: Aktualisierungsdatum
             from_label: Aktualisiert ab
             to_label: Aktualisiert bis
+            reset: Zeitraum zurücksetzen
         overview_map:
           region_label: Karte der Ortsteile
           note: Die Karte zeigt die Ortsteile und die Lage der Vorhaben. Alle Ortsteile lassen sich auch über die Liste „Ortsteil“ filtern.
-        view_switch:
-          label: Ansicht
-          tiles: Kacheln
-          table: Tabelle
-        table:
-          caption: Vorhabenliste
-          archive_caption: Archiv der Vorhabenliste
-          region_label: Tabelle der Vorhaben
-          columns:
-            name: Name
-            tags: Tags
-            content_updated_at: Aktualisierungsdatum
-            topics: Thema
-            districts: Ortsteil
       badges:
         new: neuer Eintrag
         updated: aktualisierter Eintrag

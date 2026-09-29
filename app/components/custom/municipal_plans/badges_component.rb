@@ -25,8 +25,4 @@ class MunicipalPlans::BadgesComponent < ApplicationComponent
   def icon_class(badge)
     ICONS.fetch(badge, "circle")
   end
-
-  def modifier_class(badge)
-    "municipal-plan-badge--#{badge.to_s.dasherize}"
-  end
 end

@@ -17,8 +17,12 @@ class MunicipalPlans::ListItemComponent < ApplicationComponent
     }
   end
 
-  def topic_names
-    municipal_plan.topics.map(&:name)
+  def topics
+    municipal_plan.topics
+  end
+
+  def topic_path(topic)
+    helpers.municipal_plans_path(topics: [topic.id])
   end
 
   def district_names

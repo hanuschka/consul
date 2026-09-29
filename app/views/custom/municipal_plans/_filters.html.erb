@@ -1,55 +1,40 @@
-<%= form_tag form_url, method: :get, enforce_utf8: false,
-      class: "municipal-plans-filter-form",
-      data: { turbolinks: false } do %>
+<%= render Sidebar::CheckboxFilterComponent.new(
+  identifier: :districts,
+  options: @districts.map { |d| [d.name_for_display, d.id] },
+  title: t("custom.municipal_plans.index.sidebar.districts.title"),
+  icon: "map-marker-alt",
+  id_prefix: "filter_district",
+  empty_text: t("custom.municipal_plans.index.sidebar.districts.empty")
+) %>
 
-  <% if params[:order].present? %>
-    <%= hidden_field_tag :order, params[:order] %>
-  <% end %>
+<%= render Sidebar::CheckboxFilterComponent.new(
+  identifier: :topics,
+  options: @topics.map { |t| [t.name, t.id] },
+  title: t("custom.municipal_plans.index.sidebar.topics.title"),
+  icon: "tags",
+  id_prefix: "filter_topic",
+  empty_text: t("custom.municipal_plans.index.sidebar.topics.empty")
+) %>
 
-  <% if params[:search].present? %>
-    <%= hidden_field_tag :search, params[:search] %>
-  <% end %>
+<%= render Sidebar::CheckboxFilterComponent.new(
+  identifier: :participation,
+  options: MunicipalPlansQuery::PARTICIPATION_KINDS.map { |k| [t("custom.municipal_plans.index.sidebar.participation.options.#{k}"), k] },
+  title: t("custom.municipal_plans.index.sidebar.participation.title"),
+  icon: "hands-helping",
+  id_prefix: "filter_participation"
+) %>
 
-  <%= render Sidebar::CheckboxFilterComponent.new(
-    identifier: :districts,
-    options: @districts.map { |d| [d.name_for_display, d.id] },
-    title: t("custom.municipal_plans.index.sidebar.districts.title"),
-    icon: "map-marker-alt",
-    id_prefix: "filter_district",
-    empty_text: t("custom.municipal_plans.index.sidebar.districts.empty")
-  ) %>
+<%= render Sidebar::CheckboxFilterComponent.new(
+  identifier: :recency,
+  options: MunicipalPlansQuery::RECENCY_VALUES.map { |v| [t("custom.municipal_plans.badges.#{v}"), v] },
+  title: t("custom.municipal_plans.index.sidebar.recency.title"),
+  icon: "star",
+  id_prefix: "filter_recency"
+) %>
 
-  <%= render Sidebar::CheckboxFilterComponent.new(
-    identifier: :topics,
-    options: @topics.map { |t| [t.name, t.id] },
-    title: t("custom.municipal_plans.index.sidebar.topics.title"),
-    icon: "tags",
-    id_prefix: "filter_topic",
-    empty_text: t("custom.municipal_plans.index.sidebar.topics.empty")
-  ) %>
-
-  <%= render Sidebar::CheckboxFilterComponent.new(
-    identifier: :participation,
-    options: MunicipalPlansQuery::PARTICIPATION_KINDS.map { |k| [t("custom.municipal_plans.index.sidebar.participation.options.#{k}"), k] },
-    title: t("custom.municipal_plans.index.sidebar.participation.title"),
-    icon: "hands-helping",
-    id_prefix: "filter_participation"
-  ) %>
-
-  <%= render Sidebar::CheckboxFilterComponent.new(
-    identifier: :recency,
-    options: MunicipalPlansQuery::RECENCY_VALUES.map { |v| [t("custom.municipal_plans.badges.#{v}"), v] },
-    title: t("custom.municipal_plans.index.sidebar.recency.title"),
-    icon: "star",
-    id_prefix: "filter_recency"
-  ) %>
-
-  <%= render Shared::SidebarCardComponent.new(
-    title: t("custom.municipal_plans.index.sidebar.updated_range.title"),
-    icon_name: "calendar-alt"
-  ) do %>
-    <%= render "municipal_plans/sidebar/updated_range" %>
-  <% end %>
-
-  <%= render "municipal_plans/sidebar/actions", reset_url: form_url %>
+<%= render Shared::SidebarCardComponent.new(
+  title: t("custom.municipal_plans.index.sidebar.updated_range.title"),
+  icon_name: "calendar-alt"
+) do %>
+  <%= render "municipal_plans/sidebar/updated_range", form_url: form_url %>
 <% end %>

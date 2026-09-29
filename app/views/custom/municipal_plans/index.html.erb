@@ -14,7 +14,7 @@
       <div class="resource-page--intro-text">
         <%= render_custom_block(archive_view ? "municipal_plans_archive_welcome" : "municipal_plans_index_welcome", default_content: intro_text) %>
 
-        <p class="municipal-plans--archive-link">
+        <p>
           <% if archive_view %>
             <%= link_to t("custom.municipal_plans.index.overview_link"), municipal_plans_path %>
           <% else %>
@@ -29,10 +29,6 @@
 
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
     <div class="main-column">
-      <p class="municipal-plans--result-count" role="status">
-        <%= t("custom.municipal_plans.index.result_count", count: @municipal_plans.total_count) %>
-      </p>
-
       <%= render Resources::List::BaseComponent.new(
         empty_text: @municipal_plans.empty? ? empty_list_text : nil
       ) do |c| %>
@@ -41,30 +37,10 @@
           filters: @valid_orders,
           current_filter: @current_order,
           param: "order",
-          text_search_enabled: true,
-          hide_view_mode_button: true
+          text_search_enabled: true
         ) %>
 
-        <%= render Resources::ViewSwitchComponent.new(
-          options: {
-            "tiles" => t("custom.municipal_plans.index.view_switch.tiles"),
-            "table" => t("custom.municipal_plans.index.view_switch.table")
-          },
-          current: @view_mode,
-          label: t("custom.municipal_plans.index.view_switch.label")
-        ) %>
-
-        <% if @municipal_plans.present? && @view_mode == "table" %>
-          <%= render Resources::TableComponent.new(
-            columns: MunicipalPlans::TableRowComponent.columns,
-            caption: archive_view ? t("custom.municipal_plans.index.table.archive_caption") : t("custom.municipal_plans.index.table.caption"),
-            region_label: t("custom.municipal_plans.index.table.region_label")
-          ) do %>
-            <% @municipal_plans.each do |municipal_plan| %>
-              <%= render MunicipalPlans::TableRowComponent.new(municipal_plan: municipal_plan) %>
-            <% end %>
-          <% end %>
-        <% elsif @municipal_plans.present? %>
+        <% if @municipal_plans.present? %>
           <% c.with_items do %>
             <% @municipal_plans.each do |municipal_plan| %>
               <%= render MunicipalPlans::ListItemComponent.new(municipal_plan: municipal_plan) %>
@@ -77,13 +53,20 @@
     </div>
 
     <div id="municipal-plans-sidebar" class="sidebar">
-      <div class="hide-on-mobile">
-        <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle", opened_on_mobile: true) do %>
-          <div class="margin-bottom-half">
-            <%= render_custom_block "municipal_plans_index_sidebar", default_content: t("custom.municipal_plans.index.sidebar_information") %>
-          </div>
-        <% end %>
-      </div>
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do %>
+        <div class="margin-bottom-half">
+          <%= render_custom_block "municipal_plans_index_sidebar", default_content: t("custom.municipal_plans.index.sidebar_information") %>
+        </div>
+
+        <div class="resources--info-count margin-bottom-half" role="status">
+          <span>
+            <%= t("custom.municipal_plans.index.count") %>
+          </span>
+          <span>
+            <%= @municipal_plans.total_count %>
+          </span>
+        </div>
+      <% end %>
 
       <%= render "municipal_plans/filters", form_url: list_path %>
     </div>

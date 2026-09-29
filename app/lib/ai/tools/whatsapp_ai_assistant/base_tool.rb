@@ -201,7 +201,7 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     end
 
     # Read the way the pill beside the sentence reads it, through
-    # Whatsapp::AssistantActions#support_toggle_label, so the two cannot come
+    # Whatsapp::AssistantActions#support_action, so the two cannot come
     # apart: a support registered in an earlier session is not in the transcript,
     # and with no fact to write from the model offers a support the button under
     # it is already labelled "withdraw".

@@ -56,6 +56,8 @@ module Whatsapp::FlowActions
     notifications_open
     notifications_done
     notify_toggle
+    notify_enable
+    notify_disable
     unlink_start
     unlink_cancel
     unlink_confirm
@@ -69,6 +71,8 @@ module Whatsapp::FlowActions
     support
     support_prompt
     support_toggle
+    support_register
+    support_withdraw
     comment_prompt
     comment_post
     category
@@ -109,7 +113,8 @@ module Whatsapp::FlowActions
   PARAMETERISED_ACTIONS = %i[
     view_projekt participate_projekt idea_start phase_open phase_contributions poll_answer
     poll_weight poll_done poll_skip
-    category sentiment notify_toggle discover_category support support_toggle show_more
+    category sentiment notify_toggle notify_enable notify_disable discover_category support
+    support_toggle support_register support_withdraw show_more
     view_contribution
   ].freeze
 
@@ -127,7 +132,17 @@ module Whatsapp::FlowActions
   # a multiple-choice question, the other declines a free-text or a map one — and
   # all of them are meaningless outside a ballot in flight. A model offering one of
   # them mid-conversation is a pill that answers a question nobody was asked.
-  BOT_ONLY_ACTIONS = %i[poll_answer poll_weight poll_done poll_skip].freeze
+  #
+  # `support_register` / `support_withdraw` and `notify_enable` / `notify_disable`
+  # are what `support_toggle` and `notify_toggle` become on the way out: the model
+  # offers the toggle, and the direction is read off the state when the message is
+  # composed and written into the id. A model writing one of them itself would be
+  # choosing the direction, which is the one thing the state has to decide.
+  DIRECTED_ACTIONS = %i[support_register support_withdraw notify_enable notify_disable].freeze
+
+  BOT_ONLY_ACTIONS = [
+    :poll_answer, :poll_weight, :poll_done, :poll_skip, *DIRECTED_ACTIONS
+  ].freeze
 
   # Withheld for a reason the set above does not cover. A bot-only id is one whose
   # label belongs to a record; this is one whose whole message does — the pill sits
@@ -197,10 +212,10 @@ module Whatsapp::FlowActions
   #
   # `support` and `support_prompt` were the two halves of an offer and a
   # confirmation: the first asked, the second acted, and a support needed both. It
-  # takes one tap now, and which way that tap goes depends on the vote as it stands
-  # when it arrives — so the pill is `support_toggle` and neither of the old pair can
-  # be offered again. A tap on one still registers, because it still means the one
-  # thing it ever meant.
+  # takes one tap now, and which way that tap goes is read off the vote when the pill
+  # is composed — so the pill the model offers is `support_toggle` and neither of the
+  # old pair can be offered again. A tap on one still registers, because it still
+  # means the one thing it ever meant.
   RETIRED_ACTIONS = %i[participate_projekt support support_prompt].freeze
 
   # The pills that put a projekt or a participation phase in front of the citizen,

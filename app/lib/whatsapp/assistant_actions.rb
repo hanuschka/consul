@@ -49,12 +49,13 @@ module Whatsapp::AssistantActions
   # sentence it wrote, checked for length and nothing else, because the dispatcher
   # re-resolves the id on the tap and a poor label costs a badly-worded button.
   #
-  # The support toggle is here because the same id does opposite things: it gives
-  # support or takes it back depending on the vote as it stands when the tap arrives.
-  # A label the model wrote a message earlier can therefore say the precise opposite
-  # of what tapping it does, and the citizen has no way to tell. Read from the vote
-  # instead, and the model's own words for this one are discarded rather than
-  # preferred.
+  # The support toggle is here because the same id the model offers does opposite
+  # things: it gives support or takes it back depending on the vote. A label the
+  # model wrote can therefore say the precise opposite of what tapping it does, and
+  # the citizen has no way to tell. The vote is read when the message is composed
+  # and decides both halves of the pill — the direction written into the id
+  # (#directed_action) and the fixed words on it — so the model's own words for this
+  # one are discarded rather than preferred.
   #
   # The other three are the irreversible pills a citizen still has to be able to
   # recognise: a comment going onto a public page under their name, a contribution
@@ -68,12 +69,16 @@ module Whatsapp::AssistantActions
   # and not only the words on it. Here the model still decides when to offer, which is
   # safe because each of these is re-checked on the tap — against the vote, against the
   # digest of what was shown.
-  FORCED_LABEL_ACTIONS = %i[support_toggle comment_post draft_publish submit_final].freeze
+  FORCED_LABEL_ACTIONS = %i[
+    support_toggle support_register support_withdraw comment_post draft_publish submit_final
+  ].freeze
 
   # The fixed labels that have no record behind them to be read off. `submit_final` is
   # the id `draft_publish` took over and is still accepted as proof of the question
   # having been asked, so it says the same thing rather than something of its own.
   FORCED_LABEL_COPY_KEYS = {
+    support_register: "whatsapp.bot.buttons.support",
+    support_withdraw: "whatsapp.bot.buttons.support_withdraw",
     comment_post: "whatsapp.bot.buttons.comment_post",
     draft_publish: "whatsapp.bot.buttons.draft_publish",
     submit_final: "whatsapp.bot.buttons.draft_publish"
@@ -201,15 +206,37 @@ module Whatsapp::AssistantActions
       return dropped(spec, conversation, :unreachable)
     end
 
+    sent_action = directed_action(action, param, conversation)
+
+    return dropped(spec, conversation, :unlabelled) if sent_action.blank?
+
     title = title_for(
-      action: action, param: param, label: label, conversation: conversation, length: length
+      action: sent_action, param: param, label: label, conversation: conversation, length: length
     )
 
     return dropped(spec, conversation, :unlabelled) if title.blank?
 
-    record_irreversible_offer(action, conversation)
+    record_irreversible_offer(sent_action, conversation)
 
-    { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
+    { id: ::Whatsapp::FlowActions.id_for(action: sent_action, param: param), title: title }
+  end
+
+  # The toggles the model offers, turned into the direction they have at the moment
+  # the message is composed. A toggle id read again on the tap does whatever the
+  # state says by then — and a citizen who taps "Unterstützen" twice while the reply
+  # is still on its way registers the support with the first tap and takes it back
+  # with the second. Written into the id, the direction is what the label said, so a
+  # repeated tap finds it already done and changes nothing.
+  #
+  # Nil where there is nothing to offer — a proposal that is gone, or one that can
+  # no longer be supported by someone who has not supported it — which drops the
+  # pill the same way a blank label did.
+  def directed_action(action, param, conversation)
+    case action
+    when :support_toggle then support_action(param, conversation)
+    when :notify_toggle then notification_action(param, conversation)
+    else action
+    end
   end
 
   # One of the three parameters checked before the label rather than through it —
@@ -525,12 +552,11 @@ module Whatsapp::AssistantActions
     when :phase_open then phase_action_label(param, conversation)
     when :phase_contributions then ::Whatsapp.copy("whatsapp.bot.buttons.phase_contributions")
     when :support then proposal_label(param)
-    when :support_toggle then support_toggle_label(param, conversation)
     when :category
       taxonomy_label(::Whatsapp::DraftTaxonomy.category(conversation.projekt_phase), param)
     when :sentiment
       taxonomy_label(::Whatsapp::DraftTaxonomy.sentiment(conversation.projekt_phase), param)
-    when :notify_toggle then notification_label(param)
+    when :notify_enable, :notify_disable then notification_label(param)
     when :discover_category then browse_category_label(param)
     when :show_more then ::Whatsapp.copy("whatsapp.bot.buttons.show_more")
     end
@@ -644,25 +670,35 @@ module Whatsapp::AssistantActions
   end
 
   # Which way the toggle goes, read off the citizen's own vote at the moment the
-  # message is composed rather than carried in the id. The vote is the only thing
-  # that can say whether tapping this gives a support or takes one back, and the
-  # inbound side reads it again on the tap — so a label built from anything else is
-  # a label that can disagree with what happens.
+  # message is composed and carried in the id. The vote is the only thing that can
+  # say whether tapping this gives a support or takes one back, and the label is
+  # the fixed copy of the direction chosen here — so the words on the pill and what
+  # the tap does come from the one reading.
   #
-  # Blank for a proposal that is gone, which drops the pill: the same rule every
+  # Nil for a proposal that is gone, which drops the pill: the same rule every
   # other record-backed label follows.
-  def support_toggle_label(param, conversation)
+  def support_action(param, conversation)
     proposal = ::Proposal.not_retired.find_by(id: param.to_i)
 
     return if proposal.blank?
 
     user = conversation.user
-    supported = user.present? && proposal.voted_up_by?(user)
 
-    return ::Whatsapp.copy("whatsapp.bot.buttons.support_withdraw") if supported
+    return :support_withdraw if user.present? && proposal.voted_up_by?(user)
     return if !supportable?(proposal)
 
-    ::Whatsapp.copy("whatsapp.bot.buttons.support")
+    :support_register
+  end
+
+  # The same for a notification switch: a type that is on is offered as the switch
+  # that turns it off. Nil for a type nobody has heard of, which drops the pill.
+  def notification_action(param, conversation)
+    type = notification_type(param)
+
+    return if type.blank?
+    return :notify_disable if conversation.whatsapp_account.notifies?(type)
+
+    :notify_enable
   end
 
   # Asked only on the way to "Unterstützen": a support already given is theirs to
@@ -685,11 +721,15 @@ module Whatsapp::AssistantActions
   end
 
   def notification_label(param)
-    type = ::Whatsapp::Account::NOTIFICATION_TYPES.find { |known| known.to_s == param.to_s }
+    type = notification_type(param)
 
     return if type.blank?
 
     ::Whatsapp.copy("whatsapp.bot.notifications.types.#{type}.short")
+  end
+
+  def notification_type(param)
+    ::Whatsapp::Account::NOTIFICATION_TYPES.find { |known| known.to_s == param.to_s }
   end
 
   def browse_category_label(param)

@@ -23,7 +23,7 @@ class Ai::Tools::WhatsappAiAssistant::SendLoginLink < Ai::Tools::WhatsappAiAssis
       lines: [
         ::Whatsapp.copy(
           "whatsapp.bot.onboarding.login_prompt",
-          privacy_url: ::Whatsapp::PortalLinks.privacy_url
+          privacy_url: ::Whatsapp::PortalLinks.privacy_url(locale: ::Whatsapp.locale_for(account))
         ),
         ::Whatsapp.copy("whatsapp.bot.buttons.login")
       ]

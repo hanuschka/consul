@@ -20,6 +20,10 @@ module Whatsapp::BallotParticipation
   # on such a phase has always answered with. The page is where the vote they cast is
   # legible anyway.
 
+  # A citizen's standing in a poll they have begun, as #states_by_poll_id reports it.
+  ANSWERED = "answered".freeze
+  PARTLY_ANSWERED = "partly_answered".freeze
+
   module_function
 
   def completed?(projekt_phase:, user:)
@@ -45,6 +49,24 @@ module Whatsapp::BallotParticipation
     finished = completed_poll_ids(polls: ballots.values, user: user)
 
     ballots.filter_map { |projekt_phase_id, poll| projekt_phase_id if finished.include?(poll.id) }
+  end
+
+  # Where this citizen stands in each poll they have begun, for a whole list at once
+  # rather than a page of it: a count of the votes still owed read off ten marked rows
+  # of twenty-two came out as fourteen once and as two the next time. Polls they
+  # never answered anything in are absent — the one query in #begun_poll_ids settles
+  # those — so only the begun ones pay for a traversal.
+  #
+  # Begun and finished are kept apart because they are different answers to "have I
+  # voted there": a half-answered ballot has stored answers and still owes questions.
+  def states_by_poll_id(polls:, user:)
+    return {} if user.blank?
+
+    begun = begun_poll_ids(polls, user)
+
+    polls.select { |poll| begun.include?(poll.id) }.to_h do |poll|
+      [poll.id, finished?(poll: poll, user: user) ? ANSWERED : PARTLY_ANSWERED]
+    end
   end
 
   # The same question asked of a page of polls at once. A traversal costs a fixed handful

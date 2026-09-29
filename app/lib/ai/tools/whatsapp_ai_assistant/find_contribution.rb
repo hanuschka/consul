@@ -6,9 +6,10 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
   # assistant is told says which contribution the conversation is about.
   description "Finds the contribution a citizen is talking about from what they called it, " \
               "however roughly. Returns its id, its title, how many supports it has, whether " \
-              "this citizen has already supported it, whether it can be supported and the link " \
-              "to open it — or several candidates when more than " \
-              "one matches, so you can ask which they mean rather than guessing. Call it before " \
+              "this citizen has already supported it, whether it can be supported, the action " \
+              "id of its support button and the link to open it — or several candidates when " \
+              "more than one matches, so you can ask which they mean rather than guessing. " \
+              "Call it before " \
               "support_proposal, withdraw_support, draft_comment or send_link for a " \
               "contribution; each of those needs the id this returns. Sends nothing."
 
@@ -45,7 +46,17 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
     def summary_for(contribution)
       contribution_candidate_summary(contribution).merge(
         supportable: contribution.is_a?(::Proposal),
+        support_action_id: support_action_id(contribution),
         url: ::Whatsapp::PublishedResourceUrl.call(contribution)
       ).compact
+    end
+
+    # Handed over rather than left for the model to compose, the way draft_proposal
+    # hands over its candidates'. Which way the pill goes is read off the vote when
+    # it is sent, and a proposal that can no longer be supported loses the pill there.
+    def support_action_id(contribution)
+      return if !contribution.is_a?(::Proposal)
+
+      "support_toggle-#{contribution.id}"
     end
 end

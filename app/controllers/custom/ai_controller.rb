@@ -123,28 +123,13 @@ class AiController < ApplicationController
     end
 
     def attach_generated_image(resource, response_body)
-      filename = "ai_generated_#{Time.current.to_i}.jpg"
-      image = resource.image || Image.new(user: current_user, imageable: resource)
-      marked_data = marked_image_data(
-        response_body["image"],
-        filename: filename,
-        image: image,
-        response_body: response_body
+      ResourceImages::AttachService.from_generated_base64(
+        resource: resource,
+        user: current_user,
+        base64: response_body["image"],
+        ai_system: DtApi::Resources::Ai.reported_provider(response_body),
+        ai_system_version: DtApi::Resources::Ai.reported_model(response_body)
       )
-      file = attachment_tempfile(marked_data)
-
-      begin
-        image.attachment = ActionDispatch::Http::UploadedFile.new(
-          tempfile: file,
-          filename: filename,
-          type: "image/jpeg"
-        )
-        image.ai_generated = true
-        image.save!
-      ensure
-        file.close
-        file.unlink
-      end
     end
 
     def marked_payload(parsed_response)
@@ -177,14 +162,6 @@ class AiController < ApplicationController
         generated_file.close
         generated_file.unlink
       end
-    end
-
-    def attachment_tempfile(data)
-      file = Tempfile.new(["ai_generated", ".jpg"], binmode: true)
-      file.write(data)
-      file.rewind
-
-      file
     end
 
     def image_url(attachment)

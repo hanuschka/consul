@@ -1,0 +1,7 @@
+en:
+  adm:
+    projekts:
+      similar_contributions:
+        excluded: The contribution was removed from the duplicate set.
+        popup:
+          empty: No similar contributions are stored for this entry.

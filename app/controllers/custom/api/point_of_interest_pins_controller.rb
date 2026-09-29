@@ -14,11 +14,7 @@ class Api::PointOfInterestPinsController < Api::BaseController
       ProjektPointOfInterestPin.includes(:author, :projekt_point_of_interest_category, :projekt_phase, :projekt_phase, :map_location)
     end
 
-    pins =
-      pins
-        .order(created_at: :asc)
-        .page(params[:page])
-        .per(params[:per_page] || DEFAULT_PER_PAGE)
+    pins = paginate(pins.order(created_at: :asc))
 
     serialized_pins = PointOfInterestPinSerializer.serialize_collection(pins)
 
@@ -89,15 +85,6 @@ class Api::PointOfInterestPinsController < Api::BaseController
 
   def find_pin
     @pin = ProjektPointOfInterestPin.includes(:author, :projekt_point_of_interest_category, :projekt_phase, :projekt_phase, :map_location).find(params[:id])
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end
 

@@ -1,0 +1,71 @@
+<%
+  # The two kinds live in different settings, so a row is "in use" only against
+  # the setting for its own kind — comparing every row to the text template
+  # would mark a card template unused while it is the one being broadcast.
+  configured_name_for_kind = configured_names_by_kind[template[:kind]]
+  in_use = configured_name_for_kind == template[:name] &&
+    configured_language == template[:language]
+  rejected = whatsapp_template_rejected?(template[:status])
+  row_id = "whatsapp-template-#{template[:name].parameterize}-#{template[:language].parameterize}"
+%>
+
+<tr class="kern-table__row">
+  <th scope="row" class="kern-table__header" id="<%= row_id %>">
+    <code class="adm-whatsapp-page--slot-name"><%= template[:name] %></code>
+  </th>
+
+  <td class="kern-table__cell"><%= t("adm.whatsapp.show.template_kind_#{template[:kind]}") %></td>
+  <td class="kern-table__cell"><%= template[:language] %></td>
+  <td class="kern-table__cell"><%= whatsapp_template_status_badge(template[:status]) %></td>
+
+  <td class="kern-table__cell kern-table__cell--action">
+    <% if in_use %>
+      <span class="kern-body kern-body--muted"><%= t("adm.whatsapp.show.template_in_use") %></span>
+    <% else %>
+      <% if configured_name_for_kind == template[:name] %>
+        <p class="kern-body kern-body--small kern-body--muted">
+          <%= t("adm.whatsapp.show.template_language_mismatch", language: configured_language) %>
+        </p>
+      <% end %>
+
+      <%# Only an approved template may be activated: Meta accepts a submission
+          long before it approves one, and broadcasting a pending template fails
+          while still marking the projekt announced. Creating a template no
+          longer activates it, so this is the only path that does.
+
+          A real PATCH form, not an <a> carrying data-turbo-method: only PATCH is
+          routed, so a Turbo prefetch, a middle-click or a bookmarked href would
+          raise a routing error. %>
+      <% if template[:approved] %>
+        <%= form_with url: use_template_adm_whatsapp_path, method: :patch do |form| %>
+          <%= form.hidden_field :name, value: template[:name], id: nil %>
+          <%= form.hidden_field :language, value: template[:language], id: nil %>
+          <%= form.hidden_field :kind, value: template[:kind], id: nil %>
+          <%= kern_button(
+            text: t("adm.whatsapp.show.template_use"),
+            type: "submit",
+            style: :secondary,
+            "aria-describedby": row_id
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%# Rejected templates are the only ones worth deleting: nothing can ever
+          send with one, and Meta keeps it on the account against its limit. The
+          controller re-checks both the status and every slot before deleting —
+          this listing is cached, so the button can outlive the state it read. %>
+      <% if rejected %>
+        <%= form_with url: delete_template_adm_whatsapp_path, method: :delete,
+          data: { turbo_confirm: t("adm.whatsapp.show.template_delete_confirm") } do |form| %>
+          <%= form.hidden_field :name, value: template[:name], id: nil %>
+          <%= kern_button(
+            text: t("adm.whatsapp.show.template_delete"),
+            type: "submit",
+            style: :tertiary,
+            "aria-describedby": row_id
+          ) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

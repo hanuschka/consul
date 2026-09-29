@@ -192,8 +192,9 @@ module Abilities
       can :access, :ckeditor
       can :create, AdminImage
       can [:update, :destroy], AdminImage do |admin_image|
-        admin_image.projekt.present? &&
-          user.has_pm_permission_to?("manage", admin_image.projekt)
+        (admin_image.projekt_id.nil? && admin_image.user_id == user.id) ||
+          (admin_image.projekt.present? &&
+            user.has_pm_permission_to?("manage", admin_image.projekt))
       end
 
       can :toggle_subscription, ProjektSubscription do |subscription|

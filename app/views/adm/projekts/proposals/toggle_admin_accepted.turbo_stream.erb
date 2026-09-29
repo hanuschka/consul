@@ -1,3 +1,16 @@
+<%# Two targets, one response: the list row on the phase index and the Verwaltung field on the
+    detail page. Turbo skips whichever id is absent from the page that sent the request. %>
 <%= turbo_stream.replace dom_id(@proposal) do %>
   <%= render "adm/projekts/phases/proposals/proposal", proposal: @proposal, projekt_phase: @projekt_phase %>
+<% end %>
+
+<%= turbo_stream.replace dom_id(@proposal, :admin_accepted) do %>
+  <div id="<%= dom_id(@proposal, :admin_accepted) %>">
+    <%= render Adm::AttributeEditors::BooleanComponent.new(
+      @proposal,
+      :admin_accepted,
+      path: toggle_admin_accepted_adm_projekts_phase_proposal_path(@projekt_phase, @proposal),
+      aria_label: t("adm.projekts.proposals.show.admin_accepted_status")
+    ) %>
+  </div>
 <% end %>

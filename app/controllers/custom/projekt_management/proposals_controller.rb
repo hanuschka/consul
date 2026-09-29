@@ -29,6 +29,7 @@ class ProjektManagement::ProposalsController < ProjektManagement::BaseController
   def show
     @proposal = Proposal.find(params[:id])
     @projekt_phase = @proposal.projekt_phase
+    @similar_contributions = SimilarContributions::FindForProjekt.call(@proposal)
 
     render "custom/admin/proposals/show"
   end

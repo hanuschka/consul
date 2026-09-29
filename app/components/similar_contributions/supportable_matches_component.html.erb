@@ -1,0 +1,17 @@
+<ul class="similar-contributions-matches">
+  <% matches.each do |match| %>
+    <%= render SimilarContributions::MatchItemComponent.new(
+      match.resource,
+      variant: variant
+    ) do |item| %>
+      <% if supporting_available?(match.resource) %>
+        <% item.with_footer do %>
+          <div class="similar-contributions-match--support"
+               id="<%= votes_container_id(match.resource) %>">
+            <%= render votes_component_for(match.resource) %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</ul>

@@ -43,7 +43,8 @@ class Projekts::Copying::Serializing::PhaseSerializer < ApplicationService
         "registered_address_district_ids" =>
           source_phase.registered_address_districts.map(&:id),
         "registered_address_street_ids" => source_phase.registered_address_streets.map(&:id),
-        "individual_group_value_ids" => source_phase.individual_group_values.map(&:id)
+        "individual_group_value_ids" => source_phase.individual_group_values.map(&:id),
+        "similar_search_projekt_ids" => source_phase.similar_search_projekts.map(&:id)
       }
     end
 

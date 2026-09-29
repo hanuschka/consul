@@ -863,12 +863,26 @@ function createUploadFilesPlugin(CKEDITOR) {
         'X-CSRF-TOKEN': this.csrf_token
       }
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return response.json()
+          .catch(() => ({}))
+          .then((body) => {
+            const error = body && body.error;
+            const message = (typeof error === 'string' ? error : error && error.message) || 'Die Dateien konnten nicht geladen werden.';
+            throw new Error(message);
+          });
+      })
       .then((data) => {
-        this.state.total_pages = data.total_pages;
-        this.state.items = data.items;
+        this.state.total_pages = data.total_pages || 0;
+        this.state.items = data.items || [];
       })
       .catch((error) => {
+        this.state.items = [];
+        this.state.total_pages = 0;
         alert(error.message);
       })
       .finally(() => {

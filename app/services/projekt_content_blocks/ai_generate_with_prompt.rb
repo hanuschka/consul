@@ -23,7 +23,7 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
       templates_tool = Ai::Tools::FetchContentBlockTemplates.new(
         templates_by_category: dt_templates_by_category
       )
-      Ai::RubyLlmFactory.attach_tools(chat, templates_tool)
+      Ai::RubyLlmFactory.attach_tools(chat, [templates_tool], Ai::ModelProfile.default)
     end
 
     response =

@@ -42,7 +42,8 @@ module Adm
     private
 
       def displayed_setting_keys
-        GENERAL_SETTING_KEYS + GENERAL_TEXT_SETTING_KEYS + OAUTH_LOGIN_SETTING_KEYS + KOBIL_SETTING_KEYS
+        GENERAL_SETTING_KEYS + GENERAL_TEXT_SETTING_KEYS + OAUTH_LOGIN_SETTING_KEYS +
+          KOBIL_SETTING_KEYS
       end
   end
 end

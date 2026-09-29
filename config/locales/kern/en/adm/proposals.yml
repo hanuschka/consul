@@ -3,10 +3,21 @@ en:
     projekts:
       proposals:
         show:
+          section_content: Proposal
+          section_admin: Administration
+          image_label: Image
+          map_label: Location
+          author: Submitted by
+          on_behalf_of_label: On behalf of
+          created_at: Created at
+          votes: Votes in favour
+          votes_down: Votes against
+          comments: Comments
           video_url: Video
           view_on_site: View on the website
-          on_behalf_of: on behalf of
+          pdf: Download as PDF
           admin_accepted_status: Approval status
+          admin_accepted_status_hint: Controls whether this proposal is publicly visible on the website.
           accepted: Approved
           not_accepted: Not approved
           official_answer: Official response

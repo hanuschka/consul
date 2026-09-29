@@ -74,3 +74,12 @@ main {
   }
 }
 
+// Measure for running text — section intros, hints, explanations. Caps a
+// paragraph at 70% of its container so it stays readable instead of spanning
+// the full admin width; below md the container is already narrow enough.
+.kern-prose {
+  @media (min-width: map.get(breakpoints.$grid-breakpoints, md)) {
+    max-width: 70%;
+  }
+}
+

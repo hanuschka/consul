@@ -9,7 +9,7 @@ de:
     title: Titel
     description: Beschreibung
     related_sdg_list: Ziele und Unterziele
-    resource_terms: Die AGBs und die Datenschutzbestimmung
+    resource_terms: Die AGB und die Datenschutzbestimmung
   activerecord:
     models:
       activity:

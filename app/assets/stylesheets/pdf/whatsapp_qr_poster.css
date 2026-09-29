@@ -1,0 +1,96 @@
+/* Standalone stylesheet for the printable WhatsApp QR poster. Inlined into the
+   PDF layout by PdfServices::WhatsappQrPosterCss — deliberately self-contained:
+   inlining the built adm pack instead costs ~7.5MB of base64 fonts and stalls
+   the headless renderer past its timeout.
+
+   Because the pack is not loaded, the kern custom properties are unavailable.
+   The values below are the light-mode kern tokens copied verbatim (paper is
+   always light, so the dark-mode variants never apply), and Fira Sans is left
+   to fall back to a system sans rather than shipping the webfont again. */
+
+:root {
+  --poster-accent: oklch(36.29% 0.1831 265); /* --kern-darkblue-750 */
+  --poster-text: oklch(39.94% 0 none); /* --kern-grey-700 */
+  --poster-rule: oklch(0% 0 none); /* --kern-custom-black */
+}
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  font-family: "Fira Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--poster-text);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.adm-whatsapp-poster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20mm 16mm;
+  text-align: center;
+}
+
+.adm-whatsapp-poster--preline {
+  margin: 0 0 3mm;
+  font-size: 16pt;
+  line-height: 1.3;
+}
+
+.adm-whatsapp-poster--headline {
+  margin: 0 0 4mm;
+  color: var(--poster-accent);
+  font-size: 34pt;
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.adm-whatsapp-poster--lead {
+  margin: 0 0 10mm;
+  max-width: 150mm;
+  font-size: 18pt;
+  line-height: 1.5;
+}
+
+.adm-whatsapp-poster--code {
+  width: 105mm;
+  padding: 6mm;
+  border: 1.5mm solid var(--poster-rule);
+  border-radius: 3mm;
+  background: #fff;
+}
+
+.adm-whatsapp-poster--code svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.adm-whatsapp-poster--steps {
+  margin: 9mm 0 0;
+  max-width: 150mm;
+  font-size: 16pt;
+  line-height: 1.5;
+}
+
+.adm-whatsapp-poster--footer {
+  margin-top: 12mm;
+}
+
+.adm-whatsapp-poster--number {
+  margin: 0 0 2mm;
+  color: var(--poster-accent);
+  font-size: 16pt;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.adm-whatsapp-poster--link {
+  margin: 0;
+  font-size: 11pt;
+  overflow-wrap: anywhere;
+}

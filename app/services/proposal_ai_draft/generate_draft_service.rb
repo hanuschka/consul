@@ -53,7 +53,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
 
         The citizen described their idea as:
         "#{@idea_text}"
-        #{taxonomy_prompt_section}#{submission_slots_prompt_section}
+        #{taxonomy_prompt_section}#{submission_slots_prompt_section}#{additions_prompt_section}
       PROMPT
     end
 
@@ -70,6 +70,22 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         other in later messages. Report whether the citizen already settled either of them in
         the message above, so they are not asked again for something they have already said.
         Judge only their words: when they did not mention it, the answer is false.
+      SECTION
+    end
+
+    # The draft is published under the citizen's name, so the chat tells them what
+    # it proposes that they never said. Asked of this call because it is the one
+    # that added it; the assistant only sees an excerpt of the finished text.
+    def additions_prompt_section
+      return "" if !required_taxonomy?
+
+      <<~SECTION
+
+        The draft may go beyond what the citizen said, and that is wanted. Because it is
+        published under their name, list in additions_beyond_idea what it proposes that they
+        did not give: each measure, feature, partner or rule you added. Rewording, structuring
+        and spelling out what they plainly meant are not additions. When the draft only
+        rephrases their words, the list is empty.
       SECTION
     end
 
@@ -182,7 +198,8 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       if required_taxonomy?
         properties[:photo_declined] = photo_declined_schema
         properties[:location_stated] = location_stated_schema
-        required.push(*SUBMISSION_SLOT_KEYS)
+        properties[:additions_beyond_idea] = additions_beyond_idea_schema
+        required.push(*SUBMISSION_SLOT_KEYS, "additions_beyond_idea")
       end
 
       if available_sentiments.any?
@@ -230,6 +247,17 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
                      "Bahnhof\", \"Hauptstraße 14\", \"im Stadtpark\"), or said there is no " \
                      "particular place. False whenever they did not say where. Never infer " \
                      "this from the projekt's own name or area."
+      }
+    end
+
+    def additions_beyond_idea_schema
+      {
+        type: "array",
+        items: { type: "string" },
+        description: "What the draft proposes that the citizen's own words did not: each added " \
+                     "measure, feature, partner or rule as a short phrase in the draft's " \
+                     "language (\"Kooperation mit Energieversorgern\"). Empty when the draft " \
+                     "only rephrases what they said."
       }
     end
 

@@ -2,7 +2,10 @@ require "rails_helper"
 
 describe Whatsapp::AiAssistant::RouterService do
   let(:messages_api) do
-    instance_double(WhatsappApi::Resources::Messages, send_typing_indicator: true)
+    instance_double(
+      WhatsappApi::Resources::Messages,
+      send_typing_indicator: double(:response, success?: true)
+    )
   end
 
   let(:conversation) { double(:conversation, step: nil) }
@@ -11,11 +14,12 @@ describe Whatsapp::AiAssistant::RouterService do
     Whatsapp::AiAssistant::RouterService.new(
       conversation: conversation,
       inbound_text: "The citizen tapped the button \"Von vorne loslegen\" (action menu).",
-      inbound_message_id: inbound_message_id
+      inbound_message_id: "wamid.INBOUND",
+      typing_message_id: typing_message_id
     )
   end
 
-  let(:inbound_message_id) { "wamid.INBOUND" }
+  let(:typing_message_id) { "wamid.INBOUND" }
 
   before do
     allow(WhatsappApi::Client)
@@ -35,8 +39,20 @@ describe Whatsapp::AiAssistant::RouterService do
         .to have_received(:send_typing_indicator).with(message_id: "wamid.INBOUND").exactly(3).times
     end
 
-    context "when the inbound message is not known" do
-      let(:inbound_message_id) { nil }
+    # A retry answers an older inbound while the citizen watches the pill they
+    # have just tapped, and WhatsApp only shows the bubble under that one.
+    context "when the turn answers an older message than the one the citizen is under" do
+      let(:typing_message_id) { "wamid.TAPPED" }
+
+      it "hangs the bubble on the message the citizen is under" do
+        service.send(:track_tool_call, double(:call, name: "list_open_phases"))
+
+        expect(messages_api).to have_received(:send_typing_indicator).with(message_id: "wamid.TAPPED")
+      end
+    end
+
+    context "when there is no message to hang the bubble on" do
+      let(:typing_message_id) { nil }
 
       it "asks for nothing" do
         service.send(:track_tool_call, double(:call, name: "list_open_phases"))

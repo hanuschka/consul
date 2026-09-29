@@ -21,7 +21,19 @@ describe Whatsapp::AiAssistant::SystemPromptService do
       projekt_phase: projekt_phase,
       active_proposal_id: nil,
       pending_confirmations: [],
-      starting_over?: starting_over
+      starting_over?: starting_over,
+      unsaved_submission?: false,
+      draft_picture_attached?: false,
+      image_question_available?: false,
+      last_draft_at: nil,
+      pending_open_question_id: nil,
+      proposed_location: nil,
+      resumed_poll_question_ids: [],
+      subject_changed_at: nil,
+      typing_hint_due?: false,
+      unsaved_work?: false,
+      replayable_turn?: false,
+      awaiting_link?: false
     )
   end
 
@@ -33,6 +45,7 @@ describe Whatsapp::AiAssistant::SystemPromptService do
 
   before do
     allow(Whatsapp::EligiblePhasesQuery).to receive(:uncapped).and_return([])
+    allow(Whatsapp::Polls::OwedQuestionQuery).to receive(:for).and_return(nil)
     allow(Whatsapp::AiAssistant::DialogDigest)
       .to receive(:new).and_return(double(:digest, transcript: nil))
   end

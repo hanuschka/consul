@@ -12,6 +12,12 @@ class Whatsapp::OpenPollsQuery < ApplicationQuery
       .to_a
   end
 
+  # Every open poll at once, for the counts that have to cover the whole list
+  # rather than the page of it on screen.
+  def all
+    scope.includes(projekt_phase: { projekt: :page }).to_a
+  end
+
   def total
     scope.count
   end
@@ -33,12 +39,16 @@ class Whatsapp::OpenPollsQuery < ApplicationQuery
     # ProjektPhase's default scope puts it on the association. `reorder` because the
     # same default scope orders by given_order and a merge brings that along, which
     # across projekts sorts by nothing a citizen can read.
+    #
+    # Published polls only: an unpublished one has no ballot and no address, so
+    # listing it counted a vote the citizen still owed that they could not reach.
     def scope
       relation = Poll
         .joins(projekt_phase: { projekt: :page })
         .merge(ProjektPhase.current)
         .where(site_customization_pages: { status: "published" })
         .merge(Projekt.activated)
+        .merge(Poll.published)
         .reorder(:ends_at)
 
       return relation if @projekt.blank?

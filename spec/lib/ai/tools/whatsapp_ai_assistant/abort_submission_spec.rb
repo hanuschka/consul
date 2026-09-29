@@ -5,14 +5,14 @@ describe Ai::Tools::WhatsappAiAssistant::AbortSubmission do
     Ai::Tools::WhatsappAiAssistant::AbortSubmission.new(conversation: conversation)
   end
 
-  let(:unsaved_submission) { true }
+  let(:step_in_progress) { true }
 
   let(:start_over_requested) { false }
 
   let(:conversation) do
     double(
       :conversation,
-      unsaved_submission?: unsaved_submission,
+      step_in_progress?: step_in_progress,
       start_over_requested?: start_over_requested
     ).tap { |stub| allow(stub).to receive(:discard_draft!) }
   end
@@ -31,7 +31,7 @@ describe Ai::Tools::WhatsappAiAssistant::AbortSubmission do
   end
 
   describe "when nothing is in progress" do
-    let(:unsaved_submission) { false }
+    let(:step_in_progress) { false }
 
     it "discards nothing" do
       tool.execute

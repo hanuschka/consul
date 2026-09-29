@@ -453,7 +453,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       settle_slot_for(flow_action[:action])
       discard_declined_photo(flow_action[:action])
 
-      support_toggle_note(action: flow_action[:action], param: flow_action[:param]) ||
+      support_tap_note(action: flow_action[:action], param: flow_action[:param]) ||
         tapped_line(action: flow_action[:action], param: flow_action[:param])
     end
 
@@ -476,26 +476,37 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # the act allowed only in the next — two taps for one support. A tapped id needs
     # none of that: it is the id of a button the citizen was looking at.
     #
-    # Which way it goes is read here rather than carried in the id. One pill toggles,
-    # and the citizen's vote as it stands when the tap arrives is the only thing that
-    # can say whether tapping gives a support or takes one back. The label was built
-    # from the same reading a message earlier, which is what keeps the two in step —
-    # and where they disagree, because the vote moved on the projekt page in between,
-    # it is this reading that is right.
+    # Which way it goes is carried in the id, written from the vote when the pill was
+    # composed (Whatsapp::AssistantActions#directed_action) — so a tap does what its
+    # label said. It used to be read here, off the vote as it stood when the tap
+    # arrived, and a citizen tapping twice while the reply was still on its way had
+    # the support registered by the first tap and taken back by the second. Now the
+    # second finds it already done and nothing changes.
     #
     # The retired `support` id comes through here too. Every support pill the bot has
     # ever sent is still sitting in a chat history and still tappable, and it only
-    # ever meant the one thing.
-    SUPPORT_TOGGLE_ACTIONS = %i[support_toggle support].freeze
+    # ever meant the one thing. So does `support_toggle` from before the direction
+    # was carried: it says nothing about which way it went, so it still reads the
+    # vote on arrival.
+    SUPPORT_TAP_ACTIONS = %i[support_register support_withdraw support_toggle support].freeze
 
-    def support_toggle_note(action:, param:)
-      return if !SUPPORT_TOGGLE_ACTIONS.include?(action)
+    def support_tap_note(action:, param:)
+      return if !SUPPORT_TAP_ACTIONS.include?(action)
       return if param.blank?
       return NOT_LINKED_NOTE if account.user.blank?
 
       proposal = ::Proposal.not_retired.find_by(id: param.to_i)
 
       return SUPPORT_GONE_NOTE if proposal.blank?
+
+      case action
+      when :support_withdraw then withdrawn_support_note(proposal)
+      when :support_toggle then toggled_support_note(proposal)
+      else registered_support_note(proposal)
+      end
+    end
+
+    def toggled_support_note(proposal)
       return withdrawn_support_note(proposal) if proposal.voted_up_by?(account.user)
 
       registered_support_note(proposal)
@@ -540,13 +551,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # actually asked, in their language. Nothing has been sent on any of these paths,
     # so unlike the two notes above there is nothing to tell it not to repeat.
     #
-    # The two "already" answers are races rather than mistakes — the vote read a
-    # moment ago moved on the projekt page or in another chat before the write
-    # landed. Both are the state the citizen wanted, so neither is reported as a
-    # failure.
+    # The two "already" answers are not mistakes. Usually the same pill was tapped
+    # twice while the reply to the first tap was still on its way; otherwise the
+    # vote moved on the projekt page or in another chat after the pill was sent.
+    # Both are the state the citizen wanted, so neither is reported as a failure —
+    # and the pill offered beside it is the one that goes the other way.
     def support_refusal_note(reason, proposal)
-      return ALREADY_SUPPORTED_NOTE if reason == :already_supported
-      return NOT_SUPPORTED_NOTE if reason == :not_supported
+      return already_supported_note(proposal) if reason == :already_supported
+      return not_supported_note(proposal) if reason == :not_supported
       return WRITE_FAILED_NOTE if reason == :not_registered || reason == :not_withdrawn
       return SUPPORT_GONE_NOTE if reason == :gone
       return NOT_LINKED_NOTE if reason == :not_linked
@@ -565,7 +577,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
                       "is registered, and repeat none of it. Your reply is the way on only — a " \
                       "short line on what they can do next, with its buttons. Do not invite " \
                       "them to support anything else, and do not say it is final or cannot be " \
-                      "taken back — the same button now takes it back.".freeze
+                      "taken back — its support button, offered again, takes it back.".freeze
 
     WITHDRAWN_NOTE = "The citizen tapped the support button on a contribution they already " \
                      "supported, so the support has been taken back. The contribution, the " \
@@ -573,13 +585,20 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
                      "and that message is the confirmation: do not say again that it is " \
                      "withdrawn, and repeat none of it. Your reply is the way on only — a short " \
                      "line on what they can do next, with its buttons. Do not ask why and do " \
-                     "not talk them back into it — the same button supports it again.".freeze
+                     "not talk them back into it — its support button, offered again, " \
+                     "supports it again.".freeze
 
-    ALREADY_SUPPORTED_NOTE = "They already support that contribution, and nothing changed. Say " \
-                             "so plainly rather than as a failure.".freeze
+    def already_supported_note(proposal)
+      "They already support that contribution, and nothing changed. Say so plainly rather " \
+        "than as a failure, and offer support_toggle-#{proposal.id} beside it — it now takes " \
+        "the support back."
+    end
 
-    NOT_SUPPORTED_NOTE = "They do not support that contribution, so there was nothing to take " \
-                         "back and nothing changed. Say so plainly rather than as a failure.".freeze
+    def not_supported_note(proposal)
+      "They do not support that contribution, so there was nothing to take back and nothing " \
+        "changed. Say so plainly rather than as a failure, and offer " \
+        "support_toggle-#{proposal.id} beside it — it now gives the support."
+    end
 
     WRITE_FAILED_NOTE = "The tap did not take: nothing was written and the count is unchanged. " \
                         "Tell the citizen it did not go through and that the button is still " \

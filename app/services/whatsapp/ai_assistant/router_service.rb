@@ -521,6 +521,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility,
       ::Ai::Tools::WhatsappAiAssistant::DescribeProjekt,
       ::Ai::Tools::WhatsappAiAssistant::ProjektConfiguration,
+      ::Ai::Tools::WhatsappAiAssistant::PortalDataProtection,
       ::Ai::Tools::WhatsappAiAssistant::ListProjektResults,
       ::Ai::Tools::WhatsappAiAssistant::ListMilestones,
       ::Ai::Tools::WhatsappAiAssistant::ListEvents,

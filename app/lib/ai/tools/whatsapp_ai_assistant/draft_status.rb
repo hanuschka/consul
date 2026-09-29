@@ -12,9 +12,9 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
               "they stand, which phase it belongs to, whether a category or sentiment is still " \
               "needed, whether a picture is attached, whether this phase collects a picture or a " \
               "map pin at all, whether the citizen has already been asked for a photo or said " \
-              "they have none or named the place in words, and which place is attached or " \
-              "waiting for their " \
-              "answer. Call it before asking them for anything about the draft " \
+              "they have none or named the place in words, which place is attached or " \
+              "waiting for their answer, and what the draft proposes beyond their own words. " \
+              "Call it before asking them for anything about the draft " \
               "— it is the only way to avoid asking for something they have already given — and " \
               "before publishing, to be sure nothing is outstanding. Sends nothing."
 
@@ -30,7 +30,8 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
       outstanding: outstanding_requirements,
       picture: picture_status,
       location: location_status,
-      citizens_own_words: conversation.last_idea_text
+      citizens_own_words: conversation.last_idea_text,
+      additions_beyond_idea: conversation.additions_beyond_idea.presence
     }.compact
   end
 

@@ -32,7 +32,8 @@ module Whatsapp::CompletionNotes
   # assistant knows where the citizen is standing.
   def ballot_finished(poll:)
     "The citizen has just answered the last question of the vote \"#{poll.name}\" and every " \
-      "answer of theirs is recorded. There is nothing left to ask them in it. #{CONTINUATION}"
+      "answer of theirs is recorded. There is nothing left to ask them in it. They can still " \
+      "change their answers on the ballot page until it closes. #{CONTINUATION}"
   end
 
   # The vote is named the same way and for the same reason, but this is not a completion
@@ -41,11 +42,16 @@ module Whatsapp::CompletionNotes
   # answers were recorded a moment ago or some time before. A note that only said "every
   # answer of theirs is recorded" would be read as the first and confirmed as a fresh
   # ballot, which is the reading this exists to prevent.
+  #
+  # It used to add that they could not answer it a second time, which the model passed
+  # on as "you cannot change your answers" — while the ballot page lets them change any
+  # of them until the phase ends. What the chat will not do is ask it again.
   def ballot_already_answered(poll:)
     "The citizen has already taken part in the vote \"#{poll.name}\" — they answered it earlier, " \
-      "not just now, and every answer of theirs from then still stands. There is nothing left to " \
-      "ask them in it and they cannot answer it a second time. Say that they have already voted " \
-      "and that their answers stand, and do not thank them for answers just given. #{CONTINUATION}"
+      "not just now, and every answer of theirs from then still stands. It is not asked again " \
+      "here. #{::Whatsapp::BallotAnswerRules.change_rule_for_poll(poll)} Say that they have " \
+      "already voted and that their answers stand, and do not thank them for answers just " \
+      "given. #{CONTINUATION}"
   end
 
   # Linking is the one completion that interrupted something else. What that something

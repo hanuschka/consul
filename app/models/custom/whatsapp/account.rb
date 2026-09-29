@@ -120,10 +120,12 @@ class Whatsapp::Account < ApplicationRecord
     self[NOTIFICATION_COLUMNS.fetch(type)]
   end
 
-  def toggle_notification!(type)
-    column = NOTIFICATION_COLUMNS.fetch(type)
+  def enable_notification!(type)
+    update!(NOTIFICATION_COLUMNS.fetch(type) => true)
+  end
 
-    update!(column => !self[column])
+  def disable_notification!(type)
+    update!(NOTIFICATION_COLUMNS.fetch(type) => false)
   end
 
   # Unlinking is self-service, so it clears everything that ties the number to a

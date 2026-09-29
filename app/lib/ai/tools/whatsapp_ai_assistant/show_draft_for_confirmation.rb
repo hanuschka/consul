@@ -32,7 +32,9 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
     string :question,
       description: "What you ask the citizen underneath their contribution — whether it should go " \
                    "in as it stands. A sentence or two, in their language, and not a restatement " \
-                   "of the contribution: they are reading it directly above."
+                   "of the contribution: they are reading it directly above. Where the draft " \
+                   "carries additions_beyond_idea, name them briefly as parts they did not " \
+                   "write and can have taken out; where it carries none, say nothing about it."
     array :buttons,
       of: :object,
       description: "Up to three buttons, each {\"action_id\": ..., \"label\": ...}. Offer " \

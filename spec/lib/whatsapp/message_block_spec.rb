@@ -12,7 +12,8 @@ describe Whatsapp::MessageBlock do
 
   describe ".labels" do
     it "asks for every key in one call, keyed as it was asked" do
-      expect(Whatsapp::AiAssistant::BotCopyService).to receive(:call).once.and_call_original
+      expect(Whatsapp::AiAssistant::BotCopyService)
+        .to receive(:call).once { |account:, lines:| lines }
 
       labels = Whatsapp::MessageBlock.labels(
         account: account, scope: "whatsapp.bot.preview", keys: %w[projekt phase]

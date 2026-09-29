@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   description "Opens WhatsApp's own location picker so the citizen can drop a pin. The pin it " \
               "produces is the only way to get an exact position, so this is the tool for a " \
               "phase that collects one — draft_status says whether this phase does. Always " \
@@ -12,7 +14,7 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
               "show the picker at all. That message is sent for you; do not write it, or the " \
               "note, yourself."
 
-  params do
+  parameters do
     string :body,
       description: "The sentence above the picker, in the citizen's language, saying the pin is " \
                    "optional."

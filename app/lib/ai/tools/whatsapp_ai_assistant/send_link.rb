@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # A URL button, which is the one thing about a link that plain text cannot do:
   # the citizen reads what they are about to open instead of a bare address. Falls
   # back to the address written out when WhatsApp will not take the button, because
@@ -11,7 +13,7 @@ class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant:
               "title with it. This sends the message itself — do not repeat the address in a " \
               "reply afterwards."
 
-  params do
+  parameters do
     string :body, description: "The sentence above the button, in the citizen's language."
     string :label,
       description: "What the button says, at most " \

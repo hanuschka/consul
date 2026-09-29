@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   description "Starts voting in the chat on a voting phase's ballot: it sends the citizen the " \
               "first question as buttons and carries them through the rest of the poll one " \
               "question at a time, recording each answer as it is given. Call it whenever a " \
@@ -19,7 +21,7 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
               "here, but until it closes they can change their answers on its page; the result " \
               "carries that rule and the link."
 
-  params do
+  parameters do
     integer :projekt_phase_id,
       description: "The voting phase whose ballot the citizen wants to answer"
   end

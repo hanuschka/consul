@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::RecordOpenPollAnswer < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # The citizen's words as the answer to the free-text ballot question they were
   # asked. Any message used to be taken as that answer, a question about the
   # ballot included; whether this one is the answer is now the model's reading.

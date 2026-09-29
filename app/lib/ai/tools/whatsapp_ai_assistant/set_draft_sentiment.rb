@@ -5,7 +5,7 @@ class Ai::Tools::WhatsappAiAssistant::SetDraftSentiment < Ai::Tools::WhatsappAiA
               "own words first; this only records the answer and sends nothing. A draft that was " \
               "waiting on this choice is saved by it."
 
-  params do
+  parameters do
     integer :option_id,
       description: "Id of the chosen sentiment, from the options this phase offers"
   end

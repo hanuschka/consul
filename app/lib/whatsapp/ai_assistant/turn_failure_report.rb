@@ -10,9 +10,9 @@ module Whatsapp::AiAssistant::TurnFailureReport
   # its own. What is worth watching is how often each reason happens, which is one
   # issue with a count.
   #
-  # The completed actions travel with every report, because a failure after the
-  # comment is on the page is not the same failure as one before anything happened,
-  # and nothing else in the event would say which it was.
+  # The tools that completed an action travel with every report, because a failure
+  # after the comment is on the page is not the same failure as one before anything
+  # happened, and nothing else in the event would say which it was.
   FINGERPRINT = "whatsapp-assistant-turn-failed".freeze
 
   module_function
@@ -43,7 +43,7 @@ module Whatsapp::AiAssistant::TurnFailureReport
   def extra_for(conversation, details)
     {
       whatsapp_conversation_id: conversation&.id,
-      completed_actions: conversation&.completed_actions&.map(&:kind)&.join(",").presence
+      completed_tools: conversation&.completed_tool_names&.join(",").presence
     }.merge(details).compact
   end
 end

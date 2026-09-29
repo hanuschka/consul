@@ -90,7 +90,7 @@ class Ai::Tools::WhatsappAiAssistant::ProjektConfiguration <
               "portal_data_protection, not by this. Returns facts for you to answer in your " \
               "own words — it sends nothing to the citizen itself."
 
-  params do
+  parameters do
     string :projekt_name, description: "The project name as the citizen wrote it"
   end
 

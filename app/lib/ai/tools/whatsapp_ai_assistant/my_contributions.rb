@@ -15,7 +15,7 @@ class Ai::Tools::WhatsappAiAssistant::MyContributions < Ai::Tools::WhatsappAiAss
               "The sentence above the list names how many contributions it shows, which the " \
               "row that loads more is not one of. #{MORE_ROWS_HINT}"
 
-  params do
+  parameters do
     optional :from, description: FROM_DESCRIPTION do
       integer
     end

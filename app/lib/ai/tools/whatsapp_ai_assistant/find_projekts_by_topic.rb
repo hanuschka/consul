@@ -22,7 +22,7 @@ class Ai::Tools::WhatsappAiAssistant::FindProjektsByTopic < Ai::Tools::WhatsappA
   # times over, short enough to tell two projekts on one subject apart.
   SUBTITLE_LENGTH = 160
 
-  params do
+  parameters do
     string :topic, description: "The subject the citizen wants to talk about, in their own words"
   end
 

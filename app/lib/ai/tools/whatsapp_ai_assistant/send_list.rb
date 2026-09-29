@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # The one selectable list, replacing the several that each hardcoded their own
   # rows — the projekt browser, the contribution list, the notification settings,
   # the taxonomy picker. What goes in it is the model's; what stays bounded is the
@@ -32,7 +34,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
               "in the body above if one is needed. This sends the message itself: do not write " \
               "one as well."
 
-  params do
+  parameters do
     string :body,
       description: "The sentence above the list, in the citizen's language, laid out as the " \
                    "style rules require."

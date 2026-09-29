@@ -25,7 +25,7 @@ module Whatsapp::AiAssistant::ToolCallDigest
   # model, and nothing promises it holds no citizen words. The error's wording is
   # dropped for the same reason — that there was one is what the line is for.
   def result(tool_result)
-    if tool_result.is_a?(::RubyLLM::Tool::Halt)
+    if tool_result.is_a?(::ToolHalt)
       return { "#{RESULT_PREFIX}.halted" => true }
     end
 

@@ -74,16 +74,23 @@ module Whatsapp::CompletionNotes
   # act a second time or be told there is nothing left to act on — "no comment has been
   # written down" about a comment the citizen can see on the page.
   #
+  # What went through is not described here but handed over as the tools answered it —
+  # the same results, hints included, that the model read in the turn that failed — so
+  # there is no second account of each action to keep in step with the tools.
+  #
   # Unlike every note above, the citizen has already been told what went through, by
   # the tool's own message or by the fallback line itself, so the confirmation is the
-  # one thing this reply must not repeat. Joined with semicolons rather than
-  # to_sentence, whose connector would come out of the current locale.
-  def retry_after_completed(completed_actions)
-    facts = completed_actions.map(&:fact).uniq.join("; ")
+  # one thing this reply must not repeat.
+  def retry_after_completed(completed_tool_results)
+    answers = completed_tool_results
+      .map { |entry| "#{entry["tool"]} answered #{JSON.generate(entry["result"])}" }
+      .uniq
+      .join("; ")
 
-    "The citizen tapped \"try again\" after your reply to what they last did could not be " \
-      "sent. Before that reply failed, #{facts}, and they have already been told so — do not " \
-      "say it again and do not do any of it a second time. Carry the conversation on from " \
-      "there: #{ONWARD}"
+    "The citizen tapped \"try again\" after your last reply could not be sent. That turn had " \
+      "already done something before it failed, and each tool's answer below is what you were " \
+      "told at the time: #{answers}. They have already been sent whatever those answers say " \
+      "was sent to them, and been told that it worked — do not say it again and do not call " \
+      "any of those tools a second time. Carry the conversation on from there: #{ONWARD}"
   end
 end

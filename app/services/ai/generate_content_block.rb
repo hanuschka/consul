@@ -68,7 +68,7 @@ class Ai::GenerateContentBlock < ApplicationService
 
     @content_block&.mark_ai_generation_step!("finishing")
 
-    body_html = response.content&.dig("html")
+    body_html = ::Ai::StructuredOutput.content_of(response)&.dig("html")
 
     if body_html.blank?
       ServiceResult.failure(error: "KI konnte keinen Inhalt erstellen")

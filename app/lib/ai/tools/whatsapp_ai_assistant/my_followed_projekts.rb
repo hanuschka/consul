@@ -8,7 +8,7 @@ class Ai::Tools::WhatsappAiAssistant::MyFollowedProjekts < Ai::Tools::WhatsappAi
 
   MORE_SCOPE = "followed_projekts".freeze
 
-  params do
+  parameters do
     optional :from, description: FROM_DESCRIPTION do
       integer
     end

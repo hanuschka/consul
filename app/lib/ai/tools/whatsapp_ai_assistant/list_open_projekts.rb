@@ -17,7 +17,7 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenProjekts < Ai::Tools::WhatsappAiAs
   # only needs enough of to tell the projekts apart in one line each.
   SUBTITLE_LENGTH = 160
 
-  params do
+  parameters do
     optional :from, description: FROM_DESCRIPTION do
       integer
     end

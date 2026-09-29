@@ -1,5 +1,7 @@
 class Ai::Tools::WhatsappAiAssistant::RequestTermsConsent <
   Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # The terms and the privacy policy, put in front of the citizen before they
   # accept them, and the only thing that lets record_terms_consent run. The
   # statement and both addresses are composed from fixed copy and the accept
@@ -17,7 +19,7 @@ class Ai::Tools::WhatsappAiAssistant::RequestTermsConsent <
               "This is the only thing that arms record_terms_consent, which is refused until it " \
               "has been called. This sends the messages itself."
 
-  params do
+  parameters do
     string :question,
       description: "What you ask the citizen underneath the statement — whether they accept. A " \
                    "sentence or two, in their language, and not a restatement of the statement: " \

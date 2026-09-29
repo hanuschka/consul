@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # One projekt as a card: the title as the portal writes it, the picture, the
   # link, and the summary the model wrote. The picture and the title come from the
   # record because they are facts about it; the summary is a sentence, so it is the
@@ -35,7 +37,7 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
               "one that opens what has already been contributed — so never offer taking part, a " \
               "phase to choose from or the existing contributions yourself alongside it."
 
-  params do
+  parameters do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
     string :summary,
       description: "What the projekt is about, then what can be done in it now and until when. " \

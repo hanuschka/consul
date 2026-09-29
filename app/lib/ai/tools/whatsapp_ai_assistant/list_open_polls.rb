@@ -35,7 +35,7 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
   PROJEKT_COVERAGE = "projekt".freeze
   PORTAL_COVERAGE = "portal".freeze
 
-  params do
+  parameters do
     optional :projekt_name,
       description: "The project name as the citizen wrote it, or null for the whole portal" do
       string

@@ -78,10 +78,8 @@ describe Ai::Tools::WhatsappAiAssistant::PostComment do
       allow(conversation).to receive(:confirmation_offered?).and_return(true)
       allow(conversation).to receive(:comment_preview_digest).and_return("current-digest")
       allow(conversation).to receive(:clear_pending_comment!)
-      allow(conversation).to receive(:note_action_completed!)
 
       allow(Proposal).to receive(:find_by).and_return(double(:proposal))
-      allow(comment).to receive(:commentable).and_return(nil)
       allow(Whatsapp::Contributions::CreateCommentService).to receive(:call).and_return(comment)
       allow(Whatsapp::PublishedResourceUrl).to receive(:call).and_return("https://example.org/p/1#comment_9")
       allow(Whatsapp::CommentPreview).to receive(:posted_confirmation).and_return("posted")

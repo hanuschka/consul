@@ -8,7 +8,7 @@ class Ai::Tools::WhatsappAiAssistant::ListProjektResults < Ai::Tools::WhatsappAi
 
   MORE_SCOPE = "results".freeze
 
-  params do
+  parameters do
     optional :projekt_name,
       description: "The project name as the citizen wrote it, or null for the whole portal" do
       string

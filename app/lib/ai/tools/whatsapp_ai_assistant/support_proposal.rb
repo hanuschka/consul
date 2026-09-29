@@ -15,7 +15,7 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
               "been retired refuses rather than acting. On success the proposal, its new count " \
               "and its address are sent to them for you — do not write them out again."
 
-  params do
+  parameters do
     integer :contribution_id,
       description: "Id of the proposal, exactly as find_contribution returned it"
   end
@@ -43,11 +43,8 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
 
       send_recap(proposal: proposal, supports: supports)
 
-      conversation.note_action_completed!(
-        ::Whatsapp::CompletedAction.support_registered(proposal: proposal)
-      )
-
       {
+        completed: true,
         supported: true,
         supports: supports,
         hint: "The proposal, its new count and its address have already been sent to them, and " \

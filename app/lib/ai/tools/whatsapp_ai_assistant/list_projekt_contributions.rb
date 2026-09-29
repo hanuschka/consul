@@ -16,7 +16,7 @@ class Ai::Tools::WhatsappAiAssistant::ListProjektContributions <
               "same id twice, and a sentence naming how many rows it holds; a single one they " \
               "have already picked is send_link."
 
-  params do
+  parameters do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
   end
 

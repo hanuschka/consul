@@ -54,6 +54,6 @@ class AiUsageRecords::RecordChatUsage < ApplicationService
     end
 
     def billed_model
-      @message.model_id.presence || @requested_model.to_s
+      @message.model.presence || @requested_model.to_s
     end
 end

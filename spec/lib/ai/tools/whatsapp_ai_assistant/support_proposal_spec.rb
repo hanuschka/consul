@@ -18,7 +18,6 @@ describe Ai::Tools::WhatsappAiAssistant::SupportProposal do
     let(:proposal) { double(:proposal, title: "Mehr Bänke") }
 
     before do
-      allow(conversation).to receive(:note_action_completed!)
       allow(Proposal).to receive(:find_by).with(id: 482).and_return(proposal)
       allow(Whatsapp::Contributions::RegisterSupportService).to receive(:call).and_return(43)
       allow(Whatsapp::SupportRecap)

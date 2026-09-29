@@ -13,7 +13,7 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPhases < Ai::Tools::WhatsappAiAssi
 
   MORE_SCOPE = "eligible_phases".freeze
 
-  params do
+  parameters do
     optional :from, description: FROM_DESCRIPTION do
       integer
     end

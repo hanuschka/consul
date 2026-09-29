@@ -73,21 +73,11 @@ en:
       assistant_unavailable_retryable: >-
         I can't answer you right now — hopefully only for a moment. Tap "Try again" and I'll
         pick up right where we were.
-      # The same line after a turn that completed something before it failed: one
-      # sentence per completed action saying it went through, then retry_hint. Sent
+      # The same line after a turn that completed something before it failed. Sent
       # untranslated, because it is sent precisely when the assistant did not answer.
-      assistant_unavailable_after_action:
-        comment_posted: Your comment has been saved.
-        contribution_published: Your contribution has been submitted.
-        support_registered: Your support has been registered.
-        support_withdrawn: Your support has been withdrawn.
-        projekt_followed: You are now following "%{projekt}".
-        projekt_unfollowed: You are no longer following "%{projekt}".
-        notification_switched: Your notification setting has been saved.
-        account_unlinked: Your account is no longer linked to this number.
-        retry_hint: >-
-          Only my reply to it isn't getting through right now. Tap "Try again" and I'll pick up
-          from there.
+      assistant_unavailable_after_action: >-
+        That worked — only my reply to it isn't getting through right now. Tap "Try again" and
+        I'll pick up from there.
       cancelled: OK, cancelled. Just message me again whenever you'd like.
       opted_in: You will receive messages from us again.
       compliance:

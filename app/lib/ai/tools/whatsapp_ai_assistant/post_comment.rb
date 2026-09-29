@@ -90,13 +90,9 @@ class Ai::Tools::WhatsappAiAssistant::PostComment < Ai::Tools::WhatsappAiAssista
       send_confirmation(url: url)
 
       conversation.clear_pending_comment!
-      conversation.note_action_completed!(
-        ::Whatsapp::CompletedAction.comment_posted(
-          proposal: comment.commentable, visible: !comment.hidden?
-        )
-      )
 
       {
+        completed: true,
         posted: true,
         visible: !comment.hidden?,
         url: url,

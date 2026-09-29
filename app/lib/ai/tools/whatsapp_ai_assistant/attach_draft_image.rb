@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::AttachDraftImage < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # The photo the citizen sent, attached to their draft. It takes no arguments and
   # reads the picture off the conversation instead: an image arrives as a WhatsApp
   # media id, which the protocol layer parks the moment it comes in, and a media id

@@ -23,11 +23,20 @@ module OpenaiApi::Usage
     ::RubyLLM::Message.new(
       role: :assistant,
       content: "",
-      model_id: response.model,
-      input_tokens: usage&.input_tokens,
+      model: response.model,
+      input_tokens: uncached_input_tokens(usage),
       output_tokens: usage&.output_tokens,
-      cached_tokens: usage&.cached_tokens,
-      reasoning_tokens: usage&.reasoning_tokens
+      cache_read_tokens: usage&.cached_tokens,
+      thinking_tokens: usage&.reasoning_tokens
     )
+  end
+
+  # ruby_llm counts input and cache reads apart and prices each once, the way its
+  # own Responses parser reports them. OpenAI's input_tokens include the cached
+  # ones, which passed through unchanged would be priced twice.
+  def self.uncached_input_tokens(usage)
+    return if usage&.input_tokens.nil?
+
+    [usage.input_tokens.to_i - usage.cached_tokens.to_i, 0].max
   end
 end

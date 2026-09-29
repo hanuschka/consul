@@ -158,15 +158,15 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
     def ruby_llm_turn
       chat = build_chat
-      response = chat.ask(@inbound_text)
+      reply = converse(chat, @inbound_text)
 
-      if !response.is_a?(::RubyLLM::Tool::Halt) && empty_after_tools?(response.content)
-        response = reask_after_empty_reply { chat.ask(EMPTY_REPLY_RETRY) }
+      if !reply.is_a?(::ToolHalt) && empty_after_tools?(reply)
+        reply = reask_after_empty_reply { converse(chat, EMPTY_REPLY_RETRY) }
       end
 
-      return Turn.new(halt: response, chat: chat) if response.is_a?(::RubyLLM::Tool::Halt)
+      return Turn.new(halt: reply, chat: chat) if reply.is_a?(::ToolHalt)
 
-      Turn.new(text: response.content.to_s, chat: chat)
+      Turn.new(text: reply, chat: chat)
     end
 
     def build_chat
@@ -175,9 +175,62 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       )
 
       chat.with_instructions(instructions)
-      chat.on_tool_call { |tool_call| track_tool_call(tool_call) }
+      chat.before_tool_call { |tool_call| track_tool_call(tool_call) }
+      chat.after_tool_result { |tool_result| note_tool_halt(tool_result) }
 
       state.replay_into(chat)
+    end
+
+    # Asks, and runs what the model calls, until it answers in words or a tool has
+    # answered the citizen itself. Returns the ToolHalt in the second case and the
+    # reply's text in the first.
+    #
+    # ruby_llm goes back to the model after every tool result, which for a tool that
+    # has just sent the citizen a message means a second message written on top of it.
+    # So the tools that can answer declare `requires_approval`: ruby_llm runs every
+    # other call of a response and pauses on those, and they are approved and run
+    # here one at a time. A halt ends the turn; any other result — a refusal the model
+    # has to read — lets the loop carry on from it.
+    def converse(chat, message)
+      chat.ask(message)
+
+      while chat.awaiting_approval?
+        tool_halt = run_approved_tool(chat)
+
+        return tool_halt if tool_halt.present?
+
+        chat.complete
+      end
+
+      chat.messages.last.content.to_s
+    end
+
+    # The rest of a batch after a halt is answered rather than run, the way
+    # OpenaiApi::ToolLoop answers it: the citizen has been written to already, and
+    # the provider rejects a history with a tool call nobody answered.
+    def run_approved_tool(chat)
+      @tool_halt = nil
+
+      chat.approve(chat.pending_approvals.first)
+      chat.run_tools
+
+      return if @tool_halt.blank?
+
+      chat.pending_approvals.each do |skipped_call|
+        chat.add_message(
+          role: :tool,
+          content: ::OpenaiApi::ToolLoop::SKIPPED_OUTPUT,
+          tool_call_id: skipped_call.id
+        )
+      end
+
+      @tool_halt
+    end
+
+    def note_tool_halt(tool_result)
+      return if !tool_result.is_a?(::ToolHalt)
+
+      @tool_halt = tool_result
     end
 
     # The re-ask continues the chain from the empty response, so what is stored once the
@@ -384,19 +437,30 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
       keep_waiting_visible
 
-      response = turn.chat.ask(retry_prompt)
+      messages_before_retry = turn.chat.messages.length
+      reply = converse(turn.chat, retry_prompt)
 
-      if response.is_a?(::RubyLLM::Tool::Halt)
-        turn.halt = response
+      if reply.is_a?(::ToolHalt)
+        turn.halt = reply
 
         return :sent
       end
 
-      response.content.to_s.strip
+      reply.strip
     rescue StandardError => e
       report(e)
+      drop_failed_retry(turn.chat, messages_before_retry)
 
       nil
+    end
+
+    # The first answer still goes out after a retry that raised, and the turn is stored
+    # with it — so the retry's own messages go, or a tool call it left unanswered would be
+    # stored too, and every later turn of this conversation would be refused over it.
+    def drop_failed_retry(chat, messages_before_retry)
+      return if messages_before_retry.blank?
+
+      chat.messages = chat.messages.first(messages_before_retry)
     end
 
     # The same one extra request, asked for the preview rather than for buttons when

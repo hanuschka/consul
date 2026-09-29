@@ -40,7 +40,7 @@ class Ai::CorrectiveJsonRequest
           .with_instructions(system_prompt)
           .ask(message)
 
-      response.content
+      ::Ai::StructuredOutput.content_of(response)
     rescue StandardError => e
       @last_error = e
       Rails.logger.error("[#{source}] AI call error: #{e.class}: #{e.message}")

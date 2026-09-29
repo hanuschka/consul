@@ -55,16 +55,26 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
   # OpenaiApi::ToolLoop alike — so this is the one place that sees what a call
   # was made with and what it answered, which RouterService's tool_called line,
   # written before the tool runs, never could.
-  def call(args)
+  #
+  # It is also where a completed action is noticed. A tool that has done something
+  # the citizen would want to know went through says so in the result the model
+  # reads — `completed: true` — and that same result is kept for the turn, so a turn
+  # that then fails to write its reply can tell the citizen it worked and hand the
+  # retry what the tool answered rather than the request that led to it.
+  def call(tool_call: nil, **arguments)
     tool_result = super
 
     ::Whatsapp::AiAssistant::DecisionLog.record(
       event: :tool_result,
       conversation: conversation,
       tool: name,
-      **::Whatsapp::AiAssistant::ToolCallDigest.arguments(args),
+      **::Whatsapp::AiAssistant::ToolCallDigest.arguments(arguments),
       **::Whatsapp::AiAssistant::ToolCallDigest.result(tool_result)
     )
+
+    if completed_action?(tool_result)
+      conversation.note_completed_tool_result!(tool: name, result: tool_result)
+    end
 
     tool_result
   end
@@ -80,6 +90,18 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
   private
 
     attr_reader :conversation, :citizen_words
+
+    def completed_action?(tool_result)
+      tool_result.is_a?(Hash) && tool_result[:completed] == true
+    end
+
+    # For the tools that have answered the citizen themselves. Each of them declares
+    # `requires_approval`, which is what makes the router run it on its own and look
+    # at what came back before the model is asked anything else (see
+    # Whatsapp::AiAssistant::RouterService#run_approved_tools).
+    def halt(content)
+      ::ToolHalt.new(content)
+    end
 
     def account
       conversation.whatsapp_account

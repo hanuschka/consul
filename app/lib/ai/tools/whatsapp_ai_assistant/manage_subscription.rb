@@ -16,7 +16,7 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
   # "stop", "remove" — fell through to subscribing: the opposite of what the citizen
   # asked for, and not something they can tell from the confirmation they get back.
   # An enum means the provider cannot emit a third value at all.
-  params(
+  parameters(
     type: "object",
     properties: {
       projekt_name: {
@@ -79,24 +79,12 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
         ::Whatsapp::Subscriptions.unfollow(user: user, projekt: projekt)
       end
 
-      conversation.note_action_completed!(completed_subscription(title, direction))
-
       {
+        completed: true,
         projekt: title,
         following: direction == SUBSCRIBE,
         hint: "Say what changed in one line, and say how they can undo it."
       }
-    end
-
-    # Following sends nothing of its own — the reply is the whole confirmation — so a
-    # turn that fails after it leaves the fallback line as the only thing that can say
-    # it happened.
-    def completed_subscription(title, direction)
-      if direction == SUBSCRIBE
-        return ::Whatsapp::CompletedAction.projekt_followed(projekt_title: title)
-      end
-
-      ::Whatsapp::CompletedAction.projekt_unfollowed(projekt_title: title)
     end
 
     # The enum should make this unreachable; it stands as the floor for a provider

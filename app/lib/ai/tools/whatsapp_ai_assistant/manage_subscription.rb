@@ -27,9 +27,10 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
         type: "string",
         enum: DIRECTIONS,
         description: "Whether to start or stop following the projekt"
-      }
+      },
+      **COMPLETION_LINE_PARAMETER
     },
-    required: %w[projekt_name action],
+    required: %w[projekt_name action completion_line],
     additionalProperties: false
   )
 

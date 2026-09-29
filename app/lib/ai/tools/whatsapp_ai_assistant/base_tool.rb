@@ -36,6 +36,22 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     comment: "show_comment_for_confirmation"
   }.freeze
 
+  # For the tools that change something and send nothing of their own, where the
+  # model's reply is the whole confirmation. Written by the model in the call
+  # itself, so it exists before that reply does and is still there when the reply
+  # cannot be sent — the one moment it is shown. Merged into such a tool's
+  # properties and required, and taken off again in #call before #execute sees it.
+  COMPLETION_LINE_PARAMETER = {
+    completion_line: {
+      type: "string",
+      description: "One short sentence to the citizen, in the language and form of address of " \
+                   "your replies, confirming what this call changes once it has gone through — " \
+                   "for example that they now follow the projekt, named as they know it. It is " \
+                   "shown to them only if your reply after this call cannot be sent, so write a " \
+                   "plain confirmation: no question, no next step."
+    }
+  }.freeze
+
   # `citizen_words` is the message the turn answers when the citizen wrote it —
   # nil for a tap, a scan, a photo or a completion note. Passed apart from the
   # note the model reads, for the tool that stores what they wrote as it arrived.
@@ -60,9 +76,12 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
   # the citizen would want to know went through says so in the result the model
   # reads — `completed: true` — and that same result is kept for the turn, so a turn
   # that then fails to write its reply can tell the citizen it worked and hand the
-  # retry what the tool answered rather than the request that led to it.
+  # retry what the tool answered rather than the request that led to it. Where the
+  # model wrote a completion_line with the call, that line is kept beside the result
+  # as the confirmation the failed reply would have been.
   def call(tool_call: nil, **arguments)
-    tool_result = super
+    tool_arguments = arguments.reject { |key, _| completion_line_argument?(key) }
+    tool_result = super(tool_call: tool_call, **tool_arguments)
 
     ::Whatsapp::AiAssistant::DecisionLog.record(
       event: :tool_result,
@@ -73,7 +92,9 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     )
 
     if completed_action?(tool_result)
-      conversation.note_completed_tool_result!(tool: name, result: tool_result)
+      conversation.note_completed_tool_result!(
+        tool: name, result: tool_result, completion_line: completion_line_in(arguments)
+      )
     end
 
     tool_result
@@ -93,6 +114,23 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
 
     def completed_action?(tool_result)
       tool_result.is_a?(Hash) && tool_result[:completed] == true
+    end
+
+    # Matched by name whatever the key type: RubyLLM passes symbols, and
+    # OpenaiApi::ToolLoop splats the parsed JSON with its string keys.
+    def completion_line_argument?(key)
+      COMPLETION_LINE_PARAMETER.key?(key.to_sym)
+    end
+
+    # Ended with a full stop where the model left it off, because the fallback line
+    # carries on with a sentence of its own right after it.
+    def completion_line_in(arguments)
+      line = arguments.find { |key, _| completion_line_argument?(key) }&.last.to_s.squish
+
+      return if line.blank?
+      return line if line.end_with?(".", "!", "…")
+
+      "#{line}."
     end
 
     # For the tools that have answered the citizen themselves. Each of them declares
@@ -617,11 +655,18 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     # this turn, since a completion reached inside one is left to it
     # (Whatsapp::AiAssistant::ContinueConversationService) — and anything else
     # where the ballot's next message has already gone out.
+    #
+    # The last answer is a completed action like any other: the vote is in and only
+    # the model's reply says so, so a turn that then fails must say it went through
+    # and replay this answer rather than the one that is no longer owed.
     def ballot_answer_outcome(outcome, poll:)
       return ballot_answer_refused_error if !outcome
 
       if outcome == ::Whatsapp::Polls::AdvanceBallotService::COMPLETED
-        return { status: ::Whatsapp::CompletionNotes.ballot_finished(poll: poll) }
+        return {
+          completed: true,
+          status: ::Whatsapp::CompletionNotes.ballot_finished(poll: poll)
+        }
       end
 
       ::Current.whatsapp_ballot_message_sent_in_turn = true

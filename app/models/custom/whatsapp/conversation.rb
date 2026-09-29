@@ -909,9 +909,25 @@ class Whatsapp::Conversation < ApplicationRecord
   # Inbound::ProcessMessageService when the turn then fails, because a reply that
   # could not be written must not be answered as though nothing had happened — nor
   # retried as though it had not.
-  def note_completed_tool_result!(tool:, result:)
-    @completed_tool_results =
-      completed_tool_results + [{ "tool" => tool.to_s, "result" => result.as_json }]
+  #
+  # The completion line the model wrote with the call sits beside the result rather
+  # than in it: it is for the citizen's fallback line, and the retry hands the model
+  # only what the tool answered.
+  def note_completed_tool_result!(tool:, result:, completion_line: nil)
+    entry = {
+      "tool" => tool.to_s,
+      "result" => result.as_json,
+      "completion_line" => completion_line
+    }.compact
+
+    @completed_tool_results = completed_tool_results + [entry]
+  end
+
+  # A retry of a turn that had completed something starts out holding those results,
+  # so what reads this turn's completed actions — its fallback line, its failure
+  # report, its log — counts them too when the retry fails as well.
+  def carry_completed_tool_results!(entries)
+    @completed_tool_results = completed_tool_results + Array(entries)
   end
 
   def completed_tool_results

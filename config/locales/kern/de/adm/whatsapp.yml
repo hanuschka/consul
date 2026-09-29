@@ -269,6 +269,13 @@ de:
           sofort.
         settings_mirrored_value_empty: Keine Vorlage aktiv
         settings_templates_link: Vorlagen verwalten
+        administration_contact_title: Kontakt der Verwaltung
+        administration_contact_intro: >-
+          Hinterlegt Telefonnummer, E-Mail-Adresse und einen Link zum Bürgerservice der Verwaltung.
+          Der WhatsApp-Bot nennt diese Angaben, wenn Bürgerinnen und Bürger nach einer
+          Ansprechperson fragen oder ein Anliegen haben, das nicht zur Beteiligung gehört. Tragen Sie
+          hier ein, wo die Verwaltung für allgemeine Anfragen erreichbar ist, damit niemand ohne
+          Ansprechpartner bleibt.
         auto_broadcast_title: Automatische Projekt-Benachrichtigung
         auto_broadcast_intro: >-
           Ist dies aktiv, versendet die Plattform die WhatsApp-Benachrichtigung von selbst, sobald

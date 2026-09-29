@@ -39,6 +39,10 @@ module Whatsapp::ProjektCardActions
   # the word underneath while leaving the two rows just as alike as before.
   RowText = Struct.new(:title, :note, :named, keyword_init: true)
 
+  # What the parts of the line under a row's title are joined with — the name,
+  # the note and the closing date — counted into the room that line has.
+  NOTE_SEPARATOR = " · ".freeze
+
   module_function
 
   # The card's entries, most useful first: every open phase's own action, then the
@@ -59,35 +63,102 @@ module Whatsapp::ProjektCardActions
   # already in it. Now a row is kept for it whenever there is one to show, and the
   # phases share what is left. A cut that still costs a running phase is said out loud
   # by #log_phases_cut, where it used to happen with nothing anywhere naming it.
-  # `user` is who the card is being sent to, and only the wording of a button depends on
-  # it: a phase they have already taken part in keeps its row and its place, because the
-  # row is how they reach what they did there and dropping it would leave the card
-  # quietly shorter for the people who have used it most. Left out, every label is the
-  # one everybody used to get — which is what a caller with nobody to send the card to
-  # should show.
+  #
+  # What the cut costs is a vote the citizen has already answered, before
+  # anything they can still do: the phases are ordered by #still_to_do_first
+  # before it. The cut used to fall on the last phases in page order whatever
+  # they were, and a projekt running nine votes lost the one its citizen had
+  # not answered yet while keeping eight they could only look at. A cut that
+  # costs a vote at all gives up one more phase row for #more_votes_entry, the
+  # row that opens every vote.
+  #
+  # `user` is who the card is being sent to, and the wording of a button and
+  # the order of the rows depend on it: a phase they have already taken part
+  # in keeps its row where there is room for it, because the row is how they
+  # reach what they did there and dropping it would leave the card quietly
+  # shorter for the people who have used it most. Left out, every label and
+  # the order are the ones everybody used to get — which is what a caller with
+  # nobody to send the card to should show.
   def call(projekt, user: nil)
     phases = actionable_phases(projekt)
     facts = ::Whatsapp::ProjektCard.phase_facts(phases)
-    contributions = contributions_entry(phases, facts)
-    kept = phases.first(phase_row_budget(contributions))
     voted_ids = ::Whatsapp::BallotParticipation.completed_phase_ids(
-      projekt_phases: markable(kept), user: user
+      projekt_phases: markable(phases), user: user
     )
+    ordered = still_to_do_first(phases, voted_ids)
+    contributions = contributions_entry(ordered, facts)
+    kept = ordered.first(phase_row_budget(ordered, contributions))
     texts = row_texts(kept, facts, voted_ids)
     entries =
       (kept.map { |phase| action_entry(phase, facts[phase.id], texts[phase.id]) } +
-        [contributions]).compact
+        [contributions, more_votes_entry(ordered, kept)]).compact
 
-    log_phases_cut(projekt, phases, kept)
+    log_phases_cut(projekt, ordered, kept)
     log_entries_reading_alike(projekt, entries)
 
     entries
   end
 
-  # How many phase rows the card has room for once the contributions row, when there
-  # is one, has taken its place.
-  def phase_row_budget(contributions)
-    ::Whatsapp::MAX_OFFERED_LIST_ROWS - [contributions].compact.size
+  # Whether these entries end on the row that opens every vote, which the card's
+  # tool has to tell the model about: the tap on it arrives as a scope name and
+  # nothing else, so which projekt's votes it means is the model's to know.
+  def more_votes?(entries)
+    entries.any? { |entry| entry[:id] == more_votes_id }
+  end
+
+  # The phases the citizen still has something to do in ahead of the votes they
+  # have already answered, each half in the order it came in, so that the cut
+  # below costs what they are done with before what they are not.
+  def still_to_do_first(phases, voted_ids)
+    answered, to_do = phases.partition do |projekt_phase|
+      voted_ids.include?(projekt_phase.id)
+    end
+
+    to_do + answered
+  end
+
+  # How many phase rows the card has room for once the contributions row, when
+  # there is one, has taken its place — and one fewer when the phases do not all
+  # fit and a vote is among those left over, whose room goes to the row that
+  # opens every vote. Where only phases that are not votes are left over, there
+  # is no such row: the list of votes would hold none of them.
+  def phase_row_budget(phases, contributions)
+    room = ::Whatsapp::MAX_OFFERED_LIST_ROWS - [contributions].compact.size
+
+    return room if phases.size <= room
+
+    if any_vote?(phases.drop(room - 1))
+      room - 1
+    else
+      room
+    end
+  end
+
+  # The row the votes the card has no room for are reached through. It opens
+  # ListOpenPolls' own list of the projekt's votes rather than a second page of
+  # this card: that list already pages, marks what the citizen has answered and
+  # holds every vote, those above this row included, so nothing needs to know
+  # where the card stopped.
+  def more_votes_entry(phases, kept)
+    left_over = phases.drop(kept.size)
+
+    return if !any_vote?(left_over)
+
+    {
+      id: more_votes_id,
+      title: ::Whatsapp.copy("whatsapp.bot.buttons.show_more"),
+      description: ::Whatsapp.copy("whatsapp.bot.buttons.show_more_votes")
+    }
+  end
+
+  def more_votes_id
+    ::Whatsapp::ListWindow.more_action_id(
+      ::Ai::Tools::WhatsappAiAssistant::ListOpenPolls::MORE_SCOPE
+    )
+  end
+
+  def any_vote?(phases)
+    phases.any? { |projekt_phase| projekt_phase.is_a?(::ProjektPhase::VotingPhase) }
   end
 
   # Whether these entries have to arrive behind the list picker rather than as reply
@@ -105,7 +176,7 @@ module Whatsapp::ProjektCardActions
   end
 
   def actionable_phases(projekt)
-    ::Whatsapp::ProjektPhasesQuery.new(projekt: projekt).call.select do |projekt_phase|
+    ::Whatsapp::ProjektPhasesQuery.new(projekt: projekt).uncapped.select do |projekt_phase|
       actionable_phase_names.include?(projekt_phase.name.to_s) && projekt_phase.current?
     end
   end
@@ -160,7 +231,7 @@ module Whatsapp::ProjektCardActions
 
     [note, ::Whatsapp::DatePhrase.absolute(phase_facts.ends_on)]
       .compact_blank
-      .join(" · ")
+      .join(NOTE_SEPARATOR)
       .presence
   end
 
@@ -221,14 +292,126 @@ module Whatsapp::ProjektCardActions
       written_row(projekt_phase, facts[projekt_phase.id], voted_ids)
     end
     length = title_length(written.values.count { |row| row.title.present? })
-
-    told_apart(written, facts).transform_values do |row|
+    rows = told_apart(written, facts)
+    cut_rows = rows.transform_values do |row|
       RowText.new(
         title: ::Whatsapp::AssistantActions.truncated(row.title, length: length),
         note: row.note,
         named: row.named
       )
     end
+
+    kept_apart(rows, cut_rows, facts, length)
+  end
+
+  # Titles the cut made alike again, told apart after all. #told_apart compares
+  # the words in full, so two ballots named "WhatsApp-Test: Grundfragen …" that
+  # part company past the twenty-fourth character pass it as different and come
+  # out of the cut as the same row twice — over the same line underneath, when
+  # both close on the same day. Such a row has its name cut where it parts from
+  # the others rather than at its end, and the line underneath opens with the
+  # name as far as it fits there.
+  #
+  # Only named rows: the name is the one thing on a row that can differ, and an
+  # action label repeated is #told_apart's to settle. And only against names
+  # that do differ — two ballots a portal named the same stay as they are,
+  # which #log_entries_reading_alike is there to say.
+  def kept_apart(rows, cut_rows, facts, length)
+    names = rows.to_h { |phase_id, row| [phase_id, row_name(row, facts[phase_id])] }
+    alike =
+      cut_rows
+        .keys
+        .select { |phase_id| names[phase_id].present? }
+        .group_by { |phase_id| cut_rows[phase_id].title }
+        .values
+        .select { |phase_ids| phase_ids.size > 1 }
+
+    alike.each_with_object(cut_rows.dup) do |phase_ids, kept|
+      phase_ids.each do |phase_id|
+        neighbours = phase_ids.map { |other_id| names[other_id] } - [names[phase_id]]
+
+        next if neighbours.empty?
+
+        kept[phase_id] = apart_row(
+          rows[phase_id], names[phase_id], neighbours, facts[phase_id], length
+        )
+      end
+    end
+  end
+
+  # The name a row's title carries, where it carries one at all.
+  def row_name(row, phase_facts)
+    return if !row.named
+
+    phase_facts&.name.to_s.squish.presence
+  end
+
+  # One row of a set that read alike once cut: the name in its title cut where
+  # it parts from its neighbours, and the name again at the head of the line
+  # underneath, in whatever room the note and the date leave there.
+  def apart_row(row, name, neighbours, phase_facts, length)
+    title = row.title.to_s.squish
+    name_room = length - (title.length - name.length)
+    apart_title = title.sub(name) { cut_apart(name, neighbours, name_room) || name }
+    rest = [row.note, ::Whatsapp::DatePhrase.absolute(phase_facts&.ends_on)].compact_blank
+    rest_length = rest.sum { |part| part.length + NOTE_SEPARATOR.length }
+    note_name = cut_apart(name, neighbours, ::Whatsapp::MAX_ROW_DESCRIPTION_LENGTH - rest_length)
+
+    RowText.new(
+      title: ::Whatsapp::AssistantActions.truncated(apart_title, length: length),
+      note: [note_name, row.note].compact_blank.join(NOTE_SEPARATOR),
+      named: true
+    )
+  end
+
+  # The name cut to `length` around where it parts from its neighbours rather
+  # than at its end. What it shares with them says nothing about which row is
+  # which, so that is what gives way: the ellipsis goes in front, and the words
+  # from the one they differ in onwards are kept, filled back towards the start
+  # as far as the room allows. Where they part early enough for an ordinary cut
+  # to show it, the ordinary cut is what it gets.
+  def cut_apart(name, neighbours, length)
+    return name if name.length <= length
+
+    omission = ::Whatsapp::AssistantActions::TRUNCATION_OMISSION
+    room = length - omission.length
+
+    return if room < 1
+
+    parted_at = neighbours.map { |other| shared_prefix_length(name, other) }.max.to_i
+
+    if parted_at < room
+      name.truncate(length, omission: omission)
+    else
+      omission + tail_from(name, parted_at, room)
+    end
+  end
+
+  # The end of the name that fits `room`, beginning no later than the word it
+  # parts from its neighbours in: that word and the rest cut short where they
+  # are longer, filled back towards the start by whole words where shorter.
+  def tail_from(name, parted_at, room)
+    word_start = name.rindex(" ", parted_at)&.succ.to_i
+    tail = name[word_start..]
+
+    if tail.length > room
+      return tail.truncate(room, omission: ::Whatsapp::AssistantActions::TRUNCATION_OMISSION)
+    end
+
+    start = name.length - room
+    boundary = name.index(" ", start - 1)
+
+    if boundary.present? && boundary < word_start
+      start = boundary.succ
+    end
+
+    name[start..]
+  end
+
+  def shared_prefix_length(text, other)
+    shorter = [text.length, other.length].min
+
+    (0...shorter).find { |index| text[index] != other[index] } || shorter
   end
 
   # What a row says before anything is done about its neighbours.

@@ -114,6 +114,15 @@ class Whatsapp::Conversation < ApplicationRecord
     unsaved_submission? || pending_comment.present?
   end
 
+  # Wider again, for the one question that is about the citizen rather than about
+  # what a reset would lose: whether they are in the middle of something that
+  # "Stopp" could mean leaving. A ballot is saved answer by answer, so it is not
+  # unsaved work, but a citizen half-way through one is just as likely to mean the
+  # vote rather than the channel.
+  def step_in_progress?
+    unsaved_work? || active_poll_id.present?
+  end
+
   # What this phase collects besides the text, asked of the conversation because
   # two places each need one of the answers and they must not drift: the tool that
   # offers a pin and the drafting call that infers one from the citizen's wording
@@ -136,6 +145,13 @@ class Whatsapp::Conversation < ApplicationRecord
   # submission.
   def image_question_pending?
     image_question_available? && !photo_declined?
+  end
+
+  # Whether the draft on the table carries a picture. One predicate for the tools
+  # that talk about the picture and the prompt's draft line, so a request to replace
+  # it is answered from the same fact wherever it comes up.
+  def draft_picture_attached?
+    draft_resource&.image&.attachment&.attached? == true
   end
 
   def location_question_pending?
@@ -367,6 +383,22 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(subject_change_stamp.merge("start_over_requested" => true))
   end
 
+  # Going back to the beginning, from the pill and from the citizen saying so in
+  # their own words alike: one implementation, so the two cannot come to mean
+  # different things. The ballot goes and the phase goes; a submission in progress
+  # stays until the citizen says to discard it, because neither the tap nor the
+  # sentence is consent to losing what they wrote.
+  def begin_start_over!
+    note_start_over!
+    clear_ballot!
+
+    if unsaved_submission?
+      request_start_over!
+    else
+      leave_projekt!
+    end
+  end
+
   # Cleared on a revision, where the record is already persisted. Deliberately: a
   # declined photo carried over would hold for the life of the submission, so a
   # citizen who changed their mind while revising ("doch, ein Foto habe ich") would
@@ -393,6 +425,33 @@ class Whatsapp::Conversation < ApplicationRecord
     return if context["shared_location"].blank?
 
     merge_context!(shared_location: nil)
+  end
+
+  # That this draft's optional pin has been asked for. Asked once and never again,
+  # and held as a fact the tool checks rather than left to "never ask twice", which
+  # was a sentence the model was told and could talk itself past. Outside the
+  # settled slots on purpose, which clear on a revision — a revised text is still
+  # the same draft, and the pin was still asked for — and gone with the rest of the
+  # context when the draft ends.
+  def location_requested?
+    context["location_requested"] == true
+  end
+
+  def record_location_requested!
+    merge_context!(location_requested: true)
+  end
+
+  # That this draft's citizen has been shown both picture notices — the rights one
+  # and the generated-picture one — which every way a picture reaches the draft
+  # reads first. Held for the draft rather than for the last message like the
+  # irreversible offers, because a photo can arrive turns after it was asked for;
+  # gone with the rest of the context when the draft ends.
+  def image_notices_shown?
+    context["image_notices_shown"] == true
+  end
+
+  def record_image_notices_shown!
+    merge_context!(image_notices_shown: true)
   end
 
   # A place read from the citizen's own words, held until they say it is the right
@@ -645,6 +704,22 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(declined_poll_question_ids: declined_poll_question_ids + [question_id])
   end
 
+  # The questions of this ballot already put to the citizen again after they turned
+  # to something else. Once each: a question re-sent under every reply is a script
+  # talking over the conversation — a map question sent its picker and the way past
+  # it under "Welche Projekte gibt es?" for minutes on end. After that one time the
+  # question stays in the state and whether to bring it back is the assistant's.
+  # Scoped to the ballot like the declined questions, and cleared with them.
+  def resumed_poll_question_ids
+    Array(context["resumed_poll_question_ids"])
+  end
+
+  def record_resumed_poll_question!(question_id)
+    return if resumed_poll_question_ids.include?(question_id)
+
+    merge_context!(resumed_poll_question_ids: resumed_poll_question_ids + [question_id])
+  end
+
   # All of them in one write, for the end of a ballot and for starting over.
   # Separate clears would leave a window in which the poll was gone and a question
   # of it was still expecting an answer.
@@ -656,7 +731,8 @@ class Whatsapp::Conversation < ApplicationRecord
       open_multiple_question_id: nil,
       pending_open_question_id: nil,
       pending_map_question_id: nil,
-      declined_poll_question_ids: nil
+      declined_poll_question_ids: nil,
+      resumed_poll_question_ids: nil
     )
   end
 
@@ -723,6 +799,34 @@ class Whatsapp::Conversation < ApplicationRecord
   # Called once at the top of the inbound chain, before anything can send.
   def hold_offered_confirmations!
     @held_confirmations = pending_confirmations
+  end
+
+  # Whether the bot had already asked "only this, or all messages?" when the
+  # citizen's message arrived. Asked once and only once: the next opt-out keyword
+  # is honoured without a model, and stop_messages acts on a plain yes. Held on
+  # arrival for the same reason as the confirmations above — the turn that asks
+  # must not be able to count its own question as answered.
+  def hold_stop_question!
+    @held_stop_question = context["stop_question_asked"].present?
+  end
+
+  def stop_question_asked?
+    return @held_stop_question if defined?(@held_stop_question)
+
+    context["stop_question_asked"].present?
+  end
+
+  def ask_stop_question!
+    merge_context!(stop_question_asked: true)
+  end
+
+  # Any message after the question answers it, so the question is settled
+  # whatever that answer was: a citizen who went on with their comment and
+  # typed "Stopp" an hour later is asked again rather than unsubscribed.
+  def clear_stop_question!
+    return if context["stop_question_asked"].blank?
+
+    merge_context!(stop_question_asked: nil)
   end
 
   # The draft and the comment as they stood when the assistant's turn began, held
@@ -935,7 +1039,7 @@ class Whatsapp::Conversation < ApplicationRecord
     def ballot_keys
       %w[
         active_poll_id open_multiple_question_id pending_open_question_id
-        pending_map_question_id declined_poll_question_ids
+        pending_map_question_id declined_poll_question_ids resumed_poll_question_ids
       ]
     end
 

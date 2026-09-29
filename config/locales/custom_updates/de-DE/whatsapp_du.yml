@@ -19,7 +19,9 @@ de:
       opted_in: "Du erhältst wieder Nachrichten von uns."
       compliance:
         disclosure: "👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet dir kein Mensch direkt."
-        opted_out: "Verstanden, du erhältst keine Nachrichten mehr von uns."
+        opted_out: >-
+          Verstanden, du erhältst keine Nachrichten mehr von uns. Schreib %{keyword},
+          wenn du wieder Nachrichten erhalten möchtest.
         opted_out_reminder: >-
           Du hast dich von unseren Nachrichten abgemeldet, deshalb kann ich dir hier nicht
           weiterhelfen. Schreib %{keyword}, wenn du wieder Nachrichten erhalten möchtest.
@@ -33,6 +35,10 @@ de:
         erasure: >-
           Wenn du dein Konto und deine Daten wirklich löschen möchtest, geht das im Portal unter
           „Konto löschen“:
+      terms:
+        statement: >-
+          Bevor du etwas einreichen kannst, brauchen wir deine Zustimmung zu unseren
+          Nutzungsbedingungen und unserer Datenschutzerklärung:
       comment:
         online: "Dein Kommentar steht jetzt auf der Seite:"
         awaiting_review: >-
@@ -48,7 +54,10 @@ de:
         image_rights_notice: >-
           Bitte sende nur Bilder, für die du die Rechte hast und auf denen keine Personen
           erkennbar sind, die damit nicht einverstanden sind.
-        location_optional: "Ein Ort ist freiwillig. Du kannst auch ohne weitermachen."
+        image_use_question: Soll dieses Foto für deinen Beitrag verwendet werden?
+        location_optional: >-
+          Ein Ort ist freiwillig. Du kannst auch ohne weitermachen. Den Pin setzt du in der
+          WhatsApp-App auf dem Handy — in WhatsApp Web und am Desktop geht das nicht.
       phase:
         open: "Hier kannst du bei „%{phase}“ mitmachen:"
         contributions_page: "Hier findest du alles dazu:"
@@ -74,7 +83,9 @@ de:
         location_prompt: "Bitte sende den Ort als Standort."
         location_prompt_remaining: >-
           Bitte sende den Ort als Standort. Du kannst noch %{remaining} Orte angeben.
-        location_optional: "Wenn du keinen Ort angeben möchtest, hier tippen."
+        location_optional: >-
+          Den Pin setzt du in der WhatsApp-App auf dem Handy — in WhatsApp Web und am Desktop
+          geht das nicht. Wenn du keinen Ort angeben möchtest, hier tippen.
         location_remaining: "Du kannst noch %{remaining} Orte angeben."
         location_outside_area: >-
           Dieser Ort liegt außerhalb des Gebiets, das für diese Frage festgelegt wurde.

@@ -11,13 +11,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   nothing may allow, so leaving the channel cannot depend on a provider being
   #   reachable. That is also why the keyword list is the one piece of reading left
   #   in Ruby: it is deterministic on purpose, not for want of a better reader.
+  #   The one thing it does not decide is what "Stopp" means in the middle of a
+  #   contribution, a comment or a vote. That is handed on to the assistant, which
+  #   asks once, and the keyword falls back to leaving whenever no model answers.
   # - An unsubscribed number reaches no model and gets nothing about the portal
   #   answered: being conversed with is the one thing unsubscribing asked us not to
   #   do. It used to reach a classifier — a whole model call whose only question was
   #   whether the message was an opt-in, which the keyword above now answers. What
-  #   it does get, at most once a week, is the one line naming the word that brings
-  #   it back, because the keyword that took it out of the channel is also the
-  #   ordinary word for abandoning a draft.
+  #   it does get — on its first message after leaving, then at most once a day —
+  #   is the one line naming the word that brings it back, because the keyword that
+  #   took it out of the channel is also the ordinary word for abandoning a draft.
   # - A voice note is transcribed just ahead of the keyword gate, the first text
   #   consumer. The "could not read it" reply goes out there, but the chain runs on.
   # - Cancelling is read before anything else can act on the message, for the same
@@ -46,6 +49,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   # read this is Ruby.
   OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
 
+  # The one of them the citizen is told to write, by the confirmation of leaving
+  # and by the reminder after it — both have to name a word this list still reads.
+  def self.opt_in_keyword
+    OPT_IN_KEYWORDS.first.upcase
+  end
+
   # How many of a phase's contributions the reply names in words. Fewer than the ten
   # a list holds, and deliberately: each one is named over two lines with its own
   # address, and past five of those the body outgrows the 1024 characters an
@@ -73,6 +82,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Before anything can send: the tools that must not act on an irreversible offer
     # they made themselves read this rather than the record.
     conversation.hold_offered_confirmations!
+    conversation.hold_stop_question!
 
     # Every message is acknowledged, tapped ones included: a tap that produces no
     # bubble reads as a tap that did not arrive, and the citizen taps again.
@@ -82,6 +92,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     return if handle_channel_keywords
     return offer_way_back_in if account.opt_out_at.present?
+
+    settle_stop_question
 
     disclose_ai
 
@@ -103,7 +115,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     park_media
 
-    inbound_note = tap_note || entry_note(entry) || reading.text.presence || media_note
+    inbound_note =
+      tap_note || entry_note(entry) || deferred_opt_out_note || reading.text.presence ||
+      media_note
 
     # Read before the turn, because the turn is what may end the ballot: a citizen
     # who asks to submit something instead has left it, and start_draft! replaces the
@@ -144,6 +158,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       return conversation.clear_retry_inbound! if result.success?
+      return honour_deferred_opt_out if @opt_out_deferred
 
       # The note describing a tap is snapshotted as the text it is: what the retry
       # replays is the sentence the assistant was given, which already says which
@@ -214,8 +229,18 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # only moment both are still nameable and the new question has not gone out yet.
     # And where the turn recorded a typed answer: the tool that recorded it has
     # already sent the ballot's next message.
+    #
+    # And once per question only. Put again after every detour, a question is a
+    # script running under the conversation rather than a part of it — a map
+    # question re-sent its picker under each reply until the citizen was trapped in
+    # it. After the one re-ask the question stays in the state, and bringing it
+    # back is the assistant's call (Whatsapp::Conversation#resumed_poll_question_ids).
+    #
+    # Never under the stop question: the next ballot question sent after "only the
+    # vote, or all messages?" answers it on the citizen's behalf.
     def resume_ballot(poll_id)
       return if poll_id.blank?
+      return if @opt_out_deferred
       return if ::Current.whatsapp_ballot_message_sent_in_turn
       return if conversation.reload.active_poll_id != poll_id
       return if conversation.unsaved_submission?
@@ -223,6 +248,15 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       poll = ::Poll.find_by(id: poll_id)
 
       return if poll.blank?
+
+      owed_question_id =
+        ::Whatsapp::Polls::OwedQuestionQuery.for(conversation: conversation)&.question&.id
+
+      return if conversation.resumed_poll_question_ids.include?(owed_question_id)
+
+      if owed_question_id.present?
+        conversation.record_resumed_poll_question!(owed_question_id)
+      end
 
       ::Whatsapp::Polls::AdvanceBallotService.call(conversation: conversation, poll: poll)
     end
@@ -257,20 +291,64 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     # The catalog uses one word for two things: "Stop" abandons what is in progress,
-    # and "STOP" ends all messages for good. Decided here rather than inside either
-    # service — getting it wrong means a citizen who wanted to cancel is silently
-    # unsubscribed instead.
+    # and "STOP" ends all messages for good. With nothing in progress it can only
+    # mean the second, and that is honoured here before any model is asked. In the
+    # middle of a contribution, a comment or a vote it can mean either, and which
+    # is the assistant's to read from the conversation rather than a rule's to
+    # guess: guessed "cancel", a citizen who wanted out stays subscribed; guessed
+    # "leave", a citizen who wanted to drop a comment is unsubscribed without a word.
+    #
+    # The assistant asks once. The keyword after that question is honoured here
+    # again, and so is one that arrives when no model can be reached to ask it.
     def handle_opt_out
-      if conversation.unsaved_submission?
-        conversation.discard_draft!
+      return defer_opt_out if opt_out_ambiguous?
 
-        send_cancelled_line
-      else
-        ::Whatsapp::Accounts::MessageDeliveryService.disable(conversation: conversation)
-      end
+      ::Whatsapp::Accounts::MessageDeliveryService.disable(conversation: conversation)
 
       true
     end
+
+    def opt_out_ambiguous?
+      conversation.step_in_progress? &&
+        !conversation.stop_question_asked? &&
+        ::Ai::Settings.ai_available?
+    end
+
+    # False, so the chain runs on: the disclosure still goes out ahead of the
+    # reply, and the reply is the assistant's.
+    def defer_opt_out
+      @opt_out_deferred = true
+      conversation.ask_stop_question!
+
+      false
+    end
+
+    # Any other message answers the question, whatever it said.
+    def settle_stop_question
+      return if @opt_out_deferred
+
+      conversation.clear_stop_question!
+    end
+
+    # The deferred keyword whose turn could not be written. Asking was the
+    # assistant's part, and without it the keyword means what it means everywhere
+    # else: leaving the channel must not depend on a provider being reachable.
+    # No retry is stored, because there is nothing left to retry.
+    def honour_deferred_opt_out
+      ::Whatsapp::Accounts::MessageDeliveryService.disable(conversation: conversation)
+    end
+
+    def deferred_opt_out_note
+      return if !@opt_out_deferred
+
+      sprintf(DEFERRED_OPT_OUT_NOTE, text: reading.text.to_s.squish)
+    end
+
+    DEFERRED_OPT_OUT_NOTE = "The citizen wrote \"%{text}\" while in the middle of a contribution, " \
+                            "a comment or a vote. It may mean stopping only that, or receiving " \
+                            "no more messages from us at all. Ask them once, in one short " \
+                            "question, which they mean, and offer the cancel button for stopping " \
+                            "only this. If they want no more messages, call stop_messages.".freeze
 
     def handle_opt_in
       return false if account.opt_out_at.blank?
@@ -290,11 +368,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # than to leave the channel; every message they wrote afterwards was dropped
     # without a word, and the way back was a keyword nobody had been told.
     #
-    # Throttled off the last thing the bot said to this number rather than off a
-    # column of its own, and the message log answers exactly this question for
-    # exactly this case: a broadcast skips an opted-out number and the assistant
-    # never reaches one, so the only thing that writes to one is this line.
-    OPT_OUT_REMINDER_INTERVAL = 7.days
+    # Throttled off what the bot has said to this number since it left rather than
+    # off a column of its own, and the message log answers exactly this question
+    # for exactly this case: a broadcast skips an opted-out number and the
+    # assistant never reaches one, so the only lines written to one are the
+    # confirmation of leaving and this one.
+    #
+    # The first message after leaving is always answered. Counting the
+    # confirmation as "the last thing said" is what held the way back for a week
+    # from the one citizen most likely to need it — the one who is still writing.
+    OPT_OUT_REMINDER_INTERVAL = 1.day
 
     def offer_way_back_in
       return if !way_back_in_due?
@@ -302,15 +385,26 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       send_bot_line(
         ::Whatsapp.copy(
           "whatsapp.bot.compliance.opted_out_reminder",
-          keyword: OPT_IN_KEYWORDS.first.upcase
+          keyword: self.class.opt_in_keyword
         )
       )
     end
 
+    # Two rows are enough to tell the cases apart: none or only the confirmation
+    # means no reminder yet, and otherwise the newest row is the last reminder.
     def way_back_in_due?
-      last_spoken_at = account.whatsapp_messages.outbound.maximum(:created_at)
+      spoken_since_opt_out_at =
+        account
+          .whatsapp_messages
+          .outbound
+          .where(created_at: account.opt_out_at..)
+          .order(created_at: :desc)
+          .limit(2)
+          .pluck(:created_at)
 
-      last_spoken_at.blank? || last_spoken_at < OPT_OUT_REMINDER_INTERVAL.ago
+      return true if spoken_since_opt_out_at.size < 2
+
+      spoken_since_opt_out_at.first < OPT_OUT_REMINDER_INTERVAL.ago
     end
 
     # Once per number rather than once per 24-hour window: a regular who reads it
@@ -345,7 +439,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return if tapped_id.blank?
 
-      return start_over_note if start_over_tap?
+      return ::Whatsapp::StartOverNotes.for(conversation) if start_over_tap?
 
       recovery = ::Whatsapp::Send.recovery_action_from(tapped_id)
 
@@ -357,6 +451,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(flow_action[:action], flow_action[:param])
       settle_slot_for(flow_action[:action])
+      discard_declined_photo(flow_action[:action])
 
       support_toggle_note(action: flow_action[:action], param: flow_action[:param]) ||
         tapped_line(action: flow_action[:action], param: flow_action[:param])
@@ -466,15 +561,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     REGISTERED_NOTE = "The citizen tapped the support button and their support is registered. " \
                       "The contribution, its new count and its address have already been sent " \
-                      "to them, so repeat none of it: say in one line that it is registered. Do " \
-                      "not invite them to support anything else, and do not say it is final or " \
-                      "cannot be taken back — the same button now takes it back.".freeze
+                      "to them, and that message is the confirmation: do not say again that it " \
+                      "is registered, and repeat none of it. Your reply is the way on only — a " \
+                      "short line on what they can do next, with its buttons. Do not invite " \
+                      "them to support anything else, and do not say it is final or cannot be " \
+                      "taken back — the same button now takes it back.".freeze
 
     WITHDRAWN_NOTE = "The citizen tapped the support button on a contribution they already " \
                      "supported, so the support has been taken back. The contribution, the " \
-                     "count as it now stands and its address have already been sent to them, so " \
-                     "repeat none of it: say in one line that it is withdrawn. Do not ask why " \
-                     "and do not talk them back into it — the same button supports it again.".freeze
+                     "count as it now stands and its address have already been sent to them, " \
+                     "and that message is the confirmation: do not say again that it is " \
+                     "withdrawn, and repeat none of it. Your reply is the way on only — a short " \
+                     "line on what they can do next, with its buttons. Do not ask why and do " \
+                     "not talk them back into it — the same button supports it again.".freeze
 
     ALREADY_SUPPORTED_NOTE = "They already support that contribution, and nothing changed. Say " \
                              "so plainly rather than as a failure.".freeze
@@ -521,14 +620,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         unsaved: conversation.unsaved_submission?
       )
 
-      conversation.note_start_over!
-      conversation.clear_ballot!
-
-      if conversation.unsaved_submission?
-        conversation.request_start_over!
-      else
-        conversation.leave_projekt!
-      end
+      conversation.begin_start_over!
     end
 
     # One id from each namespace, which is why both are read here: the start-over pill
@@ -546,31 +638,6 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       START_OVER_ACTIONS.include?(action)
     end
-
-    # Said rather than left to the cleared state, because the state is not the only
-    # thing the model reads: the stored history is replayed every turn and still has
-    # the projekt in it, so a nil phase on its own is one line of evidence against
-    # ten. This note is the newest message in the turn, which is the only place a
-    # correction outweighs what came before it.
-    def start_over_note
-      return START_OVER_WITH_DRAFT_NOTE if conversation.unsaved_submission?
-
-      START_OVER_NOTE
-    end
-
-    START_OVER_NOTE = "The citizen asked to go back to the start. No projekt and no phase " \
-                      "is selected any more, and nothing said earlier in this conversation " \
-                      "about one carries into what follows: do not offer that projekt, its " \
-                      "phases or a contribution to it unless they name it again themselves. " \
-                      "Send them what applies right now — what is open to take part in, what " \
-                      "they have already done, what there is to read.".freeze
-
-    START_OVER_WITH_DRAFT_NOTE = "The citizen asked to go back to the start while part-way " \
-                                 "through a contribution. Nothing has been discarded and the " \
-                                 "projekt is still selected, because throwing away what they " \
-                                 "wrote cannot be taken back. Say in one line what is " \
-                                 "unsaved, and ask whether to discard it or carry on with " \
-                                 "it. Call abort_submission only if they say to discard.".freeze
 
     # Cancelling is the one tap that does its own work, and its gate is up in the
     # chain with the stop keyword for the same reason: abandoning a submission must
@@ -962,7 +1029,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return false if action != ::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION
 
-      contribution = ::Whatsapp::ContributionPill.resolve(flow_action[:param])
+      contribution = ::Whatsapp::ContributionPill.resolve(flow_action[:param], user: account.user)
 
       return false if contribution.blank?
 
@@ -1086,6 +1153,15 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       conversation.settle_slot!(slot)
     end
 
+    # A photo that arrived unasked waits under the question about it, and the
+    # notices went out with that question — so a "no" that left it parked would
+    # let the next attach_draft_image put the photo they declined on the draft.
+    def discard_declined_photo(action)
+      return if action != :image_skip
+
+      conversation.clear_shared_image!
+    end
+
     # A pill from an older deploy, still sitting in someone's chat history and still
     # tappable forever. Answered rather than dropped: a tap that produces nothing at
     # all reads as a bot that has stopped working, and the citizen taps again. That it
@@ -1141,8 +1217,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     IMAGE_NOTE = "The citizen sent a photo with nothing written beside it. If a draft is open " \
-                 "and this phase takes pictures, attach it with attach_draft_image and say so. " \
-                 "Otherwise tell them there is nothing to attach it to right now.".freeze
+                 "and this phase takes pictures, call attach_draft_image: it attaches the " \
+                 "photo, or first sends the notices about pictures where they have not been " \
+                 "shown yet. Otherwise tell them there is nothing to attach it to right " \
+                 "now.".freeze
 
     LOCATION_NOTE = "The citizen shared a location with nothing written beside it. If a draft is " \
                     "open, attach it with set_draft_location and say so. Otherwise tell them " \

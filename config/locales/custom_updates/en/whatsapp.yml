@@ -41,6 +41,9 @@ en:
       date:
         absolute_format: "%B %-d, %Y"
         absolute_with_time_format: "%B %-d, %Y at %H:%M"
+        range: "%{from} – %{to}"
+        until: "until %{to}"
+        since: "from %{from}"
         today: today
         past:
           days:
@@ -74,7 +77,9 @@ en:
       opted_in: You will receive messages from us again.
       compliance:
         disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
-        opted_out: Understood, you won't receive any more messages from us.
+        opted_out: >-
+          Understood, you won't receive any more messages from us. Write %{keyword} if
+          you would like to receive messages again.
         opted_out_reminder: >-
           You unsubscribed from our messages, so I can't help you here. Write %{keyword}
           if you would like to receive messages again.
@@ -95,6 +100,15 @@ en:
         erasure: >-
           If you want your account and your data actually deleted, you can do that in the portal
           under "Delete account":
+      # The block Whatsapp::TermsConsentPreview puts in front of the consent question.
+      # Not the model's words: the acceptance is a legal declaration, and each address
+      # follows on a line of its own under its name.
+      terms:
+        statement: >-
+          Before you can submit anything, we need your consent to our terms of use and our
+          privacy policy:
+        conditions: Terms of use
+        privacy: Privacy policy
       comment:
         on_proposal: Comment on
         online: "Your comment is now on the page:"
@@ -135,7 +149,12 @@ en:
         # rather than after they see the picture.
         image_generation_notice: >-
           A generated picture is created by an AI rather than taken by a person.
-        location_optional: A location is optional. You can also carry on without one.
+        # The question above both notices when a photo arrived unasked: it is only used
+        # once the citizen has read them and said yes.
+        image_use_question: Should this photo be used for your contribution?
+        location_optional: >-
+          A location is optional. You can also carry on without one. The pin can only be set in
+          the WhatsApp app on your phone — not in WhatsApp Web or on desktop.
       phase:
         open: "Here is where you can take part in “%{phase}”:"
         contributions_intro:
@@ -187,7 +206,9 @@ en:
         location_prompt: "Please send the place as a location."
         location_prompt_remaining: >-
           Please send the place as a location. You can still give %{remaining} places.
-        location_optional: "Tap here if you would rather not give a place."
+        location_optional: >-
+          The pin can only be set in the WhatsApp app on your phone — not in WhatsApp Web or on
+          desktop. Tap here if you would rather not give a place.
         location_recorded: "✅ Place saved."
         location_remaining: "You can still give %{remaining} places."
         location_outside_area: >-
@@ -263,6 +284,7 @@ en:
         location_skip: Continue without
         main_menu: Start over
         show_more: Show more
+        show_more_votes: All votes in this project
         image_upload: Add a photo
         image_generate: Generate a picture
         support: Support now
@@ -272,6 +294,10 @@ en:
         # what that means is stated in the block above it. It has to fit the 20
         # characters WhatsApp allows a button title.
         unlink_confirm: Unlink number
+        # Fixed as well: the acceptance stands under the block with both links, and the
+        # model may not offer it anywhere else.
+        terms_accept: I agree
+        image_attach: Use this photo
         # The two buttons that do something irreversible: a comment goes onto a public
         # page under this citizen's name, a contribution goes in. That the label says
         # so used to live as a sentence in the tool descriptions — a "Continue" on the

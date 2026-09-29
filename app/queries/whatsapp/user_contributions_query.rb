@@ -44,8 +44,11 @@ class Whatsapp::UserContributionsQuery < ApplicationQuery
       scope.limit(::Whatsapp::ListWindow.limit_through(@from))
     end
 
+    # Published ones only: a draft never sent in is not a contribution yet, and
+    # the row it made was opened with the line that it is being reviewed.
     def proposals_scope
       Proposal
+        .published
         .where(author: @user)
         .order(created_at: :desc)
     end

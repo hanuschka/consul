@@ -11,7 +11,8 @@ module Whatsapp::PortalLinks
   PAGE_SLUGS = {
     privacy: %w[datenschutz privacy privacy-policy datenschutzerklaerung],
     help: %w[hilfe help],
-    conditions: %w[nutzungsbedingungen conditions terms]
+    conditions: %w[nutzungsbedingungen conditions terms],
+    contact: %w[kontakt contact kontaktieren-sie-uns contact-us]
   }.freeze
 
   module_function
@@ -56,6 +57,10 @@ module Whatsapp::PortalLinks
 
   def conditions_url
     page_url(:conditions)
+  end
+
+  def contact_url
+    page_url(:contact)
   end
 
   # Falls back to the portal's front page rather than to a dead link: a consent

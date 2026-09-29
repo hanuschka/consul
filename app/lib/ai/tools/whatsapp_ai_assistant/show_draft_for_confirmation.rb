@@ -13,7 +13,6 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
   # Two messages rather than one, because an interactive message's body is a
   # quarter of what a plain text message holds and a contribution longer than that
   # would have to be cut to fit — which is the whole thing this exists to prevent.
-  MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
 
   # The only message the publishing pill can sit under, so that tapping it publishes
   # what the citizen has just read rather than asking to show it to them first.
@@ -39,7 +38,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
       description: "Up to three buttons, each {\"action_id\": ..., \"label\": ...}. Offer " \
                    "draft_publish among them whenever you are asking whether it can go in — " \
                    "nothing else arms publishing, and its label is written for you, so leave it " \
-                   "empty. Parameterless action ids: " \
+                   "empty. #{LABEL_BUDGET_DESCRIPTION} Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}."
   end
 
@@ -51,7 +50,11 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
     return no_draft_error if draft_resource.blank?
     return blank_question_error if question.to_s.strip.blank?
 
-    offerable = offerable_buttons(buttons)
+    overlong = refuse_overlong_button_labels(buttons)
+
+    return overlong if overlong.present?
+
+    offerable = preview_buttons(buttons, confirms: CONFIRMS)
 
     return unusable_actions_error if offerable.empty?
 
@@ -121,21 +124,6 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
 
     def picture_available?
       ::Whatsapp.usable_header_image?(draft_resource.image&.attachment)
-    end
-
-    def offerable_buttons(buttons)
-      Array(buttons)
-        .filter_map do |button|
-          spec = button["action_id"] || button[:action_id]
-          label = button["label"] || button[:label]
-
-          ::Whatsapp::AssistantActions.confirmation_button(
-            spec: spec, label: label, conversation: conversation, confirms: CONFIRMS
-          )
-        end
-        .uniq { |button| button[:id] }
-        .uniq { |button| button[:title].downcase }
-        .first(MAX_ACTIONS)
     end
 
     # Remembered on the conversation, not just for this send: any later message

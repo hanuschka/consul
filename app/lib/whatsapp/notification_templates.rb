@@ -83,9 +83,12 @@ module Whatsapp::NotificationTemplates
   # to be browsing /adm in: Meta stores the language alongside the text, and a
   # German template carrying an English body is a template whose approval says
   # nothing about what citizens will read.
+  #
+  # And in the portal's address form, for the same reason: a portal that says
+  # "du" everywhere else would otherwise submit a push that says "Sie".
   def default_body(kind, language: nil)
     I18n.with_locale(body_locale(language)) do
-      I18n.t(
+      ::Whatsapp.copy(
         "whatsapp.bot.notifications.push.#{kind}",
         url: "{{1}}",
         portal_name: ::Whatsapp::PortalLinks.portal_name

@@ -48,6 +48,9 @@ de:
       date:
         absolute_format: "%-d. %B %Y"
         absolute_with_time_format: "%-d. %B %Y, %H:%M Uhr"
+        range: "%{from} – %{to}"
+        until: "bis %{to}"
+        since: "ab %{from}"
         today: heute
         past:
           days:
@@ -82,7 +85,9 @@ de:
       opted_in: Sie erhalten wieder Nachrichten von uns.
       compliance:
         disclosure: 👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet Ihnen kein Mensch direkt.
-        opted_out: Verstanden, Sie erhalten keine Nachrichten mehr von uns.
+        opted_out: >-
+          Verstanden, Sie erhalten keine Nachrichten mehr von uns. Schreiben Sie
+          %{keyword}, wenn Sie wieder Nachrichten erhalten möchten.
         opted_out_reminder: >-
           Sie haben sich von unseren Nachrichten abgemeldet, deshalb kann ich Ihnen hier
           nicht weiterhelfen. Schreiben Sie %{keyword}, wenn Sie wieder Nachrichten
@@ -106,6 +111,15 @@ de:
         erasure: >-
           Wenn Sie Ihr Konto und Ihre Daten wirklich löschen möchten, geht das im Portal unter
           „Konto löschen“:
+      # Der Block, den Whatsapp::TermsConsentPreview vor die Frage nach der Zustimmung
+      # stellt. Nicht vom Modell formuliert: Die Zustimmung ist eine rechtliche
+      # Erklärung, und beide Adressen folgen je in einer Zeile unter ihrem Namen.
+      terms:
+        statement: >-
+          Bevor Sie etwas einreichen können, brauchen wir Ihre Zustimmung zu unseren
+          Nutzungsbedingungen und unserer Datenschutzerklärung:
+        conditions: Nutzungsbedingungen
+        privacy: Datenschutzerklärung
       comment:
         on_proposal: "Kommentar zu"
         online: "Ihr Kommentar steht jetzt auf der Seite:"
@@ -150,7 +164,12 @@ de:
         image_generation_notice: >-
           Ein erzeugtes Bild wird von einer KI erstellt und nicht von einem Menschen
           aufgenommen.
-        location_optional: Ein Ort ist freiwillig. Sie können auch ohne weitermachen.
+        # Die Frage über den beiden Hinweisen, wenn ein Foto ungefragt kam: Es wird
+        # erst verwendet, wenn die Person die Hinweise gelesen und ja gesagt hat.
+        image_use_question: Soll dieses Foto für Ihren Beitrag verwendet werden?
+        location_optional: >-
+          Ein Ort ist freiwillig. Sie können auch ohne weitermachen. Den Pin setzen Sie in der
+          WhatsApp-App auf dem Handy — in WhatsApp Web und am Desktop geht das nicht.
       # The lines under a tap on one of the projekt card's phase pills. They are sent
       # from Whatsapp::Inbound::ProcessMessageService rather than written by the
       # assistant, because a card that names an action has to perform it on the tap —
@@ -231,7 +250,9 @@ de:
         location_prompt: "Bitte senden Sie den Ort als Standort."
         location_prompt_remaining: >-
           Bitte senden Sie den Ort als Standort. Sie können noch %{remaining} Orte angeben.
-        location_optional: "Wenn Sie keinen Ort angeben möchten, hier tippen."
+        location_optional: >-
+          Den Pin setzen Sie in der WhatsApp-App auf dem Handy — in WhatsApp Web und am Desktop
+          geht das nicht. Wenn Sie keinen Ort angeben möchten, hier tippen.
         location_recorded: "✅ Ort gespeichert."
         location_remaining: "Sie können noch %{remaining} Orte angeben."
         location_outside_area: >-
@@ -325,6 +346,11 @@ de:
         location_skip: Ohne Ort weiter
         main_menu: Von vorne loslegen
         show_more: Weitere anzeigen
+        # Die Zeile unter „Weitere anzeigen“ auf der Projektkarte, wenn die
+        # Karte nicht für jede Abstimmung eine Zeile hat. Sie öffnet die Liste
+        # aller Abstimmungen des Projekts, nicht nur der fehlenden — daher
+        # kein Zähler.
+        show_more_votes: Alle Abstimmungen dieses Projekts
         image_upload: Foto hinzufügen
         image_generate: Bild erzeugen
         # The two faces of one pill, and two of the labels the assistant is not allowed
@@ -349,6 +375,10 @@ de:
         # darüber. Auch sie muss in die 20 Zeichen passen, die WhatsApp einer
         # Beschriftung lässt.
         unlink_confirm: Verknüpfung lösen
+        # Ebenso fest: Die Zustimmung steht unter dem Block mit beiden Links, und das
+        # Modell darf sie nirgends sonst anbieten.
+        terms_accept: Zustimmen
+        image_attach: Foto verwenden
       notifications:
         follow_up:
           deadline_approaching: Sie können hier noch mitmachen, bis die Frist abläuft.

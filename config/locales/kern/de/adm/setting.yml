@@ -44,6 +44,12 @@ de:
       message_retention_days_description: "Nachrichten, die älter sind als diese Frist, werden nächtlich um 3:15 Uhr gelöscht. Das ist eine datenschutzrechtliche Pflicht und keine Frage der Ordnung. Tragen Sie eine ganze Zahl größer als Null ein; leer, Null oder eine Eingabe, die keine Zahl ist, bedeutet neunzig Tage. Verkürzen Sie die Frist, wenn Ihr Löschkonzept das verlangt — die Liste auf der Seite Dialoge dünnt sich entsprechend aus."
       max_voice_megabytes: "Größengrenze für Sprachnachrichten in MB"
       max_voice_megabytes_description: "Wird geprüft, bevor eine Sprachnachricht von WhatsApp heruntergeladen wird. Ein höherer Wert erlaubt längere Nachrichten; ein zu niedriger lässt sie scheitern, ohne dass der Grund sichtbar wird — die Person erhält lediglich die Bitte, ihre Idee als Text zu schreiben. Leer, Null oder keine Zahl bedeutet 16."
+      administration_contact_phone: "Telefonnummer der Verwaltung"
+      administration_contact_phone_description: "Die Nummer, unter der die Verwaltung für allgemeine Anfragen erreichbar ist, etwa die Behördennummer 115 oder das Bürgertelefon. Freitext: Sie können Sprechzeiten dazuschreiben, der Bot gibt die Angabe so weiter, wie sie hier steht. Leer bedeutet, dass der Bot keine Telefonnummer nennt."
+      administration_contact_email: "E-Mail-Adresse der Verwaltung"
+      administration_contact_email_description: "Die Adresse für allgemeine Anfragen an die Verwaltung, etwa das Postfach des Bürgerservice. Eine Eingabe, die keine gültige E-Mail-Adresse ist, wird abgewiesen. Leer bedeutet, dass der Bot keine E-Mail-Adresse nennt."
+      administration_contact_url: "Link zum Bürgerservice"
+      administration_contact_url_description: "Die Seite der Verwaltung mit Anliegen, Öffnungszeiten und Ansprechpersonen. Tragen Sie den vollständigen Link mit https:// ein. Sind alle drei Felder leer, verweist der Bot auf die Kontaktseite dieses Portals oder, falls es keine gibt, auf seine Startseite."
       auto_broadcast_new_projekts: "Rundnachricht bei jeder Projektveröffentlichung"
       auto_broadcast_new_projekts_description: "Schickt bei jeder Veröffentlichung eines Projekts automatisch eine Nachricht an alle angemeldeten Nummern. Standardmäßig aus, und die einzige Einstellung dieser Seite, die durch einen einzigen Klick an anderer Stelle Tausende Menschen erreicht. Aktivieren Sie sie nur, wenn Ihre Veröffentlichungen bewusst gesetzt sind und eine Vorlage aktiv ist."
     projekt_option:

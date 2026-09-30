@@ -199,6 +199,10 @@ class MunicipalPlan < ApplicationRecord
     content_updated_at >= Date.current - RECENCY_WINDOW.in_days.to_i
   end
 
+  def display_updated_on
+    (content_updated_at || created_at).to_date
+  end
+
   def last_public_change_at
     last_status_change_at = if has_attribute?(:last_status_change_at)
                               self[:last_status_change_at]&.in_time_zone

@@ -14,7 +14,8 @@ class MunicipalPlanNoticesController < ApplicationController
 
     if @notice.save
       ::MunicipalPlans::NoticeNotificationService.call(@notice)
-      redirect_to municipal_plan_path(@municipal_plan), notice: t(".success")
+      redirect_to municipal_plan_path(@municipal_plan),
+                  notice: t("custom.municipal_plans.notices.create.success")
     else
       render "municipal_plans/show", status: :unprocessable_entity
     end

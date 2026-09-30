@@ -30,6 +30,8 @@ describe "Hinweise zu einem Vorhaben", type: :request do
       expect(notice.email).to eq("kai@example.org")
       expect(notice.body).to eq("Bitte prüfen Sie den Zeitplan.")
       expect(response).to redirect_to(municipal_plan_path(plan))
+      expect(flash[:notice]).to eq I18n.t("custom.municipal_plans.notices.create.success")
+      expect(flash[:notice]).not_to include("Translation missing")
     end
 
     it "notifies the responsible department" do
@@ -53,6 +55,16 @@ describe "Hinweise zu einem Vorhaben", type: :request do
       expect(response.body).to include("Bitte prüfen Sie den Zeitplan.")
       expect(response.body).to include("Kai Ostermann")
       expect(response.body).to include(MunicipalPlan::Notice.human_attribute_name(:email))
+    end
+
+    it "links each error in the callout to its field" do
+      submit(name: "Kai Ostermann", email: "", body: "")
+
+      callout = Nokogiri::HTML(response.body).at_css("#municipal-plan-notice-form .callout.alert")
+
+      expect(callout).to be_present
+      expect(callout.at_css("a[href='#municipal_plan_notice_email']")).to be_present
+      expect(callout.at_css("a[href='#municipal_plan_notice_body']")).to be_present
     end
 
     it "refuses a Hinweis longer than the limit" do

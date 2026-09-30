@@ -129,19 +129,38 @@ describe "Vorhabenliste", type: :request do
 
       get municipal_plan_path(plan)
 
-      banner = Nokogiri::HTML(response.body).at_css(".resource-page-banner")
+      block = Nokogiri::HTML(response.body).at_css(".municipal-plan-participation")
+      rows = block.css(".municipal-plan-participation--projekt")
 
-      expect(banner.at_css("a[href='#{page_path(active.page.slug)}']").text)
-        .to include(I18n.t("custom.resource_page.banner_component.related_projekt"))
+      expect(rows.size).to eq 1
+      expect(rows.first.text)
+        .to include(I18n.t("custom.municipal_plans.show.participation_block.projekt_text"))
+      expect(rows.first.at_css("a[href='#{page_path(active.page.slug)}']").text)
+        .to include(I18n.t("custom.municipal_plans.show.participation_block.projekt_button"))
       expect(response.body).to include("Beteiligung Eichplatz")
       expect(response.body).not_to include("Deaktivierte Beteiligung")
       expect(response.body).not_to include("Gelöschte Beteiligung")
     end
 
+    it "renders one row per linked project, naming each one" do
+      first = create(:projekt, name: "Beteiligung Eichplatz", municipal_plan: plan)
+      second = create(:projekt, name: "Beteiligung Inselplatz", municipal_plan: plan)
+
+      get municipal_plan_path(plan)
+
+      rows = Nokogiri::HTML(response.body).css(".municipal-plan-participation--projekt")
+
+      expect(rows.size).to eq 2
+      expect(rows.map { |row| row.at_css("strong").text.strip })
+        .to match_array ["Beteiligung Eichplatz", "Beteiligung Inselplatz"]
+      expect(rows.map { |row| row.at_css("a")["href"] })
+        .to match_array [page_path(first.page.slug), page_path(second.page.slug)]
+    end
+
     it "shows no related-project row when no project is linked" do
       get municipal_plan_path(plan)
 
-      expect(Nokogiri::HTML(response.body).css(".resource-page-banner .fa-code-branch")).to be_empty
+      expect(Nokogiri::HTML(response.body).css(".municipal-plan-participation--projekt")).to be_empty
     end
   end
 
@@ -1113,6 +1132,497 @@ describe "Vorhabenliste", type: :request do
     end
   end
 
+  describe "the hero on the detail page" do
+    before { enable_module(true) }
+
+    def hero
+      Nokogiri::HTML(response.body).at_css(".municipal-plan-hero")
+    end
+
+    def status_chip
+      hero.at_css(".municipal-plan-hero--chip.-status")
+    end
+
+    def meta_items
+      hero.css(".municipal-plan-hero--meta li").map { |item| item.text.squish }
+    end
+
+    it "shows the title as the h1, outside the main column" do
+      get municipal_plan_path(plan)
+
+      expect(hero.at_css("h1").text.strip).to eq plan.title
+      expect(hero.ancestors(".main-column")).to be_empty
+    end
+
+    it "marks a newly added Vorhaben as new" do
+      plan.update_columns(created_at: 2.days.ago, content_updated_at: Date.current)
+
+      get municipal_plan_path(plan)
+
+      expect(status_chip.text.strip).to eq I18n.t("custom.municipal_plans.show.hero.status_new")
+    end
+
+    it "marks a recently updated Vorhaben as updated" do
+      plan.update_columns(created_at: 90.days.ago, content_updated_at: Date.current - 5.days)
+
+      get municipal_plan_path(plan)
+
+      expect(status_chip.text.strip).to eq I18n.t("custom.municipal_plans.show.hero.status_updated")
+    end
+
+    it "marks an archived Vorhaben as completed, even when it is recent" do
+      plan.update_columns(status: "archived", created_at: 2.days.ago, content_updated_at: Date.current)
+
+      get municipal_plan_path(plan)
+
+      expect(status_chip.text.strip).to eq I18n.t("custom.municipal_plans.show.hero.status_archived_chip")
+    end
+
+    it "shows no status chip for an older Vorhaben without a recent update" do
+      plan.update_columns(created_at: 90.days.ago, content_updated_at: Date.current - 60.days)
+
+      get municipal_plan_path(plan)
+
+      expect(status_chip).to be_nil
+    end
+
+    it "links every Thema alphabetically to the filtered list" do
+      plan.topic_assignments.destroy_all
+      topics = %w[Mobilität Bauen].map do |name|
+        create(:municipal_plan_topic, name: name).tap do |topic|
+          plan.topic_assignments.create!(topic: topic)
+        end
+      end
+
+      get municipal_plan_path(plan)
+
+      links = hero.css(".municipal-plan-hero--topics a")
+
+      expect(links.map { |link| link.text.strip }).to eq %w[Bauen Mobilität]
+      expect(links.map { |link| link["href"] }).to eq [
+        municipal_plans_path(topics: [topics.last.id]),
+        municipal_plans_path(topics: [topics.first.id])
+      ]
+      expect(links.map { |link| link["rel"] }.uniq).to eq ["nofollow"]
+    end
+
+    it "shows the Ortsteile, the update date and the version in the meta row" do
+      plan.district_assignments.destroy_all
+      %w[Zwätzen Lobeda].each do |name|
+        plan.district_assignments.create!(district: create(:registered_address_district, name: name))
+      end
+      plan.update_columns(content_updated_at: Date.new(2026, 3, 14), version: "1.2")
+
+      get municipal_plan_path(plan)
+
+      expect(meta_items).to eq [
+        "#{I18n.t("custom.municipal_plans.show.banner.districts")}: Lobeda, Zwätzen",
+        I18n.t("custom.municipal_plans.show.updated_on", date: "14.03.2026"),
+        "#{I18n.t("custom.municipal_plans.show.banner.version")} 1.2"
+      ]
+    end
+
+    it "falls back to the creation date and leaves out a missing version" do
+      plan.update_columns(created_at: Time.zone.local(2026, 2, 3, 10), content_updated_at: nil, version: "")
+
+      get municipal_plan_path(plan)
+
+      expect(meta_items).to include I18n.t("custom.municipal_plans.show.updated_on", date: "03.02.2026")
+      expect(hero.css(".municipal-plan-hero--meta .fa-hashtag")).to be_empty
+    end
+  end
+
+  describe "the content blocks on the detail page" do
+    before { enable_module(true) }
+
+    def document
+      Nokogiri::HTML(response.body)
+    end
+
+    def show_key(key)
+      I18n.t("custom.municipal_plans.show.#{key}")
+    end
+
+    def clear_translated(*fields)
+      plan.translations.update_all(fields.index_with("<p> </p>"))
+    end
+
+    describe "Worum es geht" do
+      it "shows the Kurze Beschreibung under its own heading" do
+        plan.update!(short_description: "<p>Neubau einer Brücke</p>")
+
+        get municipal_plan_path(plan)
+
+        intro = document.at_css(".municipal-plan-intro")
+
+        expect(intro.at_css("h2").text.strip).to eq show_key("intro.title")
+        expect(intro.text).to include "Neubau einer Brücke"
+      end
+
+      it "is left out when the Kurze Beschreibung is empty" do
+        clear_translated(:short_description)
+
+        get municipal_plan_path(plan)
+
+        expect(document.at_css(".municipal-plan-intro")).to be_nil
+      end
+    end
+
+    describe "Wo steht das Vorhaben?" do
+      def stations
+        document.css(".municipal-plan-timeline--station")
+      end
+
+      def station_labels
+        stations.map { |station| station.at_css("h3").children.first.text.strip }
+      end
+
+      it "lists the three stations in order and marks the current one" do
+        plan.update!(last_resolution: "Beschluss vom 16.11.2022",
+                     processing_status: "Satzung beschlossen",
+                     next_steps: "Vorentwurf folgt")
+
+        get municipal_plan_path(plan)
+
+        expect(document.at_css(".municipal-plan-timeline h2").text.strip).to eq show_key("timeline.title")
+        expect(document.at_css(".municipal-plan-timeline ol")).to be_present
+        expect(station_labels)
+          .to eq [show_key("last_resolution"), show_key("processing_status"), show_key("next_steps")]
+
+        current = stations.select { |station| station["aria-current"] == "step" }
+
+        expect(current.size).to eq 1
+        expect(current.first.text).to include "Satzung beschlossen"
+        expect(current.first.at_css(".municipal-plan-timeline--now").text.strip)
+          .to eq show_key("timeline.now")
+        expect(document.css(".municipal-plan-timeline--now").size).to eq 1
+        expect(stations.css("i").map { |icon| icon.ancestors("[aria-hidden='true']").any? }.uniq).to eq [true]
+      end
+
+      it "shows the update date, falling back to the creation date" do
+        plan.update_columns(created_at: Time.zone.local(2026, 2, 3, 10), content_updated_at: nil)
+
+        get municipal_plan_path(plan)
+
+        expect(document.at_css(".municipal-plan-timeline--updated").text.strip)
+          .to eq I18n.t("custom.municipal_plans.show.updated_on", date: "03.02.2026")
+      end
+
+      it "leaves out an empty station" do
+        plan.update!(last_resolution: "", processing_status: "Satzung beschlossen")
+        clear_translated(:next_steps)
+
+        get municipal_plan_path(plan)
+
+        expect(station_labels).to eq [show_key("processing_status")]
+      end
+
+      it "shows no JETZT pill when the Bearbeitungsstand is empty" do
+        plan.update!(last_resolution: "Beschluss vom 16.11.2022", next_steps: "Vorentwurf folgt")
+        clear_translated(:processing_status)
+
+        get municipal_plan_path(plan)
+
+        expect(station_labels).to eq [show_key("last_resolution"), show_key("next_steps")]
+        expect(document.css(".municipal-plan-timeline--now")).to be_empty
+      end
+
+      it "is left out when all three fields are empty" do
+        clear_translated(:last_resolution, :processing_status, :next_steps)
+
+        get municipal_plan_path(plan)
+
+        expect(document.at_css(".municipal-plan-timeline")).to be_nil
+      end
+    end
+
+    describe "Weitere Informationen zum Vorhaben" do
+      it "shows the text with simple_format under the Hintergrund heading" do
+        plan.update!(further_information: "Erster Absatz\n\nZweiter Absatz")
+
+        get municipal_plan_path(plan)
+
+        block = document.at_css(".municipal-plan-background")
+
+        expect(block.at_css(".municipal-plan-block--eyebrow").text.strip).to eq show_key("background.eyebrow")
+        expect(block.at_css("h2").text.strip).to eq show_key("background.title")
+        expect(block.css(".municipal-plan-block--text p").map { |p| p.text.strip })
+          .to eq ["Erster Absatz", "Zweiter Absatz"]
+      end
+
+      it "is left out when the field is empty" do
+        plan.update!(further_information: "")
+
+        get municipal_plan_path(plan)
+
+        expect(document.at_css(".municipal-plan-background")).to be_nil
+      end
+    end
+
+    describe "Bürgerbeteiligung" do
+      def rows
+        document.css(".municipal-plan-participation--row")
+      end
+
+      it "always shows both kinds, with Nein when neither applies" do
+        plan.update!(formal_participation: false, informal_participation: false)
+
+        get municipal_plan_path(plan)
+
+        expect(document.at_css(".municipal-plan-participation h2").text.strip).to eq show_key("participation")
+        expect(rows.map { |row| row.at_css("h3").text.strip })
+          .to eq [show_key("participation_block.formal"), show_key("participation_block.informal")]
+        expect(rows.map { |row| row.at_css(".municipal-plan-participation--status").text.strip })
+          .to eq [show_key("participation_block.status_no")] * 2
+        expect(document.css(".municipal-plan-participation--reason")).to be_empty
+      end
+
+      it "shows Ja or Nein per kind together with its reason" do
+        plan.update!(formal_participation: true, formal_participation_reason: "Im Zuge des Planverfahrens",
+                     informal_participation: false, informal_participation_reason: "Keine Gründe erkennbar")
+
+        get municipal_plan_path(plan)
+
+        expect(rows.map { |row| row.at_css(".municipal-plan-participation--status").text.strip })
+          .to eq [show_key("participation_block.status_yes"), show_key("participation_block.status_no")]
+        expect(rows.map { |row| row.at_css(".municipal-plan-participation--reason").text.strip })
+          .to eq ["Im Zuge des Planverfahrens", "Keine Gründe erkennbar"]
+      end
+    end
+
+    describe "Lage" do
+      def section
+        document.at_css("section.municipal-plan-location")
+      end
+
+      it "shows the map under its own heading with the approximated address below it" do
+        plan.map_location.update_column(:approximated_address, "Kleinromstedter Weg, 07751 Jena-Isserstedt")
+
+        get municipal_plan_path(plan)
+
+        heading = section.at_css("h2")
+
+        expect(heading.text.strip).to eq show_key("location.title")
+        expect(section["aria-labelledby"]).to eq heading["id"]
+        expect(section.at_css(".municipal-plan-location--card .map_location")).to be_present
+        expect(section.at_css(".municipal-plan-location--label").text.strip)
+          .to eq show_key("location.approximate")
+        expect(section.at_css(".municipal-plan-location--address").text.strip)
+          .to eq "Kleinromstedter Weg, 07751 Jena-Isserstedt"
+      end
+
+      it "says that no address is available when the location has none" do
+        plan.map_location.update_column(:approximated_address, nil)
+
+        get municipal_plan_path(plan)
+
+        expect(section.at_css(".municipal-plan-location--address").text.strip)
+          .to eq show_key("map_address_missing")
+      end
+
+      it "is left out when the Vorhaben has no location" do
+        plan.map_location.destroy!
+
+        get municipal_plan_path(plan)
+
+        expect(section).to be_nil
+        expect(document.at_css(".main-column .map_location")).to be_nil
+      end
+    end
+
+    it "orders the blocks and leaves the Kosten out of the main column" do
+      plan.update!(further_information: "Hintergrundtext", costs: "ca. 50.000 €")
+
+      get municipal_plan_path(plan)
+
+      headings = document.css(".main-column h2").map { |heading| heading.text.strip }
+
+      expect(headings.first(5)).to eq [
+        show_key("intro.title"), show_key("timeline.title"), show_key("background.title"),
+        show_key("participation"), show_key("location.title")
+      ]
+      expect(document.at_css(".main-column").text).not_to include("ca. 50.000 €")
+    end
+  end
+
+  describe "the sidebar on the detail page" do
+    before { enable_module(true) }
+
+    def document
+      Nokogiri::HTML(response.body)
+    end
+
+    def show_key(key, **options)
+      I18n.t("custom.municipal_plans.show.#{key}", **options)
+    end
+
+    def contact_card
+      document.at_css(".sidebar .sidebar-contact-person")
+    end
+
+    def contact_key(key, **options)
+      I18n.t("components.sidebar.contact_person_component.#{key}", **options)
+    end
+
+    def card_titled(key)
+      document.css(".sidebar .sidebar-card").find do |card|
+        card.at_css(".sidebar-card--title-text")&.text&.strip == show_key(key)
+      end
+    end
+
+    def glance_rows
+      card_titled("at_a_glance.title").css(".municipal-plan-glance--row").map do |row|
+        [row.at_css("dt").text.strip, row.at_css("dd").text.strip]
+      end
+    end
+
+    it "orders the cards as in the mockup" do
+      plan.update!(contact_name: "Maria Muster")
+      plan.links.create!(title: "Beschlussvorlage", url: "https://jena.example/vorlage")
+      create(:projekt, name: "Beteiligung Eichplatz", municipal_plan: plan)
+
+      get municipal_plan_path(plan)
+
+      titles = document.css(".sidebar > section").map do |card|
+        (card.at_css(".sidebar-card--title-text") || card.at_css("h2")).text.strip
+      end
+
+      expect(titles).to eq [
+        contact_key("title"), show_key("at_a_glance.title"), show_key("links"),
+        show_key("notice_card.title"), show_key("projekt_card.title"), I18n.t("proposals.show.share")
+      ]
+    end
+
+    describe "Ansprechperson" do
+      it "shows the initials, name and role under a heading" do
+        plan.update!(contact_name: "Maria Muster", contact_role: "Team Stadtplanung")
+
+        get municipal_plan_path(plan)
+
+        expect(contact_card.at_css("h2").text.strip).to eq contact_key("title")
+        expect(contact_card.at_css(".sidebar-contact-person--initials").text.strip).to eq "MM"
+        expect(contact_card.at_css(".sidebar-contact-person--name").text.strip).to eq "Maria Muster"
+        expect(contact_card.at_css(".sidebar-contact-person--role").text.strip).to eq "Team Stadtplanung"
+      end
+
+      it "falls back to a user icon without a name" do
+        plan.update!(contact_name: nil, contact_role: "Team Stadtplanung")
+
+        get municipal_plan_path(plan)
+
+        avatar = contact_card.at_css(".sidebar-contact-person--initials")
+
+        expect(avatar.text.strip).to be_empty
+        expect(avatar.at_css("i.fa-user")).to be_present
+        expect(contact_card.at_css(".sidebar-contact-person--name")).to be_nil
+      end
+
+      it "names the e-mail link on its own while showing schreiben" do
+        plan.update!(contact_name: "Maria Muster", contact_email: "maria.muster@jena.example")
+
+        get municipal_plan_path(plan)
+
+        link = contact_card.at_css("a[href='mailto:maria.muster@jena.example']")
+        label = contact_key("email_to_name", name: "Maria Muster")
+
+        expect(link.at_css(".show-for-sr").text.strip).to eq label
+        expect(link.text.squish).to eq "#{label} #{contact_key("write")}"
+      end
+
+      it "leaves the card out when no contact field is filled" do
+        plan.update!(contact_name: nil, contact_role: nil, contact_phone: nil, contact_email: nil)
+
+        get municipal_plan_path(plan)
+
+        expect(contact_card).to be_nil
+      end
+    end
+
+    describe "Auf einen Blick" do
+      it "lists Gebiet, Kosten, both participation kinds and the Version" do
+        plan.district_assignments.destroy_all
+        plan.district_assignments.create!(district: create(:registered_address_district, name: "Zwätzen"))
+        plan.district_assignments.create!(district: create(:registered_address_district, name: "Lobeda"))
+        plan.update!(costs: "ca. 50.000 €", formal_participation: true, informal_participation: false)
+
+        get municipal_plan_path(plan.reload)
+
+        expect(glance_rows).to eq [
+          [show_key("at_a_glance.area"), "Lobeda, Zwätzen"],
+          [show_key("at_a_glance.costs"), "ca. 50.000 €"],
+          [show_key("at_a_glance.formal"), show_key("participation_block.status_yes")],
+          [show_key("at_a_glance.informal"), show_key("participation_block.status_no")],
+          [show_key("banner.version"), plan.version]
+        ]
+      end
+
+      it "leaves out the Kosten row when no costs are given" do
+        plan.update!(costs: "")
+
+        get municipal_plan_path(plan)
+
+        expect(glance_rows.map(&:first)).not_to include show_key("at_a_glance.costs")
+      end
+    end
+
+    it "marks every link as external and opening in a new tab" do
+      plan.links.create!(title: "Beschlussvorlage", url: "https://jena.example/vorlage")
+
+      get municipal_plan_path(plan)
+
+      link = card_titled("links").at_css("a[href='https://jena.example/vorlage']")
+
+      expect(link["target"]).to eq "_blank"
+      expect(link["rel"]).to eq "noopener"
+      expect(link.at_css(".municipal-plan-links--title").text.strip).to eq "Beschlussvorlage"
+      expect(link.at_css(".show-for-sr").text.strip).to eq show_key("opens_in_new_tab")
+      expect(link.at_css("i.fa-external-link-alt")["aria-hidden"]).to eq "true"
+    end
+
+    it "points the Fragen oder Hinweise card to the notice form" do
+      get municipal_plan_path(plan)
+
+      card = card_titled("notice_card.title")
+
+      expect(card.text).to include show_key("notice_card.text")
+      expect(card.at_css("a[href='#municipal-plan-notice-form']").text.strip)
+        .to eq show_key("notice_card.button")
+    end
+
+    describe "Beteiligungsprojekt" do
+      it "links a visible project" do
+        projekt = create(:projekt, name: "Beteiligung Eichplatz", municipal_plan: plan)
+
+        get municipal_plan_path(plan)
+
+        card = card_titled("projekt_card.title")
+        link = card.at_css("a[href='#{page_path(projekt.page.slug)}']")
+
+        expect(card.text).to include show_key("projekt_card.text")
+        expect(link.text.squish)
+          .to eq "#{show_key("participation_block.projekt_button")} : Beteiligung Eichplatz"
+      end
+
+      it "shows one button per project, named by its title" do
+        create(:projekt, name: "Beteiligung Eichplatz", municipal_plan: plan)
+        create(:projekt, name: "Beteiligung Inselplatz", municipal_plan: plan)
+
+        get municipal_plan_path(plan)
+
+        expect(card_titled("projekt_card.title").css("a").map { |link| link.text.strip })
+          .to match_array ["Beteiligung Eichplatz", "Beteiligung Inselplatz"]
+      end
+
+      it "leaves the card out without a visible project" do
+        create(:projekt, :deactivated, name: "Deaktivierte Beteiligung", municipal_plan: plan)
+
+        get municipal_plan_path(plan)
+
+        expect(card_titled("projekt_card.title")).to be_nil
+      end
+    end
+  end
+
   describe "the detail page layout" do
     before { enable_module(true) }
 
@@ -1138,6 +1648,33 @@ describe "Vorhabenliste", type: :request do
       expect(document.at_css(".sidebar a[href='#municipal-plan-notice-form']")).to be_present
     end
 
+    it "heads the notice form with a titled band and marks the required fields" do
+      get municipal_plan_path(plan)
+
+      form = document.at_css("#municipal-plan-notice-form")
+
+      expect(form.at_css(".municipal-plan-notice--header h2").text.strip)
+        .to eq I18n.t("custom.municipal_plans.notices.form.title")
+      expect(form.at_css("#municipal_plan_notice_email")["required"]).to be_present
+      expect(form.at_css("#municipal_plan_notice_body")["required"]).to be_present
+      expect(form.at_css("#municipal_plan_notice_name")["required"]).to be_nil
+      expect(form.css("label[for='municipal_plan_notice_email']").size).to eq 1
+      expect(form.at_css("label[for='municipal_plan_notice_email'] span[aria-hidden='true']").text).to eq "*"
+      expect(form.at_css(".municipal-plan-notice--legend").text)
+        .to include I18n.t("custom.municipal_plans.notices.form.required_legend")
+      expect(form.at_css("input[type=submit]")["value"])
+        .to eq I18n.t("custom.municipal_plans.notices.form.submit")
+    end
+
+    it "leaves the notice form off an archived Vorhaben" do
+      plan.update!(status: "archived")
+
+      get municipal_plan_path(plan)
+
+      expect(document.at_css("#municipal-plan-notice-form")).to be_nil
+      expect(document.at_css(".sidebar a[href='#municipal-plan-notice-form']")).to be_nil
+    end
+
     it "links a phone number and leaves a phone note without digits as text" do
       plan.update!(contact_phone: "03641 49-0")
 
@@ -1153,14 +1690,14 @@ describe "Vorhabenliste", type: :request do
       expect(document.at_css(".sidebar").text).to include("über die Zentrale")
     end
 
-    it "keeps the address sentence out of the print-hidden map wrapper" do
+    it "keeps the Lage footer out of the print-hidden map wrapper" do
       get municipal_plan_path(plan)
 
-      sentence = I18n.t("custom.municipal_plans.show.map_address_missing")
-      paragraph = document.css("main p").find { |node| node.text.strip == sentence }
+      footer = document.at_css(".municipal-plan-location--footer")
 
-      expect(paragraph).to be_present
-      expect(paragraph.ancestors(".not-print")).to be_empty
+      expect(footer).to be_present
+      expect(footer.ancestors(".not-print")).to be_empty
+      expect(document.at_css(".municipal-plan-location--map.not-print .map_location")).to be_present
     end
 
     it "describes the Vorhaben for social media" do

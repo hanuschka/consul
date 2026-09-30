@@ -23,3 +23,10 @@ de:
       ai_image_label_component:
         text: "KI-generiertes Bild"
         tooltip: "Dieses Bild wurde mit künstlicher Intelligenz erstellt oder bearbeitet und zeigt keine reale Aufnahme. Der Hinweis ist gesetzlich vorgeschrieben."
+    sidebar:
+      contact_person_component:
+        title: "Ansprechperson"
+        phone: "Telefon"
+        email: "E-Mail"
+        write: "schreiben"
+        email_to_name: "E-Mail an %{name}"

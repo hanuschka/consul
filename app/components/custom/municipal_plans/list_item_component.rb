@@ -30,8 +30,8 @@ class MunicipalPlans::ListItemComponent < ApplicationComponent
   end
 
   def header_label
-    date = municipal_plan.content_updated_at.presence || municipal_plan.created_at.to_date
+    date = l(municipal_plan.display_updated_on, format: "%d.%m.%Y")
 
-    t("custom.municipal_plans.index.updated_on", date: l(date, format: "%d.%m.%Y"))
+    t("custom.municipal_plans.index.updated_on", date: date)
   end
 end

@@ -74,47 +74,65 @@ de:
         create:
           success: Vielen Dank! Ihr Hinweis wurde an die zuständige Stelle weitergeleitet.
         form:
-          title: Hinweis einreichen
-          intro: Haben Sie eine Anmerkung, eine Frage oder einen Korrekturhinweis zu diesem Vorhaben? Ihre Nachricht geht an die zuständige Stelle in der Verwaltung.
-          name: Name
-          name_hint: Optional
-          email: E-Mail-Adresse
-          email_hint: Wird benötigt, damit die Verwaltung antworten kann.
+          title: Ihr Hinweis zum Vorhaben
+          subline: Ihre Nachricht geht direkt an den zuständigen Fachbereich.
+          name: Name (freiwillig)
+          email: E-Mail
           body: Ihr Hinweis
-          submit: Hinweis absenden
+          required_legend: Pflichtfeld
+          submit: Hinweis senden
           error_title: Ihr Hinweis konnte nicht abgeschickt werden
 
       show:
+        hero:
+          status_archived_chip: abgeschlossen
+          status_new: neu
+          status_updated: aktualisiert
+        intro:
+          title: Worum es geht
+        timeline:
+          title: Wo steht das Vorhaben?
+          now: Jetzt
+        background:
+          eyebrow: Hintergrund
+          title: Weitere Informationen zum Vorhaben
+        participation_block:
+          formal: Formell
+          informal: Informell
+          status_yes: Ja
+          status_no: Nein
+          projekt_text: Zu diesem Vorhaben läuft ein Beteiligungsverfahren.
+          projekt_button: Zum Projekt
         banner:
           version: Version
           topics: Themen
           districts: Ortsteile
         back: Zurück zur Vorhabenliste
-        contact: Kontakt
-        contact_name: Name
-        contact_role: Funktion
-        contact_phone: Telefon
-        contact_email: E-Mail
+        at_a_glance:
+          title: Auf einen Blick
+          area: Gebiet
+          costs: Kosten
+          formal: Formelle Beteiligung
+          informal: Informelle Beteiligung
         last_resolution: Letzter Beschluss
         processing_status: Aktueller Bearbeitungsstand
         next_steps: Geplanter Zeitpunkt, nächste Schritte
-        further_information: Weitere Informationen
         districts: Betroffenes Gebiet / Ortsteil
         topics: Schwerpunktmäßig betroffene Themen
-        costs: Kosten soweit bezifferbar
         participation: Bürgerbeteiligung
-        formal_participation: Bürgerbeteiligung formell
-        informal_participation: Bürgerbeteiligung informell
-        links: Links und Dokumente
+        links: Links & Dokumente
         opens_in_new_tab: (öffnet in einem neuen Tab)
-        map_address: "Das Vorhaben befindet sich bei folgender Adresse: %{address}"
+        location:
+          title: Lage
+          approximate: Ungefähre Lage
         map_address_missing: Zu diesem Vorhaben liegt keine Adresse vor. Die Lage ist ausschließlich in der Karte dargestellt.
-        version: Versionsnummer
         updated_on: "Aktualisiert am %{date}"
-        status_archived: "Status: Archiviert"
         notice_card:
-          title: Hinweis senden
-          text: Haben Sie eine Anmerkung, Frage oder Korrektur? Schreiben Sie der zuständigen Stelle.
-          button: Zum Hinweisformular
+          title: Fragen oder Hinweise?
+          text: Schreiben Sie dem Fachbereich direkt zu diesem Vorhaben.
+          button: Hinweis geben
+        projekt_card:
+          title: Beteiligungsprojekt
+          text: Zu diesem Vorhaben läuft ein Beteiligungsverfahren auf dieser Plattform.
       projekt_sidebar:
         title: Zugehöriges Vorhaben

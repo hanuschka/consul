@@ -1,0 +1,448 @@
+.municipal-plan-block {
+  .municipal-plan-block--header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-bottom: 20px;
+  }
+
+  .municipal-plan-block--heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .municipal-plan-block--icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-base;
+    background-color: color-mix(in srgb, var(--brand-color) 10%, #fff);
+    color: var(--brand-color);
+  }
+
+  .municipal-plan-block--title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.25;
+
+    @media (max-width: $mobile-viewport-start) {
+      font-size: 20px;
+    }
+  }
+
+  .municipal-plan-block--eyebrow {
+    margin: 0 0 8px;
+    color: var(--brand-color);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .municipal-plan-block--heading .municipal-plan-block--eyebrow {
+    margin-bottom: 2px;
+  }
+
+  .municipal-plan-block--text > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.municipal-plan-intro {
+  border-left: 4px solid var(--brand-color);
+}
+
+.municipal-plan-timeline {
+  .municipal-plan-timeline--updated {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    color: var(--brand-color);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .municipal-plan-timeline--stations {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .municipal-plan-timeline--station {
+    position: relative;
+    display: flex;
+    gap: 16px;
+    margin: 0;
+    padding-bottom: 24px;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+
+    &:not(:last-child)::before {
+      content: "";
+      position: absolute;
+      top: 32px;
+      bottom: 0;
+      left: 15px;
+      border-left: 2px solid var(--brand-color);
+    }
+
+    &.-dashed-connector::before {
+      border-left-style: dashed;
+    }
+  }
+
+  .municipal-plan-timeline--marker {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--brand-color);
+    border-radius: 50%;
+    background-color: var(--brand-color);
+    color: #fff;
+    font-size: 14px;
+  }
+
+  .-upcoming .municipal-plan-timeline--marker {
+    border-style: dashed;
+    background-color: #fff;
+    color: var(--brand-color);
+  }
+
+  .municipal-plan-timeline--content {
+    flex-grow: 1;
+    min-width: 0;
+    padding-top: 4px;
+  }
+
+  .-current .municipal-plan-timeline--content {
+    padding: 16px 20px;
+    border-radius: $radius-base;
+    background-color: color-mix(in srgb, var(--brand-color) 10%, #fff);
+  }
+
+  .municipal-plan-timeline--label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 6px;
+    color: var(--brand-color);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .municipal-plan-timeline--now {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background-color: var(--brand-color);
+    color: #fff;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+
+  .municipal-plan-timeline--text > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.municipal-plan-participation {
+  .municipal-plan-block--title {
+    margin-bottom: 20px;
+  }
+
+  .municipal-plan-participation--row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 8px 24px;
+    padding: 16px 0;
+    border-top: 1px solid $border-color;
+
+    &:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    @media (max-width: $mobile-viewport-start) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .municipal-plan-participation--kind {
+    grid-column: 1;
+  }
+
+  .municipal-plan-participation--label {
+    margin: 0 0 4px;
+    color: var(--brand-color);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .municipal-plan-participation--status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    font-weight: 700;
+
+    &.-yes {
+      color: var(--brand-color);
+    }
+  }
+
+  .municipal-plan-participation--reason {
+    margin: 0;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (min-width: $mobile-viewport-start + 1) {
+      grid-column: 2;
+    }
+  }
+
+  .municipal-plan-participation--projekt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 16px;
+    margin-top: 16px;
+    padding: 16px 20px;
+    border-radius: $radius-base;
+    background-color: color-mix(in srgb, var(--brand-color) 8%, #fff);
+
+    p {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 8px;
+      margin: 0;
+    }
+  }
+
+  .municipal-plan-participation--button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+.municipal-plan-location {
+  .municipal-plan-location--title {
+    margin-bottom: 12px;
+  }
+
+  .municipal-plan-location--card.main-content-card {
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: $radius-large;
+  }
+
+  .municipal-plan-location--map .map.map_location {
+    margin: 0;
+    border-radius: $radius-large $radius-large 0 0;
+  }
+
+  .municipal-plan-location--footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid $border-color;
+  }
+
+  .municipal-plan-location--icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--brand-color);
+    color: #fff;
+    font-size: 14px;
+  }
+
+  .municipal-plan-location--label {
+    margin: 0 0 2px;
+    color: var(--brand-color);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .municipal-plan-location--address {
+    margin: 0;
+  }
+}
+
+.municipal-plan-block.municipal-plan-notice.main-content-card {
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: $radius-large;
+
+  .municipal-plan-notice--header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 30px;
+    background-color: var(--brand-color);
+    color: #fff;
+
+    @media (max-width: $mobile-viewport-start) {
+      padding: 16px 20px;
+    }
+  }
+
+  .municipal-plan-notice--icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: color-mix(in srgb, #fff 20%, transparent);
+    color: #fff;
+  }
+
+  .municipal-plan-notice--title {
+    color: #fff;
+  }
+
+  .municipal-plan-notice--subline {
+    margin: 2px 0 0;
+    color: #fff;
+  }
+
+  .municipal-plan-notice--body {
+    padding: 24px 30px 30px;
+
+    @media (max-width: $mobile-viewport-start) {
+      padding: 20px;
+    }
+  }
+
+  .municipal-plan-notice--row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 24px;
+
+    @media (max-width: $mobile-viewport-start) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .municipal-plan-notice--field label {
+    font-weight: 700;
+  }
+
+  .municipal-plan-notice--footer {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 16px;
+  }
+
+  .municipal-plan-notice--legend {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .municipal-plan-notice--submit {
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+.municipal-plan-glance {
+  margin: 0;
+
+  .municipal-plan-glance--row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+
+    + .municipal-plan-glance--row {
+      margin-top: 4px;
+    }
+  }
+
+  dt,
+  dd {
+    margin: 0;
+  }
+
+  dt {
+    font-weight: 400;
+  }
+
+  dd {
+    font-weight: 700;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+}
+
+.municipal-plan-links {
+  margin: 0;
+  list-style: none;
+
+  li + li {
+    margin-top: 6px;
+  }
+
+  .municipal-plan-links--link {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .municipal-plan-links--title {
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  .municipal-plan-links--icon {
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+}
+
+.municipal-plan-sidebar--button {
+  font-weight: 700;
+}

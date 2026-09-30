@@ -23,3 +23,10 @@ en:
       ai_image_label_component:
         text: "AI-generated image"
         tooltip: "This image was created or edited with artificial intelligence and does not show a real photograph. The notice is required by law."
+    sidebar:
+      contact_person_component:
+        title: "Contact person"
+        phone: "Phone"
+        email: "Email"
+        write: "write"
+        email_to_name: "Email to %{name}"

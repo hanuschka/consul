@@ -40,6 +40,9 @@ class Ai::Tools::WhatsappAiAssistant::StartDraft < Ai::Tools::WhatsappAiAssistan
 
     return refusal if refusal.present?
 
+    # Recorded before the consent question, which is already part of contributing.
+    conversation.open_step!("contribution")
+
     consent = refuse_without_consent
 
     return consent if consent.present?

@@ -541,6 +541,40 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
                "#{verb}. Ask which proposal they mean." }
     end
 
+    # What Whatsapp::Contributions::CreateCommentService refused, for the tools that
+    # ask it before anything is posted: the one inviting the comment and the one
+    # writing it down.
+    def comment_refusal_error(reason)
+      return comment_gone_error if reason == :gone
+      return comment_closed_error if reason == :closed
+      return comment_blank_error if reason == :blank
+      return comment_confirmation_only_error if reason == :confirmation_only
+
+      not_linked_error("comment on a proposal")
+    end
+
+    def comment_gone_error
+      { error: "That proposal is not there any more, so there is nothing to comment on. Tell the " \
+               "citizen so; nothing was written down." }
+    end
+
+    def comment_closed_error
+      { error: "Comments are not open on that proposal. Tell the citizen plainly; nothing was " \
+               "written down." }
+    end
+
+    def comment_blank_error
+      { error: "There was no comment text. Ask the citizen what they want to say." }
+    end
+
+    # Refused rather than written down. A single word of agreement is the citizen
+    # answering a question, not their contribution to a public page, and their name
+    # would be under it.
+    def comment_confirmation_only_error
+      { error: "That is a yes or a no rather than a comment, so nothing was written down. Ask " \
+               "them for what they actually want to say on the page." }
+    end
+
     # Two situations, and telling them apart matters more than it looks. A draft that
     # has been written but not saved is waiting on something the phase requires, and
     # there is no record for these tools to act on — but answering that with "there is

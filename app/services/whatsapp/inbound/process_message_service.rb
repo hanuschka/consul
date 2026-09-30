@@ -42,12 +42,31 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   on the locale copy.
   # - Everything else is the assistant's, and the recovery line is what happens when
   #   the assistant does not answer.
-  OPT_OUT_KEYWORDS = ["stop", "stopp", "abmelden", "unsubscribe"].freeze
+  #
+  # Turkish, Arabic, Ukrainian and Russian follow German and English, because a
+  # citizen writing in their own language must be able to leave during an outage
+  # too. Their cancel words count as leaving on purpose: missing someone who
+  # wanted out is the failure nothing may allow, and in the middle of a step the
+  # assistant still asks first. Arabic is listed with and without the hamza,
+  # since both are how people type it.
+  OPT_OUT_KEYWORDS = [
+    "stop", "stopp", "abmelden", "unsubscribe",
+    "dur", "iptal", "abonelikten çık",
+    "توقف", "إيقاف", "ايقاف", "إلغاء", "الغاء", "إلغاء الاشتراك", "الغاء الاشتراك",
+    "стоп", "відписатися", "скасувати",
+    "отписаться", "отмена"
+  ].map { |word| ::Whatsapp::Inbound::MessageReading.keyword_form(word) }.freeze
 
   # The way back in for a number that left. Deterministic for the same reason
   # leaving is: an unsubscribed number reaches no model, so the only thing that can
   # read this is Ruby.
-  OPT_IN_KEYWORDS = ["start", "anmelden", "subscribe"].freeze
+  OPT_IN_KEYWORDS = [
+    "start", "anmelden", "subscribe",
+    "başla", "abone ol",
+    "ابدأ", "ابدا", "اشتراك",
+    "старт", "підписатися",
+    "подписаться"
+  ].map { |word| ::Whatsapp::Inbound::MessageReading.keyword_form(word) }.freeze
 
   # The one of them the citizen is told to write, by the confirmation of leaving
   # and by the reminder after it — both have to name a word this list still reads.
@@ -422,8 +441,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     end
 
     DEFERRED_OPT_OUT_NOTE = "The citizen wrote \"%{text}\" while in the middle of a contribution, " \
-                            "a comment or a vote. It may mean stopping only that, or receiving " \
-                            "no more messages from us at all. Ask them once, in one short " \
+                            "a comment or a vote, or just after being asked for one. It may mean " \
+                            "stopping only that, or receiving no more messages from us at all. " \
+                            "Ask them once, in one short " \
                             "question, which they mean, and offer the cancel button for stopping " \
                             "only this. If they want no more messages, call stop_messages.".freeze
 

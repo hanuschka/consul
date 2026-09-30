@@ -10,8 +10,8 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
               "id of its support button and the link to open it — or several candidates when " \
               "more than one matches, so you can ask which they mean rather than guessing. " \
               "Call it before " \
-              "support_proposal, withdraw_support, draft_comment or send_link for a " \
-              "contribution; each of those needs the id this returns. Sends nothing."
+              "support_proposal, withdraw_support, start_comment, draft_comment or send_link for " \
+              "a contribution; each of those needs the id this returns. Sends nothing."
 
   parameters do
     string :title, description: "What the citizen called the contribution, in their own words"

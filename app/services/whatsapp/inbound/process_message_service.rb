@@ -27,8 +27,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   reason as the stop keyword: leaving a half-written submission must not depend
   #   on a provider being reachable. A text-less voice note halts only after that
   #   gate, because a tap is never audio.
-  # - The two pills that mean "back to the beginning" are read here for that reason
-  #   as well, and theirs is the one gate that does not halt: clearing the phase is
+  # - Help, tapped or typed as the bare word, is answered from the locale copy
+  #   rather than by the assistant: it names the same words, privacy page and
+  #   contact every time, and it leaves whatever is in progress where it was.
+  # - The pill that means "back to the beginning" is read here for that reason
+  #   as well, and its gate is the one that does not halt: clearing the phase is
   #   only half of what the citizen asked for, and the other half is the reply,
   #   which is the overview of what applies now and so the assistant's to write.
   # - The projekt card's phase pills are answered here rather than described to the
@@ -73,6 +76,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   def self.opt_in_keyword
     OPT_IN_KEYWORDS.first.upcase
   end
+
+  # The word alone, answered like the pill. Anything around it — "hilfe bei meinem
+  # Vorschlag" — is a question for the assistant, which sends the same help through
+  # show_help where that is what it asks for.
+  HELP_KEYWORDS = %w[hilfe help].map do |word|
+    ::Whatsapp::Inbound::MessageReading.keyword_form(word)
+  end.freeze
 
   # How many of a phase's contributions the reply names in words, where none of them
   # can be opened in the chat and a list has nothing to offer. Fewer than the ten
@@ -120,6 +130,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     track_submission_wish
 
     return if handle_cancel_tap
+    return if handle_help_request
     return if handle_retry_tap
     return if handle_phase_tap
     return if handle_contribution_tap
@@ -767,10 +778,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       conversation.begin_start_over!
     end
 
-    # One id from each namespace, which is why both are read here: the start-over pill
-    # is built from the catalog and keeps its catalog id, because every one already
-    # sent is still sitting in a chat history and still tappable.
-    START_OVER_ACTIONS = %i[main_menu help].freeze
+    # Both namespaces are read here: the start-over pill is built from the catalog and
+    # keeps its catalog id, because every one already sent is still sitting in a chat
+    # history and still tappable. `help` left this list when it got an answer of its
+    # own (handle_help_request) — as a start-over it cleared the phase under a draft
+    # and was answered with the overview.
+    START_OVER_ACTIONS = %i[main_menu].freeze
 
     def start_over_tap?
       tapped_id = reading.tapped_reply_id
@@ -801,6 +814,25 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       answer_discard(note)
 
       true
+    end
+
+    # Nothing is cleared: a draft, a comment or a ballot in progress is still there
+    # when the citizen writes again, and the assistant carries on from it.
+    def handle_help_request
+      help_tap = ::Whatsapp::Send.recovery_action_from(reading.tapped_reply_id) == :help
+
+      return false if !help_tap && !typed_help_keyword?
+
+      record_tap(:help, nil) if help_tap
+
+      ::Whatsapp::HelpMessage.deliver(conversation)
+
+      true
+    end
+
+    # Never for a tapped pill, whose label the citizen did not write.
+    def typed_help_keyword?
+      reading.tapped_reply_id.blank? && HELP_KEYWORDS.include?(normalized_text)
     end
 
     # The discard is done by now and never waits on a model; only the line after it

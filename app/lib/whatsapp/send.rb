@@ -383,16 +383,25 @@ module Whatsapp::Send
   # call rather than three, so a body and its buttons can never come back in two
   # different ones.
   def recovery(conversation:, body:, actions:)
-    pills = recovery_buttons(actions, conversation)
-    lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+    locale_buttons(
       account: conversation.whatsapp_account,
-      lines: [body, *pills.map { |pill| pill[:title] }]
+      body: body,
+      buttons: recovery_buttons(actions, conversation)
+    )
+  end
+
+  # The bot's own locale copy with fixed pills under it, the sentence and the labels
+  # put into the citizen's language in one batch so the two cannot drift apart.
+  def locale_buttons(account:, body:, buttons:)
+    lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+      account: account,
+      lines: [body, *buttons.map { |pill| pill[:title] }]
     )
 
     recovery_buttons_message(
-      account: conversation.whatsapp_account,
+      account: account,
       body: lines.first,
-      buttons: pills.zip(lines.drop(1)).map do |pill, title|
+      buttons: buttons.zip(lines.drop(1)).map do |pill, title|
         pill.merge(
           title: ::Whatsapp::AssistantActions.fitting_label(
             translated: title, original: pill[:title]

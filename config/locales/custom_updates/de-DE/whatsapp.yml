@@ -93,6 +93,20 @@ de:
       # selbst, was verworfen wurde, und bietet den nächsten Schritt an.
       cancelled: Alles klar, das ist verworfen. Sie können gleich mit etwas anderem weitermachen.
       opted_in: Sie erhalten wieder Nachrichten von uns.
+      # Die Antwort auf „Hilfe“: muss auf einen Handybildschirm passen. Die
+      # Kontaktzeile wird nur angehängt, wenn die Einstellungen einen Kontakt führen.
+      help:
+        body: |-
+          So können Sie hier mitmachen:
+          • Ideen und Vorschläge einreichen
+          • Vorschläge unterstützen und kommentieren
+          • an Abstimmungen teilnehmen
+          • Ihre eigenen Beiträge ansehen
+
+          Schreiben Sie einfach, was Sie vorhaben. Diese Wörter gehen immer: „von vorne“ fängt neu an, „Stopp“ meldet Sie von unseren Nachrichten ab.
+
+          Datenschutz: %{privacy_url}
+        contact: "Fragen an die Verwaltung: %{contact}"
       compliance:
         disclosure: 👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet Ihnen kein Mensch direkt.
         opted_out: >-
@@ -372,6 +386,7 @@ de:
         contribution_choose: Beitrag auswählen
         view_projekt: Projekt ansehen
         my_contributions: Meine Beiträge
+        discover: Projekte ansehen
         location_skip: Ohne Ort weiter
         main_menu: Von vorne loslegen
         show_more: Weitere anzeigen

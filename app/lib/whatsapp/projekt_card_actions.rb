@@ -223,8 +223,14 @@ module Whatsapp::ProjektCardActions
   # which is the portal. A proposal phase whose portal has switched the bot off as a
   # submission channel used to be named here as a link; it no longer reaches this
   # (#closed_to_chat_submission?).
+  #
+  # So a submission phase that does reach it is eligible already, and is not asked a
+  # second time: eligible? loads a budget phase's heading, and a card asked it twice
+  # per phase.
   def action_for(projekt_phase)
-    return :idea_start if ::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+    if ::Whatsapp::EligiblePhasesQuery::PHASE_CLASSES.include?(projekt_phase.class)
+      return :idea_start
+    end
 
     :phase_open
   end

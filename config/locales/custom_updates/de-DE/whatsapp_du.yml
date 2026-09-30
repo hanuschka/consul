@@ -21,6 +21,17 @@ de:
         „Nochmal versuchen“, dann mache ich dort weiter.
       cancelled: "Alles klar, das ist verworfen. Du kannst gleich mit etwas anderem weitermachen."
       opted_in: "Du erhältst wieder Nachrichten von uns."
+      help:
+        body: |-
+          So kannst du hier mitmachen:
+          • Ideen und Vorschläge einreichen
+          • Vorschläge unterstützen und kommentieren
+          • an Abstimmungen teilnehmen
+          • deine eigenen Beiträge ansehen
+
+          Schreib einfach, was du vorhast. Diese Wörter gehen immer: „von vorne“ fängt neu an, „Stopp“ meldet dich von unseren Nachrichten ab.
+
+          Datenschutz: %{privacy_url}
       compliance:
         disclosure: "👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet dir kein Mensch direkt."
         opted_out: >-

@@ -44,19 +44,8 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
     # only proposals report as supportable — the same distinction the two searches
     # behind this used to encode by being two searches.
     def summary_for(contribution)
-      contribution_candidate_summary(contribution).merge(
-        supportable: contribution.is_a?(::Proposal),
-        support_action_id: support_action_id(contribution),
+      ::Whatsapp::ContributionFacts.call(contribution, user: user).merge(
         url: ::Whatsapp::PublishedResourceUrl.call(contribution)
       ).compact
-    end
-
-    # Handed over rather than left for the model to compose, the way draft_proposal
-    # hands over its candidates'. Which way the pill goes is read off the vote when
-    # it is sent, and a proposal that can no longer be supported loses the pill there.
-    def support_action_id(contribution)
-      return if !contribution.is_a?(::Proposal)
-
-      "support_toggle-#{contribution.id}"
     end
 end

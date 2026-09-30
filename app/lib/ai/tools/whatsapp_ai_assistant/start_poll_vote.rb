@@ -92,8 +92,7 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
     # lets them change any answer, and this used to tell the model the vote could not
     # be answered a second time, which it passed on as "you cannot change it".
     def already_answered(projekt_phase)
-      ballot_url = ::Whatsapp::ProjektLink.ballot_url(projekt_phase) ||
-        ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+      ballot_url = ::Whatsapp::ProjektLink.participation_url(projekt_phase)
 
       {
         status: "The citizen took part in that vote earlier and answered it in full, so there " \
@@ -141,8 +140,7 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
     # vote is on the page — so the reasons are not enumerated for a model that would
     # only have to translate them into that one sentence anyway.
     def ballot_on_the_page_error(projekt_phase)
-      url = ::Whatsapp::ProjektLink.ballot_url(projekt_phase) ||
-        ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+      url = ::Whatsapp::ProjektLink.participation_url(projekt_phase)
 
       return unreachable_ballot_error if url.blank?
 

@@ -39,9 +39,16 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}. " \
                    "With a record id after a dash: " \
                    "#{::Whatsapp::AssistantActions.parameterised_action_names.join(", ")}."
+    optional :link,
+      description: "A page to put under your text, named by the id of the button that " \
+                   "opens it (\"phase_open-45\", \"view_contribution-proposal_12\") where a " \
+                   "tap note offers one. The bot writes the address in; never write one into " \
+                   "body yourself." do
+      string
+    end
   end
 
-  def execute(body:, buttons:)
+  def execute(body:, buttons:, link: nil)
     refusal = refuse_before_preview
 
     return refusal if refusal.present?
@@ -51,11 +58,17 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
     return overlong if overlong.present?
 
+    page_url = ::Whatsapp::PillPageUrl.call(link, user: user)
+
+    if link.present? && page_url.blank?
+      return unknown_link_error
+    end
+
     offerable = offerable_buttons(buttons)
 
     return unusable_actions_error if offerable.empty?
 
-    message = send_reply(body: body.strip, buttons: offerable)
+    message = send_reply(body: [body.strip, page_url].compact.join("\n\n"), buttons: offerable)
 
     return send_refused_error if ::Whatsapp::Send.refused?(message)
 
@@ -66,6 +79,7 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
     halt(
       [
         "Replied to the citizen with buttons: #{button_ids.join(", ")}.",
+        page_url.present? ? "The page #{link} opens was put under the text." : nil,
         ::Whatsapp::AssistantActions.wording_note(wording_offers(offerable))
       ].compact.join(" ")
     )
@@ -126,6 +140,13 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
     def blank_body_error
       { error: "The reply needs text of its own. Write the sentence and call this again." }
+    end
+
+    def unknown_link_error
+      {
+        error: "That link names no page this citizen can open now. Leave link out, and say " \
+               "there is no page to open rather than writing an address."
+      }
     end
 
     # Names what was wrong without listing the whole vocabulary again — it is

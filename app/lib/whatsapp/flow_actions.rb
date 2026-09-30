@@ -32,7 +32,7 @@ module Whatsapp::FlowActions
   # `main_menu` is the exception on both counts. It acts on its own — the inbound
   # layer clears the active phase on it, because a way back to the beginning that
   # needs a model to be reachable is not one — and yet it keeps its id here rather
-  # than moving to the recovery namespace beside `help`, which now behaves the same.
+  # than moving to the recovery namespace beside `help`, which answers on its own too.
   # Moving it would change the id, and every start-over pill the bot has ever sent is
   # still sitting in a chat history and still tappable.
   ACTIONS = %i[

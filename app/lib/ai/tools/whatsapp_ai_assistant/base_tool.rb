@@ -273,41 +273,6 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       yield(projekt)
     end
 
-    # What a contribution search hands back when it cannot decide on its own.
-    # Shared because several tools resolve one from what the citizen called it,
-    # and a second wording of the same refusal is a second situation for the model
-    # to tell apart.
-    #
-    # Reads the same four things off a proposal and off a budget investment:
-    # Budget::Investment delegates projekt_phase to its budget, so neither the
-    # class nor the shape has to be branched on here.
-    def contribution_candidate_summary(contribution)
-      projekt = contribution.projekt_phase&.projekt
-
-      {
-        contribution_id: contribution.id,
-        title: contribution.title,
-        projekt: projekt.present? ? projekt_title(projekt) : nil,
-        supports: contribution.cached_votes_up,
-        supported_by_you: supported_by_user?(contribution)
-      }.compact
-    end
-
-    # Read the way the pill beside the sentence reads it, through
-    # Whatsapp::AssistantActions#support_action, so the two cannot come
-    # apart: a support registered in an earlier session is not in the transcript,
-    # and with no fact to write from the model offers a support the button under
-    # it is already labelled "withdraw".
-    #
-    # Absent rather than false for a budget investment and for an unlinked number.
-    # Neither is a proposal this citizen has not supported yet, and reported as
-    # false both would read as one.
-    def supported_by_user?(contribution)
-      return if !contribution.is_a?(::Proposal) || user.blank?
-
-      contribution.voted_up_by?(user)
-    end
-
     # The pills under a statement the model may not word — what unlinking does, what
     # accepting the terms accepts. The platform's pill comes first and is built
     # here, not filtered out of what the model passed: it is unofferable through the

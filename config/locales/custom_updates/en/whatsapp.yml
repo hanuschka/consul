@@ -85,6 +85,20 @@ en:
       # itself what was discarded and offers the next step.
       cancelled: OK, that's discarded. You can carry on with something else right away.
       opted_in: You will receive messages from us again.
+      # The answer to "Help": it has to fit on a phone screen. The contact line is
+      # appended only when the settings hold a contact.
+      help:
+        body: |-
+          Here's how you can take part:
+          • Submit ideas and proposals
+          • Support and comment on proposals
+          • Take part in votes
+          • See your own contributions
+
+          Just write what you have in mind. These words always work: "start over" begins again, "stop" unsubscribes you from our messages.
+
+          Privacy: %{privacy_url}
+        contact: "Questions for the administration: %{contact}"
       compliance:
         disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
         opted_out: >-
@@ -303,6 +317,7 @@ en:
         contribution_choose: Choose contribution
         view_projekt: View project
         my_contributions: My contributions
+        discover: See projects
         location_skip: Continue without
         main_menu: Start over
         show_more: Show more

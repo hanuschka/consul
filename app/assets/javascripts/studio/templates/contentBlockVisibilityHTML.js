@@ -59,7 +59,7 @@ App.Studio.Projekt.templateFunctions.contentBlockVisibilityControlsHtml = functi
           template-id="content-block-visibility-period-popup-template"
           body-class="content-block-visibility-period-popup"
           placement="bottom"
-          align="end"
+          align="start"
         >
           <button
             type="button"

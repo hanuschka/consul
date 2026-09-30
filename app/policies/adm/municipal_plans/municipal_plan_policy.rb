@@ -78,7 +78,7 @@ class Adm::MunicipalPlans::MunicipalPlanPolicy < ApplicationPolicy
     return false unless @user&.administrator?
     return false unless @record.is_a?(MunicipalPlan)
 
-    @record.released_plan_id.nil? && @record.status == "published"
+    @record.released_plan_id.nil? && @record.status == "published" && @record.working_copy.nil?
   end
 
   # Renumbering the list only makes sense for someone who sees all of it.

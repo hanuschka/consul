@@ -148,9 +148,6 @@ en:
             convert: Convert into project
           projekts:
             title: Linked participation projects
-          working_copy:
-            title: This is the working version
-            body: This version is not public yet. It replaces the released plan as soon as it has been released.
           changes:
             title: Changes against the released version
             field: Field

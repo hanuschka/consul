@@ -198,6 +198,11 @@
   border-radius: 8px;
   padding: 24px;
   margin-bottom: 24px;
+
+  &.-info {
+    background: var(--kern-color-feedback-info-background);
+    border-color: var(--kern-color-feedback-info);
+  }
 }
 
 // --- Section title (top-level page sections: Bewertung, Bürgervorschlag, Interne Notizen) ---

@@ -253,14 +253,15 @@ describe "Vorhaben in /adm", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
-    it "offers the actions of the released Vorhaben on the pending version's page" do
+    it "offers the conversion only on the released Vorhaben, not on its pending version" do
       copy = ::MunicipalPlans::WorkingCopyService.call(released)
 
       get adm_municipal_plans_municipal_plan_path(copy)
 
-      expect(response.body).to include(
-        new_adm_municipal_plans_municipal_plan_projekt_conversion_path(released)
-      )
+      expect(response.body)
+        .not_to include(new_adm_municipal_plans_municipal_plan_projekt_conversion_path(released))
+      expect(response.body)
+        .not_to include(new_adm_municipal_plans_municipal_plan_projekt_conversion_path(copy))
       expect(response.body)
         .not_to include(%(action="#{archive_adm_municipal_plans_municipal_plan_path(released)}"))
       expect(response.body)

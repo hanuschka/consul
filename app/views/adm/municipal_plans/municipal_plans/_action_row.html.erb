@@ -8,7 +8,7 @@
 <% show_archive = show_edit && municipal_plan.published? && policy.archive? %>
 <% show_discard = show_edit && policy.discard? %>
 <% show_unarchive = show_edit && master.archived? && master_policy.unarchive? %>
-<% show_convert = show_edit && master_policy.convert? %>
+<% show_convert = show_edit && policy.convert? %>
 <% visible_actions = { website: show_website, edit: show_edit, submit: show_submit, release: show_release,
                         discard: show_discard, archive: show_archive, unarchive: show_unarchive, convert: show_convert }.select { |_, shown| shown }.keys %>
 
@@ -79,7 +79,7 @@
     <% end %>
 
     <% if show_convert %>
-      <%= kern_link_button(new_adm_municipal_plans_municipal_plan_projekt_conversion_path(master),
+      <%= kern_link_button(new_adm_municipal_plans_municipal_plan_projekt_conversion_path(municipal_plan),
             text: t("adm.municipal_plans.municipal_plans.show.actions.convert"),
             icon: "rocket_launch", style: :secondary) %>
     <% end %>

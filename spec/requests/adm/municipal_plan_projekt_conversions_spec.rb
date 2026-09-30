@@ -53,6 +53,18 @@ describe "Converting a Vorhaben into a Beteiligungsprojekt", type: :request do
 
       expect(response).to redirect_to(adm_root_path)
     end
+
+    it "neither offers nor allows the conversion while a change is pending" do
+      ::MunicipalPlans::WorkingCopyService.call(plan)
+
+      get adm_municipal_plans_municipal_plan_path(plan)
+      expect(response.body)
+        .not_to include(new_adm_municipal_plans_municipal_plan_projekt_conversion_path(plan))
+
+      expect { post adm_municipal_plans_municipal_plan_projekt_conversion_path(plan), params: params }
+        .not_to change(Projekt, :count)
+      expect(response).to redirect_to(adm_root_path)
+    end
   end
 
   describe "as a Sachbearbeitung" do

@@ -148,9 +148,6 @@ de:
             convert: In Beteiligungsprojekt überführen
           projekts:
             title: Verknüpfte Beteiligungsprojekte
-          working_copy:
-            title: Dies ist die Bearbeitungsfassung
-            body: Diese Fassung ist noch nicht öffentlich. Sie ersetzt das freigegebene Vorhaben, sobald sie freigegeben wurde.
           changes:
             title: Änderungen gegenüber der freigegebenen Fassung
             field: Feld

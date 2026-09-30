@@ -45,8 +45,12 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
     string :question,
       description: "What you ask the citizen underneath their contribution — whether it should go " \
                    "in as it stands. A sentence or two, in their language, and not a restatement " \
-                   "of the contribution: they are reading it directly above. Say nothing here " \
-                   "about what the draft adds to their words — that is additions_note."
+                   "of the contribution: they are reading it directly above. Ask it as a plain, " \
+                   "friendly question even where something above gives them a reason to " \
+                   "hesitate, such as a similar proposal: never as though going ahead needed " \
+                   "excusing — \"Soll er trotzdem genau so veröffentlicht werden?\" reads as a " \
+                   "reproach. Say nothing here about what the draft adds to their words — that " \
+                   "is additions_note."
     optional :additions_note,
       description: "Only where the draft carries additions_beyond_idea: one short sentence of " \
                    "your own, in the citizen's language, naming what the draft proposes that " \

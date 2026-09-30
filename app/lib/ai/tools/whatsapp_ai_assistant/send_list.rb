@@ -19,14 +19,19 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
               "and an optional one-line description. Use it instead of buttons whenever there " \
               "are more than three things to choose between, or when each option needs a line " \
               "explaining it. Every row is yours to write, and every row needs an action_id " \
-              "from the same vocabulary as reply_with_actions. Nothing is sent unless every " \
+              "from the same vocabulary as reply_with_actions — where the steps with fixed " \
+              "labels keep them, except that an idea_start row is named after its projekt. " \
+              "Nothing is sent unless every " \
               "row can be: a row whose " \
               "action is unknown, whose record no longer exists, whose action id repeats " \
               "another row's, or which reads exactly like another row without a description " \
               "to tell the two apart refuses the whole list, because a list that quietly held " \
               "fewer would leave out a row the sentence above it offers. That sentence never " \
               "says how many rows the list holds — the citizen sees them — and a number in it " \
-              "is a total a tool returned, said as the total. A list carries no " \
+              "is a total a tool returned, said as the total. Nor does it list or number the " \
+              "rows again: a sentence naming each of them above a list of the same is a wall " \
+              "of text the list was meant to replace. The button that opens the list is " \
+              "labelled for you from what its rows are. A list carries no " \
               "buttons beside it, so any way out of the " \
               "question has to be a row of its own. Rows cannot hold links or markup — put a URL " \
               "in the body above if one is needed. This sends the message itself: do not write " \
@@ -36,11 +41,6 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
     string :body,
       description: "The sentence above the list, in the citizen's language, laid out as the " \
                    "style rules require."
-    string :button_label,
-      description: "What the button that opens the list says, at most " \
-                   "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting " \
-                   "spaces (\"Projekt wählen\", \"Auswählen\"). Count them: a longer one is " \
-                   "refused, and nothing is sent until it is shorter."
     array :rows,
       of: :object,
       description: "Up to ten rows, most useful first. Each is {\"action_id\": ..., " \
@@ -56,16 +56,15 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
                    "#{::Whatsapp::AssistantActions.parameterised_action_names.join(", ")}."
   end
 
-  def execute(body:, button_label:, rows:)
+  def execute(body:, rows:)
     refusal = refuse_before_preview
 
     return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
 
-    overlong =
-      refuse_overlong_button_labels(
-        rows, length: ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
-      ) || refuse_overlong_labels([button_label])
+    overlong = refuse_overlong_button_labels(
+      rows, length: ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
+    )
 
     return overlong if overlong.present?
 
@@ -75,24 +74,20 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
     return unusable_rows_error if listed.empty?
     return partial_rows_error(offered: offered, listed: listed) if listed.size < offered.size
 
-    opener = ::Whatsapp::AssistantActions.truncated(button_label).presence ||
-             ::Whatsapp.copy("whatsapp.bot.buttons.choose")
+    row_ids = listed.map { |row| row[:id] }
+    opener = ::Whatsapp::AssistantActions.list_opener(row_ids)
     message = ::Whatsapp::Send.list(
       account: account, body: body.strip, button_label: opener, rows: listed
     )
 
     return send_refused_error if ::Whatsapp::Send.refused?(message)
 
-    row_ids = listed.map { |row| row[:id] }
-
     note_typing_hint_offered! if ::Whatsapp::FlowActions.projekt_choice?(row_ids)
 
     halt(
       [
-        "Sent a list of #{listed.size} rows: #{row_ids.join(", ")}.",
-        ::Whatsapp::AssistantActions.wording_note(
-          wording_offers(listed) << [button_label, opener]
-        )
+        "Sent a list of #{listed.size} rows, opened by \"#{opener}\": #{row_ids.join(", ")}.",
+        ::Whatsapp::AssistantActions.wording_note(wording_offers(listed))
       ].compact.join(" ")
     )
   end
@@ -152,11 +147,9 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       spec = row_value(row, "action_id")
       label = row_value(row, "label")
 
-      button =
-        ::Whatsapp::AssistantActions.offered_button(
-          spec: spec, label: label, conversation: conversation,
-          length: ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
-        )
+      button = ::Whatsapp::AssistantActions.offered_row(
+        spec: spec, label: label, conversation: conversation
+      )
 
       return if button.blank?
 

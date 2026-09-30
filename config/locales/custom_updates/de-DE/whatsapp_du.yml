@@ -19,7 +19,7 @@ de:
       assistant_unavailable_after_action: >-
         %{completed} Nur meine Antwort darauf kommt gerade nicht durch. Tippe auf
         „Nochmal versuchen“, dann mache ich dort weiter.
-      cancelled: "Alles klar, abgebrochen. Schreib mir einfach wieder, wann immer du möchtest."
+      cancelled: "Alles klar, das ist verworfen. Du kannst gleich mit etwas anderem weitermachen."
       opted_in: "Du erhältst wieder Nachrichten von uns."
       compliance:
         disclosure: "👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet dir kein Mensch direkt."

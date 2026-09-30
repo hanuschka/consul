@@ -81,7 +81,9 @@ en:
         %{completed} Only my reply to it isn't getting through right now. Tap "Try again" and
         I'll pick up from there.
       assistant_unavailable_action_done: That worked.
-      cancelled: OK, cancelled. Just message me again whenever you'd like.
+      # Only the fallback for when the assistant cannot answer: otherwise it says
+      # itself what was discarded and offers the next step.
+      cancelled: OK, that's discarded. You can carry on with something else right away.
       opted_in: You will receive messages from us again.
       compliance:
         disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
@@ -253,6 +255,16 @@ en:
         retry: Try again
         link_retry: Try again
         cancel: Cancel
+        # The cancel pill, named after what it discards.
+        cancel_draft: Discard draft
+        cancel_comment: Discard comment
+        # Fixed labels for steps that recur throughout a conversation: worded by the
+        # model, the same step read six different ways in one session.
+        submit_proposal: Submit an idea
+        draft_revise: Edit draft
+        submit_anyway: Keep as it is
+        location_share: Use this place
+        choose_projekt: Choose project
         help: Help
         login: 🔗 Log in
         open_page: Open page

@@ -69,8 +69,15 @@ module Whatsapp::AssistantActions
   # and not only the words on it. Here the model still decides when to offer, which is
   # safe because each of these is re-checked on the tap — against the vote, against the
   # digest of what was shown.
+  #
+  # The rest are the steps a submission passes through again and again — starting
+  # one, changing the draft, keeping it as it is, taking or skipping a place,
+  # starting over. Worded afresh on every message, one step reached a citizen
+  # under six labels in one session, and a button that reads differently each
+  # time reads as a different button. Fixed so the same step always reads alike.
   FORCED_LABEL_ACTIONS = %i[
     support_toggle support_register support_withdraw comment_post draft_publish submit_final
+    submit_proposal draft_revise submit_anyway location_share location_skip main_menu
   ].freeze
 
   # The fixed labels that have no record behind them to be read off. `submit_final` is
@@ -81,7 +88,31 @@ module Whatsapp::AssistantActions
     support_withdraw: "whatsapp.bot.buttons.support_withdraw",
     comment_post: "whatsapp.bot.buttons.comment_post",
     draft_publish: "whatsapp.bot.buttons.draft_publish",
-    submit_final: "whatsapp.bot.buttons.draft_publish"
+    submit_final: "whatsapp.bot.buttons.draft_publish",
+    submit_proposal: "whatsapp.bot.buttons.submit_proposal",
+    draft_revise: "whatsapp.bot.buttons.draft_revise",
+    submit_anyway: "whatsapp.bot.buttons.submit_anyway",
+    location_share: "whatsapp.bot.buttons.location_share",
+    location_skip: "whatsapp.bot.buttons.location_skip",
+    main_menu: "whatsapp.bot.buttons.main_menu"
+  }.freeze
+
+  # The cancel pill named after what it throws away. "Abbrechen" under a draft
+  # was written up as "Entwurf löschen" on one message and "Kommentar abbrechen"
+  # on the next; named by the work that is open, it says what tapping it does.
+  CANCEL_LABEL_KEYS = {
+    draft: "whatsapp.bot.buttons.cancel_draft",
+    comment: "whatsapp.bot.buttons.cancel_comment",
+    step: "whatsapp.bot.buttons.cancel"
+  }.freeze
+
+  # What opens a list, by what its rows are. The model used to word it, and one
+  # overview opened under "Projekt wählen" and "Übersicht öffnen" on two
+  # consecutive messages.
+  LIST_OPENER_KEYS = {
+    projekts: "whatsapp.bot.buttons.choose_projekt",
+    contributions: "whatsapp.bot.buttons.contribution_choose",
+    mixed: "whatsapp.bot.buttons.choose"
   }.freeze
 
   module_function
@@ -111,22 +142,76 @@ module Whatsapp::AssistantActions
     ).map(&:to_s)
   end
 
+  # The offerable ids whose label is fixed, for the tool descriptions that tell
+  # the model to leave it empty.
+  def fixed_label_action_names
+    (
+      (FORCED_LABEL_ACTIONS - ::Whatsapp::FlowActions.unofferable) +
+        [:idea_start] +
+        ::Whatsapp::Send::RECOVERY_ACTION_IDS.keys
+    ).map(&:to_s)
+  end
+
   # The one entry point the tools build a model-written pill through. Which of the
   # two namespaces a spec belongs to is not the caller's business, and it stopped
   # being expressible as a fallback the moment a recovery pill could be refused on
   # state: five call sites read a nil from the recovery side as "not a recovery id"
   # and asked the catalog for it, which answered nil again and logged the drop a
   # second time under the wrong reason.
-  def offered_button(spec:, label:, conversation:, length: MAX_LABEL_LENGTH)
+  #
+  # `idea_start` on a button says what tapping it does, in the card's words for the
+  # phase: offered beside a sentence it is the step, not a choice of projekt.
+  def offered_button(spec:, label:, conversation:)
+    action, param = parse(spec)
+
+    if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
+      return recovery_button(spec: spec, conversation: conversation)
+    end
+
+    button(
+      spec: spec,
+      label: button_label(action: action, param: param, label: label, conversation: conversation),
+      conversation: conversation
+    )
+  end
+
+  # The same pill as a list row. A row with `idea_start` is one projekt among
+  # several, so it keeps the name it was given: labelled with the step, every
+  # row of the list would read the same and WhatsApp refuses the whole list.
+  def offered_row(spec:, label:, conversation:)
     action, = parse(spec)
 
     if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
-      return recovery_button(
-        spec: spec, label: label, conversation: conversation, length: length
-      )
+      return recovery_button(spec: spec, conversation: conversation, length: MAX_ROW_TITLE_LENGTH)
     end
 
-    button(spec: spec, label: label, conversation: conversation, length: length)
+    button(spec: spec, label: label, conversation: conversation, length: MAX_ROW_TITLE_LENGTH)
+  end
+
+  # The words a button goes out with before any fixed label replaces them: the
+  # model's own, except where the step has its card wording.
+  def button_label(action:, param:, label:, conversation:)
+    return label if action != :idea_start
+
+    phase_action_label(param, conversation).presence || label
+  end
+
+  # The opener of a list, read off its rows rather than written by the model.
+  def list_opener(row_ids)
+    ::Whatsapp.copy(LIST_OPENER_KEYS.fetch(list_kind(row_ids)))
+  end
+
+  # Projekts only, contributions only, or anything else, which is an overview.
+  def list_kind(row_ids)
+    actions = Array(row_ids).map { |row_id| ::Whatsapp::FlowActions.parse(row_id)&.dig(:action) }
+
+    if actions.all? { |action| ::Whatsapp::FlowActions::PROJEKT_CHOICE_ACTIONS.include?(action) }
+      :projekts
+    elsif actions.all?(::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION)
+      :contributions
+    else
+      :mixed
+    end
   end
 
   # The pill neither half of which is the model's, for the ids withheld from it
@@ -181,7 +266,8 @@ module Whatsapp::AssistantActions
   def written_label?(spec)
     action, = parse(spec)
 
-    !FORCED_LABEL_ACTIONS.include?(action) && !confirmation?(action)
+    !FORCED_LABEL_ACTIONS.include?(action) && !confirmation?(action) &&
+      !::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
   end
 
   # One tappable button from the action id and the label the model wrote, or nil
@@ -372,7 +458,10 @@ module Whatsapp::AssistantActions
   # once per process, so the conversation is the only place the rule can actually be
   # enforced. The slot it frees is not backfilled: nothing is appended to a recovery
   # line any more except the way back, and that one is added on the way out.
-  def recovery_button(spec:, label:, conversation:, length: MAX_LABEL_LENGTH)
+  #
+  # Labelled from the copy like the recovery lines' own pills, so a way out reads
+  # the same whether the model offered it or a fixed line did.
+  def recovery_button(spec:, conversation:, length: MAX_LABEL_LENGTH)
     action, = parse(spec)
     recovery_id = ::Whatsapp::Send::RECOVERY_ACTION_IDS[action]
 
@@ -382,11 +471,33 @@ module Whatsapp::AssistantActions
       return dropped(spec, conversation, :recovery_unavailable)
     end
 
-    title = truncated(label, length: length)
+    title = truncated(recovery_label(action, conversation), length: length)
 
     return if title.blank?
 
     { id: recovery_id, title: title }
+  end
+
+  # The one place a recovery pill's words come from, for the model's pills and
+  # for Whatsapp::Send's fixed lines alike.
+  def recovery_label(action, conversation)
+    if action == :cancel
+      return ::Whatsapp.copy(CANCEL_LABEL_KEYS.fetch(cancelled_work(conversation)))
+    end
+
+    ::Whatsapp.copy("whatsapp.bot.buttons.#{action}")
+  end
+
+  # Which of the three things a cancel tap throws away, the draft first as the
+  # larger loss.
+  def cancelled_work(conversation)
+    if conversation.unsaved_submission?
+      :draft
+    elsif conversation.pending_comment.present?
+      :comment
+    else
+      :step
+    end
   end
 
   # Asked of the conversation as it stands when the message is built, which is when
@@ -476,6 +587,10 @@ module Whatsapp::AssistantActions
   # paraphrase would, so reporting those would put a note on most turns — and a note
   # that arrives every turn is one that stops being read, which is the whole reason
   # this is silent whenever every written label survived.
+  #
+  # Worded for either cause: a label cut to fit, or one replaced by the fixed words
+  # its step always carries (FORCED_LABEL_ACTIONS). Both leave the model's sentence
+  # naming words no button shows.
   def wording_note(offers)
     changed = offers.filter_map do |written, title|
       words = written.to_s.squish
@@ -487,9 +602,9 @@ module Whatsapp::AssistantActions
 
     return if changed.empty?
 
-    "Your label did not fit on #{changed.size == 1 ? "one button" : "some buttons"} — the " \
-      "citizen reads #{changed.join(", ")}. Say it that way if you refer to them again, and " \
-      "write shorter labels from here."
+    "#{changed.size == 1 ? "One button does" : "Some buttons do"} not carry the words you " \
+      "wrote — the citizen reads #{changed.join(", ")}. Say it that way if you refer to " \
+      "#{changed.size == 1 ? "it" : "them"} again."
   end
 
   # The label of a translated fixed line, as it will actually arrive. Preferring the

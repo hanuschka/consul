@@ -88,6 +88,7 @@ module Whatsapp::FlowActions
     link_later
     link_retry
     show_more
+    projekt_polls
   ].freeze
 
   # The ways to answer the picture question, in the order they are offered.
@@ -116,7 +117,7 @@ module Whatsapp::FlowActions
     poll_weight poll_done poll_skip
     category sentiment notify_toggle notify_enable notify_disable discover_category support
     support_toggle support_register support_withdraw show_more
-    view_contribution
+    view_contribution projekt_polls
   ].freeze
 
   # Ids the bot composes itself and the assistant may never write. Distinct from the
@@ -141,8 +142,11 @@ module Whatsapp::FlowActions
   # choosing the direction, which is the one thing the state has to decide.
   DIRECTED_ACTIONS = %i[support_register support_withdraw notify_enable notify_disable].freeze
 
+  # `projekt_polls` is the projekt card's own last row, and its parameter carries a
+  # page offset beside the projekt (#page_param) — a shape the bot writes for the
+  # page it has just sent and nothing a model has to compose.
   BOT_ONLY_ACTIONS = [
-    :poll_answer, :poll_weight, :poll_done, :poll_skip, *DIRECTED_ACTIONS
+    :poll_answer, :poll_weight, :poll_done, :poll_skip, :projekt_polls, *DIRECTED_ACTIONS
   ].freeze
 
   # Withheld for a reason the set above does not cover. A bot-only id is one whose
@@ -207,6 +211,13 @@ module Whatsapp::FlowActions
   # names a kind and an id together, which is why it is not one of the two above —
   # Whatsapp::ContributionPill is what reads it.
   DIRECT_CONTRIBUTION_ACTION = :view_contribution
+
+  # Answered on this side as well: the row that opens every vote of one projekt. It
+  # used to be `show_more` with the scope name alone, handed to the assistant as a
+  # tap, and which projekt's votes that meant was the model's to remember — on
+  # staging it answered the tap twice with one of the ballots rather than the list.
+  # Its parameter names the projekt, so the tap can only open that projekt's votes.
+  DIRECT_VOTES_ACTION = :projekt_polls
 
   # The ids another action has taken over. They stay in ACTIONS because every pill
   # the bot has ever sent is still sitting in a chat history and still tappable, so
@@ -291,6 +302,23 @@ module Whatsapp::FlowActions
 
   def parameterised?(action)
     PARAMETERISED_ACTIONS.include?(action)
+  end
+
+  # A record and how far into its list the next page starts, for the rows that
+  # page a list the bot sends itself — `projekt_polls` and `phase_contributions`.
+  # The first page is the bare id, so a pill sent before the offset existed still
+  # reads as that page.
+  def page_param(record_id:, from:)
+    return record_id.to_s if from.to_i <= 0
+
+    "#{record_id}_#{from.to_i}"
+  end
+
+  # [record_id, from] read back off such a parameter.
+  def parse_page_param(param)
+    record_id, from = param.to_s.split("_", 2)
+
+    [record_id, from.to_i]
   end
 
   # Answered on this side rather than by the assistant. Asked where a tap is

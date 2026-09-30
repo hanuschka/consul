@@ -414,12 +414,48 @@ class Whatsapp::Conversation < ApplicationRecord
     note_start_over!
     clear_ballot!
     close_step!("comment")
+    clear_submission_wish!
 
     if unsaved_submission?
       request_start_over!
     else
       leave_projekt!
     end
+  end
+
+  # ── A submission asked for before its projekt ───────────────────────────
+  # "Vorschlag erstellen" tapped with no phase open: the citizen has said they want
+  # to submit something and not yet where. The assistant answers it with the open
+  # projekts, and the projekt they picked from those used to be answered with its
+  # whole card — nine votes and the contributions included — on which the wish they
+  # had just tapped was nowhere to be seen. Held here until that card is sent, so it
+  # can offer only the way to submit (Ai::Tools::WhatsappAiAssistant::SendProjektCard).
+  #
+  # A timestamp rather than a flag, read against the window below: a wish the
+  # citizen never followed up is not one a card sent later should act on. Picking a
+  # projekt from the list the tap is answered with takes a minute, so the window is
+  # short. Cleared sooner by the card that uses it, by going back to the beginning,
+  # and with the rest of the context by start_draft!.
+  SUBMISSION_WISH_TTL = 10.minutes
+
+  def submission_wished?
+    wished_at = context["submission_wished_at"]
+
+    return false if wished_at.blank?
+
+    Time.zone.parse(wished_at) > SUBMISSION_WISH_TTL.ago
+  end
+
+  def record_submission_wish!
+    merge_context!(submission_wished_at: Time.current.iso8601)
+  end
+
+  def clear_submission_wish!
+    if context["submission_wished_at"].blank?
+      return
+    end
+
+    merge_context!(submission_wished_at: nil)
   end
 
   # Cleared on a revision, where the record is already persisted. Deliberately: a

@@ -864,7 +864,7 @@ class Projekt < ApplicationRecord
       # over the bodies appended the whole page into the first content block's
       # in-memory body and left the record dirty, one save away from
       # overwriting it.
-      content_blocks_content = content_blocks.map(&:body).join
+      content_blocks_content = publicly_visible_content_blocks.map(&:body).join
 
       ActionView::Base.full_sanitizer.sanitize(content_blocks_content, tags: ["h1", "h2" "h3", "h4", "ul", "li"])
     else
@@ -873,11 +873,20 @@ class Projekt < ApplicationRecord
   end
 
   def content_blocks_body
-    content_blocks
-      .sort_by(&:position)
+    publicly_visible_content_blocks
       .map(&:body)
       .compact_blank
       .join("\n")
+  end
+
+  # Filtered in memory so callers that preload content_blocks stay at one
+  # query per page of projekts.
+  def publicly_visible_content_blocks
+    now = Time.current
+
+    content_blocks
+      .select { |content_block| content_block.publicly_visible?(now) }
+      .sort_by { |content_block| content_block.position.to_i }
   end
 
   def perform_sync_update_for_global_overview

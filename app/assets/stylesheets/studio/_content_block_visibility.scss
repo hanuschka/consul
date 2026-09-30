@@ -1,0 +1,144 @@
+// Eye/calendar toolbar controls, the editor-only visibility hint and the
+// visibility period popup of content blocks
+// (App.Studio.ContentBlocks.Visibility).
+.custom-content-block-visibility-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.studio-icon-button.-visibility-off {
+  color: $dt-base;
+  background: $dt-base-light;
+
+  &:hover {
+    color: $dt-base;
+    background: $dt-base-light-hover;
+  }
+}
+
+// Blocks citizens can't see right now always carry the hint as a label on
+// their top edge; the dashed frame joins it while the block is hovered. Both
+// are overlays at the hover highlight's geometry, so the content never moves.
+.custom-content-block--visibility-frame {
+  position: absolute;
+  inset: -10px;
+  z-index: 1;
+
+  display: none;
+
+  border: 1px dashed mix($dt-base, #ffffff, 65%);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.custom-content-block-wrapper.-hidden-from-visitors > .custom-content-block-wrapper--inner:hover > .custom-content-block--visibility-frame,
+.custom-content-block-wrapper.-hidden-from-visitors > .custom-content-block-wrapper--inner:focus-within > .custom-content-block--visibility-frame {
+  display: block;
+}
+
+.content-block-visibility-hint {
+  position: absolute;
+  top: -14px;
+  left: 16px;
+  z-index: 3;
+
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 8px;
+  max-width: calc(100% - 32px);
+  padding: 2px 12px;
+
+  font-size: 0.875rem;
+  line-height: 1.5;
+
+  color: $dt-base;
+  background: $dt-base-light;
+  border: 1px solid $dt-base-light-hover;
+  border-radius: 14px;
+
+  &[hidden] {
+    display: none;
+  }
+
+  // A visible block has no frame to sit on, so its period label stays in
+  // the flow above the content.
+  &.-visible {
+    position: static;
+    display: flex;
+    width: fit-content;
+    margin-bottom: 12px;
+  }
+}
+
+.content-block-visibility-hint--icon {
+  flex-shrink: 0;
+}
+
+.content-block-visibility-hint--title {
+  font-weight: 500;
+}
+
+// Editors see blocks citizens can't see half-transparent; an open editor
+// brings the block back to full strength so its text stays readable.
+.custom-content-block-wrapper.-hidden-from-visitors:not(.-in-edit-mode) > .custom-content-block-wrapper--inner > .custom-content-block {
+  opacity: 0.5;
+}
+
+// Preview-as-user shows the page as citizens see it right now, so blocks they
+// can't see drop out of it entirely.
+body.-preview-mode .custom-content-block-wrapper.-hidden-from-visitors {
+  display: none;
+}
+
+.content-block-visibility-period-popup {
+  width: 380px;
+  max-width: calc(100vw - 24px);
+}
+
+.content-block-visibility-period-popup--intro {
+  margin-bottom: 12px;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.content-block-visibility-period-popup--note {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: $dt-base-light;
+  color: $dt-base;
+  font-size: 14px;
+  line-height: 1.4;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.content-block-visibility-period-popup--fields {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  input {
+    width: 100%;
+    margin: 4px 0 0;
+    font-weight: normal;
+  }
+}
+
+.content-block-visibility-period-popup--error {
+  margin-bottom: 12px;
+  color: #b91c1c;
+  font-size: 14px;
+
+  &[hidden] {
+    display: none;
+  }
+}

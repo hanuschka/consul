@@ -17,7 +17,7 @@ class Ai::Tools::WhatsappAiAssistant::ToggleNotification <
   # reply was on its way had it turned on by the first tap and off again by the
   # second. Constrained in the schema for the reason ManageSubscription gives: the
   # provider cannot emit a third value.
-  params(
+  parameters(
     type: "object",
     properties: {
       type: {
@@ -28,9 +28,10 @@ class Ai::Tools::WhatsappAiAssistant::ToggleNotification <
         type: "string",
         enum: SWITCHES,
         description: "Whether to switch the notification on or off"
-      }
+      },
+      **COMPLETION_LINE_PARAMETER
     },
-    required: %w[type switch],
+    required: %w[type switch completion_line],
     additionalProperties: false
   )
 
@@ -53,11 +54,13 @@ class Ai::Tools::WhatsappAiAssistant::ToggleNotification <
     apply(notification_type, switch.to_s)
 
     enabled = account.notifies?(notification_type)
+    changed = enabled != was_enabled
 
     {
+      completed: changed,
       type: notification_type.to_s,
       enabled: enabled,
-      changed: enabled != was_enabled,
+      changed: changed,
       hint: "Say which one it is and whether it is now on or off — if nothing changed, that " \
             "it already was. Do not list the rest."
     }

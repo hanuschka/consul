@@ -174,7 +174,15 @@ de:
           attributes:
             operator:
               must_be_include_for_first_filter: muss „Hinzufügen" sein, solange noch kein anderer Filter vorhanden ist
+        site_customization/content_block:
+          attributes:
+            visible_until:
+              before_visible_from: darf nicht vor dem Beginn des Sichtbarkeitszeitraums liegen
     attributes:
+      site_customization/content_block:
+        visible: Sichtbar
+        visible_from: Sichtbar ab
+        visible_until: Sichtbar bis
       map_location:
         latitude: Breitengrad
         longitude: Längengrad

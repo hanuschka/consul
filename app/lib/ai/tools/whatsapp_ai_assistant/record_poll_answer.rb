@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::RecordPollAnswer < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # A typed answer to the ballot question the citizen is looking at, recorded the
   # way a tap on the same option is. Whether the message chose that option is the
   # model's reading: the words used to be matched against the options before the
@@ -19,7 +21,7 @@ class Ai::Tools::WhatsappAiAssistant::RecordPollAnswer < Ai::Tools::WhatsappAiAs
               "record_open_poll_answer instead. Say nothing further once the answer has gone " \
               "through: the ballot's next message has already been sent."
 
-  params do
+  parameters do
     integer :question_answer_id,
       description: "The id of the option they chose, as the ballot question in the state lists it"
     optional :weight,

@@ -13,11 +13,16 @@ module Whatsapp::ListWindow
   # through the tapped id: `show_more`'s parameter names *which* list, because a
   # scope name is all the inbound side can safely resolve, and the offset is the
   # `next_from` the model was handed with the page it just showed.
-  # What a page can actually show, which a list no longer spends a row of on the way
-  # to start over. Loading more than a list renders means the surplus record of every
-  # page is reported as shown, counted into the next offset, and never seen — one
-  # contribution, phase or poll silently lost per page in every scope below.
-  ROWS = ::Whatsapp::MAX_OFFERED_LIST_ROWS
+  # What a page can actually show. Loading more than a list renders means the surplus
+  # record of every page is reported as shown, counted into the next offset, and
+  # never seen — one contribution, phase or poll silently lost per page in every
+  # scope below.
+  #
+  # One row short of a full list, because a list carries no buttons beside it and
+  # more_action_id has to go in as a row of its own. A page of ten plus that row
+  # was eleven for a list of ten: the model sent nine and still reported ten, and
+  # the tenth record of every page was never shown.
+  ROWS = ::Whatsapp::MAX_LIST_ROWS - 1
 
   module_function
 

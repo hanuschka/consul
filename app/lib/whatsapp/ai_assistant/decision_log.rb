@@ -60,8 +60,15 @@ module Whatsapp::AiAssistant::DecisionLog
   # cannot be refused: a plain-text answer that went out before the preview
   # anyway. Together they are the rate of the message that asked citizens to
   # approve a text they had not read.
+  #
+  # `tool_result` is `tool_called` finished: the same call once it has run, with the
+  # shape of its arguments and of its answer (Whatsapp::AiAssistant::ToolCallDigest).
+  # The replayed history keeps a turn's arguments only until it scrolls out of the
+  # window, and a reply reported days later has to be traced back to the page it was
+  # read off and the numbers it was given.
   EVENTS = %i[
     tool_called
+    tool_result
     action_dropped
     actions_unusable
     actions_missed

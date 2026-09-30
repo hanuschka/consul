@@ -55,11 +55,13 @@ class ProposalAiDraft::EvaluateTwoTierService < ApplicationService
     def evaluation_response
       return {} if hard_criteria.empty? && soft_criteria.empty?
 
-      Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
-        .with_instructions(build_system_instructions)
-        .ask(build_user_prompt)
-        .content
+      response =
+        Ai::RubyLlmFactory
+          .chat_with_json_output(output_schema)
+          .with_instructions(build_system_instructions)
+          .ask(build_user_prompt)
+
+      ::Ai::StructuredOutput.content_of(response)
     end
 
     def hard_criteria

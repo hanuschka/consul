@@ -73,6 +73,14 @@ en:
       assistant_unavailable_retryable: >-
         I can't answer you right now — hopefully only for a moment. Tap "Try again" and I'll
         pick up right where we were.
+      # The same line after a turn that completed something before it failed. Sent
+      # untranslated, because it is sent precisely when the assistant did not answer.
+      # %{completed} is the confirmation the model wrote with the tool call, or
+      # assistant_unavailable_action_done where the tool confirmed it itself.
+      assistant_unavailable_after_action: >-
+        %{completed} Only my reply to it isn't getting through right now. Tap "Try again" and
+        I'll pick up from there.
+      assistant_unavailable_action_done: That worked.
       cancelled: OK, cancelled. Just message me again whenever you'd like.
       opted_in: You will receive messages from us again.
       compliance:

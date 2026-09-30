@@ -80,12 +80,13 @@ class ProposalAiDraft::EvaluateContentSafetyService < ApplicationService
   private
 
     def response_content
-      Ai::RubyLlmFactory
-        .chat_with_json_output(output_schema)
-        .with_instructions(instructions)
-        .ask(user_prompt)
-        .content
-        .to_h
+      response =
+        Ai::RubyLlmFactory
+          .chat_with_json_output(output_schema)
+          .with_instructions(instructions)
+          .ask(user_prompt)
+
+      ::Ai::StructuredOutput.content_of(response).to_h
     end
 
     # Single words only, because that is what the any-word search matches on: a

@@ -4,7 +4,8 @@ describe DeficiencyReports::AiCategorizationService do
   # chat_with_json_output(schema).with_instructions(prompt).ask(prompt, with: image) -> response
   def stub_llm_content(content)
     chat = double("chat")
-    allow(chat).to receive(:ask).and_return(double("response", content: content))
+    allow(chat).to receive(:ask)
+      .and_return(RubyLLM::Message.new(role: :assistant, content: content.to_json))
     allow(Ai::RubyLlmFactory).to receive(:chat_with_json_output)
       .and_return(double("chat_builder", with_instructions: chat))
     chat

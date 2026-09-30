@@ -1,5 +1,7 @@
 class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
   Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # The comment put in front of the citizen before their name goes under it, and
   # the only thing that lets post_comment write anything. Composed from what
   # draft_comment wrote down, so what they read is what will be posted — nothing
@@ -19,7 +21,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
               "label saying so and whatever you write for it is discarded. This sends the " \
               "messages itself."
 
-  params do
+  parameters do
     string :question,
       description: "What you ask the citizen underneath their comment — whether it should go on " \
                    "the page. A sentence or two, in their language, and not a restatement of the " \

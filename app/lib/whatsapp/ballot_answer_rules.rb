@@ -28,6 +28,21 @@ module Whatsapp::BallotAnswerRules
 
   AFTER_CLOSE_RULE = "Once it has closed, answers can no longer be changed.".freeze
 
+  # Anonymity is ruled out in so many words, because answers are stored with the
+  # citizen's account — which is what lets them be changed — and a citizen told
+  # otherwise has been told something untrue about their data.
+  RESULTS_RULE = "Published results show how many chose each option, never who chose what. " \
+                 "Answers are stored with the citizen's account — that is what lets them change " \
+                 "them — so never call them anonymous.".freeze
+
+  # The rule as it holds for every vote on the portal, with nothing of one vote in
+  # it, for the system prompt to hold without a tool call. Asked "what happens to
+  # the answers I gave", the assistant used to ask back which projekt was meant,
+  # because the rule only ever reached it through one projekt's configuration.
+  PORTAL_RULE = "#{SAVED_RULE} Until a vote closes the citizen can change or remove any of " \
+                "their answers on that vote's ballot page on the portal. #{AFTER_CLOSE_RULE} " \
+                "#{IN_CHAT_RULE} #{RESULTS_RULE}".freeze
+
   module_function
 
   # Keyed on the phase rather than on one poll, because every rule here is the
@@ -84,16 +99,8 @@ module Whatsapp::BallotAnswerRules
     end
   end
 
-  # Anonymity is ruled out in so many words, because answers are stored with the
-  # citizen's account — which is what lets them be changed — and a citizen told
-  # otherwise has been told something untrue about their data.
   def names_rule(projekt_phase)
-    [
-      "Published results show how many chose each option, never who chose what. Answers are " \
-      "stored with the citizen's account — that is what lets them change them — so never call " \
-      "them anonymous.",
-      open_answer_names(projekt_phase)
-    ].join(" ")
+    [RESULTS_RULE, open_answer_names(projekt_phase)].join(" ")
   end
 
   # The setting Poll#show_open_answer_author_name? reads, asked of the phase

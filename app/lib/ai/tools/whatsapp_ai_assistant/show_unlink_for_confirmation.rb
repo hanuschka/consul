@@ -1,5 +1,7 @@
 class Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation <
   Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # What severing the link does, put in front of the citizen before they answer for
   # it, and the only thing that lets unlink_account run. The statement itself is
   # composed from fixed copy and the confirm button carries a fixed label, because
@@ -16,7 +18,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation <
               "leave the link in place. This is the only thing that arms unlink_account, which " \
               "is refused until it has been called. This sends the messages itself."
 
-  params do
+  parameters do
     string :question,
       description: "What you ask the citizen underneath the statement — whether the link should " \
                    "be severed. A sentence or two, in their language, and not a restatement of " \

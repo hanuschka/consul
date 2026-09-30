@@ -139,13 +139,12 @@ class Whatsapp::ProcessInboundMessageJob < ApplicationJob
       )
     end
 
+    # Through TurnFailureReport like every other fallback, so these events carry the
+    # same completed-tool tags. The conversation is the one the service ran on (the
+    # same cached association), so what its tools completed is still on it. And that
+    # report never raises, so a failing report cannot cost the citizen the line.
     def report(exception, conversation)
-      Rails.logger.error(
-        "[Whatsapp] inbound message could not be answered: " \
-        "#{exception.class} - #{exception.message}"
-      )
-
-      Sentry.capture_exception(exception, extra: { whatsapp_conversation_id: conversation.id })
+      ::Whatsapp::AiAssistant::TurnFailureReport.exception(exception, conversation: conversation)
     end
 
     # A message rather than an exception: nothing went wrong here, and the

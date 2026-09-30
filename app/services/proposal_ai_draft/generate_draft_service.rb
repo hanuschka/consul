@@ -26,7 +26,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         .with_instructions(system_instructions)
         .ask(user_prompt)
 
-    normalized_content(response.content)
+    normalized_content(::Ai::StructuredOutput.content_of(response))
   rescue StandardError => e
     Rails.logger.error("[ProposalAiDraft] GenerateDraftService failed: #{e.class} - #{e.message}")
     Rails.logger.error("[ProposalAiDraft] Backtrace: #{e.backtrace.first(10).join("\n")}")

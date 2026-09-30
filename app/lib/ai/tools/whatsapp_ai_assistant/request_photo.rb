@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # Asking for a photo is a sentence, so by every rule here it should not be a tool.
   # It is one for a single reason: whichever picture is chosen becomes a picture on a
   # public civic page under the citizen's name, and what they have to know about it
@@ -26,7 +28,7 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
               "back to you as a message, and generate_draft_image is what you answer it with. " \
               "This sends the message itself."
 
-  params do
+  parameters do
     string :body,
       description: "Your request for the photo, in the citizen's language, saying it is optional."
   end

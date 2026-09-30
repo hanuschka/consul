@@ -30,15 +30,25 @@ class AiUsageRecords::RecordEmbeddingUsage < ApplicationService
       Rails.logger.error("[AiUsageRecord] Failed to enqueue push for #{@feature}: #{e.message}")
     end
 
-    # The embeddings endpoint bills input tokens only and reports no price, so
-    # the request lands in the unpriced bucket like any other uncosted call.
+    # The embeddings endpoint bills input tokens only. ruby_llm prices them from its
+    # registry; a model it has no price for lands in the unpriced bucket like any
+    # other uncosted call.
     def counters
       {
         request_count: 1,
-        unpriced_request_count: 1,
-        input_tokens: @embedding.input_tokens.to_i,
-        cost_total: 0
+        unpriced_request_count: cost_counters.empty? ? 1 : 0,
+        input_tokens: @embedding.tokens&.input.to_i,
+        cost_total: 0,
+        **cost_counters
       }
+    end
+
+    def cost_counters
+      return @cost_counters if defined?(@cost_counters)
+
+      @cost_counters = AiUsageRecord.cost_counters(@embedding.cost)
+    rescue StandardError
+      @cost_counters = {}
     end
 
     def billed_model

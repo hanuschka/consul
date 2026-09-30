@@ -20,7 +20,7 @@ module RubyLlmToolToOpenAiConverter
   # `function`.
   #
   # Left unstrict to match what ruby_llm sent these tools with. A schema from
-  # the `params` DSL does qualify for strict mode — every property is listed
+  # the `parameters` DSL does qualify for strict mode — every property is listed
   # in `required` and an optional one is a nullable `anyOf` rather than a
   # missing key — so turning it on is one word here, and a change in how the
   # model is constrained rather than a change of transport.
@@ -34,13 +34,13 @@ module RubyLlmToolToOpenAiConverter
     }
   end
 
-  # ruby_llm always has a schema to give: the `params` DSL's, one derived from
-  # the older `param` declarations, or one inferred from #execute's keywords
+  # ruby_llm always has a schema to give: the `parameters` DSL's, one derived
+  # from `parameter` declarations, or one inferred from #execute's keywords
   # for a tool that declares neither — an argumentless tool included, which
   # gets the empty object schema the provider requires. So there is nothing to
   # fall back to, and a version that did hand back nothing would raise here
   # rather than quietly tell the model the tool takes no arguments.
   def self.parameters_for(tool)
-    tool.params_schema.reject { |key, _| NON_SCHEMA_KEYS.include?(key.to_s) }
+    tool.parameters_schema.reject { |key, _| NON_SCHEMA_KEYS.include?(key.to_s) }
   end
 end

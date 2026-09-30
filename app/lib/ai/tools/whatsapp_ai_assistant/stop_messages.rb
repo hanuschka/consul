@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::StopMessages < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   description "Stops all WhatsApp messages to this citizen. Call it the moment they ask not to " \
               "be written to any more, however they phrase it — no more messages, leave me " \
               "alone, unsubscribe, take me off the list. Never argue and never tell them to " \

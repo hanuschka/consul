@@ -13,7 +13,7 @@ class Ai::Tools::WhatsappAiAssistant::WithdrawSupport < Ai::Tools::WhatsappAiAss
               "acting. On success the proposal, the count as it now stands and its address are " \
               "sent to them for you — do not write them out again."
 
-  params do
+  parameters do
     integer :contribution_id,
       description: "Id of the proposal, exactly as find_contribution returned it"
   end
@@ -38,6 +38,7 @@ class Ai::Tools::WhatsappAiAssistant::WithdrawSupport < Ai::Tools::WhatsappAiAss
       send_recap(proposal: proposal, supports: supports)
 
       {
+        completed: true,
         withdrawn: true,
         supports: supports,
         hint: "The proposal, the count as it now stands and its address have already been sent " \

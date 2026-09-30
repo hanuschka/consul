@@ -13,7 +13,7 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
               "support_proposal, withdraw_support, draft_comment or send_link for a " \
               "contribution; each of those needs the id this returns. Sends nothing."
 
-  params do
+  parameters do
     string :title, description: "What the citizen called the contribution, in their own words"
   end
 

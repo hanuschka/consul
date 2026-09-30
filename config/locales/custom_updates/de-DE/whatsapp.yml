@@ -81,6 +81,14 @@ de:
       assistant_unavailable_retryable: >-
         Ich kann Ihnen gerade nicht antworten — das ist hoffentlich nur vorübergehend.
         Tippen Sie auf „Nochmal versuchen“, dann mache ich genau dort weiter.
+      # The same line after a turn that completed something before it failed. Sent
+      # untranslated, because it is sent precisely when the assistant did not answer.
+      # %{completed} is the confirmation the model wrote with the tool call, or
+      # assistant_unavailable_action_done where the tool confirmed it itself.
+      assistant_unavailable_after_action: >-
+        %{completed} Nur meine Antwort darauf kommt gerade nicht durch. Tippen Sie auf
+        „Nochmal versuchen“, dann mache ich dort weiter.
+      assistant_unavailable_action_done: Das hat geklappt.
       cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
       opted_in: Sie erhalten wieder Nachrichten von uns.
       compliance:

@@ -1,4 +1,8 @@
 module Ai::RubyLlmFactory
+  # ruby_llm requires a Vertex AI location and the settings offer none. The global
+  # endpoint serves the Gemini models without pinning a region.
+  VERTEX_AI_LOCATION = "global".freeze
+
   # The one builder. A chat is pinned to the model its profile chose and carries
   # the tools it was asked for in the same call, so the model it talks to and the
   # effort those tools are named with are always answers from the same profile —
@@ -100,14 +104,31 @@ module Ai::RubyLlmFactory
     chat = context.chat(
       model: model,
       provider: provider.to_sym,
+      protocol: protocol_for_endpoint,
       assume_model_exists: true
     )
 
     record_usage_from(chat, feature: feature, provider: provider, model: model)
   end
 
+  # ruby_llm speaks OpenAI's Responses API by default, and so does this app on
+  # OpenAI itself. An OpenAI-compatible endpoint serves the chat-completions schema
+  # and seldom anything else, so it keeps that one. Nil leaves the choice to the
+  # provider, which is every other case.
+  def self.protocol_for_endpoint
+    return if !Ai::Settings.openai?
+    return if Ai::Settings.standard_openai?
+
+    :chat_completions
+  end
+
+  # after_message also fires for every tool result the chat appends, and a tool
+  # result is no request to the provider: counted, each one was a request with no
+  # tokens and no price.
   def self.record_usage_from(chat, feature:, provider:, model:)
     chat.after_message do |message|
+      next if message.role != :assistant
+
       AiUsageRecords::RecordChatUsage.call(
         message: message,
         feature: feature,
@@ -268,11 +289,11 @@ module Ai::RubyLlmFactory
 
   def self.bedrock_context
     RubyLLM.context do |config|
-      config.aws_access_key_id = Ai::Settings.bedrock_access_key_id
-      config.aws_secret_access_key = Ai::Settings.bedrock_secret_access_key
+      config.bedrock_api_key = Ai::Settings.bedrock_access_key_id
+      config.bedrock_secret_key = Ai::Settings.bedrock_secret_access_key
 
       if Ai::Settings.bedrock_region.present?
-        config.aws_region = Ai::Settings.bedrock_region
+        config.bedrock_region = Ai::Settings.bedrock_region
       end
 
       if proxy_uri.present?
@@ -283,14 +304,15 @@ module Ai::RubyLlmFactory
 
   def self.vertex_ai_context
     RubyLLM.context do |config|
-      config.vertex_project = Ai::Settings.vertex_ai_project
+      config.vertexai_project_id = Ai::Settings.vertex_ai_project
+      config.vertexai_location = VERTEX_AI_LOCATION
 
       if proxy_uri.present?
         config.http_proxy = proxy_uri
       end
 
       if Ai::Settings.vertex_ai_credentials.present?
-        config.vertex_credentials = JSON.parse(Ai::Settings.vertex_ai_credentials)
+        config.vertexai_service_account_key = Ai::Settings.vertex_ai_credentials
       end
     end
   end

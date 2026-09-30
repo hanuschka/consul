@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::SendLoginLink < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   description "Sends the citizen a one-time link that connects this number to their portal " \
               "account. Call it when they want to link, when they say they have an account, or " \
               "after a tool has refused something for want of one — never unprompted as the " \

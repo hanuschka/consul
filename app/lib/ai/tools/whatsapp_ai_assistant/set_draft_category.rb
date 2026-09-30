@@ -6,7 +6,7 @@ class Ai::Tools::WhatsappAiAssistant::SetDraftCategory < Ai::Tools::WhatsappAiAs
               "records the answer and sends nothing. A draft that was waiting on this choice is " \
               "saved by it, so what comes back says whether anything else is still needed."
 
-  params do
+  parameters do
     integer :option_id, description: "Id of the chosen category, from the options this phase offers"
   end
 

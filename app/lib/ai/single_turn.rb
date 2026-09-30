@@ -20,13 +20,14 @@ module Ai::SingleTurn
       )
     end
 
-    ::Ai::RubyLlmFactory
-      .chat_for(profile, feature: feature, request_timeout: timeout_seconds)
-      .with_schema(schema)
-      .with_instructions(instructions)
-      .ask(input)
-      .content
-      .to_h
+    response =
+      ::Ai::RubyLlmFactory
+        .chat_for(profile, feature: feature, request_timeout: timeout_seconds)
+        .with_schema(schema)
+        .with_instructions(instructions)
+        .ask(input)
+
+    ::Ai::StructuredOutput.content_of(response).to_h
   end
 
   def self.json(
@@ -45,13 +46,14 @@ module Ai::SingleTurn
       )
     end
 
-    ::Ai::RubyLlmFactory
-      .chat_for(profile, feature: feature)
-      .with_schema(schema)
-      .with_instructions(instructions)
-      .ask(input)
-      .content
-      .to_h
+    response =
+      ::Ai::RubyLlmFactory
+        .chat_for(profile, feature: feature)
+        .with_schema(schema)
+        .with_instructions(instructions)
+        .ask(input)
+
+    ::Ai::StructuredOutput.content_of(response).to_h
   end
 
   def self.fast_text(

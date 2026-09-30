@@ -96,15 +96,22 @@ App.Studio.Projekt.templateFunctions.wrapWithContentBlockListHtml = function(con
   `
 }
 
-App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context, updateUrl, destroyUrl, updatePositionUrl, aiUrl, generateUrl, toolbarPosition} = {}) {
+App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context, updateUrl, destroyUrl, updatePositionUrl, aiUrl, generateUrl, toolbarPosition, visibility} = {}) {
   const isSiteContext = context === 'site';
   const showEmptyHint = !context || context === 'projekt';
   const isEmpty = showEmptyHint && App.Studio.ContentBlocks.Crud.isContentEmpty(contentBlockHTML);
   const emptyHintClasses = `${showEmptyHint ? ' js-toggle-empty-hint-on-content' : ''}${isEmpty ? ' is-content-empty' : ''}`;
+  const showVisibility = context !== 'newsletter';
+  const visibilityState = visibility || App.Studio.ContentBlocks.Visibility.readFromElement(null);
+  let hiddenFromVisitorsClass = '';
+
+  if (showVisibility && visibilityState.status !== 'visible') {
+    hiddenFromVisitorsClass = ' -hidden-from-visitors';
+  }
 
   return `
     <div
-      class="js-content-block-wrapper custom-content-block-wrapper${emptyHintClasses} ${draftContentBlockIndex ? ' -draft' : ''}"
+      class="js-content-block-wrapper custom-content-block-wrapper${emptyHintClasses}${hiddenFromVisitorsClass} ${draftContentBlockIndex ? ' -draft' : ''}"
       data-content-block-id="${contentBlockId ? contentBlockId : ''}"
       data-draft-index="${draftContentBlockIndex !== undefined ? draftContentBlockIndex : ''}"
       data-draft="${draftContentBlockIndex ? true : false}"
@@ -115,10 +122,17 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
       ${aiUrl ? `data-ai-url="${aiUrl}"` : ''}
       ${generateUrl ? `data-generate-url="${generateUrl}"` : ''}
       ${toolbarPosition ? `data-toolbar-position="${toolbarPosition}"` : ''}
+      ${showVisibility ? `
+        data-visible="${visibilityState.visible}"
+        data-visible-from="${visibilityState.visibleFrom}"
+        data-visible-until="${visibilityState.visibleUntil}"
+        data-visibility-status="${visibilityState.status}"
+      ` : ''}
       data-context="${context || 'projekt'}"
       >
       <div class="custom-content-block-wrapper--inner">
         <div class="custom-content-block--toolbar-zone js-studio-hide-on-preview">
+        <div class="custom-content-block--toolbar-row">
         <div class="custom-content-block--toolbar">
 
             <div class="custom-content-block-edit--buttons-wrapper">
@@ -304,19 +318,6 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
               <div class="custom-content-block-edit--separator"></div>
               ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                 <button
-                  type="button"
-                  tabindex="-1"
-                  class="js-copy-current-content-block studio-icon-button"
-                >
-                  <i class="fas fa-copy"></i>
-                </button>
-              `, {
-                delay: 1000,
-                title: "Duplizieren",
-                text: "Erstellt eine exakte Kopie dieses Inhaltsblocks direkt darunter — mit allen Einstellungen."
-              })}
-              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
-                <button
                   tabindex="-1"
                   disabled
                   class="studio-icon-button js-content-block-version-managment"
@@ -382,9 +383,34 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
             <div class="custom-content-block-edit custom-content-block--mode-controlls js-code-edit-mode-controlls">
             </div>
         </div>
+
+          <div class="custom-content-block--toolbar -start">
+            <div class="custom-content-block-start-controls">
+              ${showVisibility ? `
+              ${App.Studio.Projekt.templateFunctions.contentBlockVisibilityControlsHtml(visibilityState)}
+              <div class="custom-content-block-edit--separator"></div>
+              ` : ''}
+              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
+                <button
+                  type="button"
+                  tabindex="-1"
+                  class="js-copy-current-content-block studio-icon-button"
+                >
+                  <i class="fas fa-copy"></i>
+                </button>
+              `, {
+                delay: 1000,
+                title: "Duplizieren",
+                text: "Erstellt eine exakte Kopie dieses Inhaltsblocks direkt darunter — mit allen Einstellungen."
+              })}
+            </div>
+          </div>
+        </div>
         </div>
 
         <div class="custom-content-block--toolbar-border js-content-block--toolbar-anchor js-studio-hide-on-preview"></div>
+
+        ${showVisibility ? App.Studio.Projekt.templateFunctions.contentBlockVisibilityHintHtml(visibilityState) : ''}
 
         ${showEmptyHint ? App.Studio.Projekt.templateFunctions.contentBlockEmptyHintHtml() : ''}
 

@@ -74,9 +74,33 @@ body.-preview-mode .custom-content-block-wrapper.-hidden-from-visitors {
   display: none;
 }
 
+// The <inline-popup> body of the period form, cloned into each calendar
+// button's popup. It renders in the top layer but still inherits from the
+// toolbar it sits in, hence the text-align and user-select resets.
 .content-block-visibility-period-popup {
-  width: 380px;
-  max-width: calc(100vw - 24px);
+  --inline-popup-max-width: min(420px, calc(100vw - 24px));
+  width: 420px;
+
+  text-align: left;
+  user-select: text;
+}
+
+// The toolbar only shows while its block is hovered or focused; the open
+// popup is a descendant of the toolbar, so without this it would vanish the
+// moment the pointer leaves the block on its way into the form.
+.custom-content-block-wrapper--inner:has(.content-block-visibility-period-popup:popover-open) .custom-content-block--toolbar,
+.custom-content-block-wrapper--inner:has(.content-block-visibility-period-popup.-visible) .custom-content-block--toolbar {
+  display: flex;
+}
+
+.content-block-visibility-period-popup--actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.content-block-visibility-period-popup--clear {
+  margin-left: auto;
 }
 
 .content-block-visibility-period-popup--intro {

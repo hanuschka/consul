@@ -2,18 +2,20 @@
 // through the block's regular update URL; the server answers with the new
 // state (including whether citizens see the block right now), which is then
 // re-rendered into the toolbar and the hint.
+//
+// The period form lives in an <inline-popup> around each calendar button, so
+// outside clicks and Escape close it natively. Every block has its own copy of
+// the form, which is why all lookups below are scoped to one popup.
 App.Studio.ContentBlocks.Visibility = {
-  currentWrapper: null,
-
   initialize() {
     const $document = $(document);
 
     $document.on("click", ".js-content-block-toggle-visibility", this.handleToggleClick.bind(this));
-    $document.on("click", ".js-content-block-edit-visibility-period", this.handlePeriodButtonClick.bind(this));
+    $document.on("inline-popup:open", ".js-content-block-visibility-period-popup", this.handlePeriodPopupOpen.bind(this));
+    $document.on("inline-popup:close", ".js-content-block-visibility-period-popup", this.handlePeriodPopupClose.bind(this));
     $document.on("click", ".js-content-block-accept-visibility-period", this.acceptPeriodEdit.bind(this));
-    $document.on("click", ".js-content-block-cancel-visibility-period", this.cancelPeriodEdit.bind(this));
     $document.on("click", ".js-content-block-clear-visibility-period", this.clearPeriod.bind(this));
-    $document.on("keydown", ".js-content-block-visibility-period-popup", this.handlePopupKeydown.bind(this));
+    $document.on("keydown", ".js-content-block-visibility-period-popup input", this.handlePeriodInputKeydown.bind(this));
   },
 
   // Blocks rendered without these data attributes (freshly added, duplicated
@@ -63,17 +65,25 @@ App.Studio.ContentBlocks.Visibility = {
 
   // Success re-renders the controls, which also drops any disabled state.
   save(wrapper, data) {
-    return App.Ajax
-      .request({
-        url: App.Studio.ContentBlocks.Crud.getUpdateUrl(wrapper),
-        type: "PATCH",
-        dataType: "json",
-        data: data
-      })
+    return this
+      .requestUpdate(wrapper, data)
       .then((response) => {
-        this.applyState(wrapper, this.fromServerState(response.visibility));
-        App.Studio.ContentBlocks.DomHelpers.showBlockStatus(wrapper, "saved");
+        this.applySavedState(wrapper, response);
       });
+  },
+
+  requestUpdate(wrapper, data) {
+    return App.Ajax.request({
+      url: App.Studio.ContentBlocks.Crud.getUpdateUrl(wrapper),
+      type: "PATCH",
+      dataType: "json",
+      data: data
+    });
+  },
+
+  applySavedState(wrapper, response) {
+    this.applyState(wrapper, this.fromServerState(response.visibility));
+    App.Studio.ContentBlocks.DomHelpers.showBlockStatus(wrapper, "saved");
   },
 
   applyState(wrapper, visibility) {
@@ -107,131 +117,119 @@ App.Studio.ContentBlocks.Visibility = {
     element.outerHTML = html;
   },
 
-  getPopup() {
-    return $(".js-content-block-visibility-period-popup");
+  getPeriodPopup(element) {
+    return element.closest(".js-content-block-visibility-period-popup");
   },
 
-  getFromInput() {
-    return document.querySelector(".js-content-block-visible-from-input");
+  getFromInput(popup) {
+    return popup.querySelector(".js-content-block-visible-from-input");
   },
 
-  getUntilInput() {
-    return document.querySelector(".js-content-block-visible-until-input");
+  getUntilInput(popup) {
+    return popup.querySelector(".js-content-block-visible-until-input");
   },
 
-  handlePeriodButtonClick(e) {
-    e.preventDefault();
+  getPopupActionButtons(popup) {
+    return popup.querySelectorAll(".js-content-block-visibility-period-actions button");
+  },
 
-    const button = e.currentTarget;
-    const wrapper = App.Studio.ContentBlocks.DomHelpers.getParentContentBlockWrapper(button);
+  handlePeriodPopupOpen(e) {
+    const popup = e.currentTarget;
+    const wrapper = App.Studio.ContentBlocks.DomHelpers.getParentContentBlockWrapper(popup);
 
-    if (!this.isPersisted(wrapper)) return
+    if (!this.isPersisted(wrapper)) {
+      popup.close();
+
+      return
+    }
 
     const visibility = this.readFromElement(wrapper);
-    const $popup = this.getPopup();
 
-    this.currentWrapper = wrapper;
-    this.getFromInput().value = visibility.visibleFrom;
-    this.getUntilInput().value = visibility.visibleUntil;
-    $popup.find(".js-content-block-visibility-period-hidden-note").prop("hidden", visibility.visible);
-    this.showError(null);
+    this.getFromInput(popup).value = visibility.visibleFrom;
+    this.getUntilInput(popup).value = visibility.visibleUntil;
+    popup.querySelector(".js-content-block-visibility-period-hidden-note").hidden = visibility.visible;
+    this.showError(popup, null);
+    this.suppressTooltip(popup);
 
-    App.Studio.ContentBlocks.SimpleEditMode.EditPopup.show($popup, button);
-    this.keepPopupInViewport($popup);
-
-    this.getFromInput().focus();
+    this.getFromInput(popup).focus();
   },
 
-  // The toolbar sits at the block's right edge, so a popup opened left-aligned
-  // to its button would run off the screen.
-  keepPopupInViewport($popup) {
-    const popup = $popup.get(0);
+  handlePeriodPopupClose(e) {
+    this.restoreTooltip(e.currentTarget);
+  },
 
-    if (!popup) return
+  // The calendar button's rich-tooltip wraps the popup, so without this it
+  // would open over the form while the pointer rests on it.
+  suppressTooltip(popup) {
+    const tooltip = popup.closest("rich-tooltip");
 
-    const overflow = popup.getBoundingClientRect().right - document.documentElement.clientWidth + 12;
+    if (!tooltip) return
 
-    if (overflow > 0) {
-      popup.style.left = `${Math.max(window.scrollX + 12, parseFloat(popup.style.left) - overflow)}px`;
-    }
+    tooltip.setAttribute("disabled", "");
+
+    if (tooltip.tooltipBody) tooltip.hide();
+  },
+
+  restoreTooltip(popup) {
+    const tooltip = popup.closest("rich-tooltip");
+
+    if (!tooltip) return
+
+    tooltip.removeAttribute("disabled");
+  },
+
+  handlePeriodInputKeydown(e) {
+    if (e.key !== "Enter") return
+
+    this.acceptPeriodEdit(e);
   },
 
   acceptPeriodEdit(e) {
     e.preventDefault();
 
-    if (!this.currentWrapper) return
-
-    const visibleFrom = this.getFromInput().value;
-    const visibleUntil = this.getUntilInput().value;
+    const popup = this.getPeriodPopup(e.currentTarget);
+    const visibleFrom = this.getFromInput(popup).value;
+    const visibleUntil = this.getUntilInput(popup).value;
 
     // Same-format local timestamps compare correctly as strings.
     if (visibleFrom && visibleUntil && visibleUntil < visibleFrom) {
-      this.showError("order");
+      this.showError(popup, "order");
 
       return
     }
 
-    this.savePeriod(visibleFrom, visibleUntil);
+    this.savePeriod(popup, visibleFrom, visibleUntil);
   },
 
   clearPeriod(e) {
     e.preventDefault();
 
-    if (!this.currentWrapper) return
-
-    this.savePeriod("", "");
+    this.savePeriod(this.getPeriodPopup(e.currentTarget), "", "");
   },
 
-  savePeriod(visibleFrom, visibleUntil) {
-    const $actionButtons = this.getPopupActionButtons();
+  // The popup is closed before the new state re-renders the toolbar, since
+  // that re-render replaces the popup element itself.
+  savePeriod(popup, visibleFrom, visibleUntil) {
+    const wrapper = App.Studio.ContentBlocks.DomHelpers.getParentContentBlockWrapper(popup);
+    const actionButtons = this.getPopupActionButtons(popup);
 
-    $actionButtons.prop("disabled", true);
-    this.showError(null);
+    actionButtons.forEach((button) => { button.disabled = true; });
+    this.showError(popup, null);
 
-    this.save(this.currentWrapper, { visible_from: visibleFrom, visible_until: visibleUntil })
-      .then(() => {
-        this.hidePopup();
+    this
+      .requestUpdate(wrapper, { visible_from: visibleFrom, visible_until: visibleUntil })
+      .then((response) => {
+        popup.close();
+        this.applySavedState(wrapper, response);
       })
       .catch(() => {
-        this.showError("save");
-      })
-      .always(() => {
-        $actionButtons.prop("disabled", false);
+        actionButtons.forEach((button) => { button.disabled = false; });
+        this.showError(popup, "save");
       });
   },
 
-  getPopupActionButtons() {
-    return this.getPopup().find("button");
-  },
-
-  cancelPeriodEdit(e) {
-    e.preventDefault();
-
-    this.hidePopup();
-  },
-
-  handlePopupKeydown(e) {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      this.hidePopup();
-
-      return
-    }
-
-    if (e.key === "Enter" && e.target.matches("input")) {
-      this.acceptPeriodEdit(e);
-    }
-  },
-
-  showError(type) {
-    const $popup = this.getPopup();
-
-    $popup.find(".js-content-block-visibility-period-order-error").prop("hidden", type !== "order");
-    $popup.find(".js-content-block-visibility-period-save-error").prop("hidden", type !== "save");
-  },
-
-  hidePopup() {
-    App.Studio.ContentBlocks.SimpleEditMode.EditPopup.hide(this.getPopup());
-    this.currentWrapper = null;
+  showError(popup, type) {
+    popup.querySelector(".js-content-block-visibility-period-order-error").hidden = type !== "order";
+    popup.querySelector(".js-content-block-visibility-period-save-error").hidden = type !== "save";
   }
 };

@@ -9,7 +9,7 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
   # words on the handful of pills whose label is a statement rather than a
   # signpost (Whatsapp::AssistantActions::FORCED_LABEL_ACTIONS).
   description "Answers the citizen with a short text of your own and up to three tappable " \
-              "buttons whose labels you write yourself — all three are yours to fill. Prefer it " \
+              "buttons, most of whose labels you write yourself. Prefer it " \
               "over a plain text reply whenever there is an obvious next step: it saves them " \
               "typing and it says what can happen next. Each button needs an action_id from the " \
               "list below and a label in the citizen's language of at most " \
@@ -20,7 +20,9 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
               "returned (\"view_projekt-482\", \"notify_toggle-new_comments\"); leave its label " \
               "empty to use the record's own name, which is usually better than a paraphrase of " \
               "it. A button whose action is unknown or whose record no longer exists is " \
-              "dropped. " \
+              "dropped. The steps that recur all through a conversation carry fixed labels " \
+              "written for you, so the same step always reads the same — leave their label " \
+              "empty: #{::Whatsapp::AssistantActions.fixed_label_action_names.join(", ")}. " \
               "Publishing a draft and posting a comment are offered only under their preview, " \
               "by show_draft_for_confirmation and show_comment_for_confirmation, and unlinking " \
               "is not yours to offer at all. This sends the message itself: do not write one as " \
@@ -95,8 +97,7 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
     end
 
     # A recovery id keeps its own namespace, read by the inbound side before the
-    # catalog's, so it is built by its own path — but the label on it is the
-    # model's like every other.
+    # catalog's, so it is built by its own path, with a label from the copy.
     #
     # The words the model asked for are kept against the id the button got, so what
     # it wrote can be compared afterwards with what shipped. Kept here rather than

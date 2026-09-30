@@ -118,9 +118,12 @@ class Whatsapp::Conversation < ApplicationRecord
   # what a reset would lose: whether they are in the middle of something that
   # "Stopp" could mean leaving. A ballot is saved answer by answer, so it is not
   # unsaved work, but a citizen half-way through one is just as likely to mean the
-  # vote rather than the channel.
+  # vote rather than the channel. So is one who has only just been asked for their
+  # words — invited to comment, asked for their idea, sent to link before a vote:
+  # nothing is written yet, and the "Stopp" that answers the invitation is still
+  # most likely about the step it opened.
   def step_in_progress?
-    unsaved_work? || active_poll_id.present?
+    unsaved_work? || active_poll_id.present? || pending_poll_id.present? || opened_steps.any?
   end
 
   # What this phase collects besides the text, asked of the conversation because
@@ -208,11 +211,15 @@ class Whatsapp::Conversation < ApplicationRecord
   # path that destroys a half-written contribution. Whoever calls it has already
   # established there is nothing to lose (#unsaved_submission?), and discarding,
   # where that is what the citizen meant, stays the one implementation in
-  # AbortSubmission.
+  # AbortSubmission. The contribution the citizen had only said they wanted to
+  # make goes with the phase, in the same write: there is nothing of it to lose.
   def leave_projekt!
     return if projekt_phase_id.blank?
 
-    update!(projekt_phase_id: nil, context: context.merge(subject_change_stamp))
+    update!(
+      projekt_phase_id: nil,
+      context: context.merge(subject_change_stamp, "opened_steps" => opened_steps - ["contribution"])
+    )
   end
 
   # ── When the conversation stopped being about what it was about ─────────
@@ -406,12 +413,49 @@ class Whatsapp::Conversation < ApplicationRecord
   def begin_start_over!
     note_start_over!
     clear_ballot!
+    close_step!("comment")
+    clear_submission_wish!
 
     if unsaved_submission?
       request_start_over!
     else
       leave_projekt!
     end
+  end
+
+  # ── A submission asked for before its projekt ───────────────────────────
+  # "Vorschlag erstellen" tapped with no phase open: the citizen has said they want
+  # to submit something and not yet where. The assistant answers it with the open
+  # projekts, and the projekt they picked from those used to be answered with its
+  # whole card — nine votes and the contributions included — on which the wish they
+  # had just tapped was nowhere to be seen. Held here until that card is sent, so it
+  # can offer only the way to submit (Ai::Tools::WhatsappAiAssistant::SendProjektCard).
+  #
+  # A timestamp rather than a flag, read against the window below: a wish the
+  # citizen never followed up is not one a card sent later should act on. Picking a
+  # projekt from the list the tap is answered with takes a minute, so the window is
+  # short. Cleared sooner by the card that uses it, by going back to the beginning,
+  # and with the rest of the context by start_draft!.
+  SUBMISSION_WISH_TTL = 10.minutes
+
+  def submission_wished?
+    wished_at = context["submission_wished_at"]
+
+    return false if wished_at.blank?
+
+    Time.zone.parse(wished_at) > SUBMISSION_WISH_TTL.ago
+  end
+
+  def record_submission_wish!
+    merge_context!(submission_wished_at: Time.current.iso8601)
+  end
+
+  def clear_submission_wish!
+    if context["submission_wished_at"].blank?
+      return
+    end
+
+    merge_context!(submission_wished_at: nil)
   end
 
   # Cleared on a revision, where the record is already persisted. Deliberately: a
@@ -594,11 +638,19 @@ class Whatsapp::Conversation < ApplicationRecord
   end
 
   # Both keys in one write: the words are gone, so a digest of them is a digest of
-  # nothing, and leaving it behind would let the next comment inherit a yes.
+  # nothing, and leaving it behind would let the next comment inherit a yes. The
+  # invitation that asked for the words goes in the same write, because the
+  # comment it opened is over.
   def clear_pending_comment!
-    return if context["pending_comment"].blank? && context["comment_preview_digest"].blank?
+    return if context["pending_comment"].blank? &&
+      context["comment_preview_digest"].blank? &&
+      !opened_steps.include?("comment")
 
-    merge_context!(pending_comment: nil, comment_preview_digest: nil)
+    merge_context!(
+      pending_comment: nil,
+      comment_preview_digest: nil,
+      opened_steps: opened_steps - ["comment"]
+    )
   end
 
   # The ballot a citizen was about to be given when it turned out they had no account
@@ -785,6 +837,34 @@ class Whatsapp::Conversation < ApplicationRecord
   # prompt.
   def active_proposal_id
     support_proposal_id || comment_proposal_id
+  end
+
+  # The steps the bot has opened by asking for the citizen's words before any of
+  # them have arrived: "comment" once it has invited a comment, "contribution"
+  # once the citizen has said they want to contribute. Nothing is written yet, so
+  # a reset loses nothing and unsaved_work? finds nothing, but step_in_progress?
+  # reads this, so a "Stopp" answering the invitation is asked about rather than
+  # read as leaving the channel.
+  #
+  # Written by StartComment and StartDraft, never by start_draft! itself: a
+  # projekt card and a scanned code enter a phase too, and neither is the citizen
+  # saying they want to contribute. The whole-context replacements clear both,
+  # clear_pending_comment! the comment, leave_projekt! the contribution, and
+  # going back to the beginning the comment.
+  def opened_steps
+    Array(context["opened_steps"])
+  end
+
+  def open_step!(kind)
+    return if opened_steps.include?(kind)
+
+    merge_context!(opened_steps: opened_steps + [kind])
+  end
+
+  def close_step!(kind)
+    return if !opened_steps.include?(kind)
+
+    merge_context!(opened_steps: opened_steps - [kind])
   end
 
   # The irreversible actions the bot's last interactive message offered, written by

@@ -89,7 +89,9 @@ de:
         %{completed} Nur meine Antwort darauf kommt gerade nicht durch. Tippen Sie auf
         „Nochmal versuchen“, dann mache ich dort weiter.
       assistant_unavailable_action_done: Das hat geklappt.
-      cancelled: Alles klar, abgebrochen. Schreiben Sie mir einfach wieder, wann immer Sie möchten.
+      # Nur noch der Ersatz, wenn der Assistent nicht antworten kann: Sonst sagt er
+      # selbst, was verworfen wurde, und bietet den nächsten Schritt an.
+      cancelled: Alles klar, das ist verworfen. Sie können gleich mit etwas anderem weitermachen.
       opted_in: Sie erhalten wieder Nachrichten von uns.
       compliance:
         disclosure: 👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet Ihnen kein Mensch direkt.
@@ -204,6 +206,8 @@ de:
         # and saying so reads as an apology for a complete answer.
         contributions_all: "%{intro}:"
         contributions_newest: "%{intro} — hier die %{shown} neuesten von insgesamt %{total}:"
+        # Past the first page of the list, where "the newest" is no longer what it shows.
+        contributions_range: "%{intro} — hier %{first} bis %{last} von insgesamt %{total}:"
         contributions_page: "Hier finden Sie alles dazu:"
         contributions_hint: >-
           Einen einzelnen Beitrag öffnen Sie über „Beitrag auswählen“ — oder Sie fragen mich
@@ -226,6 +230,9 @@ de:
       # portal published it, and a ballot answered in a paraphrase of itself is not
       # the one that was published.
       poll:
+        # Over the list the projekt card's „Weitere anzeigen“ opens: every open vote
+        # of the projekt.
+        projekt_list: "Die Abstimmungen bei „%{projekt}“:"
         login_prompt: >-
           Zum Abstimmen bei „%{poll}“ brauchen Sie ein Konto. Zum Anmelden hier tippen —
           danach geht es mit der Abstimmung gleich weiter. Mit dem Öffnen des Links
@@ -307,6 +314,16 @@ de:
         retry: Nochmal versuchen
         link_retry: Nochmal versuchen
         cancel: Abbrechen
+        # Die Abbrechen-Schaltfläche, benannt nach dem, was sie verwirft.
+        cancel_draft: Entwurf verwerfen
+        cancel_comment: Kommentar verwerfen
+        # Feste Beschriftungen für Schritte, die im Gespräch immer wieder vorkommen:
+        # Vom Modell formuliert, hieß derselbe Schritt in einer Sitzung sechsmal anders.
+        submit_proposal: Vorschlag erstellen
+        draft_revise: Entwurf ändern
+        submit_anyway: So beibehalten
+        location_share: Ort übernehmen
+        choose_projekt: Projekt wählen
         help: Hilfe
         login: 🔗 Anmelden
         open_page: Seite öffnen

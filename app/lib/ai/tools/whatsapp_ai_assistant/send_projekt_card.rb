@@ -32,10 +32,13 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
               "describe_projekt returned, in the citizen's language, and do not repeat it " \
               "or the link in a reply afterwards. The summary itself says what the projekt is " \
               "about — never send the citizen to the link to find that out. Naming several " \
-              "projekts at once is send_list, not a card each. The card carries a button of its " \
-              "own for each of the projekt's open phases, worded as the action it starts, and " \
-              "one that opens what has already been contributed — so never offer taking part, a " \
-              "phase to choose from or the existing contributions yourself alongside it."
+              "projekts at once is send_list, not a card each. The card carries a row of its " \
+              "own for each of the projekt's open phases, worded as the action it starts, one " \
+              "that opens what has already been contributed and, where it has no room for " \
+              "every vote, one that opens them all — so never offer taking part, a phase to " \
+              "choose from, the existing contributions or the list of votes yourself alongside " \
+              "it. Where the citizen asked to submit something before picking the projekt, the " \
+              "card offers only the way to submit."
 
   parameters do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
@@ -47,8 +50,10 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
                    "The card's buttons list the phases, so the summary does not have to. Say " \
                    "that a phase is running where its running field says so, even where it " \
                    "takes no written contribution, and say which of them the chat can take a " \
-                   "contribution into. At most about #{SUMMARY_TARGET_LENGTH} characters, in the " \
-                   "citizen's language, from what describe_projekt returned in this conversation."
+                   "contribution into. Where the citizen asked to submit something and nothing " \
+                   "can be submitted to this projekt in the chat, say so. At most about " \
+                   "#{SUMMARY_TARGET_LENGTH} characters, in the citizen's language, from what " \
+                   "describe_projekt returned in this conversation."
   end
 
   def execute(projekt_name:, summary:)
@@ -60,9 +65,13 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
 
     return unknown_projekt_error(projekt_name) if projekt.blank?
 
-    actions = ::Whatsapp::ProjektCardActions.call(projekt, user: conversation.user)
+    all_actions = ::Whatsapp::ProjektCardActions.call(projekt, user: conversation.user)
+    submission_actions = wished_submission_actions(all_actions)
+    actions = submission_actions.presence || all_actions
 
     send_card(projekt, summary, actions)
+
+    conversation.clear_submission_wish!
 
     entered = enter_single_open_phase(projekt)
 
@@ -73,11 +82,30 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     # would pay for a sentence that may only repeat them.
     halt(
       "Sent the card for #{projekt_title(projekt)}, carrying the title, your summary, the " \
-      "picture and the link.#{entered_note(entered)}#{more_votes_note(projekt, actions)}"
+      "picture and the link.#{submission_note(submission_actions)}#{entered_note(entered)}" \
+      "#{more_votes_note(actions)}"
     )
   end
 
   private
+
+    # The rows that start a submission, where the citizen asked to submit something
+    # before they picked this projekt (Whatsapp::Conversation#submission_wished?) and
+    # the projekt takes one in the chat. Empty otherwise, and the card is the whole
+    # card: a projekt with nothing to submit to still has to be shown, and its summary
+    # is where that is said.
+    def wished_submission_actions(actions)
+      return [] if !conversation.submission_wished?
+
+      ::Whatsapp::ProjektCardActions.submission_entries(actions)
+    end
+
+    def submission_note(submission_actions)
+      return "" if submission_actions.blank?
+
+      " The citizen had asked to submit something before picking this projekt, so the card " \
+        "offers only the way to submit here."
+    end
 
     # Picking a projekt is how a citizen says what they want to talk about, and
     # where the projekt has exactly one thing the chat can take a contribution
@@ -115,36 +143,35 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
         "their contribution — call draft_proposal with it rather than searching for a projekt."
     end
 
-    # Said to the model because the tap on the card's last row reaches it as
-    # "show_more, polls" and nothing else: which projekt's votes that means is
-    # only written down here, in the result it will read the tap against.
-    def more_votes_note(projekt, actions)
+    # Said to the model so that it does not offer the same list again. The tap on the
+    # row is answered without it: the row names its projekt, and the inbound side
+    # sends that projekt's votes (Whatsapp::Polls::ListProjektPollsService).
+    def more_votes_note(actions)
       more_votes = ::Whatsapp::ProjektCardActions.more_votes?(actions)
 
       return "" if !more_votes
 
-      " The card had no row for every vote, so its last row opens them all: when the " \
-        "citizen taps it (action show_more, id polls), call list_open_polls with the " \
-        "projekt name \"#{projekt_title(projekt)}\" and send its votes for them to pick " \
-        "from. The tap asks to see the votes, not to vote: start none they have not picked."
+      " The card had no row for every vote, so its last row opens the list of all of them."
     end
 
-    # Buttons rather than a caption on its own, which is what this sent before: a
+    # A list rather than a caption on its own, which is what this sent at first: a
     # card is the one message where the next step is never in doubt — the citizen is
     # looking at one projekt — and it was the only tappable-looking thing in the chat
     # that could not be tapped.
     #
-    # Routed through buttons_with_picture rather than image, so the picture and the
-    # pills arrive on one message and the ladder that gives the picture up when
-    # WhatsApp will not take it is the transport's rather than this tool's.
+    # Always a list now, where a card with three actions or fewer used to arrive as
+    # reply buttons under the picture. Two projekts read as two different kinds of
+    # message — one with its buttons on the card, one behind "Auswählen" — and a reply
+    # button carries a title and nothing else, while every row of the card has a
+    # second line to tell it apart by (Whatsapp::ProjektCardActions#row_texts).
     #
     # Which actions the card offers is Whatsapp::ProjektCardActions': one per open
     # phase, worded as the action itself. There used to be one pill here for all of
     # them, which only opened a further step where the citizen picked which phase they
     # meant — a question the card had already answered by being about this projekt.
     #
-    # The citizen goes with the projekt because the wording of a phase's pill depends on
-    # what they have already done in it: a vote they took part in is labelled as such
+    # The citizen goes with the projekt because the wording of a phase's row depends on
+    # what they have already done in it: a vote they took part in is marked as such
     # here rather than only after they tap it.
     #
     # Telling more about the projekt used to be a pill as well. It sat between the
@@ -152,7 +179,7 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     # the card's own three facts worded differently — so the detail is in the summary
     # now and the step is gone.
     def send_card(projekt, summary, actions)
-      if ::Whatsapp::ProjektCardActions.list_required?(actions)
+      if actions.present?
         return send_action_list(projekt, summary, actions)
       end
 
@@ -160,23 +187,24 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
       # newsfeed, a milestone — has no action to offer, and that is a dead end: the
       # card is worth reading and there is nowhere on from it. The way back stands in
       # for the actions, and it also keeps the message sendable, an interactive one
-      # carrying no buttons at all being the one thing WhatsApp refuses outright.
+      # carrying no options at all being the one thing WhatsApp refuses outright.
+      # Routed through buttons_with_picture rather than image, so the picture and the
+      # pill arrive on one message and the ladder that gives the picture up when
+      # WhatsApp will not take it is the transport's rather than this tool's.
       ::Whatsapp::Send.buttons_with_picture(
         account: account,
         body: card_body(projekt, summary),
-        buttons: actions.presence || [::Whatsapp::Send.main_menu_pill(account)],
+        buttons: [::Whatsapp::Send.main_menu_pill(account)],
         image_url: ::Whatsapp::ProjektCard.image_url(projekt)
       )
     end
 
-    # The card becomes a list where reply buttons cannot carry the actions — more than
-    # three of them, or two that would read alike, which is Whatsapp::ProjektCardActions'
-    # call. The picture goes as a message of its own ahead
-    # of it rather than being dropped: a list message takes no header at all, and the
-    # picture is the half of a card a citizen recognises the projekt by. It is sent
-    # first so the two arrive in the order they would have been read in, and its
-    # absence costs nothing — Whatsapp::Send.picture answers nil for a projekt with no
-    # showable one and the list follows either way.
+    # The picture goes as a message of its own ahead of the list rather than being
+    # dropped: a list message takes no header at all, and the picture is the half of
+    # a card a citizen recognises the projekt by. It is sent first so the two arrive in
+    # the order they would have been read in, and its absence costs nothing —
+    # Whatsapp::Send.picture answers nil for a projekt with no showable one and the
+    # list follows either way.
     def send_action_list(projekt, summary, actions)
       ::Whatsapp::Send.picture(
         account: account, image_url: ::Whatsapp::ProjektCard.image_url(projekt)

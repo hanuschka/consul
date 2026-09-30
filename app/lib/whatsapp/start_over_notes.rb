@@ -17,7 +17,9 @@ module Whatsapp::StartOverNotes
                   "about one carries into what follows: do not offer that projekt, its " \
                   "phases or a contribution to it unless they name it again themselves. " \
                   "Send them what applies right now — what is open to take part in, what " \
-                  "they have already done, what there is to read.".freeze
+                  "they have already done, what there is to read — as a sentence or two " \
+                  "with the options to tap, never as a numbered rundown of everything in " \
+                  "the text.".freeze
 
   WITH_DRAFT = "The citizen asked to go back to the start while part-way through a " \
                "contribution. Nothing has been discarded and the projekt is still selected, " \

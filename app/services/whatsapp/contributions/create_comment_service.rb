@@ -18,12 +18,24 @@ class Whatsapp::Contributions::CreateCommentService < ApplicationService
   # their words, and again before those words are written. A comment refused only
   # at the write is a citizen who confirmed a comment onto a closed thread.
   def self.refusal(proposal:, user:, body:)
+    thread_refusal(proposal: proposal, user: user) || body_refusal(body)
+  end
+
+  # Why this citizen may write no comment at all on this proposal, whatever it
+  # says, or nil when they may. Asked on its own before there are any words, so a
+  # citizen is not invited to write onto a thread that would refuse them.
+  def self.thread_refusal(proposal:, user:)
     return :not_linked if user.blank?
     return :gone if proposal.blank?
     return :gone if !publicly_listed?(proposal)
+    return :closed if !comments_allowed?(proposal: proposal, user: user)
+
+    nil
+  end
+
+  def self.body_refusal(body)
     return :blank if body.to_s.strip.blank?
     return :confirmation_only if confirmation_only?(body)
-    return :closed if !comments_allowed?(proposal: proposal, user: user)
 
     nil
   end

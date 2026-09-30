@@ -9,9 +9,16 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
   # How the rest of a paged list is reached, for the same tools. A list carries no
   # buttons beside it, so the one place more_action_id fits there is a row — which
   # is the row a page leaves free (Whatsapp::ListWindow::ROWS).
+  #
+  # The row-count rule is here rather than in each tool for the same reason: the
+  # tools that each described their own list sentence were the ones whose
+  # sentence said nine above four rows.
   MORE_ROWS_HINT = "#{::Whatsapp::ListWindow::ROWS} at a time: where next_from is present " \
                    "there are more — offer more_action_id as the last row of a list, or as a " \
-                   "button under a reply in text.".freeze
+                   "button under a reply in text. Never say how many rows a list or reply " \
+                   "shows, or how many are on a later page: the citizen sees the rows, and a " \
+                   "number you give them is a total this result returns, said as the total " \
+                   "it is.".freeze
 
   # Named in the "none of these can be offered" answer of the two tools whose set can
   # actually be emptied by it. Without the reason spelled out the model reads the

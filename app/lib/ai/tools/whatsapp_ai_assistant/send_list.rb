@@ -23,12 +23,10 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
               "row can be: a row whose " \
               "action is unknown, whose record no longer exists, whose action id repeats " \
               "another row's, or which reads exactly like another row without a description " \
-              "to tell the two apart refuses the whole list, because the sentence you wrote " \
-              "above it " \
-              "names a number of rows and a list that quietly held fewer would contradict it. " \
-              "That sentence names how many of the things offered the list holds — a row that " \
-              "shows more or leads out of the question is not one of them — and not how many " \
-              "there are altogether, which belongs in the same sentence in words. A list carries no " \
+              "to tell the two apart refuses the whole list, because a list that quietly held " \
+              "fewer would leave out a row the sentence above it offers. That sentence never " \
+              "says how many rows the list holds — the citizen sees them — and a number in it " \
+              "is a total a tool returned, said as the total. A list carries no " \
               "buttons beside it, so any way out of the " \
               "question has to be a row of its own. Rows cannot hold links or markup — put a URL " \
               "in the body above if one is needed. This sends the message itself: do not write " \
@@ -218,7 +216,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
                "apart, or more than #{MAX_ROWS} rows. Nothing was sent. These are the ones " \
                "that can be: #{listed.map { |row| row[:id] }.join(", ")}. Call this again with " \
                "exactly those — or with a description on each row that needs one — and a " \
-               "sentence naming how many you send."
+               "sentence that offers only those."
       }
     end
 

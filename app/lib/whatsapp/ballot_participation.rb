@@ -88,32 +88,39 @@ module Whatsapp::BallotParticipation
   def states_by_poll_id(polls:, user:)
     return {} if user.blank?
 
-    begun = begun_poll_ids(polls, user)
+    begun = begun_polls(polls, user)
+    traversals = ::Polls::BallotTraversalQuery.for_polls(polls: begun, user: user)
 
-    polls.select { |poll| begun.include?(poll.id) }.to_h do |poll|
-      [poll.id, finished?(poll: poll, user: user) ? ANSWERED : PARTLY_ANSWERED]
+    begun.to_h do |poll|
+      [poll.id, traversals[poll.id].nothing_owed? ? ANSWERED : PARTLY_ANSWERED]
     end
   end
 
-  # The same question asked of a page of polls at once. A traversal costs a fixed handful
-  # of queries per poll, which is a handful too many repeated over ten rows of a list the
-  # assistant asks for often — so the polls this citizen has never answered a question of
-  # are dropped first, in one query, and only what is left is walked. That is nearly
-  # always all of them: a citizen listing what is open has usually voted in none of it.
+  # The same question asked of a page of polls at once. The polls this citizen has never
+  # answered a question of are dropped first, in one query — nearly always all of them: a
+  # citizen listing what is open has usually voted in none of it. What is left is walked
+  # together (Polls::BallotTraversalQuery.for_polls): walked one by one, a traversal's
+  # fixed handful of queries was paid again for every poll they had begun.
   def completed_poll_ids(polls:, user:)
     return [] if user.blank?
 
-    begun = begun_poll_ids(polls, user)
+    begun = begun_polls(polls, user)
 
     return [] if begun.empty?
 
-    polls
-      .select { |poll| begun.include?(poll.id) && finished?(poll: poll, user: user) }
-      .map(&:id)
+    traversals = ::Polls::BallotTraversalQuery.for_polls(polls: begun, user: user)
+
+    begun.select { |poll| traversals[poll.id].nothing_owed? }.map(&:id)
   end
 
   def finished?(poll:, user:)
     ::Polls::BallotTraversalQuery.for(poll: poll, user: user).nothing_owed?
+  end
+
+  def begun_polls(polls, user)
+    begun_ids = begun_poll_ids(polls, user)
+
+    polls.select { |poll| begun_ids.include?(poll.id) }
   end
 
   # Every poll of the page this citizen has any answer recorded in. A map-point question

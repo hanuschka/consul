@@ -89,13 +89,14 @@ module Whatsapp::ProjektCardActions
     )
     ordered = still_to_do_first(phases, voted_ids)
     contributions = contributions_entry(ordered, facts)
-    kept = ordered.first(phase_row_budget(ordered, contributions))
+    offered = ordered.reject { |projekt_phase| closed_to_chat_submission?(projekt_phase) }
+    kept = offered.first(phase_row_budget(offered, contributions))
     texts = row_texts(kept, facts, voted_ids)
     entries =
       (kept.map { |phase| action_entry(phase, texts[phase.id]) } +
-        [contributions, more_votes_entry(projekt, ordered, kept)]).compact
+        [contributions, more_votes_entry(projekt, offered, kept)]).compact
 
-    log_phases_cut(projekt, ordered, kept)
+    log_phases_cut(projekt, offered, kept)
     log_entries_reading_alike(projekt, entries)
 
     entries
@@ -117,6 +118,27 @@ module Whatsapp::ProjektCardActions
 
   def action_of(entry)
     ::Whatsapp::FlowActions.parse(entry[:id])&.dig(:action)
+  end
+
+  # The card's entries as reply buttons, or nil where the card has to be a list. A
+  # card with three entries or fewer arrives with its buttons under the picture, one
+  # tap from the action; past that, or where a title would have to be cut to fit a
+  # button, or where two titles read alike, it stays a list. A reply button carries
+  # a title and nothing else — WhatsappApi::Resources::Messages drops the line a
+  # list row shows underneath — so a title that only tells its row apart together
+  # with that line cannot go out as a button.
+  #
+  # Asked of the entries the card actually sends rather than of the projekt, so the
+  # card cut down to the ways to submit (#submission_entries) is a set of buttons
+  # even for a projekt whose whole card is a list.
+  def buttons(entries)
+    return if !::Whatsapp.buttons?(entries.size)
+
+    titles = entries.map { |entry| entry[:button_title] }
+
+    return if titles.any?(&:blank?) || titles.uniq.size != titles.size
+
+    entries.zip(titles).map { |entry, title| { id: entry[:id], title: title } }
   end
 
   # The phases the citizen still has something to do in ahead of the votes they
@@ -183,12 +205,24 @@ module Whatsapp::ProjektCardActions
     I18n.t(ACTION_LABEL_SCOPE, locale: ::Whatsapp.default_locale, default: {}).keys.map(&:to_s)
   end
 
+  # A submission phase the chat cannot take a submission into — the portal has
+  # switched the bot off as a channel, or closed submissions — gets no row of its
+  # own. Its only label is "Vorschlag erstellen", and a card saying that nothing can
+  # be submitted here, above a button offering to, was a button leading to a bare
+  # link. What is already in the phase stays reachable: #contributions_entry is
+  # chosen from every phase, this one included.
+  def closed_to_chat_submission?(projekt_phase)
+    return false if !::Whatsapp::EligiblePhasesQuery::PHASE_CLASSES.include?(projekt_phase.class)
+
+    !::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+  end
+
   # Which pill the phase gets, and the split is EligiblePhasesQuery's rather than a
   # list of its own: a phase the bot can take a submission into enters the drafting
   # flow on the tap, and every other one is acted on where the action actually lives,
-  # which is the portal. That also covers a proposal phase whose portal has switched
-  # the bot off as a submission channel — still open on the website, so still worth
-  # naming, but as a link.
+  # which is the portal. A proposal phase whose portal has switched the bot off as a
+  # submission channel used to be named here as a link; it no longer reaches this
+  # (#closed_to_chat_submission?).
   def action_for(projekt_phase)
     return :idea_start if ::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
 
@@ -200,7 +234,8 @@ module Whatsapp::ProjektCardActions
       action: action_for(projekt_phase),
       projekt_phase: projekt_phase,
       title: row_lines&.dig(:title),
-      description: row_lines&.dig(:description)
+      description: row_lines&.dig(:description),
+      button_title: row_lines&.dig(:button_title)
     )
   end
 
@@ -224,11 +259,14 @@ module Whatsapp::ProjektCardActions
 
     return if projekt_phase.blank?
 
+    title = ::Whatsapp.copy("whatsapp.bot.buttons.phase_contributions")
+
     entry(
       action: :phase_contributions,
       projekt_phase: projekt_phase,
-      title: ::Whatsapp.copy("whatsapp.bot.buttons.phase_contributions"),
-      description: facts[projekt_phase.id]&.name
+      title: title,
+      description: facts[projekt_phase.id]&.name,
+      button_title: button_title(title)
     )
   end
 
@@ -270,7 +308,8 @@ module Whatsapp::ProjektCardActions
   # Grundfragen …" that part company past the title's twenty-fourth character used to
   # come out as the same row twice, over the same line underneath when both close on the
   # same day. The line underneath now carries on with the name, ahead of the note and the
-  # closing date. Always to a list row's length, because the card is always a list.
+  # closing date. The title whole goes along beside the two lines, for a card small
+  # enough to be sent as buttons (#buttons), which show no second line to carry it on.
   def row_texts(phases, facts, voted_ids)
     written = phases.index_by(&:id).transform_values do |projekt_phase|
       written_row(projekt_phase, facts[projekt_phase.id], voted_ids)
@@ -290,7 +329,17 @@ module Whatsapp::ProjektCardActions
     ::Whatsapp::ListRowText.call(
       name: row.title,
       notes: [row.note, ::Whatsapp::DatePhrase.absolute(phase_facts&.ends_on)]
-    )
+    )&.merge(button_title: button_title(row.title))
+  end
+
+  # The title as a reply button would carry it: whole, or not at all. A button cut
+  # to its twenty characters is the "WhatsApp-Test: Grundf…" that could not be told
+  # from its neighbour, so a title that does not fit keeps the card a list.
+  def button_title(title)
+    text = title.to_s.squish
+    length = ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH
+
+    text.presence if ::Whatsapp::AssistantActions.fits?(text, length)
   end
 
   # What a row says before anything is done about its neighbours.
@@ -405,7 +454,8 @@ module Whatsapp::ProjektCardActions
   end
 
   # The description travels on every entry: WhatsappApi::Resources::Messages puts it
-  # under the row of the list the card is sent as.
+  # under the row of the list the card is sent as, and a card sent as buttons
+  # (#buttons) carries none of it.
   # A row is told from the one above it by its title and by the line under it, so two
   # rows alike in both are two the citizen cannot choose between —
   # and a list carrying them is one WhatsApp refuses outright, which loses the whole
@@ -445,13 +495,14 @@ module Whatsapp::ProjektCardActions
     )
   end
 
-  def entry(action:, projekt_phase:, title:, description:)
+  def entry(action:, projekt_phase:, title:, description:, button_title: nil)
     return if title.blank?
 
     {
       id: ::Whatsapp::FlowActions.id_for(action: action, param: projekt_phase.id),
       title: title,
-      description: description
+      description: description,
+      **{ button_title: button_title }.compact
     }
   end
 end

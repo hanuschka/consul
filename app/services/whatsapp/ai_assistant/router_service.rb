@@ -665,6 +665,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::UnlinkAccount,
       ::Ai::Tools::WhatsappAiAssistant::StopMessages,
       ::Ai::Tools::WhatsappAiAssistant::StartOver,
+      ::Ai::Tools::WhatsappAiAssistant::NoteSubmissionWish,
       ::Ai::Tools::WhatsappAiAssistant::StartPollVote,
       ::Ai::Tools::WhatsappAiAssistant::RecordPollAnswer,
       ::Ai::Tools::WhatsappAiAssistant::RecordOpenPollAnswer

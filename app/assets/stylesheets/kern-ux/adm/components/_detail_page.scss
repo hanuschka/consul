@@ -198,6 +198,11 @@
   border-radius: 8px;
   padding: 24px;
   margin-bottom: 24px;
+
+  &.-info {
+    background: var(--kern-color-feedback-info-background);
+    border-color: var(--kern-color-feedback-info);
+  }
 }
 
 // --- Section title (top-level page sections: Bewertung, Bürgervorschlag, Interne Notizen) ---
@@ -530,7 +535,7 @@ form:has(> .adm-detail-media-card__action) {
   display: flex;
   flex-wrap: wrap;
   padding: var(--kern-metric-space-small, 12px) var(--kern-metric-space-default, 16px);
-  gap: var(--kern-metric-space-small, 12px);
+  gap: var(--kern-metric-space-large, 24px);
   border-bottom: var(--kern-metric-border-width-light, 1px) solid var(--kern-color-layout-border, #e0e0e0);
 
   &:last-child {
@@ -540,11 +545,10 @@ form:has(> .adm-detail-media-card__action) {
 }
 
 .adm-detail-table__label {
-  flex: 0 0 200px;
+  flex: 0 0 260px;
   font-weight: 600;
-  font-size: var(--kern-font-size-14, 14px);
+  font-size: var(--kern-font-size-16, 16px);
   color: var(--kern-color-layout-text-subtle, #666);
-  padding-top: 2px;
 }
 
 .adm-detail-table__value {
@@ -562,6 +566,10 @@ form:has(> .adm-detail-media-card__action) {
     li {
       padding: 2px 0;
     }
+  }
+
+  p:last-child {
+    margin-bottom: 0;
   }
 
   a {

@@ -184,6 +184,9 @@ de:
       # from Whatsapp::Inbound::ProcessMessageService rather than written by the
       # assistant, because a card that names an action has to perform it on the tap —
       # a model asked what the tap meant is the selection step the card removed.
+      # `open` is the exception: a phase taken part in on the website is answered by
+      # the assistant with a way on beside the link, and this line is what is left
+      # for when the assistant is unavailable.
       phase:
         open: "Hier können Sie bei „%{phase}“ mitmachen:"
         # What the message naming a phase's entries opens with, keyed by the phase's
@@ -216,7 +219,8 @@ de:
       # The two ways a row naming one of the citizen's own contributions is
       # answered. A proposal submitted into a moderated phase has no public page
       # until it is accepted, and the row is still offered — so the reason has to
-      # be sayable.
+      # be sayable. Sent only when the assistant is unavailable: otherwise it answers
+      # the tap itself, with the contribution's supports and a way on.
       contribution:
         open: "Ihr Beitrag „%{contribution}“:"
         # The same pill is offered by a phase's list of everyone's contributions,

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_30_120000) do
+ActiveRecord::Schema.define(version: 2026_09_30_142814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1865,6 +1865,133 @@ ActiveRecord::Schema.define(version: 2026_09_30_120000) do
     t.index ["user_id"], name: "index_moderators_on_user_id"
   end
 
+  create_table "municipal_plan_district_assignments", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.bigint "registered_address_district_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_id", "registered_address_district_id"], name: "index_mp_district_assignments_unique", unique: true
+    t.index ["municipal_plan_id"], name: "index_mp_district_assignments_on_plan_id"
+    t.index ["registered_address_district_id"], name: "index_mp_district_assignments_on_district_id"
+  end
+
+  create_table "municipal_plan_links", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.string "title"
+    t.string "url"
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_id"], name: "index_municipal_plan_links_on_plan_id"
+  end
+
+  create_table "municipal_plan_notices", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.string "name"
+    t.string "email", null: false
+    t.text "body", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_id"], name: "index_municipal_plan_notices_on_municipal_plan_id"
+  end
+
+  create_table "municipal_plan_officer_group_assignments", force: :cascade do |t|
+    t.bigint "municipal_plan_officer_id", null: false
+    t.bigint "municipal_plan_officer_group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_officer_group_id"], name: "index_mp_officer_group_assignments_on_group_id"
+    t.index ["municipal_plan_officer_id", "municipal_plan_officer_group_id"], name: "index_mp_officer_group_assignments_unique", unique: true
+    t.index ["municipal_plan_officer_id"], name: "index_mp_officer_group_assignments_on_officer_id"
+  end
+
+  create_table "municipal_plan_officer_groups", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "municipal_plan_officers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_municipal_plan_officers_on_user_id", unique: true
+  end
+
+  create_table "municipal_plan_topic_assignments", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.bigint "municipal_plan_topic_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_id", "municipal_plan_topic_id"], name: "index_mp_topic_assignments_unique", unique: true
+    t.index ["municipal_plan_id"], name: "index_mp_topic_assignments_on_plan_id"
+    t.index ["municipal_plan_topic_id"], name: "index_mp_topic_assignments_on_topic_id"
+  end
+
+  create_table "municipal_plan_topic_translations", force: :cascade do |t|
+    t.bigint "municipal_plan_topic_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_mp_topic_translations_on_locale"
+    t.index ["municipal_plan_topic_id"], name: "index_mp_topic_translations_on_topic_id"
+  end
+
+  create_table "municipal_plan_topics", force: :cascade do |t|
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "municipal_plan_translations", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.string "locale", null: false
+    t.string "title"
+    t.text "short_description"
+    t.text "further_information"
+    t.text "last_resolution"
+    t.text "processing_status"
+    t.text "next_steps"
+    t.string "costs"
+    t.text "formal_participation_reason"
+    t.text "informal_participation_reason"
+    t.string "contact_role"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_municipal_plan_translations_on_locale"
+    t.index ["municipal_plan_id"], name: "index_municipal_plan_translations_on_plan_id"
+  end
+
+  create_table "municipal_plans", force: :cascade do |t|
+    t.string "status", default: "draft", null: false
+    t.string "version", default: "0.1", null: false
+    t.date "content_updated_at"
+    t.integer "given_order"
+    t.boolean "formal_participation", default: false, null: false
+    t.boolean "informal_participation", default: false, null: false
+    t.string "contact_name"
+    t.string "contact_phone"
+    t.string "contact_email"
+    t.string "system_mailbox_email"
+    t.string "responsible_type"
+    t.bigint "responsible_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.tsvector "tsv"
+    t.datetime "submitted_at"
+    t.bigint "released_plan_id"
+    t.date "archive_on"
+    t.datetime "released_at"
+    t.string "legacy_id"
+    t.index ["given_order"], name: "index_municipal_plans_on_given_order"
+    t.index ["legacy_id"], name: "index_municipal_plans_on_legacy_id", unique: true
+    t.index ["released_plan_id"], name: "index_municipal_plans_on_released_plan_id"
+    t.index ["responsible_type", "responsible_id"], name: "index_municipal_plans_on_responsible"
+    t.index ["status"], name: "index_municipal_plans_on_status"
+    t.index ["tsv"], name: "index_municipal_plans_on_tsv", using: :gin
+  end
+
   create_table "navbar_items", force: :cascade do |t|
     t.integer "kind"
     t.string "preset"
@@ -2808,10 +2935,12 @@ ActiveRecord::Schema.define(version: 2026_09_30_120000) do
     t.string "copy_status"
     t.bigint "copied_from_projekt_id"
     t.jsonb "copy_data"
+    t.bigint "municipal_plan_id"
     t.index ["activated"], name: "index_projekts_on_activated"
     t.index ["copied_from_projekt_id"], name: "index_projekts_on_copied_from_projekt_id"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
+    t.index ["municipal_plan_id"], name: "index_projekts_on_municipal_plan_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["published_at"], name: "index_projekts_on_published_at"
@@ -3939,6 +4068,8 @@ ActiveRecord::Schema.define(version: 2026_09_30_120000) do
   add_foreign_key "mitmachbox_participations", "projekt_phases"
   add_foreign_key "mitmachbox_participations", "users"
   add_foreign_key "moderators", "users"
+  add_foreign_key "municipal_plan_notices", "municipal_plans"
+  add_foreign_key "municipal_plans", "municipal_plans", column: "released_plan_id"
   add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
   add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
@@ -4003,6 +4134,7 @@ ActiveRecord::Schema.define(version: 2026_09_30_120000) do
   add_foreign_key "projekt_settings", "projekts"
   add_foreign_key "projekt_subscriptions", "projekts"
   add_foreign_key "projekt_subscriptions", "users"
+  add_foreign_key "projekts", "municipal_plans", on_delete: :nullify
   add_foreign_key "projekts", "projekts", column: "parent_id"
   add_foreign_key "projekts", "site_customization_pages", column: "landing_page_id"
   add_foreign_key "proposals", "communities"

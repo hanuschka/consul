@@ -9,5 +9,6 @@ de:
           landing_page: "Zur Themenseite"
           deficiency_reports: "Zum Mängelmelder"
           ideas: "Zum Ideenmanagement"
+          municipal_plans: "Zur Vorhabenliste"
           feature: "Zum %{feature}"
           default: "Zur Webseite"

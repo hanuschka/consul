@@ -28,4 +28,10 @@ class MunicipalPlans::ListItemComponent < ApplicationComponent
   def district_names
     municipal_plan.districts.map(&:name_for_display)
   end
+
+  def header_label
+    date = municipal_plan.content_updated_at.presence || municipal_plan.created_at.to_date
+
+    t("custom.municipal_plans.index.updated_on", date: l(date, format: "%d.%m.%Y"))
+  end
 end

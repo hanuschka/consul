@@ -500,7 +500,6 @@ describe "Vorhabenliste", type: :request do
       get municipal_plans_path
 
       expect(document.at_css(".resources-list .js-resource-list-switch-view-button")).to be_present
-      expect(document.at_css("table")).to be_nil
     end
 
     it "shows the result count in the sidebar information card as a status" do
@@ -548,6 +547,487 @@ describe "Vorhabenliste", type: :request do
       get municipal_plans_path(order: "content_updated_at")
 
       expect(item_titles).to eq ["Neueres Vorhaben", "Älteres Vorhaben"]
+    end
+  end
+
+  describe "the table view" do
+    before do
+      enable_module(true)
+      cookies["wide_resources"] = "true"
+    end
+
+    def document
+      Nokogiri::HTML(response.body)
+    end
+
+    def row_for(title)
+      document.css("table tbody tr").find { |row| row.at_css("th[scope=row]")&.text&.strip == title }
+    end
+
+    def row_titles
+      document.css("table tbody tr th[scope=row]").map { |cell| cell.text.strip }
+    end
+
+    it "renders a table with five column headers and the linked title" do
+      plan
+
+      get municipal_plans_path
+
+      html = document
+      html.css(".municipal-plans-table--sort-hint").each(&:remove)
+      headers = html.css(".municipal-plans-table table thead th[scope=col]").map { |th| th.text.strip }
+      expect(headers).to eq %w[title date topics districts badges].map { |key|
+        I18n.t("custom.municipal_plans.index.table.columns.#{key}")
+      }
+      link = row_for("Weiterentwicklung des Eichplatz-Areals").at_css("a")
+      expect(link["href"]).to eq municipal_plan_path(plan)
+    end
+
+    it "keeps the table semantics as explicit ARIA roles" do
+      plan
+
+      get municipal_plans_path
+
+      region = document.at_css(".municipal-plans-table > .municipal-plans-table--scroll[role=region]")
+      expect(region["aria-label"]).to eq I18n.t("custom.municipal_plans.index.table.region_label")
+      table = region.at_css("table[role=table]")
+      caption = table.at_css("caption")
+      expect(caption["id"]).to be_present
+      expect(table["aria-labelledby"]).to eq caption["id"]
+      expect(caption.text.strip).to eq I18n.t("custom.municipal_plans.index.table.caption")
+      expect(table.css("thead[role=rowgroup] tr[role=row] [role=columnheader]").size).to eq 5
+      rows = table.css("tbody[role=rowgroup] > tr")
+      expect(rows).not_to be_empty
+      rows.each do |row|
+        expect(row["role"]).to eq "row"
+        expect(row.css("[role=rowheader]").size).to eq 1
+        expect(row.css("> [role=cell]").size).to eq 4
+      end
+    end
+
+    it "shows every Ortsteil of a Vorhaben" do
+      names = %w[Lobeda Wenigenjena Winzerla Zwätzen]
+      plan.district_assignments.destroy_all
+      names.each do |name|
+        plan.district_assignments.create!(district: create(:registered_address_district, name: name))
+      end
+
+      get municipal_plans_path
+
+      label = I18n.t("custom.municipal_plans.index.table.columns.districts")
+      districts_cell = row_for("Weiterentwicklung des Eichplatz-Areals").at_css("td[data-label='#{label}']")
+      names.each { |name| expect(districts_cell.text).to include(name) }
+    end
+
+    it "applies the Ortsteil filter and keeps it checked" do
+      district = create(:registered_address_district, name: "Lobeda")
+      plan.district_assignments.destroy_all
+      plan.district_assignments.create!(district: district)
+      create(:municipal_plan, :published, responsible: officer, title: "Anderer Ortsteil")
+
+      get municipal_plans_path(districts: [district.id])
+
+      expect(row_titles).to eq ["Weiterentwicklung des Eichplatz-Areals"]
+      expect(document.at_css("#filter_district_#{district.id}")["checked"]).to be_present
+    end
+
+    it "lists the newest update first when sorted by Aktualisierungsdatum" do
+      older = create(:municipal_plan, :published, responsible: officer, title: "Älteres Vorhaben")
+      newer = create(:municipal_plan, :published, responsible: officer, title: "Neueres Vorhaben")
+      older.update_columns(content_updated_at: Date.current - 20.days)
+      newer.update_columns(content_updated_at: Date.current - 2.days)
+
+      get municipal_plans_path(order: "content_updated_at")
+
+      expect(row_titles).to eq ["Neueres Vorhaben", "Älteres Vorhaben"]
+      label = I18n.t("custom.municipal_plans.index.table.columns.date")
+      expect(row_for("Neueres Vorhaben").at_css("td[data-label='#{label}']").text.strip)
+        .to eq (Date.current - 2.days).strftime("%d.%m.%Y")
+    end
+
+    it "lists the oldest update first when sorted by Aktualisierungsdatum ascending" do
+      older = create(:municipal_plan, :published, responsible: officer, title: "Älteres Vorhaben")
+      newer = create(:municipal_plan, :published, responsible: officer, title: "Neueres Vorhaben")
+      older.update_columns(content_updated_at: Date.current - 20.days)
+      newer.update_columns(content_updated_at: Date.current - 2.days)
+
+      get municipal_plans_path(order: "content_updated_at_asc")
+
+      expect(row_titles).to eq ["Älteres Vorhaben", "Neueres Vorhaben"]
+    end
+
+    it "lists the titles from Z to A when sorted by title descending" do
+      create(:municipal_plan, :published, responsible: officer, title: "Ausbau Radweg")
+      create(:municipal_plan, :published, responsible: officer, title: "Zentrale Bushaltestelle")
+
+      get municipal_plans_path(order: "title_desc")
+
+      expect(row_titles).to eq ["Zentrale Bushaltestelle", "Ausbau Radweg"]
+    end
+
+    it "lists a Vorhaben without Aktualisierungsdatum last in both directions" do
+      undated = create(:municipal_plan, :published, responsible: officer, title: "Ohne Datum")
+      dated = create(:municipal_plan, :published, responsible: officer, title: "Mit Datum")
+      undated.update_columns(content_updated_at: nil)
+      dated.update_columns(content_updated_at: Date.current - 2.days)
+
+      get municipal_plans_path(order: "content_updated_at")
+      expect(row_titles).to eq ["Mit Datum", "Ohne Datum"]
+
+      get municipal_plans_path(order: "content_updated_at_asc")
+      expect(row_titles).to eq ["Mit Datum", "Ohne Datum"]
+    end
+
+    def header_link(key)
+      document.at_css(".municipal-plans-table thead th.municipal-plans-table--#{key} a")
+    end
+
+    def link_query(link)
+      Rack::Utils.parse_nested_query(URI.parse(link["href"]).query)
+    end
+
+    it "links the Vorhaben header to the A-Z order by default" do
+      plan
+
+      get municipal_plans_path
+
+      link = header_link(:title)
+      expect(URI.parse(link["href"]).path).to eq municipal_plans_path
+      expect(link_query(link)).to eq("order" => "title")
+      expect(link.at_css(".municipal-plans-table--sort-hint").text.strip)
+        .to eq I18n.t("custom.municipal_plans.index.table.sort.ascending")
+      expect(link_query(header_link(:date))).to eq("order" => "content_updated_at")
+    end
+
+    it "links the Vorhaben header to the Z-A order when sorted by title, keeping filters" do
+      district = create(:registered_address_district, name: "Lobeda")
+      topic = create(:municipal_plan_topic)
+      plan.district_assignments.destroy_all
+      plan.district_assignments.create!(district: district)
+      plan.topic_assignments.create!(topic: topic)
+
+      get municipal_plans_path(order: "title", districts: [district.id], topics: [topic.id],
+                               search: "Eichplatz", page: 2)
+
+      query = link_query(header_link(:title))
+      expect(query).to eq("order" => "title_desc", "districts" => [district.id.to_s],
+                          "topics" => [topic.id.to_s], "search" => "Eichplatz")
+    end
+
+    it "links the Datum header to the oldest-first order when sorted newest first" do
+      plan
+
+      get municipal_plans_path(order: "content_updated_at")
+
+      expect(link_query(header_link(:date))).to eq("order" => "content_updated_at_asc")
+    end
+
+    it "marks only the sorted column with aria-sort" do
+      plan
+
+      get municipal_plans_path(order: "title_desc")
+
+      headers = document.css(".municipal-plans-table thead th")
+      expect(headers.map { |th| th["aria-sort"] }).to eq ["descending", nil, nil, nil, nil]
+      expect(headers.first.at_css(".fa-sort-down[aria-hidden=true]")).to be_present
+      expect(headers[1].at_css(".fa-sort[aria-hidden=true]")).to be_present
+      expect(headers[2].at_css(".fa-sort[aria-hidden=true]")).to be_present
+      expect(headers[4].at_css("a")).to be_nil
+
+      get municipal_plans_path(order: "content_updated_at_asc")
+
+      expect(document.css(".municipal-plans-table thead th").map { |th| th["aria-sort"] })
+        .to eq [nil, "ascending", nil, nil, nil]
+    end
+
+    def plan_with_topics(title, names)
+      create(:municipal_plan, :published, responsible: officer, title: title).tap do |created|
+        created.topic_assignments.destroy_all
+        names.each do |name|
+          created.topic_assignments.create!(topic: create(:municipal_plan_topic, name: name))
+        end
+      end
+    end
+
+    def plan_with_districts(title, names)
+      create(:municipal_plan, :published, responsible: officer, title: title).tap do |created|
+        created.district_assignments.destroy_all
+        names.each do |name|
+          created.district_assignments.create!(district: create(:registered_address_district, name: name))
+        end
+      end
+    end
+
+    def cell_text(title, key)
+      label = I18n.t("custom.municipal_plans.index.table.columns.#{key}")
+      row_for(title).at_css("td[data-label='#{label}']").text.strip
+    end
+
+    it "sorts by the first Kategorie, listing a Vorhaben without Kategorie last in both directions" do
+      plan_with_topics("Ohne Kategorie", [])
+      plan_with_topics("Umwelt und Mobilität", %w[Umwelt Mobilität])
+      plan_with_topics("Ärztehaus", %w[Zuwanderung Ärzte])
+      plan_with_topics("Bauen", %w[bauen])
+
+      get municipal_plans_path(order: "topics")
+      expect(row_titles).to eq ["Ärztehaus", "Bauen", "Umwelt und Mobilität", "Ohne Kategorie"]
+
+      get municipal_plans_path(order: "topics_desc")
+      expect(row_titles).to eq ["Umwelt und Mobilität", "Bauen", "Ärztehaus", "Ohne Kategorie"]
+    end
+
+    it "sorts by the first Ort, listing a Vorhaben without Ort last in both directions" do
+      plan_with_districts("Ohne Ort", [])
+      plan_with_districts("Zwätzen und Lobeda", %w[Zwätzen Lobeda])
+      plan_with_districts("Ammerbach", %w[Winzerla Ammerbach])
+      plan_with_districts("Drackendorf", %w[drackendorf])
+
+      get municipal_plans_path(order: "districts")
+      expect(row_titles).to eq ["Ammerbach", "Drackendorf", "Zwätzen und Lobeda", "Ohne Ort"]
+
+      get municipal_plans_path(order: "districts_desc")
+      expect(row_titles).to eq ["Zwätzen und Lobeda", "Drackendorf", "Ammerbach", "Ohne Ort"]
+    end
+
+    it "lists the Kategorien and Orte of a Vorhaben alphabetically" do
+      plan_with_topics("Sortierte Namen", %w[Mobilität Bauen]).tap do |created|
+        created.district_assignments.destroy_all
+        %w[Zwätzen Lobeda].each do |name|
+          created.district_assignments.create!(district: create(:registered_address_district, name: name))
+        end
+      end
+
+      get municipal_plans_path
+
+      expect(cell_text("Sortierte Namen", :topics)).to eq "Bauen, Mobilität"
+      expect(cell_text("Sortierte Namen", :districts)).to eq "Lobeda, Zwätzen"
+    end
+
+    it "links the Kategorie and Ort headers to the A-Z order by default" do
+      plan
+
+      get municipal_plans_path
+
+      expect(link_query(header_link(:topics))).to eq("order" => "topics")
+      expect(link_query(header_link(:districts))).to eq("order" => "districts")
+      expect(header_link(:topics).at_css(".municipal-plans-table--sort-hint").text.strip)
+        .to eq I18n.t("custom.municipal_plans.index.table.sort.ascending")
+    end
+
+    it "links the Kategorie and Ort headers to the Z-A order when sorted by them, keeping filters" do
+      district = create(:registered_address_district, name: "Lobeda")
+      topic = create(:municipal_plan_topic)
+      plan.district_assignments.destroy_all
+      plan.district_assignments.create!(district: district)
+      plan.topic_assignments.create!(topic: topic)
+      filters = { "districts" => [district.id.to_s], "topics" => [topic.id.to_s], "search" => "Eichplatz" }
+
+      get municipal_plans_path(order: "topics", districts: [district.id], topics: [topic.id],
+                               search: "Eichplatz", page: 2)
+
+      expect(link_query(header_link(:topics))).to eq filters.merge("order" => "topics_desc")
+      expect(link_query(header_link(:districts))).to eq filters.merge("order" => "districts")
+      expect(document.css(".municipal-plans-table thead th").map { |th| th["aria-sort"] })
+        .to eq [nil, nil, "ascending", nil, nil]
+
+      get municipal_plans_path(order: "districts", districts: [district.id], topics: [topic.id],
+                               search: "Eichplatz")
+
+      expect(link_query(header_link(:districts))).to eq filters.merge("order" => "districts_desc")
+      expect(document.css(".municipal-plans-table thead th").map { |th| th["aria-sort"] })
+        .to eq [nil, nil, nil, "ascending", nil]
+    end
+
+    it "lists the Kategorie and Ort orders in the sort dropdown" do
+      plan
+
+      get municipal_plans_path(order: "topics")
+
+      dropdown = document.at_css(".resources-list--filter dropdown-select-menu")
+      orders = dropdown.css("a").map { |link| link_query(link)["order"] }
+      expect(orders).to eq %w[given_order content_updated_at content_updated_at_asc title title_desc
+                              topics topics_desc districts districts_desc]
+      labels = dropdown.css("a").map { |link| link.text.strip }
+      expect(labels.last(4)).to eq %w[topics topics_desc districts districts_desc].map { |order|
+        I18n.t("custom.municipal_plans.index.orders.#{order}")
+      }
+      expect(dropdown["selected"]).to eq I18n.t("custom.municipal_plans.index.orders.topics")
+
+      get municipal_plans_path(order: "districts_desc")
+
+      dropdown = document.at_css(".resources-list--filter dropdown-select-menu")
+      expect(dropdown["selected"]).to eq I18n.t("custom.municipal_plans.index.orders.districts_desc")
+    end
+
+    it "counts the Vorhaben when sorted by Kategorie" do
+      plan_with_topics("Mit Kategorie", %w[Bauen])
+      plan_with_topics("Ohne Kategorie", [])
+
+      get municipal_plans_path(order: "topics")
+
+      expect(row_titles).to eq ["Mit Kategorie", "Ohne Kategorie"]
+      expect(document.at_css("#municipal-plans-sidebar .resources--info-count span:last-child").text.strip)
+        .to eq "2"
+    end
+
+    it "shows every published plan without pagination" do
+      create_list(:municipal_plan, 30, :published, responsible: officer)
+
+      get municipal_plans_path
+
+      expect(document.css(".municipal-plans-table tbody tr").size).to eq 30
+      expect(document.at_css(".pagination")).to be_nil
+      expect(document.at_css("#municipal-plans-sidebar .resources--info-count span:last-child").text.strip)
+        .to eq "30"
+    end
+
+    it "shows the count for a search result too" do
+      plan
+
+      get municipal_plans_path(search: "Eichplatz")
+
+      expect(response).to have_http_status(:ok)
+      expect(row_titles).to eq ["Weiterentwicklung des Eichplatz-Areals"]
+      expect(document.at_css("#municipal-plans-sidebar .resources--info-count span:last-child").text.strip)
+        .to eq "1"
+    end
+
+    def badge_label(badge)
+      I18n.t("custom.municipal_plans.badges.#{badge}")
+    end
+
+    it "shows the Kennzeichnung as icons with a tooltip each" do
+      plan.update_columns(formal_participation: true)
+
+      get municipal_plans_path
+
+      cell = row_for("Weiterentwicklung des Eichplatz-Areals")
+        .at_css("td[data-label='#{I18n.t("custom.municipal_plans.index.table.columns.badges")}']")
+      tooltips = cell.css("rich-tooltip")
+      expect(tooltips.size).to eq 2
+      tooltips.zip(%i[new formal_participation]).each do |tooltip, badge|
+        trigger = tooltip.at_css("> span")
+        expect(trigger["role"]).to eq "img"
+        expect(trigger["aria-label"]).to eq badge_label(badge)
+        expect(trigger["tabindex"]).to eq "0"
+        expect(trigger.at_css("i.fas.fa-#{MunicipalPlans::BadgesComponent::ICONS[badge]}[aria-hidden=true]"))
+          .to be_present
+        expect(trigger.at_css(".municipal-plans-table--badge-label[aria-hidden=true]").text.strip)
+          .to eq badge_label(badge)
+        expect(tooltip.at_css("> template").inner_html.strip).to eq badge_label(badge)
+      end
+    end
+
+    it "lists every kind of Kennzeichnung in the legend above the table" do
+      plan
+
+      get municipal_plans_path
+
+      legend = document.at_css(".municipal-plans-table > .municipal-plans-table--legend")
+      list = legend.at_css("ul")
+      expect(list["aria-label"]).to eq I18n.t("custom.municipal_plans.index.table.legend")
+      expect(list.css("li").map { |item| item.text.strip })
+        .to eq MunicipalPlans::BadgesComponent::ICONS.keys.map { |badge| badge_label(badge) }
+      expect(list.css("i.fas[aria-hidden=true]").size).to eq 4
+      expect(legend.next_element["class"]).to eq "municipal-plans-table--scroll"
+    end
+
+    def tile_for_plan
+      document.at_css(".resources-list--body .municipal_plan-list-item")
+    end
+
+    it "shows no participation badges on the tile" do
+      plan.update_columns(formal_participation: true, informal_participation: true)
+
+      get municipal_plans_path
+
+      tile = tile_for_plan
+      expect(tile.css("rich-tooltip")).to be_empty
+      expect(tile.css("ul.no-bullet")).to be_empty
+      expect(tile.text).not_to include(badge_label(:formal_participation))
+      expect(tile.text).not_to include(badge_label(:informal_participation))
+    end
+
+    def updated_on_label(date)
+      I18n.t("custom.municipal_plans.index.updated_on", date: date.strftime("%d.%m.%Y"))
+    end
+
+    it "shows the content update date in the tile header" do
+      plan.update_columns(created_at: 60.days.ago, content_updated_at: Date.new(2026, 3, 14))
+
+      get municipal_plans_path
+
+      expect(tile_for_plan.at_css(".resource-item--header").text.strip)
+        .to eq updated_on_label(Date.new(2026, 3, 14))
+    end
+
+    it "falls back to the creation date in the tile header without a content update date" do
+      plan.update_columns(created_at: Time.zone.local(2026, 2, 3, 10), content_updated_at: nil)
+
+      get municipal_plans_path
+
+      expect(tile_for_plan.at_css(".resource-item--header").text.strip)
+        .to eq updated_on_label(Date.new(2026, 2, 3))
+    end
+
+    it "renders a header on every tile, in the archive too" do
+      plan.update_columns(created_at: 60.days.ago, content_updated_at: Date.current - 60.days)
+      create(:municipal_plan, :published, responsible: officer).update!(status: "archived")
+
+      [municipal_plans_path, archive_municipal_plans_path].each do |path|
+        get path
+
+        tiles = document.css(".resources-list--body .municipal_plan-list-item")
+        expect(tiles).not_to be_empty
+        tiles.each do |tile|
+          expect(tile.at_css(".resource-item--header")).to be_present
+          expect(tile["class"].split).not_to include "-no-header"
+        end
+      end
+    end
+
+    it "offers a footer button to the plan on the tile" do
+      plan
+
+      get municipal_plans_path
+
+      button = tile_for_plan.at_css(".resource-item--footer a.button.-grey")
+      expect(button.text.strip).to eq I18n.t("custom.municipal_plans.index.to_municipal_plan")
+      expect(button["href"]).to eq municipal_plan_path(plan)
+      expect(button["tabindex"]).to eq "-1"
+      expect(button["aria-hidden"]).to eq "true"
+    end
+
+    it "renders the table in the archive too" do
+      create(:municipal_plan, :published, responsible: officer, title: "Abgeschlossenes Vorhaben")
+        .update!(status: "archived")
+
+      get archive_municipal_plans_path
+
+      expect(row_titles).to eq ["Abgeschlossenes Vorhaben"]
+      expect(document.at_css(".municipal-plans-table caption").text.strip)
+        .to eq I18n.t("custom.municipal_plans.index.table.archive_caption")
+    end
+
+    it "renders the table without the cookie too, next to the list, for CSS to switch" do
+      cookies.delete("wide_resources")
+      plan
+
+      get municipal_plans_path
+
+      expect(document.at_css(".resources-list.-wide")).to be_nil
+      expect(document.at_css(".resources-list .municipal-plans-table + .resources-list--body")).to be_present
+      expect(row_titles).to eq ["Weiterentwicklung des Eichplatz-Areals"]
+      expect(document.css(".resources-list--inner .resource-item--title").map { |t| t.text.strip })
+        .to eq ["Weiterentwicklung des Eichplatz-Areals"]
+    end
+
+    it "renders no table when the list is empty" do
+      get municipal_plans_path
+
+      expect(document.at_css(".resources-list.-wide")).to be_present
+      expect(document.at_css("table")).to be_nil
+      expect(document.at_css(".resources-list--body")).to be_present
     end
   end
 

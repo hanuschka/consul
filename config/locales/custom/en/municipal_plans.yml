@@ -10,12 +10,20 @@ en:
         archive_empty_list_text: There are no plans in the archive at the moment.
         archive_link: Go to the municipal plans archive
         overview_link: Back to the plan list
+        to_municipal_plan: View plan
+        updated_on: "Updated on %{date}"
         count: Plans
         orders:
           relevance: Relevance
           given_order: Editorial order
-          content_updated_at: Updated on
-          title: Title
+          content_updated_at: Updated on (newest first)
+          content_updated_at_asc: Updated on (oldest first)
+          title: Title (A–Z)
+          title_desc: Title (Z–A)
+          topics: Category (A–Z)
+          topics_desc: Category (Z–A)
+          districts: Location (A–Z)
+          districts_desc: Location (Z–A)
         search_form:
           placeholder: e.g. market square
           button_title: Search plans
@@ -40,6 +48,20 @@ en:
             from_label: Updated from
             to_label: Updated until
             reset: Reset date range
+        table:
+          caption: Municipal plans
+          archive_caption: Municipal plans archive
+          region_label: Table of municipal plans
+          legend: Legend
+          columns:
+            title: Plan
+            date: Date
+            topics: Category
+            districts: Location
+            badges: Labels
+          sort:
+            ascending: sort ascending
+            descending: sort descending
         overview_map:
           region_label: Map of the districts
           note: The map shows the districts and where the plans are located. Every district can also be filtered through the "District" list.

@@ -9,7 +9,9 @@ class MunicipalPlansController < ApplicationController
   before_action :parse_search_terms, only: :archive
   before_action :set_search_order, only: :archive
 
-  has_orders %w[relevance given_order content_updated_at title], only: [:index, :archive]
+  has_orders %w[relevance given_order content_updated_at content_updated_at_asc title title_desc
+                topics topics_desc districts districts_desc],
+             only: [:index, :archive]
 
   def index
     load_overview(MunicipalPlan.published)
@@ -41,7 +43,7 @@ class MunicipalPlansController < ApplicationController
         @municipal_plans, districts: @districts, selected_district_ids: Array(filter_params[:districts])
       )
 
-      @municipal_plans = apply_order(@municipal_plans).page(params[:page])
+      @municipal_plans = apply_order(@municipal_plans)
     end
 
     def filter_params
@@ -53,7 +55,13 @@ class MunicipalPlansController < ApplicationController
     def apply_order(scope)
       case @current_order
       when "content_updated_at" then scope.sort_by_content_updated_at
+      when "content_updated_at_asc" then scope.sort_by_content_updated_at(:asc)
       when "title" then scope.sort_by_title
+      when "title_desc" then scope.sort_by_title(:desc)
+      when "topics" then MunicipalPlan.sort_by_names(scope.sorted, :sorted_topic_names)
+      when "topics_desc" then MunicipalPlan.sort_by_names(scope.sorted, :sorted_topic_names, :desc)
+      when "districts" then MunicipalPlan.sort_by_names(scope.sorted, :sorted_district_names)
+      when "districts_desc" then MunicipalPlan.sort_by_names(scope.sorted, :sorted_district_names, :desc)
       when "relevance" then scope
       else scope.sorted
       end

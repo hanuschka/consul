@@ -1,4 +1,8 @@
 <%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_header do %>
+    <%= header_label %>
+  <% end %>
+
   <% if topics.any? %>
     <% c.with_subheading do %>
       <span class="show-for-sr"><%= t("custom.municipal_plans.show.topics") %>:</span>
@@ -20,9 +24,7 @@
     <% end %>
   <% end %>
 
-  <% if municipal_plan.badges.any? %>
-    <% c.with_footer_section do %>
-      <%= render MunicipalPlans::BadgesComponent.new(municipal_plan: municipal_plan) %>
-    <% end %>
+  <% c.with_footer_section do %>
+    <%= link_to t("custom.municipal_plans.index.to_municipal_plan"), helpers.municipal_plan_path(municipal_plan), class: "button -grey", tabindex: "-1", data: { turbolinks: false }, aria: { hidden: true } %>
   <% end %>
 <% end %>

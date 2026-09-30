@@ -29,27 +29,33 @@
 
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
     <div class="main-column">
-      <%= render Resources::List::BaseComponent.new(
-        empty_text: @municipal_plans.empty? ? empty_list_text : nil
-      ) do |c| %>
-        <% c.with_toolbar(
-          i18n_namespace: "custom.municipal_plans.index",
-          filters: @valid_orders,
-          current_filter: @current_order,
-          param: "order",
-          text_search_enabled: true
-        ) %>
+      <div class="municipal-plans-list">
+        <%= render Resources::List::BaseComponent.new(
+          empty_text: @municipal_plans.empty? ? empty_list_text : nil
+        ) do |c| %>
+          <% c.with_toolbar(
+            i18n_namespace: "custom.municipal_plans.index",
+            filters: @valid_orders,
+            current_filter: @current_order,
+            param: "order",
+            text_search_enabled: true
+          ) %>
 
-        <% if @municipal_plans.present? %>
-          <% c.with_items do %>
-            <% @municipal_plans.each do |municipal_plan| %>
-              <%= render MunicipalPlans::ListItemComponent.new(municipal_plan: municipal_plan) %>
+          <% if @municipal_plans.present? %>
+            <%= render MunicipalPlans::TableComponent.new(
+              municipal_plans: @municipal_plans,
+              current_order: @current_order,
+              caption: archive_view ? t("custom.municipal_plans.index.table.archive_caption") : t("custom.municipal_plans.index.table.caption")
+            ) %>
+
+            <% c.with_items do %>
+              <% @municipal_plans.each do |municipal_plan| %>
+                <%= render MunicipalPlans::ListItemComponent.new(municipal_plan: municipal_plan) %>
+              <% end %>
             <% end %>
           <% end %>
         <% end %>
-      <% end %>
-
-      <%= paginate @municipal_plans %>
+      </div>
     </div>
 
     <div id="municipal-plans-sidebar" class="sidebar">
@@ -63,7 +69,7 @@
             <%= t("custom.municipal_plans.index.count") %>
           </span>
           <span>
-            <%= @municipal_plans.total_count %>
+            <%= @municipal_plans.to_a.size %>
           </span>
         </div>
       <% end %>

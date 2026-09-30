@@ -113,7 +113,11 @@ class MunicipalPlan < ApplicationRecord
            "(#{STATUS_AUDITS_SQL} ORDER BY audits.created_at DESC LIMIT 1) AS last_status_change_at")
   }
   scope :due_for_archiving, -> { published.released_versions.where(archive_on: ..Date.current) }
-  scope :sort_by_content_updated_at, -> { reorder(content_updated_at: :desc, id: :desc) }
+  scope :sort_by_content_updated_at, ->(direction = :desc) {
+    direction = direction.to_s.casecmp?("asc") ? :asc : :desc
+
+    reorder(arel_table[:content_updated_at].public_send(direction).nulls_last, id: direction)
+  }
   scope :newly_added, -> { where(created_at: RECENCY_WINDOW.ago..) }
   scope :recently_updated, -> {
     where(content_updated_at: (Date.current - RECENCY_WINDOW.in_days.to_i)..)
@@ -121,14 +125,15 @@ class MunicipalPlan < ApplicationRecord
   }
   # Ordered by a correlated subquery rather than a join: a join would drop every plan that has no
   # translation in the current locale, which silently hides plans instead of sorting them.
-  scope :sort_by_title, -> {
+  scope :sort_by_title, ->(direction = :asc) {
     locale = connection.quote(I18n.locale.to_s)
+    direction = direction.to_s.casecmp?("desc") ? "DESC" : "ASC"
 
     reorder(Arel.sql(<<~SQL.squish))
       (SELECT t.title FROM municipal_plan_translations t
         WHERE t.municipal_plan_id = municipal_plans.id
         ORDER BY (t.locale = #{locale}) DESC, t.id ASC
-        LIMIT 1) ASC NULLS LAST
+        LIMIT 1) #{direction} NULLS LAST
     SQL
   }
   scope :assigned_to_officer, ->(officer) {
@@ -216,6 +221,32 @@ class MunicipalPlan < ApplicationRecord
       (:formal_participation if formal_participation?),
       (:informal_participation if informal_participation?)
     ].compact
+  end
+
+  def sorted_topic_names
+    self.class.sort_names(topics.map(&:name))
+  end
+
+  def sorted_district_names
+    self.class.sort_names(districts.map(&:name_for_display))
+  end
+
+  def self.sort_names(names)
+    names.compact_blank.sort_by { |name| name_sort_key(name) }
+  end
+
+  def self.name_sort_key(name)
+    I18n.transliterate(name.to_s).downcase
+  end
+
+  def self.sort_by_names(plans, names_method, direction = :asc)
+    named, unnamed = plans.to_a.partition { |plan| plan.public_send(names_method).any? }
+
+    named = named.each_with_index.sort_by do |plan, index|
+      [name_sort_key(plan.public_send(names_method).first), index]
+    end.map(&:first)
+
+    (direction.to_s == "desc" ? named.reverse : named) + unnamed
   end
 
   def searchable_values

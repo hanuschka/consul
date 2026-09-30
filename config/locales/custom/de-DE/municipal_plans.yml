@@ -10,12 +10,20 @@ de:
         archive_empty_list_text: Im Archiv sind zurzeit keine Vorhaben abgelegt.
         archive_link: Zum Archiv der Vorhabenliste
         overview_link: Zurück zur Vorhabenliste
+        to_municipal_plan: Zum Vorhaben
+        updated_on: "Aktualisiert am %{date}"
         count: Vorhaben
         orders:
           relevance: Relevanz
           given_order: Redaktionelle Reihenfolge
-          content_updated_at: Aktualisierungsdatum
-          title: Titel
+          content_updated_at: Aktualisierungsdatum (neueste zuerst)
+          content_updated_at_asc: Aktualisierungsdatum (älteste zuerst)
+          title: Titel (A–Z)
+          title_desc: Titel (Z–A)
+          topics: Kategorie (A–Z)
+          topics_desc: Kategorie (Z–A)
+          districts: Ort (A–Z)
+          districts_desc: Ort (Z–A)
         search_form:
           placeholder: z. B. Marktplatz
           button_title: Vorhaben durchsuchen
@@ -40,6 +48,20 @@ de:
             from_label: Aktualisiert ab
             to_label: Aktualisiert bis
             reset: Zeitraum zurücksetzen
+        table:
+          caption: Vorhabenliste
+          archive_caption: Archiv der Vorhabenliste
+          region_label: Tabelle der Vorhaben
+          legend: Legende
+          columns:
+            title: Vorhaben
+            date: Datum
+            topics: Kategorie
+            districts: Ort
+            badges: Kennzeichnung
+          sort:
+            ascending: sortieren, aufsteigend
+            descending: sortieren, absteigend
         overview_map:
           region_label: Karte der Ortsteile
           note: Die Karte zeigt die Ortsteile und die Lage der Vorhaben. Alle Ortsteile lassen sich auch über die Liste „Ortsteil“ filtern.

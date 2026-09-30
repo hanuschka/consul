@@ -37,7 +37,13 @@
 <% else %>
   <%= form_tag form_url, method: :get, remote: remote_attribute, enforce_utf8: false, class: "text-search-form js-text-search-form", data: { disable_reset_button_submit: disable_reset_button_submit? } do %>
     <% other_query_params_from_current_path.each do |param_name, param_value| %>
-      <%= hidden_field_tag param_name, param_value %>
+      <% if param_value.is_a?(Array) %>
+        <% param_value.each do |value| %>
+          <%= hidden_field_tag "#{param_name}[]", value, id: nil %>
+        <% end %>
+      <% elsif !param_value.is_a?(Hash) %>
+        <%= hidden_field_tag param_name, param_value %>
+      <% end %>
     <% end %>
     <%= inner_content %>
   <% end %>

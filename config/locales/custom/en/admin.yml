@@ -167,6 +167,8 @@ en:
           title: Texts
   custom:
     sidebar_filter:
+      checkbox:
+        updates_on_change: The list reloads with every selection.
       my_posts:
         title: 'My posts'
         all: 'All'

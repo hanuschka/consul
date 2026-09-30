@@ -61,3 +61,10 @@ de:
       badge:
         one: "%{count} ähnlicher Beitrag"
         other: "%{count} ähnliche Beiträge"
+    sidebar:
+      contact_person_component:
+        title: "Ansprechperson"
+        phone: "Telefon"
+        email: "E-Mail"
+        write: "schreiben"
+        email_to_name: "E-Mail an %{name}"

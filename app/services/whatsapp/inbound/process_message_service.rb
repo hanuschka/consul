@@ -27,8 +27,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   #   reason as the stop keyword: leaving a half-written submission must not depend
   #   on a provider being reachable. A text-less voice note halts only after that
   #   gate, because a tap is never audio.
-  # - The two pills that mean "back to the beginning" are read here for that reason
-  #   as well, and theirs is the one gate that does not halt: clearing the phase is
+  # - Help, tapped or typed as the bare word, is answered from the locale copy
+  #   rather than by the assistant: it names the same words, privacy page and
+  #   contact every time, and it leaves whatever is in progress where it was.
+  # - The pill that means "back to the beginning" is read here for that reason
+  #   as well, and its gate is the one that does not halt: clearing the phase is
   #   only half of what the citizen asked for, and the other half is the reply,
   #   which is the overview of what applies now and so the assistant's to write.
   # - The projekt card's phase pills are answered here rather than described to the
@@ -73,6 +76,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
   def self.opt_in_keyword
     OPT_IN_KEYWORDS.first.upcase
   end
+
+  # The word alone, answered like the pill. Anything around it — "hilfe bei meinem
+  # Vorschlag" — is a question for the assistant, which sends the same help through
+  # show_help where that is what it asks for.
+  HELP_KEYWORDS = %w[hilfe help].map do |word|
+    ::Whatsapp::Inbound::MessageReading.keyword_form(word)
+  end.freeze
 
   # How many of a phase's contributions the reply names in words, where none of them
   # can be opened in the chat and a list has nothing to offer. Fewer than the ten
@@ -120,6 +130,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     track_submission_wish
 
     return if handle_cancel_tap
+    return if handle_help_request
     return if handle_retry_tap
     return if handle_phase_tap
     return if handle_contribution_tap
@@ -547,6 +558,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       tapped_id = reading.tapped_reply_id
 
       return if tapped_id.blank?
+      return @resolved_tap_note if @resolved_tap_note.present?
 
       return ::Whatsapp::StartOverNotes.for(conversation) if start_over_tap?
 
@@ -766,10 +778,12 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       conversation.begin_start_over!
     end
 
-    # One id from each namespace, which is why both are read here: the start-over pill
-    # is built from the catalog and keeps its catalog id, because every one already
-    # sent is still sitting in a chat history and still tappable.
-    START_OVER_ACTIONS = %i[main_menu help].freeze
+    # Both namespaces are read here: the start-over pill is built from the catalog and
+    # keeps its catalog id, because every one already sent is still sitting in a chat
+    # history and still tappable. `help` left this list when it got an answer of its
+    # own (handle_help_request) — as a start-over it cleared the phase under a draft
+    # and was answered with the overview.
+    START_OVER_ACTIONS = %i[main_menu].freeze
 
     def start_over_tap?
       tapped_id = reading.tapped_reply_id
@@ -800,6 +814,25 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       answer_discard(note)
 
       true
+    end
+
+    # Nothing is cleared: a draft, a comment or a ballot in progress is still there
+    # when the citizen writes again, and the assistant carries on from it.
+    def handle_help_request
+      help_tap = ::Whatsapp::Send.recovery_action_from(reading.tapped_reply_id) == :help
+
+      return false if !help_tap && !typed_help_keyword?
+
+      record_tap(:help, nil) if help_tap
+
+      ::Whatsapp::HelpMessage.deliver(conversation)
+
+      true
+    end
+
+    # Never for a tapped pill, whose label the citizen did not write.
+    def typed_help_keyword?
+      reading.tapped_reply_id.blank? && HELP_KEYWORDS.include?(normalized_text)
     end
 
     # The discard is done by now and never waits on a model; only the line after it
@@ -847,6 +880,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Falls through rather than answering wherever the pill can no longer be honoured —
     # the phase closed, the projekt was deactivated, the page unpublished since the card
     # was sent. The assistant is what says so, and it says it better than a fixed line.
+    #
+    # It also falls through for a phase that is taken part in on the website, but
+    # resolved: the phase is looked up and checked here, and what reaches the
+    # assistant is a note saying what it is (#open_phase). The fixed line and the bare
+    # link that used to answer it left the citizen with nothing to tap.
     def handle_phase_tap
       flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
       action = flow_action&.fetch(:action)
@@ -930,16 +968,50 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # to land on answered that with a list containing the one poll it holds. The page
     # is still what everything else opens, and what a voting phase falls back to when
     # its poll has not been published.
+    #
+    # The link goes out in the assistant's reply, with a way on beside it: the tap is
+    # handed over as a note (#website_phase_note) and false lets the message reach
+    # the turn. Only with the assistant unavailable is it the fixed line and the link
+    # alone, because a tap answered with "unavailable" loses the page it asked for.
     def open_phase(projekt_phase)
       return true if ::Whatsapp::Polls::OfferBallotService.call(
         conversation: conversation, projekt_phase: projekt_phase
       )
 
-      send_line_with_link(
-        line: ::Whatsapp.copy("whatsapp.bot.phase.open", phase: projekt_phase.title),
-        url: ::Whatsapp::ProjektLink.ballot_url(projekt_phase) ||
-          ::Whatsapp::ProjektLink.phase_url(projekt_phase)
-      )
+      if !::Ai::Settings.ai_available?
+        return send_line_with_link(
+          line: ::Whatsapp.copy("whatsapp.bot.phase.open", phase: projekt_phase.title),
+          url: ::Whatsapp::ProjektLink.participation_url(projekt_phase)
+        )
+      end
+
+      @resolved_tap_note = website_phase_note(projekt_phase)
+
+      false
+    end
+
+    # What the tap resolved to, in facts rather than in instructions: which ways on
+    # make sense — the projekt, its events, another of its phases — is the
+    # assistant's to judge. The address stays on this side: the note names the pill,
+    # and reply_with_actions writes the page in by it (Whatsapp::PillPageUrl).
+    def website_phase_note(projekt_phase)
+      projekt = projekt_phase.projekt
+      spec = "phase_open-#{projekt_phase.id}"
+
+      [
+        tapped_line(action: :phase_open, param: projekt_phase.id),
+        "It is the phase \"#{projekt_phase.title}\" (#{projekt_phase.name}) of the projekt " \
+          "\"#{::Whatsapp::ProjektLink.title(projekt)}\" (id #{projekt.id}), which is taken " \
+          "part in on the website, not in this chat.",
+        page_note(spec, url: ::Whatsapp::ProjektLink.participation_url(projekt_phase))
+      ].join(" ")
+    end
+
+    # How the page gets into the reply, or that there is none to give.
+    def page_note(spec, url:)
+      return "It has no page the bot can link to." if url.blank?
+
+      "Its page goes under your reply by passing link \"#{spec}\" to reply_with_actions."
     end
 
     # A tap on one of a poll's answer pills. Its parameter is an answer id rather than
@@ -1319,7 +1391,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # is what lets the row be offered at all — every row of a list is selectable, so
     # the alternative was leaving the contribution out of the list that is meant to
     # be the citizen's complete history.
+    #
+    # Answered by the assistant from the same facts find_contribution gives it — its
+    # supports, whether the citizen wrote or supported it, the pill that supports it
+    # — so that a contribution opened by a tap is not a bare link where the same one
+    # asked about by name comes with a way on. As with a phase, the fixed lines are
+    # what is left for when the assistant is unavailable.
     def open_contribution(contribution)
+      if ::Ai::Settings.ai_available?
+        @resolved_tap_note = contribution_tap_note(contribution)
+
+        return false
+      end
+
       url = ::Whatsapp::PublishedResourceUrl.call(contribution)
 
       return send_line_with_link(
@@ -1351,6 +1435,31 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return "whatsapp.bot.contribution.open_other" if contribution.author_id != account.user_id
 
       "whatsapp.bot.contribution.open"
+    end
+
+    # Whose it is travels among the facts (written_by_you) rather than as a choice of
+    # wording, for the same reason #contribution_opening_key reads it off the author.
+    # A contribution without a public page is named as the one still being reviewed,
+    # the reason the fixed line gave, so the model is not left to guess at a link.
+    def contribution_tap_note(contribution)
+      action = ::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION
+      param = ::Whatsapp::ContributionPill.param_for(contribution)
+      url = ::Whatsapp::PublishedResourceUrl.call(contribution)
+      facts = ::Whatsapp::ContributionFacts.call(contribution, user: account.user)
+
+      [
+        tapped_line(action: action, param: param),
+        "It opens this contribution: #{facts.to_json}.",
+        contribution_page_note("#{action}-#{param}", url: url)
+      ].join(" ")
+    end
+
+    def contribution_page_note(spec, url:)
+      if url.blank?
+        return "It is still being reviewed and has no public page until it is released."
+      end
+
+      page_note(spec, url: url)
     end
 
     # The sentence goes through the copy service and the address does not. Everything

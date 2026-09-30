@@ -22,7 +22,10 @@ describe Whatsapp::Inbound::ProcessMessageService do
       shared_location: nil,
       unsaved_submission?: unsaved_submission,
       active_poll_id: nil,
-      pending_map_question_id: nil
+      pending_map_question_id: nil,
+      pending_comment: nil,
+      pending_poll_id: nil,
+      step_in_progress?: false
     ).tap do |stub|
       allow(stub).to receive(:update!)
       allow(stub).to receive(:hold_offered_confirmations!)
@@ -239,10 +242,21 @@ describe Whatsapp::Inbound::ProcessMessageService do
       expect(conversation).to have_received(:discard_draft!)
     end
 
-    it "answers without the assistant" do
+    it "has the assistant say what was discarded" do
       process(cancel_tap)
 
+      expect(Whatsapp::AiAssistant::RouterService).to have_received(:call).once
+      expect(routed_notes.last).to include(Whatsapp::DiscardNotes::NOTHING)
+    end
+
+    it "discards and answers with the fixed line where no assistant is available" do
+      allow(Ai::Settings).to receive(:ai_available?).and_return(false)
+
+      process(cancel_tap)
+
+      expect(conversation).to have_received(:discard_draft!)
       expect(Whatsapp::AiAssistant::RouterService).not_to have_received(:call)
+      expect(Whatsapp::Send).to have_received(:recovery)
     end
   end
 

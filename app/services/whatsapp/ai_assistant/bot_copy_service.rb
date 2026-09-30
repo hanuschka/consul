@@ -197,6 +197,11 @@ class Whatsapp::AiAssistant::BotCopyService < ApplicationService
         character, and so are any *bold* or _italic_ marks around them. A portal called
         "Demokratie.Today" is called that in every language.
 
+        The words for leaving and rejoining the messages — STOP, STOPP and START, however
+        a line capitalises or quotes them — are reproduced character for character as well:
+        the citizen is being told what to write, and the bot reads the word as written, not
+        a translation of it. Every other quoted phrase is translated like the rest.
+
         Some of these lines are legal notices — about automated replies, about consent,
         about privacy, about who holds the rights to a picture. They carry the same weight
         in the new language as in the one they were written in, so nothing in them may be

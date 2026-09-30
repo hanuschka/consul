@@ -178,14 +178,18 @@ module Whatsapp::AssistantActions
   # The same pill as a list row. A row with `idea_start` is one projekt among
   # several, so it keeps the name it was given: labelled with the step, every
   # row of the list would read the same and WhatsApp refuses the whole list.
-  def offered_row(spec:, label:, conversation:)
+  #
+  # `length` is how much of the title the caller keeps: a caller that splits the
+  # name over the row's two lines (Whatsapp::ListRowText) asks for more than a
+  # title holds, so the words past it are there to carry on underneath.
+  def offered_row(spec:, label:, conversation:, length: MAX_ROW_TITLE_LENGTH)
     action, = parse(spec)
 
     if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
-      return recovery_button(spec: spec, conversation: conversation, length: MAX_ROW_TITLE_LENGTH)
+      return recovery_button(spec: spec, conversation: conversation, length: length)
     end
 
-    button(spec: spec, label: label, conversation: conversation, length: MAX_ROW_TITLE_LENGTH)
+    button(spec: spec, label: label, conversation: conversation, length: length)
   end
 
   # The words a button goes out with before any fixed label replaces them: the
@@ -292,6 +296,10 @@ module Whatsapp::AssistantActions
       return dropped(spec, conversation, :unreachable)
     end
 
+    if !submittable?(action, param, conversation)
+      return dropped(spec, conversation, :closed_to_submission)
+    end
+
     sent_action = directed_action(action, param, conversation)
 
     return dropped(spec, conversation, :unlabelled) if sent_action.blank?
@@ -364,6 +372,57 @@ module Whatsapp::AssistantActions
     contribution_for(param, conversation).present?
   end
 
+  # The fourth, for the list after "Idee einreichen": a pill starting a submission
+  # into a phase the chat cannot take one into — or, while the citizen's wish to
+  # submit stands (Whatsapp::Conversation#submission_wished?), a projekt with no such
+  # phase — is a row offering what the text above it calls impossible. Dropped here
+  # rather than left to the model, which is told every projekt's open_for_submission
+  # and offered the closed ones anyway.
+  def submittable?(action, param, conversation)
+    return true if !submission_pill?(action, conversation)
+
+    ids = submittable_ids(action, param)
+
+    return ids[:phase_ids].include?(param.to_i) if action == :idea_start
+
+    ids[:projekt_ids].include?(param.to_i)
+  end
+
+  def submission_pill?(action, conversation)
+    return true if action == :idea_start
+
+    action == :view_projekt && conversation.submission_wished?
+  end
+
+  # Read from the message's preload where one is running, and asked of the one
+  # record otherwise — the card and the follow-ups build their pills one at a time.
+  def submittable_ids(action, param)
+    preloaded = ::Current.whatsapp_pill_records&.submittable
+
+    return preloaded if preloaded.present?
+    return submittable_ids_of(eligible_phases_for_phase(param)) if action == :idea_start
+
+    projekt = ::Projekt.find_by(id: param.to_i)
+    phases = projekt.present? ? ::Whatsapp::EligiblePhasesQuery.uncapped(projekt: projekt) : []
+
+    submittable_ids_of(phases)
+  end
+
+  def eligible_phases_for_phase(param)
+    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+
+    return [] if !::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+
+    [projekt_phase]
+  end
+
+  def submittable_ids_of(phases)
+    {
+      phase_ids: phases.map(&:id).to_set,
+      projekt_ids: phases.map(&:projekt_id).to_set
+    }
+  end
+
   # The records one message's pills point at, read at once. A list of ten
   # contributions asked the same record three times a row — whether it may be
   # opened, what it is called, what goes under it — and every support pill asked
@@ -382,7 +441,7 @@ module Whatsapp::AssistantActions
     ::Current.whatsapp_pill_records = previous
   end
 
-  PillRecords = Struct.new(:contributions, :supportable, keyword_init: true)
+  PillRecords = Struct.new(:contributions, :supportable, :submittable, keyword_init: true)
 
   def preloaded_records(specs, conversation)
     parsed = Array(specs).map { |spec| parse(spec) }
@@ -399,8 +458,18 @@ module Whatsapp::AssistantActions
       contributions: ::Whatsapp::ContributionPill.resolve_all(
         contribution_params, user: conversation.user
       ),
-      supportable: supportable_by_id(proposal_ids)
+      supportable: supportable_by_id(proposal_ids),
+      submittable: preloaded_submittable_ids(parsed, conversation)
     )
+  end
+
+  # Every phase the chat takes a submission into, read once for the whole list
+  # rather than once per row: a list of ten projekts after "Idee einreichen" asked
+  # the same question ten times over. Nil where no pill of the message asks it.
+  def preloaded_submittable_ids(parsed, conversation)
+    return if parsed.none? { |action, _param| submission_pill?(action, conversation) }
+
+    submittable_ids_of(::Whatsapp::EligiblePhasesQuery.uncapped)
   end
 
   def supportable_by_id(proposal_ids)
@@ -869,8 +938,9 @@ module Whatsapp::AssistantActions
   # description, `unlabelled` is a pill the model wrote no words for and whose
   # record could not name it either, `unparseable` an empty or malformed spec,
   # `unknown_scope` a `show_more` naming a list the bot does not keep,
-  # `confirmation_only` a publishing pill offered away from its preview, and
-  # `confirmation_elsewhere` one offered under the other preview.
+  # `confirmation_only` a publishing pill offered away from its preview,
+  # `confirmation_elsewhere` one offered under the other preview, and
+  # `closed_to_submission` a way to submit where the chat cannot take one.
   def dropped(spec, conversation, reason)
     ::Whatsapp::AiAssistant::DecisionLog.record(
       event: :action_dropped, conversation: conversation, spec: spec, reason: reason

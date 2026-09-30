@@ -159,11 +159,12 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     # looking at one projekt — and it was the only tappable-looking thing in the chat
     # that could not be tapped.
     #
-    # Always a list now, where a card with three actions or fewer used to arrive as
-    # reply buttons under the picture. Two projekts read as two different kinds of
-    # message — one with its buttons on the card, one behind "Auswählen" — and a reply
-    # button carries a title and nothing else, while every row of the card has a
-    # second line to tell it apart by (Whatsapp::ProjektCardActions#row_texts).
+    # Reply buttons under the picture where the card has three actions or fewer and
+    # every title fits a button whole and apart from the others, a list behind
+    # "Auswählen" otherwise (Whatsapp::ProjektCardActions#buttons). A reply button
+    # carries a title and nothing else, while every row of a list has a second line
+    # to tell it apart by, so the buttons are only for the cards that need no such
+    # line: one tap to the action is what a small card is worth.
     #
     # Which actions the card offers is Whatsapp::ProjektCardActions': one per open
     # phase, worded as the action itself. There used to be one pill here for all of
@@ -179,22 +180,30 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     # the card's own three facts worded differently — so the detail is in the summary
     # now and the step is gone.
     def send_card(projekt, summary, actions)
-      if actions.present?
-        return send_action_list(projekt, summary, actions)
-      end
-
       # A projekt whose open phases are all of a type with nothing to do in them — a
       # newsfeed, a milestone — has no action to offer, and that is a dead end: the
       # card is worth reading and there is nowhere on from it. The way back stands in
       # for the actions, and it also keeps the message sendable, an interactive one
       # carrying no options at all being the one thing WhatsApp refuses outright.
-      # Routed through buttons_with_picture rather than image, so the picture and the
-      # pill arrive on one message and the ladder that gives the picture up when
-      # WhatsApp will not take it is the transport's rather than this tool's.
+      if actions.blank?
+        return send_button_card(projekt, summary, [::Whatsapp::Send.main_menu_pill(account)])
+      end
+
+      buttons = ::Whatsapp::ProjektCardActions.buttons(actions)
+
+      return send_button_card(projekt, summary, buttons) if buttons.present?
+
+      send_action_list(projekt, summary, actions)
+    end
+
+    # Routed through buttons_with_picture rather than image, so the picture and the
+    # buttons arrive on one message and the ladder that gives the picture up when
+    # WhatsApp will not take it is the transport's rather than this tool's.
+    def send_button_card(projekt, summary, buttons)
       ::Whatsapp::Send.buttons_with_picture(
         account: account,
         body: card_body(projekt, summary),
-        buttons: [::Whatsapp::Send.main_menu_pill(account)],
+        buttons: buttons,
         image_url: ::Whatsapp::ProjektCard.image_url(projekt)
       )
     end

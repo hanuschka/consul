@@ -261,9 +261,10 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
     end
 
     # Buttons while they fit and a list past that, the same fork the projekt card
-    # makes. The options carry no descriptions: an option's own wording is the whole
-    # of what it says, and a second line under it would be the bot explaining a
-    # ballot to the person voting on it.
+    # makes. The options carry no descriptions of the bot's: an option's own wording
+    # is the whole of what it says, and a second line under it would be the bot
+    # explaining a ballot to the person voting on it. What a row carries underneath
+    # is the rest of that wording, where it outgrew the title (#numbered_pill).
     def send_pills(rows, body:)
       return send_buttons(rows, body: body) if ::Whatsapp.buttons?(rows.size)
 
@@ -300,24 +301,25 @@ class Whatsapp::Polls::AskQuestionService < ApplicationService
 
     # The same pills with the number the message prints beside each option in front
     # of the wording, for a question whose choices arrive behind the picker. It is
-    # what a citizen reads a cut label back by, and it costs the wording three of the
-    # twenty characters — the cheaper half of the pair, because the option's own
-    # wording stands a line above in full while a cut pill carrying nothing but its
-    # own first words names no option at all.
+    # what a citizen reads the row back by against the options printed above.
+    #
+    # Always rows of a list — #offer_choices only numbers the options that do not
+    # fit as buttons — so the wording is split over the row's two lines rather than
+    # cut to a button's twenty characters (Whatsapp::ListRowText): the rest of the
+    # option carries on underneath, where two options opening with the same words
+    # used to arrive as two rows reading alike but for their numbers.
     def numbered_pills(options)
-      numbered(options).map { |number, option| answer_pill(option, pill_label(number, option)) }
+      numbered(options).filter_map { |number, option| numbered_pill(number, option) }
     end
 
-    def pill_label(number, option)
-      return number.to_s if self_numbered?(number, option)
+    def numbered_pill(number, option)
+      return answer_pill(option, number.to_s) if self_numbered?(number, option)
 
-      prefix = "#{number}. "
-      wording = ::Whatsapp::AssistantActions.truncated(
-        option.title,
-        length: ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH - prefix.length
-      )
+      lines = ::Whatsapp::ListRowText.call(name: "#{number}. #{option.title}")
 
-      "#{prefix}#{wording}"
+      return if lines.blank?
+
+      answer_pill(option, lines[:title]).merge(description: lines[:description]).compact
     end
 
     # Whether the option's own wording is already the number standing in front of it.

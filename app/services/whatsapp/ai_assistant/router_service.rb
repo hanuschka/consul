@@ -665,6 +665,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::UnlinkAccount,
       ::Ai::Tools::WhatsappAiAssistant::StopMessages,
       ::Ai::Tools::WhatsappAiAssistant::StartOver,
+      ::Ai::Tools::WhatsappAiAssistant::NoteSubmissionWish,
       ::Ai::Tools::WhatsappAiAssistant::StartPollVote,
       ::Ai::Tools::WhatsappAiAssistant::RecordPollAnswer,
       ::Ai::Tools::WhatsappAiAssistant::RecordOpenPollAnswer
@@ -691,12 +692,13 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::AbortSubmission
     ].freeze
 
-    # What plain text cannot express: the four interactive message types, and the two
-    # ordinary questions that must carry a legal notice with them. A plain-text reply
-    # needs no tool at all — this service sends the model's own words when it calls
-    # nothing.
+    # What plain text cannot express: the four interactive message types, the two
+    # ordinary questions that must carry a legal notice with them, and the help message,
+    # which is fixed copy. A plain-text reply needs no tool at all — this service sends
+    # the model's own words when it calls nothing.
     SEND_TOOLS = [
       ::Ai::Tools::WhatsappAiAssistant::ReplyWithActions,
+      ::Ai::Tools::WhatsappAiAssistant::ShowHelp,
       ::Ai::Tools::WhatsappAiAssistant::SendList,
       ::Ai::Tools::WhatsappAiAssistant::SendLink,
       ::Ai::Tools::WhatsappAiAssistant::SendProjektCard,

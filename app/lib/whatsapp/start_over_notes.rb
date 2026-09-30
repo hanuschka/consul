@@ -19,7 +19,9 @@ module Whatsapp::StartOverNotes
                   "Send them what applies right now — what is open to take part in, what " \
                   "they have already done, what there is to read — as a sentence or two " \
                   "with the options to tap, never as a numbered rundown of everything in " \
-                  "the text.".freeze
+                  "the text. Answer it as if it were asked for the first time: never say " \
+                  "that nothing has changed since an earlier overview, and never remark " \
+                  "on having shown it before.".freeze
 
   WITH_DRAFT = "The citizen asked to go back to the start while part-way through a " \
                "contribution. Nothing has been discarded and the projekt is still selected, " \

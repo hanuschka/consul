@@ -132,6 +132,7 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
       >
       <div class="custom-content-block-wrapper--inner">
         <div class="custom-content-block--toolbar-zone js-studio-hide-on-preview">
+        <div class="custom-content-block--toolbar-row">
         <div class="custom-content-block--toolbar">
 
             <div class="custom-content-block-edit--buttons-wrapper">
@@ -304,10 +305,6 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
                 title: "Code-Editor",
                 text: "Öffnet den erweiterten Code-Editor für fortgeschrittene HTML- und CSS-Bearbeitung mit Syntax-Highlighting."
               })}
-              ${showVisibility ? `
-              <div class="custom-content-block-edit--separator"></div>
-              ${App.Studio.Projekt.templateFunctions.contentBlockVisibilityControlsHtml(visibilityState)}
-              ` : ''}
               <!-- <button -->
               <!--   data-tooltip -->
               <!--   data-hover-delay="800" -->
@@ -319,19 +316,6 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
               <!--   </i> -->
               <!-- </button> -->
               <div class="custom-content-block-edit--separator"></div>
-              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
-                <button
-                  type="button"
-                  tabindex="-1"
-                  class="js-copy-current-content-block studio-icon-button"
-                >
-                  <i class="fas fa-copy"></i>
-                </button>
-              `, {
-                delay: 1000,
-                title: "Duplizieren",
-                text: "Erstellt eine exakte Kopie dieses Inhaltsblocks direkt darunter — mit allen Einstellungen."
-              })}
               ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                 <button
                   tabindex="-1"
@@ -398,6 +382,29 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
 
             <div class="custom-content-block-edit custom-content-block--mode-controlls js-code-edit-mode-controlls">
             </div>
+        </div>
+
+          <div class="custom-content-block--toolbar -start">
+            <div class="custom-content-block-start-controls">
+              ${showVisibility ? `
+              ${App.Studio.Projekt.templateFunctions.contentBlockVisibilityControlsHtml(visibilityState)}
+              <div class="custom-content-block-edit--separator"></div>
+              ` : ''}
+              ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
+                <button
+                  type="button"
+                  tabindex="-1"
+                  class="js-copy-current-content-block studio-icon-button"
+                >
+                  <i class="fas fa-copy"></i>
+                </button>
+              `, {
+                delay: 1000,
+                title: "Duplizieren",
+                text: "Erstellt eine exakte Kopie dieses Inhaltsblocks direkt darunter — mit allen Einstellungen."
+              })}
+            </div>
+          </div>
         </div>
         </div>
 

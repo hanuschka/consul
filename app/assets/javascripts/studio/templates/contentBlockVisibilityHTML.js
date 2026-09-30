@@ -54,14 +54,22 @@ App.Studio.Projekt.templateFunctions.contentBlockVisibilityControlsHtml = functi
         text: toggleTooltip.text
       })}
       ${tooltip(`
-        <button
-          type="button"
-          tabindex="-1"
-          class="studio-icon-button js-content-block-edit-visibility-period${periodText ? " -active" : ""}"
-          aria-label="Sichtbarkeitszeitraum festlegen"
+        <inline-popup
+          class="js-content-block-visibility-period-popup"
+          template-id="content-block-visibility-period-popup-template"
+          body-class="content-block-visibility-period-popup"
+          placement="bottom"
+          align="start"
         >
-          <i class="fas fa-calendar-alt"></i>
-        </button>
+          <button
+            type="button"
+            tabindex="-1"
+            class="studio-icon-button js-content-block-edit-visibility-period${periodText ? " -active" : ""}"
+            aria-label="Sichtbarkeitszeitraum festlegen"
+          >
+            <i class="fas fa-calendar-alt"></i>
+          </button>
+        </inline-popup>
       `, {
         delay: 1000,
         title: "Sichtbarkeitszeitraum",

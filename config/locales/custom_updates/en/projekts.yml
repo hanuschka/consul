@@ -86,7 +86,7 @@ en:
           hidden_note: The block is switched off via the eye and stays hidden regardless of its period.
           visible_from: Visible from
           visible_until: Visible until
-          clear: Remove period
+          clear: Reset
           order_error: The end must not be before the start.
           save_error: The period could not be saved. Please try again.
         toggle_background_label: Background

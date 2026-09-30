@@ -86,7 +86,7 @@ de:
           hidden_note: Der Block ist über das Auge ausgeblendet und bleibt unabhängig vom Zeitraum verborgen.
           visible_from: Sichtbar ab
           visible_until: Sichtbar bis
-          clear: Zeitraum entfernen
+          clear: Zurücksetzen
           order_error: Das Ende darf nicht vor dem Beginn liegen.
           save_error: Der Zeitraum konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.
         toggle_background_label: Hintergrund

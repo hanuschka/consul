@@ -64,21 +64,8 @@
   </div>
 <% end %>
 
-<%= render Projekts::StudioEditPopupComponent.new(
-  popup_classes: "js-content-block-visibility-period-popup content-block-visibility-period-popup",
-  accept_button_class: "js-content-block-accept-visibility-period",
-  cancel_button_class: "js-content-block-cancel-visibility-period"
-) do |popup| %>
-  <% popup.with_extra_actions do %>
-    <button
-      type="button"
-      class="studio-edit-button -red -with-background js-content-block-clear-visibility-period"
-    >
-      <i class="fas fa-calendar-times"></i>
-      <%= t("custom.projekts.page.content_block_visibility_period_popup.clear") %>
-    </button>
-  <% end %>
-
+<%# Cloned by every calendar button's <inline-popup template-id="..."> %>
+<template id="content-block-visibility-period-popup-template">
   <p class="content-block-visibility-period-popup--intro">
     <%= t("custom.projekts.page.content_block_visibility_period_popup.description") %>
   </p>
@@ -105,7 +92,32 @@
   <p class="content-block-visibility-period-popup--error js-content-block-visibility-period-save-error" role="alert" hidden>
     <%= t("custom.projekts.page.content_block_visibility_period_popup.save_error") %>
   </p>
-<% end %>
+
+  <div class="content-block-visibility-period-popup--actions js-content-block-visibility-period-actions">
+    <button
+      type="button"
+      class="studio-edit-button -green -with-background js-content-block-accept-visibility-period"
+    >
+      <i class="fas fa-save"></i>
+      <%= t("custom.projekts.page.studio_edit_popup.save") %>
+    </button>
+    <button
+      type="button"
+      class="studio-edit-button -with-background"
+      data-inline-popup-close
+    >
+      <i class="fas fa-xmark"></i>
+      <%= t("custom.projekts.page.studio_edit_popup.cancel") %>
+    </button>
+    <button
+      type="button"
+      class="studio-edit-button -red -with-background content-block-visibility-period-popup--clear js-content-block-clear-visibility-period"
+    >
+      <i class="fas fa-calendar-times"></i>
+      <%= t("custom.projekts.page.content_block_visibility_period_popup.clear") %>
+    </button>
+  </div>
+</template>
 
 <%= render Shared::ModalComponent.new(id: "siteCodeEditorModal", blur_backdrop: false) do %>
   <div class="site-code-editor-modal--content">

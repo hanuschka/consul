@@ -136,7 +136,15 @@ en:
             image:
               min_image_width: "Image width must be at least %{required_min_width}px"
               min_image_height: "Image height must be at least %{required_min_height}px"
+        site_customization/content_block:
+          attributes:
+            visible_until:
+              before_visible_from: must not be before the start of the visibility period
     attributes:
+      site_customization/content_block:
+        visible: Visible
+        visible_from: Visible from
+        visible_until: Visible until
       map_location:
         latitude: Latitude
         longitude: Longitude

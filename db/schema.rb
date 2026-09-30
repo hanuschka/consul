@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_29_144659) do
+ActiveRecord::Schema.define(version: 2026_09_30_120000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3316,6 +3316,9 @@ ActiveRecord::Schema.define(version: 2026_09_29_144659) do
     t.integer "margin_bottom"
     t.jsonb "ai_generation_data"
     t.integer "newsletter_id"
+    t.boolean "visible", default: true, null: false
+    t.datetime "visible_from"
+    t.datetime "visible_until"
     t.index "((ai_generation_data ->> 'mode'::text)), ((ai_generation_data ->> 'status'::text))", name: "index_site_customization_content_blocks_on_ai_mode_and_status"
     t.index "((ai_generation_data ->> 'status'::text))", name: "index_site_customization_content_blocks_on_ai_status"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true

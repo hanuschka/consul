@@ -81,6 +81,14 @@ en:
           alt_text: Alt text
           description: The alt text describes the image for people who use screen readers and is shown when the image cannot load. It improves accessibility and search engine visibility.
           placeholder: e.g. People discussing at a round table
+        content_block_visibility_period_popup:
+          description: Visitors only see the block within this period. Without a start it is visible right away, without an end it stays visible. All times are German local time.
+          hidden_note: The block is switched off via the eye and stays hidden regardless of its period.
+          visible_from: Visible from
+          visible_until: Visible until
+          clear: Remove period
+          order_error: The end must not be before the start.
+          save_error: The period could not be saved. Please try again.
         toggle_background_label: Background
         toggle_background_tooltip: Show or hide the white background behind the content
         color_picker:

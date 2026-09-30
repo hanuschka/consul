@@ -11538,7 +11538,7 @@ paths:
         in: query
         required: false
         description: |
-          If true, includes content blocks in response with HTML content organized by locale.
+          If true, includes content blocks in response with HTML content organized by locale. Content blocks that are switched off or outside their visibility period are left out.
 
           **Default:** false (excludes content blocks).
         schema:
@@ -11547,7 +11547,7 @@ paths:
         in: query
         required: false
         description: |
-          Includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position); pass include_text=false to omit them. Always included in the single projekt (show) response.
+          Includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position); pass include_text=false to omit them. Always included in the single projekt (show) response. Content blocks that are switched off or outside their visibility period are left out.
 
           **Default:** true (the fields are included).
         schema:
@@ -11764,7 +11764,7 @@ paths:
         in: query
         required: false
         description: |
-          If true, includes content blocks in response with all localized content blocks.
+          If true, includes content blocks in response with all localized content blocks. Content blocks that are switched off or outside their visibility period are left out.
 
           **Default:** false (excludes content blocks).
         schema:

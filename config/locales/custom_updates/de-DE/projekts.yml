@@ -81,6 +81,14 @@ de:
           alt_text: Alternativtext
           description: Der Alternativtext beschreibt das Bild für Menschen, die Screenreader nutzen, und wird angezeigt, wenn das Bild nicht geladen werden kann. Er verbessert Barrierefreiheit und Suchmaschinen-Sichtbarkeit.
           placeholder: z. B. Menschen diskutieren an einem runden Tisch
+        content_block_visibility_period_popup:
+          description: Besucher*innen sehen den Block nur in diesem Zeitraum. Ohne Beginn ist er sofort sichtbar, ohne Ende unbegrenzt. Alle Zeiten in deutscher Ortszeit.
+          hidden_note: Der Block ist über das Auge ausgeblendet und bleibt unabhängig vom Zeitraum verborgen.
+          visible_from: Sichtbar ab
+          visible_until: Sichtbar bis
+          clear: Zeitraum entfernen
+          order_error: Das Ende darf nicht vor dem Beginn liegen.
+          save_error: Der Zeitraum konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.
         toggle_background_label: Hintergrund
         toggle_background_tooltip: Weißen Hintergrund hinter dem Inhalt ein- oder ausblenden
         color_picker:

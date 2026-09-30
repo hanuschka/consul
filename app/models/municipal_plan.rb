@@ -159,6 +159,11 @@ class MunicipalPlan < ApplicationRecord
     submitted_at.present?
   end
 
+  # The legacy export carries no Kartenposition, so imported Vorhaben are released without one.
+  def legacy_record?
+    legacy_id.present? || released_plan&.legacy_id.present?
+  end
+
   # What the Sachbearbeitung is still free to leave incomplete: an Entwurf nobody has handed in.
   def editable_draft?
     draft? && !submitted_for_release?
@@ -341,6 +346,7 @@ class MunicipalPlan < ApplicationRecord
 
     def release_requirements
       RELEASE_REQUIRED_FIELDS.each do |field|
+        next if field == :map_location && legacy_record?
         next if release_value_present?(public_send(field))
 
         errors.add(:base, I18n.t("activerecord.errors.models.municipal_plan.release_required",

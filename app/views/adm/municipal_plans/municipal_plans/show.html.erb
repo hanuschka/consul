@@ -289,7 +289,7 @@
               <div>
                 <p class="strong m-0"><%= plan_notice.name.presence || t(".notices.no_name") %></p>
                 <p class="m-0">
-                  <%= notice_date %> &middot; <%= mail_to plan_notice.email, class: "kern-link" %>
+                  <%= notice_date %> &middot; <%= mail_to plan_notice.email, plan_notice.email, class: "kern-link" %>
                 </p>
               </div>
 

@@ -498,6 +498,8 @@ describe "Vorhaben in /adm", type: :request do
       expect(response.body).to include(I18n.t("adm.municipal_plans.municipal_plans.show.notices.title"))
       expect(response.body).to include("Lena Wolf")
       expect(response.body).to include("Ein Hinweis")
+      mail_link = Nokogiri::HTML(response.body).at_css("a[href='mailto:lena@example.org']")
+      expect(mail_link.text.strip).to eq("lena@example.org")
     end
 
     it "lists the released Vorhaben's Hinweise on the pending version's page" do

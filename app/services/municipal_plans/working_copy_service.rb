@@ -16,6 +16,7 @@ module MunicipalPlans
       submitted_at
       archive_on
       released_at
+      legacy_id
       tsv
       created_at
       updated_at

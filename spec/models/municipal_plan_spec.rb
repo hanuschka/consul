@@ -347,6 +347,35 @@ describe MunicipalPlan do
       expect(plan).to be_valid
     end
 
+    it "lets an imported Vorhaben go without one" do
+      plan = build(:municipal_plan, :published, responsible: officer, legacy_id: "1048980")
+      plan.map_location = nil
+
+      expect(plan).to be_valid
+    end
+
+    it "still holds an imported Vorhaben to every other requirement" do
+      plan = MunicipalPlan.new(title: "Nur ein Titel", status: "published", legacy_id: "1048980")
+
+      expect(plan).not_to be_valid
+      expect(plan.errors[:base])
+        .not_to include(I18n.t("activerecord.errors.models.municipal_plan.release_required",
+                               field: MunicipalPlan.human_attribute_name(:map_location)))
+      expect(plan.errors[:base])
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.release_required",
+                           field: MunicipalPlan.human_attribute_name(:short_description)))
+    end
+
+    it "lets the working copy of an imported Vorhaben go without one" do
+      plan = create(:municipal_plan, :published, responsible: officer, legacy_id: "1048980")
+      plan.map_location.destroy!
+      copy = MunicipalPlans::WorkingCopyService.call(plan.reload)
+      copy.submitted_at = Time.current
+
+      expect(copy.legacy_id).to be_nil
+      expect(copy).to be_valid
+    end
+
     it "exposes the district derived from the pin" do
       plan = create(:municipal_plan, responsible: officer)
 

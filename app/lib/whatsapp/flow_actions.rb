@@ -66,6 +66,7 @@ module Whatsapp::FlowActions
     terms_decline
     draft_publish
     draft_revise
+    remove_additions
     submit_final
     submit_anyway
     support
@@ -163,8 +164,15 @@ module Whatsapp::FlowActions
   # notices, and offered anywhere else they generated a picture nobody had been
   # told about — so only Whatsapp::ImageQuestion, which sends the notices with
   # them, can put them in front of the citizen.
+  #
+  # `remove_additions` stands under the note on what a draft proposes that the
+  # citizen never said. Left to the model, the way to take the additions out was a
+  # sentence in a tool description, competing for the question with everything else
+  # it carries — a similar proposal, the assessment — so
+  # Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation adds the pill itself
+  # wherever the draft carries them.
   PLATFORM_WORDED_ACTIONS = [
-    :unlink_confirm, :terms_accept, *IMAGE_ANSWERS, *UNASKED_IMAGE_ANSWERS
+    :unlink_confirm, :terms_accept, :remove_additions, *IMAGE_ANSWERS, *UNASKED_IMAGE_ANSWERS
   ].uniq.freeze
 
   # The pills that publish or post, withheld from every message but the preview of

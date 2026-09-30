@@ -11,9 +11,9 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
               "is the way through — send it with send_link. counts gives, for every open vote and not only the rows " \
               "shown, how many this citizen answered in full, how many they began and left " \
               "part-way, and how many they have not answered at all — take any number you say " \
-              "about votes from counts, never by counting rows, on every page alike. shown and " \
-              "next_from only page through the rows: never say how many votes are on a later " \
-              "page or what state they are in. Rows come partly answered first, then not " \
+              "about votes from counts, never by counting rows, on every page alike. next_from " \
+              "only pages through the rows: never say what state the votes on a later page " \
+              "are in. Rows come partly answered first, then not " \
               "answered, then answered. A row marked already_voted was answered in full " \
               "earlier: say so where you name it and do not offer to start it — it is not " \
               "asked again here, but until it closes they can change their answers on its " \
@@ -77,7 +77,7 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
         polls: page.map { |poll| row_for(poll, votable_ids, states) },
         **::Whatsapp::ListWindow.report(
           scope: MORE_SCOPE, from: from, shown: page.size, total: all_polls.size
-        ).except(:total, :remaining)
+        ).except(:total)
       }
     end
   end

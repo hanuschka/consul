@@ -134,9 +134,9 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
                       "assessment or a place belongs in its question and its buttons, not in " \
                       "a message before it. Where additions_beyond_idea is present, the draft " \
                       "proposes things the citizen did not say: name them in one short " \
-                      "sentence of your own in the question, so they know what goes in under " \
-                      "their name and that they can have it taken out. Where it is absent, " \
-                      "the draft only rephrases them — say nothing about it. Where " \
+                      "sentence of your own in additions_note — the button that takes them " \
+                      "out is added for you. Where it is absent, the draft only rephrases " \
+                      "them — say nothing about it. Where " \
                       "collects_picture is true, the picture is asked for after the preview " \
                       "and only with request_photo, which carries the notices that have to " \
                       "come with it — publishing is refused until it has been.".freeze

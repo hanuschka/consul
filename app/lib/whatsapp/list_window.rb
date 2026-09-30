@@ -49,15 +49,20 @@ module Whatsapp::ListWindow
   # is a page behind this one, so its absence is the model's signal that this is
   # everything — and `more_action_id` is absent with it, because a pill offering
   # rows that do not exist is one the citizen taps for nothing.
+  #
+  # `shown` goes into the arithmetic but not into the report. Handed over, it was
+  # quoted as "this list shows nine" above a list the model had cut to four rows,
+  # and as "all nine shown" under ten: a row count is a number the citizen checks
+  # on screen, and only the rows actually sent can make it true. `remaining` stays
+  # out for the same reason: it is the total less a full page, so under a page the
+  # model cut short it became "and five more" about rows that were never counted.
   def report(scope:, from:, shown:, total:)
     reached = offset(from) + shown
     remaining = [total - reached, 0].max
 
     {
-      shown: shown,
       total: total,
       from: offset(from),
-      remaining: remaining,
       next_from: remaining.positive? ? reached : nil,
       more_action_id: remaining.positive? ? more_action_id(scope) : nil
     }.compact

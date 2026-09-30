@@ -377,6 +377,10 @@ de:
         # gelten die 20 Zeichen.
         comment_post: Jetzt kommentieren
         draft_publish: Jetzt einreichen
+        # Steht unter dem Hinweis, was der Entwurf über die eigenen Worte hinaus
+        # vorschlägt. Vom Werkzeug gesetzt, nicht vom Modell, damit es sie immer
+        # gibt, wo es Zusätze gibt.
+        remove_additions: Zusätze entfernen
         image_skip: Ohne Foto weiter
         # Die einzige Beschriftung, die das Modell nicht einmal anbieten darf: Die
         # Schaltfläche löst die Verknüpfung, und was das bedeutet, steht im Block

@@ -74,7 +74,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     OPT_IN_KEYWORDS.first.upcase
   end
 
-  # How many of a phase's contributions the reply names in words. Fewer than the ten
+  # How many of a phase's contributions the reply names in words, where none of them
+  # can be opened in the chat and a list has nothing to offer. Fewer than the ten
   # a list holds, and deliberately: each one is named over two lines with its own
   # address, and past five of those the body outgrows the 1024 characters an
   # interactive message allows — which Whatsapp::Send does not truncate but splits,
@@ -116,10 +117,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     disclose_ai
 
+    track_submission_wish
+
     return if handle_cancel_tap
     return if handle_retry_tap
     return if handle_phase_tap
     return if handle_contribution_tap
+    return if handle_votes_tap
     return if handle_poll_answer_tap
     return if handle_poll_weight_tap
     return if handle_poll_done_tap
@@ -849,7 +853,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return false if !::Whatsapp::FlowActions.direct_phase?(action)
 
-      projekt_phase = tapped_phase(flow_action[:param])
+      phase_id, from = ::Whatsapp::FlowActions.parse_page_param(flow_action[:param])
+      projekt_phase = tapped_phase(phase_id)
 
       return false if projekt_phase.blank?
 
@@ -857,7 +862,54 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return open_phase(projekt_phase) if action == :phase_open
 
-      open_phase_contributions(projekt_phase)
+      open_phase_contributions(projekt_phase, from: from)
+    end
+
+    # "Vorschlag erstellen" is the citizen asking to submit something, and where the
+    # assistant answers it with the projekts to choose from, the card sent for the one
+    # they pick is the place that wish has to be honoured — so it is written down here,
+    # on the tap, where it is a fact rather than a reading of their words. Recorded
+    # whatever phase the conversation last had: after a published contribution the
+    # phase stays set, and the tap on staging that lost its wish came from exactly
+    # there. Where the assistant opens a submission straight away instead,
+    # start_draft! replaces the context and the wish goes with it; where the citizen
+    # goes on to something else, it lapses (Whatsapp::Conversation::SUBMISSION_WISH_TTL).
+    def track_submission_wish
+      action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)&.dig(:action)
+
+      return if action != :submit_proposal
+
+      conversation.record_submission_wish!
+    end
+
+    # The projekt card's last row, which opens every vote of its projekt. Answered
+    # here for the reason the phase pills are: handed to the assistant, the tap was a
+    # model choosing a tool, and twice it chose one of the ballots over the list.
+    # Falls through where the projekt is gone or has no open vote left.
+    def handle_votes_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+      action = flow_action&.fetch(:action)
+
+      if action != ::Whatsapp::FlowActions::DIRECT_VOTES_ACTION
+        return false
+      end
+
+      projekt_id, from = ::Whatsapp::FlowActions.parse_page_param(flow_action[:param])
+      projekt = ::Projekt.find_by(id: projekt_id.to_i)
+
+      if !::Whatsapp::EligiblePhasesQuery.projekt_visible?(projekt)
+        return false
+      end
+
+      listed = ::Whatsapp::Polls::ListProjektPollsService.call(
+        account: account, projekt: projekt, from: from
+      )
+
+      return false if !listed
+
+      record_tap(action, flow_action[:param])
+
+      true
     end
 
     # Re-resolved and re-checked on arrival, never trusted from the id: a pill sits in
@@ -1010,11 +1062,17 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
     # The results where the phase has published any — one link, because a published
     # evaluation is a document rather than a set of entries. Everything else names the
-    # newest contributions themselves: their titles, how old they are and their own
-    # addresses, so reading what is in a phase no longer means leaving the chat. The
-    # phase page closes the message off for everything the five named entries leave
-    # out.
-    def open_phase_contributions(projekt_phase)
+    # newest contributions themselves, so reading what is in a phase no longer means
+    # leaving the chat.
+    #
+    # Where the entries can be opened here — proposals and budget investments — they
+    # are the rows of a list, a page at a time, with a row for the next page. They
+    # used to be named in the text above a list of the same five, with the phase page
+    # closing the message off for the rest: seventeen entries were five in the chat,
+    # and the rows cut each title at its twenty-fourth character. Where none can be
+    # opened — an event, a poll, a milestone, a notification — they are named in the
+    # text with their own addresses, as before.
+    def open_phase_contributions(projekt_phase, from: 0)
       section = ::Whatsapp::PublishedResultsQuery.public_section_for(projekt_phase)
 
       return send_line_with_link(
@@ -1023,36 +1081,72 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       ) if section.present?
 
       query = ::Whatsapp::PhaseContributionsQuery.new(projekt_phase: projekt_phase)
-      named = query.call.first(MAX_NAMED_CONTRIBUTIONS)
+      total = query.total
+      page_start = contributions_page_start(from, total)
+      entries = query.call(from: page_start)
 
       return send_line_with_link(
         line: phase_contributions_intro(projekt_phase: projekt_phase, shown: 0, total: 0),
         url: ::Whatsapp::ProjektLink.phase_url(projekt_phase)
-      ) if named.empty?
+      ) if entries.empty?
 
-      send_phase_contributions(projekt_phase: projekt_phase, named: named, total: query.total)
+      if entries.any? { |entry| entry[:action_id].present? }
+        return send_phase_contributions_page(
+          projekt_phase: projekt_phase, entries: entries, total: total, from: page_start
+        )
+      end
+
+      send_phase_contributions(
+        projekt_phase: projekt_phase, named: entries.first(MAX_NAMED_CONTRIBUTIONS), total: total
+      )
     end
 
-    # A list wherever any of the named entries can be opened in the chat, and plain
-    # text where none can. Only proposals and budget investments carry a pill — an
-    # event, a poll, a milestone or a notification is named with its link and left out
-    # of the list rather than offered as a choice that would answer with nothing.
+    # A pill tapped long after it was sent may point past the end of a list that has
+    # shrunk since, and the first page is the answer the citizen can read.
+    def contributions_page_start(from, total)
+      page_start = ::Whatsapp::ListWindow.offset(from)
+
+      return 0 if page_start >= total
+
+      page_start
+    end
+
+    # Named in the text, for the entries none of which can be opened in the chat.
     def send_phase_contributions(projekt_phase:, named:, total:)
       phase_url = ::Whatsapp::ProjektLink.phase_url(projekt_phase)
-      offered = named.each_with_index.filter_map do |entry, index|
-        contribution_row(entry: entry, position: index + 1)
-      end
       copy = phase_contributions_copy(projekt_phase: projekt_phase, named: named, total: total)
 
-      body = phase_contributions_body(
-        named: named, copy: copy, phase_url: phase_url, offered: offered.any?
+      ::Whatsapp::Send.text(
+        account: account,
+        body: phase_contributions_body(named: named, copy: copy, phase_url: phase_url)
       )
 
-      return send_phase_contributions_list(body: body, copy: copy, offered: offered) if offered.any?
-
-      ::Whatsapp::Send.text(account: account, body: body)
-
       true
+    end
+
+    # One page of entries the citizen can open one by one, as the rows of a list: the
+    # title split over the row's two lines (Whatsapp::ListRowText) with its date
+    # underneath, and a last row for the page after it. The text above says only what
+    # the list is and where the phase page is — naming the entries there as well would
+    # repeat the list, and past five of them outgrow what an interactive body holds.
+    def send_phase_contributions_page(projekt_phase:, entries:, total:, from:)
+      phase_url = ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+      copy = phase_contributions_copy(
+        projekt_phase: projekt_phase, named: entries, total: total, from: from
+      )
+      rows = entries.each_with_index.filter_map do |entry, index|
+        contribution_row(entry: entry, position: from + index + 1, date: copy[:dates][index])
+      end
+      more_row = contributions_more_row(
+        projekt_phase: projekt_phase, next_from: from + entries.size, total: total, copy: copy
+      )
+      closing = phase_contributions_closing(page_line: copy[:page], phase_url: phase_url)
+
+      send_phase_contributions_list(
+        body: [copy[:intro], closing, copy[:hint]].compact_blank.join("\n\n"),
+        copy: copy,
+        offered: [*rows, more_row].compact
+      )
     end
 
     def send_phase_contributions_list(body:, copy:, offered:)
@@ -1067,6 +1161,21 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       true
     end
 
+    # The same pill the card's "Beiträge ansehen" row carries, with the offset of the
+    # next page beside the phase (Whatsapp::FlowActions.page_param), so the tap is
+    # answered by #handle_phase_tap like the first page was.
+    def contributions_more_row(projekt_phase:, next_from:, total:, copy:)
+      return if next_from >= total
+
+      {
+        id: ::Whatsapp::FlowActions.id_for(
+          action: :phase_contributions,
+          param: ::Whatsapp::FlowActions.page_param(record_id: projekt_phase.id, from: next_from)
+        ),
+        title: copy[:show_more].presence || ::Whatsapp.copy("whatsapp.bot.buttons.show_more")
+      }
+    end
+
     # Every fixed line of the message in one translation call, the entries' own dates
     # included: they are the bot's copy like the sentences around them, and a body in
     # the citizen's language carrying five German dates reads as two messages.
@@ -1076,12 +1185,15 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # An entry may have no date at all, which is why the call has to be the one that
     # puts a blank line back where it found it: everything here is read back by
     # position.
-    def phase_contributions_copy(projekt_phase:, named:, total:)
+    def phase_contributions_copy(projekt_phase:, named:, total:, from: 0)
       fixed = [
-        phase_contributions_intro(projekt_phase: projekt_phase, shown: named.size, total: total),
+        phase_contributions_intro(
+          projekt_phase: projekt_phase, shown: named.size, total: total, from: from
+        ),
         ::Whatsapp.copy("whatsapp.bot.phase.contributions_page"),
         ::Whatsapp.copy("whatsapp.bot.phase.contributions_hint"),
-        ::Whatsapp.copy("whatsapp.bot.buttons.contribution_choose")
+        ::Whatsapp.copy("whatsapp.bot.buttons.contribution_choose"),
+        ::Whatsapp.copy("whatsapp.bot.buttons.show_more")
       ]
 
       lines = ::Whatsapp::AiAssistant::BotCopyService.call(
@@ -1090,14 +1202,22 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       {
         intro: lines[0], page: lines[1], hint: lines[2], button_label: lines[3],
-        dates: lines.drop(fixed.size)
+        show_more: lines[4], dates: lines.drop(fixed.size)
       }
     end
 
     # The phase type's own opening sentence, either closed off or extended to account
-    # for what the message leaves unnamed.
-    def phase_contributions_intro(projekt_phase:, shown:, total:)
+    # for what the message leaves unnamed — and, past the first page, for where in the
+    # whole this page is.
+    def phase_contributions_intro(projekt_phase:, shown:, total:, from: 0)
       intro = phase_contributions_opening(projekt_phase)
+
+      if from.positive?
+        return ::Whatsapp.copy(
+          "whatsapp.bot.phase.contributions_range",
+          intro: intro, first: from + 1, last: from + shown, total: total
+        )
+      end
 
       return ::Whatsapp.copy("whatsapp.bot.phase.contributions_all", intro: intro) if total <= shown
 
@@ -1116,15 +1236,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
     end
 
-    def phase_contributions_body(named:, copy:, phase_url:, offered:)
+    def phase_contributions_body(named:, copy:, phase_url:)
       entries = named.zip(copy[:dates]).each_with_index.map do |(entry, date), index|
         contribution_entry(entry: entry, date: date, phase_url: phase_url, position: index + 1)
       end
 
       closing = phase_contributions_closing(page_line: copy[:page], phase_url: phase_url)
-      hint = offered ? copy[:hint] : nil
 
-      [copy[:intro], *entries, closing, hint].compact_blank.join("\n\n")
+      [copy[:intro], *entries, closing].compact_blank.join("\n\n")
     end
 
     # Nothing at all where the projekt has no page: Whatsapp::ProjektLink answers nil
@@ -1152,27 +1271,26 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # names still exists, which is the whole reason a row can be trusted to answer
     # with what it says.
     #
-    # Numbered with the same position the entry carries in the message above, and not
-    # for decoration: a row title holds twenty-four characters, so two proposals whose
-    # titles agree for that long arrive as two rows reading identically, with the same
-    # date under both and nothing on either saying which is which. The number is also
-    # what lets the citizen pick the third one they just read about.
-    def contribution_row(entry:, position:)
+    # Numbered by the entry's place in the whole list, and not for decoration: two
+    # proposals may carry the same title and the same date, and the number is then the
+    # one thing on either row saying which is which. The title is split over the row's
+    # two lines rather than cut at its twenty-fourth character, so what it says past
+    # that — "Anwohnerparken in de…" — is on the screen too.
+    def contribution_row(entry:, position:, date:)
       return if entry[:action_id].blank?
 
+      lines = ::Whatsapp::ListRowText.call(name: "#{position}. #{entry[:title]}", notes: [date])
+
+      return if lines.blank?
+
       button = ::Whatsapp::AssistantActions.offered_row(
-        spec: entry[:action_id], label: "#{position}. #{entry[:title]}",
-        conversation: conversation
+        spec: entry[:action_id], label: lines[:title], conversation: conversation
       )
 
       return if button.blank?
-      return button if entry[:description].blank?
+      return button if lines[:description].blank?
 
-      button.merge(
-        description: entry[:description].truncate(
-          ::Ai::Tools::WhatsappAiAssistant::SendList::MAX_DESCRIPTION_LENGTH
-        )
-      )
+      button.merge(description: lines[:description])
     end
 
     # A row naming one contribution, answered on this side for the same reason a

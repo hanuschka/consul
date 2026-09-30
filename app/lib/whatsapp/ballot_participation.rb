@@ -24,7 +24,33 @@ module Whatsapp::BallotParticipation
   ANSWERED = "answered".freeze
   PARTLY_ANSWERED = "partly_answered".freeze
 
+  # Partly answered first, because those hold answers already given and a question
+  # still owed; then the ones not begun; the ones answered in full last.
+  STATE_ORDER = {
+    PARTLY_ANSWERED => 0,
+    nil => 1,
+    ANSWERED => 2
+  }.freeze
+
   module_function
+
+  # Polls in the order a citizen is owed them, by the states #states_by_poll_id
+  # reported. Deterministic to the id, because a page is cut from this order and the
+  # next page from the same order again: two polls tied on everything else would
+  # otherwise swap between the two calls and one of them be shown twice.
+  #
+  # Shared by the assistant's list of open votes and the one the projekt card's last
+  # row opens, so the same projekt's votes page alike whichever of the two sent them.
+  def still_owed_first(polls, states)
+    polls.sort_by do |poll|
+      [
+        STATE_ORDER.fetch(states[poll.id]),
+        poll.ends_at.present? ? 0 : 1,
+        poll.ends_at.to_i,
+        poll.id
+      ]
+    end
+  end
 
   def completed?(projekt_phase:, user:)
     return false if user.blank?

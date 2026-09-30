@@ -45,14 +45,6 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
     end
   end
 
-  # Partly answered first, because those hold answers already given and a question
-  # still owed; then the ones not begun; the ones answered in full last.
-  STATE_ORDER = {
-    ::Whatsapp::BallotParticipation::PARTLY_ANSWERED => 0,
-    nil => 1,
-    ::Whatsapp::BallotParticipation::ANSWERED => 2
-  }.freeze
-
   # Where the citizen stands is read over every open poll rather than over the page
   # on screen, and the page is cut from that ordering afterwards. Read off the page,
   # the same twenty-two open votes with eight answered came out as "fourteen still
@@ -68,7 +60,9 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
       states = ::Whatsapp::BallotParticipation.states_by_poll_id(
         polls: all_polls, user: conversation.user
       )
-      page = ::Whatsapp::ListWindow.page(ordered(all_polls, states), from: from)
+      page = ::Whatsapp::ListWindow.page(
+        ::Whatsapp::BallotParticipation.still_owed_first(all_polls, states), from: from
+      )
       votable_ids = ::Whatsapp::VotableBallotQuery.votable_poll_ids(page)
 
       {
@@ -117,20 +111,6 @@ class Ai::Tools::WhatsappAiAssistant::ListOpenPolls < Ai::Tools::WhatsappAiAssis
         projekt: projekt_title(projekt_phase.projekt),
         ballot_url: ::Whatsapp::ProjektLink.poll_ballot_url(poll)
       }.compact
-    end
-
-    # Deterministic to the id, because a page is cut from this order and the next page
-    # from the same order again: two polls tied on everything else would otherwise swap
-    # between the two calls and one of them be shown twice.
-    def ordered(polls, states)
-      polls.sort_by do |poll|
-        [
-          STATE_ORDER.fetch(states[poll.id]),
-          poll.ends_at.present? ? 0 : 1,
-          poll.ends_at.to_i,
-          poll.id
-        ]
-      end
     end
 
     def counts_of(polls, states)

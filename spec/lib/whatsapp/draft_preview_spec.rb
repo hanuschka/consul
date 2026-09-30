@@ -21,7 +21,8 @@ describe Whatsapp::DraftPreview do
       draft_resource: resource,
       projekt_phase: projekt_phase,
       projekt_phase_id: projekt_phase.id,
-      whatsapp_account: account
+      whatsapp_account: account,
+      attached_location_name: nil
     )
   end
 
@@ -61,21 +62,31 @@ describe Whatsapp::DraftPreview do
 
     it "names no attachment when the draft carries none" do
       expect(Whatsapp::DraftPreview.confirmation_block(conversation: conversation))
-        .not_to include("Angehängt")
+        .not_to include(label("attachments"))
     end
 
     it "names a photo the citizen never typed" do
       attach_image(blob_id: 42)
 
       expect(Whatsapp::DraftPreview.confirmation_block(conversation: conversation))
-        .to include("Angehängt", "Foto")
+        .to include("#{label("attachments")}: #{label("photo")}")
     end
 
-    it "names a pin the citizen never typed" do
+    it "names a pin the citizen never typed by the name of its place" do
+      attach_pin(latitude: 51.5, longitude: 7.2)
+      allow(conversation).to receive(:attached_location_name).and_return("Bahnhofstraße, Bochum")
+
+      block = Whatsapp::DraftPreview.confirmation_block(conversation: conversation)
+
+      expect(block).to include("#{label("location")}: Bahnhofstraße, Bochum")
+      expect(block).not_to include(label("attachments"))
+    end
+
+    it "falls back to the bare label for a pin whose place could not be named" do
       attach_pin(latitude: 51.5, longitude: 7.2)
 
       expect(Whatsapp::DraftPreview.confirmation_block(conversation: conversation))
-        .to include("Angehängt", "Standort")
+        .to include("#{label("attachments")}: #{label("location")}")
     end
 
     it "is nil when there is no draft to show" do
@@ -85,22 +96,29 @@ describe Whatsapp::DraftPreview do
     end
   end
 
-  describe ".published_block" do
-    it "repeats the contribution and writes the address out" do
-      block = Whatsapp::DraftPreview.published_block(
+  describe ".published_confirmation" do
+    it "writes the address out under the sentence" do
+      block = Whatsapp::DraftPreview.published_confirmation(
         conversation: conversation, url: "https://example.org/proposals/1"
       )
 
-      expect(block).to include("*#{title}*")
-      expect(block).to include("https://example.org/proposals/1")
+      expect(block).to eq("#{label("online")}\nhttps://example.org/proposals/1")
+    end
+
+    it "does not repeat the contribution the citizen has just confirmed" do
+      block = Whatsapp::DraftPreview.published_confirmation(
+        conversation: conversation, url: "https://example.org/proposals/1"
+      )
+
+      expect(block).not_to include(title)
     end
   end
 
-  describe ".awaiting_review_block" do
-    it "repeats the contribution and offers no address at all" do
-      block = Whatsapp::DraftPreview.awaiting_review_block(conversation: conversation)
+  describe ".awaiting_review_confirmation" do
+    it "offers no address at all" do
+      block = Whatsapp::DraftPreview.awaiting_review_confirmation(conversation: conversation)
 
-      expect(block).to include("*#{title}*")
+      expect(block).to eq(label("awaiting_review"))
       expect(block).not_to include("http")
     end
   end
@@ -148,6 +166,10 @@ describe Whatsapp::DraftPreview do
 
       expect(Whatsapp::DraftPreview.digest(conversation: conversation)).to be_nil
     end
+  end
+
+  def label(key)
+    I18n.t("whatsapp.bot.preview.#{key}")
   end
 
   def attach_image(blob_id:)

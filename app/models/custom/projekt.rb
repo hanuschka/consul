@@ -103,6 +103,7 @@ class Projekt < ApplicationRecord
   has_many_attached :images
 
   belongs_to :landing_page, class_name: 'SiteCustomization::Page', optional: true
+  belongs_to :municipal_plan, optional: true, inverse_of: :projekts
 
   belongs_to :copied_from_projekt, class_name: "Projekt", optional: true,
     inverse_of: :copies
@@ -713,6 +714,13 @@ class Projekt < ApplicationRecord
     page&.title || name
   end
 
+  def public_municipal_plan
+    return if municipal_plan_id.blank?
+    return if Setting["process.municipal_plans"].blank?
+
+    MunicipalPlan.publicly_visible.find_by(id: municipal_plan_id)
+  end
+
   def legislation_process
     legislation_processes.order(:updated_at).last
   end
@@ -864,7 +872,7 @@ class Projekt < ApplicationRecord
       # over the bodies appended the whole page into the first content block's
       # in-memory body and left the record dirty, one save away from
       # overwriting it.
-      content_blocks_content = content_blocks.map(&:body).join
+      content_blocks_content = publicly_visible_content_blocks.map(&:body).join
 
       ActionView::Base.full_sanitizer.sanitize(content_blocks_content, tags: ["h1", "h2" "h3", "h4", "ul", "li"])
     else
@@ -873,11 +881,20 @@ class Projekt < ApplicationRecord
   end
 
   def content_blocks_body
-    content_blocks
-      .sort_by(&:position)
+    publicly_visible_content_blocks
       .map(&:body)
       .compact_blank
       .join("\n")
+  end
+
+  # Filtered in memory so callers that preload content_blocks stay at one
+  # query per page of projekts.
+  def publicly_visible_content_blocks
+    now = Time.current
+
+    content_blocks
+      .select { |content_block| content_block.publicly_visible?(now) }
+      .sort_by { |content_block| content_block.position.to_i }
   end
 
   def perform_sync_update_for_global_overview

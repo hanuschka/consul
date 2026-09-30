@@ -1,0 +1,80 @@
+<% archive_view = action_name == "archive" %>
+<% list_path = archive_view ? archive_municipal_plans_path : municipal_plans_path %>
+<% page_title = archive_view ? t("custom.municipal_plans.index.archive_title") : t("custom.municipal_plans.index.title") %>
+<% intro_text = archive_view ? t("custom.municipal_plans.index.archive_intro_text") : t("custom.municipal_plans.index.intro_text") %>
+<% empty_list_text = archive_view ? t("custom.municipal_plans.index.archive_empty_list_text") : t("custom.municipal_plans.index.empty_list_text") %>
+
+<% provide :title do %><%= page_title %><% end %>
+
+<main>
+  <h1 class="padding-on-mobile"><%= page_title %></h1>
+
+  <div class="flex-layout padding-on-mobile">
+    <div class="main-column">
+      <div class="resource-page--intro-text">
+        <%= render_custom_block(archive_view ? "municipal_plans_archive_welcome" : "municipal_plans_index_welcome", default_content: intro_text) %>
+
+        <p>
+          <% if archive_view %>
+            <%= link_to t("custom.municipal_plans.index.overview_link"), municipal_plans_path %>
+          <% else %>
+            <%= link_to t("custom.municipal_plans.index.archive_link"), archive_municipal_plans_path %>
+          <% end %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <%= render MunicipalPlans::OverviewMapComponent.new(overview_map: @overview_map) %>
+
+  <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
+    <div class="main-column">
+      <div class="municipal-plans-list">
+        <%= render Resources::List::BaseComponent.new(
+          empty_text: @municipal_plans.empty? ? empty_list_text : nil
+        ) do |c| %>
+          <% c.with_toolbar(
+            i18n_namespace: "custom.municipal_plans.index",
+            filters: @valid_orders,
+            current_filter: @current_order,
+            param: "order",
+            text_search_enabled: true
+          ) %>
+
+          <% if @municipal_plans.present? %>
+            <%= render MunicipalPlans::TableComponent.new(
+              municipal_plans: @municipal_plans,
+              current_order: @current_order,
+              caption: archive_view ? t("custom.municipal_plans.index.table.archive_caption") : t("custom.municipal_plans.index.table.caption")
+            ) %>
+
+            <% c.with_items do %>
+              <% @municipal_plans.each do |municipal_plan| %>
+                <%= render MunicipalPlans::ListItemComponent.new(municipal_plan: municipal_plan) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div id="municipal-plans-sidebar" class="sidebar">
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do %>
+        <div class="margin-bottom-half">
+          <%= render_custom_block "municipal_plans_index_sidebar", default_content: t("custom.municipal_plans.index.sidebar_information") %>
+        </div>
+
+        <div class="resources--info-count margin-bottom-half" role="status">
+          <span>
+            <%= t("custom.municipal_plans.index.count") %>
+          </span>
+          <span>
+            <%= @municipal_plans.to_a.size %>
+          </span>
+        </div>
+      <% end %>
+
+      <%= render "municipal_plans/filters", form_url: list_path %>
+    </div>
+  </div>
+</main>

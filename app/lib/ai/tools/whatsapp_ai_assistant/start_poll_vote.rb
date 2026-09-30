@@ -1,10 +1,14 @@
 class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   description "Starts voting in the chat on a voting phase's ballot: it sends the citizen the " \
               "first question as buttons and carries them through the rest of the poll one " \
               "question at a time, recording each answer as it is given. Call it whenever a " \
-              "citizen says they want to vote, picks a vote out of a list, or asks what is open " \
-              "to vote on and there is one — this is what taking part in a vote means now, so " \
-              "never hand out the link instead. Takes the projekt_phase_id that " \
+              "citizen says they want to vote in one, picks a vote out of a list, or asks what " \
+              "is open to vote on and exactly one vote is — this is what taking part in a vote " \
+              "means now, so never hand out the link instead. Never for a vote they did not " \
+              "pick: asking to see the votes, or tapping a row that shows more of them, is " \
+              "answered with the list, even where one of them is half answered. Takes the projekt_phase_id that " \
               "list_open_polls, list_open_phases and describe_projekt return. Not every poll " \
               "can be asked in a chat: one holding a rating scale, a weighted vote or a map " \
               "point comes back refused with its ballot's address, and that link is then the " \
@@ -13,10 +17,11 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
               "do not call send_login_link alongside it. Say nothing further once a question or " \
               "that link has gone out: it is already in front of the citizen and anything added " \
               "talks over it. What leaves you something to say is a vote this citizen already " \
-              "took part in earlier — nothing is sent for that, it cannot be answered again, " \
-              "and the result says what to do with it."
+              "answered in full earlier — nothing is sent for that and it is not asked again " \
+              "here, but until it closes they can change their answers on its page; the result " \
+              "carries that rule and the link."
 
-  params do
+  parameters do
     integer :projekt_phase_id,
       description: "The voting phase whose ballot the citizen wants to answer"
   end
@@ -80,19 +85,31 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
     # Earlier is the word that has to survive into what is said. This used to arrive as
     # the same outcome a ballot finished a second ago arrives as, so the reply thanked
     # the citizen for votes they had just cast on a tap that cast none — and left nothing
-    # saying the vote was closed to them, so the same tap could be made again and thanked
-    # again.
+    # saying the chat would not ask it again, so the same tap could be made again and
+    # thanked again.
+    #
+    # Not asked again is not the same as closed. Until the phase ends the ballot page
+    # lets them change any answer, and this used to tell the model the vote could not
+    # be answered a second time, which it passed on as "you cannot change it".
     def already_answered(projekt_phase)
+      ballot_url = ::Whatsapp::ProjektLink.ballot_url(projekt_phase) ||
+        ::Whatsapp::ProjektLink.phase_url(projekt_phase)
+
       {
         status: "The citizen took part in that vote earlier and answered it in full, so there " \
                 "was nothing left to ask and nothing has been sent.",
-        hint: "Say that they have already voted in it, that the answers they gave then stand " \
-              "unchanged and that it cannot be answered a second time — not a thank-you for " \
-              "votes just cast, which is not what happened. Then offer what plausibly follows " \
-              "for them in *#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)}* — another " \
-              "phase that is open, or the results of this one where they are published. Never " \
-              "start this vote again."
-      }
+        changing_answers: ::Whatsapp::BallotAnswerRules.change_rule(
+          projekt_phase: projekt_phase, ballot_url: ballot_url
+        ),
+        ballot_url: ballot_url,
+        hint: "Say that they have already voted in it and that the answers they gave stand — " \
+              "not a thank-you for votes just cast, which is not what happened. Where they " \
+              "want to change something, tell them how from changing_answers and send " \
+              "ballot_url with send_link. Then offer what plausibly follows for them in " \
+              "*#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)}* — another phase that " \
+              "is open, or the results of this one where they are published. Never start this " \
+              "vote again."
+      }.compact
     end
 
     # The ballot was begun and ended before a question could go out, which is neither a

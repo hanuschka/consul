@@ -109,10 +109,15 @@ class Whatsapp::Polls::OfferBallotService < ApplicationService
       )
     end
 
+    # The ballot page travels with the line because that is where an answer given
+    # earlier is changed; the chat does not ask a finished ballot again.
     def send_already_answered_line(poll)
+      ballot_url = ::Whatsapp::ProjektLink.poll_ballot_url(poll) ||
+        ::Whatsapp::ProjektLink.url(@projekt_phase.projekt)
+
       ::Whatsapp::Send.locale_text(
         account: account,
-        body: ::Whatsapp.copy("whatsapp.bot.poll.already_answered", poll: poll.name)
+        body: ::Whatsapp.copy("whatsapp.bot.poll.already_answered", poll: poll.name, url: ballot_url)
       )
     end
 
@@ -176,7 +181,8 @@ class Whatsapp::Polls::OfferBallotService < ApplicationService
         lines: [
           ::Whatsapp.copy(
             "whatsapp.bot.poll.login_prompt",
-            poll: poll.name, privacy_url: ::Whatsapp::PortalLinks.privacy_url
+            poll: poll.name,
+            privacy_url: ::Whatsapp::PortalLinks.privacy_url(locale: ::Whatsapp.locale_for(account))
           ),
           ::Whatsapp.copy("whatsapp.bot.buttons.login")
         ]

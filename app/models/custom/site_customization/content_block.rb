@@ -4,6 +4,10 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   VALID_BLOCKS = %w[top_links footer subnavigation_left subnavigation_left_desktop subnavigation_left_mobile subnavigation_right_desktop subnavigation_right_mobile custom].freeze
   DEFAULT_MARGIN_BOTTOM = 20
   MIN_MARGIN_BOTTOM = 15
+  VISIBILITY_ATTRIBUTES = %w[visible visible_from visible_until].freeze
+  # Matches the editor's datetime-local inputs. Values are read and written in
+  # the app time zone, which is German local time.
+  VISIBILITY_TIME_FORMAT = "%Y-%m-%dT%H:%M".freeze
 
   attribute :margin_bottom, :integer, default: DEFAULT_MARGIN_BOTTOM
 
@@ -30,6 +34,7 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   belongs_to :projekt, optional: true
   belongs_to :newsletter, optional: true
   validate :single_parent
+  validate :visibility_period_order
   acts_as_list scope: [:projekt_id, :newsletter_id]
 
   # Add-mode rows are placeholders that never existed as content, so they stay
@@ -58,6 +63,7 @@ class SiteCustomization::ContentBlock < ApplicationRecord
 
   after_create :touch_projekt_content_updated_at
   after_destroy :touch_projekt_content_updated_at
+  after_update :touch_projekt_content_updated_at, if: :visibility_previously_changed?
 
   translation_class.after_commit(on: [:create, :update]) do
     globalized_model&.touch_projekt_content_updated_at if saved_changes.key?("body")
@@ -135,6 +141,34 @@ class SiteCustomization::ContentBlock < ApplicationRecord
     name == 'custom'
   end
 
+  # The editor works in whole minutes, so both ends of the period cover their
+  # full minute: an end of 23:59 and a start of 00:00 leave no gap between two
+  # consecutive blocks.
+  def visibility_status(now = Time.current)
+    return "hidden" unless visible?
+    return "scheduled" if visible_from.present? && now < visible_from.beginning_of_minute
+    return "expired" if visible_until.present? && now > visible_until.end_of_minute
+
+    "visible"
+  end
+
+  def publicly_visible?(now = Time.current)
+    visibility_status(now) == "visible"
+  end
+
+  def visibility_state
+    {
+      visible: visible?,
+      visible_from: visible_from&.strftime(VISIBILITY_TIME_FORMAT),
+      visible_until: visible_until&.strftime(VISIBILITY_TIME_FORMAT),
+      status: visibility_status
+    }
+  end
+
+  def visibility_previously_changed?
+    saved_changes.keys.intersect?(VISIBILITY_ATTRIBUTES)
+  end
+
   def self.sort(ordered_array)
     ordered_array.each_with_index do |record_id, order|
       find(record_id).update_column(:position, (order + 1))
@@ -157,6 +191,13 @@ class SiteCustomization::ContentBlock < ApplicationRecord
     if projekt_id.present? && newsletter_id.present?
       errors.add(:base, :invalid)
     end
+  end
+
+  def visibility_period_order
+    return if visible_from.blank? || visible_until.blank?
+    return if visible_until >= visible_from
+
+    errors.add(:visible_until, :before_visible_from)
   end
 
   def repair_html_body

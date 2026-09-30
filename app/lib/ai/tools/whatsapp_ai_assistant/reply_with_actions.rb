@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # The assistant's own message with the way onward attached. The sentence is its
   # words, and so is nearly every label. What it does not choose is the *id* behind a
   # button, because WhatsApp returns the id to the webhook and the inbound side is
@@ -6,26 +8,27 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
   # citizen taps and nothing happens, with no error anywhere. Nor does it choose the
   # words on the handful of pills whose label is a statement rather than a
   # signpost (Whatsapp::AssistantActions::FORCED_LABEL_ACTIONS).
-  MAX_ACTIONS = ::Whatsapp::MAX_BUTTONS
-
   description "Answers the citizen with a short text of your own and up to three tappable " \
-              "buttons whose labels you write yourself — all three are yours to fill. Prefer it " \
+              "buttons, most of whose labels you write yourself. Prefer it " \
               "over a plain text reply whenever there is an obvious next step: it saves them " \
               "typing and it says what can happen next. Each button needs an action_id from the " \
               "list below and a label in the citizen's language of at most " \
               "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting spaces — " \
-              "count them, because a longer one is cut and arrives ending in \"…\". Name a " \
+              "count them, because a longer one is refused and nothing is sent until it is " \
+              "shorter. Name a " \
               "record-backed action as \"action-id\" using an id a tool in this conversation " \
               "returned (\"view_projekt-482\", \"notify_toggle-new_comments\"); leave its label " \
               "empty to use the record's own name, which is usually better than a paraphrase of " \
               "it. A button whose action is unknown or whose record no longer exists is " \
-              "dropped. " \
+              "dropped. The steps that recur all through a conversation carry fixed labels " \
+              "written for you, so the same step always reads the same — leave their label " \
+              "empty: #{::Whatsapp::AssistantActions.fixed_label_action_names.join(", ")}. " \
               "Publishing a draft and posting a comment are offered only under their preview, " \
               "by show_draft_for_confirmation and show_comment_for_confirmation, and unlinking " \
               "is not yours to offer at all. This sends the message itself: do not write one as " \
               "well, and do not put a link in it when a button already leads there."
 
-  params do
+  parameters do
     string :body,
       description: "The reply text, in the citizen's language, laid out as the style rules " \
                    "require."
@@ -43,6 +46,10 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
     return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
+
+    overlong = refuse_overlong_button_labels(buttons)
+
+    return overlong if overlong.present?
 
     offerable = offerable_buttons(buttons)
 
@@ -81,22 +88,16 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
       ::Whatsapp::Send.buttons(account: account, body: body, buttons: buttons)
     end
 
-    # Deduplicated twice over, and both are silent-failure prevention rather than
-    # policy. WhatsApp refuses the whole message when two buttons share an id, so
-    # a repeat would cost the reply rather than the button. Two buttons sharing a
-    # *label* are accepted by WhatsApp and indistinguishable to the citizen, which
-    # is worse: one of the two gets tapped by accident.
     def offerable_buttons(buttons)
-      Array(buttons)
-        .filter_map { |button| build(button) }
-        .uniq { |button| button[:id] }
-        .uniq { |button| button[:title].downcase }
-        .first(MAX_ACTIONS)
+      built = with_pill_records(buttons) do
+        Array(buttons).filter_map { |button| build(button) }
+      end
+
+      distinct_buttons(built)
     end
 
     # A recovery id keeps its own namespace, read by the inbound side before the
-    # catalog's, so it is built by its own path — but the label on it is the
-    # model's like every other.
+    # catalog's, so it is built by its own path, with a label from the copy.
     #
     # The words the model asked for are kept against the id the button got, so what
     # it wrote can be compared afterwards with what shipped. Kept here rather than
@@ -121,15 +122,6 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
     def wording_offers(offerable)
       offerable.map { |button| [written_labels[button[:id]], button[:title]] }
-    end
-
-    # Providers disagree on whether an object array arrives with string or symbol
-    # keys, and a missing label is a legitimate value here rather than an error, so
-    # neither shape may raise.
-    def button_value(button, key)
-      return if !button.respond_to?(:[])
-
-      button[key] || button[key.to_sym]
     end
 
     def blank_body_error

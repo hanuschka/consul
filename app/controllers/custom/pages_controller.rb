@@ -94,8 +94,6 @@ class PagesController < ApplicationController
       @cards = @custom_page.cards
       render action: custom_page_name
 
-    elsif params[:id].to_s.match?(%r{\A[a-z0-9]+(?:[_\-/][a-z0-9]+)*\z}i)
-      render action: params[:id]
     else
       head :not_found, content_type: "text/html"
     end

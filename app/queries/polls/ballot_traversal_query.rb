@@ -182,7 +182,15 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     # ordinary question.
     #
     def sequence
-      @sequence ||= participant_ordered_roots.select { |question| asks_something?(question) }
+      @sequence ||= participant_ordered_roots.select { |question| step?(question) }
+    end
+
+    # A root is a step when it asks something itself or heads a bundle whose
+    # sub-questions do. The heading carries no options of its own, and reading
+    # that alone as "asks nothing" took the whole bundle off the page's wizard
+    # and out of the chat.
+    def step?(root)
+      asks_something?(root) || root.nested_questions.any? { |nested| asks_something?(nested) }
     end
 
     def participant_ordered_roots

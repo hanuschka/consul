@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::UnlinkAccount < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # Severing the link cannot be undone from the chat — the number keeps nothing about
   # who was behind it — so the confirmation is a precondition rather than a
   # convention: this refuses until the citizen has been asked, and being asked is the

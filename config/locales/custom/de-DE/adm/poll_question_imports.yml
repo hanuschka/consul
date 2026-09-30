@@ -160,6 +160,9 @@ de:
           ai_malformed: >-
             Im Dokument ließen sich keine verwertbaren Fragen erkennen. Prüfen
             Sie das Dokument und versuchen Sie es erneut.
+          ai_request_failed: >-
+            Der KI-Dienst war nicht erreichbar oder hat die Anfrage abgelehnt.
+            Bitte versuchen Sie es später erneut.
           generation_failed: "Die Fragen konnten nicht ausgelesen werden: %{message}"
           generation_unknown: Unbekannter Fehler beim Auslesen.
           poll_missing: >-

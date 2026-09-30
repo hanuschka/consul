@@ -8,7 +8,7 @@ class Ai::Tools::WhatsappAiAssistant::ListMilestones < Ai::Tools::WhatsappAiAssi
               "reported as something that happened. Returns facts for you to answer in your own " \
               "words — it sends nothing to the citizen itself."
 
-  params do
+  parameters do
     optional :projekt_name,
       description: "The project name as the citizen wrote it, or null for the whole portal" do
       string

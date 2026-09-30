@@ -34,6 +34,15 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
                       "can plausibly happen next from here. If there is genuinely no next " \
                       "step, answer in plain text again.".freeze
 
+  # Said to a model that ran a tool and then answered with nothing. The tools that act
+  # tell it what the citizen has already been sent and what not to repeat, and a model
+  # that reads only the "do not" writes an empty reply — which used to end a turn that
+  # had put a comment on the page in the "I can't answer you" line.
+  EMPTY_REPLY_RETRY = "That reply was empty, so the citizen has been sent nothing after what " \
+                      "the tools already told them. Write the reply now: a short line on what " \
+                      "they can do next from here, sent with reply_with_actions. Do not repeat " \
+                      "what a tool has already sent them.".freeze
+
   # One turn, whichever transport answered it. `chat` is set on the ruby_llm
   # path and `chain_turn` on the Responses one, and the state writer picks by
   # which of the two it was handed — everything between the request and the
@@ -76,7 +85,9 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   end
 
   def call
-    return ServiceResult.failure(error: BLANK_MESSAGE_ERROR) if @inbound_text.blank?
+    if @inbound_text.blank?
+      return fallback_failure(:blank_inbound, error: BLANK_MESSAGE_ERROR, level: :warning)
+    end
 
     @last_message_id_before_turn = last_message_id
     keep_waiting_visible
@@ -92,8 +103,13 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # caller retries with the same words, and persisting it first would have the
     # retry asking on top of the inbound and the empty answer it is replacing —
     # which is why the rescue below returns without persisting either.
-    return ServiceResult.failure(error: EMPTY_ANSWER_ERROR) if outcome == :empty
-    return ServiceResult.failure(error: REFUSED_MESSAGE_ERROR) if outcome == :refused
+    if outcome == :empty
+      return fallback_failure(:empty_answer, error: EMPTY_ANSWER_ERROR)
+    end
+
+    if outcome == :refused
+      return fallback_failure(:refused_reply, error: REFUSED_MESSAGE_ERROR)
+    end
 
     persist(turn)
     record_reply_language
@@ -142,11 +158,15 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
     def ruby_llm_turn
       chat = build_chat
-      response = chat.ask(@inbound_text)
+      reply = converse(chat, @inbound_text)
 
-      return Turn.new(halt: response, chat: chat) if response.is_a?(::RubyLLM::Tool::Halt)
+      if !reply.is_a?(::ToolHalt) && empty_after_tools?(reply)
+        reply = reask_after_empty_reply { converse(chat, EMPTY_REPLY_RETRY) }
+      end
 
-      Turn.new(text: response.content.to_s, chat: chat)
+      return Turn.new(halt: reply, chat: chat) if reply.is_a?(::ToolHalt)
+
+      Turn.new(text: reply, chat: chat)
     end
 
     def build_chat
@@ -155,15 +175,99 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       )
 
       chat.with_instructions(instructions)
-      chat.on_tool_call { |tool_call| track_tool_call(tool_call) }
+      chat.before_tool_call { |tool_call| track_tool_call(tool_call) }
+      chat.after_tool_result { |tool_result| note_tool_halt(tool_result) }
 
       state.replay_into(chat)
     end
 
+    # Asks, and runs what the model calls, until it answers in words or a tool has
+    # answered the citizen itself. Returns the ToolHalt in the second case and the
+    # reply's text in the first.
+    #
+    # ruby_llm goes back to the model after every tool result, which for a tool that
+    # has just sent the citizen a message means a second message written on top of it.
+    # So the tools that can answer declare `requires_approval`: ruby_llm runs every
+    # other call of a response and pauses on those, and they are approved and run
+    # here one at a time. A halt ends the turn; any other result — a refusal the model
+    # has to read — lets the loop carry on from it.
+    def converse(chat, message)
+      chat.ask(message)
+
+      while chat.awaiting_approval?
+        tool_halt = run_approved_tool(chat)
+
+        return tool_halt if tool_halt.present?
+
+        chat.complete
+      end
+
+      chat.messages.last.content.to_s
+    end
+
+    # The rest of a batch after a halt is answered rather than run, the way
+    # OpenaiApi::ToolLoop answers it: the citizen has been written to already, and
+    # the provider rejects a history with a tool call nobody answered.
+    def run_approved_tool(chat)
+      @tool_halt = nil
+
+      chat.approve(chat.pending_approvals.first)
+      chat.run_tools
+
+      return if @tool_halt.blank?
+
+      chat.pending_approvals.each do |skipped_call|
+        chat.add_message(
+          role: :tool,
+          content: ::OpenaiApi::ToolLoop::SKIPPED_OUTPUT,
+          tool_call_id: skipped_call.id
+        )
+      end
+
+      @tool_halt
+    end
+
+    def note_tool_halt(tool_result)
+      return if !tool_result.is_a?(::ToolHalt)
+
+      @tool_halt = tool_result
+    end
+
+    # The re-ask continues the chain from the empty response, so what is stored once the
+    # turn is persisted points at the re-ask's own response, and the nudge stays in the
+    # provider's history the way RETRY_FOR_ACTIONS stays in the ruby_llm one.
     def openai_api_turn
       loop_turn = run_tool_loop_with_stale_retry
 
+      if !loop_turn.halted? && empty_after_tools?(loop_turn.text)
+        empty_response_id = loop_turn.response_id
+
+        loop_turn = reask_after_empty_reply do
+          run_tool_loop(
+            input: [{ role: "user", content: EMPTY_REPLY_RETRY }],
+            previous_response_id: empty_response_id
+          )
+        end
+      end
+
       Turn.new(halt: loop_turn.halt, text: loop_turn.text, chain_turn: loop_turn)
+    end
+
+    # Only after a tool ran, because that is the reply that was left to follow what a
+    # tool had already sent: a turn that called nothing and said nothing has no such
+    # message above it. And never on a spent tool budget, which is a runaway rather than
+    # a reply that went missing.
+    def empty_after_tools?(text)
+      text.to_s.strip.blank? && @tool_calls_made.positive? && @tool_calls_made < MAX_TOOL_CALLS
+    end
+
+    # One extra request per turn at most: a re-asked turn skips the actions retry, whose
+    # own request would be the third completion the citizen waits on.
+    def reask_after_empty_reply
+      keep_waiting_visible
+      @reasked_empty_reply = true
+
+      yield
     end
 
     # A chain the provider has forgotten — a conversation nobody has written to
@@ -185,16 +289,18 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # The tools, the instructions and the runaway counter are the ones the
     # ruby_llm path uses: only the transport around them changes, so a misroute
     # reads the same in DecisionLog whichever one answered.
-    def run_tool_loop
+    def run_tool_loop(
+      input: chain.input_for(@inbound_text), previous_response_id: chain.previous_response_id
+    )
       tool_loop = ::OpenaiApi::ToolLoop.new(
         tools: tools,
         tool_definitions: tool_definitions,
         model: profile.model,
         instructions: instructions,
-        input: chain.input_for(@inbound_text),
+        input: input,
         feature: ::AiUsageRecord::UNKNOWN_FEATURE,
         timeout_seconds: REQUEST_TIMEOUT_SECONDS,
-        previous_response_id: chain.previous_response_id,
+        previous_response_id: previous_response_id,
         reasoning_effort: profile.reasoning_effort
       ) { |function_call| track_tool_call(function_call) }
 
@@ -231,16 +337,16 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       raise ToolLoopError, "assistant called more than #{MAX_TOOL_CALLS} tools in one turn"
     end
 
-    # Asked for at three points. At the start of the turn, before the opening
+    # Asked for at four points. At the start of the turn, before the opening
     # completion: that is the longest single wait, and on a turn that calls no tool
     # — every smalltalk reply, every off-topic refusal — it used to be the whole
     # turn, passed in silence. Again on every tool call, because both things that
     # end the bubble happen inside the loop: a tool that speaks to the citizen
     # dismisses it, and a turn still running after TYPING_INDICATOR_SECONDS has had
-    # it expire. And once more before the actions retry, whose second completion
-    # starts after the window the first one was given. The read receipt travels in
-    # the same request, so the citizen sees both the moment their message is taken
-    # up. Unthrottled on purpose — MAX_TOOL_CALLS bounds it, and `typing` swallows
+    # it expire. And once more before each re-ask — the actions retry and the one
+    # after an empty reply — whose second completion starts after the window the
+    # first one was given. The read receipt travels in the same request, so the
+    # citizen sees both the moment their message is taken up. Unthrottled on purpose — MAX_TOOL_CALLS bounds it, and `typing` swallows
     # its own failures, so the cost of asking once too often is a log line the
     # citizen never sees.
     def keep_waiting_visible
@@ -325,24 +431,36 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     # when it answered in words again, nil when there was no retry to make. The three
     # are distinguished because only the first means the citizen has been answered.
     def retry_for_actions(turn)
+      return if @reasked_empty_reply
       return if turn.chat.blank?
       return if @tool_calls_made >= MAX_TOOL_CALLS
 
       keep_waiting_visible
 
-      response = turn.chat.ask(retry_prompt)
+      messages_before_retry = turn.chat.messages.length
+      reply = converse(turn.chat, retry_prompt)
 
-      if response.is_a?(::RubyLLM::Tool::Halt)
-        turn.halt = response
+      if reply.is_a?(::ToolHalt)
+        turn.halt = reply
 
         return :sent
       end
 
-      response.content.to_s.strip
+      reply.strip
     rescue StandardError => e
       report(e)
+      drop_failed_retry(turn.chat, messages_before_retry)
 
       nil
+    end
+
+    # The first answer still goes out after a retry that raised, and the turn is stored
+    # with it — so the retry's own messages go, or a tool call it left unanswered would be
+    # stored too, and every later turn of this conversation would be refused over it.
+    def drop_failed_retry(chat, messages_before_retry)
+      return if messages_before_retry.blank?
+
+      chat.messages = chat.messages.first(messages_before_retry)
     end
 
     # The same one extra request, asked for the preview rather than for buttons when
@@ -482,6 +600,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::ToggleNotification,
       ::Ai::Tools::WhatsappAiAssistant::SupportProposal,
       ::Ai::Tools::WhatsappAiAssistant::WithdrawSupport,
+      ::Ai::Tools::WhatsappAiAssistant::StartComment,
       ::Ai::Tools::WhatsappAiAssistant::DraftComment,
       ::Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::PostComment,
@@ -521,6 +640,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::CheckParticipationEligibility,
       ::Ai::Tools::WhatsappAiAssistant::DescribeProjekt,
       ::Ai::Tools::WhatsappAiAssistant::ProjektConfiguration,
+      ::Ai::Tools::WhatsappAiAssistant::PortalDataProtection,
       ::Ai::Tools::WhatsappAiAssistant::ListProjektResults,
       ::Ai::Tools::WhatsappAiAssistant::ListMilestones,
       ::Ai::Tools::WhatsappAiAssistant::ListEvents,
@@ -536,6 +656,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     WRITE_TOOLS = [
       ::Ai::Tools::WhatsappAiAssistant::SupportProposal,
       ::Ai::Tools::WhatsappAiAssistant::WithdrawSupport,
+      ::Ai::Tools::WhatsappAiAssistant::StartComment,
       ::Ai::Tools::WhatsappAiAssistant::DraftComment,
       ::Ai::Tools::WhatsappAiAssistant::PostComment,
       ::Ai::Tools::WhatsappAiAssistant::ManageSubscription,
@@ -543,6 +664,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::SendLoginLink,
       ::Ai::Tools::WhatsappAiAssistant::UnlinkAccount,
       ::Ai::Tools::WhatsappAiAssistant::StopMessages,
+      ::Ai::Tools::WhatsappAiAssistant::StartOver,
       ::Ai::Tools::WhatsappAiAssistant::StartPollVote,
       ::Ai::Tools::WhatsappAiAssistant::RecordPollAnswer,
       ::Ai::Tools::WhatsappAiAssistant::RecordOpenPollAnswer
@@ -569,8 +691,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::AbortSubmission
     ].freeze
 
-    # What plain text cannot express: the four interactive message types, and the one
-    # ordinary sentence that must carry a legal notice with it. A plain-text reply
+    # What plain text cannot express: the four interactive message types, and the two
+    # ordinary questions that must carry a legal notice with them. A plain-text reply
     # needs no tool at all — this service sends the model's own words when it calls
     # nothing.
     SEND_TOOLS = [
@@ -582,14 +704,31 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::ShowUnlinkForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::RequestLocation,
-      ::Ai::Tools::WhatsappAiAssistant::RequestPhoto
+      ::Ai::Tools::WhatsappAiAssistant::RequestPhoto,
+      ::Ai::Tools::WhatsappAiAssistant::RequestTermsConsent
     ].freeze
 
     def report(exception)
-      Rails.logger.error(
-        "[Whatsapp] assistant routing failed: #{exception.class} - #{exception.message}"
+      ::Whatsapp::AiAssistant::TurnFailureReport.exception(
+        exception,
+        conversation: @conversation,
+        last_tool: @last_tool_name,
+        tool_calls: @tool_calls_made
+      )
+    end
+
+    # The failures that raise nothing, which is why they used to reach no monitoring at
+    # all: each one ends in the "I can't answer you" line just as an exception does.
+    def fallback_failure(reason, error:, level: :error)
+      ::Whatsapp::AiAssistant::TurnFailureReport.message(
+        reason: reason,
+        conversation: @conversation,
+        level: level,
+        last_tool: @last_tool_name,
+        tool_calls: @tool_calls_made,
+        transport: profile.transport
       )
 
-      Sentry.capture_exception(exception, extra: { whatsapp_conversation_id: @conversation.id })
+      ServiceResult.failure(error: error)
     end
 end

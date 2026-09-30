@@ -18,6 +18,8 @@ class Setting < ApplicationRecord
   validate :validate_whatsapp_address_form
   validate :validate_whatsapp_default_locale
   validate :validate_whatsapp_positive_integer
+  validate :validate_whatsapp_administration_contact_email
+  validate :validate_whatsapp_administration_contact_url
 
   WHATSAPP_TEMPLATE_NAME_KEYS = %w[
     whatsapp.broadcast_template
@@ -84,6 +86,33 @@ class Setting < ApplicationRecord
 
     errors.add(:value, :whatsapp_positive_integer_invalid, field: whatsapp_field_name)
   end
+
+  # The bot hands both to citizens as the way to reach the administration, and
+  # a typo in either sends them to a dead end nobody notices. Refused here.
+  def validate_whatsapp_administration_contact_email
+    return if key != "whatsapp.administration_contact_email"
+    return if value.blank?
+    return if value.to_s.match?(URI::MailTo::EMAIL_REGEXP)
+
+    errors.add(:value, :whatsapp_email_invalid, field: whatsapp_field_name)
+  end
+
+  def validate_whatsapp_administration_contact_url
+    return if key != "whatsapp.administration_contact_url"
+    return if value.blank?
+    return if whatsapp_web_url?(value.to_s)
+
+    errors.add(:value, :whatsapp_url_invalid, field: whatsapp_field_name)
+  end
+
+  def whatsapp_web_url?(text)
+    uri = URI.parse(text)
+
+    uri.is_a?(URI::HTTP) && uri.host.present?
+  rescue URI::InvalidURIError
+    false
+  end
+  private :whatsapp_web_url?
 
   # Every one of these errors reaches the admin as a standalone sentence — in
   # the field's own error line and in the flash — so it has to name the field
@@ -202,7 +231,6 @@ class Setting < ApplicationRecord
         "feature.map": nil,
         "feature.allow_attached_documents": true,
         "feature.allow_images": true,
-        "feature.help_page": true,
         "feature.translation_interface": nil,
         "feature.remote_census": nil,
         "feature.valuation_comment_notification": true,
@@ -236,6 +264,9 @@ class Setting < ApplicationRecord
         "process.legislation": true,
         "process.projekts": true,
         "process.deficiency_reports": false,
+        "process.municipal_plans": false,
+        "municipal_plans.officers_see_all": false,
+        "municipal_plans.auto_archive": false,
         "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,
@@ -336,6 +367,9 @@ class Setting < ApplicationRecord
         "whatsapp.transcription_model": nil,
         "whatsapp.message_retention_days": 90,
         "whatsapp.max_voice_megabytes": 16,
+        "whatsapp.administration_contact_phone": nil,
+        "whatsapp.administration_contact_email": nil,
+        "whatsapp.administration_contact_url": nil,
 
         "deficiency_reports.admins_must_assign_officer": false,
         "deficiency_reports.intake_channel_required_for_on_behalf_of": false,
@@ -443,6 +477,9 @@ class Setting < ApplicationRecord
         "adm.deficiency_reports.intro_text": nil,
         "adm.deficiency_reports.notice_message": nil,
         "adm.deficiency_reports.notice_active": nil,
+        "adm.municipal_plans.intro_text": nil,
+        "adm.municipal_plans.notice_message": nil,
+        "adm.municipal_plans.notice_active": nil,
         "adm.projekts.intro_text": nil,
         "adm.projekts.notice_message": nil,
         "adm.projekts.notice_active": nil,

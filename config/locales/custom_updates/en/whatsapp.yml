@@ -41,6 +41,9 @@ en:
       date:
         absolute_format: "%B %-d, %Y"
         absolute_with_time_format: "%B %-d, %Y at %H:%M"
+        range: "%{from} – %{to}"
+        until: "until %{to}"
+        since: "from %{from}"
         today: today
         past:
           days:
@@ -70,11 +73,23 @@ en:
       assistant_unavailable_retryable: >-
         I can't answer you right now — hopefully only for a moment. Tap "Try again" and I'll
         pick up right where we were.
-      cancelled: OK, cancelled. Just message me again whenever you'd like.
+      # The same line after a turn that completed something before it failed. Sent
+      # untranslated, because it is sent precisely when the assistant did not answer.
+      # %{completed} is the confirmation the model wrote with the tool call, or
+      # assistant_unavailable_action_done where the tool confirmed it itself.
+      assistant_unavailable_after_action: >-
+        %{completed} Only my reply to it isn't getting through right now. Tap "Try again" and
+        I'll pick up from there.
+      assistant_unavailable_action_done: That worked.
+      # Only the fallback for when the assistant cannot answer: otherwise it says
+      # itself what was discarded and offers the next step.
+      cancelled: OK, that's discarded. You can carry on with something else right away.
       opted_in: You will receive messages from us again.
       compliance:
         disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
-        opted_out: Understood, you won't receive any more messages from us.
+        opted_out: >-
+          Understood, you won't receive any more messages from us. Write %{keyword} if
+          you would like to receive messages again.
         opted_out_reminder: >-
           You unsubscribed from our messages, so I can't help you here. Write %{keyword}
           if you would like to receive messages again.
@@ -95,6 +110,15 @@ en:
         erasure: >-
           If you want your account and your data actually deleted, you can do that in the portal
           under "Delete account":
+      # The block Whatsapp::TermsConsentPreview puts in front of the consent question.
+      # Not the model's words: the acceptance is a legal declaration, and each address
+      # follows on a line of its own under its name.
+      terms:
+        statement: >-
+          Before you can submit anything, we need your consent to our terms of use and our
+          privacy policy:
+        conditions: Terms of use
+        privacy: Privacy policy
       comment:
         on_proposal: Comment on
         online: "Your comment is now on the page:"
@@ -135,7 +159,12 @@ en:
         # rather than after they see the picture.
         image_generation_notice: >-
           A generated picture is created by an AI rather than taken by a person.
-        location_optional: A location is optional. You can also carry on without one.
+        # The question above both notices when a photo arrived unasked: it is only used
+        # once the citizen has read them and said yes.
+        image_use_question: Should this photo be used for your contribution?
+        location_optional: >-
+          A location is optional. You can also carry on without one. The pin can only be set in
+          the WhatsApp app on your phone — not in WhatsApp Web or on desktop.
       phase:
         open: "Here is where you can take part in “%{phase}”:"
         contributions_intro:
@@ -148,6 +177,7 @@ en:
         contributions_intro_fallback: "Here is what has come in for “%{phase}” so far"
         contributions_all: "%{intro}:"
         contributions_newest: "%{intro} — the %{shown} newest of %{total} altogether:"
+        contributions_range: "%{intro} — %{first} to %{last} of %{total} altogether:"
         contributions_page: "You can find everything about it here:"
         contributions_hint: >-
           To open a single contribution, use “Choose contribution” — or simply ask me about it.
@@ -159,6 +189,7 @@ en:
           “%{contribution}” is still being reviewed, so it has no public page yet. You will be
           able to open it once it has been approved.
       poll:
+        projekt_list: "The votes in “%{projekt}”:"
         login_prompt: >-
           Voting in “%{poll}” needs an account. Tap here to log in — I'll pick the vote up
           again straight afterwards. Opening the link means agreeing to your phone
@@ -187,7 +218,9 @@ en:
         location_prompt: "Please send the place as a location."
         location_prompt_remaining: >-
           Please send the place as a location. You can still give %{remaining} places.
-        location_optional: "Tap here if you would rather not give a place."
+        location_optional: >-
+          The pin can only be set in the WhatsApp app on your phone — not in WhatsApp Web or on
+          desktop. Tap here if you would rather not give a place.
         location_recorded: "✅ Place saved."
         location_remaining: "You can still give %{remaining} places."
         location_outside_area: >-
@@ -196,8 +229,8 @@ en:
         location_maximum_reached: "This question takes at most %{maximum} places."
         completed: "Thank you — your votes in “%{poll}” are counted."
         already_answered: >-
-          You have already voted in “%{poll}”. Your answers are recorded and stay as they
-          are — this vote cannot be answered a second time.
+          You have already voted in “%{poll}”. Your answers are saved. Until the vote closes
+          you can change them on the ballot page: %{url}
         typed_answer_read: "I read your answer as “%{answer}”."
         left_for_other: >-
           We have left the vote “%{poll}” here. The answers you gave are recorded — you can
@@ -224,6 +257,16 @@ en:
         retry: Try again
         link_retry: Try again
         cancel: Cancel
+        # The cancel pill, named after what it discards.
+        cancel_draft: Discard draft
+        cancel_comment: Discard comment
+        # Fixed labels for steps that recur throughout a conversation: worded by the
+        # model, the same step read six different ways in one session.
+        submit_proposal: Submit an idea
+        draft_revise: Edit draft
+        submit_anyway: Keep as it is
+        location_share: Use this place
+        choose_projekt: Choose project
         help: Help
         login: 🔗 Log in
         open_page: Open page
@@ -263,6 +306,7 @@ en:
         location_skip: Continue without
         main_menu: Start over
         show_more: Show more
+        show_more_votes: All votes in this project
         image_upload: Add a photo
         image_generate: Generate a picture
         support: Support now
@@ -272,6 +316,10 @@ en:
         # what that means is stated in the block above it. It has to fit the 20
         # characters WhatsApp allows a button title.
         unlink_confirm: Unlink number
+        # Fixed as well: the acceptance stands under the block with both links, and the
+        # model may not offer it anywhere else.
+        terms_accept: I agree
+        image_attach: Use this photo
         # The two buttons that do something irreversible: a comment goes onto a public
         # page under this citizen's name, a contribution goes in. That the label says
         # so used to live as a sentence in the tool descriptions — a "Continue" on the
@@ -279,6 +327,10 @@ en:
         # apply.
         comment_post: Post comment
         draft_publish: Submit now
+        # Stands under the note on what the draft proposes beyond the citizen's own
+        # words. Set by the tool rather than by the model, so it is there wherever
+        # there are additions.
+        remove_additions: Remove additions
       notifications:
         follow_up:
           deadline_approaching: You can still take part here until the deadline passes.

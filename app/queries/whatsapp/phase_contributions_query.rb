@@ -27,10 +27,16 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
     @projekt_phase = projekt_phase
   end
 
-  def call
+  # One page of a list with a row left for the next page (Whatsapp::ListWindow::ROWS),
+  # starting `from` rows in.
+  def call(from: 0)
     return [] if relation.blank?
 
-    relation.limit(::Whatsapp::MAX_OFFERED_LIST_ROWS).map { |record| row_for(record) }.compact
+    relation
+      .offset(::Whatsapp::ListWindow.offset(from))
+      .limit(::Whatsapp::ListWindow::ROWS)
+      .map { |record| row_for(record) }
+      .compact
   end
 
   # Counted rather than measured off the rows, which are capped: the reply says how

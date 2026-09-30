@@ -18,31 +18,46 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
   DESCRIPTION_LENGTH = 700
 
   description "Writes the citizen's idea up as a draft contribution to the phase this submission " \
-              "belongs to, and returns it for you to show them. Pass their own words, complete and " \
-              "unchanged — never your summary of them: this is their contribution and the " \
-              "generation reads what they actually wrote. Call start_draft first if no phase has " \
-              "been chosen. It also returns anything already submitted that looks like the same " \
-              "idea, and the phase's own assessment of the draft where the phase sets criteria. " \
+              "belongs to, and returns it for you to show them. Only for a contribution they " \
+              "have said they want to make and have said what it is: a place name on its own, a " \
+              "reaction to something you showed them, or a reply to a ballot question in front " \
+              "of them is not an idea to draft — at most a reason to ask whether they want to " \
+              "contribute. Pass their own words, complete and unchanged — never your summary of " \
+              "them: this is their contribution and the generation reads what they actually " \
+              "wrote. Call start_draft first if no phase has been chosen. It also returns " \
+              "anything already submitted that looks like the same idea, and the phase's own " \
+              "assessment of the draft where the phase sets criteria. " \
               "Nothing is published by this and nothing is sent. What the citizen sees next is " \
               "the draft itself: call show_draft_for_confirmation straight away, with no message " \
               "of your own announcing it first. Raise any near-duplicate in its question as a " \
               "genuine one — supporting one that exists is often worth more than a second copy " \
               "of it — and say there what the assessment found, offering to revise or to publish."
 
-  params do
+  parameters do
     string :text,
       description: "What the citizen wrote, word for word, including everything they said about " \
                    "the place and any photo. Never a paraphrase."
+    string :contribution_intent,
+      description: "The citizen's own words, quoted from this conversation, in which they say " \
+                   "they want to contribute something. Leave it empty where they have not said " \
+                   "so — never fill it with your reading of what they might want."
   end
 
   def diagnostic_step
     ::Whatsapp::Conversation::Step::AWAITING_DRAFT_DECISION
   end
 
-  def execute(text:)
+  def execute(text:, contribution_intent: nil)
     idea_text = text.to_s.strip
 
     return blank_idea_error if idea_text.blank?
+
+    # Asked for its evidence rather than trusted to judge: a place name and a vote
+    # for "die erste Möglichkeit" were each written up as a proposal and offered for
+    # publishing. A quote is something the model has to find in what the citizen
+    # said, and where there is none, the move is to ask them. What the words mean
+    # stays the model's to read — nothing here matches them against anything.
+    return no_intent_error if contribution_intent.to_s.strip.blank?
 
     refusal = precondition_refusal
 
@@ -91,9 +106,9 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
       answer(::Whatsapp::Drafting::CompleteDraftService.call(conversation: conversation), safety)
     end
 
-    # The three things the model needs and cannot see: the draft as it stands, what
-    # the portal already holds that resembles it, and how the phase's own criteria
-    # judged it.
+    # The four things the model needs and cannot see: the draft as it stands, what
+    # it proposes beyond the citizen's words, what the portal already holds that
+    # resembles it, and how the phase's own criteria judged it.
     #
     # The hint travels with them because the draft in this answer is the one thing
     # the model is most tempted to announce rather than show: handed the text, it
@@ -105,6 +120,7 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
 
       {
         draft: draft_payload(stored.resource),
+        additions_beyond_idea: conversation.additions_beyond_idea.presence,
         similar_contributions: similar_contributions(safety.search_terms),
         assessment: assessment_for(stored.resource),
         collects_picture: conversation.image_question_available?,
@@ -115,8 +131,15 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
 
     SHOW_DRAFT_HINT = "Call show_draft_for_confirmation now: the draft is the first thing the " \
                       "citizen sees. Anything above about similar contributions, the " \
-                      "assessment, a picture or a place belongs in its question and its " \
-                      "buttons, not in a message before it.".freeze
+                      "assessment or a place belongs in its question and its buttons, not in " \
+                      "a message before it. Where additions_beyond_idea is present, the draft " \
+                      "proposes things the citizen did not say: name them in one short " \
+                      "sentence of your own in additions_note — the button that takes them " \
+                      "out is added for you. Where it is absent, the draft only rephrases " \
+                      "them — say nothing about it. Where " \
+                      "collects_picture is true, the picture is asked for after the preview " \
+                      "and only with request_photo, which carries the notices that have to " \
+                      "come with it — publishing is refused until it has been.".freeze
 
     def draft_payload(resource)
       {
@@ -229,6 +252,12 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
 
     def blank_idea_error
       { error: "There is nothing to draft from. Ask the citizen what they want to contribute." }
+    end
+
+    def no_intent_error
+      { error: "Nothing was drafted: the citizen has not said they want to contribute this. " \
+               "Answer what they actually wrote, and where it could be the start of an idea, " \
+               "ask whether they want to make it a contribution." }
     end
 
     def too_fast_error

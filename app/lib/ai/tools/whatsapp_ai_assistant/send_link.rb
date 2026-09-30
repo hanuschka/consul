@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # A URL button, which is the one thing about a link that plain text cannot do:
   # the citizen reads what they are about to open instead of a bare address. Falls
   # back to the address written out when WhatsApp will not take the button, because
@@ -11,13 +13,13 @@ class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant:
               "title with it. This sends the message itself — do not repeat the address in a " \
               "reply afterwards."
 
-  params do
+  parameters do
     string :body, description: "The sentence above the button, in the citizen's language."
     string :label,
       description: "What the button says, at most " \
                    "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting " \
-                   "spaces (\"Seite öffnen\", \"Anmelden\"). Count them: a longer one is cut " \
-                   "and arrives ending in \"…\"."
+                   "spaces (\"Seite öffnen\", \"Anmelden\"). Count them: a longer one is " \
+                   "refused, and nothing is sent until it is shorter."
     string :url, description: "The address, exactly as a tool returned it."
   end
 
@@ -27,6 +29,10 @@ class Ai::Tools::WhatsappAiAssistant::SendLink < Ai::Tools::WhatsappAiAssistant:
     return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
     return invalid_url_error if !openable?(url)
+
+    overlong = refuse_overlong_labels([label])
+
+    return overlong if overlong.present?
 
     text = body.strip
     button_label = ::Whatsapp::AssistantActions.truncated(label).presence ||

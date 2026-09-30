@@ -5,7 +5,7 @@ class Ai::Tools::ProjektImports::RemoveImportPhase < Ai::Tools::ProjektImports::
               "the user explicitly asked for the phase to be deleted, and call it once " \
               "per phase."
 
-  params(
+  parameters(
     type: "object",
     properties: Ai::Tools::ProjektImports::PhaseParamSchema::INDEX_PROPERTY,
     required: %w[phase_index],

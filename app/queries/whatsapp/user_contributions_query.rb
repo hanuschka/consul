@@ -32,6 +32,23 @@ class Whatsapp::UserContributionsQuery < ApplicationQuery
     proposals_scope.count + investments_scope.count
   end
 
+  # Over the whole history rather than the page, for the same reason as #total:
+  # "welche davon werden noch geprüft?" read off one page was answered as "none of
+  # the ten shown" about a citizen with fifty. Only a proposal waits for review —
+  # an investment is public the moment it is sent (MyContributions#public?).
+  def counts
+    return { total: 0, public: 0, under_review: 0 } if @user.blank?
+
+    all_count = total
+    under_review_count = proposals_scope.where(admin_accepted: false).count
+
+    {
+      total: all_count,
+      public: all_count - under_review_count,
+      under_review: under_review_count
+    }
+  end
+
   def exists?
     return false if @user.blank?
 
@@ -44,8 +61,11 @@ class Whatsapp::UserContributionsQuery < ApplicationQuery
       scope.limit(::Whatsapp::ListWindow.limit_through(@from))
     end
 
+    # Published ones only: a draft never sent in is not a contribution yet, and
+    # the row it made was opened with the line that it is being reviewed.
     def proposals_scope
       Proposal
+        .published
         .where(author: @user)
         .order(created_at: :desc)
     end

@@ -39,6 +39,12 @@ module Whatsapp::ProjektCardActions
   # the word underneath while leaving the two rows just as alike as before.
   RowText = Struct.new(:title, :note, :named, keyword_init: true)
 
+  # The action of the row that opens every vote of the projekt. Its parameter is the
+  # projekt itself, so the tap is answered on the inbound side with that projekt's
+  # votes: the row used to carry the scope name alone, and the model left to work out
+  # whose votes it meant answered it twice with a ballot instead of the list.
+  MORE_VOTES_ACTION = :projekt_polls
+
   module_function
 
   # The card's entries, most useful first: every open phase's own action, then the
@@ -59,53 +65,111 @@ module Whatsapp::ProjektCardActions
   # already in it. Now a row is kept for it whenever there is one to show, and the
   # phases share what is left. A cut that still costs a running phase is said out loud
   # by #log_phases_cut, where it used to happen with nothing anywhere naming it.
-  # `user` is who the card is being sent to, and only the wording of a button depends on
-  # it: a phase they have already taken part in keeps its row and its place, because the
-  # row is how they reach what they did there and dropping it would leave the card
-  # quietly shorter for the people who have used it most. Left out, every label is the
-  # one everybody used to get — which is what a caller with nobody to send the card to
-  # should show.
+  #
+  # What the cut costs is a vote the citizen has already answered, before
+  # anything they can still do: the phases are ordered by #still_to_do_first
+  # before it. The cut used to fall on the last phases in page order whatever
+  # they were, and a projekt running nine votes lost the one its citizen had
+  # not answered yet while keeping eight they could only look at. A cut that
+  # costs a vote at all gives up one more phase row for #more_votes_entry, the
+  # row that opens every vote.
+  #
+  # `user` is who the card is being sent to, and the wording of a button and
+  # the order of the rows depend on it: a phase they have already taken part
+  # in keeps its row where there is room for it, because the row is how they
+  # reach what they did there and dropping it would leave the card quietly
+  # shorter for the people who have used it most. Left out, every label and
+  # the order are the ones everybody used to get — which is what a caller with
+  # nobody to send the card to should show.
   def call(projekt, user: nil)
     phases = actionable_phases(projekt)
     facts = ::Whatsapp::ProjektCard.phase_facts(phases)
-    contributions = contributions_entry(phases, facts)
-    kept = phases.first(phase_row_budget(contributions))
     voted_ids = ::Whatsapp::BallotParticipation.completed_phase_ids(
-      projekt_phases: markable(kept), user: user
+      projekt_phases: markable(phases), user: user
     )
+    ordered = still_to_do_first(phases, voted_ids)
+    contributions = contributions_entry(ordered, facts)
+    kept = ordered.first(phase_row_budget(ordered, contributions))
     texts = row_texts(kept, facts, voted_ids)
     entries =
-      (kept.map { |phase| action_entry(phase, facts[phase.id], texts[phase.id]) } +
-        [contributions]).compact
+      (kept.map { |phase| action_entry(phase, texts[phase.id]) } +
+        [contributions, more_votes_entry(projekt, ordered, kept)]).compact
 
-    log_phases_cut(projekt, phases, kept)
+    log_phases_cut(projekt, ordered, kept)
     log_entries_reading_alike(projekt, entries)
 
     entries
   end
 
-  # How many phase rows the card has room for once the contributions row, when there
-  # is one, has taken its place.
-  def phase_row_budget(contributions)
-    ::Whatsapp::MAX_OFFERED_LIST_ROWS - [contributions].compact.size
+  # Of a card's entries, only the rows that start a submission, for a citizen who
+  # asked to submit something before they had picked the projekt. The whole card
+  # used to answer that choice, nine votes and the contributions included, and the
+  # wish they had just tapped was nowhere on it.
+  def submission_entries(entries)
+    entries.select { |entry| action_of(entry) == :idea_start }
   end
 
-  # Whether these entries have to arrive behind the list picker rather than as reply
-  # buttons. Two reasons now, where it used to be only the first: more entries than a
-  # message holds buttons for, or two entries whose titles read alike. A reply button
-  # carries a title and nothing else — WhatsappApi::Resources::Messages drops the
-  # description a list row shows — so entries reading alike are indistinguishable there.
-  # #row_texts settles most of that before this is asked, by naming a repeated title after
-  # its own phase; what is left for the second reason is the collision it cannot resolve,
-  # which is two phases carrying the same name as well as the same action.
-  def list_required?(entries)
-    titles = entries.map { |entry| entry[:title] }
+  # Whether these entries end on the row that opens every vote, which the card's
+  # tool tells the model about so that it does not offer the same list again.
+  def more_votes?(entries)
+    entries.any? { |entry| action_of(entry) == MORE_VOTES_ACTION }
+  end
 
-    !::Whatsapp.buttons?(titles.size) || titles.uniq.size != titles.size
+  def action_of(entry)
+    ::Whatsapp::FlowActions.parse(entry[:id])&.dig(:action)
+  end
+
+  # The phases the citizen still has something to do in ahead of the votes they
+  # have already answered, each half in the order it came in, so that the cut
+  # below costs what they are done with before what they are not.
+  def still_to_do_first(phases, voted_ids)
+    answered, to_do = phases.partition do |projekt_phase|
+      voted_ids.include?(projekt_phase.id)
+    end
+
+    to_do + answered
+  end
+
+  # How many phase rows the card has room for once the contributions row, when
+  # there is one, has taken its place — and one fewer when the phases do not all
+  # fit and a vote is among those left over, whose room goes to the row that
+  # opens every vote. Where only phases that are not votes are left over, there
+  # is no such row: the list of votes would hold none of them.
+  def phase_row_budget(phases, contributions)
+    room = ::Whatsapp::MAX_OFFERED_LIST_ROWS - [contributions].compact.size
+
+    return room if phases.size <= room
+
+    if any_vote?(phases.drop(room - 1))
+      room - 1
+    else
+      room
+    end
+  end
+
+  # The row the votes the card has no room for are reached through. It opens the
+  # list of the projekt's votes (Whatsapp::Polls::ListProjektPollsService) rather
+  # than a second page of this card: that list pages, marks what the citizen has
+  # answered and holds every vote, those above this row included, so nothing needs
+  # to know where the card stopped.
+  def more_votes_entry(projekt, phases, kept)
+    left_over = phases.drop(kept.size)
+
+    return if !any_vote?(left_over)
+
+    {
+      id: ::Whatsapp::FlowActions.id_for(action: MORE_VOTES_ACTION, param: projekt.id),
+      title: ::Whatsapp.copy("whatsapp.bot.buttons.show_more"),
+      description: ::Whatsapp.copy("whatsapp.bot.buttons.show_more_votes")
+    }
+  end
+
+  def any_vote?(phases)
+    phases.any? { |projekt_phase| projekt_phase.is_a?(::ProjektPhase::VotingPhase) }
   end
 
   def actionable_phases(projekt)
-    ::Whatsapp::ProjektPhasesQuery.new(projekt: projekt).call.select do |projekt_phase|
+    ::Whatsapp::ProjektPhasesQuery.new(projekt: projekt).uncapped.select do |projekt_phase|
       actionable_phase_names.include?(projekt_phase.name.to_s) && projekt_phase.current?
     end
   end
@@ -131,12 +195,12 @@ module Whatsapp::ProjektCardActions
     :phase_open
   end
 
-  def action_entry(projekt_phase, phase_facts, row_text)
+  def action_entry(projekt_phase, row_lines)
     entry(
       action: action_for(projekt_phase),
       projekt_phase: projekt_phase,
-      title: row_text.title,
-      description: phase_description(phase_facts, row_text.note)
+      title: row_lines&.dig(:title),
+      description: row_lines&.dig(:description)
     )
   end
 
@@ -146,22 +210,6 @@ module Whatsapp::ProjektCardActions
   # every proposal and formular row of every card.
   def markable(phases)
     phases.select { |projekt_phase| scoped_label(VOTED_LABEL_SCOPE, projekt_phase).present? }
-  end
-
-  # The line under the title: whichever of the phase's two identities the title left for
-  # it, and the closing date. The date as well, because that half need not differ on its
-  # own — a portal running four voting phases may have left two of the ballots named
-  # alike — and two rows reading alike in every field are a list WhatsApp refuses
-  # outright, where the same two dated apart send and read fine. Written through
-  # DatePhrase like every other date the bot shows, so it cannot arrive as a tappable
-  # phone number.
-  def phase_description(phase_facts, note)
-    return if phase_facts.blank?
-
-    [note, ::Whatsapp::DatePhrase.absolute(phase_facts.ends_on)]
-      .compact_blank
-      .join(" · ")
-      .presence
   end
 
   # One entry rather than one per phase: the ticket asks for the phases' actions and
@@ -214,21 +262,35 @@ module Whatsapp::ProjektCardActions
   # Every phase's two lines, worked out over the whole set at once. Whether a title says
   # enough to tell its row apart is a property of the set and not of the phase: "Jetzt
   # abstimmen" names the action on a card with one open vote and names nothing on a card
-  # with four. Cut to length last, once the wording is settled, so the budget is spent on
-  # the words that survived the comparison rather than on the ones about to be replaced.
+  # with four. Split into the row's two lines last, once the wording is settled, so the
+  # room is spent on the words that survived the comparison rather than on the ones about
+  # to be replaced.
+  #
+  # Split rather than cut (Whatsapp::ListRowText): two ballots named "WhatsApp-Test:
+  # Grundfragen …" that part company past the title's twenty-fourth character used to
+  # come out as the same row twice, over the same line underneath when both close on the
+  # same day. The line underneath now carries on with the name, ahead of the note and the
+  # closing date. Always to a list row's length, because the card is always a list.
   def row_texts(phases, facts, voted_ids)
     written = phases.index_by(&:id).transform_values do |projekt_phase|
       written_row(projekt_phase, facts[projekt_phase.id], voted_ids)
     end
-    length = title_length(written.values.count { |row| row.title.present? })
 
-    told_apart(written, facts).transform_values do |row|
-      RowText.new(
-        title: ::Whatsapp::AssistantActions.truncated(row.title, length: length),
-        note: row.note,
-        named: row.named
-      )
+    told_apart(written, facts).to_h do |phase_id, row|
+      [phase_id, row_lines(row, facts[phase_id])]
     end
+  end
+
+  # The date as well as the note, because that half need not differ on its own — a
+  # portal running four voting phases may have left two of the ballots named alike — and
+  # two rows reading alike in every field are a list WhatsApp refuses outright, where the
+  # same two dated apart send and read fine. Written through DatePhrase like every other
+  # date the bot shows, so it cannot arrive as a tappable phone number.
+  def row_lines(row, phase_facts)
+    ::Whatsapp::ListRowText.call(
+      name: row.title,
+      notes: [row.note, ::Whatsapp::DatePhrase.absolute(phase_facts&.ends_on)]
+    )
   end
 
   # What a row says before anything is done about its neighbours.
@@ -311,23 +373,6 @@ module Whatsapp::ProjektCardActions
     end
   end
 
-  # The characters a title may spend. A set of rows is sent as reply buttons or behind the
-  # list picker depending only on how many there are, so a title has to be written to the
-  # button's smaller budget unless this card cannot be sent as buttons at all — only then
-  # are the four extra characters a list row allows safe to spend on it.
-  #
-  # Counted over the labelled phases alone rather than over the finished entries: the
-  # trailing contributions row only ever makes a card longer, so leaving it out can
-  # understate the count but never overstate it, and understating it only costs four
-  # characters where overstating it would ship a title WhatsApp cuts mid-word.
-  def title_length(labelled_count)
-    if ::Whatsapp.buttons?(labelled_count)
-      ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH
-    else
-      ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
-    end
-  end
-
   # The voted wording where the phase type has one and the ordinary label where it has
   # none, so a marked phase nobody wrote a word for keeps its row rather than losing it
   # — a blank title is what #entry drops.
@@ -359,11 +404,10 @@ module Whatsapp::ProjektCardActions
     ::Whatsapp.copy("#{scope}.#{projekt_phase.name}", default: nil)
   end
 
-  # The description travels on every entry and is read by whichever form the card
-  # takes: WhatsappApi::Resources::Messages puts it under the row of a list and
-  # ignores it on a reply button, which holds a title and nothing else.
-  # A row is told from the one above it by its title and, in list form, by the line
-  # under it, so two rows alike in both are two the citizen cannot choose between —
+  # The description travels on every entry: WhatsappApi::Resources::Messages puts it
+  # under the row of the list the card is sent as.
+  # A row is told from the one above it by its title and by the line under it, so two
+  # rows alike in both are two the citizen cannot choose between —
   # and a list carrying them is one WhatsApp refuses outright, which loses the whole
   # card rather than one row of it.
   #

@@ -5,7 +5,7 @@ class Memo < ApplicationRecord
 
   has_ancestry touch: true
 
-  belongs_to :memoable, -> { with_hidden }, polymorphic: true
+  belongs_to :memoable, -> { try(:with_hidden) || all }, polymorphic: true
   belongs_to :user, -> { with_hidden }, inverse_of: :memos
 
   validates :text, presence: true

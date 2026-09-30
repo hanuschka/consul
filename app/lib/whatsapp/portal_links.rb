@@ -11,7 +11,18 @@ module Whatsapp::PortalLinks
   PAGE_SLUGS = {
     privacy: %w[datenschutz privacy privacy-policy datenschutzerklaerung],
     help: %w[hilfe help],
-    conditions: %w[nutzungsbedingungen conditions terms]
+    conditions: %w[nutzungsbedingungen conditions terms],
+    contact: %w[kontakt contact contact_us kontaktieren-sie-uns contact-us]
+  }.freeze
+
+  # The footer's own identity for a page, which is asked first: an admin may
+  # rename a slug, and the footer still finds the page by this key while the
+  # slug list above would silently fall back to the front page. The slugs stay
+  # the fallback for pages created before the key existed.
+  FOOTER_KEYS = {
+    privacy: "privacy",
+    conditions: "conditions",
+    contact: "contact_us"
   }.freeze
 
   module_function
@@ -46,32 +57,54 @@ module Whatsapp::PortalLinks
     )
   end
 
-  def privacy_url
-    page_url(:privacy)
+  def privacy_url(locale: nil)
+    page_url(:privacy, locale: locale)
   end
 
-  def help_url
-    page_url(:help)
+  def help_url(locale: nil)
+    page_url(:help, locale: locale)
   end
 
-  def conditions_url
-    page_url(:conditions)
+  def conditions_url(locale: nil)
+    page_url(:conditions, locale: locale)
+  end
+
+  def contact_url(locale: nil)
+    page_url(:contact, locale: locale)
   end
 
   # Falls back to the portal's front page rather than to a dead link: a consent
   # line that points somewhere useful is better than one that points at a 404,
   # and better than one that silently drops the URL it promised.
-  def page_url(key)
+  def page_url(key, locale: nil)
     page = published_page(key)
+    url_helpers = Rails.application.routes.url_helpers
+    options = { **locale_params(locale), **UrlOptions.default.to_h }
 
-    return root_url if page.blank?
+    return url_helpers.root_url(**options) if page.blank?
 
-    Rails.application.routes.url_helpers.page_url(id: page.slug, **UrlOptions.default.to_h)
+    url_helpers.page_url(id: page.slug, **options)
   end
 
   def published_page(key)
-    SiteCustomization::Page
-      .where(status: "published", slug: PAGE_SLUGS.fetch(key))
-      .first
+    published = SiteCustomization::Page.where(status: "published")
+    footer_key = FOOTER_KEYS[key]
+    by_footer_key = footer_key.present? ? published.find_by(footer_key: footer_key) : nil
+
+    by_footer_key || published.where(slug: PAGE_SLUGS.fetch(key)).first
+  end
+
+  # The language the citizen is chatting in, carried to the page so it opens in
+  # that language rather than in whatever the browser or an old session says.
+  # Only where it differs from the portal's own, which the page opens in anyway,
+  # and only for a locale the portal has.
+  def locale_params(locale)
+    requested = locale.to_s
+
+    return {} if requested.blank?
+    return {} if requested == I18n.default_locale.to_s
+    return {} if I18n.available_locales.map(&:to_s).exclude?(requested)
+
+    { locale: requested }
   end
 end

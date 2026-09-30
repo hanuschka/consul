@@ -19,11 +19,13 @@ describe Projekt do
       expect(projekt.published?).to be true
     end
 
-    it "is false when the page status is draft" do
+    # A projekt page is never a draft: SiteCustomization::Page forces it back to
+    # published, so its visibility is decided by the projekt's own switches.
+    it "stays true when the page is set to draft" do
       projekt = create(:projekt)
       projekt.page.update!(status: "draft")
 
-      expect(projekt.published?).to be false
+      expect(Projekt.find(projekt.id).published?).to be true
     end
   end
 

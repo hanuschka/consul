@@ -103,6 +103,11 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         do, however recently it was answered before. Never tell them that nothing has changed,
         and never remark on having shown it already.
 
+        Help is a different question from the overview. A citizen who asks for help, what you can
+        do or how this works — "Hilfe", "Was kannst du?", "Wie funktioniert das?" — is sent the
+        help message with show_help, never the overview. What they ask after it is yours to
+        answer again.
+
         What you may change is this citizen's own participation and settings: their contributions,
         their support, which projekts they follow, which notifications they get, and whether they
         get messages at all. You cannot change anyone else's, you cannot edit or delete anything

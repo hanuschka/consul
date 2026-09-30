@@ -383,7 +383,7 @@ module Whatsapp::Send
   # call rather than three, so a body and its buttons can never come back in two
   # different ones.
   def recovery(conversation:, body:, actions:)
-    pills = recovery_buttons(actions)
+    pills = recovery_buttons(actions, conversation)
     lines = ::Whatsapp::AiAssistant::BotCopyService.call(
       account: conversation.whatsapp_account,
       lines: [body, *pills.map { |pill| pill[:title] }]
@@ -410,7 +410,9 @@ module Whatsapp::Send
   # copy at all.
   def recovery_without_assistant(conversation:, body:, actions:)
     recovery_buttons_message(
-      account: conversation.whatsapp_account, body: body, buttons: recovery_buttons(actions)
+      account: conversation.whatsapp_account,
+      body: body,
+      buttons: recovery_buttons(actions, conversation)
     )
   end
 
@@ -509,13 +511,17 @@ module Whatsapp::Send
   # One recovery pill on its own, for the deterministic messages that offer a way
   # out. Its label is locale copy rather than the assistant's, which is the whole
   # point of the recovery namespace: these are the buttons that have to be readable
-  # when nothing else is.
-  def recovery_button(action)
-    { id: RECOVERY_ACTION_IDS.fetch(action), title: ::Whatsapp.copy("whatsapp.bot.buttons.#{action}") }
+  # when nothing else is. The conversation names the cancel pill after the work it
+  # throws away, as it does when the assistant offers the same pill.
+  def recovery_button(action, conversation)
+    {
+      id: RECOVERY_ACTION_IDS.fetch(action),
+      title: ::Whatsapp::AssistantActions.recovery_label(action, conversation)
+    }
   end
 
-  def recovery_buttons(actions)
-    actions.first(MAX_RECOVERY_BUTTONS).map { |action| recovery_button(action) }
+  def recovery_buttons(actions, conversation)
+    actions.first(MAX_RECOVERY_BUTTONS).map { |action| recovery_button(action, conversation) }
   end
 
   # WhatsApp dismisses the bubble after this long, and there is no way to extend

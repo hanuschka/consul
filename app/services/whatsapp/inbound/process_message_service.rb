@@ -176,13 +176,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         conversation.carry_completed_tool_results!(replayed_tool_results)
       end
 
-      result = ::Whatsapp::AiAssistant::RouterService.call(
-        conversation: conversation,
-        inbound_text: inbound_text,
-        citizen_words: citizen_words,
-        inbound_message_id: inbound_message_id,
-        typing_message_id: reading.message_id,
-        previous_inbound_at: previous_inbound_at
+      result = route(
+        inbound_text, inbound_message_id: inbound_message_id, citizen_words: citizen_words
       )
 
       return conversation.clear_retry_inbound! if result.success?
@@ -205,6 +200,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       send_retryable_unavailable_line(reason: result.error)
+    end
+
+    # One turn of the assistant, for #answer and for the reply after a discard,
+    # which handles its own failure.
+    def route(inbound_text, inbound_message_id:, citizen_words:)
+      ::Whatsapp::AiAssistant::RouterService.call(
+        conversation: conversation,
+        inbound_text: inbound_text,
+        citizen_words: citizen_words,
+        inbound_message_id: inbound_message_id,
+        typing_message_id: reading.message_id,
+        previous_inbound_at: previous_inbound_at
+      )
     end
 
     # A turn that put a comment on the page, counted a support or followed a projekt and
@@ -780,11 +788,28 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(:cancel, nil)
 
+      # Read before the discard, which clears what it describes.
+      note = [tapped_line(action: :cancel), ::Whatsapp::DiscardNotes.for(conversation)].join(" ")
+
       conversation.discard_draft!
 
-      send_cancelled_line
+      answer_discard(note)
 
       true
+    end
+
+    # The discard is done by now and never waits on a model; only the line after it
+    # does. The assistant writes it where one answers, so it can name what went and
+    # offer the way on, and the fixed line stands in where none does: a failed turn
+    # must not leave the citizen without word that their draft is gone.
+    def answer_discard(note)
+      return send_cancelled_line if !::Ai::Settings.ai_available?
+
+      result = route(note, inbound_message_id: reading.message_id, citizen_words: nil)
+
+      return if result.success?
+
+      send_cancelled_line
     end
 
     # The retry pill under the "cannot answer" line. It repeats the turn that failed
@@ -1135,10 +1160,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def contribution_row(entry:, position:)
       return if entry[:action_id].blank?
 
-      button = ::Whatsapp::AssistantActions.offered_button(
+      button = ::Whatsapp::AssistantActions.offered_row(
         spec: entry[:action_id], label: "#{position}. #{entry[:title]}",
-        conversation: conversation,
-        length: ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
+        conversation: conversation
       )
 
       return if button.blank?
@@ -1250,13 +1274,14 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       ::Whatsapp::Send.locale_text(account: account, body: body)
     end
 
-    # A cancellation is the emptiest message the bot sends: the draft is gone, the
-    # citizen asked for that, and what is left is a sentence with nothing to do after
-    # it. The way back in goes under it rather than being left for them to type.
+    # The fallback after a discard, for when no assistant answered (#answer_discard):
+    # the draft is gone, the citizen asked for that, and what is left is a sentence
+    # with nothing to do after it. The way back in goes under it rather than being
+    # left for them to type.
     #
-    # The pill is a recovery one rather than one of the assistant's because both
-    # callers sit above the assistant in the inbound chain: there is no turn here for
-    # a model to have written a label in. The draft is discarded before this line
+    # The pill is a recovery one rather than one of the assistant's because this
+    # runs where no turn was answered: there is no model here to have written a
+    # label in. The draft is discarded before this line
     # either way, so the translation the send makes on its way out can fail without
     # costing the cancellation — it costs the wording, which is what
     # BotCopyService falls back to the written copy for.

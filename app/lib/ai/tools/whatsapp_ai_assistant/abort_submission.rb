@@ -7,7 +7,7 @@ class Ai::Tools::WhatsappAiAssistant::AbortSubmission < Ai::Tools::WhatsappAiAss
               "to discard. Asking to go back to the very beginning is start_over, which asks " \
               "about the draft first. Asking for no more messages at all is stop_messages. A " \
               "wrong call here throws away everything they wrote and it cannot be recovered, so " \
-              "when in doubt ask them first. Say afterwards, in one line, that it is discarded."
+              "when in doubt ask them first. What to say afterwards comes back with the result."
 
   def diagnostic_step
     ::Whatsapp::Conversation::Step::IDLE
@@ -21,16 +21,13 @@ class Ai::Tools::WhatsappAiAssistant::AbortSubmission < Ai::Tools::WhatsappAiAss
 
     # Read before the discard, which replaces the context the request lives in.
     starting_over = conversation.start_over_requested?
+    discarded = ::Whatsapp::DiscardNotes.for(conversation)
 
     conversation.discard_draft!
 
     return start_over_answer if starting_over
 
-    {
-      discarded: true,
-      hint: "Say in one line that it is gone and that they can start again whenever they like. " \
-            "Do not list what else the portal offers unless they ask."
-    }
+    { discarded: true, hint: discarded }
   end
 
   private
@@ -38,9 +35,9 @@ class Ai::Tools::WhatsappAiAssistant::AbortSubmission < Ai::Tools::WhatsappAiAss
     # The discard was the price of a request to go back to the beginning, made
     # before this turn and waiting on the citizen's yes — so this is not the end of
     # the exchange, and stopping at "it is gone" would leave them exactly where the
-    # menu pill used to: nowhere, with nothing to tap. The line above deliberately
-    # says the opposite for every other abandonment, where somebody who has just
-    # given up is not owed a list of what else there is.
+    # menu pill used to: nowhere, with nothing to tap. Every other abandonment gets
+    # one way on (Whatsapp::DiscardNotes) rather than this whole fresh start, since
+    # somebody who has just given up is not owed a list of what else there is.
     def start_over_answer
       {
         discarded: true,

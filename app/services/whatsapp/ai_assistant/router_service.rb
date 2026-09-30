@@ -600,6 +600,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       ::Ai::Tools::WhatsappAiAssistant::ToggleNotification,
       ::Ai::Tools::WhatsappAiAssistant::SupportProposal,
       ::Ai::Tools::WhatsappAiAssistant::WithdrawSupport,
+      ::Ai::Tools::WhatsappAiAssistant::StartComment,
       ::Ai::Tools::WhatsappAiAssistant::DraftComment,
       ::Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation,
       ::Ai::Tools::WhatsappAiAssistant::PostComment,
@@ -655,6 +656,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
     WRITE_TOOLS = [
       ::Ai::Tools::WhatsappAiAssistant::SupportProposal,
       ::Ai::Tools::WhatsappAiAssistant::WithdrawSupport,
+      ::Ai::Tools::WhatsappAiAssistant::StartComment,
       ::Ai::Tools::WhatsappAiAssistant::DraftComment,
       ::Ai::Tools::WhatsappAiAssistant::PostComment,
       ::Ai::Tools::WhatsappAiAssistant::ManageSubscription,

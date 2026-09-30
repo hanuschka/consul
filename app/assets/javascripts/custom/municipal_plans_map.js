@@ -36,11 +36,11 @@
       }
 
       var areas = App.MunicipalPlansMap.parseCollection(container.dataset.areas);
-      if (areas.features.length === 0) {
+      var markers = App.MunicipalPlansMap.parseCollection(container.dataset.markers);
+
+      if (areas.features.length === 0 && markers.features.length === 0) {
         return;
       }
-
-      var markers = App.MunicipalPlansMap.parseCollection(container.dataset.markers);
 
       container.dataset.initialized = "true";
 

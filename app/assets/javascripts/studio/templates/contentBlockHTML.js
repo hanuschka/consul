@@ -403,8 +403,6 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
 
         <div class="custom-content-block--toolbar-border js-content-block--toolbar-anchor js-studio-hide-on-preview"></div>
 
-        ${showVisibility ? '<div class="custom-content-block--visibility-frame" aria-hidden="true"></div>' : ''}
-
         ${showVisibility ? App.Studio.Projekt.templateFunctions.contentBlockVisibilityHintHtml(visibilityState) : ''}
 
         ${showEmptyHint ? App.Studio.Projekt.templateFunctions.contentBlockEmptyHintHtml() : ''}

@@ -72,9 +72,9 @@ App.Studio.Projekt.templateFunctions.contentBlockVisibilityControlsHtml = functi
   `;
 };
 
-// The label of the dashed frame around blocks citizens can't see. It is
-// editor-only: preview-as-user drops those blocks entirely, and a visible
-// block with a period hides its label there.
+// The label on the top edge of blocks citizens can't see. It is editor-only:
+// preview-as-user drops those blocks entirely, and a visible block with a
+// period hides its label there.
 App.Studio.Projekt.templateFunctions.contentBlockVisibilityHintHtml = function(visibility) {
   const periodText = App.Studio.Projekt.templateFunctions.visibilityPeriodText(visibility);
   const tooltip = App.Studio.Projekt.templateFunctions.studioControlTooltip;

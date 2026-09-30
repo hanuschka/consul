@@ -82,10 +82,14 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       <<~SECTION
 
         The draft may go beyond what the citizen said, and that is wanted. Because it is
-        published under their name, list in additions_beyond_idea what it proposes that they
-        did not give: each measure, feature, partner or rule you added. Rewording, structuring
-        and spelling out what they plainly meant are not additions. When the draft only
-        rephrases their words, the list is empty.
+        published under their name, list in additions_beyond_idea what it proposes or claims
+        that they did not give: each measure, feature, partner or rule you added, and each
+        claim they did not make — what it costs, how much effort it takes, that it is easy,
+        common or feasible, facts or numbers about the place, and specific reasons or effects
+        they did not name. Rewording, structuring and the general purpose their idea plainly
+        serves are not additions. The shorter their words — a title, a few words chosen from
+        buttons — the more the text adds, so check it sentence by sentence against what they
+        actually said. When the draft only rephrases their words, the list is empty.
       SECTION
     end
 
@@ -254,10 +258,12 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       {
         type: "array",
         items: { type: "string" },
-        description: "What the draft proposes that the citizen's own words did not: each added " \
-                     "measure, feature, partner or rule as a short phrase in the draft's " \
-                     "language (\"Kooperation mit Energieversorgern\"). Empty when the draft " \
-                     "only rephrases what they said."
+        description: "What the draft proposes or claims that the citizen's own words did not: " \
+                     "each added measure, feature, partner or rule, and each claim about cost, " \
+                     "effort, feasibility, facts or effects they did not make, as a short phrase " \
+                     "in the draft's language (\"Kooperation mit Energieversorgern\", " \
+                     "\"Umsetzung mit überschaubarem Aufwand\"). Empty when the draft only " \
+                     "rephrases what they said."
       }
     end
 

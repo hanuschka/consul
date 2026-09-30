@@ -66,6 +66,10 @@ module Whatsapp::AiAssistant::DecisionLog
   # The replayed history keeps a turn's arguments only until it scrolls out of the
   # window, and a reply reported days later has to be traced back to the page it was
   # read off and the numbers it was given.
+  #
+  # `additions_note_missing` is a preview refused because the draft proposes things
+  # the citizen never said and the model wrote no note naming them — the rate of the
+  # draft that would have gone in under their name unexplained.
   EVENTS = %i[
     tool_called
     tool_result
@@ -82,6 +86,7 @@ module Whatsapp::AiAssistant::DecisionLog
     send_refused
     preview_required
     preview_skipped
+    additions_note_missing
   ].freeze
 
   COUNTER_TTL = 40.days

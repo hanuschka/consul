@@ -313,6 +313,10 @@ en:
         # apply.
         comment_post: Post comment
         draft_publish: Submit now
+        # Stands under the note on what the draft proposes beyond the citizen's own
+        # words. Set by the tool rather than by the model, so it is there wherever
+        # there are additions.
+        remove_additions: Remove additions
       notifications:
         follow_up:
           deadline_approaching: You can still take part here until the deadline passes.

@@ -9,7 +9,7 @@ class MunicipalPlans::OverviewMapService
   end
 
   def show?
-    areas[:features].any?
+    areas[:features].any? || markers[:features].any?
   end
 
   def areas
@@ -31,15 +31,19 @@ class MunicipalPlans::OverviewMapService
   end
 
   def bounds
-    @bounds ||= begin
-      positions = areas[:features].flat_map { |feature| positions_of(feature[:geometry]["coordinates"]) }
+    @bounds ||= if positions.uniq.size > 1
+                  longitudes, latitudes = positions.transpose
 
-      if positions.any?
-        longitudes, latitudes = positions.transpose
+                  { south: latitudes.min, west: longitudes.min, north: latitudes.max, east: longitudes.max }
+                end
+  end
 
-        { south: latitudes.min, west: longitudes.min, north: latitudes.max, east: longitudes.max }
-      end
-    end
+  def center
+    @center ||= if positions.uniq.one?
+                  longitude, latitude = positions.first
+
+                  { latitude: latitude, longitude: longitude }
+                end
   end
 
   def markers
@@ -61,6 +65,12 @@ class MunicipalPlans::OverviewMapService
   end
 
   private
+
+    def positions
+      @positions ||= (areas[:features] + markers[:features]).flat_map do |feature|
+        positions_of(feature[:geometry]["coordinates"])
+      end
+    end
 
     def districts_with_map_location
       ActiveRecord::Associations::Preloader.new.preload(@districts, :map_location)

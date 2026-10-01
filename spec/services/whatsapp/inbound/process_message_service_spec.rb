@@ -260,6 +260,108 @@ describe Whatsapp::Inbound::ProcessMessageService do
     end
   end
 
+  # The state pills under a reply about one proposal (Whatsapp::StatePills): the tap
+  # names the proposal, so it is answered for that proposal rather than for whichever
+  # one the model remembers.
+  describe "the comment pill" do
+    let(:user) { double(:user) }
+    let(:proposal) { double(:proposal, id: 482, title: "Mehr Bänke") }
+    let(:refusal) { nil }
+    let(:comment_tap) do
+      tap_of(
+        id: Whatsapp::FlowActions.id_for(action: :comment_start, param: 482),
+        title: "Kommentieren"
+      )
+    end
+
+    before do
+      allow(account).to receive(:user).and_return(user)
+      allow(Proposal).to receive_message_chain(:not_retired, :find_by)
+        .with(id: 482).and_return(proposal)
+      allow(Whatsapp::Contributions::CreateCommentService)
+        .to receive(:thread_refusal).with(proposal: proposal, user: user).and_return(refusal)
+      allow(conversation).to receive(:store_comment_proposal_id!)
+      allow(conversation).to receive(:open_step!)
+    end
+
+    it "opens the comment on the proposal the pill names" do
+      process(comment_tap)
+
+      expect(conversation).to have_received(:store_comment_proposal_id!).with(482)
+      expect(conversation).to have_received(:open_step!).with("comment")
+    end
+
+    it "asks the assistant for the comment on that proposal" do
+      process(comment_tap)
+
+      expect(routed_notes.last).to include("proposal 482", "draft_comment")
+    end
+
+    context "when comments have closed since the pill was sent" do
+      let(:refusal) { :closed }
+
+      it "opens nothing and has the assistant say so" do
+        process(comment_tap)
+
+        expect(conversation).not_to have_received(:open_step!)
+        expect(routed_notes.last).to include("comments on that contribution have closed")
+      end
+    end
+  end
+
+  describe "the follow pill" do
+    let(:user) { double(:user) }
+    let(:projekt) { double(:projekt, id: 45) }
+
+    def follow_tap(action)
+      tap_of(id: Whatsapp::FlowActions.id_for(action: action, param: 45), title: "Folgen")
+    end
+
+    before do
+      allow(account).to receive(:user).and_return(user)
+      allow(Projekt).to receive_message_chain(:activated, :find_by)
+        .with(id: 45).and_return(projekt)
+      allow(Whatsapp::ProjektLink).to receive(:title).with(projekt).and_return("Radweg")
+      allow(Whatsapp::Subscriptions).to receive(:follow)
+      allow(Whatsapp::Subscriptions).to receive(:unfollow)
+      allow(conversation).to receive(:note_completed_tool_result!)
+    end
+
+    after { Current.reset }
+
+    it "follows the projekt the pill names" do
+      process(follow_tap(:follow_enable))
+
+      expect(Whatsapp::Subscriptions).to have_received(:follow).with(user: user, projekt: projekt)
+      expect(routed_notes.last).to include("now follows \"Radweg\"")
+    end
+
+    it "stops following it from the other face of the pill" do
+      process(follow_tap(:follow_disable))
+
+      expect(Whatsapp::Subscriptions)
+        .to have_received(:unfollow).with(user: user, projekt: projekt)
+      expect(routed_notes.last).to include("no longer follows \"Radweg\"")
+    end
+
+    it "keeps the projekt in focus, so the reply carries the pill that undoes it" do
+      process(follow_tap(:follow_enable))
+
+      expect(Current.whatsapp_pill_focus).to eq(projekt_id: 45)
+    end
+
+    context "with an unlinked number" do
+      let(:user) { nil }
+
+      it "follows nothing and asks for an account" do
+        process(follow_tap(:follow_enable))
+
+        expect(Whatsapp::Subscriptions).not_to have_received(:follow)
+        expect(routed_notes.last).to include("not linked to an account")
+      end
+    end
+  end
+
   # Structural rather than behavioural, and deliberately so: the reaction
   # capability was removed rather than merely left uncalled, and this is what
   # notices it being reintroduced.

@@ -75,7 +75,10 @@ module Whatsapp::FlowActions
     support_register
     support_withdraw
     comment_prompt
+    comment_start
     comment_post
+    follow_enable
+    follow_disable
     category
     sentiment
     image_upload
@@ -117,7 +120,7 @@ module Whatsapp::FlowActions
     poll_weight poll_done poll_skip
     category sentiment notify_toggle notify_enable notify_disable discover_category support
     support_toggle support_register support_withdraw show_more
-    view_contribution projekt_polls
+    view_contribution projekt_polls comment_start follow_enable follow_disable
   ].freeze
 
   # Ids the bot composes itself and the assistant may never write. Distinct from the
@@ -142,11 +145,20 @@ module Whatsapp::FlowActions
   # choosing the direction, which is the one thing the state has to decide.
   DIRECTED_ACTIONS = %i[support_register support_withdraw notify_enable notify_disable].freeze
 
+  # The pills Whatsapp::StatePills puts under every reply about one proposal or
+  # projekt, read off its state rather than offered by the model. Left to the model,
+  # the same proposal in the same state came with "Zurücknehmen" on one reply and with
+  # only its link on the next, and "Kommentieren" was not offered at all — so the
+  # offer is the platform's, and a model writing one of these would be offering it a
+  # second time.
+  STATE_ACTIONS = %i[comment_start follow_enable follow_disable].freeze
+
   # `projekt_polls` is the projekt card's own last row, and its parameter carries a
   # page offset beside the projekt (#page_param) — a shape the bot writes for the
   # page it has just sent and nothing a model has to compose.
   BOT_ONLY_ACTIONS = [
-    :poll_answer, :poll_weight, :poll_done, :poll_skip, :projekt_polls, *DIRECTED_ACTIONS
+    :poll_answer, :poll_weight, :poll_done, :poll_skip, :projekt_polls, *DIRECTED_ACTIONS,
+    *STATE_ACTIONS
   ].freeze
 
   # Withheld for a reason the set above does not cover. A bot-only id is one whose

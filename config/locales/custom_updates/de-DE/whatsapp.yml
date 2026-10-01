@@ -316,6 +316,27 @@ de:
           Bitte senden Sie einen Ort innerhalb des Gebiets.
         location_maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Orte möglich."
         completed: "Vielen Dank — Ihre Stimmen bei „%{poll}“ sind gezählt."
+        # Wenn jede Frage einer Abstimmung übersprungen wurde. Gespeichert ist nichts,
+        # also gibt es auch keinen Dank für Stimmen. %{date} ist das Ende der Abstimmung.
+        skipped:
+          until_date: >-
+            Sie haben alle Fragen bei „%{poll}“ übersprungen — es wurde nichts gespeichert.
+            Bis zum Ende der Abstimmung am %{date} können Sie noch abstimmen, hier im Chat
+            oder auf der Abstimmungsseite.
+          open_ended: >-
+            Sie haben alle Fragen bei „%{poll}“ übersprungen — es wurde nichts gespeichert.
+            Solange die Abstimmung läuft, können Sie noch abstimmen, hier im Chat oder auf
+            der Abstimmungsseite.
+        # Wenn ein Teil der Fragen beantwortet und der Rest übersprungen wurde.
+        partly_answered:
+          until_date: >-
+            Ihre Antworten bei „%{poll}“ sind gespeichert. Die übersprungenen Fragen können
+            Sie bis zum Ende der Abstimmung am %{date} noch beantworten, hier im Chat oder
+            auf der Abstimmungsseite.
+          open_ended: >-
+            Ihre Antworten bei „%{poll}“ sind gespeichert. Die übersprungenen Fragen können
+            Sie noch beantworten, solange die Abstimmung läuft, hier im Chat oder auf der
+            Abstimmungsseite.
         already_answered: >-
           Sie haben bei „%{poll}“ bereits abgestimmt. Ihre Antworten sind gespeichert. Bis zum
           Ende der Abstimmung können Sie sie auf der Abstimmungsseite ändern: %{url}
@@ -330,6 +351,8 @@ de:
         summary_map_points:
           one: "1 Ort angegeben"
           other: "%{count} Orte angegeben"
+        # In der Zusammenfassung, unter einer Frage, die übersprungen wurde.
+        summary_skipped: "Übersprungen"
         # Vor der Frage, wenn „Fertig“ angetippt wurde, bevor eine Antwort gewählt war. Ohne
         # diese Zeile kam die Frage einfach noch einmal, und das las sich wie ein Antippen,
         # das der Bot nicht bemerkt hat.
@@ -447,6 +470,11 @@ de:
         # which is why the fuller phrase lives on the message and not on the button.
         support: Jetzt unterstützen
         support_withdraw: Zurücknehmen
+        # Wie die Unterstützung von der Plattform unter jede Antwort zu einem Vorschlag
+        # gesetzt, wo Kommentare offen sind, und unter jede zu einem Projekt das Folgen.
+        comment_start: Kommentieren
+        follow_enable: Folgen
+        follow_disable: Nicht mehr folgen
         # Die beiden Schaltflächen, die etwas Unwiderrufliches auslösen: Ein Kommentar
         # steht danach unter dem Namen dieser Person auf einer öffentlichen Seite, ein
         # Beitrag ist eingereicht. Dass die Beschriftung das auch sagt, stand vorher

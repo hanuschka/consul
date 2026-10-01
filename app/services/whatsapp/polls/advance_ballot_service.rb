@@ -27,8 +27,18 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
   # citizen took part in some time before never reaches this at all — OfferBallotService
   # answers it before beginning anything, because the two need different words and
   # arriving here they had the same ones.
+  #
+  # Reaching the end is not the same as answering everything, because a skipped
+  # question is passed over and holds no answer. PARTLY_ANSWERED is a ballot ended
+  # with some questions still unanswered, SKIPPED one ended with no answer at all —
+  # which is no vote, and was confirmed as a completed one. All three are endings
+  # (ENDINGS); which one it was is Whatsapp::Polls::BallotEndingQuery's to read.
   ASKED = :asked
   COMPLETED = :completed
+  PARTLY_ANSWERED = :partly_answered
+  SKIPPED = :skipped
+
+  ENDINGS = [COMPLETED, PARTLY_ANSWERED, SKIPPED].freeze
 
   def initialize(conversation:, poll:)
     @conversation = conversation
@@ -88,12 +98,16 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
     # back for a turn already in flight, which is the one case where something else is
     # about to say this — the tool that got here reports the completion as its result,
     # and a fixed line beside that reply would confirm the vote twice.
+    #
+    # What is confirmed is how the ballot ended (#ending), never "completed" by
+    # default: a ballot skipped to its end has recorded nothing, and saying otherwise
+    # had the bot report a vote nobody cast.
     def complete
       @conversation.clear_ballot!
 
       confirm_completion
 
-      COMPLETED
+      ending.outcome
     end
 
     # The citizen is confirmed by whichever route can reach them: the assistant carrying
@@ -108,7 +122,7 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
     def carry_on
       ::Whatsapp::AiAssistant::ContinueConversationService.call(
         conversation: @conversation,
-        note: ::Whatsapp::CompletionNotes.ballot_finished(poll: @poll, answers: answers)
+        note: ::Whatsapp::CompletionNotes.ballot_ended(ending)
       )
     end
 
@@ -117,14 +131,50 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
     # questions and answers are the poll's wording.
     def send_completed_line
       account = @conversation.whatsapp_account
-      completed = ::Whatsapp::AiAssistant::BotCopyService.line(
-        account: account,
-        body: ::Whatsapp.copy("whatsapp.bot.poll.completed", poll: @poll.name)
-      )
-      body = [completed, *answers.map { |entry| summary_block(entry) }].join("\n\n")
+      closing = ::Whatsapp::AiAssistant::BotCopyService.line(account: account, body: closing_copy)
+      body = [
+        closing,
+        *ending.answers.map { |entry| summary_block(entry) },
+        *skipped_blocks
+      ].join("\n\n")
 
       ::Whatsapp::Send.text(
         account: account, body: body.truncate(::Whatsapp::MAX_TEXT_BODY_LENGTH)
+      )
+    end
+
+    # Thanked for votes only where every question has an answer. Otherwise the line
+    # says what was kept — the answers given, or nothing — and until when the rest
+    # can still be answered: the phase's end, the date its permission check closes
+    # the ballot on.
+    def closing_copy
+      closes_on = ::Whatsapp::DatePhrase.absolute(@poll.projekt_phase&.end_date)
+
+      case ending.outcome
+      when SKIPPED
+        skipped_copy(closes_on)
+      when PARTLY_ANSWERED
+        partly_answered_copy(closes_on)
+      else
+        ::Whatsapp.copy("whatsapp.bot.poll.completed", poll: @poll.name)
+      end
+    end
+
+    def skipped_copy(closes_on)
+      if closes_on.blank?
+        return ::Whatsapp.copy("whatsapp.bot.poll.skipped.open_ended", poll: @poll.name)
+      end
+
+      ::Whatsapp.copy("whatsapp.bot.poll.skipped.until_date", poll: @poll.name, date: closes_on)
+    end
+
+    def partly_answered_copy(closes_on)
+      if closes_on.blank?
+        return ::Whatsapp.copy("whatsapp.bot.poll.partly_answered.open_ended", poll: @poll.name)
+      end
+
+      ::Whatsapp.copy(
+        "whatsapp.bot.poll.partly_answered.until_date", poll: @poll.name, date: closes_on
       )
     end
 
@@ -143,8 +193,25 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
       "*#{entry.question.title}*\n#{answered}"
     end
 
-    def answers
-      @answers ||= ::Whatsapp::Polls::BallotSummaryQuery.call(
+    # A question left without an answer, listed under the answered ones so a summary
+    # of half a ballot does not read as the whole of it. Not beside no answers at
+    # all: a ballot skipped whole says so in its line, and every title under it
+    # marked skipped would only repeat that.
+    def skipped_blocks
+      return [] if ending.answers.empty?
+
+      skipped = ::Whatsapp.copy(
+        "whatsapp.bot.poll.summary_skipped",
+        locale: ::Whatsapp.locale_for(@conversation.whatsapp_account)
+      )
+
+      ending.unanswered_questions.map { |question| "*#{question.title}*\n#{skipped}" }
+    end
+
+    # Read after the markers are cleared, which it does not depend on: how a ballot
+    # ended is a fact about the recorded answers.
+    def ending
+      @ending ||= ::Whatsapp::Polls::BallotEndingQuery.call(
         poll: @poll, user: @conversation.user
       )
     end

@@ -585,6 +585,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       open_revision_for(flow_action[:action])
 
       support_tap_note(action: flow_action[:action], param: flow_action[:param]) ||
+        comment_tap_note(action: flow_action[:action], param: flow_action[:param]) ||
+        follow_tap_note(action: flow_action[:action], param: flow_action[:param]) ||
         tapped_line(action: flow_action[:action], param: flow_action[:param])
     end
 
@@ -634,6 +636,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       proposal = ::Proposal.not_retired.find_by(id: param.to_i)
 
       return SUPPORT_GONE_NOTE if proposal.blank?
+
+      ::Whatsapp::StatePills.focus_proposal(proposal.id)
 
       case action
       when :support_withdraw then withdrawn_support_note(proposal)
@@ -723,7 +727,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
                       "is registered, and repeat none of it. Your reply is the way on only — a " \
                       "short line on what they can do next, with its buttons. Do not invite " \
                       "them to support anything else, and do not say it is final or cannot be " \
-                      "taken back — its support button, offered again, takes it back.".freeze
+                      "taken back — its support button, put under your reply for you, takes " \
+                      "it back.".freeze
 
     WITHDRAWN_NOTE = "The citizen tapped the support button on a contribution they already " \
                      "supported, so the support has been taken back. The contribution, the " \
@@ -731,19 +736,20 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
                      "and that message is the confirmation: do not say again that it is " \
                      "withdrawn, and repeat none of it. Your reply is the way on only — a short " \
                      "line on what they can do next, with its buttons. Do not ask why and do " \
-                     "not talk them back into it — its support button, offered again, " \
-                     "supports it again.".freeze
+                     "not talk them back into it — its support button, put under your reply " \
+                     "for you, supports it again.".freeze
 
     def already_supported_note(proposal)
       "They already support that contribution, and nothing changed. Say so plainly rather " \
-        "than as a failure, and offer support_toggle-#{proposal.id} beside it — it now takes " \
-        "the support back."
+        "than as a failure. Its support button, support_toggle-#{proposal.id}, is put under " \
+        "your reply for you — it now takes the support back."
     end
 
     def not_supported_note(proposal)
       "They do not support that contribution, so there was nothing to take back and nothing " \
-        "changed. Say so plainly rather than as a failure, and offer " \
-        "support_toggle-#{proposal.id} beside it — it now gives the support."
+        "changed. Say so plainly rather than as a failure. Its support button, " \
+        "support_toggle-#{proposal.id}, is put under your reply for you — it now gives the " \
+        "support."
     end
 
     WRITE_FAILED_NOTE = "The tap did not take: nothing was written and the count is unchanged. " \
@@ -757,6 +763,108 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     NOT_LINKED_NOTE = "This number is not linked to an account, so a support cannot be " \
                       "registered or taken back. Tell the citizen an account is needed and call " \
                       "send_login_link when they want one.".freeze
+
+    # ── A comment begun or a projekt followed on the tap itself ─────────────
+    # The other state pills under a reply about one proposal or projekt
+    # (Whatsapp::StatePills), answered here for the same reason a support is: the id
+    # names the record the citizen was looking at, so a note asking the model which
+    # one they meant is a chance for it to pick another.
+    #
+    # The comment pill only opens the step. What goes onto the page still passes
+    # through the preview and its own pill, exactly as when the citizen asked in words.
+    def comment_tap_note(action:, param:)
+      return if action != :comment_start
+      return if param.blank?
+
+      proposal = ::Proposal.not_retired.find_by(id: param.to_i)
+      refusal = ::Whatsapp::Contributions::CreateCommentService.thread_refusal(
+        proposal: proposal, user: account.user
+      )
+
+      if refusal.present?
+        return comment_refusal_note(refusal)
+      end
+
+      conversation.store_comment_proposal_id!(proposal.id)
+      conversation.open_step!("comment")
+
+      "The citizen tapped the comment button on proposal #{proposal.id} " \
+        "(#{proposal.title.to_json}). Ask them to write their comment here, then call " \
+        "draft_comment with their own words and that id."
+    end
+
+    def comment_refusal_note(reason)
+      case reason
+      when :not_linked then COMMENT_NOT_LINKED_NOTE
+      when :closed then COMMENT_CLOSED_NOTE
+      else SUPPORT_GONE_NOTE
+      end
+    end
+
+    COMMENT_NOT_LINKED_NOTE = "This number is not linked to an account, so a comment cannot " \
+                              "be written. Tell the citizen an account is needed and call " \
+                              "send_login_link when they want one.".freeze
+
+    COMMENT_CLOSED_NOTE = "The citizen tapped the comment button, but comments on that " \
+                          "contribution have closed since it was offered. Tell them so " \
+                          "plainly; nothing was written.".freeze
+
+    FOLLOW_TAP_ACTIONS = %i[follow_enable follow_disable].freeze
+
+    # What a follow given or taken back on the tap is recorded as among the turn's
+    # completed tool results, beside the one manage_subscription records.
+    FOLLOW_BUTTON = "follow_button".freeze
+
+    def follow_tap_note(action:, param:)
+      if !FOLLOW_TAP_ACTIONS.include?(action) || param.blank?
+        return
+      end
+
+      if account.user.blank?
+        return FOLLOW_NOT_LINKED_NOTE
+      end
+
+      projekt = ::Projekt.activated.find_by(id: param.to_i)
+
+      return FOLLOW_GONE_NOTE if projekt.blank?
+
+      following = action == :follow_enable
+      title = ::Whatsapp::ProjektLink.title(projekt)
+
+      if following
+        ::Whatsapp::Subscriptions.follow(user: account.user, projekt: projekt)
+      else
+        ::Whatsapp::Subscriptions.unfollow(user: account.user, projekt: projekt)
+      end
+
+      ::Whatsapp::StatePills.focus_projekt(projekt.id)
+
+      conversation.note_completed_tool_result!(
+        tool: FOLLOW_BUTTON, result: { completed: true, projekt: title, following: following }
+      )
+
+      following ? followed_note(title) : unfollowed_note(title)
+    end
+
+    def followed_note(title)
+      "The citizen tapped the follow button and now follows #{title.to_json}, so they are " \
+        "told when something happens in it. #{FOLLOW_UNDO_LINE}"
+    end
+
+    def unfollowed_note(title)
+      "The citizen tapped the unfollow button and no longer follows #{title.to_json}, so " \
+        "they are not told about it any more. #{FOLLOW_UNDO_LINE}"
+    end
+
+    FOLLOW_UNDO_LINE = "Say so in one line. The button under your reply, put there for you, " \
+                       "undoes it.".freeze
+
+    FOLLOW_NOT_LINKED_NOTE = "This number is not linked to an account, so a projekt cannot be " \
+                             "followed. Tell the citizen an account is needed and call " \
+                             "send_login_link when they want one.".freeze
+
+    FOLLOW_GONE_NOTE = "The projekt behind that button is not on the portal any more. Tell the " \
+                       "citizen so; nothing was changed.".freeze
 
     # ── Back to the beginning ───────────────────────────────────────────────
     # The pill that sits on every interactive message the bot sends, and the one
@@ -1419,6 +1527,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return false if contribution.blank?
 
       record_tap(action, flow_action[:param])
+
+      if contribution.is_a?(::Proposal)
+        ::Whatsapp::StatePills.focus_proposal(contribution.id)
+      end
 
       open_contribution(contribution)
     end

@@ -114,6 +114,24 @@ de:
           Dieser Ort liegt außerhalb des Gebiets, das für diese Frage festgelegt wurde.
           Bitte sende einen Ort innerhalb des Gebiets.
         completed: "Vielen Dank — deine Stimmen bei „%{poll}“ sind gezählt."
+        skipped:
+          until_date: >-
+            Du hast alle Fragen bei „%{poll}“ übersprungen — es wurde nichts gespeichert.
+            Bis zum Ende der Abstimmung am %{date} kannst du noch abstimmen, hier im Chat
+            oder auf der Abstimmungsseite.
+          open_ended: >-
+            Du hast alle Fragen bei „%{poll}“ übersprungen — es wurde nichts gespeichert.
+            Solange die Abstimmung läuft, kannst du noch abstimmen, hier im Chat oder auf
+            der Abstimmungsseite.
+        partly_answered:
+          until_date: >-
+            Deine Antworten bei „%{poll}“ sind gespeichert. Die übersprungenen Fragen kannst
+            du bis zum Ende der Abstimmung am %{date} noch beantworten, hier im Chat oder auf
+            der Abstimmungsseite.
+          open_ended: >-
+            Deine Antworten bei „%{poll}“ sind gespeichert. Die übersprungenen Fragen kannst
+            du noch beantworten, solange die Abstimmung läuft, hier im Chat oder auf der
+            Abstimmungsseite.
         already_answered: >-
           Du hast bei „%{poll}“ bereits abgestimmt. Deine Antworten sind gespeichert. Bis zum
           Ende der Abstimmung kannst du sie auf der Abstimmungsseite ändern: %{url}

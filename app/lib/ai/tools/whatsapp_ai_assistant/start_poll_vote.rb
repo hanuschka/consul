@@ -47,7 +47,7 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
     case outcome
     when ::Whatsapp::Polls::OfferBallotService::ALREADY_VOTED
       already_answered(candidate)
-    when ::Whatsapp::Polls::AdvanceBallotService::COMPLETED
+    when *::Whatsapp::Polls::AdvanceBallotService::ENDINGS
       ballot_ended_early(candidate)
     when ::Whatsapp::Polls::OfferBallotService::LOGIN_OFFERED
       login_link_sent
@@ -119,7 +119,7 @@ class Ai::Tools::WhatsappAiAssistant::StartPollVote < Ai::Tools::WhatsappAiAssis
     def ballot_ended_early(projekt_phase)
       {
         status: "The ballot could not be put to the citizen after all and no question was " \
-                "sent. Nothing of theirs was recorded and nothing has been sent.",
+                "sent. Nothing of theirs was recorded just now and nothing has been sent.",
         hint: "Say the vote cannot be answered here right now, without describing its " \
               "questions, and offer what else is open in " \
               "*#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)}*."

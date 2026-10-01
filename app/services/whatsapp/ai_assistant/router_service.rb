@@ -396,9 +396,12 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       # use it: this composes no buttons of its own, so without the pill the message
       # would be an interactive one with nothing in it, which WhatsApp refuses
       # outright. It is also honestly a dead end — the model answered in words and
-      # named no next step — which is what the pill is now for.
+      # named no next step — which is what the pill is now for. The state pills of
+      # what the turn was about go on it all the same (Whatsapp::StatePills).
       message = ::Whatsapp::Send.buttons_with_way_out(
-        account: @conversation.whatsapp_account, body: body, buttons: []
+        account: @conversation.whatsapp_account,
+        body: body,
+        buttons: ::Whatsapp::StatePills.buttons(conversation: @conversation)
       )
 
       # A refused send is not an answer. Reported as its own failure so the

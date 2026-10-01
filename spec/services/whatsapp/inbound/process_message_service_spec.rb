@@ -164,10 +164,16 @@ describe Whatsapp::Inbound::ProcessMessageService do
       expect(conversation).to have_received(:begin_start_over!)
     end
 
-    it "starts over on the help pill offered under a cancellation" do
+    # `help` left the start-over pills when it got an answer of its own: as one it
+    # cleared the phase under a draft and was answered with the overview.
+    it "answers the help pill offered under a cancellation without starting over" do
+      allow(Whatsapp::HelpMessage).to receive(:deliver)
+
       process(help_tap)
 
-      expect(conversation).to have_received(:begin_start_over!)
+      expect(Whatsapp::HelpMessage).to have_received(:deliver).with(conversation)
+      expect(conversation).not_to have_received(:begin_start_over!)
+      expect(Whatsapp::AiAssistant::RouterService).not_to have_received(:call)
     end
 
     # The reset is half of it. The other half is that the replayed history still

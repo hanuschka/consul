@@ -253,6 +253,19 @@ class Polls::BallotTraversalQuery < ApplicationQuery
       .uniq.size
   end
 
+  # Every question this citizen is asked, in the order they are asked it — the path
+  # with each bundle's sub-questions after their heading, which is how a chat walks
+  # it one message at a time.
+  def expanded_path
+    @expanded_path ||= expanded(path)
+  end
+
+  # How many points this citizen has placed on a map question, read from the one
+  # count the walk already holds for the whole ballot.
+  def map_points_placed(question)
+    map_point_counts.fetch(question.id, 0)
+  end
+
   private
 
     # Every root question in the order the citizen meets it, read the way
@@ -289,10 +302,6 @@ class Polls::BallotTraversalQuery < ApplicationQuery
         .select { |question| asks_something?(question) }
     end
 
-    def expanded_path
-      @expanded_path ||= expanded(path)
-    end
-
     def expanded_sequence
       @expanded_sequence ||= expanded(sequence)
     end
@@ -316,10 +325,6 @@ class Polls::BallotTraversalQuery < ApplicationQuery
       return map_points_placed(question) >= question.max_map_points if question.map_points?
 
       chosen_options(question).any?
-    end
-
-    def map_points_placed(question)
-      map_point_counts.fetch(question.id, 0)
     end
 
     # One query for every map question of the ballot, keyed the way #answered_titles

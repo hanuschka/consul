@@ -194,6 +194,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       result = route(
         inbound_text, inbound_message_id: inbound_message_id, citizen_words: citizen_words
       )
+      @turn_answered = result.success?
 
       return conversation.clear_retry_inbound! if result.success?
       return honour_deferred_opt_out if @opt_out_deferred
@@ -357,6 +358,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     #
     # Never under the stop question: the next ballot question sent after "only the
     # vote, or all messages?" answers it on the citizen's behalf.
+    #
+    # Never without a word either. The assistant's reply is what says why the question
+    # comes again (SystemPromptService#ballot_line asks it to); a turn that failed
+    # wrote none, so a fixed line says it instead of the question arriving alone.
     def resume_ballot(poll_id)
       return if poll_id.blank?
       return if @opt_out_deferred
@@ -375,6 +380,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       if owed_question_id.present?
         conversation.record_resumed_poll_question!(owed_question_id)
+      end
+
+      if owed_question_id.present? && !@turn_answered
+        send_bot_line(::Whatsapp.copy("whatsapp.bot.poll.question_again"))
       end
 
       ::Whatsapp::Polls::AdvanceBallotService.call(conversation: conversation, poll: poll)
@@ -1051,17 +1060,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       record_tap(:poll_answer, flow_action[:param])
 
       ::Whatsapp::Polls::RecordAnswerService.call(
-        conversation: conversation, question_answer: question_answer
+        conversation: conversation, question_answers: [question_answer]
       )
     end
 
-    # "I have picked everything I want" on a multiple-choice question. It settles the
-    # question rather than answering it — whatever was chosen is already recorded,
-    # each choice as it was made — so all it does is let the ballot move on.
+    # "I have picked everything I want" on a multiple-choice question
+    # (Whatsapp::Polls::FinishMultipleQuestionService).
     #
     # Honoured only for the question the bot is actually in the middle of asking. The
     # pill sits in the chat history like every other, and tapped a day later it would
     # otherwise reopen a ballot that has been finished and closed off.
+    #
+    # Tapped before anything was chosen, the question is put again with a line saying
+    # why — it used to come back on its own, which read as a tap the bot had not seen.
     def handle_poll_done_tap
       flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
 
@@ -1070,7 +1081,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(:poll_done, flow_action[:param])
 
-      conversation.clear_open_multiple_question!
+      outcome = ::Whatsapp::Polls::FinishMultipleQuestionService.call(conversation: conversation)
+
+      if outcome != ::Whatsapp::Polls::FinishMultipleQuestionService::NOTHING_CHOSEN
+        return outcome
+      end
+
+      send_bot_line(::Whatsapp.copy("whatsapp.bot.poll.nothing_chosen"))
 
       advance_ballot
     end

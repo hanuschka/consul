@@ -108,14 +108,44 @@ class Whatsapp::Polls::AdvanceBallotService < ApplicationService
     def carry_on
       ::Whatsapp::AiAssistant::ContinueConversationService.call(
         conversation: @conversation,
-        note: ::Whatsapp::CompletionNotes.ballot_finished(poll: @poll)
+        note: ::Whatsapp::CompletionNotes.ballot_finished(poll: @poll, answers: answers)
       )
     end
 
+    # The fixed line carries the summary the assistant would have written, below it
+    # and out of the translation, which rewords only the bot's own line: the
+    # questions and answers are the poll's wording.
     def send_completed_line
-      ::Whatsapp::Send.locale_text(
-        account: @conversation.whatsapp_account,
+      account = @conversation.whatsapp_account
+      completed = ::Whatsapp::AiAssistant::BotCopyService.line(
+        account: account,
         body: ::Whatsapp.copy("whatsapp.bot.poll.completed", poll: @poll.name)
+      )
+      body = [completed, *answers.map { |entry| summary_block(entry) }].join("\n\n")
+
+      ::Whatsapp::Send.text(
+        account: account, body: body.truncate(::Whatsapp::MAX_TEXT_BODY_LENGTH)
+      )
+    end
+
+    def summary_block(entry)
+      answered =
+        if entry.map_points.positive?
+          ::Whatsapp.copy(
+            "whatsapp.bot.poll.summary_map_points",
+            count: entry.map_points,
+            locale: ::Whatsapp.locale_for(@conversation.whatsapp_account)
+          )
+        else
+          entry.answers.join(", ")
+        end
+
+      "*#{entry.question.title}*\n#{answered}"
+    end
+
+    def answers
+      @answers ||= ::Whatsapp::Polls::BallotSummaryQuery.call(
+        poll: @poll, user: @conversation.user
       )
     end
 end

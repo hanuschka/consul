@@ -655,8 +655,8 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     end
 
     # ── Typed ballot answers ────────────────────────────────────────────────
-    # What the two tools recording a typed ballot answer hand back. Shared because
-    # the ballot's record services answer both in the same three ways: false where
+    # What the tools recording a typed ballot answer hand back. Shared because the
+    # ballot's record services answer all of them in the same three ways: false where
     # the answer could not be taken, COMPLETED where it was the last one — said by
     # this turn, since a completion reached inside one is left to it
     # (Whatsapp::AiAssistant::ContinueConversationService) — and anything else
@@ -671,7 +671,9 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       if outcome == ::Whatsapp::Polls::AdvanceBallotService::COMPLETED
         return {
           completed: true,
-          status: ::Whatsapp::CompletionNotes.ballot_finished(poll: poll)
+          status: ::Whatsapp::CompletionNotes.ballot_finished(
+            poll: poll, answers: ::Whatsapp::Polls::BallotSummaryQuery.call(poll: poll, user: user)
+          )
         }
       end
 
@@ -679,6 +681,18 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
 
       halt("Handled: the ballot's next message has gone out and says where it stands, so " \
            "nothing further is owed here.")
+    end
+
+    # A typed ballot answer that records nothing ends here, so the question never
+    # comes back without a word about why. The sentence is the model's to write: it
+    # is the one that knows what it could not take from the message.
+    def ballot_ask_back_error(reason)
+      {
+        error: "#{reason} Nothing was recorded.",
+        hint: "Ask them back in one sentence: say what you could not take from their message, " \
+              "that the question is still open, and how to answer it — tap an option in the " \
+              "list, or type its number or its wording."
+      }
     end
 
     def no_ballot_question_error

@@ -27,16 +27,46 @@ module Whatsapp::CompletionNotes
   CONTINUATION = "Confirm that in one line of your own and carry the conversation on from " \
                  "it rather than closing it off: #{ONWARD}".freeze
 
+  # A finished ballot is confirmed with what was answered rather than in one line,
+  # because asked a message at a time the answers have never been in front of the
+  # citizen together. The answers keep the poll's wording for the reason the ballot
+  # does: a summary in a paraphrase is a summary of something nobody answered.
+  SUMMARY_CONTINUATION = "Confirm that with a short summary of these answers — each " \
+                         "question cut to a few words, each answer in the poll's own " \
+                         "wording as above — and carry the conversation on from it rather " \
+                         "than closing it off: #{ONWARD}".freeze
+
   module_function
 
   # The poll is named because the citizen answered questions rather than "a vote", and
   # the phase it belongs to is what the state section of the prompt still points at: the
   # ballot's markers are dropped on completion but the projekt phase is not, so the
   # assistant knows where the citizen is standing.
-  def ballot_finished(poll:)
-    "The citizen has just answered the last question of the vote \"#{poll.name}\" and every " \
-      "answer of theirs is recorded. There is nothing left to ask them in it. They can still " \
-      "change their answers on the ballot page until it closes. #{CONTINUATION}"
+  #
+  # `answers` are Whatsapp::Polls::BallotSummaryQuery entries, listed for the summary
+  # the citizen is confirmed with.
+  def ballot_finished(poll:, answers:)
+    finished = "The citizen has just answered the last question of the vote " \
+               "\"#{poll.name}\" and every answer of theirs is recorded. There is nothing " \
+               "left to ask them in it. They can still change their answers on the ballot " \
+               "page until it closes."
+
+    return "#{finished} #{CONTINUATION}" if answers.empty?
+
+    "#{finished} Their answers, in the order they were asked:\n" \
+      "#{answers.map { |entry| ballot_answer_line(entry) }.join("\n")}\n" \
+      "#{SUMMARY_CONTINUATION}"
+  end
+
+  def ballot_answer_line(entry)
+    answered =
+      if entry.map_points.positive?
+        "#{entry.map_points} place(s) marked on the map"
+      else
+        entry.answers.map { |answer| "\"#{answer}\"" }.join(", ")
+      end
+
+    "- \"#{entry.question.title}\": #{answered}"
   end
 
   # The vote is named the same way and for the same reason, but this is not a completion

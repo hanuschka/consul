@@ -306,6 +306,42 @@ describe Whatsapp::Inbound::ProcessMessageService do
       expect(Whatsapp::AiAssistant::RouterService).not_to have_received(:call)
       expect(Whatsapp::Send).to have_received(:recovery)
     end
+
+    # "Entwurf verwerfen" tapped as the answer to leaving the draft for an idea in
+    # another projekt: the reply carries on with that idea instead of ending on
+    # "abgebrochen" and having the citizen write it again.
+    context "when the draft is left for a contribution to another projekt" do
+      let(:unsaved_submission) { true }
+
+      let(:other_projekt) { double(:projekt) }
+
+      let(:other_phase) { double(:projekt_phase, id: 42, projekt: other_projekt) }
+
+      before do
+        allow(conversation).to receive_messages(
+          draft_resource: nil,
+          draft_data: { "title" => "Mehr Bänke" },
+          projekt_phase: nil,
+          parked_projekt_phase: other_phase,
+          parked_submission_text: "Trinkbrunnen am Skaterpark"
+        )
+        allow(Whatsapp::ProjektLink).to receive(:title).with(other_projekt).and_return("Jugendbeteiligung")
+      end
+
+      it "discards the draft" do
+        process(cancel_tap)
+
+        expect(conversation).to have_received(:discard_draft!)
+      end
+
+      it "has the assistant carry on with the idea they asked for" do
+        process(cancel_tap)
+
+        expect(routed_notes.last).to include("start_draft with projekt_phase_id 42")
+        expect(routed_notes.last).to include("\"Trinkbrunnen am Skaterpark\"")
+        expect(routed_notes.last).to include(Whatsapp::DiscardNotes::PARKED_REPLY)
+      end
+    end
   end
 
   # The state pills under a reply about one proposal (Whatsapp::StatePills): the tap

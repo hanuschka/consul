@@ -9,8 +9,8 @@ describe MunicipalPlans::OverviewMapComponent, type: :component do
   let(:markers) { { type: "FeatureCollection", features: [] } }
   let(:bounds) { { south: 50.88, west: 11.50, north: 50.97, east: 11.66 } }
   let(:overview_map) do
-    instance_double(MunicipalPlans::OverviewMapService, show?: true, bounds: bounds, areas: areas,
-                                                        markers: markers)
+    instance_double(MunicipalPlans::OverviewMapService, show?: true, bounds: bounds, center: nil,
+                                                        areas: areas, markers: markers)
   end
 
   def render_map

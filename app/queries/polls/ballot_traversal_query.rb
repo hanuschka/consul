@@ -241,6 +241,15 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     first_owed.blank?
   end
 
+  # Every question on this citizen's path still without a full answer, in the order
+  # they are asked. Blind to the conversation's markers for the reason #nothing_owed?
+  # is: a question they skipped is still owed, and listed here.
+  def owed_questions
+    return [] if @user.blank?
+
+    expanded_path.reject { |question| answered?(question) }
+  end
+
   # How many questions the ballot holds, for the line that tells a citizen how much
   # of it is left. Counted over the whole sequence rather than the path, and in slots
   # — a template's set of contexted clones is one, since exactly one of them is ever
@@ -251,6 +260,19 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     @total ||= expanded_sequence
       .map { |question| question.contexted_clone_of_poll_question_id || question.id }
       .uniq.size
+  end
+
+  # Every question this citizen is asked, in the order they are asked it — the path
+  # with each bundle's sub-questions after their heading, which is how a chat walks
+  # it one message at a time.
+  def expanded_path
+    @expanded_path ||= expanded(path)
+  end
+
+  # How many points this citizen has placed on a map question, read from the one
+  # count the walk already holds for the whole ballot.
+  def map_points_placed(question)
+    map_point_counts.fetch(question.id, 0)
   end
 
   private
@@ -289,10 +311,6 @@ class Polls::BallotTraversalQuery < ApplicationQuery
         .select { |question| asks_something?(question) }
     end
 
-    def expanded_path
-      @expanded_path ||= expanded(path)
-    end
-
     def expanded_sequence
       @expanded_sequence ||= expanded(sequence)
     end
@@ -316,10 +334,6 @@ class Polls::BallotTraversalQuery < ApplicationQuery
       return map_points_placed(question) >= question.max_map_points if question.map_points?
 
       chosen_options(question).any?
-    end
-
-    def map_points_placed(question)
-      map_point_counts.fetch(question.id, 0)
     end
 
     # One query for every map question of the ballot, keyed the way #answered_titles

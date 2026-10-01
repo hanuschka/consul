@@ -31,4 +31,11 @@ class Current < ActiveSupport::CurrentAttributes
   # rather than an argument because the readers sit three calls below every tool
   # that builds pills, and none of those calls has any other use for it.
   attribute :whatsapp_pill_records
+
+  # The one proposal or projekt the running WhatsApp turn is about — found by name,
+  # opened from a row, supported, published, followed — set by the tools and taps
+  # that surface it and read by Whatsapp::StatePills when the reply goes out. Here
+  # because a turn is one job, so the focus ends with it and the next message
+  # cannot inherit pills for something it is not about.
+  attribute :whatsapp_pill_focus
 end

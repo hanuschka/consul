@@ -113,7 +113,7 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
   end
 
   describe "once the citizen has confirmed the draft as it stands" do
-    let(:proposal) { instance_double(Proposal, is_a?: true, admin_accepted?: true) }
+    let(:proposal) { instance_double(Proposal, id: 77, is_a?: true, admin_accepted?: true) }
 
     before do
       allow(conversation).to receive(:confirmation_offered?).and_return(true)
@@ -151,8 +151,17 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       tool.execute
     end
 
+    # The reply after it carries the new proposal's state pills (Whatsapp::StatePills).
+    it "keeps the published proposal in focus for the reply" do
+      tool.execute
+
+      expect(Current.whatsapp_pill_focus).to eq(proposal_id: 77)
+    ensure
+      Current.reset
+    end
+
     context "when the phase holds contributions for review" do
-      let(:proposal) { instance_double(Proposal, is_a?: true, admin_accepted?: false) }
+      let(:proposal) { instance_double(Proposal, id: 77, is_a?: true, admin_accepted?: false) }
 
       before do
         allow(Whatsapp::DraftPreview).to receive(:awaiting_review_confirmation).and_return("held")

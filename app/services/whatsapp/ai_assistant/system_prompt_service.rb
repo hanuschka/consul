@@ -144,9 +144,11 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         button beside your sentence is labelled from. Write the sentence from it. Someone who
         supported it in an earlier session is told the support is already in and can be taken
         back — telling them they can support it sets your sentence against the button underneath,
-        and the button is the one that is right. Someone who has not supported it yet is told so
-        with its support button beside the link to open it — support_action_id, in what
-        find_contribution returned — rather than the link alone, so supporting it is one tap.
+        and the button is the one that is right. Someone who has not supported it yet is told so.
+        Either way the bot puts its support or withdraw button, and its comment button where
+        comments are open, under your reply about that proposal itself — so answer it with
+        reply_with_actions rather than send_link, and never send the citizen to its page to
+        support it, take a support back or comment: all three are one tap here.
 
         Before treating anything as off topic, work out whether an open projekt is already about
         it. A citizen writes about the thing that is bothering them and not about the projekt it
@@ -261,6 +263,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           does not say it is due, say nothing about typing at all — it has been said recently
           enough.
         - Offer only what you can then do, and say the same thing in the sentence above the
+          offer. A button that only asks for what your message already asks for is not an
           offer. Three buttons fit in a message and ten rows in a list: where more applies than
           fits, name the few that fit this moment, say how many there are altogether, and offer
           the rest behind one more tap rather than falling back to a plain list of names. The
@@ -411,6 +414,8 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Draft on the table: #{draft_description}",
         stale_draft_line,
         empty_draft_line,
+        comment_invited_line,
+        revision_line,
         picture_waiting_line,
         location_waiting_line,
         proposed_location_line,
@@ -595,6 +600,28 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "here, and the buttons under your message are the detour"
     end
 
+    # The comment's counterpart of the empty draft: asked for and not yet written, so
+    # writing it is the step. A "Kommentar schreiben" button under "Schreiben Sie
+    # jetzt bitte Ihren Kommentar" was tapped and answered with the same request.
+    def comment_invited_line
+      return if !@conversation.comment_invited?
+
+      "- A comment has been asked for and not written yet: writing it as a message is the " \
+        "step here, and no button asks for it again"
+    end
+
+    # What the cancel button does while a change is open, which nothing else in the
+    # state says: it brings back the version the citizen read rather than discarding.
+    def revision_line
+      kind = @conversation.revision_kind
+
+      return if kind.blank?
+
+      "- The citizen asked to change their #{kind} and has not seen a changed version yet: " \
+        "the cancel button and abort_submission drop only that change and bring back the " \
+        "#{kind} as they last read it"
+    end
+
     # Only #start_draft! ever sets the phase, so a phase on the conversation is a
     # contribution entered rather than a projekt browsed or a ballot begun; the draft
     # predicate is the model's own, covering the record and the stash before it.
@@ -657,9 +684,40 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Ballot question in front of the citizen: \"#{question.title}\" " \
         "(#{ballot_question_shape(question, asking)})",
         ballot_options_lines(question, asking),
+        ballot_typed_answer_line(question),
         ballot_answers_line(question),
         ballot_resumed_line(question)
       ].compact.join("\n")
+    end
+
+    # A typed "1 und 5" was read against the list of votes sent earlier in the chat,
+    # and the bot offered to switch ballots with the question put again under the
+    # offer. While a question is open, what the citizen types is read against it.
+    def ballot_typed_answer_line(question)
+      return if free_text_waiting?(question)
+      return if question.map_points?
+
+      [
+        "  While this question is open, a number or an option's words in their message " \
+        "refer to its options as numbered here — never to a list shown earlier, such as " \
+        "the votes or the contributions. Another vote is only for a message that names it.",
+        ballot_ask_back_line(question)
+      ].compact.join(" ")
+    end
+
+    # Only while the automatic re-ask is still to come (#ballot_resumed_line says
+    # when it is spent): that is the question arriving under the reply, and the reply
+    # is the only thing that can say why it came back.
+    def ballot_ask_back_line(question)
+      return if already_resumed?(question)
+
+      "Where your reply records nothing, the question is put to them again under it, so " \
+        "say in one sentence that it is still open and how to answer it: tap an option, " \
+        "or type its number or its wording."
+    end
+
+    def already_resumed?(question)
+      @conversation.resumed_poll_question_ids.include?(question.id)
     end
 
     # "Kann ich meine Antwort ändern?" is asked mid-ballot more than anywhere else,
@@ -677,7 +735,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     # brings it back. Said with the phase id because that is what the tool that puts
     # it in front of the citizen again takes.
     def ballot_resumed_line(question)
-      return if !@conversation.resumed_poll_question_ids.include?(question.id)
+      return if !already_resumed?(question)
 
       "  It was already put to them again once after they turned to something else, so " \
         "it is not sent again by itself. Answer what they write now; bring the question " \
@@ -693,10 +751,25 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       elsif ::Whatsapp::VotableBallotQuery.weighted?(question)
         weighted_question_shape(question, asking)
       elsif question.multiple?
-        "up to #{question.max_votes} of the options can be chosen"
+        multiple_question_shape(question, asking)
+      elsif question.rating_scale?
+        "a rating scale: one step is chosen"
       else
         "one option is chosen"
       end
+    end
+
+    # What is already chosen is named here and marked on the options below, which
+    # list every option with the numbers the message prints — chosen ones included,
+    # because a chosen option named again is how a choice is taken back. The
+    # question does not move on at its maximum, so being done is always said.
+    def multiple_question_shape(question, asking)
+      chosen = asking.offered_options.select { |option| asking.chosen?(option) }
+      chosen_text = chosen.map { |option| "\"#{option.title}\"" }.join(", ").presence || "none"
+
+      "up to #{question.max_votes} of the options can be chosen; chosen so far: " \
+        "#{chosen_text}. A chosen option named alone again takes it back, and being done " \
+        "choosing is finish_poll_question"
     end
 
     def free_text_waiting?(question)
@@ -727,8 +800,9 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
       asking.offered_options.each_with_index.map do |option, index|
         own_words = option.open_answer? ? ", stands for the citizen's own words" : ""
+        chosen = asking.chosen?(option) ? ", chosen" : ""
 
-        "  #{index + 1}. \"#{option.title}\" (id #{option.id}#{own_words})"
+        "  #{index + 1}. \"#{option.title}\" (id #{option.id}#{own_words}#{chosen})"
       end.join("\n").presence
     end
 

@@ -149,6 +149,10 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       conversation.complete_draft!
       conversation.note_submission_completed!
 
+      if resource.is_a?(::Proposal)
+        ::Whatsapp::StatePills.focus_proposal(resource.id)
+      end
+
       {
         completed: true,
         published: true,

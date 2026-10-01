@@ -92,6 +92,7 @@ de:
       # Nur noch der Ersatz, wenn der Assistent nicht antworten kann: Sonst sagt er
       # selbst, was verworfen wurde, und bietet den nächsten Schritt an.
       cancelled: Alles klar, das ist verworfen. Sie können gleich mit etwas anderem weitermachen.
+      change_reverted: Alles klar, die Änderung ist verworfen. Ihr Text ist wieder so wie zuvor.
       opted_in: Sie erhalten wieder Nachrichten von uns.
       # Die Antwort auf „Hilfe“: muss auf einen Handybildschirm passen. Die
       # Kontaktzeile wird nur angehängt, wenn die Einstellungen einen Kontakt führen.
@@ -260,21 +261,43 @@ de:
         # Fortschrittsbalken; im Chat kommt jede Frage als eigene Nachricht, und ohne
         # diese Zeile ist die Länge des Stimmzettels nicht zu erkennen.
         progress: "Frage %{number} von %{total}"
+        # Die eine Hinweiszeile einer Frage mit mehreren Antworten, solange noch nichts
+        # gewählt ist. Sie sagt zugleich, wo gewählt wird — eine zweite Zeile dafür las
+        # sich wie derselbe Satz zweimal.
         choices: >-
-          Sie können bis zu %{maximum} Antworten auswählen und die Auswahl danach
-          abschließen.
+          Wählen Sie unten bis zu %{maximum} Antworten aus und schließen Sie die Auswahl
+          dann ab.
+        # Dieselbe Zeile, sobald etwas gewählt ist: gewählte Antworten bleiben mit ✓ in
+        # der Liste, und ein erneutes Antippen wählt sie wieder ab.
+        choices_selected: >-
+          %{chosen} von höchstens %{maximum} Antworten ausgewählt. Tippen Sie eine Antwort
+          mit ✓ noch einmal an, um sie abzuwählen, oder schließen Sie die Auswahl ab.
+        # Am Höchstwert geht die Frage nicht mehr von selbst weiter. Diese Zeile bestätigt,
+        # dass die letzte Wahl gezählt hat, und sagt, wie es weitergeht.
+        maximum_selected: >-
+          Sie haben %{maximum} Antworten ausgewählt, mehr sind hier nicht möglich. Schließen
+          Sie die Auswahl ab, oder tippen Sie eine Antwort mit ✓ an, um sie abzuwählen.
         # Wo die Antwort gegeben wird. Passt eine Frage nicht auf drei Schaltflächen,
         # legt WhatsApp die Antworten hinter eine Auswahl, die erst geöffnet werden
         # muss — die Antworten stehen dann im Text, und diese Zeile sagt, wo getippt
         # wird.
         options_hint: "Ihre Antwort wählen Sie unten aus."
         open_prompt: "Bitte schreiben Sie Ihre Antwort als Nachricht."
-        maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Antworten möglich."
+        maximum_reached: >-
+          Bei dieser Frage sind höchstens %{maximum} Antworten möglich. Für eine andere
+          tippen Sie zuerst eine Antwort mit ✓ an, um sie abzuwählen.
         # Was die beiden Enden einer Skala bedeuten. Auf der Seite steht die Beschriftung
         # links und rechts neben der Reihe der Stufen; im Chat kommen die Stufen als
         # Spalte, an der nichts links oder rechts steht — also darüber. Die Beschriftungen
         # selbst sind die Formulierung des Portals und werden nicht übersetzt.
         scale: "Von „%{minimum}“ bis „%{maximum}“."
+        # Für eine Skala ohne Beschriftung im Portal: welches Ende welches ist, steht
+        # sonst nirgends. Die Stufen selbst sind die Werte des Portals.
+        scale_steps: "%{lowest} ist der niedrigste Wert, %{highest} der höchste."
+        # Unter der ersten und der letzten Stufe in der Auswahlliste, wenn das Portal
+        # keine Beschriftung gesetzt hat.
+        scale_lowest: "niedrigster Wert"
+        scale_highest: "höchster Wert"
         weight_prompt: >-
           Wie viel Gewicht soll diese Antwort bekommen? Möglich sind 0 bis %{maximum}.
         weight_maximum_reached: >-
@@ -293,6 +316,27 @@ de:
           Bitte senden Sie einen Ort innerhalb des Gebiets.
         location_maximum_reached: "Bei dieser Frage sind höchstens %{maximum} Orte möglich."
         completed: "Vielen Dank — Ihre Stimmen bei „%{poll}“ sind gezählt."
+        # Wenn jede Frage einer Abstimmung übersprungen wurde. Gespeichert ist nichts,
+        # also gibt es auch keinen Dank für Stimmen. %{date} ist das Ende der Abstimmung.
+        skipped:
+          until_date: >-
+            Sie haben alle Fragen bei „%{poll}“ übersprungen — es wurde nichts gespeichert.
+            Bis zum Ende der Abstimmung am %{date} können Sie noch abstimmen, hier im Chat
+            oder auf der Abstimmungsseite.
+          open_ended: >-
+            Sie haben alle Fragen bei „%{poll}“ übersprungen — es wurde nichts gespeichert.
+            Solange die Abstimmung läuft, können Sie noch abstimmen, hier im Chat oder auf
+            der Abstimmungsseite.
+        # Wenn ein Teil der Fragen beantwortet und der Rest übersprungen wurde.
+        partly_answered:
+          until_date: >-
+            Ihre Antworten bei „%{poll}“ sind gespeichert. Die übersprungenen Fragen können
+            Sie bis zum Ende der Abstimmung am %{date} noch beantworten, hier im Chat oder
+            auf der Abstimmungsseite.
+          open_ended: >-
+            Ihre Antworten bei „%{poll}“ sind gespeichert. Die übersprungenen Fragen können
+            Sie noch beantworten, solange die Abstimmung läuft, hier im Chat oder auf der
+            Abstimmungsseite.
         already_answered: >-
           Sie haben bei „%{poll}“ bereits abgestimmt. Ihre Antworten sind gespeichert. Bis zum
           Ende der Abstimmung können Sie sie auf der Abstimmungsseite ändern: %{url}
@@ -301,6 +345,25 @@ de:
         # gewählt hat. Sagt die Lesart, nicht das Ergebnis: die Stimme kann darunter
         # noch abgelehnt werden, und die Ablehnung sagt ihr eigenes Wort danach.
         typed_answer_read: "Ich habe Ihre Antwort als „%{answer}“ gelesen."
+        # Wenn eine geschriebene Antwort eine schon gewählte Antwort wieder abwählt.
+        typed_answer_withdrawn: "Ich habe „%{answer}“ wieder abgewählt."
+        # In der Zusammenfassung am Ende einer Abstimmung, für eine Frage nach Orten.
+        summary_map_points:
+          one: "1 Ort angegeben"
+          other: "%{count} Orte angegeben"
+        # In der Zusammenfassung, unter einer Frage, die übersprungen wurde.
+        summary_skipped: "Übersprungen"
+        # Vor der Frage, wenn „Fertig“ angetippt wurde, bevor eine Antwort gewählt war. Ohne
+        # diese Zeile kam die Frage einfach noch einmal, und das las sich wie ein Antippen,
+        # das der Bot nicht bemerkt hat.
+        nothing_chosen: >-
+          Bei dieser Frage haben Sie noch keine Antwort ausgewählt. Wählen Sie mindestens eine
+          aus, dann geht es weiter.
+        # Vor einer Frage, die nach einer gescheiterten Antwort des Assistenten noch einmal
+        # kommt. Sonst sagt dessen Antwort, warum die Frage noch einmal kommt.
+        question_again: >-
+          Diese Frage ist noch offen. Tippen Sie unten eine Antwort an oder schreiben Sie ihre
+          Nummer oder ihren Wortlaut.
         # Wenn eine laufende Abstimmung für eine andere verlassen wurde. Ohne diese Zeile
         # steht die Bürgerin plötzlich bei Frage 1 von etwas anderem.
         left_for_other: >-
@@ -335,6 +398,8 @@ de:
         # Die Abbrechen-Schaltfläche, benannt nach dem, was sie verwirft.
         cancel_draft: Entwurf verwerfen
         cancel_comment: Kommentar verwerfen
+        # Unter der Bitte um eine Änderung: nimmt nur die Änderung zurück.
+        cancel_change: Änderung verwerfen
         # Feste Beschriftungen für Schritte, die im Gespräch immer wieder vorkommen:
         # Vom Modell formuliert, hieß derselbe Schritt in einer Sitzung sechsmal anders.
         submit_proposal: Vorschlag erstellen
@@ -405,6 +470,11 @@ de:
         # which is why the fuller phrase lives on the message and not on the button.
         support: Jetzt unterstützen
         support_withdraw: Zurücknehmen
+        # Wie die Unterstützung von der Plattform unter jede Antwort zu einem Vorschlag
+        # gesetzt, wo Kommentare offen sind, und unter jede zu einem Projekt das Folgen.
+        comment_start: Kommentieren
+        follow_enable: Folgen
+        follow_disable: Nicht mehr folgen
         # Die beiden Schaltflächen, die etwas Unwiderrufliches auslösen: Ein Kommentar
         # steht danach unter dem Namen dieser Person auf einer öffentlichen Seite, ein
         # Beitrag ist eingereicht. Dass die Beschriftung das auch sagt, stand vorher

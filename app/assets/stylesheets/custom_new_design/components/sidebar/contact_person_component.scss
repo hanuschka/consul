@@ -1,0 +1,88 @@
+.custom-new-design {
+  .sidebar-contact-person {
+    overflow: hidden;
+    border-radius: 15px 15px 10px 10px;
+
+    .sidebar-contact-person--band {
+      aspect-ratio: 3.5;
+      background-color: var(--brand-color);
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .sidebar-contact-person--info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sidebar-contact-person--avatar {
+      background-color: #000;
+      border-radius: 100%;
+      width: 90px;
+      height: 90px;
+      margin-top: -48px;
+      border: 3px solid #fff;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .sidebar-contact-person--initials {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      color: #fff;
+      font-size: 32px;
+      text-align: center;
+    }
+
+    .sidebar-contact-person--name {
+      margin: 0;
+      padding: 0 16px;
+      color: #000;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .sidebar-contact-person--role {
+      margin: 0;
+      padding: 0 16px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .sidebar-contact-person--rows {
+      border-top: 1px solid $border-color;
+      width: 100%;
+      margin-top: 12px;
+      margin-bottom: 0;
+      padding: 18px 28px 25px 25px;
+    }
+
+    .sidebar-contact-person--row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: inherit;
+      font-weight: 700;
+
+      + .sidebar-contact-person--row {
+        margin-top: 6px;
+      }
+
+      dt,
+      dd {
+        margin: 0;
+        font-weight: inherit;
+      }
+
+      dd {
+        text-align: right;
+        overflow-wrap: anywhere;
+      }
+    }
+  }
+}

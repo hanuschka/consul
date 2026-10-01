@@ -1,5 +1,6 @@
 class ProjektImports::ExecuteImportJob < ApplicationJob
   queue_as :projekt_imports
+  self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
 
   BANNER_ASPECT_RATIO = "16:9".freeze
 

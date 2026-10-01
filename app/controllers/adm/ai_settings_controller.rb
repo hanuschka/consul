@@ -3,12 +3,14 @@ class Adm::AiSettingsController < Adm::BaseController
     :endpoint_without_custom_model?, :ai_feature_enabled?,
     :default_llm_model_in_use?, :effective_llm_model,
     :non_default_provider?, :default_api_key_in_use?,
-    :highlight_llm_model?, :highlight_api_key?
+    :highlight_llm_model?, :highlight_api_key?, :image_marking_unavailable?,
+    :image_marking_recovery_command
 
   def index
     authorize [:adm, Setting], :index?, policy_class: Adm::AiSettingPolicy
     @ai_settings = policy_scope(Setting, policy_scope_class: Adm::AiSettingPolicy::Scope)
       .where("key LIKE ?", "ai.%")
+      .where.not(key: ::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY)
       .order(:key)
     @evaluation_context_setting =
       @ai_settings.find { |setting| setting.key == Ai::EvaluationContext::SETTING_KEY }
@@ -123,6 +125,19 @@ class Adm::AiSettingsController < Adm::BaseController
       return false if custom_api_key_present?
 
       non_default_provider? || Setting["ai.llm_api_endpoint"].present?
+    end
+
+    # Generated pictures are marked by shelling out to exiftool, and marking is
+    # mandatory — a box that cannot reach the binary answers every generation
+    # with "it did not work" and puts the reason in the log only. Surfaced here
+    # rather than left to a Sentry event, because the people who notice
+    # generation failing are the ones on this page.
+    def image_marking_unavailable?
+      !::ExiftoolCommand.available?
+    end
+
+    def image_marking_recovery_command
+      ::ExiftoolCommand::RECOVERY_COMMAND
     end
 
     def changing_llm_provider?

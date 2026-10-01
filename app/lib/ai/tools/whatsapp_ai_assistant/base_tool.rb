@@ -1,0 +1,720 @@
+class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
+  # Written once for the five tools that page a capped list. The wording is the
+  # whole contract for how a citizen reaches row eleven, so five copies of it are
+  # five chances for one of them to describe a different offset.
+  FROM_DESCRIPTION = "Which #{::Whatsapp::ListWindow::ROWS} of the list to return: leave empty " \
+                     "for the first #{::Whatsapp::ListWindow::ROWS}, or pass the next_from a " \
+                     "previous call returned for the ones after those.".freeze
+
+  # How the rest of a paged list is reached, for the same tools. A list carries no
+  # buttons beside it, so the one place more_action_id fits there is a row — which
+  # is the row a page leaves free (Whatsapp::ListWindow::ROWS).
+  #
+  # The row-count rule is here rather than in each tool for the same reason: the
+  # tools that each described their own list sentence were the ones whose
+  # sentence said nine above four rows.
+  MORE_ROWS_HINT = "#{::Whatsapp::ListWindow::ROWS} at a time: where next_from is present " \
+                   "there are more — offer more_action_id as the last row of a list, or as a " \
+                   "button under a reply in text. Never say how many rows a list or reply " \
+                   "shows, or how many are on a later page: the citizen sees the rows, and a " \
+                   "number you give them is a total this result returns, said as the total " \
+                   "it is.".freeze
+
+  # Named in the "none of these can be offered" answer of the two tools whose set can
+  # actually be emptied by it. Without the reason spelled out the model reads the
+  # refusal as a bad id and offers the same pill again on the next turn, spending a
+  # second call on the same refusal.
+  UNOFFERABLE_RECOVERY_REASON = "a recovery button with nothing behind it — cancelling with " \
+                                "nothing written, trying again with no failed turn, or " \
+                                "reopening a login link that is not outstanding.".freeze
+
+  # The button budget, for every tool whose buttons carry labels the model writes.
+  # One wording because it warns about one refusal (#refuse_overlong_labels), and a
+  # description that left it out is how a label one character too long got written.
+  LABEL_BUDGET_DESCRIPTION = "Every label you write holds at most " \
+                             "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters " \
+                             "counting spaces. Count them: a longer one is refused, and nothing " \
+                             "is sent until it is shorter.".freeze
+
+  # The tool that shows each kind of Whatsapp::Conversation#unshown_preview_kind,
+  # named in the refusal below and in the router's retry of a plain-text answer.
+  PREVIEW_TOOLS = {
+    draft: "show_draft_for_confirmation",
+    comment: "show_comment_for_confirmation"
+  }.freeze
+
+  # For the tools that change something and send nothing of their own, where the
+  # model's reply is the whole confirmation. Written by the model in the call
+  # itself, so it exists before that reply does and is still there when the reply
+  # cannot be sent — the one moment it is shown. Merged into such a tool's
+  # properties and required, and taken off again in #call before #execute sees it.
+  COMPLETION_LINE_PARAMETER = {
+    completion_line: {
+      type: "string",
+      description: "One short sentence to the citizen, in the language and form of address of " \
+                   "your replies, confirming what this call changes once it has gone through — " \
+                   "for example that they now follow the projekt, named as they know it. It is " \
+                   "shown to them only if your reply after this call cannot be sent, so write a " \
+                   "plain confirmation: no question, no next step."
+    }
+  }.freeze
+
+  # `citizen_words` is the message the turn answers when the citizen wrote it —
+  # nil for a tap, a scan, a photo or a completion note. Passed apart from the
+  # note the model reads, for the tool that stores what they wrote as it arrived.
+  def initialize(conversation:, citizen_words: nil)
+    @conversation = conversation
+    @citizen_words = citizen_words
+  end
+
+  # RubyLLM derives the exposed name from the full class path, which would put
+  # the longer names in this namespace past the 64-character limit providers
+  # enforce on a function name.
+  def name
+    self.class.name.demodulize.underscore
+  end
+
+  # Both transports run a tool through here — RubyLLM's chat loop and
+  # OpenaiApi::ToolLoop alike — so this is the one place that sees what a call
+  # was made with and what it answered, which RouterService's tool_called line,
+  # written before the tool runs, never could.
+  #
+  # It is also where a completed action is noticed. A tool that has done something
+  # the citizen would want to know went through says so in the result the model
+  # reads — `completed: true` — and that same result is kept for the turn, so a turn
+  # that then fails to write its reply can tell the citizen it worked and hand the
+  # retry what the tool answered rather than the request that led to it. Where the
+  # model wrote a completion_line with the call, that line is kept beside the result
+  # as the confirmation the failed reply would have been.
+  def call(tool_call: nil, **arguments)
+    tool_arguments = arguments.reject { |key, _| completion_line_argument?(key) }
+    tool_result = super(tool_call: tool_call, **tool_arguments)
+
+    ::Whatsapp::AiAssistant::DecisionLog.record(
+      event: :tool_result,
+      conversation: conversation,
+      tool: name,
+      **::Whatsapp::AiAssistant::ToolCallDigest.arguments(arguments),
+      **::Whatsapp::AiAssistant::ToolCallDigest.result(tool_result)
+    )
+
+    if completed_action?(tool_result)
+      conversation.note_completed_tool_result!(
+        tool: name, result: tool_result, completion_line: completion_line_in(arguments)
+      )
+    end
+
+    tool_result
+  end
+
+  # Which step this tool leaves the conversation looking like, for the diagnostic
+  # column and nothing else — no tool reads it back, and the assistant decides
+  # what comes next from the state it is told rather than from this. Nil for the
+  # reads, which leave the conversation where they found it.
+  def diagnostic_step
+    nil
+  end
+
+  private
+
+    attr_reader :conversation, :citizen_words
+
+    def completed_action?(tool_result)
+      tool_result.is_a?(Hash) && tool_result[:completed] == true
+    end
+
+    # Matched by name whatever the key type: RubyLLM passes symbols, and
+    # OpenaiApi::ToolLoop splats the parsed JSON with its string keys.
+    def completion_line_argument?(key)
+      COMPLETION_LINE_PARAMETER.key?(key.to_sym)
+    end
+
+    # Ended with a full stop where the model left it off, because the fallback line
+    # carries on with a sentence of its own right after it.
+    def completion_line_in(arguments)
+      line = arguments.find { |key, _| completion_line_argument?(key) }&.last.to_s.squish
+
+      return if line.blank?
+      return line if line.end_with?(".", "!", "…")
+
+      "#{line}."
+    end
+
+    # For the tools that have answered the citizen themselves. Each of them declares
+    # `requires_approval`, which is what makes the router run it on its own and look
+    # at what came back before the model is asked anything else (see
+    # Whatsapp::AiAssistant::RouterService#run_approved_tools).
+    def halt(content)
+      ::ToolHalt.new(content)
+    end
+
+    def account
+      conversation.whatsapp_account
+    end
+
+    def user
+      account.user
+    end
+
+    def projekt_phase
+      conversation.projekt_phase
+    end
+
+    def draft_resource
+      conversation.draft_resource
+    end
+
+    # Checked one phase at a time rather than by searching the ten-row display
+    # list: an eleventh open phase is still open, and a model that guessed an id
+    # is stopped by the eligibility rule itself, not by the list's length.
+    def eligible_phase(projekt_phase_id)
+      candidate =
+        ::ProjektPhase.includes(:settings, projekt: :page).find_by(id: projekt_phase_id.to_i)
+
+      return if !::Whatsapp::EligiblePhasesQuery.eligible?(candidate)
+
+      candidate
+    end
+
+    # Everything open, so a projekt a citizen names is still found when it sits
+    # past the row a list would stop at. Which of the two a tool wants is the
+    # difference between "what can I show" and "what is there".
+    def all_open_projekt_phases
+      @all_open_projekt_phases ||= ::Whatsapp::EligiblePhasesQuery.uncapped
+    end
+
+    def open_projekt_phases(from: 0)
+      ::Whatsapp::ListWindow.page(all_open_projekt_phases, from: from)
+    end
+
+    # How many phases the bot could take a submission into, per projekt. Grouped
+    # off the pass above rather than asked per projekt, because every tool that
+    # lists projekts has to say which of them can be contributed to and asking
+    # that a row at a time is the most expensive question the bot asks, ten times
+    # over for one message.
+    def open_phase_counts
+      @open_phase_counts ||=
+        all_open_projekt_phases.each_with_object(Hash.new(0)) do |projekt_phase, counts|
+          counts[projekt_phase.projekt_id] += 1
+        end
+    end
+
+    # The phase whose projekt the citizen named, resolved against everything open
+    # rather than against the listed rows. Matching is
+    # Whatsapp::ProjektByNameQuery's — exact wins, a partial only when it is the
+    # single one — so an ambiguous name resolves to nothing and is asked about
+    # rather than guessed at.
+    def named_open_phase(projekt_name)
+      projekt = ::Whatsapp::ProjektByNameQuery.call(
+        term: projekt_name, candidates: all_open_projekt_phases.map(&:projekt)
+      )
+
+      return if projekt.blank?
+
+      all_open_projekt_phases.find { |phase| phase.projekt_id == projekt.id }
+    end
+
+    # That the citizen has now been told a question can simply be typed. Called by
+    # the tools whose message presents a projekt or a phase — the card, a list of
+    # projekts or phases, and a reply whose pills offer one.
+    #
+    # Only where the hint was due, because that is the only turn the prompt asked
+    # for one: stamping on every card would push the cooldown forward for a
+    # sentence that was never written.
+    #
+    # The line itself is the model's, so what this records is that it was asked
+    # for rather than that it arrived. A turn where it was due and the model left
+    # it out costs the citizen one cooldown's wait for the next offer, which is
+    # the harmless direction for this to be wrong in — the alternative is reading
+    # the model's own sentence back in a language Ruby does not know it is in.
+    def note_typing_hint_offered!
+      return if !conversation.typing_hint_due?
+
+      conversation.stamp_typing_hint!
+    end
+
+    def projekt_title(projekt)
+      ::Whatsapp::ProjektLink.title(projekt)
+    end
+
+    # What a phase is for, in the portal's words and cut to a line. Handed over with
+    # its dates wherever phases are listed, because a projekt may run three phases
+    # all called "Vorschläge", and a model with nothing but the name to go on tells
+    # them apart by numbering them.
+    def phase_about(projekt_phase)
+      ::Whatsapp.plain_text(projekt_phase.description, length: PHASE_ABOUT_LENGTH).presence
+    end
+
+    PHASE_ABOUT_LENGTH = 160
+
+    def projekt_url(projekt)
+      ::Whatsapp::ProjektLink.url(projekt)
+    end
+
+    # Resolved by name rather than by phase id, because what the read tools are
+    # asked about is routinely a projekt that has finished: it has no open phase,
+    # so no listing tool could have handed the model an id for it first.
+    def readable_projekt(projekt_name)
+      ::Whatsapp::ProjektByNameQuery.readable(term: projekt_name)
+    end
+
+    # The three-way answer every read tool with an optional projekt owes: nothing
+    # named is the whole portal, a name that resolves is that projekt, and a name
+    # that does not is an error the model can act on. Without the third case a
+    # misheard name would be answered portal-wide, which reads as an answer about
+    # the projekt the citizen asked after.
+    def for_named_projekt(projekt_name)
+      return yield(nil) if projekt_name.blank?
+
+      projekt = readable_projekt(projekt_name)
+
+      return unknown_projekt_error(projekt_name) if projekt.blank?
+
+      yield(projekt)
+    end
+
+    # The pills under a statement the model may not word — what unlinking does, what
+    # accepting the terms accepts. The platform's pill comes first and is built
+    # here, not filtered out of what the model passed: it is unofferable through the
+    # ordinary path, so a model naming it would have its pill dropped and the citizen
+    # would read the statement under a question with no way to say yes.
+    def buttons_under_statement(action:, title:, buttons:)
+      platform = ::Whatsapp::AssistantActions.platform_button(
+        action: action, title: title, conversation: conversation
+      )
+
+      distinct_buttons([platform, *written_buttons(buttons)])
+    end
+
+    # The pills under a preview: every one the model may offer anywhere, plus the
+    # one that acts on what the preview just showed where `confirms` names it.
+    def preview_buttons(buttons, confirms:)
+      built = with_pill_records(buttons) do
+        Array(buttons).filter_map do |button|
+          ::Whatsapp::AssistantActions.confirmation_button(
+            spec: button_value(button, "action_id"),
+            label: button_value(button, "label"),
+            conversation: conversation,
+            confirms: confirms
+          )
+        end
+      end
+
+      distinct_buttons(built)
+    end
+
+    def written_buttons(buttons)
+      with_pill_records(buttons) do
+        Array(buttons).filter_map do |button|
+          ::Whatsapp::AssistantActions.offered_button(
+            spec: button_value(button, "action_id"),
+            label: button_value(button, "label"),
+            conversation: conversation
+          )
+        end
+      end
+    end
+
+    # The records every pill of this message points at, read in one pass before
+    # the pills are built (Whatsapp::AssistantActions.with_records_preloaded).
+    def with_pill_records(buttons, &block)
+      specs = Array(buttons).map { |button| button_value(button, "action_id") }
+
+      ::Whatsapp::AssistantActions.with_records_preloaded(
+        specs, conversation: conversation, &block
+      )
+    end
+
+    # Deduplicated twice over, and both are silent-failure prevention rather than
+    # policy. WhatsApp refuses the whole message when two buttons share an id, so
+    # a repeat would cost the reply rather than the button. Two buttons sharing a
+    # *label* are accepted by WhatsApp and indistinguishable to the citizen, which
+    # is worse: one of the two gets tapped by accident.
+    def distinct_buttons(buttons)
+      buttons
+        .uniq { |button| button[:id] }
+        .uniq { |button| button[:title].downcase }
+        .first(::Whatsapp::MAX_BUTTONS)
+    end
+
+    # Providers disagree on whether an object array arrives with string or symbol
+    # keys, and a missing label is a legitimate value here rather than an error, so
+    # neither shape may raise.
+    def button_value(button, key)
+      return if !button.is_a?(Hash)
+
+      button[key] || button[key.to_sym]
+    end
+
+    # ── Refusals ────────────────────────────────────────────────────────────
+    # These reach the model, not the citizen, so one wording per rule matters
+    # more than it looks: three phrasings of "this number is not linked" is three
+    # chances for it to treat them as three different situations. Each says what
+    # is wrong and what would fix it, because the model's next move is a sentence
+    # to the citizen and it has nothing else to write it from.
+
+    # A label the model wrote that would arrive cut. Refused rather than cut: a cut
+    # label is a fragment ("Allgemein vorschlag…") under a sentence asking the
+    # citizen to tap it, and only the model can say the same in fewer words. Checked
+    # before anything is sent, so the retry is the same call with shorter words
+    # rather than a second message.
+    def refuse_overlong_button_labels(
+      buttons, length: ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH
+    )
+      labels = Array(buttons).filter_map do |button|
+        next if !::Whatsapp::AssistantActions.written_label?(button_value(button, "action_id"))
+
+        button_value(button, "label")
+      end
+
+      refuse_overlong_labels(labels, length: length)
+    end
+
+    def refuse_overlong_labels(labels, length: ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH)
+      overlong =
+        Array(labels)
+          .map { |label| label.to_s.squish }
+          .reject { |label| ::Whatsapp::AssistantActions.fits?(label, length) }
+
+      return if overlong.empty?
+
+      overlong_labels_error(overlong, length)
+    end
+
+    def overlong_labels_error(labels, length)
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :labels_too_long, conversation: conversation, labels: labels, length: length
+      )
+
+      counted = labels.map { |label| "\"#{label}\" (#{label.length})" }
+
+      {
+        error: "#{counted.join(", ")} #{labels.one? ? "is" : "are"} longer than the #{length} " \
+               "characters this label holds, spaces included, so nothing was sent.",
+        hint: "Say the same in fewer words — a shorter word or one word less, never a word cut " \
+              "off — and call this again with everything else unchanged."
+      }
+    end
+
+    def no_proposal_match_error(title)
+      {
+        error: "No publicly listed proposal matches \"#{title}\". Tell the citizen you could not " \
+               "find it and ask for the title as it appears on the projekt page."
+      }
+    end
+
+    # Its own wording rather than the one above: this search covered proposals and
+    # budget investments both, so naming proposals in the refusal would send the
+    # model asking after a kind of Beitrag that was already looked for.
+    def no_contribution_match_error(title)
+      {
+        error: "No publicly listed contribution matches \"#{title}\". Tell the citizen you could " \
+               "not find it and ask for the title as it appears on the projekt page."
+      }
+    end
+
+    # A message WhatsApp refused. It is recorded as a failed row and comes back
+    # like a delivered one, so a tool that halts on it ends the turn on
+    # something the citizen never saw — and the stored history then says the bot
+    # answered, which the next turn reads back as fact.
+    #
+    # Handed to the model rather than to the citizen because it is the model
+    # that can act on it: the body it wrote is the part that has to change, and
+    # it has one more call to say the same thing in less. A closed service
+    # window is not this case and never reaches here — nothing can be delivered
+    # until the citizen writes again, so there is nothing to retry.
+    def send_refused_error
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :send_refused, conversation: conversation, step: conversation.step
+      )
+
+      {
+        error: "WhatsApp refused that message, so the citizen has not seen it. The likeliest " \
+               "reason is length: a message with buttons holds " \
+               "#{::Whatsapp::MAX_INTERACTIVE_BODY_LENGTH} characters. Say the same thing in " \
+               "markedly fewer words and send it once more. Do not add anything to it, and do " \
+               "not tell the citizen a message failed."
+      }
+    end
+
+    # The order the retired step machine kept by sequence: a contribution written or
+    # changed in this turn is shown before anything else is said about it. Told to
+    # the model in every drafting tool's answer, and still followed by a message
+    # announcing a draft the citizen had not seen — eight of nine new drafts on one
+    # day — so the tools that would send that message refuse instead.
+    #
+    # Only the send is refused. What the preview says underneath and which choices
+    # sit beside it stay the model's; this decides no more than that the text comes
+    # first. Scoped to the turn by Whatsapp::Conversation#unshown_preview_kind, so a
+    # citizen asking something else later is answered rather than shown the draft
+    # again.
+    def refuse_before_preview
+      kind = conversation.unshown_preview_kind
+
+      return if kind.blank?
+
+      preview_required_error(kind)
+    end
+
+    def preview_required_error(kind)
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :preview_required, conversation: conversation, tool: name, kind: kind
+      )
+
+      {
+        error: "The citizen's #{kind} was written or changed in this turn and they have not " \
+               "seen it yet, so nothing else was sent.",
+        hint: "Call #{PREVIEW_TOOLS.fetch(kind)} now. Put what you meant to say here into its " \
+              "question, and the next steps you meant to offer into its buttons."
+      }
+    end
+
+    def unknown_phase_error
+      { error: "No open participation phase with that id. Call list_open_phases first." }
+    end
+
+    # Deliberately not a guess: the name query only answers when it is certain, so
+    # an ambiguous name is a question for the citizen rather than a projekt picked
+    # on their behalf.
+    #
+    # What nearly matched travels with the refusal. Without it the model's only
+    # move is to list the whole portal back at someone who named their projekt
+    # almost correctly — the names are already resolved and ranked by then.
+    def unknown_projekt_error(projekt_name = nil)
+      suggestions = ::Whatsapp::ProjektByNameQuery.suggestions(term: projekt_name.to_s)
+
+      return { error: NO_PROJEKT_ERROR } if suggestions.blank?
+
+      {
+        error: NO_PROJEKT_ERROR,
+        did_you_mean: suggestions,
+        hint: "Ask the citizen whether they meant one of did_you_mean, naming them. Do not act " \
+              "on one without their answer."
+      }
+    end
+
+    NO_PROJEKT_ERROR = "No single project matches that name. Call send_list with the projekts " \
+                       "so the citizen can pick one, or ask them to name it exactly.".freeze
+
+    def not_linked_error(action)
+      { error: "This number is not linked to an account, so it cannot #{action}. Tell the " \
+               "citizen an account is needed and call send_login_link when they want one." }
+    end
+
+    def no_proposal_error(verb)
+      { error: "This conversation is not about a specific proposal, so there is nothing to " \
+               "#{verb}. Ask which proposal they mean." }
+    end
+
+    # What Whatsapp::Contributions::CreateCommentService refused, for the tools that
+    # ask it before anything is posted: the one inviting the comment and the one
+    # writing it down.
+    def comment_refusal_error(reason)
+      return comment_gone_error if reason == :gone
+      return comment_closed_error if reason == :closed
+      return comment_blank_error if reason == :blank
+      return comment_confirmation_only_error if reason == :confirmation_only
+
+      not_linked_error("comment on a proposal")
+    end
+
+    def comment_gone_error
+      { error: "That proposal is not there any more, so there is nothing to comment on. Tell the " \
+               "citizen so; nothing was written down." }
+    end
+
+    def comment_closed_error
+      { error: "Comments are not open on that proposal. Tell the citizen plainly; nothing was " \
+               "written down." }
+    end
+
+    def comment_blank_error
+      { error: "There was no comment text. Ask the citizen what they want to say." }
+    end
+
+    # Refused rather than written down. A single word of agreement is the citizen
+    # answering a question, not their contribution to a public page, and their name
+    # would be under it.
+    def comment_confirmation_only_error
+      { error: "That is a yes or a no rather than a comment, so nothing was written down. Ask " \
+               "them for what they actually want to say on the page." }
+    end
+
+    # Two situations, and telling them apart matters more than it looks. A draft that
+    # has been written but not saved is waiting on something the phase requires, and
+    # there is no record for these tools to act on — but answering that with "there is
+    # no draft" sends the model back to draft_proposal, which regenerates from scratch
+    # and throws away the answers the citizen has already given.
+    def no_draft_error
+      return unsaved_draft_error if conversation.unsaved_submission?
+
+      { error: "There is no draft in this conversation. Ask the citizen what they want to " \
+               "contribute and call draft_proposal with their own words." }
+    end
+
+    def unsaved_draft_error
+      { error: "The draft is written but not saved yet, because something this phase requires is " \
+               "still outstanding — so there is no record to act on. Call draft_status for what " \
+               "is missing and record it. Do not call draft_proposal again: that would write a " \
+               "new draft and lose what the citizen has already answered." }
+    end
+
+    def no_phase_error
+      { error: "No participation phase has been chosen for this submission. Call " \
+               "list_open_phases and then start_draft before working on a draft." }
+    end
+
+    # The gate the retired step machine enforced by sequence and that now has to be
+    # enforced by every tool that would violate it. Terms and privacy acceptance is
+    # the same checkbox the web form collects, so it is a refusal rather than an
+    # instruction: a sentence in the prompt is something a model can talk itself
+    # past, and what is on the other side of this one is an unconsented submission
+    # published under a citizen's name.
+    def refuse_without_consent
+      return if account.terms_accepted?
+
+      {
+        error: "This citizen has not accepted the terms and the privacy policy, which is a legal " \
+               "requirement before anything may be submitted. Nothing can be drafted or " \
+               "published until they have.",
+        hint: "Ask them with request_terms_consent, which sends both links and the accept " \
+              "button. Do not write out the terms or the links yourself."
+      }
+    end
+
+    # Re-checked per action rather than once when the submission began: the same
+    # three tools can be minutes or days apart, and a phase that expires in
+    # between must stop an idea before it costs a draft and stop a draft before it
+    # becomes a proposal.
+    #
+    # Returns nil when the citizen may act. The reason travels with the refusal —
+    # it is the same symbol the web form's refusal reads — so the model can say
+    # which rule stopped them rather than that something did.
+    def refuse_if_not_permitted
+      return no_phase_error if projekt_phase.blank?
+
+      problem = ::Whatsapp::Drafting::ResourceCreationValidationService.call(
+        projekt_phase: projekt_phase,
+        user: ::Whatsapp::Drafting::SubmissionAuthorService.call(conversation: conversation)
+      )
+
+      return if problem.blank?
+
+      participation_refused_error(problem)
+    end
+
+    # What the two taxonomy tools answer with. Shared here rather than written twice
+    # because the two differ in nothing but the word: a second wording of "that
+    # option is not one this phase offers" is a second situation for the model to
+    # tell apart, and the pair would drift the first time one of them was edited.
+    def draft_choice_answer(outcome, kind)
+      return draft_choice_rejected(outcome.rejected, kind) if outcome.rejected?
+      return invalid_draft_error(outcome.errors) if outcome.invalid?
+      return draft_choice_incomplete(outcome.missing, kind) if outcome.missing?
+
+      {
+        recorded: kind,
+        draft_saved: true,
+        hint: "Nothing is outstanding. Show them the draft with show_draft_for_confirmation and " \
+              "ask there whether it can go in."
+      }
+    end
+
+    def draft_choice_incomplete(missing, kind)
+      {
+        recorded: kind,
+        still_needed: missing.to_s,
+        hint: "The draft still cannot be saved. Ask the citizen for the #{missing} too, offering " \
+              "the options draft_status returns."
+      }
+    end
+
+    def draft_choice_rejected(reason, kind)
+      return no_draft_error if reason == :no_draft
+
+      if reason == :not_collected
+        return {
+          error: "This phase does not collect a #{kind}, so there is nothing to record. Do not " \
+                 "ask the citizen about it."
+        }
+      end
+
+      {
+        error: "That is not a #{kind} this phase offers. Call draft_status for the options it " \
+               "really has and ask the citizen again — never guess an id."
+      }
+    end
+
+    def invalid_draft_error(errors)
+      {
+        error: "The portal refused to save the draft.",
+        reason: Array(errors).first.to_s,
+        hint: "Their own words are what has to change, so say what the problem is and ask them " \
+              "to put it differently. Retrying the same text fails identically."
+      }
+    end
+
+    # ── Typed ballot answers ────────────────────────────────────────────────
+    # What the tools recording a typed ballot answer hand back. Shared because the
+    # ballot's record services answer all of them in the same three ways: false where
+    # the answer could not be taken, one of the ENDINGS where it was the last one —
+    # said by this turn, since a completion reached inside one is left to it
+    # (Whatsapp::AiAssistant::ContinueConversationService) — and anything else
+    # where the ballot's next message has already gone out.
+    #
+    # The last answer is a completed action like any other: the vote is in and only
+    # the model's reply says so, so a turn that then fails must say it went through
+    # and replay this answer rather than the one that is no longer owed.
+    def ballot_answer_outcome(outcome, poll:)
+      return ballot_answer_refused_error if !outcome
+
+      if ::Whatsapp::Polls::AdvanceBallotService::ENDINGS.include?(outcome)
+        return {
+          completed: true,
+          status: ::Whatsapp::CompletionNotes.ballot_ended(
+            ::Whatsapp::Polls::BallotEndingQuery.call(poll: poll, user: user)
+          )
+        }
+      end
+
+      ::Current.whatsapp_ballot_message_sent_in_turn = true
+
+      halt("Handled: the ballot's next message has gone out and says where it stands, so " \
+           "nothing further is owed here.")
+    end
+
+    # A typed ballot answer that records nothing ends here, so the question never
+    # comes back without a word about why. The sentence is the model's to write: it
+    # is the one that knows what it could not take from the message.
+    def ballot_ask_back_error(reason)
+      {
+        error: "#{reason} Nothing was recorded.",
+        hint: "Ask them back in one sentence: say what you could not take from their message, " \
+              "that the question is still open, and how to answer it — tap an option in the " \
+              "list, or type its number or its wording."
+      }
+    end
+
+    def no_ballot_question_error
+      { error: "No ballot question is waiting for an answer in this conversation, so there is " \
+               "nothing to record. Answer what the citizen wrote." }
+    end
+
+    def ballot_answer_refused_error
+      {
+        error: "The answer could not be recorded: this vote is no longer open to this citizen " \
+               "here — it may have closed, or they may no longer take part in it.",
+        hint: "Say so plainly. Do not put the question to them again."
+      }
+    end
+
+    def participation_refused_error(reason)
+      {
+        error: "This citizen may not submit to this phase right now.",
+        reason: reason.to_s,
+        rule: ::Whatsapp::ParticipationRules.explain(
+          reason: reason, projekt_phase: projekt_phase
+        )
+      }.compact
+    end
+end

@@ -64,13 +64,13 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 DESC
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
                 description: <<~DESC
-                  If true, includes content blocks in response with HTML content organized by locale.
+                  If true, includes content blocks in response with HTML content organized by locale. Content blocks that are switched off or outside their visibility period are left out.
 
                   **Default:** false (excludes content blocks).
                 DESC
       parameter name: :include_text, in: :query, type: :boolean, required: false,
                 description: <<~DESC
-                  Includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position); pass include_text=false to omit them. Always included in the single projekt (show) response.
+                  Includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position); pass include_text=false to omit them. Always included in the single projekt (show) response. Content blocks that are switched off or outside their visibility period are left out.
 
                   **Default:** true (the fields are included).
                 DESC
@@ -90,7 +90,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 description: <<~DESC
                   Number of projekts per page when paginating. Only applies when page or per_page is provided.
 
-                  **Default:** 20.
+                  **Default:** 20. **Max:** 2000 (higher values are clamped).
                 DESC
       parameter name: :image_variant_versions, in: :query, type: :string, required: false,
                 description: <<~DESC
@@ -353,7 +353,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 DESC
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
                 description: <<~DESC
-                  If true, includes content blocks in response with all localized content blocks.
+                  If true, includes content blocks in response with all localized content blocks. Content blocks that are switched off or outside their visibility period are left out.
 
                   **Default:** false (excludes content blocks).
                 DESC

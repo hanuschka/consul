@@ -81,7 +81,7 @@ class ProjektEvaluations::GeneratePhaseShortSummary < ApplicationService
         .with_instructions(Ai::EvaluationContext.prepend_to(system_instructions, @projekt_phase))
         .ask(user_prompt)
 
-      response.content
+      ::Ai::StructuredOutput.content_of(response)
     end
 
     def output_schema

@@ -1,7 +1,7 @@
 <tr id="<%= dom_id(comment, :moderation) %>" class="kern-table__row">
   <th scope="row" class="kern-table__header" data-field="body"><%= truncate(comment.body, length: 100) %></th>
   <td class="kern-table__cell" data-field="projekt"><%= comment.projekt&.name %></td>
-  <td class="kern-table__cell" data-field="author"><%= comment.author.username %></td>
+  <td class="kern-table__cell" data-field="author"><%= comment.author&.username %></td>
   <td class="kern-table__cell" data-field="flags_count"><%= comment.flags_count %></td>
   <td class="kern-table__cell" data-field="status">
     <% status_key, badge_variant = moderation_status_badge(comment) %>

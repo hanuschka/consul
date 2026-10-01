@@ -1,0 +1,42 @@
+<div class="new-card main-content-card municipal-plan-block municipal-plan-participation">
+  <h2 class="municipal-plan-block--title"><%= t("custom.municipal_plans.show.participation") %></h2>
+
+  <div class="municipal-plan-participation--rows">
+    <% rows.each do |row| %>
+      <div class="municipal-plan-participation--row">
+        <div class="municipal-plan-participation--kind">
+          <h3 class="municipal-plan-participation--label"><%= t("custom.municipal_plans.show.participation_block.#{row[:key]}") %></h3>
+          <p class="municipal-plan-participation--status <%= row[:value] ? "-yes" : "-no" %>">
+            <% if row[:value] %>
+              <i class="fas fa-check-circle" aria-hidden="true"></i>
+              <%= t("custom.municipal_plans.show.participation_block.status_yes") %>
+            <% else %>
+              <i class="fas fa-minus-circle" aria-hidden="true"></i>
+              <%= t("custom.municipal_plans.show.participation_block.status_no") %>
+            <% end %>
+          </p>
+        </div>
+        <% if row[:reason].present? %>
+          <div class="municipal-plan-participation--reason"><%= helpers.auto_link_already_sanitized_html simple_format(row[:reason]) %></div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% projekts.each do |projekt| %>
+    <div class="municipal-plan-participation--projekt">
+      <p>
+        <i class="fas fa-comments" aria-hidden="true"></i>
+        <%= t("custom.municipal_plans.show.participation_block.projekt_text") %>
+        <% if several_projekts? %>
+          <strong><%= projekt.title %></strong>
+        <% end %>
+      </p>
+      <%= link_to helpers.page_path(projekt.page.slug), class: "button hollow municipal-plan-participation--button" do %>
+        <%= t("custom.municipal_plans.show.participation_block.projekt_button") %>
+        <span class="show-for-sr">: <%= projekt.title %></span>
+        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+      <% end %>
+    </div>
+  <% end %>
+</div>

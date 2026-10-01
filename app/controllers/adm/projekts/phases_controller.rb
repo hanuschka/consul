@@ -84,6 +84,32 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     ]
   end
 
+  # Matches for the further projekts selected on this phase are recorded when a
+  # contribution is published, so a projekt selected later leaves everything
+  # already published without them. This is the catch-up, enqueued rather than
+  # run inline: it costs one AI ranking per contribution.
+  #
+  # The status is committed here rather than in the worker, so the poller the
+  # button starts finds a run in progress even before the job is picked up.
+  def recheck_similar_contributions
+    authorize_phase(:update?)
+
+    @projekt_phase.update!(similar_search_recheck_status: :processing)
+
+    ::SimilarContributions::RecheckAdditionalProjektsJob.perform_later(@projekt_phase)
+
+    render json: { status: @projekt_phase.similar_search_recheck_status }
+  end
+
+  def similar_contributions_recheck_status
+    authorize_phase(:show?)
+
+    render json: {
+      status: @projekt_phase.similar_search_recheck_status || "idle",
+      finished_at: @projekt_phase.similar_search_recheck_finished_at&.iso8601
+    }
+  end
+
   def toggle_active
     authorize_phase(:update?)
     @projekt_phase.update(active: !@projekt_phase.active)
@@ -158,7 +184,12 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @pagy, @proposals = pagy(base_scope.preload(:author, image: { attachment_attachment: :blob }))
+        @pagy, @proposals = pagy(
+          base_scope.preload(:author,
+                             { projekt_phase: [:settings, :projekt] },
+                             image: { attachment_attachment: :blob })
+        )
+        @similar_contributions_counts = ::SimilarContributions::StoredCounts.call(@proposals)
 
         @title_header_options = { search: true }
         @moderation_header_options = { filter_options: moderation_filter_options }
@@ -202,6 +233,20 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
                   filename: "comments-#{@projekt_phase.id}-#{Time.zone.today}.csv"
       end
     end
+  end
+
+  def whatsapp
+    authorize_phase(:update?)
+    @phase_token = ::Whatsapp::QrToken.for_projekt_phase(@projekt_phase)
+
+    @whatsapp_submissions_setting =
+      @projekt_phase.settings.find_by(key: "feature.general.whatsapp_submissions")
+
+    @breadcrumbs = [
+      { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+      { name: @projekt_phase.title },
+      { name: t(".title") }
+    ]
   end
 
   def ai_user_flow
@@ -303,7 +348,12 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @pagy, @investments = pagy(base_scope.preload(:author, image: { attachment_attachment: :blob }))
+        @pagy, @investments = pagy(
+          base_scope.preload(:author,
+                             { budget: { projekt_phase: [:settings, :projekt] } },
+                             image: { attachment_attachment: :blob })
+        )
+        @similar_contributions_counts = ::SimilarContributions::StoredCounts.call(@investments)
 
         boolean_filter_options = [[true, t("shared.true")], [false, t("shared.false")]]
 
@@ -814,7 +864,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     authorize_phase(:update?)
 
     @assistant_codename = @projekt_phase.voice_assistant_codename
-    @ai_settings = @projekt_phase.settings.where(key: "feature.form.voice_assistant")
+    @ai_settings = @projekt_phase.settings.where(key: ::ProjektPhaseSetting::AI_SETTINGS_TAB_KEYS)
 
     load_ai_assistant_config if InternalApiClient.active_dt?
 
@@ -1022,6 +1072,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         :lock_on,
         registered_address_district_ids: [], registered_address_street_ids: [],
         individual_group_value_ids: [], officing_manager_ids: [],
+        similar_search_projekt_ids: [],
         registered_address_grouping_restrictions: registered_address_grouping_restrictions_params
       )
     end

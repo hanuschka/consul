@@ -73,6 +73,22 @@ de:
         title: Funktionen
       form_author:
         title: Formular Autor
+        similar_search_projekts:
+          label: Frühere Projekte in die Ähnlichkeitsprüfung einbeziehen
+          description: "Legt fest, welche weiteren Projekte bei der Prüfung auf ähnliche Beiträge durchsucht werden. Die Treffer erscheinen nur in der Bearbeitungsansicht der Verwaltung, nicht im Frontend. Wählen Sie hier frühere Durchgänge aus, wenn Sie ein Verfahren jährlich wiederholen und nachvollziehen möchten, wie vergleichbare Beiträge damals beantwortet und bewertet wurden."
+          empty: Es sind keine weiteren veröffentlichten Projekte vorhanden.
+          recheck: Vorhandene Beiträge jetzt prüfen
+          recheck_confirm:
+            one: "%{count} vorhandener Beitrag wird gegen die ausgewählten Projekte geprüft. Das verursacht je Beitrag eine KI-Anfrage. Fortfahren?"
+            other: "%{count} vorhandene Beiträge werden gegen die ausgewählten Projekte geprüft. Das verursacht je Beitrag eine KI-Anfrage. Fortfahren?"
+          recheck_hint: Neue Beiträge werden beim Veröffentlichen automatisch gegen die ausgewählten Projekte geprüft. Für Beiträge, die vor der Auswahl eingereicht wurden, starten Sie die Prüfung hier.
+          recheck_running: Die Prüfung läuft. Die Treffer erscheinen nach und nach in der Bearbeitungsansicht.
+          recheck_failed: Die letzte Prüfung wurde abgebrochen. Sie können sie erneut starten.
+          recheck_last_run: "Zuletzt geprüft: %{time}"
+          filter_label: Projekte durchsuchen
+          filter_placeholder: Projekt suchen …
+          filter_no_matches: Kein Projekt passt zu Ihrer Suche.
+          selected_label: "Ausgewählt:"
       user_functions:
         title: Nutzerfunktionen
       proposals:

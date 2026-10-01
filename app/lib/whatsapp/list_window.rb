@@ -1,0 +1,79 @@
+module Whatsapp::ListWindow
+  # One page of a list the bot sends, and what it owes the model about the rest.
+  #
+  # Every list the bot can send is capped at ten offerable rows, and until now a capped list
+  # said nothing about what it cut: two of the tools reported a total beside their
+  # rows, the other three reported the rows alone, so on a portal with forty open
+  # phases the model answered "ten projekts are running" and had no way to know
+  # otherwise. Reporting the same four numbers from one place is what lets the
+  # reply say how many there are altogether and offer the rest behind one tap,
+  # rather than falling back to a plain list of names.
+  #
+  # Where the citizen is in the list travels through the conversation rather than
+  # through the tapped id: `show_more`'s parameter names *which* list, because a
+  # scope name is all the inbound side can safely resolve, and the offset is the
+  # `next_from` the model was handed with the page it just showed.
+  # What a page can actually show. Loading more than a list renders means the surplus
+  # record of every page is reported as shown, counted into the next offset, and
+  # never seen — one contribution, phase or poll silently lost per page in every
+  # scope below.
+  #
+  # One row short of a full list, because a list carries no buttons beside it and
+  # more_action_id has to go in as a row of its own. A page of ten plus that row
+  # was eleven for a list of ten: the model sent nine and still reported ten, and
+  # the tenth record of every page was never shown.
+  ROWS = ::Whatsapp::MAX_LIST_ROWS - 1
+
+  module_function
+
+  # A row offset from whatever the model passed. Clamped rather than validated: a
+  # negative or non-numeric `from` is the first page, which is the answer the
+  # citizen can read, where an error is a turn spent on arithmetic.
+  def offset(from)
+    [from.to_i, 0].max
+  end
+
+  # How many rows to load to answer a window that is filtered in Ruby afterwards.
+  # A query that selects rows after loading them cannot offset in SQL, so it loads
+  # up to the end of the window and drops the pages before it.
+  def limit_through(from)
+    offset(from) + ROWS
+  end
+
+  # The window itself, for the queries whose rows are decided in Ruby.
+  def page(rows, from:)
+    rows.drop(offset(from)).first(ROWS)
+  end
+
+  # What the tool reports beside its rows. `next_from` is present only when there
+  # is a page behind this one, so its absence is the model's signal that this is
+  # everything — and `more_action_id` is absent with it, because a pill offering
+  # rows that do not exist is one the citizen taps for nothing.
+  #
+  # `shown` goes into the arithmetic but not into the report. Handed over, it was
+  # quoted as "this list shows nine" above a list the model had cut to four rows,
+  # and as "all nine shown" under ten: a row count is a number the citizen checks
+  # on screen, and only the rows actually sent can make it true. `remaining` stays
+  # out for the same reason: it is the total less a full page, so under a page the
+  # model cut short it became "and five more" about rows that were never counted.
+  def report(scope:, from:, shown:, total:)
+    reached = offset(from) + shown
+    remaining = [total - reached, 0].max
+
+    {
+      total: total,
+      from: offset(from),
+      next_from: remaining.positive? ? reached : nil,
+      more_action_id: remaining.positive? ? more_action_id(scope) : nil
+    }.compact
+  end
+
+  # Built here rather than written into five tool descriptions, so a scope name
+  # that is not one cannot reach a citizen's screen as a pill: the id is composed
+  # from the same allowlist the inbound side checks it against.
+  def more_action_id(scope)
+    return if !::Whatsapp::FlowActions::MORE_SCOPES.include?(scope.to_s)
+
+    ::Whatsapp::FlowActions.id_for(action: :show_more, param: scope)
+  end
+end

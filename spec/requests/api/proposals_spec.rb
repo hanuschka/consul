@@ -23,7 +23,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       description "Retrieve all proposals submitted for a specific projekt phase. Proposals are citizen-initiated action items or projects proposed within a participation phase. Access filtering: public_data users automatically see only published (non-draft) and non-archived proposals. The for_public_render parameter is independent and can be used to apply additional filtering. Returns paginated results. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :sort, in: :query, type: :string, required: false, description: "Sort proposals by. Valid values: 'created_at' (**default**, oldest first), 'hot_score' (trending/most activity), 'confidence_score' (highest confidence first), 'relevance' (most voted first), 'archival_date' (most recently archived first)"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of proposals per page (**default:** 100, max: 500)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
       parameter name: :for_public_render, in: :query, type: :boolean, required: false, description: 'If true, returns only proposals that are publicly visible and ready for rendering on frontend (published, non-archived, non-retired). This filter is independent: public_data users will have discard_draft and discard_archived applied automatically, and can additionally use for_public_render to apply stricter filtering.'
 
       response '200', 'proposals found and returned' do
@@ -407,8 +407,8 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve a paginated list of all proposals across all projekt phases. Access filtering: public_data users automatically see only published (non-draft) and non-archived proposals. The for_public_render parameter is independent and can be used to apply additional filtering. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, description: 'Page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Items per page (**default:** 100)', required: false
+      parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
       parameter name: :for_public_render, in: :query, type: :boolean, required: false, description: 'If true, returns only proposals that are publicly visible and ready for rendering on frontend (published, non-archived, non-retired). This filter is independent: public_data users will have discard_draft and discard_archived applied automatically, and can additionally use for_public_render to apply stricter filtering.'
 
       response '200', 'proposals found' do

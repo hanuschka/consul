@@ -1,0 +1,96 @@
+<%= render "adm/whatsapp/page_header", key: "reach" %>
+
+<div class="kern-container my-3 adm-whatsapp-page">
+  <%= render "adm/whatsapp/page_description", key: "reach" %>
+
+  <% broadcasts = @reach_stats[:broadcasts] %>
+  <% conversations = @reach_stats[:conversations] %>
+
+  <section class="mb-5">
+    <h2 class="kern-heading-medium mb-1"><%= t("adm.whatsapp.reach.contacts_title") %></h2>
+    <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.reach.contacts_intro") %></p>
+
+    <%= render "adm/whatsapp/stat_grid", tiles: @reach_tiles[:contacts][:tiles] %>
+
+    <%= render "adm/whatsapp/stat_breakdown",
+      title: t("adm.whatsapp.reach.contacts_breakdown_title"),
+      rows: @reach_tiles[:contacts][:breakdown] %>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="kern-heading-medium mb-1"><%= t("adm.whatsapp.reach.activity_title") %></h2>
+    <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.reach.activity_intro") %></p>
+
+    <%= render "adm/whatsapp/stat_grid", tiles: @reach_tiles[:activity][:tiles] %>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="kern-heading-medium mb-1"><%= t("adm.whatsapp.reach.messages_title") %></h2>
+    <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.reach.messages_intro") %></p>
+
+    <%= render "adm/whatsapp/stat_grid", tiles: @reach_tiles[:messages][:tiles] %>
+
+    <% breakdown = @reach_tiles[:messages][:breakdown] %>
+    <% if breakdown.any? %>
+      <%= render "adm/whatsapp/stat_breakdown",
+        title: t("adm.whatsapp.reach.by_kind_title"),
+        rows: breakdown %>
+    <% end %>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="kern-heading-medium mb-1"><%= t("adm.whatsapp.reach.broadcasts_title") %></h2>
+    <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.reach.broadcasts_intro") %></p>
+
+    <% if broadcasts.any? %>
+      <div class="kern-table-responsive" tabindex="0">
+        <table class="kern-table">
+          <thead class="kern-table__head">
+            <tr class="kern-table__row">
+              <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.reach.projekt") %></th>
+              <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.reach.sent") %></th>
+              <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.reach.failed") %></th>
+              <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.reach.last_sent_at") %></th>
+            </tr>
+          </thead>
+
+          <tbody class="kern-table__body">
+            <% broadcasts.each do |row| %>
+              <tr class="kern-table__row">
+                <td class="kern-table__cell">
+                  <%= link_to row[:projekt_name],
+                    whatsapp_adm_projekts_projekt_path(row[:projekt_id]),
+                    class: "kern-link" %>
+                </td>
+                <td class="kern-table__cell"><%= number_with_delimiter(row[:sent]) %></td>
+                <td class="kern-table__cell">
+                  <% if row[:failed].positive? %>
+                    <span class="kern-badge kern-badge--danger">
+                      <span class="kern-label"><%= number_with_delimiter(row[:failed]) %></span>
+                    </span>
+                  <% else %>
+                    <%= row[:failed] %>
+                  <% end %>
+                </td>
+                <td class="kern-table__cell"><%= l(row[:last_sent_at], format: :short) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <%= empty_state(title: t("adm.whatsapp.reach.no_broadcasts"), icon: "campaign") %>
+    <% end %>
+  </section>
+
+  <section class="mb-5">
+    <h2 class="kern-heading-medium mb-1"><%= t("adm.whatsapp.reach.flows_title") %></h2>
+    <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.reach.flows_intro") %></p>
+
+    <% if conversations[:in_flight].positive? %>
+      <%= render "adm/whatsapp/stat_grid", tiles: @reach_tiles[:flows][:tiles] %>
+    <% else %>
+      <%= empty_state(title: t("adm.whatsapp.reach.no_flows"), icon: "forum") %>
+    <% end %>
+  </section>
+</div>

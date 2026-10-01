@@ -188,9 +188,11 @@ class Whatsapp::Conversation < ApplicationRecord
 
   # Entering a submission. The context is replaced rather than merged — a new
   # submission has settled nothing — except for the assistant's own stored
-  # history, which is the conversation and outlives any one draft in it.
+  # history, which is the conversation and outlives any one draft in it. A
+  # contribution held back for later goes too: this is it being taken up, or the
+  # citizen having moved on to another.
   def start_draft!(new_projekt_phase)
-    next_context = retained_context
+    next_context = retained_context.except("parked_submission")
 
     if new_projekt_phase&.id != projekt_phase_id
       next_context = next_context.merge(subject_change_stamp)
@@ -420,6 +422,7 @@ class Whatsapp::Conversation < ApplicationRecord
     note_start_over!
     clear_ballot!
     clear_submission_wish!
+    clear_parked_submission!
 
     if unsaved_work?
       close_step!("comment")
@@ -463,6 +466,48 @@ class Whatsapp::Conversation < ApplicationRecord
     end
 
     merge_context!(submission_wished_at: nil)
+  end
+
+  # ── A contribution asked for while another is open ──────────────────────
+  # A citizen part-way through a draft or a comment who asks to contribute
+  # somewhere is asked first whether to discard what they have, because StartDraft
+  # refuses until they say so. The idea they gave with the request used to go with
+  # the answer: the discard ended on "it is gone", and the idea had to be written
+  # again. Held here from the refusal, so the reply to the discard carries on with
+  # it (Whatsapp::DiscardNotes), and kept through the draft they chose to finish
+  # instead, so it is offered once that one is done (SystemPromptService).
+  #
+  # Their words as they wrote them, or none where they picked the projekt from a
+  # list. It outlives the discard and the publishing, which both rebuild the
+  # context (#retained_context); a new submission takes it with the rest, having
+  # either taken it up or moved past it, and so does going back to the beginning.
+  def parked_projekt_phase
+    projekt_phase_id = context.dig("parked_submission", "projekt_phase_id")
+
+    return if projekt_phase_id.blank?
+
+    ::ProjektPhase.find_by(id: projekt_phase_id)
+  end
+
+  def parked_submission_text
+    context.dig("parked_submission", "text")
+  end
+
+  def park_submission!(projekt_phase:, text:)
+    merge_context!(
+      parked_submission: {
+        "projekt_phase_id" => projekt_phase.id,
+        "text" => text.to_s.strip.presence
+      }
+    )
+  end
+
+  def clear_parked_submission!
+    if context["parked_submission"].blank?
+      return
+    end
+
+    merge_context!(parked_submission: nil)
   end
 
   # Cleared on a revision, where the record is already persisted. Deliberately: a
@@ -1353,9 +1398,13 @@ class Whatsapp::Conversation < ApplicationRecord
     # about a draft in it — dropped with the rest, a citizen would be told again the
     # moment they started a submission, which is the one point in the conversation
     # where they are least in need of it.
+    #
+    # A contribution held back for later belongs to the next draft rather than to
+    # this one, so it outlives this one's end (#parked_projekt_phase).
     def retained_context
       context.slice(
-        "ai_chat", "ai_chain", "typing_hint_at_message_id", "subject_changed_at"
+        "ai_chat", "ai_chain", "typing_hint_at_message_id", "subject_changed_at",
+        "parked_submission"
       )
     end
 

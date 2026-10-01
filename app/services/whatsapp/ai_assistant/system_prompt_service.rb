@@ -413,6 +413,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Time since their previous message: #{gap_instruction_line}",
         "- Draft on the table: #{draft_description}",
         stale_draft_line,
+        parked_submission_line,
         empty_draft_line,
         comment_invited_line,
         revision_line,
@@ -582,6 +583,39 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         generated_at.present? ? Time.zone.parse(generated_at) : nil,
         @conversation.draft_resource&.updated_at
       ].compact.max
+    end
+
+    # A contribution asked for while another was open, and kept over the question
+    # whether to discard that one (Whatsapp::Conversation#parked_projekt_phase).
+    # Said on every turn it holds, because the turn that ends the open one is not
+    # always the discard whose note carries it on: a draft published or a comment
+    # posted ends it as well, and so does a discard whose reply failed.
+    def parked_submission_line
+      projekt_phase = @conversation.parked_projekt_phase
+
+      return if projekt_phase.blank?
+
+      asked =
+        "- Also asked for: a contribution to " \
+        "#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)} (projekt_phase_id " \
+        "#{projekt_phase.id})#{parked_words}"
+
+      if @conversation.unsaved_work?
+        "#{asked}. It waits until what is open now is published or discarded: do not start " \
+          "it before, and offer it as the next step then"
+      else
+        "#{asked}. Nothing else is open, so offer to carry on with it, as a button, unless " \
+          "you already have and they went on to something else; on their yes call " \
+          "start_draft for it, and never ask again for what they already told you"
+      end
+    end
+
+    def parked_words
+      text = @conversation.parked_submission_text
+
+      return "" if text.blank?
+
+      ", written as: \"#{text}\""
     end
 
     # The one state where writing outranks tapping, and the state itself is what was

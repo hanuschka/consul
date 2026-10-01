@@ -11,9 +11,12 @@ class Whatsapp::Polls::BallotSummaryQuery < ApplicationQuery
 
   ANSWER_LENGTH = 160
 
-  def initialize(poll:, user:)
+  # `traversal` is the walk of this ballot a caller already holds; left out, the
+  # query walks it itself.
+  def initialize(poll:, user:, traversal: nil)
     @poll = poll
     @user = user
+    @traversal = traversal
   end
 
   def call

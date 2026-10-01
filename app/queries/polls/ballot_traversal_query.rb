@@ -241,6 +241,15 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     first_owed.blank?
   end
 
+  # Every question on this citizen's path still without a full answer, in the order
+  # they are asked. Blind to the conversation's markers for the reason #nothing_owed?
+  # is: a question they skipped is still owed, and listed here.
+  def owed_questions
+    return [] if @user.blank?
+
+    expanded_path.reject { |question| answered?(question) }
+  end
+
   # How many questions the ballot holds, for the line that tells a citizen how much
   # of it is left. Counted over the whole sequence rather than the path, and in slots
   # — a template's set of contexted clones is one, since exactly one of them is ever

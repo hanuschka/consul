@@ -657,8 +657,8 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     # ── Typed ballot answers ────────────────────────────────────────────────
     # What the tools recording a typed ballot answer hand back. Shared because the
     # ballot's record services answer all of them in the same three ways: false where
-    # the answer could not be taken, COMPLETED where it was the last one — said by
-    # this turn, since a completion reached inside one is left to it
+    # the answer could not be taken, one of the ENDINGS where it was the last one —
+    # said by this turn, since a completion reached inside one is left to it
     # (Whatsapp::AiAssistant::ContinueConversationService) — and anything else
     # where the ballot's next message has already gone out.
     #
@@ -668,11 +668,11 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     def ballot_answer_outcome(outcome, poll:)
       return ballot_answer_refused_error if !outcome
 
-      if outcome == ::Whatsapp::Polls::AdvanceBallotService::COMPLETED
+      if ::Whatsapp::Polls::AdvanceBallotService::ENDINGS.include?(outcome)
         return {
           completed: true,
-          status: ::Whatsapp::CompletionNotes.ballot_finished(
-            poll: poll, answers: ::Whatsapp::Polls::BallotSummaryQuery.call(poll: poll, user: user)
+          status: ::Whatsapp::CompletionNotes.ballot_ended(
+            ::Whatsapp::Polls::BallotEndingQuery.call(poll: poll, user: user)
           )
         }
       end

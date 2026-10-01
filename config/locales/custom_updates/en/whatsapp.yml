@@ -254,6 +254,20 @@ en:
           the area.
         location_maximum_reached: "This question takes at most %{maximum} places."
         completed: "Thank you — your votes in “%{poll}” are counted."
+        skipped:
+          until_date: >-
+            You skipped every question in “%{poll}”, so nothing was saved. Until the vote
+            closes on %{date} you can still vote, here in the chat or on the ballot page.
+          open_ended: >-
+            You skipped every question in “%{poll}”, so nothing was saved. While the vote
+            runs you can still vote, here in the chat or on the ballot page.
+        partly_answered:
+          until_date: >-
+            Your answers in “%{poll}” are saved. Until the vote closes on %{date} you can
+            still answer the questions you skipped, here in the chat or on the ballot page.
+          open_ended: >-
+            Your answers in “%{poll}” are saved. While the vote runs you can still answer
+            the questions you skipped, here in the chat or on the ballot page.
         already_answered: >-
           You have already voted in “%{poll}”. Your answers are saved. Until the vote closes
           you can change them on the ballot page: %{url}
@@ -262,6 +276,7 @@ en:
         summary_map_points:
           one: "1 place given"
           other: "%{count} places given"
+        summary_skipped: "Skipped"
         nothing_chosen: >-
           You have not picked an answer to this question yet. Pick at least one and the vote
           carries on.

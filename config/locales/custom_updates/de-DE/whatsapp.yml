@@ -470,6 +470,11 @@ de:
         # which is why the fuller phrase lives on the message and not on the button.
         support: Jetzt unterstützen
         support_withdraw: Zurücknehmen
+        # Wie die Unterstützung von der Plattform unter jede Antwort zu einem Vorschlag
+        # gesetzt, wo Kommentare offen sind, und unter jede zu einem Projekt das Folgen.
+        comment_start: Kommentieren
+        follow_enable: Folgen
+        follow_disable: Nicht mehr folgen
         # Die beiden Schaltflächen, die etwas Unwiderrufliches auslösen: Ein Kommentar
         # steht danach unter dem Namen dieser Person auf einer öffentlichen Seite, ein
         # Beitrag ist eingereicht. Dass die Beschriftung das auch sagt, stand vorher

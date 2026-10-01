@@ -23,6 +23,10 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
               "dropped. The steps that recur all through a conversation carry fixed labels " \
               "written for you, so the same step always reads the same — leave their label " \
               "empty: #{::Whatsapp::AssistantActions.fixed_label_action_names.join(", ")}. " \
+              "Replying about the one proposal or projekt this turn found, opened or acted on, " \
+              "the bot puts the buttons its state calls for ahead of yours by itself — support " \
+              "or withdraw and comment for a proposal, follow or unfollow for a projekt — and " \
+              "yours fill the slots left, so spend yours on the next step. " \
               "Publishing a draft and posting a comment are offered only under their preview, " \
               "by show_draft_for_confirmation and show_comment_for_confirmation, and unlinking " \
               "is not yours to offer at all. This sends the message itself: do not write one as " \
@@ -102,12 +106,14 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
       ::Whatsapp::Send.buttons(account: account, body: body, buttons: buttons)
     end
 
+    # The state pills of what this turn is about come first, and the model's own fill
+    # what is left (Whatsapp::StatePills).
     def offerable_buttons(buttons)
       built = with_pill_records(buttons) do
         Array(buttons).filter_map { |button| build(button) }
       end
 
-      distinct_buttons(built)
+      distinct_buttons(::Whatsapp::StatePills.buttons(conversation: conversation) + built)
     end
 
     # A recovery id keeps its own namespace, read by the inbound side before the

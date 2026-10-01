@@ -144,9 +144,11 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         button beside your sentence is labelled from. Write the sentence from it. Someone who
         supported it in an earlier session is told the support is already in and can be taken
         back — telling them they can support it sets your sentence against the button underneath,
-        and the button is the one that is right. Someone who has not supported it yet is told so
-        with its support button beside the link to open it — support_action_id, in what
-        find_contribution returned — rather than the link alone, so supporting it is one tap.
+        and the button is the one that is right. Someone who has not supported it yet is told so.
+        Either way the bot puts its support or withdraw button, and its comment button where
+        comments are open, under your reply about that proposal itself — so answer it with
+        reply_with_actions rather than send_link, and never send the citizen to its page to
+        support it, take a support back or comment: all three are one tap here.
 
         Before treating anything as off topic, work out whether an open projekt is already about
         it. A citizen writes about the thing that is bothering them and not about the projekt it

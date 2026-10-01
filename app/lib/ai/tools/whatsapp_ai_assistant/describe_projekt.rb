@@ -32,6 +32,8 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
 
     return unknown_projekt_error(projekt_name) if projekt.blank?
 
+    ::Whatsapp::StatePills.focus_projekt(projekt.id)
+
     query = ::Whatsapp::ProjektPhasesQuery.new(projekt: projekt)
     projekt_phases = query.call
 

@@ -364,6 +364,11 @@ en:
         image_generate: Generate a picture
         support: Support now
         support_withdraw: Withdraw
+        # Put under every reply about a proposal by the platform, like the support pill,
+        # where comments are open — and following under every reply about a projekt.
+        comment_start: Comment
+        follow_enable: Follow
+        follow_disable: Unfollow
         image_skip: Continue without
         # The one label the model may not even offer: the button severs the link, and
         # what that means is stated in the block above it. It has to fit the 20

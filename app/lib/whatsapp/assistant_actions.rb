@@ -86,7 +86,10 @@ module Whatsapp::AssistantActions
   FORCED_LABEL_COPY_KEYS = {
     support_register: "whatsapp.bot.buttons.support",
     support_withdraw: "whatsapp.bot.buttons.support_withdraw",
+    comment_start: "whatsapp.bot.buttons.comment_start",
     comment_post: "whatsapp.bot.buttons.comment_post",
+    follow_enable: "whatsapp.bot.buttons.follow_enable",
+    follow_disable: "whatsapp.bot.buttons.follow_disable",
     draft_publish: "whatsapp.bot.buttons.draft_publish",
     submit_final: "whatsapp.bot.buttons.draft_publish",
     submit_proposal: "whatsapp.bot.buttons.submit_proposal",
@@ -885,6 +888,13 @@ module Whatsapp::AssistantActions
 
     return if proposal.blank?
 
+    support_direction(proposal, conversation)
+  end
+
+  # The same reading for a caller that has the proposal in hand already
+  # (Whatsapp::StatePills), so the vote is read one way wherever a support pill is
+  # composed.
+  def support_direction(proposal, conversation)
     user = conversation.user
 
     return :support_withdraw if user.present? && proposal.voted_up_by?(user)

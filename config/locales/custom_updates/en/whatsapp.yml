@@ -84,6 +84,7 @@ en:
       # Only the fallback for when the assistant cannot answer: otherwise it says
       # itself what was discarded and offers the next step.
       cancelled: OK, that's discarded. You can carry on with something else right away.
+      change_reverted: OK, the change is discarded. Your text is back as it was.
       opted_in: You will receive messages from us again.
       # The answer to "Help": it has to fit on a phone screen. The contact line is
       # appended only when the settings hold a contact.
@@ -213,18 +214,29 @@ en:
         # this line the length of the ballot cannot be seen at all.
         progress: "Question %{number} of %{total}"
         choices: >-
-          You can pick up to %{maximum} answers, then finish your selection.
+          Pick up to %{maximum} answers below, then finish your selection.
+        choices_selected: >-
+          %{chosen} of at most %{maximum} answers picked. Tap an answer with ✓ again to
+          remove it, or finish your selection.
+        maximum_selected: >-
+          You have picked %{maximum} answers, the most this question takes. Finish your
+          selection, or tap an answer with ✓ to remove it.
         # Where the answer is given. Past three buttons WhatsApp puts the answers
         # behind a picker that has to be opened first — the answers are then printed
         # in the text, and this line says where to tap.
         options_hint: "Pick your answer below."
         open_prompt: "Please write your answer as a message."
-        maximum_reached: "This question takes at most %{maximum} answers."
+        maximum_reached: >-
+          This question takes at most %{maximum} answers. To pick another, first tap an
+          answer with ✓ to remove it.
         # What the two ends of a scale mean. On the page the wording sits to the left and
         # the right of the row of steps; in a chat the steps arrive as a column with
         # nothing to either side of them, so it goes above. The labels themselves are the
         # portal's own wording and are never translated.
         scale: "From “%{minimum}” to “%{maximum}”."
+        scale_steps: "%{lowest} is the lowest value, %{highest} the highest."
+        scale_lowest: "lowest value"
+        scale_highest: "highest value"
         weight_prompt: >-
           How much weight should this answer carry? Anything from 0 to %{maximum}.
         weight_maximum_reached: >-
@@ -246,6 +258,15 @@ en:
           You have already voted in “%{poll}”. Your answers are saved. Until the vote closes
           you can change them on the ballot page: %{url}
         typed_answer_read: "I read your answer as “%{answer}”."
+        typed_answer_withdrawn: "I have removed “%{answer}” from your answers."
+        summary_map_points:
+          one: "1 place given"
+          other: "%{count} places given"
+        nothing_chosen: >-
+          You have not picked an answer to this question yet. Pick at least one and the vote
+          carries on.
+        question_again: >-
+          This question is still open. Tap an answer below, or type its number or its wording.
         left_for_other: >-
           We have left the vote “%{poll}” here. The answers you gave are recorded — you can
           pick it up again whenever you like.
@@ -274,6 +295,8 @@ en:
         # The cancel pill, named after what it discards.
         cancel_draft: Discard draft
         cancel_comment: Discard comment
+        # Under a request for a change: takes back only the change.
+        cancel_change: Discard change
         # Fixed labels for steps that recur throughout a conversation: worded by the
         # model, the same step read six different ways in one session.
         submit_proposal: Submit an idea

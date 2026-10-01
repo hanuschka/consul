@@ -120,18 +120,50 @@ describe MunicipalPlans::OverviewMapService do
       expect(service_for({}).bounds).to eq(south: 50.90, west: 11.50, north: 50.96, east: 11.60)
     end
 
-    it "is nil on an instance where no Ortsteil areas were loaded" do
+    it "is nil on an instance where neither Ortsteil areas nor pins exist" do
       create(:registered_address_district, name: "Lobeda")
 
       expect(service_for({}).bounds).to be_nil
     end
+
+    it "spans the pins when no Ortsteil areas were loaded" do
+      lobeda = create(:registered_address_district, name: "Lobeda")
+      plan_in([lobeda], title: "Nord")
+      south = plan_in([lobeda], title: "Süd")
+      south.map_location.update!(features: pin_features(11.61, 50.88))
+
+      expect(service_for({}).bounds).to eq(south: 50.88, west: 11.59, north: 50.93, east: 11.61)
+    end
+  end
+
+  describe "#center" do
+    it "is the only pin when there is nothing else to fit" do
+      plan_in([create(:registered_address_district, name: "Lobeda")], title: "Allein")
+
+      service = service_for({})
+
+      expect(service.bounds).to be_nil
+      expect(service.center).to eq(latitude: 50.93, longitude: 11.59)
+    end
+
+    it "is nil once there is an extent to fit" do
+      district_with_area("Lobeda")
+
+      expect(service_for({}).center).to be_nil
+    end
   end
 
   describe "#show?" do
-    it "is false on an instance where no Ortsteil areas were loaded" do
+    it "is false on an instance with neither Ortsteil areas nor pins" do
       create(:registered_address_district, name: "Lobeda")
 
       expect(service_for({}).show?).to be false
+    end
+
+    it "is true on an instance without Ortsteil areas once one Vorhaben has a pin" do
+      plan_in([create(:registered_address_district, name: "Lobeda")], title: "Mit Pin")
+
+      expect(service_for({}).show?).to be true
     end
 
     it "is true once one Ortsteil has an area" do

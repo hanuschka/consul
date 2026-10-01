@@ -7,9 +7,6 @@ de:
       count:
         one: 1 Notiz
         other: "%{count} Notizen"
-      empty:
-        title: Noch keine internen Notizen
-        text: Halten Sie hier Rückfragen, Absprachen und Entscheidungen zu diesem Beitrag fest.
       form:
         submit: Notiz erstellen
         submit_reply: Antwort senden

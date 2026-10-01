@@ -91,8 +91,16 @@ de:
           willigst du in die Verarbeitung deiner Telefonnummer gemäß unserer
           Datenschutzerklärung ein: %{privacy_url}
         choices: >-
-          Du kannst bis zu %{maximum} Antworten auswählen und die Auswahl danach
-          abschließen.
+          Wähle unten bis zu %{maximum} Antworten aus und schließ die Auswahl dann ab.
+        choices_selected: >-
+          %{chosen} von höchstens %{maximum} Antworten ausgewählt. Tippe eine Antwort mit ✓
+          noch einmal an, um sie abzuwählen, oder schließ die Auswahl ab.
+        maximum_selected: >-
+          Du hast %{maximum} Antworten ausgewählt, mehr sind hier nicht möglich. Schließ die
+          Auswahl ab, oder tippe eine Antwort mit ✓ an, um sie abzuwählen.
+        maximum_reached: >-
+          Bei dieser Frage sind höchstens %{maximum} Antworten möglich. Für eine andere tippe
+          zuerst eine Antwort mit ✓ an, um sie abzuwählen.
         options_hint: "Deine Antwort wählst du unten aus."
         open_prompt: "Bitte schreib deine Antwort als Nachricht."
         location_prompt: "Bitte sende den Ort als Standort."

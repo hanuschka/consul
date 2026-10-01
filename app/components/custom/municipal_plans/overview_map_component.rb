@@ -21,8 +21,8 @@ class MunicipalPlans::OverviewMapComponent < ApplicationComponent
     data = {
       library: rendering_library,
       bounds: overview_map.bounds,
-      latitude: map_location.latitude || Setting["map.latitude"],
-      longitude: map_location.longitude || Setting["map.longitude"],
+      latitude: overview_map.center&.dig(:latitude) || map_location.latitude || Setting["map.latitude"],
+      longitude: overview_map.center&.dig(:longitude) || map_location.longitude || Setting["map.longitude"],
       zoom: map_location.zoom || Setting["map.zoom"],
       areas: overview_map.areas,
       markers: overview_map.markers

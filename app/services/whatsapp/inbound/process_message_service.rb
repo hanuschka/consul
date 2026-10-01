@@ -194,6 +194,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       result = route(
         inbound_text, inbound_message_id: inbound_message_id, citizen_words: citizen_words
       )
+      @turn_answered = result.success?
 
       return conversation.clear_retry_inbound! if result.success?
       return honour_deferred_opt_out if @opt_out_deferred
@@ -357,6 +358,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     #
     # Never under the stop question: the next ballot question sent after "only the
     # vote, or all messages?" answers it on the citizen's behalf.
+    #
+    # Never without a word either. The assistant's reply is what says why the question
+    # comes again (SystemPromptService#ballot_line asks it to); a turn that failed
+    # wrote none, so a fixed line says it instead of the question arriving alone.
     def resume_ballot(poll_id)
       return if poll_id.blank?
       return if @opt_out_deferred
@@ -375,6 +380,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       if owed_question_id.present?
         conversation.record_resumed_poll_question!(owed_question_id)
+      end
+
+      if owed_question_id.present? && !@turn_answered
+        send_bot_line(::Whatsapp.copy("whatsapp.bot.poll.question_again"))
       end
 
       ::Whatsapp::Polls::AdvanceBallotService.call(conversation: conversation, poll: poll)
@@ -573,6 +582,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       record_tap(flow_action[:action], flow_action[:param])
       settle_slot_for(flow_action[:action])
       discard_declined_photo(flow_action[:action])
+      open_revision_for(flow_action[:action])
 
       support_tap_note(action: flow_action[:action], param: flow_action[:param]) ||
         tapped_line(action: flow_action[:action], param: flow_action[:param])
@@ -806,14 +816,34 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(:cancel, nil)
 
+      if conversation.revision_open?
+        revert_change
+      else
+        discard_work
+      end
+
+      true
+    end
+
+    # While a change the citizen asked for is open, the change is all the pill takes
+    # back: it reads "Änderung verwerfen" then, and the comment or the draft they had
+    # already read is still what they want.
+    def revert_change
+      # Read before the revert, which closes what it describes.
+      note = [tapped_line(action: :cancel), ::Whatsapp::RevertNotes.for(conversation)].join(" ")
+
+      conversation.revert_revision!
+
+      answer_cancel(note, fallback_key: "whatsapp.bot.change_reverted")
+    end
+
+    def discard_work
       # Read before the discard, which clears what it describes.
       note = [tapped_line(action: :cancel), ::Whatsapp::DiscardNotes.for(conversation)].join(" ")
 
       conversation.discard_draft!
 
-      answer_discard(note)
-
-      true
+      answer_cancel(note, fallback_key: "whatsapp.bot.cancelled")
     end
 
     # Nothing is cleared: a draft, a comment or a ballot in progress is still there
@@ -835,18 +865,18 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       reading.tapped_reply_id.blank? && HELP_KEYWORDS.include?(normalized_text)
     end
 
-    # The discard is done by now and never waits on a model; only the line after it
-    # does. The assistant writes it where one answers, so it can name what went and
-    # offer the way on, and the fixed line stands in where none does: a failed turn
-    # must not leave the citizen without word that their draft is gone.
-    def answer_discard(note)
-      return send_cancelled_line if !::Ai::Settings.ai_available?
+    # The discard or the revert is done by now and never waits on a model; only the
+    # line after it does. The assistant writes it where one answers, so it can name
+    # what went and offer the way on, and the fixed line stands in where none does: a
+    # failed turn must not leave the citizen without word of what the tap did.
+    def answer_cancel(note, fallback_key:)
+      return send_cancel_line(fallback_key) if !::Ai::Settings.ai_available?
 
       result = route(note, inbound_message_id: reading.message_id, citizen_words: nil)
 
       return if result.success?
 
-      send_cancelled_line
+      send_cancel_line(fallback_key)
     end
 
     # The retry pill under the "cannot answer" line. It repeats the turn that failed
@@ -1030,17 +1060,19 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       record_tap(:poll_answer, flow_action[:param])
 
       ::Whatsapp::Polls::RecordAnswerService.call(
-        conversation: conversation, question_answer: question_answer
+        conversation: conversation, question_answers: [question_answer]
       )
     end
 
-    # "I have picked everything I want" on a multiple-choice question. It settles the
-    # question rather than answering it — whatever was chosen is already recorded,
-    # each choice as it was made — so all it does is let the ballot move on.
+    # "I have picked everything I want" on a multiple-choice question
+    # (Whatsapp::Polls::FinishMultipleQuestionService).
     #
     # Honoured only for the question the bot is actually in the middle of asking. The
     # pill sits in the chat history like every other, and tapped a day later it would
     # otherwise reopen a ballot that has been finished and closed off.
+    #
+    # Tapped before anything was chosen, the question is put again with a line saying
+    # why — it used to come back on its own, which read as a tap the bot had not seen.
     def handle_poll_done_tap
       flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
 
@@ -1049,7 +1081,13 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       record_tap(:poll_done, flow_action[:param])
 
-      conversation.clear_open_multiple_question!
+      outcome = ::Whatsapp::Polls::FinishMultipleQuestionService.call(conversation: conversation)
+
+      if outcome != ::Whatsapp::Polls::FinishMultipleQuestionService::NOTHING_CHOSEN
+        return outcome
+      end
+
+      send_bot_line(::Whatsapp.copy("whatsapp.bot.poll.nothing_chosen"))
 
       advance_ballot
     end
@@ -1501,10 +1539,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       ::Whatsapp::Send.locale_text(account: account, body: body)
     end
 
-    # The fallback after a discard, for when no assistant answered (#answer_discard):
-    # the draft is gone, the citizen asked for that, and what is left is a sentence
-    # with nothing to do after it. The way back in goes under it rather than being
-    # left for them to type.
+    # The fallback after a discard or a revert, for when no assistant answered
+    # (#answer_cancel): the tap did what the citizen asked, and what is left is a
+    # sentence with nothing to do after it. The way back in goes under it rather than
+    # being left for them to type.
     #
     # The pill is a recovery one rather than one of the assistant's because this
     # runs where no turn was answered: there is no model here to have written a
@@ -1512,9 +1550,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # either way, so the translation the send makes on its way out can fail without
     # costing the cancellation — it costs the wording, which is what
     # BotCopyService falls back to the written copy for.
-    def send_cancelled_line
+    def send_cancel_line(copy_key)
       ::Whatsapp::Send.recovery(
-        conversation: conversation, body: ::Whatsapp.copy("whatsapp.bot.cancelled"), actions: [:help]
+        conversation: conversation, body: ::Whatsapp.copy(copy_key), actions: [:help]
       )
     end
 
@@ -1546,6 +1584,18 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return if action != :image_skip
 
       conversation.clear_shared_image!
+    end
+
+    # The two taps that ask to change what the citizen has just read in a preview:
+    # the comment and the draft. What they read is kept from here until the changed
+    # version is shown, so the cancel pill under the request for the change can take
+    # back the change alone (#revert_change). Writing it down is all this does — the
+    # tap still reaches the assistant as the line it always was.
+    def open_revision_for(action)
+      case action
+      when :comment_prompt then conversation.begin_comment_revision!
+      when :draft_revise then conversation.begin_draft_revision!
+      end
     end
 
     # A pill from an older deploy, still sitting in someone's chat history and still

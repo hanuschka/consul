@@ -604,6 +604,11 @@ module Whatsapp::Send
   # question is not whether the bot asked but *what about*: "support" recorded
   # bare is satisfied by an offer for any proposal, so a pill shown for one and a
   # tool called with another looked identical from here.
+  #
+  # A publishing pill's parameter is the opposite case and is left off: it is the
+  # version of the preview it stood under (Whatsapp::PreviewVersion), which the
+  # tap has already been checked against, not something the tool is asked to act
+  # on — and the tools ask about the bare action.
   def irreversible_ids(entries)
     Array(entries).filter_map do |entry|
       parsed = ::Whatsapp::FlowActions.parse(entry[:id])
@@ -612,7 +617,9 @@ module Whatsapp::Send
       next if action.blank?
       next if !::Whatsapp::AssistantActions::IRREVERSIBLE_ACTIONS.include?(action)
 
-      [action, parsed[:param]].compact_blank.join(::Whatsapp::FlowActions::SEPARATOR)
+      param = ::Whatsapp::FlowActions.confirmation?(action) ? nil : parsed[:param]
+
+      [action, param].compact_blank.join(::Whatsapp::FlowActions::SEPARATOR)
     end
   end
 

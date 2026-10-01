@@ -13,6 +13,8 @@ describe Whatsapp::Inbound::ProcessMessageService do
 
   let(:unsaved_submission) { false }
 
+  let(:pending_comment) { nil }
+
   let(:conversation) do
     double(
       :conversation,
@@ -21,15 +23,18 @@ describe Whatsapp::Inbound::ProcessMessageService do
       shared_image_id: nil,
       shared_location: nil,
       unsaved_submission?: unsaved_submission,
+      unsaved_work?: unsaved_submission || pending_comment.present?,
       active_poll_id: nil,
       pending_map_question_id: nil,
-      pending_comment: nil,
+      pending_comment: pending_comment,
       pending_poll_id: nil,
+      revision_open?: false,
       step_in_progress?: false
     ).tap do |stub|
       allow(stub).to receive(:update!)
       allow(stub).to receive(:hold_offered_confirmations!)
       allow(stub).to receive(:hold_stop_question!)
+      allow(stub).to receive(:hold_inbound_message_id!)
       allow(stub).to receive(:clear_stop_question!)
       allow(stub).to receive(:begin_start_over!)
       allow(stub).to receive(:discard_draft!)
@@ -159,10 +164,16 @@ describe Whatsapp::Inbound::ProcessMessageService do
       expect(conversation).to have_received(:begin_start_over!)
     end
 
-    it "starts over on the help pill offered under a cancellation" do
+    # `help` left the start-over pills when it got an answer of its own: as one it
+    # cleared the phase under a draft and was answered with the overview.
+    it "answers the help pill offered under a cancellation without starting over" do
+      allow(Whatsapp::HelpMessage).to receive(:deliver)
+
       process(help_tap)
 
-      expect(conversation).to have_received(:begin_start_over!)
+      expect(Whatsapp::HelpMessage).to have_received(:deliver).with(conversation)
+      expect(conversation).not_to have_received(:begin_start_over!)
+      expect(Whatsapp::AiAssistant::RouterService).not_to have_received(:call)
     end
 
     # The reset is half of it. The other half is that the replayed history still
@@ -221,6 +232,43 @@ describe Whatsapp::Inbound::ProcessMessageService do
         process(main_menu_tap)
 
         expect(conversation).to have_received(:begin_start_over!)
+      end
+    end
+
+    # The comment counts as much as a draft: the citizen wrote it, and the tap is
+    # no more consent to losing it than to losing a draft.
+    context "when a comment is written and not posted" do
+      let(:pending_comment) { { "proposal_id" => 7, "text" => "Gute Idee" } }
+
+      it "discards nothing" do
+        process(main_menu_tap)
+
+        expect(conversation).not_to have_received(:discard_draft!)
+      end
+
+      it "asks about the comment before anything is discarded" do
+        process(main_menu_tap)
+
+        expect(routed_notes.last).to include("a comment they wrote is not posted yet")
+      end
+
+      it "records that something unsaved was in the way" do
+        process(main_menu_tap)
+
+        expect(Whatsapp::AiAssistant::DecisionLog)
+          .to have_received(:record).with(hash_including(event: :start_over, unsaved: true))
+      end
+    end
+
+    context "when a contribution and a comment are both unsaved" do
+      let(:unsaved_submission) { true }
+
+      let(:pending_comment) { { "proposal_id" => 7, "text" => "Gute Idee" } }
+
+      it "asks one question naming both" do
+        process(main_menu_tap)
+
+        expect(routed_notes.last).to include("Name both in one line and ask once")
       end
     end
   end
@@ -358,6 +406,83 @@ describe Whatsapp::Inbound::ProcessMessageService do
 
         expect(Whatsapp::Subscriptions).not_to have_received(:follow)
         expect(routed_notes.last).to include("not linked to an account")
+      end
+    end
+  end
+
+  # A publishing pill stays tappable under every preview the citizen was sent, and
+  # the draft can have changed since. A yes under an older preview publishes
+  # nothing: it is answered with the version that stands now.
+  describe "a publishing pill under an older preview" do
+    let(:draft_digest) { "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2" }
+    let(:comment_digest) { "0f0e0d0c0b0a09080706050403020100ffeeddccbbaa99887766554433221100" }
+    let(:resent) { true }
+
+    def publish_tap(tag, action: :draft_publish)
+      tap_of(id: Whatsapp::FlowActions.id_for(action: action, param: tag), title: "Jetzt einreichen")
+    end
+
+    before do
+      allow(Whatsapp::DraftPreview).to receive(:digest).and_return(draft_digest)
+      allow(Whatsapp::CommentPreview).to receive(:digest).and_return(comment_digest)
+      allow(Whatsapp::Drafting::ResendPreviewService).to receive(:call).and_return(resent)
+      allow(Whatsapp::Contributions::ResendCommentPreviewService)
+        .to receive(:call).and_return(resent)
+      allow(conversation).to receive(:hold_preview_digests!)
+    end
+
+    it "shows the draft as it stands now" do
+      process(publish_tap("999999999999"))
+
+      expect(Whatsapp::Drafting::ResendPreviewService)
+        .to have_received(:call).with(conversation: conversation)
+    end
+
+    it "does not ask the assistant, so nothing can be published on it" do
+      process(publish_tap("999999999999"))
+
+      expect(Whatsapp::AiAssistant::RouterService).not_to have_received(:call)
+    end
+
+    it "records the tap" do
+      process(publish_tap("999999999999"))
+
+      expect(Whatsapp::AiAssistant::DecisionLog).to have_received(:record)
+        .with(hash_including(event: :preview_outdated_tap, action: :draft_publish))
+    end
+
+    it "shows a comment as it stands now for the posting pill" do
+      process(publish_tap("999999999999", action: :comment_post))
+
+      expect(Whatsapp::Contributions::ResendCommentPreviewService)
+        .to have_received(:call).with(conversation: conversation)
+      expect(Whatsapp::Drafting::ResendPreviewService).not_to have_received(:call)
+    end
+
+    context "when the pill stands under the version that stands now" do
+      it "hands the tap to the assistant as before" do
+        process(publish_tap("a1b2c3d4e5f6"))
+
+        expect(Whatsapp::Drafting::ResendPreviewService).not_to have_received(:call)
+        expect(routed_notes.last).to include("(action draft_publish)")
+      end
+
+      # The tag is a version, not a record — named as an id, it is one the model
+      # would be left to wonder about.
+      it "leaves the version out of what the assistant is told" do
+        process(publish_tap("a1b2c3d4e5f6"))
+
+        expect(routed_notes.last).not_to include("a1b2c3d4e5f6")
+      end
+    end
+
+    context "when the current preview could not be sent" do
+      let(:resent) { false }
+
+      it "falls through to the assistant" do
+        process(publish_tap("999999999999"))
+
+        expect(Whatsapp::AiAssistant::RouterService).to have_received(:call).once
       end
     end
   end

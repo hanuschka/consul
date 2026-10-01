@@ -91,6 +91,12 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
 
     return no_draft_error if block.blank?
 
+    repeated = repeated_preview_halt(
+      kind: :draft, digest: ::Whatsapp::DraftPreview.digest(conversation: conversation)
+    )
+
+    return repeated if repeated.present?
+
     send_block(block)
 
     ask(question_body(question, additions_note), with_remove_additions(offerable))
@@ -141,8 +147,10 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
       distinct_buttons([*publish, remove_additions_button, *others].compact)
     end
 
+    # By action rather than by id: the publishing pill's id carries the version it
+    # was offered under (Whatsapp::PreviewVersion).
     def publish_button?(button)
-      CONFIRMS.any? { |action| button[:id] == ::Whatsapp::FlowActions.id_for(action: action) }
+      CONFIRMS.include?(::Whatsapp::FlowActions.parse(button[:id])&.dig(:action))
     end
 
     def remove_additions_button

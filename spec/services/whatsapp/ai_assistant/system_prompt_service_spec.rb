@@ -33,7 +33,9 @@ describe Whatsapp::AiAssistant::SystemPromptService do
       typing_hint_due?: false,
       unsaved_work?: false,
       replayable_turn?: false,
-      awaiting_link?: false
+      awaiting_link?: false,
+      comment_invited?: false,
+      revision_kind: nil
     )
   end
 

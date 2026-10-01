@@ -113,6 +113,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # they made themselves read this rather than the record.
     conversation.hold_offered_confirmations!
     conversation.hold_stop_question!
+    conversation.hold_inbound_message_id!(reading.message_id)
 
     # Every message is acknowledged, tapped ones included: a tap that produces no
     # bubble reads as a tap that did not arrive, and the citizen taps again.
@@ -140,6 +141,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     return if handle_poll_done_tap
     return if handle_poll_skip_tap
     return if handle_poll_location
+    return if handle_outdated_preview_tap
 
     apply_start_over_tap
 
@@ -575,7 +577,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return tapped_line(action: recovery) if recovery.present?
 
-      flow_action = ::Whatsapp::FlowActions.parse(tapped_id)
+      flow_action = without_preview_version(::Whatsapp::FlowActions.parse(tapped_id))
 
       return unhandled_tap_note(tapped_id) if flow_action.blank?
 
@@ -588,6 +590,54 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         comment_tap_note(action: flow_action[:action], param: flow_action[:param]) ||
         follow_tap_note(action: flow_action[:action], param: flow_action[:param]) ||
         tapped_line(action: flow_action[:action], param: flow_action[:param])
+    end
+
+    # A publishing pill's parameter is the version of the preview it stood under,
+    # already compared by #handle_outdated_preview_tap — not a record, and named to
+    # the assistant as an id it would only be left to wonder about.
+    def without_preview_version(flow_action)
+      return flow_action if flow_action.blank?
+      return flow_action if !::Whatsapp::FlowActions.confirmation?(flow_action[:action])
+
+      flow_action.merge(param: nil)
+    end
+
+    # ── A publishing pill under an older preview ───────────────────────────
+    # A pill stays tappable for as long as it sits in the chat, and the draft or the
+    # comment can have changed since the preview it stands under. The yes is to a
+    # text that is no longer the one that would go in, so nothing is published on it:
+    # the citizen is shown the version that stands now, with pills of its own.
+    #
+    # Answered on this side because the tap says everything that matters — which
+    # version it was given to — and the answer is fixed. Falls through to the
+    # assistant where the preview could not be sent, and there PublishDraft's and
+    # PostComment's own digest checks still stand between the tap and the page.
+    def handle_outdated_preview_tap
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+
+      return false if flow_action.blank?
+
+      action = flow_action[:action]
+
+      outdated = ::Whatsapp::PreviewVersion.outdated?(
+        action: action, param: flow_action[:param], conversation: conversation
+      )
+
+      return false if !outdated
+
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :preview_outdated_tap, conversation: conversation, action: action
+      )
+
+      resend_current_preview(action)
+    end
+
+    def resend_current_preview(action)
+      if ::Whatsapp::PreviewVersion.comment?(action)
+        ::Whatsapp::Contributions::ResendCommentPreviewService.call(conversation: conversation)
+      else
+        ::Whatsapp::Drafting::ResendPreviewService.call(conversation: conversation)
+      end
     end
 
     # The label the citizen actually read, taken from the webhook rather than from
@@ -890,7 +940,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       ::Whatsapp::AiAssistant::DecisionLog.record(
         event: :start_over,
         conversation: conversation,
-        unsaved: conversation.unsaved_submission?
+        unsaved: conversation.unsaved_work?
       )
 
       conversation.begin_start_over!

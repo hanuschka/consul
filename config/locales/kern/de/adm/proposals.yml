@@ -3,10 +3,21 @@ de:
     projekts:
       proposals:
         show:
+          section_content: Vorschlag
+          section_admin: Verwaltung
+          image_label: Bild
+          map_label: Standort
+          author: Eingereicht von
+          on_behalf_of_label: Im Namen von
+          created_at: Erstellt am
+          votes: Zustimmungen
+          votes_down: Ablehnungen
+          comments: Kommentare
           video_url: Video
           view_on_site: Auf der Website anzeigen
-          on_behalf_of: im Namen von
+          pdf: Als PDF herunterladen
           admin_accepted_status: Freigabestatus
+          admin_accepted_status_hint: Legt fest, ob dieser Vorschlag auf der Website öffentlich sichtbar ist.
           accepted: Freigegeben
           not_accepted: Nicht freigegeben
           official_answer: Offizielle Antwort

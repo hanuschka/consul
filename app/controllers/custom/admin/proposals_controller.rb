@@ -27,6 +27,7 @@ class Admin::ProposalsController < Admin::BaseController
   def show
     @affiliated_districts = (params[:affiliated_districts] || '').split(',').map(&:to_i)
     @projekt_phase = @proposal.projekt_phase
+    @similar_contributions = SimilarContributions::FindForProjekt.call(@proposal)
   end
 
   def edit

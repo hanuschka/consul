@@ -23,6 +23,33 @@ namespace :adm do
     get :file_settings, on: :collection
   end
   resource :features, controller: "features", only: [:show]
+  resource :whatsapp, controller: "whatsapp", only: [:show] do
+    # One page per tab rather than one page with seven panels: each loads only
+    # its own data, and the two 360dialog round-trips now cost only the pages
+    # that actually show their answer.
+    get :connection
+    get :settings
+    get :templates
+    get :qr_code
+    get :reach
+    get :dialogs
+    get :test_message
+
+    # Named apart from the GET page above, which owns `test_message`.
+    post :send_test_message
+    post :create_template
+    patch :use_template
+    post :create_notification_template
+    patch :use_notification_template
+    post :resubmit_notification_template
+    delete :delete_template
+    # PDF QR poster disabled for now — see Adm::WhatsappController.
+    # get :qr_poster
+
+    resources :dialogs, controller: "whatsapp_dialogs", only: [:show] do
+      post :reply, on: :member
+    end
+  end
   resources :registered_addresses, only: [:index]
   resources :registered_address_streets, only: [] do
     get :search, on: :collection

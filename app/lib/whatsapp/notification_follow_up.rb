@@ -1,0 +1,135 @@
+module Whatsapp::NotificationFollowUp
+  # The tappable half of a notification the bot sends on its own initiative.
+  #
+  # A notification is an approved template, and a template's buttons are approved
+  # with it: adding one means a submission to Meta per portal, so a reminder that
+  # wants to offer a way in cannot simply grow one. What it can do is say the same
+  # thing in a second message — and only where WhatsApp allows a second message at
+  # all, which is inside the twenty-four hours since the citizen last wrote.
+  #
+  # Every line is read at the account's own locale. Both callers are daily jobs that
+  # do not wrap their work in I18n.with_locale the way the inbound ones do, so an
+  # ambient locale here is whatever the process was left on.
+  #
+  # The labels are locale copy rather than a record's own name. A projekt title cut
+  # to twenty characters is a worse button than "View project", and both pills on a
+  # deadline reminder would otherwise read as the same projekt twice and one of them
+  # would be dropped as a duplicate.
+  #
+  # Nothing here is offered that the tap cannot then do: a phase whose deadline has
+  # passed is not offered a submission, and the ids are composed from records the
+  # job has already loaded rather than from anything a model wrote.
+  module_function
+
+  # The reminder about a phase. `deadline_approaching` can still be acted on, so it
+  # leads with taking part; `deadline_passed` cannot, and leads with looking.
+  def phase_deadline(account:, projekt_phase:, kind:)
+    projekt = projekt_phase.projekt
+
+    return if projekt.blank?
+
+    send_offer(account: account, body: copy(account, "notifications.follow_up.#{kind}")) do
+      deadline_pills(account, kind: kind, projekt_phase: projekt_phase, projekt: projekt)
+    end
+  end
+
+  # The push about the citizen's own proposal. Their own contributions is the
+  # honest second step: what changed on it is visible from there, and it is the one
+  # list this citizen is certain to have a row in.
+  def proposal_status(account:, proposal:)
+    projekt = proposal.projekt_phase&.projekt
+
+    return if projekt.blank?
+
+    send_offer(account: account, body: copy(account, "notifications.follow_up.status_change")) do
+      [
+        pill(account, :my_contributions, label: "my_contributions"),
+        view_projekt_pill(account, projekt)
+      ].compact
+    end
+  end
+
+  def deadline_pills(account, kind:, projekt_phase:, projekt:)
+    if kind.to_s == "deadline_passed"
+      return [
+        view_projekt_pill(account, projekt),
+        pill(account, :my_contributions, label: "my_contributions")
+      ].compact
+    end
+
+    [
+      pill(account, :idea_start, param: projekt_phase.id, label: "take_part"),
+      view_projekt_pill(account, projekt)
+    ].compact
+  end
+
+  # Nil where the projekt has nothing to tell beyond its card, for the same reason
+  # the card itself leaves the pill out: the tap would deliver what the citizen has
+  # already read, and the pills that do something move up into its slot.
+  def view_projekt_pill(account, projekt)
+    return if !::Whatsapp::ProjektCard.tells_more?(projekt)
+
+    pill(account, :view_projekt, param: projekt.id, label: "view_projekt")
+  end
+
+  def pill(account, action, label:, param: nil)
+    {
+      id: ::Whatsapp::FlowActions.id_for(action: action, param: param),
+      title: copy(account, "buttons.#{label}")
+    }
+  end
+
+  # Read at the account's own locale rather than at whatever the process happens to
+  # be set to. The inbound jobs wrap their work in I18n.with_locale; these two run
+  # from a daily schedule and do not, so a German portal was rendering the body in
+  # the default locale while the labels beside it came out German — one message, two
+  # languages, before BotCopyService had said anything.
+  def copy(account, key)
+    ::Whatsapp.copy("whatsapp.bot.#{key}", locale: ::Whatsapp.locale_for(account))
+  end
+
+  # The body and the labels under it travel through one translation call, for the
+  # reason BotCopyService gives: translated apart they drift into two registers,
+  # and here they are also the only lines of the exchange the citizen did not
+  # prompt. What fits in a button is a property of the translated label rather than
+  # of the copy it was written from, so the fit is decided after the translation —
+  # and a translation that can only arrive shortened gives way to the written copy,
+  # which is what fitting_label is for.
+  #
+  # The window is checked here rather than left to Send, even though Send checks it
+  # too. Send's guard is the last thing before the request; the translation above is
+  # an LLM call with a timeout and a usage record, and this runs once per subscribed
+  # account in a fan-out where most accounts are *outside* the window — that being
+  # the whole reason the notification itself is a template. Left to Send, every
+  # daily run would pay for a translation per recipient and throw it away.
+  #
+  # The pills arrive as a block for the same reason: deciding whether a projekt has
+  # more to tell reads its page and its phases, and that too would otherwise run once
+  # per recipient outside the window.
+  def send_offer(account:, body:)
+    return if !::Whatsapp::ServiceWindow.open?(account)
+
+    pills = yield
+
+    # A notification carries no way back of its own any more — it is the bot opening
+    # a conversation, not ending one — so an offer with nothing on it is an
+    # interactive message WhatsApp refuses outright rather than one bare pill.
+    return if pills.blank?
+
+    lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+      account: account, lines: [body, *pills.map { |pill| pill[:title] }]
+    )
+
+    ::Whatsapp::Send.buttons(
+      account: account,
+      body: lines.first,
+      buttons: pills.zip(lines.drop(1)).map do |pill, title|
+        pill.merge(
+          title: ::Whatsapp::AssistantActions.fitting_label(
+            translated: title, original: pill[:title]
+          )
+        )
+      end
+    )
+  end
+end

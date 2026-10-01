@@ -13,6 +13,8 @@ module Abilities
     def initialize(user)
       merge Abilities::Common.new(user)
 
+      can :index, AdminAsset
+
       can([:index, :edit, :update, :update_map, :order_phases, :update_standard_phase], Projekt) do |p|
         user.projekt_manager.present? && user.projekt_manager.allowed_to?("manage", p)
       end

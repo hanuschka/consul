@@ -155,6 +155,9 @@ en:
           ai_malformed: >-
             No usable questions could be recognised in the document. Check the
             document and try again.
+          ai_request_failed: >-
+            The AI service could not be reached or rejected the request. Please
+            try again later.
           generation_failed: "The questions could not be read: %{message}"
           generation_unknown: Unknown error while reading the document.
           poll_missing: >-

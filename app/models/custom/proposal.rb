@@ -7,6 +7,9 @@ include MachineTranslatable
   include OnBehalfOfSubmittable
   include Memoable
   include ConditionallyVotable
+  include SimilarContributionsCheckable
+
+  VOTES_FOR_SUCCESS_KEY = "option.resource.votes_for_proposal_success".freeze
 
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: :projekt_id # TODO: remove column after data migration con1538
 
@@ -23,6 +26,12 @@ include MachineTranslatable
   validates_translation :description, presence: true
   validates :projekt_phase, presence: true
   validate :description_sanitized
+
+  # Catalog B12's "moderation decision" trigger. Both directions count: a
+  # proposal being accepted and a proposal being hidden are each a decision the
+  # author asked to hear about, and hearing only about the good one would make
+  # the setting a lie.
+  after_update_commit :notify_whatsapp_moderation_decision
 
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
@@ -180,10 +189,17 @@ include MachineTranslatable
     Proposal.where(id: ids)
   end
 
+  # A phase created before the setting existed, or one whose settings were never
+  # backfilled, has no row here. Falling back to the global threshold keeps that
+  # from raising in every list that renders a proposal.
   def custom_votes_needed_for_success
-    return Proposal.votes_needed_for_success unless projekt_phase.present?
+    return Proposal.votes_needed_for_success if projekt_phase.blank?
 
-    projekt_phase.settings.find { |setting| setting.key == "option.resource.votes_for_proposal_success" }.value.to_i
+    setting = projekt_phase.settings.find { |phase_setting| phase_setting.key == VOTES_FOR_SUCCESS_KEY }
+
+    return Proposal.votes_needed_for_success if setting.blank?
+
+    setting.value.to_i
   end
 
   def publish
@@ -230,5 +246,18 @@ include MachineTranslatable
       return if author.blank? || author.email.blank?
 
       Mailer.proposal_official_answer(self).deliver_later
+    end
+
+  private
+
+    # A draft has never been submitted, so there is nothing to have decided
+    # about it yet — publishing one would otherwise read as a moderation
+    # decision the moment it flips admin_accepted.
+    def notify_whatsapp_moderation_decision
+      return if draft?
+      return if !saved_change_to_admin_accepted? && !saved_change_to_hidden_at?
+      return if !::Whatsapp.enabled?
+
+      Whatsapp::NotifyProposalStatusJob.perform_later(id, "moderation_decision")
     end
 end

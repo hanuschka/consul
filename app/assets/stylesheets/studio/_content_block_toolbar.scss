@@ -27,15 +27,17 @@
 // Toolbar floats above the block (out-of-flow) — no layout shift.
 // "absolute + sticky" pattern: outer .custom-content-block--toolbar-zone is
 // position:absolute (takes no flow space, so toggling `display` on the inner
-// toolbar causes no vertical layout shift). Inner .custom-content-block--toolbar
-// is position:sticky (sticks below the topbar while the wrapper is in view).
+// toolbar row causes no vertical layout shift). The inner
+// .custom-content-block--toolbar-row is position:sticky (sticks below the
+// topbar while the wrapper is in view) and shows or hides both toolbars in it
+// as one unit.
 // The zone's top:-48px lifts the toolbar's at-rest position visually above
 // the wrapper's top edge, replacing the old margin-top:-48px hoist.
 .custom-content-block-wrapper--inner {
   position: relative;
 
-  &:hover .custom-content-block--toolbar,
-  &:focus-within .custom-content-block--toolbar {
+  &:hover .custom-content-block--toolbar-row,
+  &:focus-within .custom-content-block--toolbar-row {
     display: flex;
   }
 }
@@ -62,7 +64,7 @@
     top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
     margin-left: auto;
     width: fit-content;
-    display: none;
+    display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 2px;
@@ -97,7 +99,6 @@
     > .custom-content-block-edit-main-controlls {
       position: relative;
       margin-left: 8px;
-      padding-left: 8px;
 
       &::before {
         content: "";
@@ -121,6 +122,12 @@
           display: none;
         }
       }
+    }
+
+    // The format tools start right after their divider; only the mode-switch
+    // group keeps a gap to it.
+    > .custom-content-block-edit-main-controlls {
+      padding-left: 8px;
     }
   }
 
@@ -151,11 +158,23 @@
       outline: 1px solid #c9dced;
     }
 
+    .custom-content-block--toolbar-row {
+      display: flex;
+      width: auto;
+      margin-left: 0;
+    }
+
     &:not(.-compact-mode) {
       .custom-content-block--toolbar {
         width: 100%;
       }
     }
+  }
+
+  // Narrow sidebar/footer cards keep their toolbars at the left edge.
+  &.-compact-mode .custom-content-block--toolbar-row {
+    justify-content: flex-start;
+    margin-left: 0;
   }
 
   // Variant: toolbar anchored to the LEFT side of the wrapper instead of
@@ -170,6 +189,34 @@
       margin-right: auto;
       justify-content: flex-start;
     }
+
+    .custom-content-block--toolbar-row {
+      justify-content: flex-start;
+      margin-left: 0;
+      margin-right: auto;
+    }
+  }
+
+  // Holds the main toolbar and the block-actions toolbar side by side. The
+  // row is what sticks and what shows or hides, so the two toolbars stay
+  // together while scrolling. It shrinks to its toolbars and catches the
+  // pointer, so the gap between them keeps the block hovered without the row
+  // stealing hover from the block above across the full width.
+  .custom-content-block--toolbar-row {
+    position: sticky;
+    top: calc(#{$topbar-height} + var(--admin-topbar-height) + 10px);
+    display: none;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 8px;
+    width: fit-content;
+    margin-left: auto;
+    pointer-events: auto;
+  }
+
+  .custom-content-block--toolbar-row > .custom-content-block--toolbar {
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
@@ -214,7 +261,7 @@
   align-items: center;
   gap: 2px;
   height: 32px;
-  padding: 0 4px;
+  padding: 0 2px;
   border-radius: 8px;
   color: #2b3744;
 

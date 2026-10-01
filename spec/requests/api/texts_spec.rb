@@ -15,7 +15,7 @@ RSpec.describe 'Texts API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       security [bearer_auth: []]
       description "Retrieve all texts/legislation documents for a projekt phase. Texts support multi-phase review processes: draft publication, debate period, and allegations/amendments period.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of texts per page (**default:** 100, max: 500)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
 
       response '200', 'texts found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

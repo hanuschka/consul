@@ -6,7 +6,7 @@ class Ai::Tools::ProjektImports::ReadImportData < Ai::Tools::ProjektImports::Edi
               "\"phases\" returns every phase in full, including its poll questions, " \
               "events, milestones, arguments, notifications and other resources."
 
-  params(
+  parameters(
     type: "object",
     properties: {
       section: {

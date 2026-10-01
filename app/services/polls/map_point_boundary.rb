@@ -7,6 +7,19 @@ class Polls::MapPointBoundary
     polygons.any?
   end
 
+  # Whether the area can be tested at all. RGeo::Geos.factory is nil wherever the
+  # GEOS extension is not built, and #contains? on a restricted area then raises
+  # instead of answering — so a caller that cannot afford to raise, or that would
+  # rather not offer the question at all, asks this first. An unrestricted area is
+  # always testable: everything is inside it.
+  def usable?
+    return true if !restricted?
+
+    factory.present?
+  rescue RGeo::Error::RGeoError
+    false
+  end
+
   def contains?(latitude, longitude)
     return true unless restricted?
 

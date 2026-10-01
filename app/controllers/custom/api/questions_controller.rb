@@ -27,11 +27,7 @@ class Api::QuestionsController < Api::BaseController
       end
     end
 
-    questions =
-      questions
-        .order(created_at: :asc)
-        .page(params[:page])
-        .per(params[:per_page] || DEFAULT_PER_PAGE)
+    questions = paginate(questions.order(created_at: :asc))
 
     serialized_questions = QuestionSerializer.serialize_collection(questions)
 
@@ -136,15 +132,6 @@ class Api::QuestionsController < Api::BaseController
 
   def find_projekt_question
     @projekt_question = ProjektQuestion.find(params[:id])
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end
 

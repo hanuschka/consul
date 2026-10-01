@@ -157,6 +157,18 @@ module AdmHelper
     tabs
   end
 
+  def municipal_plan_tabs(municipal_plan, current_action: nil)
+    current_action ||= action_name
+
+    %w[show audits].map do |action|
+      {
+        label: I18n.t("adm.municipal_plans.municipal_plans.tabs.#{action}"),
+        url: send("#{action == 'show' ? '' : "#{action}_"}adm_municipal_plans_municipal_plan_path", municipal_plan),
+        current: current_action == action
+      }
+    end
+  end
+
   def show_deficiency_report_visibility_control?(deficiency_report)
     return false if Setting["deficiency_reports.admin_acceptance_required"].blank?
     return false if deficiency_report.hidden?

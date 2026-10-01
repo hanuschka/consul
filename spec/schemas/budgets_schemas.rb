@@ -49,6 +49,7 @@ module Schemas
         status: { type: :string, nullable: true, description: 'Status of the investment (e.g., selected, unselected, feasible)', example: 'selected' },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the investment was created', example: '2024-01-05T08:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the investment was last modified', example: '2024-01-18T14:30:00Z' },
+        similar_contributions_count: { type: :integer, nullable: true, description: 'Number of other contributions in the same projekt with similar content. Determined freshly on every request and only when the "Pruefung auf aehnliche Beitraege" phase setting is enabled; 0 otherwise.', example: 2 },
         image: { '$ref' => '#/components/schemas/ImageResponse' }
       },
       required: %w[id title budget_id created_at updated_at]

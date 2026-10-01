@@ -44,6 +44,8 @@ en:
             required: Required
             options: Options
             actions: Actions
+            condition_summary: "Only if: %{question} = %{options}"
+            condition_options_connector: " or "
           move_up: Move up
           move_down: Move down
           edit: Edit
@@ -138,11 +140,19 @@ en:
             rating: Rating scale
           required_label: Required question
           required_hint: Required questions must be answered on the device before the next question is shown.
+          required_checkbox_label: Answer required
           save_button: Save
           options_title: Options
           options_hint: A maximum of 5 options – the Mitmachbox has 5 selection buttons.
           add_option_button: Add option
           no_options: No options yet.
+          condition_title: Display condition
+          condition_hint: The question is only shown if one of the ticked answers was chosen for the selected question. Questions in between are shown as usual. Only earlier single-choice questions can be selected.
+          condition_question_label: Depends on question
+          condition_none: No condition
+          condition_source_option: "Question %{number}: %{prompt}"
+          condition_options_legend: "Answers to “%{prompt}”"
+          condition_unavailable: A display condition needs an earlier single-choice question with options.
         options:
           created: The option has been added.
           updated: The option has been updated.
@@ -185,6 +195,8 @@ en:
           generic: An error occurred while communicating with the Mitmachbox platform.
           no_draft: There is no editable draft. Create a new draft first.
           branch_order: "This order cannot be saved: a follow-up question must come after the question that branches to it."
+          condition_order: "This order cannot be saved: a question with a display condition must come after the question it depends on."
+          condition_dependency: "This is not possible because another question's display condition depends on it. Remove or change that condition first."
           stale_order: "The order was not saved because the question list has changed in the meantime. Please reorder the questions again."
           max_options_reached: A maximum of 5 options per question is possible – the Mitmachbox has 5 selection buttons.
           max_questions_reached: A maximum of 20 questions per version is possible – the Mitmachbox cannot load more.

@@ -60,6 +60,15 @@ describe Mitmachbox::TestRun do
     expect(run({ 1 => [13], 4 => [41] }, answered: "4")).to be_finished
   end
 
+  it "shows a conditional question only if its condition is met" do
+    questions.last["condition"] = { "question_id" => 1, "option_ids" => [13] }
+
+    expect(run({ 1 => [13], 3 => [31] }, answered: "3").current_question["id"]).to eq 4
+    expect(run({ 1 => [13], 3 => [31] }, answered: "3")).not_to be_finished
+    questions.last["condition"] = { "question_id" => 1, "option_ids" => [11] }
+    expect(run({ 1 => [13], 3 => [31] }, answered: "3")).to be_finished
+  end
+
   it "carries the earlier answers but not the one being asked" do
     test_run = run({ 1 => [11], 3 => [] }, answered: "1")
 

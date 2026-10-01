@@ -282,3 +282,6 @@ application.register("shared--anchor-highlight", SharedAnchorHighlightController
 
 import SharedDropdownSelectMenuController from "./shared/dropdown_select_menu_controller"
 application.register("shared--dropdown-select-menu", SharedDropdownSelectMenuController)
+
+import AdmMitmachboxConditionController from "./adm/mitmachbox_condition_controller"
+application.register("adm--mitmachbox-condition", AdmMitmachboxConditionController)

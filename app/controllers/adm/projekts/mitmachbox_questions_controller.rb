@@ -9,6 +9,7 @@ class Adm::Projekts::MitmachboxQuestionsController < Adm::Projekts::BaseControll
   before_action :authorize_phase
   before_action :set_survey_and_draft
   before_action :set_question, only: %i[edit update destroy move_up move_down]
+  before_action :set_condition_sources, only: %i[new edit]
 
   def new
     @question = {}
@@ -110,14 +111,35 @@ class Adm::Projekts::MitmachboxQuestionsController < Adm::Projekts::BaseControll
     end
 
     def question_params
-      permitted = params.require(:question).permit(:prompt, :question_type, :required)
+      permitted = params.require(:question).permit(:prompt, :question_type, :required,
+                                                   :condition_question_id, condition_option_ids: [])
       question_type = permitted[:question_type].presence_in(QUESTION_TYPES) || "single_choice"
 
       {
         prompt: permitted[:prompt].to_s,
         question_type: question_type,
-        required: permitted[:required] == "1"
+        required: permitted[:required] == "1",
+        condition_option_ids: condition_option_ids(permitted)
       }
+    end
+
+    def condition_option_ids(permitted)
+      source = @draft_detail["questions"].find do |question|
+        question["id"].to_s == permitted[:condition_question_id].to_s
+      end
+      return [] if source.nil?
+
+      allowed_ids = (source["options"] || []).map { |option| option["id"].to_s }
+      Array(permitted[:condition_option_ids]).select { |id| allowed_ids.include?(id.to_s) }.map(&:to_i)
+    end
+
+    def set_condition_sources
+      position = @question&.dig("position")
+
+      @condition_sources = @draft_detail["questions"]
+        .select { |question| question["question_type"] == "single_choice" }
+        .select { |question| position.nil? || question["position"].to_i < position.to_i }
+        .sort_by { |question| question["position"].to_i }
     end
 
     def reorder_question(offset)

@@ -53,7 +53,9 @@
             <% hint_id = "mitmachbox_question_#{question["id"]}_hint" if multiple %>
 
             <%= tag.fieldset class: "mitmachbox-survey-question js-mitmachbox-question",
-                             data: { question_id: question["id"], required: question["required"].presence },
+                             data: { question_id: question["id"], required: question["required"].presence,
+                                     condition_question_id: question.dig("condition", "question_id"),
+                                     condition_option_ids: question.dig("condition", "option_ids").presence },
                              aria: { describedby: hint_id } do %>
               <legend class="mitmachbox-survey-question-legend">
                 <h3 class="mitmachbox-survey-question-prompt js-mitmachbox-question-prompt" tabindex="-1">

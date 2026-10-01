@@ -1,4 +1,5 @@
 <% sorted_questions = questions.sort_by { |question| question["position"].to_i } %>
+<% questions_by_id = questions.index_by { |question| question["id"] } %>
 
 <div class="kern-table-responsive mb-5" tabindex="0">
   <table class="kern-table">
@@ -27,7 +28,20 @@
               <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
             </td>
           <% end %>
-          <th scope="row" class="kern-table__header"><%= question["prompt"] %></th>
+          <% condition_source = questions_by_id[question.dig("condition", "question_id")] %>
+          <% condition_labels = (condition_source&.dig("options") || [])
+                                  .select { |option| Array(question.dig("condition", "option_ids")).include?(option["id"]) }
+                                  .map { |option| option["label"] } %>
+          <th scope="row" class="kern-table__header">
+            <%= question["prompt"] %>
+            <% if condition_labels.any? %>
+              <span class="d-block kern-body kern-body--small">
+                <%= t("adm.projekts.phases.mitmachbox_survey.table.condition_summary",
+                      question: condition_source["prompt"],
+                      options: condition_labels.join(t("adm.projekts.phases.mitmachbox_survey.table.condition_options_connector"))) %>
+              </span>
+            <% end %>
+          </th>
           <td class="kern-table__cell">
             <%= t("adm.projekts.mitmachbox.questions.question_types.#{question["question_type"]}") %>
           </td>

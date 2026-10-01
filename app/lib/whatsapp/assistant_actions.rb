@@ -231,12 +231,12 @@ module Whatsapp::AssistantActions
   # The title is composed by the caller rather than looked up here, because it comes
   # out of the same translation batch as the block it is sent with: asking for it
   # again would put a label from one cache state under a sentence from another.
-  def platform_button(action:, title:, conversation:)
+  def platform_button(action:, title:, conversation:, param: nil)
     return if title.blank?
 
     record_irreversible_offer(action, conversation)
 
-    { id: ::Whatsapp::FlowActions.id_for(action: action), title: title }
+    { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
   end
 
   # The pill a preview tool builds, which is every pill #offered_button builds plus
@@ -246,6 +246,8 @@ module Whatsapp::AssistantActions
   # the reverse.
   #
   # The label is the fixed one whatever the model wrote, as it always was for these.
+  # The id carries the version of what the preview shows (Whatsapp::PreviewVersion),
+  # whatever parameter the model wrote, so a tap can tell which version it answers.
   def confirmation_button(spec:, label:, conversation:, confirms:)
     action, param = parse(spec)
 
@@ -260,7 +262,8 @@ module Whatsapp::AssistantActions
     platform_button(
       action: action,
       title: truncated(forced_label(action: action, param: param, conversation: conversation)),
-      conversation: conversation
+      conversation: conversation,
+      param: ::Whatsapp::PreviewVersion.tag(action: action, conversation: conversation)
     )
   end
 

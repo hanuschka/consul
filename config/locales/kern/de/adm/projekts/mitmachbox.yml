@@ -32,21 +32,36 @@ de:
           publish_button: Entwurf veröffentlichen
           publish_confirm: Nach der Veröffentlichung kann diese Version nicht mehr bearbeitet werden. Fortfahren?
           new_draft_button: Neuen Entwurf erstellen
+          test_run_button: Probedurchlauf
           new_draft_hint: Die veröffentlichte Version wird in einen bearbeitbaren Entwurf kopiert. Die laufende Version bleibt bis zur nächsten Veröffentlichung unverändert auf den Geräten.
           read_only_hint: Veröffentlichte Versionen können nicht bearbeitet werden. Erstellen Sie einen neuen Entwurf, um Änderungen vorzunehmen.
           no_questions: Noch keine Fragen vorhanden.
           max_questions_hint: Diese Version hat die maximale Anzahl von 20 Fragen erreicht – mehr kann die Mitmachbox nicht laden.
           table:
+            order: Reihenfolge
             prompt: Frage
             question_type: Fragetyp
             required: Pflichtfrage
             options: Antwortoptionen
             actions: Aktionen
+            condition_summary: "Nur bei: %{question} = %{options}"
+            condition_options_connector: " oder "
           move_up: Nach oben
           move_down: Nach unten
           edit: Bearbeiten
           delete: Löschen
           delete_confirm: Frage wirklich löschen?
+        mitmachbox_test_run:
+          title: Probedurchlauf
+          hint: Klicken Sie sich durch die Umfrage wie an der Mitmachbox. Ihre Antworten werden nicht gespeichert.
+          version_draft: "Entwurf (Version %{number})"
+          version_current: "Veröffentlichte Version %{number}"
+          step: "Frage %{current} von %{total}"
+          next: Weiter
+          required: Bitte wählen Sie eine Antwort.
+          finished: Vielen Dank für Ihre Teilnahme!
+          restart: Erneut starten
+          no_questions: Diese Version enthält noch keine Fragen.
         mitmachbox_deployments:
           title: Geräte
           hint_text: >
@@ -125,11 +140,19 @@ de:
             rating: Bewertungsskala
           required_label: Pflichtfrage
           required_hint: Pflichtfragen müssen am Gerät beantwortet werden, bevor die nächste Frage angezeigt wird.
+          required_checkbox_label: Antwort erforderlich
           save_button: Speichern
           options_title: Antwortoptionen
           options_hint: Maximal 5 Antwortoptionen – die Mitmachbox hat 5 Auswahltasten.
           add_option_button: Option hinzufügen
           no_options: Noch keine Antwortoptionen vorhanden.
+          condition_title: Anzeigebedingung
+          condition_hint: Die Frage wird nur angezeigt, wenn bei der gewählten Frage eine der angehakten Antworten gewählt wurde. Fragen dazwischen werden wie gewohnt angezeigt. Zur Auswahl stehen nur vorherige Fragen mit Einfachauswahl.
+          condition_question_label: Abhängig von Frage
+          condition_none: Keine Bedingung
+          condition_source_option: "Frage %{number}: %{prompt}"
+          condition_options_legend: "Antworten auf „%{prompt}“"
+          condition_unavailable: Eine Anzeigebedingung braucht eine vorherige Frage mit Einfachauswahl und Antwortoptionen.
         options:
           created: Die Antwortoption wurde hinzugefügt.
           updated: Die Antwortoption wurde aktualisiert.
@@ -172,6 +195,9 @@ de:
           generic: Bei der Kommunikation mit der Mitmachbox-Plattform ist ein Fehler aufgetreten.
           no_draft: Es ist kein bearbeitbarer Entwurf vorhanden. Erstellen Sie zuerst einen neuen Entwurf.
           branch_order: "Die Reihenfolge kann so nicht gespeichert werden: Eine Folgefrage muss hinter der Frage liegen, die auf sie verzweigt."
+          condition_order: "Die Reihenfolge kann so nicht gespeichert werden: Eine Frage mit Anzeigebedingung muss hinter der Frage liegen, von der sie abhängt."
+          condition_dependency: "Das ist nicht möglich, weil die Anzeigebedingung einer anderen Frage davon abhängt. Entfernen oder ändern Sie zuerst diese Bedingung."
+          stale_order: "Die Reihenfolge wurde nicht gespeichert, weil sich die Fragenliste inzwischen geändert hat. Bitte ordnen Sie die Fragen erneut."
           max_options_reached: Es sind maximal 5 Antwortoptionen pro Frage möglich – die Mitmachbox hat 5 Auswahltasten.
           max_questions_reached: Es sind maximal 20 Fragen pro Version möglich – mehr kann die Mitmachbox nicht laden.
           max_questions_reached: Es sind maximal 20 Fragen pro Version möglich – mehr kann die Mitmachbox nicht laden.

@@ -151,6 +151,11 @@ de:
         awaiting_review: >-
           Ihr Kommentar ist eingegangen und wird noch geprüft. Sobald er freigegeben ist,
           erscheint er auf der Seite — einen Link dazu gibt es deshalb noch nicht.
+        # Die Frage unter dem erneut gezeigten Kommentar, wenn unter einer älteren
+        # Vorschau auf „Jetzt kommentieren“ getippt wurde (Whatsapp::PreviewVersion).
+        outdated_question: >-
+          Ihr Kommentar hat sich seit dieser Vorschau geändert. Oben sehen Sie ihn so, wie er
+          jetzt veröffentlicht würde. Soll er so auf die Seite?
       # The block Whatsapp::SupportRecap sends once a support has been registered or
       # taken back again. Both directions are the same three lines with the number
       # moved, so they share the count label.
@@ -175,6 +180,15 @@ de:
           Ihr Beitrag ist eingegangen und liegt jetzt zur Prüfung bei der Verwaltung. Sobald er
           freigegeben ist, erscheint er auf der Seite — einen Link dazu gibt es deshalb noch
           nicht.
+        # Die Frage unter dem erneut gezeigten Entwurf, wenn unter einer älteren Vorschau
+        # auf „Jetzt einreichen“ getippt wurde (Whatsapp::PreviewVersion), und der Hinweis
+        # auf das, was der Entwurf über die eigenen Worte hinaus enthält.
+        outdated_question: >-
+          Ihr Beitrag hat sich seit dieser Vorschau geändert. Oben sehen Sie ihn so, wie er
+          jetzt veröffentlicht würde. Soll er so online gehen?
+        outdated_additions_note: >-
+          Darin steht auch etwas, das Sie so nicht gesagt haben: %{additions}. Das kann ich
+          wieder herausnehmen.
       proposal:
         # A legal notice rather than the bot's voice, which is why it survived the copy
         # that did not: Ai::Tools::WhatsappAiAssistant::RequestPhoto appends it to every
@@ -398,6 +412,8 @@ de:
         # Die Abbrechen-Schaltfläche, benannt nach dem, was sie verwirft.
         cancel_draft: Entwurf verwerfen
         cancel_comment: Kommentar verwerfen
+        # Unter dem erneut gezeigten Kommentar: öffnet die Änderung der Worte.
+        comment_revise: Kommentar ändern
         # Unter der Bitte um eine Änderung: nimmt nur die Änderung zurück.
         cancel_change: Änderung verwerfen
         # Feste Beschriftungen für Schritte, die im Gespräch immer wieder vorkommen:

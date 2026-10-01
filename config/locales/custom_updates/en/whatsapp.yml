@@ -140,6 +140,11 @@ en:
         awaiting_review: >-
           Your comment has arrived and is still being reviewed. It will appear on the page once it
           has been approved — which is why there is no link to it yet.
+        # The question under the comment shown again after a tap on the posting pill
+        # under an older preview (Whatsapp::PreviewVersion).
+        outdated_question: >-
+          Your comment has changed since that preview. Above is how it would be posted now.
+          Should it go on the page like this?
       # The block Whatsapp::SupportRecap sends once a support has been registered.
       support:
         registered: Supported
@@ -161,6 +166,14 @@ en:
         awaiting_review: >-
           Your contribution has arrived and is now with the municipality for review. It will appear
           on the page once it has been approved — which is why there is no link to it yet.
+        # The question under the draft shown again after a tap on the publishing pill
+        # under an older preview (Whatsapp::PreviewVersion), and the note on what the
+        # draft adds beyond the citizen's own words.
+        outdated_question: >-
+          Your contribution has changed since that preview. Above is how it would be published
+          now. Should it go online like this?
+        outdated_additions_note: >-
+          It also contains something you did not say: %{additions}. I can take that out again.
       proposal:
         # A legal notice rather than the bot's voice, which is why it survived the copy
         # that did not: Ai::Tools::WhatsappAiAssistant::RequestPhoto appends it to every
@@ -310,6 +323,8 @@ en:
         # The cancel pill, named after what it discards.
         cancel_draft: Discard draft
         cancel_comment: Discard comment
+        # Under the comment shown again: opens a change to its words.
+        comment_revise: Edit comment
         # Under a request for a change: takes back only the change.
         cancel_change: Discard change
         # Fixed labels for steps that recur throughout a conversation: worded by the

@@ -1,4 +1,5 @@
 <%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+<% turbo_refreshes_with(method: :replace, scroll: :preserve) %>
 
 <% survey_ready = Mitmachbox.configured? && !@survey_lost && @mitmachbox_error.nil? && @survey.present? %>
 

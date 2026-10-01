@@ -11,6 +11,8 @@ describe Ai::Tools::WhatsappAiAssistant::AbortSubmission do
 
   let(:revision_open) { false }
 
+  let(:parked_projekt_phase) { nil }
+
   let(:conversation) do
     double(
       :conversation,
@@ -20,7 +22,9 @@ describe Ai::Tools::WhatsappAiAssistant::AbortSubmission do
       unsaved_submission?: false,
       pending_comment: nil,
       active_poll_id: nil,
-      pending_poll_id: nil
+      pending_poll_id: nil,
+      parked_projekt_phase: parked_projekt_phase,
+      parked_submission_text: "Trinkbrunnen am Skaterpark"
     ).tap do |stub|
       allow(stub).to receive(:discard_draft!)
       allow(stub).to receive(:revert_revision!)
@@ -37,6 +41,39 @@ describe Ai::Tools::WhatsappAiAssistant::AbortSubmission do
     # Somebody who has just given up is not owed a list of what else there is.
     it "does not go on to offer what the portal has" do
       expect(tool.execute[:hint]).to include("Do not list what else the portal offers")
+    end
+  end
+
+  # The yes was to leaving it for a contribution asked for elsewhere, so the answer
+  # carries on with that one rather than ending on what was lost.
+  describe "an abandonment for a contribution to another projekt" do
+    let(:other_projekt) { double(:projekt) }
+
+    let(:parked_projekt_phase) { double(:projekt_phase, id: 42, projekt: other_projekt) }
+
+    before do
+      allow(Whatsapp::ProjektLink).to receive(:title).with(other_projekt).and_return("Jugendbeteiligung")
+    end
+
+    it "discards the draft" do
+      tool.execute
+
+      expect(conversation).to have_received(:discard_draft!)
+    end
+
+    it "carries on with the contribution asked for" do
+      hint = tool.execute[:hint]
+
+      expect(hint).to include("start_draft with projekt_phase_id 42")
+      expect(hint).to include("\"Trinkbrunnen am Skaterpark\"")
+      expect(hint).to include(Whatsapp::DiscardNotes::PARKED_REPLY)
+    end
+
+    it "reads it before the discard" do
+      expect(conversation).to receive(:parked_projekt_phase).ordered
+      expect(conversation).to receive(:discard_draft!).ordered
+
+      tool.execute
     end
   end
 

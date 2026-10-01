@@ -32,6 +32,7 @@ en:
           publish_button: Publish draft
           publish_confirm: After publishing, this version can no longer be edited. Continue?
           new_draft_button: Create new draft
+          test_run_button: Test run
           new_draft_hint: The published version is copied into an editable draft. The current version stays unchanged on the devices until the next publish.
           read_only_hint: Published versions cannot be edited. Create a new draft to make changes.
           no_questions: No questions yet.
@@ -48,6 +49,17 @@ en:
           edit: Edit
           delete: Delete
           delete_confirm: Really delete this question?
+        mitmachbox_test_run:
+          title: Test run
+          hint: Click through the survey the way a respondent at the Mitmachbox would. Your answers are not saved.
+          version_draft: "Draft (version %{number})"
+          version_current: "Published version %{number}"
+          step: "Question %{current} of %{total}"
+          next: Next
+          required: Please choose an answer.
+          finished: Thank you for taking part!
+          restart: Start again
+          no_questions: This version has no questions yet.
         mitmachbox_deployments:
           title: Devices
           hint_text: >

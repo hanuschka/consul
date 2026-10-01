@@ -60,6 +60,7 @@ namespace :adm do
         patch :mitmachbox_survey_state
         post :mitmachbox_create_draft
         post :mitmachbox_publish_draft
+        get :mitmachbox_test_run
         get :mitmachbox_deployments
         get :mitmachbox_results
         get :mitmachbox_results_export

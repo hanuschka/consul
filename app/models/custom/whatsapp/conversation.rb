@@ -385,15 +385,18 @@ class Whatsapp::Conversation < ApplicationRecord
   end
 
   # That the citizen asked to be put back at the beginning while a contribution
-  # was still in the way. Written by the inbound layer, which resets nothing on
-  # that turn because throwing away what they wrote cannot be taken back, and
-  # read by AbortSubmission once they have said to discard — so the reply that
-  # follows the discard is the fresh start they asked for rather than a full stop.
+  # or a comment not yet posted was still in the way. Written by the inbound
+  # layer, which resets nothing on that turn because throwing away what they
+  # wrote cannot be taken back, and read by AbortSubmission once they have said to
+  # discard — so the reply that follows the discard is the fresh start they asked
+  # for rather than a full stop.
   #
-  # Nothing clears it explicitly, and nothing needs to: discard_draft!,
+  # For a draft nothing clears it explicitly, and nothing needs to: discard_draft!,
   # complete_draft! and start_draft! each replace the whole context, and every way
   # out of having a draft goes through one of them, so the key cannot outlive the
-  # submission it was written for. What it does outlive is a change of mind — ask
+  # submission it was written for. Posting a comment keeps the context, so
+  # clear_pending_comment! takes the request with it where no draft is left to
+  # hold it. What it does outlive is a change of mind — ask
   # to start over, carry on with the draft instead, abandon it an hour later, and
   # the overview comes with the discard. They did ask for it, so that is the
   # harmless direction for this to be wrong in.
@@ -407,18 +410,22 @@ class Whatsapp::Conversation < ApplicationRecord
 
   # Going back to the beginning, from the pill and from the citizen saying so in
   # their own words alike: one implementation, so the two cannot come to mean
-  # different things. The ballot goes and the phase goes; a submission in progress
-  # stays until the citizen says to discard it, because neither the tap nor the
-  # sentence is consent to losing what they wrote.
+  # different things. The ballot goes and the phase goes; a submission or a
+  # comment in progress stays until the citizen says to discard it, because
+  # neither the tap nor the sentence is consent to losing what they wrote. With
+  # nothing written, every invitation goes too, and the proposal a comment was
+  # asked for with it: a comment asked for and not yet written used to outlive
+  # the way back, and the prompt still named the proposal it was meant for.
   def begin_start_over!
     note_start_over!
     clear_ballot!
-    close_step!("comment")
     clear_submission_wish!
 
-    if unsaved_submission?
+    if unsaved_work?
+      close_step!("comment")
       request_start_over!
     else
+      close_opened_steps!
       leave_projekt!
     end
   end
@@ -653,7 +660,8 @@ class Whatsapp::Conversation < ApplicationRecord
       pending_comment: nil,
       comment_preview_digest: nil,
       opened_steps: opened_steps - ["comment"],
-      **revision_closed("comment")
+      **revision_closed("comment"),
+      **start_over_request_closed
     )
   end
 
@@ -862,7 +870,8 @@ class Whatsapp::Conversation < ApplicationRecord
   # projekt card and a scanned code enter a phase too, and neither is the citizen
   # saying they want to contribute. The whole-context replacements clear both,
   # clear_pending_comment! the comment, leave_projekt! the contribution, and
-  # going back to the beginning the comment.
+  # going back to the beginning all of them, or only the comment while something
+  # written waits on the citizen's answer.
   def opened_steps
     Array(context["opened_steps"])
   end
@@ -1010,6 +1019,39 @@ class Whatsapp::Conversation < ApplicationRecord
     return :comment if unshown_comment_change?
 
     nil
+  end
+
+  # The citizen message being answered, held in memory like the confirmations
+  # above. Called once at the top of the inbound chain, before anything can send,
+  # with the message the citizen is looking at — so a retry tap is a message of
+  # its own and may be answered with the preview again.
+  def hold_inbound_message_id!(message_id)
+    @held_inbound_message_id = message_id
+  end
+
+  # Whether a preview of this version may go out: false where the same version
+  # of the same kind has already been shown in answer to the same message. One
+  # change, one preview — a second one under the same message is a second set of
+  # pills for one question, and a tap under the first answers a message the bot
+  # itself has replaced.
+  #
+  # Claimed before the send, like the preview digest, so a send that fails
+  # halfway leaves a claim rather than an opening for a second preview. True
+  # wherever no message is held: a turn started outside the inbound chain has
+  # nothing to key it on. No row lock, because the inbound job already holds
+  # the conversation's advisory lock for the whole answer
+  # (Whatsapp::ProcessInboundMessageJob).
+  def claim_preview!(kind:, digest:)
+    return true if @held_inbound_message_id.blank? || digest.blank?
+
+    claim = { "digest" => digest, "inbound_message_id" => @held_inbound_message_id }
+    claims = context["preview_claims"].to_h
+
+    return false if claims[kind.to_s] == claim
+
+    merge_context!(preview_claims: claims.merge(kind.to_s => claim))
+
+    true
   end
 
   # That the citizen has just asked to start over, held in memory rather than
@@ -1223,6 +1265,23 @@ class Whatsapp::Conversation < ApplicationRecord
       return {} if revision_kind != kind
 
       { revision_base: nil }
+    end
+
+    # A request to start over that only the comment was holding up ends with it;
+    # one a draft still holds up stays for the draft.
+    def start_over_request_closed
+      return {} if !start_over_requested?
+      return {} if unsaved_submission?
+
+      { start_over_requested: nil }
+    end
+
+    # Every step opened by asking for the citizen's words, and the proposal the
+    # comment one was asked about. Nothing is written yet, so nothing is lost.
+    def close_opened_steps!
+      return if opened_steps.empty? && comment_proposal_id.blank?
+
+      merge_context!(opened_steps: [], comment_proposal_id: nil)
     end
 
     # What revise_draft changes: the record's title and text, the assessment that is

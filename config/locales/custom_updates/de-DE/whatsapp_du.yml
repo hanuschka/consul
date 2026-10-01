@@ -59,12 +59,21 @@ de:
         awaiting_review: >-
           Dein Kommentar ist eingegangen und wird noch geprüft. Sobald er freigegeben ist,
           erscheint er auf der Seite — einen Link dazu gibt es deshalb noch nicht.
+        outdated_question: >-
+          Dein Kommentar hat sich seit dieser Vorschau geändert. Oben siehst du ihn so, wie er
+          jetzt veröffentlicht würde. Soll er so auf die Seite?
       preview:
         online: "Dein Beitrag ist jetzt online:"
         awaiting_review: >-
           Dein Beitrag ist eingegangen und liegt jetzt zur Prüfung bei der Verwaltung. Sobald
           er freigegeben ist, erscheint er auf der Seite — einen Link dazu gibt es deshalb
           noch nicht.
+        outdated_question: >-
+          Dein Beitrag hat sich seit dieser Vorschau geändert. Oben siehst du ihn so, wie er
+          jetzt veröffentlicht würde. Soll er so online gehen?
+        outdated_additions_note: >-
+          Darin steht auch etwas, das du so nicht gesagt hast: %{additions}. Das kann ich
+          wieder herausnehmen.
       proposal:
         image_rights_notice: >-
           Bitte sende nur Bilder, für die du die Rechte hast und auf denen keine Personen

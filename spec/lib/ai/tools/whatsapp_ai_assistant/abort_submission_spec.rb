@@ -9,12 +9,22 @@ describe Ai::Tools::WhatsappAiAssistant::AbortSubmission do
 
   let(:start_over_requested) { false }
 
+  let(:revision_open) { false }
+
   let(:conversation) do
     double(
       :conversation,
       step_in_progress?: step_in_progress,
-      start_over_requested?: start_over_requested
-    ).tap { |stub| allow(stub).to receive(:discard_draft!) }
+      start_over_requested?: start_over_requested,
+      revision_open?: revision_open,
+      unsaved_submission?: false,
+      pending_comment: nil,
+      active_poll_id: nil,
+      pending_poll_id: nil
+    ).tap do |stub|
+      allow(stub).to receive(:discard_draft!)
+      allow(stub).to receive(:revert_revision!)
+    end
   end
 
   describe "an ordinary abandonment" do
@@ -74,6 +84,26 @@ describe Ai::Tools::WhatsappAiAssistant::AbortSubmission do
       expect(conversation).to receive(:discard_draft!).ordered
 
       tool.execute
+    end
+  end
+
+  # The yes to going back to the beginning was a yes to losing what they wrote, so
+  # a change still open to their comment is not all that goes.
+  describe "when a start-over waits while a change to the comment is open" do
+    let(:start_over_requested) { true }
+
+    let(:revision_open) { true }
+
+    it "discards the whole comment" do
+      tool.execute
+
+      expect(conversation).to have_received(:discard_draft!)
+    end
+
+    it "does not stop at taking back the change" do
+      tool.execute
+
+      expect(conversation).not_to have_received(:revert_revision!)
     end
   end
 end

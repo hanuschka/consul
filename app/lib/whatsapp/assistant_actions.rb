@@ -101,6 +101,7 @@ module Whatsapp::AssistantActions
   # was written up as "Entwurf löschen" on one message and "Kommentar abbrechen"
   # on the next; named by the work that is open, it says what tapping it does.
   CANCEL_LABEL_KEYS = {
+    change: "whatsapp.bot.buttons.cancel_change",
     draft: "whatsapp.bot.buttons.cancel_draft",
     comment: "whatsapp.bot.buttons.cancel_comment",
     step: "whatsapp.bot.buttons.cancel"
@@ -300,6 +301,10 @@ module Whatsapp::AssistantActions
       return dropped(spec, conversation, :closed_to_submission)
     end
 
+    if restates_request?(action, conversation)
+      return dropped(spec, conversation, :restates_request)
+    end
+
     sent_action = directed_action(action, param, conversation)
 
     return dropped(spec, conversation, :unlabelled) if sent_action.blank?
@@ -421,6 +426,17 @@ module Whatsapp::AssistantActions
       phase_ids: phases.map(&:id).to_set,
       projekt_ids: phases.map(&:projekt_id).to_set
     }
+  end
+
+  # The fifth, for a pill asking for what the message above it already asks for.
+  # Offered under "Schreiben Sie jetzt bitte Ihren Kommentar", a "Kommentar
+  # schreiben" pill was tapped and answered with the same request again: the
+  # citizen's next step there is writing, not tapping.
+  #
+  # Under the comment's preview the same id is the way to change it, which is why
+  # this asks the state rather than withholding the id.
+  def restates_request?(action, conversation)
+    action == :comment_prompt && conversation.comment_invited?
   end
 
   # The records one message's pills point at, read at once. A list of ten
@@ -557,10 +573,13 @@ module Whatsapp::AssistantActions
     ::Whatsapp.copy("whatsapp.bot.buttons.#{action}")
   end
 
-  # Which of the three things a cancel tap throws away, the draft first as the
-  # larger loss.
+  # Which of the four things a cancel tap throws away. A change the citizen has
+  # asked for comes first: while one is open the tap takes back only the change
+  # (Whatsapp::Conversation#revert_revision!). Then the draft, as the larger loss.
   def cancelled_work(conversation)
-    if conversation.unsaved_submission?
+    if conversation.revision_open?
+      :change
+    elsif conversation.unsaved_submission?
       :draft
     elsif conversation.pending_comment.present?
       :comment
@@ -939,8 +958,9 @@ module Whatsapp::AssistantActions
   # record could not name it either, `unparseable` an empty or malformed spec,
   # `unknown_scope` a `show_more` naming a list the bot does not keep,
   # `confirmation_only` a publishing pill offered away from its preview,
-  # `confirmation_elsewhere` one offered under the other preview, and
-  # `closed_to_submission` a way to submit where the chat cannot take one.
+  # `confirmation_elsewhere` one offered under the other preview,
+  # `closed_to_submission` a way to submit where the chat cannot take one, and
+  # `restates_request` a pill asking for what the message already asks for.
   def dropped(spec, conversation, reason)
     ::Whatsapp::AiAssistant::DecisionLog.record(
       event: :action_dropped, conversation: conversation, spec: spec, reason: reason

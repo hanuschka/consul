@@ -614,8 +614,10 @@ class Whatsapp::Conversation < ApplicationRecord
     context["draft_preview_digest"]
   end
 
+  # The draft just shown is the version a later change starts from, so a change
+  # still open from before it closes in the same write.
   def store_draft_preview_digest!(digest)
-    merge_context!(draft_preview_digest: digest)
+    merge_context!(draft_preview_digest: digest, **revision_closed("draft"))
   end
 
   def revoke_draft_preview_digest!
@@ -640,17 +642,26 @@ class Whatsapp::Conversation < ApplicationRecord
   # Both keys in one write: the words are gone, so a digest of them is a digest of
   # nothing, and leaving it behind would let the next comment inherit a yes. The
   # invitation that asked for the words goes in the same write, because the
-  # comment it opened is over.
+  # comment it opened is over, and so does a change to it still open.
   def clear_pending_comment!
     return if context["pending_comment"].blank? &&
       context["comment_preview_digest"].blank? &&
-      !opened_steps.include?("comment")
+      !opened_steps.include?("comment") &&
+      revision_kind != "comment"
 
     merge_context!(
       pending_comment: nil,
       comment_preview_digest: nil,
-      opened_steps: opened_steps - ["comment"]
+      opened_steps: opened_steps - ["comment"],
+      **revision_closed("comment")
     )
+  end
+
+  # The invitation to comment is out and nothing has been written yet: the next
+  # thing the citizen sends is their comment, and a button asking for it again
+  # only repeats the message it sits under.
+  def comment_invited?
+    opened_steps.include?("comment") && pending_comment.blank?
   end
 
   # The ballot a citizen was about to be given when it turned out they had no account
@@ -811,8 +822,9 @@ class Whatsapp::Conversation < ApplicationRecord
     context["comment_preview_digest"]
   end
 
+  # The same as the draft's: the comment just shown closes a change still open.
   def store_comment_preview_digest!(digest)
-    merge_context!(comment_preview_digest: digest)
+    merge_context!(comment_preview_digest: digest, **revision_closed("comment"))
   end
 
   # The proposal the bot last asked about, written by the tools that resolve one
@@ -865,6 +877,54 @@ class Whatsapp::Conversation < ApplicationRecord
     return if !opened_steps.include?(kind)
 
     merge_context!(opened_steps: opened_steps - [kind])
+  end
+
+  # ── A change on its way ─────────────────────────────────────────────────
+  # The comment or the draft as the citizen last read it in its preview, kept from
+  # the tap that asks to change it until the changed version is shown. The cancel
+  # pill under that request used to throw the whole thing away, which is not what
+  # "Änderung verwerfen" says; with this it takes back the change and nothing else
+  # (Inbound::ProcessMessageService#revert_change).
+  #
+  # Kept only where what is on the table is still what the preview showed — past
+  # that there is no version the citizen read to go back to. One level and one at a
+  # time: a second change starts from the version shown after the first, and a
+  # change to the draft replaces one to the comment. Closed by the next preview of
+  # the same kind and by posting the comment; the whole-context replacements clear
+  # it with everything else.
+  def revision_open?
+    context["revision_base"].present?
+  end
+
+  # "comment" or "draft", nil while no change is open.
+  def revision_kind
+    context["revision_base"].to_h["kind"]
+  end
+
+  def begin_comment_revision!
+    return if pending_comment.blank?
+    return if ::Whatsapp::CommentPreview.digest(conversation: self) != comment_preview_digest
+
+    merge_context!(revision_base: { "kind" => "comment", "snapshot" => pending_comment })
+  end
+
+  def begin_draft_revision!
+    return if draft_resource.blank?
+    return if ::Whatsapp::DraftPreview.digest(conversation: self) != draft_preview_digest
+
+    merge_context!(revision_base: { "kind" => "draft", "snapshot" => draft_snapshot })
+  end
+
+  # The version the citizen last read, back on the table. Their yes to it is not:
+  # the digest goes with the change, so nothing is posted or published before the
+  # preview has been sent again.
+  def revert_revision!
+    snapshot = context["revision_base"].to_h["snapshot"].to_h
+
+    case revision_kind
+    when "comment" then revert_comment!(snapshot)
+    when "draft" then revert_draft!(snapshot)
+    end
   end
 
   # The irreversible actions the bot's last interactive message offered, written by
@@ -1155,6 +1215,48 @@ class Whatsapp::Conversation < ApplicationRecord
 
     def listed_additions(additions)
       Array(additions).map { |addition| addition.to_s.squish }.compact_blank
+    end
+
+    # The change of this kind closed in the same write as whatever ends it, and
+    # nothing where none of this kind is open.
+    def revision_closed(kind)
+      return {} if revision_kind != kind
+
+      { revision_base: nil }
+    end
+
+    # What revise_draft changes: the record's title and text, the assessment that is
+    # cleared with the text, and the two keys restated beside them.
+    def draft_snapshot
+      {
+        "title" => draft_resource.title,
+        "description" => draft_resource.description,
+        "ai_evaluation_result" => draft_resource.ai_evaluation_result,
+        "additions_beyond_idea" => additions_beyond_idea,
+        "settled_slots" => settled_slots
+      }
+    end
+
+    def revert_comment!(snapshot)
+      merge_context!(pending_comment: snapshot, comment_preview_digest: nil, revision_base: nil)
+    end
+
+    # Saved without a second look from the model: the snapshot is a version the
+    # record already held and the citizen already read.
+    def revert_draft!(snapshot)
+      if draft_resource.present?
+        draft_resource.title = snapshot["title"]
+        draft_resource.description = snapshot["description"]
+        draft_resource.ai_evaluation_result = snapshot["ai_evaluation_result"]
+        draft_resource.save!
+      end
+
+      merge_context!(
+        additions_beyond_idea: Array(snapshot["additions_beyond_idea"]),
+        settled_slots: snapshot["settled_slots"].to_h,
+        draft_preview_digest: nil,
+        revision_base: nil
+      )
     end
 
     def unshown_draft_change?

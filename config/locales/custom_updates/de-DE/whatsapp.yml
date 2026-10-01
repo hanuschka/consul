@@ -92,6 +92,7 @@ de:
       # Nur noch der Ersatz, wenn der Assistent nicht antworten kann: Sonst sagt er
       # selbst, was verworfen wurde, und bietet den nächsten Schritt an.
       cancelled: Alles klar, das ist verworfen. Sie können gleich mit etwas anderem weitermachen.
+      change_reverted: Alles klar, die Änderung ist verworfen. Ihr Text ist wieder so wie zuvor.
       opted_in: Sie erhalten wieder Nachrichten von uns.
       # Die Antwort auf „Hilfe“: muss auf einen Handybildschirm passen. Die
       # Kontaktzeile wird nur angehängt, wenn die Einstellungen einen Kontakt führen.
@@ -335,6 +336,8 @@ de:
         # Die Abbrechen-Schaltfläche, benannt nach dem, was sie verwirft.
         cancel_draft: Entwurf verwerfen
         cancel_comment: Kommentar verwerfen
+        # Unter der Bitte um eine Änderung: nimmt nur die Änderung zurück.
+        cancel_change: Änderung verwerfen
         # Feste Beschriftungen für Schritte, die im Gespräch immer wieder vorkommen:
         # Vom Modell formuliert, hieß derselbe Schritt in einer Sitzung sechsmal anders.
         submit_proposal: Vorschlag erstellen

@@ -261,6 +261,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           does not say it is due, say nothing about typing at all — it has been said recently
           enough.
         - Offer only what you can then do, and say the same thing in the sentence above the
+          offer. A button that only asks for what your message already asks for is not an
           offer. Three buttons fit in a message and ten rows in a list: where more applies than
           fits, name the few that fit this moment, say how many there are altogether, and offer
           the rest behind one more tap rather than falling back to a plain list of names. The
@@ -411,6 +412,8 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Draft on the table: #{draft_description}",
         stale_draft_line,
         empty_draft_line,
+        comment_invited_line,
+        revision_line,
         picture_waiting_line,
         location_waiting_line,
         proposed_location_line,
@@ -593,6 +596,28 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
       "- The draft is open and still empty: writing the contribution as a message is the step " \
         "here, and the buttons under your message are the detour"
+    end
+
+    # The comment's counterpart of the empty draft: asked for and not yet written, so
+    # writing it is the step. A "Kommentar schreiben" button under "Schreiben Sie
+    # jetzt bitte Ihren Kommentar" was tapped and answered with the same request.
+    def comment_invited_line
+      return if !@conversation.comment_invited?
+
+      "- A comment has been asked for and not written yet: writing it as a message is the " \
+        "step here, and no button asks for it again"
+    end
+
+    # What the cancel button does while a change is open, which nothing else in the
+    # state says: it brings back the version the citizen read rather than discarding.
+    def revision_line
+      kind = @conversation.revision_kind
+
+      return if kind.blank?
+
+      "- The citizen asked to change their #{kind} and has not seen a changed version yet: " \
+        "the cancel button drops only that change and brings back the #{kind} as they last " \
+        "read it"
     end
 
     # Only #start_draft! ever sets the phase, so a phase on the conversation is a

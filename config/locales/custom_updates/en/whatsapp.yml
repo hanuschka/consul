@@ -84,6 +84,7 @@ en:
       # Only the fallback for when the assistant cannot answer: otherwise it says
       # itself what was discarded and offers the next step.
       cancelled: OK, that's discarded. You can carry on with something else right away.
+      change_reverted: OK, the change is discarded. Your text is back as it was.
       opted_in: You will receive messages from us again.
       # The answer to "Help": it has to fit on a phone screen. The contact line is
       # appended only when the settings hold a contact.
@@ -274,6 +275,8 @@ en:
         # The cancel pill, named after what it discards.
         cancel_draft: Discard draft
         cancel_comment: Discard comment
+        # Under a request for a change: takes back only the change.
+        cancel_change: Discard change
         # Fixed labels for steps that recur throughout a conversation: worded by the
         # model, the same step read six different ways in one session.
         submit_proposal: Submit an idea

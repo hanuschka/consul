@@ -4,6 +4,11 @@
   <table class="kern-table">
     <thead class="kern-table__head">
       <tr class="kern-table__row">
+        <% if editable %>
+          <th scope="col" class="kern-table__header">
+            <span class="kern-sr-only"><%= t("adm.projekts.phases.mitmachbox_survey.table.order") %></span>
+          </th>
+        <% end %>
         <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.prompt") %></th>
         <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.question_type") %></th>
         <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.required") %></th>
@@ -14,9 +19,14 @@
       </tr>
     </thead>
 
-    <tbody class="kern-table__body">
+    <tbody class="kern-table__body"<% if editable %> data-controller="sortable" data-sortable-url-value="<%= reorder_adm_projekts_phase_mitmachbox_questions_path(@projekt_phase) %>"<% end %>>
       <% sorted_questions.each_with_index do |question, index| %>
-        <tr class="kern-table__row">
+        <tr class="kern-table__row"<% if editable %> data-sortable-id="<%= question["id"] %>"<% end %>>
+          <% if editable %>
+            <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+              <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+            </td>
+          <% end %>
           <th scope="row" class="kern-table__header"><%= question["prompt"] %></th>
           <td class="kern-table__cell">
             <%= t("adm.projekts.mitmachbox.questions.question_types.#{question["question_type"]}") %>

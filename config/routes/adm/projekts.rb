@@ -151,6 +151,9 @@ namespace :adm do
         end
       end
       resources :mitmachbox_questions, only: %i[new create edit update destroy] do
+        collection do
+          patch :reorder
+        end
         member do
           patch :move_up
           patch :move_down

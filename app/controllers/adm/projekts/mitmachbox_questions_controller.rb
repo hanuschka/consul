@@ -49,6 +49,22 @@ class Adm::Projekts::MitmachboxQuestionsController < Adm::Projekts::BaseControll
     reorder_question(1)
   end
 
+  def reorder
+    question_ids = Array(params[:tree]).map { |item| item[:id].to_s }
+    draft_question_ids = @draft_detail["questions"].map { |question| question["id"].to_s }
+
+    if question_ids.sort != draft_question_ids.sort
+      flash[:alert] = t("adm.projekts.mitmachbox.errors.stale_order")
+      head :unprocessable_entity and return
+    end
+
+    mitmachbox_client.questions.reorder(survey_id, draft_id, question_ids: question_ids.map(&:to_i))
+    head :ok
+  rescue Mitmachbox::Error => e
+    flash[:alert] = mitmachbox_error_message(e)
+    head :unprocessable_entity
+  end
+
   private
 
     def set_projekt_phase

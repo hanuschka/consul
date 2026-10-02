@@ -37,6 +37,7 @@ namespace :adm do
 
     # Named apart from the GET page above, which owns `test_message`.
     post :send_test_message
+    post :register_webhook
     post :create_template
     patch :use_template
     post :create_notification_template

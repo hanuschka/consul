@@ -22,6 +22,32 @@ en:
         number: 'WhatsApp number: %{number}'
       missing_number: No WhatsApp number is configured (secret "whatsapp.business_number").
       not_configured: WhatsApp is not fully configured.
+      blocking_reasons:
+        title: The WhatsApp bot is not working
+        intro: 'Citizens can only use the bot once every point below is fixed:'
+        missing_credentials:
+          title: Credentials are missing on the server.
+          body: >-
+            Not set: %{keys}. Without them the bot sends nothing and refuses every incoming message.
+            The credentials are stored in the server secrets — contact the Demokratie Today
+            administrators to have them added.
+        switched_off:
+          title: The bot is switched off.
+          body: Incoming messages are stored but not answered, and no notifications are sent.
+          link: Switch the bot on in the "Connection" tab
+        ai_disabled:
+          title: AI is disabled on the server.
+          body: >-
+            The secret "ai.enabled" is not set. Without AI the bot cannot respond to written or spoken
+            messages and answers each of them only with "I can't answer you right now". Contact the
+            Demokratie Today administrators to have AI enabled.
+        ai_provider_unavailable:
+          title: The AI provider has no API key.
+          body: >-
+            No credentials are stored for the selected provider "%{provider}". Without them the bot
+            cannot respond to written or spoken messages and answers each of them only with "I can't
+            answer you right now". The key is stored in the AI settings.
+          link: Open AI settings
       test_message:
         body: Test message from the participation platform. If you can read this, sending works.
         sent: >-
@@ -220,10 +246,6 @@ en:
           General entry point to the WhatsApp bot. This QR code lets citizens link their number and
           subscribe to notifications about new projects. Submitting a proposal requires a project
           or phase QR code.
-        unavailable_title: WhatsApp is not set up for this portal
-        unavailable_body: >-
-          The connection to the WhatsApp service has to be configured on the server. Contact the Demokratie
-          Today administrators to have the feature set up and enabled.
         explanation_title: What the WhatsApp bot does
         explanation_intro: >-
           The bot connects the participation platform to WhatsApp: citizens take part where they already
@@ -300,6 +322,10 @@ en:
         webhook_mismatch_body: >-
           Registered: %{registered}. Expected: %{expected}. Switch the feature off and on again to
           re-register it.
+        webhook_unchecked_title: Webhook not checked
+        webhook_unchecked_body: >-
+          Without credentials 360dialog is not queried, so whether and where a webhook is
+          registered is unknown. The missing credentials are listed above.
         webhook_unreachable_title: Webhook status unavailable
         webhook_unreachable_body: The configuration could not be read from 360dialog. Check the API
           key in config/secrets.yml.

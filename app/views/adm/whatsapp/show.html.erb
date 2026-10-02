@@ -9,9 +9,7 @@
 ) %>
 
 <div class="kern-container my-3 adm-whatsapp-page">
-  <%= kern_alert(title: t("adm.whatsapp.show.unavailable_title"), style: :info) do %>
-    <p class="kern-body"><%= t("adm.whatsapp.show.unavailable_body") %></p>
-  <% end %>
+  <%= render "adm/whatsapp/blocking_reasons", reasons: @blocking_reasons %>
 
   <section class="adm-whatsapp-page--explanation mt-5">
     <h2 class="kern-heading-medium mb-2">

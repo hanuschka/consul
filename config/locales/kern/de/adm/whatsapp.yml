@@ -22,6 +22,36 @@ de:
         number: 'WhatsApp-Nummer: %{number}'
       missing_number: Es ist keine WhatsApp-Nummer konfiguriert (Secret „whatsapp.business_number“).
       not_configured: WhatsApp ist nicht vollständig konfiguriert.
+      blocking_reasons:
+        title: Der WhatsApp-Bot funktioniert nicht
+        intro: 'Erst wenn alle folgenden Punkte behoben sind, können Bürger:innen den Bot nutzen:'
+        missing_credentials:
+          title: Zugangsdaten fehlen auf dem Server.
+          body: >-
+            Nicht gesetzt: %{keys}. Ohne sie sendet der Bot nichts und weist jede eingehende Nachricht ab.
+            Die Zugangsdaten werden in den Server-Secrets hinterlegt – wende dich an die Administration
+            von Demokratie Today, um sie eintragen zu lassen.
+        switched_off:
+          title: Der Bot ist ausgeschaltet.
+          body: >-
+            Eingehende Nachrichten werden gespeichert, aber nicht beantwortet, und es werden keine
+            Benachrichtigungen verschickt.
+          link: Bot im Tab „Verbindung“ einschalten
+        ai_disabled:
+          title: KI ist auf dem Server deaktiviert.
+          body: >-
+            Das Secret „ai.enabled“ ist nicht gesetzt. Ohne KI kann der Bot nicht auf geschriebene
+            oder gesprochene Nachrichten eingehen und antwortet auf jede nur, dass er gerade nicht
+            antworten kann. Wende dich an die Administration von Demokratie Today, um KI freischalten
+            zu lassen.
+        ai_provider_unavailable:
+          title: Für den KI-Anbieter fehlt ein API-Schlüssel.
+          body: >-
+            Für den gewählten Anbieter „%{provider}“ sind keine Zugangsdaten hinterlegt. Ohne sie kann
+            der Bot nicht auf geschriebene oder gesprochene Nachrichten eingehen und antwortet auf jede
+            nur, dass er gerade nicht antworten kann. Hinterlegt wird der Schlüssel in den
+            KI-Einstellungen.
+          link: KI-Einstellungen öffnen
       test_message:
         body: Testnachricht vom Beteiligungsportal. Wenn du das liest, funktioniert der Versand.
         sent: >-
@@ -224,11 +254,6 @@ de:
           Allgemeiner Einstieg in den WhatsApp-Bot. Über diesen QR-Code können Bürger:innen ihre Nummer
           verbinden und Benachrichtigungen zu neuen Projekten abonnieren. Zum Einreichen von Vorschlägen
           brauchen sie den QR-Code eines Projekts oder einer Phase.
-        unavailable_title: WhatsApp ist für dieses Portal nicht eingerichtet
-        unavailable_body: >-
-          Die Anbindung an den WhatsApp-Dienst muss serverseitig hinterlegt werden. Wende dich an
-          die Administration von Demokratie Today, um die Funktion einrichten und freischalten zu
-          lassen.
         explanation_title: Was der WhatsApp-Bot leistet
         explanation_intro: >-
           Der Bot verbindet das Beteiligungsportal mit WhatsApp: Bürger:innen erreichen die Beteiligung
@@ -308,6 +333,10 @@ de:
         webhook_mismatch_body: >-
           Registriert ist: %{registered}. Erwartet wird: %{expected}. Schalte die Funktion einmal
           aus und wieder ein, um sie neu zu registrieren.
+        webhook_unchecked_title: Webhook nicht geprüft
+        webhook_unchecked_body: >-
+          Ohne Zugangsdaten wird 360dialog nicht abgefragt, daher ist unbekannt, ob und wohin ein
+          Webhook registriert ist. Welche Zugangsdaten fehlen, steht oben.
         webhook_unreachable_title: Webhook-Status nicht abrufbar
         webhook_unreachable_body: >-
           Die Konfiguration konnte nicht von 360dialog gelesen werden. Prüfe den API-Schlüssel in

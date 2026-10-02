@@ -15,7 +15,17 @@ class WhatsappApi::BaseController < ActionController::API
     def ensure_feature_enabled!
       return if ::Whatsapp.enabled?
 
+      Rails.logger.warn("[Whatsapp] webhook delivery refused: #{disabled_reason}")
+
       head :not_found
+    end
+
+    def disabled_reason
+      if !::Whatsapp.configured?
+        "missing #{::Whatsapp.missing_required_credential_keys.join(", ")} in the whatsapp secrets"
+      else
+        "feature.whatsapp_bot is switched off"
+      end
     end
 
     def authenticate_webhook!

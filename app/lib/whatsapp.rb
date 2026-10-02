@@ -176,8 +176,27 @@ module Whatsapp
     missing_required_credential_keys.empty?
   end
 
+  def self.switched_on?
+    Setting["feature.whatsapp_bot"].present?
+  end
+
   def self.enabled?
-    Setting["feature.whatsapp_bot"].present? && configured?
+    switched_on? && configured?
+  end
+
+  # Everything that keeps the bot from answering citizens, in the order an admin
+  # has to clear it: without credentials or the switch it does not run at all,
+  # and without an AI provider every typed or spoken message is answered with
+  # the "can't answer right now" line (ProcessMessageService#answer).
+  def self.blocking_reasons
+    ai_feature_enabled = ::Ai::Settings.feature_enabled?
+
+    [
+      (:missing_credentials if !configured?),
+      (:switched_off if !switched_on?),
+      (:ai_disabled if !ai_feature_enabled),
+      (:ai_provider_unavailable if ai_feature_enabled && !::Ai::Settings.ai_available?)
+    ].compact
   end
 
   # The secret each way of authenticating a webhook delivery needs. A way whose

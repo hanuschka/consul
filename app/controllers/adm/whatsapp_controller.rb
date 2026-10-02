@@ -412,9 +412,11 @@ module Adm
       end
 
       # Everything every page needs and nothing any single one does: the tab
-      # strip reads @active_tab, the header reads @breadcrumbs.
+      # strip reads @active_tab, the header reads @breadcrumbs, the alert under
+      # the tabs reads @blocking_reasons.
       def load_page_chrome
         @active_tab = action_name
+        @blocking_reasons = ::Whatsapp.blocking_reasons
         @breadcrumbs = [
           { name: t("adm.menu.items.application"), icon: "desktop_windows" },
           { name: t("adm.whatsapp.show.title") }

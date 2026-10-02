@@ -1,4 +1,4 @@
-# The models each provider offers, as the daily ai_models:refresh task last
+# The models each provider offers, as the five-hourly ai_models:refresh task last
 # saved them to the ruby_llm_models table. A refresh downloads the catalogue
 # and rewrites every row in one transaction, so it never runs in a request:
 # two admins opening the AI settings page at once raced each other into the

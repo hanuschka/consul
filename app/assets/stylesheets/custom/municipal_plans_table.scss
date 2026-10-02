@@ -1,0 +1,197 @@
+.municipal-plans-list .resources-list:not(.-wide) .municipal-plans-table {
+  display: none;
+}
+
+.municipal-plans-list .resources-list.-wide .municipal-plans-table ~ .resources-list--body {
+  display: none;
+}
+
+.municipal-plans-table {
+  margin-bottom: 20px;
+}
+
+.municipal-plans-table .municipal-plans-table--scroll {
+  max-width: 100%;
+  overflow-x: auto;
+
+  &:focus-visible {
+    outline: $outline-focus;
+    outline-offset: 2px;
+  }
+}
+
+.municipal-plans-table .municipal-plans-table--legend {
+  margin-bottom: 12px;
+  color: $main-text-color;
+  font-size: $small-font-size;
+
+  .municipal-plans-table--legend-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin: 0;
+    list-style: none;
+  }
+
+  .fas {
+    margin-right: 4px;
+  }
+
+  @media (max-width: $small-tablet-viewport-start) {
+    display: none;
+  }
+}
+
+.municipal-plans-table .municipal-plans-table--table .municipal-plans-table--caption.show-for-sr {
+  @include element-invisible;
+  display: table-caption;
+}
+
+.municipal-plans-table .municipal-plans-table--table {
+  width: 100%;
+  margin-bottom: 0;
+  overflow: hidden;
+  border: 1px solid $border-color;
+  border-collapse: separate;
+  border-radius: $radius-base;
+  border-spacing: 0;
+  background: #fff;
+
+  thead,
+  tbody,
+  tr {
+    border: 0;
+    background: transparent;
+  }
+
+  th,
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid $border-color;
+    color: $main-text-color;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  thead th {
+    background: $light-gray-2;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+
+  .municipal-plans-table--sort-link {
+    color: inherit;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: $outline-focus;
+      outline-offset: 2px;
+    }
+
+    .fa {
+      margin-left: 4px;
+    }
+  }
+
+  .municipal-plans-table--sort-hint {
+    @include element-invisible;
+  }
+
+  tbody th {
+    background: transparent;
+    font-weight: bold;
+  }
+
+  tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  ul {
+    margin: 0;
+  }
+
+  .municipal-plans-table--badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+  }
+
+  .municipal-plans-table--badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+
+    &:focus-visible {
+      outline: $outline-focus;
+      outline-offset: 2px;
+    }
+  }
+
+  .municipal-plans-table--badge-label {
+    display: none;
+  }
+
+  @media (max-width: $small-tablet-viewport-start) {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+
+    thead {
+      @include element-invisible;
+    }
+
+    tbody tr {
+      display: block;
+      margin-bottom: 16px;
+      border: 1px solid $border-color;
+      border-radius: $radius-base;
+      background: #fff;
+    }
+
+    th,
+    td {
+      display: block;
+      padding: 8px 16px;
+    }
+
+    tbody tr:last-child > * {
+      border-bottom: 1px solid $border-color;
+    }
+
+    tbody tr > :last-child {
+      border-bottom: 0;
+    }
+
+    td:empty {
+      display: none;
+    }
+
+    td::before {
+      content: attr(data-label);
+      display: block;
+      font-weight: bold;
+    }
+
+    .municipal-plans-table--badges {
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .municipal-plans-table--badge {
+      white-space: normal;
+    }
+
+    .municipal-plans-table--badge-label {
+      display: inline;
+    }
+  }
+}

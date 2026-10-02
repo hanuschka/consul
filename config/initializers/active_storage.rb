@@ -32,3 +32,8 @@ Rails.application.config.to_prepare do
       end
   end
 end
+
+require Rails.root.join("lib", "image_metadata_stripper").to_s
+require Rails.root.join("lib", "image_metadata_stripper", "upload_hook").to_s
+
+ActiveStorage::Attached::Changes::CreateOne.prepend(ImageMetadataStripper::UploadHook)

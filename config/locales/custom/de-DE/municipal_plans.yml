@@ -1,0 +1,138 @@
+de:
+  custom:
+    municipal_plans:
+      index:
+        title: Vorhabenliste
+        intro_text: In der Vorhabenliste stellt die Stadt ihre laufenden und geplanten Vorhaben vor. Zu jedem Vorhaben finden Sie den aktuellen Bearbeitungsstand, die nächsten Schritte, die betroffenen Ortsteile sowie eine Ansprechperson in der Verwaltung.
+        empty_list_text: Zurzeit sind keine Vorhaben veröffentlicht.
+        archive_title: Archiv der Vorhabenliste
+        archive_intro_text: Im Archiv finden Sie Vorhaben, die abgeschlossen sind oder nicht weiterverfolgt werden. Die Einträge bleiben mit allen Angaben erhalten, werden aber nicht mehr aktualisiert.
+        archive_empty_list_text: Im Archiv sind zurzeit keine Vorhaben abgelegt.
+        archive_link: Zum Archiv der Vorhabenliste
+        overview_link: Zurück zur Vorhabenliste
+        to_municipal_plan: Zum Vorhaben
+        updated_on: "Aktualisiert am %{date}"
+        count: Vorhaben
+        orders:
+          relevance: Relevanz
+          given_order: Redaktionelle Reihenfolge
+          content_updated_at: Aktualisierungsdatum (neueste zuerst)
+          content_updated_at_asc: Aktualisierungsdatum (älteste zuerst)
+          title: Titel (A–Z)
+          title_desc: Titel (Z–A)
+          topics: Kategorie (A–Z)
+          topics_desc: Kategorie (Z–A)
+          districts: Ort (A–Z)
+          districts_desc: Ort (Z–A)
+        search_form:
+          placeholder: z. B. Marktplatz
+          button_title: Vorhaben durchsuchen
+        sidebar_information: Die Vorhabenliste gibt einen Überblick über geplante und laufende Vorhaben der Stadt. Zu jedem Vorhaben können Sie über das Hinweisformular eine Anmerkung an die zuständige Stelle senden.
+        sidebar:
+          apply: Filter anwenden
+          districts:
+            title: Ortsteil
+            empty: Es sind keine Ortsteile hinterlegt.
+          topics:
+            title: Thema
+            empty: Es sind keine Themen hinterlegt.
+          participation:
+            title: Bürgerbeteiligung
+            options:
+              formal: formelle Bürgerbeteiligung
+              informal: informelle Bürgerbeteiligung
+          recency:
+            title: Kennzeichnung
+          updated_range:
+            title: Aktualisierungsdatum
+            from_label: Aktualisiert ab
+            to_label: Aktualisiert bis
+            reset: Zeitraum zurücksetzen
+        table:
+          caption: Vorhabenliste
+          archive_caption: Archiv der Vorhabenliste
+          region_label: Tabelle der Vorhaben
+          legend: Legende
+          columns:
+            title: Vorhaben
+            date: Datum
+            topics: Kategorie
+            districts: Ort
+            badges: Kennzeichnung
+          sort:
+            ascending: sortieren, aufsteigend
+            descending: sortieren, absteigend
+        overview_map:
+          region_label: Karte der Ortsteile
+          note: Die Karte zeigt die Ortsteile und die Lage der Vorhaben. Alle Ortsteile lassen sich auch über die Liste „Ortsteil“ filtern.
+      badges:
+        new: neuer Eintrag
+        updated: aktualisierter Eintrag
+        formal_participation: formelle Bürgerbeteiligung
+        informal_participation: informelle Bürgerbeteiligung
+      notices:
+        create:
+          success: Vielen Dank! Ihr Hinweis wurde an die zuständige Stelle weitergeleitet.
+        form:
+          title: Ihr Hinweis zum Vorhaben
+          subline: Ihre Nachricht geht direkt an den zuständigen Fachbereich.
+          name: Name (freiwillig)
+          email: E-Mail
+          body: Ihr Hinweis
+          required_legend: Pflichtfeld
+          submit: Hinweis senden
+          error_title: Ihr Hinweis konnte nicht abgeschickt werden
+
+      show:
+        hero:
+          status_archived_chip: abgeschlossen
+          status_new: neu
+          status_updated: aktualisiert
+        intro:
+          title: Worum es geht
+        timeline:
+          title: Wo steht das Vorhaben?
+          now: Jetzt
+        background:
+          eyebrow: Hintergrund
+          title: Weitere Informationen zum Vorhaben
+        participation_block:
+          formal: Formell
+          informal: Informell
+          status_yes: Ja
+          status_no: Nein
+          projekt_text: Zu diesem Vorhaben läuft ein Beteiligungsverfahren.
+          projekt_button: Zum Projekt
+        banner:
+          version: Version
+          topics: Themen
+          districts: Ortsteile
+        back: Zurück zur Vorhabenliste
+        at_a_glance:
+          title: Auf einen Blick
+          area: Gebiet
+          costs: Kosten
+          formal: Formelle Beteiligung
+          informal: Informelle Beteiligung
+        last_resolution: Letzter Beschluss
+        processing_status: Aktueller Bearbeitungsstand
+        next_steps: Geplanter Zeitpunkt, nächste Schritte
+        districts: Betroffenes Gebiet / Ortsteil
+        topics: Schwerpunktmäßig betroffene Themen
+        participation: Bürgerbeteiligung
+        links: Links & Dokumente
+        opens_in_new_tab: (öffnet in einem neuen Tab)
+        location:
+          title: Lage
+          approximate: Ungefähre Lage
+        map_address_missing: Zu diesem Vorhaben liegt keine Adresse vor. Die Lage ist ausschließlich in der Karte dargestellt.
+        updated_on: "Aktualisiert am %{date}"
+        notice_card:
+          title: Fragen oder Hinweise?
+          text: Schreiben Sie dem Fachbereich direkt zu diesem Vorhaben.
+          button: Hinweis geben
+        projekt_card:
+          title: Beteiligungsprojekt
+          text: Zu diesem Vorhaben läuft ein Beteiligungsverfahren auf dieser Plattform.
+      projekt_sidebar:
+        title: Zugehöriges Vorhaben

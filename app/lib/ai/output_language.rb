@@ -17,4 +17,12 @@ module Ai::OutputLanguage
 
     LANGUAGE_NAMES.fetch(locale.to_s, FALLBACK)
   end
+
+  # A reply in a conversation follows the person being spoken to, in every
+  # environment — unlike stored content, which follows the site. The WhatsApp
+  # prompts reached past `name_for` into the constants to get this; naming it
+  # here keeps the two of them from drifting into answering it differently.
+  def self.chat_name_for(locale)
+    LANGUAGE_NAMES.fetch(locale.to_s, FALLBACK)
+  end
 end

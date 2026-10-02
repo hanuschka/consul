@@ -1,0 +1,15 @@
+en:
+  custom:
+    municipal_plan_mailer:
+      notice_submitted:
+        subject: "New notice on the plan: %{title}"
+        greeting: "Hello,"
+        body: "a notice on the plan “%{title}” was submitted through the plan list."
+        sender: "Submitted by"
+        no_name: "no name given"
+      submitted_for_release:
+        subject: "Plan submitted for release: %{title}"
+        greeting: "Hello,"
+        body: "the plan “%{title}” was submitted for release and is waiting to be reviewed."
+        body_with_responsible: "the plan “%{title}” was submitted for release by %{responsible} and is waiting to be reviewed."
+        review_link: Review and release the plan.

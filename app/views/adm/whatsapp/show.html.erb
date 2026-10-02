@@ -1,0 +1,33 @@
+<%# Only reached when the portal has no WhatsApp credentials — a configured one
+    is redirected to the first page. There are no tabs here on purpose: none of
+    them can show anything until the integration exists. %>
+<%= content_for :title, t("adm.whatsapp.show.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.whatsapp.show.title"),
+  breadcrumbs: @breadcrumbs
+) %>
+
+<div class="kern-container my-3 adm-whatsapp-page">
+  <%= kern_alert(title: t("adm.whatsapp.show.unavailable_title"), style: :info) do %>
+    <p class="kern-body"><%= t("adm.whatsapp.show.unavailable_body") %></p>
+  <% end %>
+
+  <section class="adm-whatsapp-page--explanation mt-5">
+    <h2 class="kern-heading-medium mb-2">
+      <%= t("adm.whatsapp.show.explanation_title") %>
+    </h2>
+    <p class="kern-body mb-3"><%= t("adm.whatsapp.show.explanation_intro") %></p>
+
+    <dl class="kern-description-list kern-description-list--col">
+      <% t("adm.whatsapp.show.explanation_items").each do |item| %>
+        <div class="kern-description-list-item">
+          <dt class="kern-description-list-item__key"><%= item[:title] %></dt>
+          <dd class="kern-description-list-item__value"><%= item[:body] %></dd>
+        </div>
+      <% end %>
+    </dl>
+
+    <p class="kern-body mt-3"><%= t("adm.whatsapp.show.explanation_outro") %></p>
+  </section>
+</div>

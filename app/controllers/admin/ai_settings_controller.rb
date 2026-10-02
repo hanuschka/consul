@@ -2,7 +2,10 @@ class Admin::AiSettingsController < Admin::BaseController
   helper_method :show_api_endpoint?, :show_model_field?, :show_custom_model_field?
 
   def index
-    @ai_settings = Setting.where("key LIKE ?", "ai.%").order(:key)
+    @ai_settings = Setting
+      .where("key LIKE ?", "ai.%")
+      .where.not(key: ::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY)
+      .order(:key)
   end
 
   def update

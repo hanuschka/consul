@@ -1,0 +1,19 @@
+<%# Shared chrome: browser title, page header with its one-line hint, and the
+    tab strip. Every WhatsApp page opens with this so a new page cannot end up
+    wearing different chrome from the other six. Page content is written
+    directly in each page template, not here. %>
+<% page_scope = "adm.whatsapp.pages.#{key}" %>
+
+<%= content_for :title,
+  "#{t("adm.whatsapp.show.title")} · #{t("adm.whatsapp.show.tabs.#{key}")}" %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.whatsapp.show.title"),
+  breadcrumbs: @breadcrumbs
+) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t("#{page_scope}.hint") %></p>
+  <% end %>
+<% end %>
+
+<%= render "adm/whatsapp/tabs" %>

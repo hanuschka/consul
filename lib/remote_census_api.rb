@@ -56,8 +56,8 @@ class RemoteCensusApi
     end
 
     def house_number_extension_matched?
-      request_house_number_extension = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummerBuchstabeZusatzziffer", "ns2" => "http://www.osci.de/xmeld2411").text
-      registered_house_number_extensions = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummerBuchstabeZusatzziffer", "ns2" => "http://www.osci.de/xmeld2411").map(&:text)
+      request_house_number_extension = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummerBuchstabeZusatzziffer", "ns2" => "http://www.osci.de/xmeld34").text
+      registered_house_number_extensions = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummerBuchstabeZusatzziffer", "ns2" => "http://www.osci.de/xmeld34").map(&:text)
 
       return true if request_house_number_extension.blank? && registered_house_number_extensions.blank?
 

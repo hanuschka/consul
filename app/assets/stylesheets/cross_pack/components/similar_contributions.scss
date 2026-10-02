@@ -1,0 +1,730 @@
+// One width for both states, so the dialog does not resize under the citizen
+// when the spinner gives way to the matches. .shared-modal's own 90vw cap is
+// restated here because the desktop width below replaces it.
+// [open] only: a closed <dialog> is hidden by the UA's display: none, which a
+// bare display: flex here would override into a permanently visible panel.
+.shared-modal.-similar-contributions[open] {
+  display: flex;
+  flex-direction: column;
+  width: 90vw;
+  max-width: 90vw;
+  // unquote() because libsass evaluates min() itself and rejects mixed units;
+  // the browser has to be the one comparing vh against dvh.
+  max-height: unquote("min(95vh, 95dvh)");
+  overflow: hidden;
+}
+
+// The title and the action row stay put while only the match list scrolls, so
+// every wrapper between the dialog and the list has to pass the remaining
+// height on. min-height: 0 is what lets the list shrink below its own content
+// instead of pushing the actions out of the dialog.
+.shared-modal.-similar-contributions[open] .shared-modal--content,
+.shared-modal.-similar-contributions[open] .similar-contributions-check--result:not(:empty) {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.shared-modal.-similar-contributions[open] .modern-modal--header,
+.shared-modal.-similar-contributions[open] .similar-contributions-notice--actions {
+  flex: 0 0 auto;
+}
+
+@media (min-width: 980px) {
+  .shared-modal.-similar-contributions[open] {
+    width: 760px;
+    max-width: 760px;
+  }
+}
+
+.similar-contributions-check--modal-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.similar-contributions-check--modal-progress-title {
+  margin: 24px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.similar-contributions-check--modal-progress-hint {
+  max-width: 460px;
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+.similar-contributions-check--modal-progress[hidden] {
+  display: none;
+}
+
+.similar-contributions-check--modal-progress .shared-loading-spinner {
+  border-top-color: #1b5e20;
+}
+
+// ---------------------------------------------------------------------------
+// One match, wherever it is shown. The variants below change only the picture
+// size and the type scale -- never the structure.
+// ---------------------------------------------------------------------------
+
+.similar-contributions-matches {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.similar-contributions-match {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0;
+  border-top: 1px solid #e2e2e2;
+
+  @media (min-width: 600px) {
+    flex-direction: row;
+    gap: 16px;
+  }
+}
+
+.similar-contributions-match:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.similar-contributions-match:last-child {
+  padding-bottom: 0;
+}
+
+.similar-contributions-match--thumb {
+  flex: 0 0 auto;
+  width: 100%;
+
+  @media (min-width: 600px) {
+    width: 200px;
+  }
+}
+
+.similar-contributions-match--thumb a {
+  display: block;
+  line-height: 0;
+}
+
+.similar-contributions-match--thumb img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+
+.similar-contributions-match--thumb-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #f3f4f6;
+  color: #888;
+  font-size: 36px;
+  line-height: 1;
+}
+
+.similar-contributions-match--body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.similar-contributions-match--meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 6px;
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: #6a6a6a;
+}
+
+.similar-contributions-match--meta .material-symbols-outlined {
+  font-size: 18px;
+}
+
+// The projekt a match comes from, shown only when it is not the one being read.
+// It carries the same scale as the rest of the meta line and only the weight of
+// a heading, because it is what tells an entry of an earlier round apart.
+.similar-contributions-match--projekt {
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+// Where the match stands in processing. It sits above the title it qualifies,
+// so it reads at the meta scale rather than as another label chip.
+.similar-contributions-match--status {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6a6a6a;
+}
+
+.similar-contributions-match--tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-bottom: 8px;
+}
+
+.similar-contributions-match--sentiment,
+.similar-contributions-match--label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.similar-contributions-match--label {
+  background: #eef1f4;
+  color: #3a3a3a;
+}
+
+.similar-contributions-match--title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.similar-contributions-match--title i {
+  margin-left: 4px;
+  font-size: 14px;
+}
+
+.similar-contributions-match--excerpt {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+// The excerpt and the copy button share a row: the button belongs beside the
+// quote rather than under it, because the popup has no height to spare.
+.similar-contributions-match--answer-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.similar-contributions-match--answer {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding-left: 12px;
+  border-left: 3px solid #d9d9d9;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+.similar-contributions-match--no-answer {
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-style: italic;
+  color: #6a6a6a;
+}
+
+// The stand-in for a textless answer takes the quote's place in the row, so it
+// has to behave like the quote rather than like the no-answer line above.
+.similar-contributions-match--answer-without-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  font-style: italic;
+  color: #6a6a6a;
+}
+
+// .kern-btn is sized for form actions, so the icon-only copy button has to be
+// brought down to something that sits next to a 14px quote.
+.similar-contributions-match--copy-answer.kern-btn {
+  flex: 0 0 auto;
+  min-height: 24px;
+  padding: 0 4px;
+
+  .material-symbols-outlined {
+    font-size: 1rem;
+  }
+}
+
+// The icon carries the confirmation because the label is screen-reader only.
+// The kern token is only defined in the admin pack, where this button lives.
+.similar-contributions-match--answer-row.-copied
+  .similar-contributions-match--copy-answer .material-symbols-outlined {
+  color: var(--kern-color-feedback-success, #157a3d);
+}
+
+// The other way out of a match. The title already carries the citizen page, so
+// this one names its destination in words rather than competing with it for
+// size -- it stays on the excerpt's step of the row's own scale.
+.similar-contributions-match--backend {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.similar-contributions-match--backend-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--kern-color-action-default, #21409a);
+  text-decoration: none;
+}
+
+// Only the underline moves on hover: the link sits inside a row whose other
+// interactive parts are a button and a title link, and a colour shift here
+// would read as a third kind of control.
+.similar-contributions-match--backend-link:hover,
+.similar-contributions-match--backend-link:focus-visible {
+  text-decoration: underline;
+}
+
+.similar-contributions-match--backend-link .material-symbols-outlined {
+  font-size: 16px;
+}
+
+// button_to wraps the kern button in a form; the form only has to place it.
+.similar-contributions-match--exclude {
+  margin-top: 10px;
+}
+
+// .kern-btn ships gap: 0, so the icon would otherwise touch the label.
+.similar-contributions-match--exclude .kern-btn {
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 var(--kern-metric-space-x-small, 8px);
+
+  .kern-label {
+    font-size: 0.875rem;
+  }
+
+  .material-symbols-outlined {
+    font-size: 1rem;
+  }
+}
+
+.similar-contributions-match--support {
+  margin-top: 14px;
+}
+
+// The shared votes markup is built for a centered sidebar column: here it has
+// to read as one compact row, with the quorum bar and any permission notice
+// still spanning the full width above it.
+.similar-contributions-match--support .supports {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  max-width: none;
+  margin: 0;
+  text-align: left;
+}
+
+.similar-contributions-match--support .supports > *:not(.in-favor):not(.votes):not(.total-supports) {
+  flex: 0 0 100%;
+}
+
+.similar-contributions-match--support .supports .in-favor,
+.similar-contributions-match--support .supports .votes,
+.similar-contributions-match--support .supports form {
+  margin: 0;
+}
+
+.similar-contributions-match--support .supports .button {
+  margin: 0;
+  width: auto;
+}
+
+.similar-contributions-match--support .supports .total-supports {
+  font-size: 14px;
+  color: #6a6a6a;
+}
+
+// Variants: the compact list -- the admin detail page and the decision block on
+// the citizen's form -- reads at a smaller scale than the citizen's modal, and
+// the badge popup smaller still.
+.similar-contributions-match.-list .similar-contributions-match--thumb,
+.similar-contributions-match.-decision .similar-contributions-match--thumb {
+  @media (min-width: 600px) {
+    width: 120px;
+  }
+}
+
+.similar-contributions-match.-list .similar-contributions-match--title,
+.similar-contributions-match.-decision .similar-contributions-match--title {
+  font-size: 15px;
+}
+
+.similar-contributions-match.-list .similar-contributions-match--excerpt,
+.similar-contributions-match.-decision .similar-contributions-match--excerpt {
+  font-size: 14px;
+}
+
+// The citizen's modal shows every match at once above a fixed action row, so
+// the notice rows are tightened by about a quarter against the base scale.
+.similar-contributions-match.-notice {
+  gap: 9px;
+  padding: 12px 0;
+
+  @media (min-width: 600px) {
+    gap: 16px;
+  }
+}
+
+.similar-contributions-match.-notice .similar-contributions-match--tags {
+  margin-bottom: 5px;
+}
+
+.similar-contributions-match.-notice .similar-contributions-match--sentiment,
+.similar-contributions-match.-notice .similar-contributions-match--label {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  line-height: 1.35;
+}
+
+.similar-contributions-match.-notice .similar-contributions-match--title {
+  margin-bottom: 5px;
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.similar-contributions-match.-notice .similar-contributions-match--excerpt {
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.similar-contributions-match.-notice .similar-contributions-match--support {
+  margin-top: 10px;
+}
+
+.similar-contributions-match.-popup {
+  flex-direction: row;
+  gap: 12px;
+  padding: 10px 0;
+  border-top-color: #ededed;
+}
+
+.similar-contributions-match.-popup .similar-contributions-match--thumb {
+  width: 72px;
+}
+
+.similar-contributions-match.-popup .similar-contributions-match--thumb-placeholder {
+  font-size: 24px;
+}
+
+.similar-contributions-match.-popup .similar-contributions-match--title {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+.similar-contributions-match.-popup .similar-contributions-match--excerpt {
+  font-size: 14px;
+}
+
+// 14px is the floor for text meant to be read, so the popup keeps the answer at
+// the list's size and buys the height back from the margins instead.
+.similar-contributions-match.-popup .similar-contributions-match--status {
+  margin-bottom: 6px;
+}
+
+.similar-contributions-match.-popup .similar-contributions-match--answer-row,
+.similar-contributions-match.-popup .similar-contributions-match--no-answer,
+.similar-contributions-match.-popup .similar-contributions-match--backend {
+  margin-top: 6px;
+}
+
+// ---------------------------------------------------------------------------
+// The citizen's modal
+// ---------------------------------------------------------------------------
+
+.similar-contributions-notice {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.similar-contributions-notice--intro {
+  margin: 0 0 20px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+.similar-contributions-notice--actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e2e2;
+}
+
+.similar-contributions-notice--default-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.similar-contributions-notice--actions .button {
+  margin: 0;
+}
+
+// .button and the flex row above both beat the UA rule for [hidden], so the
+// toggled-off state needs its own declaration.
+.similar-contributions-notice--supported-link[hidden],
+.similar-contributions-notice--default-actions[hidden] {
+  display: none;
+}
+
+// ---------------------------------------------------------------------------
+// The admin detail page
+// ---------------------------------------------------------------------------
+
+.similar-contributions-list {
+  margin-bottom: 24px;
+  scroll-margin-top: 24px;
+}
+
+.similar-contributions-list--title {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.similar-contributions-list--empty {
+  margin: 0;
+  font-size: 14px;
+  color: #4a4a4a;
+}
+
+// ---------------------------------------------------------------------------
+// The admin index badge and its hover panel
+// ---------------------------------------------------------------------------
+
+// Sits inline after a table title, so it aligns to the title's text rather
+// than to the row box, and keeps its own left margin off the link.
+.similar-contributions-badge-wrapper {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
+.similar-contributions-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #eef3ee;
+  color: #1b5e20;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  cursor: default;
+}
+
+// On the index the badge is a link to the matching section of the
+// contribution's own page, so it has to shed the surrounding link styling.
+a.similar-contributions-badge {
+  color: #1b5e20;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a.similar-contributions-badge:hover,
+a.similar-contributions-badge:focus-visible {
+  background: #dce8dc;
+  color: #14471a;
+  text-decoration: none;
+}
+
+.similar-contributions-badge .material-symbols-outlined {
+  font-size: 18px;
+}
+
+// Fixed rather than absolute, and positioned from the badge's own rect by the
+// Stimulus controller: the index table sits in .kern-table-responsive, whose
+// overflow-x makes the block axis scrollable too, so an absolutely positioned
+// panel would be clipped inside the table instead of overlaying it.
+.similar-contributions-badge--popup {
+  position: fixed;
+  z-index: 20;
+  width: 420px;
+  max-width: 80vw;
+  max-height: 420px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px 14px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  white-space: normal;
+  text-align: left;
+}
+
+.similar-contributions-badge--popup.is-loading {
+  min-height: 56px;
+}
+
+.similar-contributions-popup--empty {
+  margin: 0;
+  font-size: 14px;
+  color: #6a6a6a;
+}
+
+// ---------------------------------------------------------------------------
+// The check's own chrome on the form
+// ---------------------------------------------------------------------------
+
+.similar-contributions-check {
+  margin: 0;
+  padding: 0;
+}
+
+.similar-contributions-check--result:empty {
+  display: none;
+}
+
+.similar-contributions-progress {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 8px;
+  padding: 14px 20px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #f6f9f6;
+}
+
+.similar-contributions-progress[hidden] {
+  display: none;
+}
+
+.similar-contributions-progress .shared-loading-spinner {
+  border-top-color: #1b5e20;
+}
+
+.similar-contributions-progress .shared-loading-spinner--message {
+  font-size: 16px;
+  line-height: 1.4;
+  color: #4a4a4a;
+  text-align: left;
+}
+
+// The citizen has already been told the contribution may be a duplicate and
+// has walked away from that modal, so this block has to keep the decision
+// visible on a long form: a warning panel, not two loose buttons.
+.similar-contributions-decision {
+  margin-top: 8px;
+  padding: 16px 18px;
+  border: 1px solid #e8c46a;
+  border-left: 4px solid #d99b1c;
+  border-radius: 8px;
+  background: #fdf8ec;
+}
+
+.similar-contributions-decision[hidden] {
+  display: none;
+}
+
+.similar-contributions-decision--headline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #7a5303;
+}
+
+.similar-contributions-decision--headline i {
+  font-size: 18px;
+  color: #d99b1c;
+}
+
+.similar-contributions-decision--intro {
+  margin: 0 0 14px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+.similar-contributions-decision--actions,
+.similar-contributions-decision--default-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.similar-contributions-decision--actions .button {
+  margin: 0;
+}
+
+// .button and the flex rows above both beat the UA rule for [hidden], so the
+// toggled-off states need their own declarations.
+.similar-contributions-decision--supported-link[hidden],
+.similar-contributions-decision--default-actions[hidden] {
+  display: none;
+}
+
+.similar-contributions-decision--toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.similar-contributions-decision--toggle i {
+  font-size: 13px;
+  transition: transform 0.15s ease;
+}
+
+.similar-contributions-decision--toggle[aria-expanded="true"] i {
+  transform: rotate(180deg);
+}
+
+.similar-contributions-decision--matches {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid #ecdcb4;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.similar-contributions-decision--matches[hidden] {
+  display: none;
+}
+
+// The panel's own tinted ground would read through the shared votes markup, so
+// the support row is set off against the white match list instead.
+.similar-contributions-decision--matches .similar-contributions-match--support {
+  padding-top: 12px;
+  border-top: 1px dashed #e2e2e2;
+}

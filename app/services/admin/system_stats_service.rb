@@ -13,7 +13,7 @@ class Admin::SystemStatsService < ApplicationService
 
   def call
     {
-      memory:     memory_stats,
+      memory:     Admin::MemoryStatsService.call,
       disk:       disk_stats,
       cpu:        cpu_stats,
       db_pool:    db_pool_stats,
@@ -23,25 +23,6 @@ class Admin::SystemStatsService < ApplicationService
   end
 
   private
-
-  def memory_stats
-    mem_info = read_meminfo
-
-    return { available: false } if mem_info.empty?
-
-    total_mb = (mem_info["MemTotal"].to_i / 1024.0).round
-    free_mb  = (mem_info["MemAvailable"].to_i / 1024.0).round
-    used_mb  = total_mb - free_mb
-    pct      = total_mb > 0 ? (used_mb * 100.0 / total_mb).round : 0
-
-    {
-      available: true,
-      total_mb:  total_mb,
-      used_mb:   used_mb,
-      free_mb:   free_mb,
-      pct:       pct
-    }
-  end
 
   def disk_stats
     output   = `df -k / 2>/dev/null`.lines.last&.split
@@ -259,15 +240,6 @@ class Admin::SystemStatsService < ApplicationService
     `ldd --version 2>/dev/null`.lines.first.to_s[/([\d]+\.[\d.]+)\s*\z/, 1]
   rescue StandardError
     nil
-  end
-
-  def read_meminfo
-    File.read("/proc/meminfo").lines.each_with_object({}) do |line, h|
-      k, v = line.split(":")
-      h[k.strip] = v.strip.to_i if v
-    end
-  rescue StandardError
-    {}
   end
 
   def read_loadavg

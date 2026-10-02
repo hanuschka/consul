@@ -1,0 +1,161 @@
+.adm-mitmachbox-device {
+  --adm-mitmachbox-case: oklch(var(--kern-neutral-950-lightness) var(--kern-neutral-950-chroma) var(--kern-neutral-950-hue));
+  --adm-mitmachbox-ink: #000;
+  --adm-mitmachbox-paper: oklch(var(--kern-neutral-050-lightness) var(--kern-neutral-050-chroma) var(--kern-neutral-050-hue));
+  --adm-mitmachbox-yellow: oklch(var(--kern-yellow-150-lightness) var(--kern-yellow-150-chroma) var(--kern-yellow-150-hue));
+  --adm-mitmachbox-yellow-shade: oklch(var(--kern-yellow-400-lightness) var(--kern-yellow-400-chroma) var(--kern-yellow-400-hue));
+
+  container-type: inline-size;
+  max-width: 56rem;
+  overflow-wrap: anywhere;
+}
+
+.adm-mitmachbox-device__case {
+  --adm-mitmachbox-bezel: 1.75cqw;
+  --adm-mitmachbox-screen-pad: 2.5cqw;
+  --adm-mitmachbox-slot-gap: 1.5cqw;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "screen confirm" "keys .";
+  gap: 2.5cqw;
+  padding: 3cqw;
+  background: var(--adm-mitmachbox-case);
+  border-radius: 3cqw;
+}
+
+.adm-mitmachbox-device__bezel {
+  grid-area: screen;
+  padding: var(--adm-mitmachbox-bezel);
+  background: var(--adm-mitmachbox-yellow);
+  border-radius: 1.5cqw;
+}
+
+.adm-mitmachbox-device__screen {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 5 / 3;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--adm-mitmachbox-ink);
+  background: var(--adm-mitmachbox-paper);
+}
+
+.adm-mitmachbox-device__prompt,
+.adm-mitmachbox-device__message {
+  margin: 4cqw 3cqw 0;
+  font-family: inherit;
+  font-size: max(0.875rem, 3cqw);
+  font-weight: 700;
+  line-height: 1.4167;
+  color: inherit;
+}
+
+.adm-mitmachbox-device__prompt {
+  min-height: 12.25cqw;
+}
+
+.adm-mitmachbox-device__message {
+  margin-top: 22cqw;
+}
+
+.adm-mitmachbox-device__answers {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 1cqw;
+  min-height: 37.5cqw;
+  margin-inline: 3cqw;
+}
+
+.adm-mitmachbox-device__answer {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+  padding-inline: 1.25cqw;
+  text-align: center;
+  border: max(1px, 0.125cqw) solid var(--adm-mitmachbox-ink);
+}
+
+.adm-mitmachbox-device__label {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  font-size: max(0.75rem, 2.25cqw);
+  line-height: 1.3333;
+}
+
+.adm-mitmachbox-device__number {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 5.5cqw;
+  font-size: max(0.75rem, 2.25cqw);
+  font-weight: 700;
+}
+
+.adm-mitmachbox-device__input:checked + .adm-mitmachbox-device__answer {
+  color: var(--adm-mitmachbox-paper);
+  background: var(--adm-mitmachbox-ink);
+}
+
+.adm-mitmachbox-device__input:focus-visible + .adm-mitmachbox-device__answer,
+.adm-mitmachbox-device__key--confirm:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--kern-color-action-on-default), 0 0 0 4px var(--kern-color-action-focus-border-inside), 0 0 0 6px var(--kern-color-action-focus-border-outside);
+}
+
+.adm-mitmachbox-device__footer {
+  display: flex;
+  align-items: center;
+  min-height: 4.5cqw;
+  margin: 1.75cqw 3cqw 0;
+  font-size: max(0.625rem, 1.75cqw);
+  line-height: 1.3;
+  white-space: pre-wrap;
+}
+
+.adm-mitmachbox-device__keys {
+  grid-area: keys;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  justify-items: center;
+  gap: var(--adm-mitmachbox-slot-gap);
+  padding-inline: calc(var(--adm-mitmachbox-bezel) + var(--adm-mitmachbox-screen-pad));
+}
+
+.adm-mitmachbox-device__key {
+  display: block;
+  width: max(2rem, 6cqw);
+  aspect-ratio: 1;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: var(--kern-metric-border-radius-circle);
+  background: var(--adm-mitmachbox-yellow);
+  box-shadow: inset 0 calc(-1 * max(2px, 0.5cqw)) 0 var(--adm-mitmachbox-yellow-shade);
+}
+
+label.adm-mitmachbox-device__key,
+button.adm-mitmachbox-device__key {
+  cursor: pointer;
+}
+
+.adm-mitmachbox-device__key--confirm {
+  grid-area: confirm;
+  align-self: center;
+  width: max(2.5rem, 7cqw);
+
+  &:active {
+    box-shadow: inset 0 max(2px, 0.5cqw) 0 var(--adm-mitmachbox-yellow-shade);
+  }
+}
+
+@for $key from 1 through 5 {
+  .adm-mitmachbox-device__case:has(.adm-mitmachbox-device__input[data-key="#{$key}"]:checked) .adm-mitmachbox-device__key[data-key="#{$key}"] {
+    box-shadow: inset 0 max(2px, 0.5cqw) 0 var(--adm-mitmachbox-yellow-shade);
+  }
+}

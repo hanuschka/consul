@@ -1,0 +1,74 @@
+<%
+  broadcast = slot[:group] == ::Whatsapp::TemplateSlots::BROADCAST_GROUP
+  row_id = "whatsapp-slot-#{slot[:group]}-#{slot[:kind]}"
+%>
+
+<tr class="kern-table__row">
+  <th scope="row" class="kern-table__header" id="<%= row_id %>">
+    <%# The purpose above the name, because eleven rows of German labels are hard
+        to group by eye and the two catalogs behave differently. %>
+    <span class="kern-preline adm-whatsapp-page--slot-purpose">
+      <%= t("adm.whatsapp.show.slot_purpose_#{slot[:group]}") %>
+    </span>
+    <span class="kern-body"><%= slot[:label] %></span>
+  </th>
+
+  <td class="kern-table__cell">
+    <%# An empty slot says so once, in the status column. Repeating it here read
+        as two different facts about the same row. %>
+    <% if slot[:name].present? %>
+      <code class="adm-whatsapp-page--slot-name"><%= slot[:name] %></code>
+    <% else %>
+      <span class="kern-body kern-body--muted">&mdash;</span>
+    <% end %>
+  </td>
+
+  <td class="kern-table__cell"><%= slot[:language] %></td>
+
+  <td class="kern-table__cell">
+    <%# The one status representation on the page: a slot with no template at all
+        gets the same badge shape as an approved one, rather than prose. %>
+    <%= whatsapp_slot_status_badge(slot) %>
+  </td>
+
+  <td class="kern-table__cell kern-table__cell--action">
+    <% if ::Whatsapp::TemplateSlots.armed?(slot) %>
+      <span class="kern-body kern-body--muted"><%= t("adm.whatsapp.show.template_in_use") %></span>
+    <% elsif broadcast %>
+      <%# Nothing to offer for a broadcast slot: which template fills it is
+          chosen from the account list below, where the approved candidates are.
+          A button here would have no template to name. %>
+      <span class="kern-body kern-body--muted">&mdash;</span>
+    <% elsif slot[:approved] %>
+      <%# A real PATCH form rather than an <a> carrying data-turbo-method: only
+          PATCH is routed, so a Turbo prefetch, a middle-click or a bookmarked
+          href would raise a routing error. %>
+      <%= form_with url: use_notification_template_adm_whatsapp_path, method: :patch do |form| %>
+        <%= form.hidden_field :kind, value: slot[:kind], id: nil %>
+        <%= kern_button(
+          text: t("adm.whatsapp.show.template_use"),
+          type: "submit",
+          style: :secondary,
+          "aria-describedby": row_id
+        ) %>
+      <% end %>
+    <% elsif !slot[:submitted] %>
+      <%= form_with url: create_notification_template_adm_whatsapp_path, method: :post do |form| %>
+        <%= form.hidden_field :kind, value: slot[:kind], id: nil %>
+        <%= kern_button(
+          text: t("adm.whatsapp.show.notification_template_submit"),
+          type: "submit",
+          style: :tertiary,
+          "aria-describedby": row_id
+        ) %>
+      <% end %>
+    <% elsif whatsapp_template_rejected?(slot[:status]) %>
+      <%# A rejected push is a dead end otherwise: nothing can send with it, and
+          its name is taken, so the row has to offer the way out. %>
+      <%= render "adm/whatsapp/notification_resubmit_form",
+        kind: slot[:kind], button_options: { "aria-describedby": row_id } %>
+    <% else %>
+      <span class="kern-body kern-body--muted">&mdash;</span>
+    <% end %>
+  </td>
+</tr>

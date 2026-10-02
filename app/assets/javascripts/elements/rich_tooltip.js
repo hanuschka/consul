@@ -122,7 +122,11 @@
       }
 
       this.appendChild(body)
-      this.trigger.setAttribute("aria-describedby", body.id)
+
+      if (this.normalizeText(body.textContent) !== this.triggerAccessibleName()) {
+        this.trigger.setAttribute("aria-describedby", body.id)
+      }
+
       this.tooltipBody = body
 
       if (SUPPORTS_ANCHOR) {
@@ -131,6 +135,16 @@
         body.style.setProperty("position-anchor", anchorName)
         this.applyAnchorPlacement(body)
       }
+    }
+
+    triggerAccessibleName() {
+      const label = this.trigger.getAttribute("aria-label")
+
+      return this.normalizeText(label === null ? this.trigger.textContent : label)
+    }
+
+    normalizeText(text) {
+      return (text || "").replace(/\s+/g, " ").trim()
     }
 
     applyAnchorPlacement(body) {

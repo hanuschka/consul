@@ -5,6 +5,7 @@ require_dependency Rails.root.join(
 class Admin::SiteCustomization::ContentBlocksController
   include AiErrorHandling
   include SiteContentBlocksAiActions
+  include ContentBlockVisibilityParams
 
   # The core controller names this resource, so a nameless skip would never
   # match it and CanCan would keep loading the content block underneath.
@@ -20,11 +21,13 @@ class Admin::SiteCustomization::ContentBlocksController
     update_params = {}
     update_params[:body] = params[:html] if params.key?(:html)
     update_params[:margin_bottom] = params[:margin_bottom] if params.key?(:margin_bottom)
+    update_params.merge!(content_block_visibility_params)
 
     if @content_block.update(update_params)
       render json: {
         body: @content_block.body,
         stripped: @content_block.body_stripped?,
+        visibility: @content_block.visibility_state,
         status: { message: I18n.t("admin.site_customization.content_blocks.update.notice") }
       }
     else

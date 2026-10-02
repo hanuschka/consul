@@ -6,7 +6,7 @@ class Ai::Tools::FetchContentBlockTemplates < RubyLLM::Tool
               "those categories, and template ids for individual templates. Pass an " \
               "empty array for the selector you do not need."
 
-  params do
+  parameters do
     array :category_ids,
           of: :string,
           description: "Category ids whose templates should be returned in full"

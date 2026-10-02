@@ -1,13 +1,8 @@
 class AiUsageRecords::PushCurrentMonths < ApplicationService
-  PUSHED_COLUMNS = %w[
-    period_month feature provider model version
-    request_count unpriced_request_count
-    input_tokens output_tokens cache_read_tokens cache_write_tokens
-    thinking_tokens audio_seconds cost_total
-  ].freeze
+  PUSHED_COLUMNS = AiUsageRecords::Upsert::RETURNED_COLUMNS
 
   def call
-    return unless Dt.connected?
+    return if !Dt.connected?
 
     records = pushable_records
 

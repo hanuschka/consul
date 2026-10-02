@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_09_10_172943) do
+ActiveRecord::Schema.define(version: 2026_10_01_081754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -258,6 +258,11 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "version", default: 0, null: false
+    t.decimal "cost_input", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_output", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_cache_read", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_cache_write", precision: 14, scale: 6, default: "0.0", null: false
+    t.decimal "cost_thinking", precision: 14, scale: 6, default: "0.0", null: false
     t.index ["period_month", "feature", "provider", "model"], name: "index_ai_usage_records_on_period_and_breakdown", unique: true
     t.index ["period_month"], name: "index_ai_usage_records_on_period_month"
   end
@@ -1860,6 +1865,133 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
     t.index ["user_id"], name: "index_moderators_on_user_id"
   end
 
+  create_table "municipal_plan_district_assignments", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.bigint "registered_address_district_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_id", "registered_address_district_id"], name: "index_mp_district_assignments_unique", unique: true
+    t.index ["municipal_plan_id"], name: "index_mp_district_assignments_on_plan_id"
+    t.index ["registered_address_district_id"], name: "index_mp_district_assignments_on_district_id"
+  end
+
+  create_table "municipal_plan_links", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.string "title"
+    t.string "url"
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_id"], name: "index_municipal_plan_links_on_plan_id"
+  end
+
+  create_table "municipal_plan_notices", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.string "name"
+    t.string "email", null: false
+    t.text "body", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_id"], name: "index_municipal_plan_notices_on_municipal_plan_id"
+  end
+
+  create_table "municipal_plan_officer_group_assignments", force: :cascade do |t|
+    t.bigint "municipal_plan_officer_id", null: false
+    t.bigint "municipal_plan_officer_group_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_officer_group_id"], name: "index_mp_officer_group_assignments_on_group_id"
+    t.index ["municipal_plan_officer_id", "municipal_plan_officer_group_id"], name: "index_mp_officer_group_assignments_unique", unique: true
+    t.index ["municipal_plan_officer_id"], name: "index_mp_officer_group_assignments_on_officer_id"
+  end
+
+  create_table "municipal_plan_officer_groups", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "municipal_plan_officers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_municipal_plan_officers_on_user_id", unique: true
+  end
+
+  create_table "municipal_plan_topic_assignments", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.bigint "municipal_plan_topic_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["municipal_plan_id", "municipal_plan_topic_id"], name: "index_mp_topic_assignments_unique", unique: true
+    t.index ["municipal_plan_id"], name: "index_mp_topic_assignments_on_plan_id"
+    t.index ["municipal_plan_topic_id"], name: "index_mp_topic_assignments_on_topic_id"
+  end
+
+  create_table "municipal_plan_topic_translations", force: :cascade do |t|
+    t.bigint "municipal_plan_topic_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_mp_topic_translations_on_locale"
+    t.index ["municipal_plan_topic_id"], name: "index_mp_topic_translations_on_topic_id"
+  end
+
+  create_table "municipal_plan_topics", force: :cascade do |t|
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "municipal_plan_translations", force: :cascade do |t|
+    t.bigint "municipal_plan_id", null: false
+    t.string "locale", null: false
+    t.string "title"
+    t.text "short_description"
+    t.text "further_information"
+    t.text "last_resolution"
+    t.text "processing_status"
+    t.text "next_steps"
+    t.string "costs"
+    t.text "formal_participation_reason"
+    t.text "informal_participation_reason"
+    t.string "contact_role"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_municipal_plan_translations_on_locale"
+    t.index ["municipal_plan_id"], name: "index_municipal_plan_translations_on_plan_id"
+  end
+
+  create_table "municipal_plans", force: :cascade do |t|
+    t.string "status", default: "draft", null: false
+    t.string "version", default: "0.1", null: false
+    t.date "content_updated_at"
+    t.integer "given_order"
+    t.boolean "formal_participation", default: false, null: false
+    t.boolean "informal_participation", default: false, null: false
+    t.string "contact_name"
+    t.string "contact_phone"
+    t.string "contact_email"
+    t.string "system_mailbox_email"
+    t.string "responsible_type"
+    t.bigint "responsible_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.tsvector "tsv"
+    t.datetime "submitted_at"
+    t.bigint "released_plan_id"
+    t.date "archive_on"
+    t.datetime "released_at"
+    t.string "legacy_id"
+    t.index ["given_order"], name: "index_municipal_plans_on_given_order"
+    t.index ["legacy_id"], name: "index_municipal_plans_on_legacy_id", unique: true
+    t.index ["released_plan_id"], name: "index_municipal_plans_on_released_plan_id"
+    t.index ["responsible_type", "responsible_id"], name: "index_municipal_plans_on_responsible"
+    t.index ["status"], name: "index_municipal_plans_on_status"
+    t.index ["tsv"], name: "index_municipal_plans_on_tsv", using: :gin
+  end
+
   create_table "navbar_items", force: :cascade do |t|
     t.integer "kind"
     t.string "preset"
@@ -2803,10 +2935,12 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
     t.string "copy_status"
     t.bigint "copied_from_projekt_id"
     t.jsonb "copy_data"
+    t.bigint "municipal_plan_id"
     t.index ["activated"], name: "index_projekts_on_activated"
     t.index ["copied_from_projekt_id"], name: "index_projekts_on_copied_from_projekt_id"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"
     t.index ["landing_page_id"], name: "index_projekts_on_landing_page_id"
+    t.index ["municipal_plan_id"], name: "index_projekts_on_municipal_plan_id"
     t.index ["on_dt_global_overview"], name: "index_projekts_on_on_dt_global_overview"
     t.index ["parent_id"], name: "index_projekts_on_parent_id"
     t.index ["published_at"], name: "index_projekts_on_published_at"
@@ -3068,6 +3202,29 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
     t.index ["sentimentable_type", "sentimentable_id"], name: "index_resource_sentiments_on_sentimentable"
   end
 
+  create_table "ruby_llm_models", force: :cascade do |t|
+    t.string "model_id", null: false
+    t.string "name", null: false
+    t.string "provider", null: false
+    t.string "family"
+    t.datetime "model_created_at"
+    t.integer "context_window"
+    t.integer "max_output_tokens"
+    t.date "knowledge_cutoff"
+    t.datetime "unlisted_at"
+    t.jsonb "modalities", default: {}
+    t.jsonb "capabilities", default: []
+    t.jsonb "pricing", default: {}
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["capabilities"], name: "index_ruby_llm_models_on_capabilities", using: :gin
+    t.index ["family"], name: "index_ruby_llm_models_on_family"
+    t.index ["modalities"], name: "index_ruby_llm_models_on_modalities", using: :gin
+    t.index ["provider", "model_id"], name: "index_ruby_llm_models_on_provider_and_model_id", unique: true
+    t.index ["provider"], name: "index_ruby_llm_models_on_provider"
+  end
+
   create_table "saved_content_blocks", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", precision: 6, null: false
@@ -3288,6 +3445,9 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
     t.integer "margin_bottom"
     t.jsonb "ai_generation_data"
     t.integer "newsletter_id"
+    t.boolean "visible", default: true, null: false
+    t.datetime "visible_from"
+    t.datetime "visible_until"
     t.index "((ai_generation_data ->> 'mode'::text)), ((ai_generation_data ->> 'status'::text))", name: "index_site_customization_content_blocks_on_ai_mode_and_status"
     t.index "((ai_generation_data ->> 'status'::text))", name: "index_site_customization_content_blocks_on_ai_status"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
@@ -3771,6 +3931,8 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
     t.string "language"
     t.index ["created_at"], name: "index_whatsapp_messages_on_created_at"
     t.index ["wa_message_id"], name: "index_whatsapp_messages_on_wa_message_id", unique: true
+    t.index ["whatsapp_account_id", "id"], name: "index_whatsapp_messages_on_account_latest_inbound", order: { id: :desc }, where: "((direction)::text = 'inbound'::text)"
+    t.index ["whatsapp_account_id", "id"], name: "index_whatsapp_messages_on_account_latest_reply_language", order: { id: :desc }, where: "(((direction)::text = 'outbound'::text) AND (language IS NOT NULL))"
     t.index ["whatsapp_account_id", "projekt_id", "kind"], name: "index_whatsapp_messages_on_account_projekt_kind"
     t.index ["whatsapp_account_id"], name: "index_whatsapp_messages_on_whatsapp_account_id"
   end
@@ -3906,6 +4068,8 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
   add_foreign_key "mitmachbox_participations", "projekt_phases"
   add_foreign_key "mitmachbox_participations", "users"
   add_foreign_key "moderators", "users"
+  add_foreign_key "municipal_plan_notices", "municipal_plans"
+  add_foreign_key "municipal_plans", "municipal_plans", column: "released_plan_id"
   add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
   add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
@@ -3970,6 +4134,7 @@ ActiveRecord::Schema.define(version: 2026_09_10_172943) do
   add_foreign_key "projekt_settings", "projekts"
   add_foreign_key "projekt_subscriptions", "projekts"
   add_foreign_key "projekt_subscriptions", "users"
+  add_foreign_key "projekts", "municipal_plans", on_delete: :nullify
   add_foreign_key "projekts", "projekts", column: "parent_id"
   add_foreign_key "projekts", "site_customization_pages", column: "landing_page_id"
   add_foreign_key "proposals", "communities"

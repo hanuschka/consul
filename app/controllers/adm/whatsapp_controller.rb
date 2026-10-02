@@ -119,6 +119,23 @@ module Adm
       render json: result
     end
 
+    # The fix the webhook alert offers when 360dialog holds another address or
+    # header than this installation expects. It used to tell the admin to switch
+    # the bot off and on, which re-registered as a side effect.
+    def register_webhook
+      return head :forbidden if !@configured
+
+      response = ::Whatsapp::Platform::RegisterWebhookService.call(base_url: request.base_url)
+
+      if response.success?
+        flash[:success] = t("adm.whatsapp.show.webhook_registered")
+      else
+        flash[:error] = t("adm.whatsapp.show.webhook_registration_failed", code: response.code)
+      end
+
+      redirect_to connection_adm_whatsapp_path
+    end
+
     # def qr_poster
     #   token = params[:token].presence
     #   subject = token.present? ? qr_token_subject(token) : nil

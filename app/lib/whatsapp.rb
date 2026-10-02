@@ -184,16 +184,45 @@ module Whatsapp
     switched_on? && configured?
   end
 
+  # Raised by a job that finds the bot switched on but its own process without
+  # credentials. Secrets are read once per process, so a Delayed Job worker
+  # started before they were added keeps running without them after Puma has
+  # been restarted onto them — and the jobs it ran used to return in silence,
+  # dropping every reply. Raised instead, so ApplicationJob's retry_on holds
+  # the job until the worker is restarted (Whatsapp::WorkerHeartbeat).
+  class MissingCredentialsError < StandardError; end
+
+  def self.ensure_credentials_loaded!
+    return if !switched_on?
+    return if configured?
+
+    message = "[Whatsapp] the bot is switched on but this process has no " \
+              "#{missing_required_credential_keys.join(", ")}: restart it to load them"
+
+    raise MissingCredentialsError, message
+  end
+
+  # Tells two processes' credentials apart without either revealing them: a
+  # digest of the whole block, so a rotated key counts as a change as much as an
+  # added one.
+  def self.credentials_fingerprint
+    Digest::SHA256.hexdigest(config.to_h.sort.to_s).first(16)
+  end
+
   # Everything that keeps the bot from answering citizens, in the order an admin
   # has to clear it: without credentials or the switch it does not run at all,
-  # and without an AI provider every typed or spoken message is answered with
-  # the "can't answer right now" line (ProcessMessageService#answer).
+  # a worker still on older credentials cannot send what it is handed, a
+  # signature the deliveries fail stops every message at the door, and without
+  # an AI provider every typed or spoken message is answered with the "can't
+  # answer right now" line (ProcessMessageService#answer).
   def self.blocking_reasons
     ai_feature_enabled = ::Ai::Settings.feature_enabled?
 
     [
       (:missing_credentials if !configured?),
       (:switched_off if !switched_on?),
+      (:worker_outdated if ::Whatsapp::WorkerHeartbeat.outdated?),
+      ::Whatsapp::SignatureRefusal.unresolved_reason,
       (:ai_disabled if !ai_feature_enabled),
       (:ai_provider_unavailable if ai_feature_enabled && !::Ai::Settings.ai_available?)
     ].compact

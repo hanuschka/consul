@@ -9,6 +9,7 @@ class Whatsapp::BroadcastProjektJob < ApplicationJob
     projekt = Projekt.find_by(id: projekt_id)
 
     return if projekt.blank?
+    ::Whatsapp.ensure_credentials_loaded!
     return if !::Whatsapp.enabled?
     return if ::Whatsapp.broadcast_template_name.blank?
     return if already_broadcast?(projekt)

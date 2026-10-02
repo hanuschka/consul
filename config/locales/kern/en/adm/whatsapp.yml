@@ -35,6 +35,25 @@ en:
           title: The bot is switched off.
           body: Incoming messages are stored but not answered, and no notifications are sent.
           link: Switch the bot on in the "Connection" tab
+        worker_outdated:
+          title: The background worker is running on outdated credentials.
+          body: >-
+            It was started before the server secrets last changed and only reads them again after a
+            restart. Until then replies and notifications wait in the queue. Contact the Demokratie
+            Today administrators to have delayed_job restarted.
+        signature_missing:
+          title: 360dialog does not sign its deliveries.
+          body: >-
+            Incoming messages arrive with a valid security header but without x-360dialog-signature,
+            and are refused because whatsapp.webhook_signature_secret is set. Contact the Demokratie
+            Today administrators to have the secret removed or signing switched on for the 360dialog
+            account.
+        signature_mismatch:
+          title: The deliveries' signature does not match.
+          body: >-
+            Incoming messages carry a signature that does not match whatsapp.webhook_signature_secret
+            and are refused. The secret has to be the 360dialog account's platform secret — contact
+            the Demokratie Today administrators to have it corrected.
         ai_disabled:
           title: AI is disabled on the server.
           body: >-
@@ -320,8 +339,16 @@ en:
         webhook_ok_body: 360dialog delivers inbound messages to %{url} with a matching security header.
         webhook_mismatch_title: Webhook does not match
         webhook_mismatch_body: >-
-          Registered: %{registered}. Expected: %{expected}. Switch the feature off and on again to
-          re-register it.
+          Registered: %{registered}. Expected: %{expected}. Re-register the webhook so 360dialog
+          delivers to the expected address.
+        webhook_header_mismatch_body: >-
+          The address is right, but 360dialog sends no security header or a different one, so every
+          delivery is refused. Re-register the webhook so 360dialog uses the current header.
+        webhook_register: Re-register webhook
+        webhook_registered: Webhook re-registered with 360dialog.
+        webhook_registration_failed: >-
+          The webhook could not be registered with 360dialog (HTTP %{code}). Without a registration
+          incoming messages do not reach the bot.
         webhook_unchecked_title: Webhook not checked
         webhook_unchecked_body: >-
           Without credentials 360dialog is not queried, so whether and where a webhook is

@@ -37,6 +37,27 @@ de:
             Eingehende Nachrichten werden gespeichert, aber nicht beantwortet, und es werden keine
             Benachrichtigungen verschickt.
           link: Bot im Tab „Verbindung“ einschalten
+        worker_outdated:
+          title: Der Hintergrund-Worker arbeitet mit veralteten Zugangsdaten.
+          body: >-
+            Er wurde vor der letzten Änderung der Server-Secrets gestartet und liest sie erst nach
+            einem Neustart. Bis dahin warten Antworten und Benachrichtigungen in der Warteschlange.
+            Wende dich an die Administration von Demokratie Today, um delayed_job neu starten zu
+            lassen.
+        signature_missing:
+          title: 360dialog signiert seine Zustellungen nicht.
+          body: >-
+            Eingehende Nachrichten kommen mit gültigem Sicherheits-Header, aber ohne
+            x-360dialog-signature an und werden abgewiesen, weil whatsapp.webhook_signature_secret
+            gesetzt ist. Wende dich an die Administration von Demokratie Today, um das Secret zu
+            entfernen oder die Signatur im 360dialog-Konto einschalten zu lassen.
+        signature_mismatch:
+          title: Die Signatur der Zustellungen passt nicht.
+          body: >-
+            Eingehende Nachrichten tragen eine Signatur, die nicht zu whatsapp.webhook_signature_secret
+            passt, und werden abgewiesen. Das Secret muss dem Platform-Secret des 360dialog-Kontos
+            entsprechen – wende dich an die Administration von Demokratie Today, um es korrigieren zu
+            lassen.
         ai_disabled:
           title: KI ist auf dem Server deaktiviert.
           body: >-
@@ -331,8 +352,17 @@ de:
         webhook_ok_body: 360dialog liefert eingehende Nachrichten an %{url} – mit passendem Sicherheits-Header.
         webhook_mismatch_title: Webhook stimmt nicht
         webhook_mismatch_body: >-
-          Registriert ist: %{registered}. Erwartet wird: %{expected}. Schalte die Funktion einmal
-          aus und wieder ein, um sie neu zu registrieren.
+          Registriert ist: %{registered}. Erwartet wird: %{expected}. Registriere den Webhook neu,
+          damit 360dialog an die erwartete Adresse liefert.
+        webhook_header_mismatch_body: >-
+          Die Adresse stimmt, aber 360dialog sendet keinen oder einen anderen Sicherheits-Header mit.
+          Jede Zustellung wird deshalb abgewiesen. Registriere den Webhook neu, damit 360dialog den
+          aktuellen Header verwendet.
+        webhook_register: Webhook neu registrieren
+        webhook_registered: Webhook bei 360dialog neu registriert.
+        webhook_registration_failed: >-
+          Der Webhook konnte nicht bei 360dialog registriert werden (HTTP %{code}). Ohne
+          Registrierung erreichen eingehende Nachrichten den Bot nicht.
         webhook_unchecked_title: Webhook nicht geprüft
         webhook_unchecked_body: >-
           Ohne Zugangsdaten wird 360dialog nicht abgefragt, daher ist unbekannt, ob und wohin ein

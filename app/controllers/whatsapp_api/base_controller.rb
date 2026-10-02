@@ -32,8 +32,21 @@ class WhatsappApi::BaseController < ActionController::API
       return if authenticated?
 
       Rails.logger.warn("[Whatsapp] webhook delivery refused: #{refusal_reason}")
+      record_signature_refusal
 
       head :unauthorized
+    end
+
+    # Only a delivery that carried the shared secret is known to be 360dialog's,
+    # so only that one is worth putting in front of the admin
+    # (Whatsapp::SignatureRefusal).
+    def record_signature_refusal
+      return if !signature_required?
+      return if !(valid_url_secret? || valid_header_secret?)
+
+      reason = provided_signature.blank? ? :signature_missing : :signature_mismatch
+
+      ::Whatsapp::SignatureRefusal.record(reason)
     end
 
     # A configured signing secret makes the signature mandatory on top of the

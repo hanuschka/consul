@@ -43,11 +43,26 @@
       <% end %>
     <% else %>
       <%= kern_alert(title: t("adm.whatsapp.show.webhook_mismatch_title"), style: :warning) do %>
+        <%# Two addresses that read the same are no explanation when only the
+            header is wrong, which is what a registration made before the
+            credentials existed leaves behind. %>
         <p class="kern-body">
-          <%= t("adm.whatsapp.show.webhook_mismatch_body",
-            registered: @webhook_status[:registered_url].presence || t("adm.whatsapp.show.webhook_none"),
-            expected: @webhook_status[:expected_url]) %>
+          <% if @webhook_status[:url_matches] %>
+            <%= t("adm.whatsapp.show.webhook_header_mismatch_body") %>
+          <% else %>
+            <%= t("adm.whatsapp.show.webhook_mismatch_body",
+              registered: @webhook_status[:registered_url].presence || t("adm.whatsapp.show.webhook_none"),
+              expected: @webhook_status[:expected_url]) %>
+          <% end %>
         </p>
+
+        <%= button_to(
+          register_webhook_adm_whatsapp_path,
+          class: "kern-btn kern-btn--secondary",
+          form: { class: "mt-3" }
+        ) do %>
+          <span class="kern-label"><%= t("adm.whatsapp.show.webhook_register") %></span>
+        <% end %>
       <% end %>
     <% end %>
 

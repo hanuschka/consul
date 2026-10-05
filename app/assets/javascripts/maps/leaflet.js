@@ -535,7 +535,6 @@
             direction: 'top',
             sticky: true
           });
-          layer.bindPopup('<div class="map-popup-status-message">Alle markierten Flächen und Pins in grün sind vom System vorgegeben</div>');
         }
       }).addTo(this.map);
       this.overlayLayers['Verwaltungseinträge'] = adminFeaturesLayer;

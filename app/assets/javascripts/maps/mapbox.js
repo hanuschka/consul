@@ -432,28 +432,6 @@
         this.layerControl.dropdownList.appendChild(label);
       }
 
-      const popupContent = '<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>';
-      instance.map.on('click', 'admin-features-circles', function(e) {
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(popupContent)
-          .addTo(instance.map);
-      });
-
-      instance.map.on('click', 'admin-features-lines', function(e) {
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(popupContent)
-          .addTo(instance.map);
-      });
-
-      instance.map.on('click', 'admin-features-polygons', function(e) {
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(popupContent)
-          .addTo(instance.map);
-      });
-
       this.renderAdminFeaturesNote();
     }
 

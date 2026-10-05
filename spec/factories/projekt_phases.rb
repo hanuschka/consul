@@ -20,6 +20,14 @@ FactoryBot.define do
     type { "ProjektPhase::ProposalPhase" }
   end
 
+  factory :budget_phase, parent: :projekt_phase, class: "ProjektPhase::BudgetPhase" do
+    type { "ProjektPhase::BudgetPhase" }
+  end
+
+  factory :point_of_interest_phase, parent: :projekt_phase, class: "ProjektPhase::PointOfInterestPhase" do
+    type { "ProjektPhase::PointOfInterestPhase" }
+  end
+
   factory :mitmachbox_phase, parent: :projekt_phase, class: "ProjektPhase::MitmachboxPhase" do
     type { "ProjektPhase::MitmachboxPhase" }
     mitmachbox_survey_id { 7 }

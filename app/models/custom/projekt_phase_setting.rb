@@ -91,6 +91,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.sentiments": "",
           "feature.form.show_map": "active",
           "feature.form.enable_geoman_controls_in_maps": "active",
+          "feature.form.restrict_map_features_to_marked_areas": "",
           "feature.form.allow_attached_documents": "",
           "feature.form.enable_external_video": "",
           "feature.form.voice_assistant": "",
@@ -149,6 +150,7 @@ class ProjektPhaseSetting < ApplicationRecord
           "feature.form.sentiments": "",
           "feature.form.show_map": "active",
           "feature.form.enable_geoman_controls_in_maps": "active",
+          "feature.form.restrict_map_features_to_marked_areas": "",
           "feature.form.allow_attached_documents": "",
           "feature.form.enable_external_video": "",
           "feature.form.show_implementation_option_fields": "",
@@ -218,6 +220,7 @@ class ProjektPhaseSetting < ApplicationRecord
         "ProjektPhase::PointOfInterestPhase" => {
           "feature.general.users_can_create_pins": "active",
           "feature.form.use_masterportal_collections_as_labels": "",
+          "feature.form.restrict_map_features_to_marked_areas": "",
           "option.general.max_number_of_pins_per_user": "",
           "option.form.map_features_limit": "1"
         }

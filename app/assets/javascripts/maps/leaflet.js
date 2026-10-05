@@ -62,6 +62,8 @@
       this.enableShapes = $element.data("enable-shapes");
       this.editableLayers = [];
       this.editableLayersLimit = $element.data("map-features-limit")
+      this.markedAreasCheckUrl = $element.data("marked-areas-check-url");
+      this.markedAreasOutsideText = $element.data("marked-areas-outside-text");
       this.centerMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
       this.featureColor = null;
@@ -73,6 +75,7 @@
       this.longitudeInput = document.querySelector('[data-longitude-input-for="' + this.element.id + '"]');
       this.zoomInput = document.querySelector('[data-zoom-input-for="' + this.element.id + '"]');
       this.featuresInput = document.querySelector('[data-features-input-for="' + this.element.id + '"]');
+      this.markedAreasStatus = document.querySelector('[data-marked-areas-status-for="' + this.element.id + '"]');
     }
 
     bindEventListeners() {
@@ -529,16 +532,26 @@
           color: '#008000',
           weight: 2,
           fillOpacity: 0.2
-        },
-        onEachFeature: (feature, layer) => {
+        }
+      }).addTo(this.map);
+      this.adminFeaturesLayer = adminFeaturesLayer;
+      this.overlayLayers['Verwaltungseinträge'] = adminFeaturesLayer;
+      this.updateAdminFeatureTooltips(this.map.pm.globalDrawModeEnabled());
+      this.map.on('pm:globaldrawmodetoggled', (e) => this.updateAdminFeatureTooltips(e.enabled));
+      this.renderAdminFeaturesNote();
+    }
+
+    updateAdminFeatureTooltips(drawModeEnabled) {
+      this.adminFeaturesLayer.eachLayer((layer) => {
+        layer.unbindTooltip();
+
+        if (!drawModeEnabled) {
           layer.bindTooltip('Vom System vorgegeben – nicht verschiebbar', {
             direction: 'top',
             sticky: true
           });
         }
-      }).addTo(this.map);
-      this.overlayLayers['Verwaltungseinträge'] = adminFeaturesLayer;
-      this.renderAdminFeaturesNote();
+      });
     }
 
     addHintAboutEditableLayersLimit() {
@@ -723,9 +736,11 @@
             self.editableLayers.push(layer);
 
             layer.addTo(self.map);
+            self.rememberMarkedAreasGeometry(layer);
 
             layer.on('pm:edit', function(e) {
               self.updateFeaturesInput(self.featuresInput, self.editableLayers);
+              self.checkEditedLayerInsideMarkedAreas(layer);
             });
           } else {
             if (feature.geometry.type === 'Point') {
@@ -917,18 +932,24 @@
       });
 
       this.map.on('pm:create', function(e) {
+        const layer = e.layer;
+        let replacedLayer = null;
+
         if (!self.adminEditor && self.editableLayers.length >= self.editableLayersLimit) {
-          self.map.removeLayer(self.editableLayers.pop());
+          replacedLayer = self.editableLayers.pop();
+          self.map.removeLayer(replacedLayer);
         }
 
-        self.editableLayers.push(e.layer);
+        self.editableLayers.push(layer);
 
-        e.layer.on('pm:edit', function(e) {
+        layer.on('pm:edit', function(e) {
           self.updateFeaturesInput(self.featuresInput, self.editableLayers);
+          self.checkEditedLayerInsideMarkedAreas(layer);
         });
 
         self.updateFeaturesInput(self.featuresInput, self.editableLayers);
         self.zoomInput.value = self.map.getZoom();
+        self.checkLayerInsideMarkedAreas(layer, replacedLayer);
       });
 
       this.map.on('pm:dragend', function(e) {
@@ -971,6 +992,154 @@
       };
 
       featuresInput.value = JSON.stringify(featureCollection);
+    }
+
+    checkEditedLayerInsideMarkedAreas(layer) {
+      if (!this.map.hasLayer(layer)) return;
+
+      this.checkLayerInsideMarkedAreas(layer);
+    }
+
+    checkLayerInsideMarkedAreas(layer, replacedLayer) {
+      if (!this.markedAreasCheckUrl) return;
+
+      const self = this;
+      const geometry = this.captureLayerGeometry(layer);
+      const checkId = (layer._markedAreasCheckId || 0) + 1;
+
+      layer._markedAreasCheckId = checkId;
+
+      if (replacedLayer) {
+        layer._markedAreasReplacedLayer = replacedLayer;
+      }
+
+      this.setMarkedAreasMessage("");
+
+      this.requestMarkedAreasCheck(layer).then(function(inside) {
+        if (layer._markedAreasCheckId !== checkId) return;
+        if (self.editableLayers.indexOf(layer) === -1) return;
+
+        if (inside) {
+          layer._markedAreasAcceptedGeometry = geometry;
+          delete layer._markedAreasReplacedLayer;
+          self.setMarkedAreasMessage("");
+        } else {
+          self.rejectMarkedAreasLayer(layer);
+          self.updateFeaturesInput(self.featuresInput, self.editableLayers);
+          self.setMarkedAreasMessage(self.markedAreasOutsideText);
+        }
+      }, function() {});
+    }
+
+    requestMarkedAreasCheck(layer) {
+      const token = document.querySelector("meta[name=csrf-token]");
+      const geometryLayer = layer.options.shape == 'Circle' ? L.PM.Utils.circleToPolygon(layer, 60) : layer;
+      const featureCollection = {
+        type: 'FeatureCollection',
+        features: [geometryLayer.toGeoJSON()]
+      };
+
+      return fetch(this.markedAreasCheckUrl, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "X-CSRF-Token": token ? token.getAttribute("content") : ""
+        },
+        body: JSON.stringify({ features: JSON.stringify(featureCollection) })
+      }).then(function(response) {
+        if (!response.ok) throw new Error(response.statusText);
+
+        return response.json();
+      }).then(function(body) {
+        return body.inside !== false;
+      });
+    }
+
+    rejectMarkedAreasLayer(layer) {
+      if (layer._markedAreasAcceptedGeometry) {
+        this.restoreLayerGeometry(layer, layer._markedAreasAcceptedGeometry);
+        return;
+      }
+
+      const index = this.editableLayers.indexOf(layer);
+      const replacedLayer = layer._markedAreasReplacedLayer;
+
+      this.map.removeLayer(layer);
+
+      if (replacedLayer && replacedLayer._markedAreasAcceptedGeometry) {
+        this.restoreLayerGeometry(replacedLayer, replacedLayer._markedAreasAcceptedGeometry);
+        replacedLayer.addTo(this.map);
+        this.editableLayers.splice(index, 1, replacedLayer);
+      } else {
+        this.editableLayers.splice(index, 1);
+      }
+    }
+
+    rememberMarkedAreasGeometry(layer) {
+      if (!this.markedAreasCheckUrl) return;
+
+      layer._markedAreasAcceptedGeometry = this.captureLayerGeometry(layer);
+    }
+
+    captureLayerGeometry(layer) {
+      const geometry = {};
+
+      if (layer instanceof L.Circle) {
+        geometry.latlng = layer.getLatLng().clone();
+        geometry.radius = layer.getRadius();
+      } else if (layer instanceof L.Marker) {
+        geometry.latlng = layer.getLatLng().clone();
+      } else {
+        geometry.latlngs = this.cloneLatLngs(layer.getLatLngs());
+      }
+
+      if (layer.pm && typeof layer.pm.getAngle === "function") {
+        geometry.angle = layer.pm.getAngle();
+      }
+
+      return geometry;
+    }
+
+    restoreLayerGeometry(layer, geometry) {
+      const editing = layer.pm.enabled();
+      const rotating = typeof layer.pm.rotateEnabled === "function" && layer.pm.rotateEnabled();
+
+      if (editing) layer.pm.disable();
+      if (rotating) layer.pm.disableRotate();
+
+      if (layer instanceof L.Circle) {
+        layer.setLatLng(geometry.latlng.clone());
+        layer.setRadius(geometry.radius);
+      } else if (layer instanceof L.Marker) {
+        layer.setLatLng(geometry.latlng.clone());
+      } else {
+        layer.setLatLngs(this.cloneLatLngs(geometry.latlngs));
+      }
+
+      if (typeof geometry.angle === "number") {
+        layer.pm.setInitAngle(geometry.angle);
+      }
+
+      if (rotating) layer.pm.enableRotate();
+      if (editing) layer.pm.enable();
+    }
+
+    cloneLatLngs(latlngs) {
+      if (Array.isArray(latlngs)) {
+        return latlngs.map((latlng) => this.cloneLatLngs(latlng));
+      }
+
+      return latlngs.clone();
+    }
+
+    setMarkedAreasMessage(text) {
+      const message = this.markedAreasStatus && this.markedAreasStatus.querySelector(".form-error");
+      if (!message) return;
+
+      message.textContent = text || "";
+      message.classList.toggle("is-visible", !!text);
     }
 
     toggleControlVisibility() {

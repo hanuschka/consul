@@ -16,7 +16,8 @@ class Masterportal::Converters::ProposalBuilder < ApplicationService
       description: I18n.t("masterportal.imported_resource_description"),
       summary: title,
       masterportal_pin_id: @pin.id,
-      published_at: Time.current
+      published_at: Time.current,
+      skip_marked_areas_check: true
     )
     proposal.resource_terms = "1"
     proposal.map_location = build_map_location

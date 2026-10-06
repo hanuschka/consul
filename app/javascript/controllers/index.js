@@ -196,6 +196,12 @@ application.register("shared--visibility-toggle", SharedVisibilityToggleControll
 import AdmColumnSelectorController from "./adm/column_selector_controller"
 application.register("adm-column-selector", AdmColumnSelectorController)
 
+import AdmListStateController from "./adm/list_state_controller"
+application.register("adm-list-state", AdmListStateController)
+
+import AdmListResetController from "./adm/list_reset_controller"
+application.register("adm-list-reset", AdmListResetController)
+
 import AdmDashboardNoticeController from "./adm/dashboard_notice_controller"
 application.register("adm-dashboard-notice", AdmDashboardNoticeController)
 

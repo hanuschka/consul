@@ -1,0 +1,8 @@
+<ul class="no-bullet">
+  <% badges.each do |badge| %>
+    <li>
+      <i class="fas fa-<%= icon_class(badge) %>" aria-hidden="true"></i>
+      <%= t("custom.municipal_plans.badges.#{badge}") %>
+    </li>
+  <% end %>
+</ul>

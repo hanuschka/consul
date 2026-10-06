@@ -9,7 +9,7 @@ class Admin::AiSettings::FormComponent < ApplicationComponent
   private
 
     def ai_provider_options
-      RubyLLM.providers.map { |p| [p.name, p.name.downcase] }
+      RubyLLM.providers.map { |provider| [provider.display_name, provider.slug] }
     end
 
     def ai_model_options
@@ -18,7 +18,7 @@ class Admin::AiSettings::FormComponent < ApplicationComponent
 
       RubyLLM
         .models
-        .refresh!
+        .refresh
         .by_provider(provider.to_sym)
         .chat_models
         .sort_by { |model| model.created_at || Time.new(2000) } .reverse

@@ -1,0 +1,48 @@
+<%# Sits outside the turbo-frame it targets, so a live filter never re-renders
+   the form itself and the search field keeps focus and caret while typing. %>
+<%= form_tag dialogs_adm_whatsapp_path, method: :get, class: "adm-filter-bar -labeled", data: {
+  turbo_frame: "whatsapp_dialogs",
+  controller: "shared--auto-submit-form",
+  action: "change->shared--auto-submit-form#submit input->shared--auto-submit-form#debouncedSubmit"
+} do %>
+  <div class="adm-filter-bar--field adm-filter-bar--field-search adm-filter-bar--field-grow">
+    <%= label_tag :q, t("adm.whatsapp.dialogs.filters.search_label"), class: "adm-filter-bar--label" %>
+    <div class="adm-filter-bar--control">
+      <i class="fa fa-search adm-filter-bar--search-icon" aria-hidden="true"></i>
+      <%= search_field_tag :q, params[:q],
+        class: "adm-filter-bar--input adm-filter-bar--input-search",
+        placeholder: t("adm.whatsapp.dialogs.filters.search_placeholder") %>
+    </div>
+  </div>
+
+  <div class="adm-filter-bar--field">
+    <%= label_tag :state, t("adm.whatsapp.dialogs.filters.state_label"), class: "adm-filter-bar--label" %>
+    <%= select_tag :state,
+      options_for_select(@dialog_state_options, params[:state]),
+      include_blank: t("adm.whatsapp.dialogs.filters.any"),
+      class: "adm-filter-bar--input" %>
+  </div>
+
+  <div class="adm-filter-bar--field">
+    <%= label_tag :step, t("adm.whatsapp.dialogs.filters.step_label"), class: "adm-filter-bar--label" %>
+    <%= select_tag :step,
+      options_for_select(@dialog_step_options, params[:step]),
+      include_blank: t("adm.whatsapp.dialogs.filters.any"),
+      class: "adm-filter-bar--input" %>
+  </div>
+
+  <div class="adm-filter-bar--field">
+    <%= label_tag :activity, t("adm.whatsapp.dialogs.filters.activity_label"), class: "adm-filter-bar--label" %>
+    <%= select_tag :activity,
+      options_for_select(@dialog_activity_options, params[:activity]),
+      include_blank: t("adm.whatsapp.dialogs.filters.any"),
+      class: "adm-filter-bar--input" %>
+  </div>
+
+  <div class="adm-filter-bar--actions">
+    <%= link_to t("adm.whatsapp.dialogs.filters.reset"),
+      dialogs_adm_whatsapp_path,
+      class: "adm-filter-bar--reset-button",
+      data: { turbo_frame: "_top" } %>
+  </div>
+<% end %>

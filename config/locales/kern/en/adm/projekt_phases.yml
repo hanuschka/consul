@@ -73,6 +73,22 @@ en:
         title: Features
       form_author:
         title: Form author
+        similar_search_projekts:
+          label: Include earlier projekts in the similarity check
+          description: "Defines which further projekts are searched when checking for similar contributions. The matches appear in the administration's processing view only, never in the frontend. Select earlier rounds here when you repeat a procedure every year and want to see how comparable contributions were answered and assessed back then."
+          empty: There are no further published projekts.
+          recheck: Check existing contributions now
+          recheck_confirm:
+            one: "%{count} existing contribution will be checked against the selected projekts. This costs one AI request per contribution. Continue?"
+            other: "%{count} existing contributions will be checked against the selected projekts. This costs one AI request per contribution. Continue?"
+          recheck_hint: New contributions are checked against the selected projekts automatically when they are published. Start the check here for contributions submitted before the selection was made.
+          recheck_running: The check is running. The matches appear in the processing view as they are found.
+          recheck_failed: The last check was interrupted. You can start it again.
+          recheck_last_run: "Last checked: %{time}"
+          filter_label: Search projekts
+          filter_placeholder: Find a projekt …
+          filter_no_matches: No projekt matches your search.
+          selected_label: "Selected:"
       user_functions:
         title: User functions
       proposals:

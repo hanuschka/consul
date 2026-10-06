@@ -23,7 +23,7 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
       templates_tool = Ai::Tools::FetchContentBlockTemplates.new(
         templates_by_category: dt_templates_by_category
       )
-      Ai::RubyLlmFactory.attach_tools(chat, templates_tool)
+      Ai::RubyLlmFactory.attach_tools(chat, [templates_tool], Ai::ModelProfile.default)
     end
 
     response =
@@ -31,7 +31,7 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
         .with_instructions(build_system_instructions(base_prompt, dt_templates_by_category))
         .ask(user_prompt)
 
-    process_response(response.content)
+    process_response(::Ai::StructuredOutput.content_of(response))
   end
 
   private

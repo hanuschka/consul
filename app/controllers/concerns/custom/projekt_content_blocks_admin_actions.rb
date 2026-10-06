@@ -1,6 +1,7 @@
 module ProjektContentBlocksAdminActions
   extend ActiveSupport::Concern
   include AiErrorHandling
+  include ContentBlockVisibilityParams
 
   included do
     before_action :set_namespace
@@ -51,10 +52,18 @@ module ProjektContentBlocksAdminActions
       update_params[:margin_bottom] = [params[:margin_bottom].to_i, min].max
     end
 
+    update_params.merge!(content_block_visibility_params)
+
     if @content_block.update(update_params)
-      render json: { status: { message: I18n.t("custom.projekt_content_blocks.update.success") }}
+      render json: {
+        visibility: @content_block.visibility_state,
+        status: { message: I18n.t("custom.projekt_content_blocks.update.success") }
+      }
     else
-      render json: { message: I18n.t("custom.projekt_content_blocks.update.error") }
+      render json: {
+        message: I18n.t("custom.projekt_content_blocks.update.error"),
+        errors: @content_block.errors.full_messages
+      }, status: :unprocessable_entity
     end
   end
 

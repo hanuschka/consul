@@ -108,7 +108,7 @@ class ProjektImports::ResolveContentBlockHtmlService < ApplicationService
         .chat_with_json_output(output_schema, feature: "projekt_imports.resolve_content_block_html")
         .ask(message)
 
-    Array(response.content["blocks"])
+    Array(::Ai::StructuredOutput.content_of(response)["blocks"])
   end
 
   # The model is never shown the real addresses, whether or not the document had

@@ -45,12 +45,12 @@ class Ai::GenerateContentBlock < ApplicationService
     # Reasoning is switched off for both branches: attaching tools used to be
     # what did it, and adapting a given template does not need it either.
     if anchor_template.present?
-      Ai::RubyLlmFactory.disable_reasoning(chat)
+      Ai::RubyLlmFactory.disable_reasoning(chat, Ai::ModelProfile.default)
     elsif filtered_templates.any?
       tool = Ai::Tools::FetchContentBlockTemplates.new(
         templates_by_category: filtered_templates
       )
-      Ai::RubyLlmFactory.attach_tools(chat, tool)
+      Ai::RubyLlmFactory.attach_tools(chat, [tool], Ai::ModelProfile.default)
     end
 
     instructions = build_system_instructions(filtered_templates, anchor_template)
@@ -68,7 +68,7 @@ class Ai::GenerateContentBlock < ApplicationService
 
     @content_block&.mark_ai_generation_step!("finishing")
 
-    body_html = response.content&.dig("html")
+    body_html = ::Ai::StructuredOutput.content_of(response)&.dig("html")
 
     if body_html.blank?
       ServiceResult.failure(error: "KI konnte keinen Inhalt erstellen")

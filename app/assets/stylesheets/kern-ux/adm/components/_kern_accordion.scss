@@ -1,0 +1,9 @@
+.kern-accordion__header {
+  padding-left: var(--kern-metric-space-default, 16px);
+  padding-right: var(--kern-metric-space-default, 16px);
+  background: #f7f7f7;
+}
+
+.kern-accordion__body {
+  padding-top: var(--kern-metric-space-default, 16px);
+}

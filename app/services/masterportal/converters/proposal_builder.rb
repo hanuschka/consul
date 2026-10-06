@@ -16,7 +16,8 @@ class Masterportal::Converters::ProposalBuilder < ApplicationService
       description: I18n.t("masterportal.imported_resource_description"),
       summary: title,
       masterportal_pin_id: @pin.id,
-      published_at: Time.current
+      published_at: Time.current,
+      skip_marked_areas_check: true
     )
     proposal.resource_terms = "1"
     proposal.map_location = build_map_location
@@ -39,24 +40,12 @@ class Masterportal::Converters::ProposalBuilder < ApplicationService
         latitude: @pin.latitude,
         longitude: @pin.longitude,
         zoom: default_zoom,
-        features: point_feature_collection,
+        features: MapLocation.point_feature_collection(
+          latitude: @pin.latitude, longitude: @pin.longitude
+        ),
         geocoder_data: Masterportal::GeocoderDataBuilder.call(pin: @pin),
         skip_masterportal_geocoding: true
       )
-    end
-
-    def point_feature_collection
-      {
-        "type" => "FeatureCollection",
-        "features" => [{
-          "type" => "Feature",
-          "geometry" => {
-            "type" => "Point",
-            "coordinates" => [@pin.longitude.to_f, @pin.latitude.to_f]
-          },
-          "properties" => {}
-        }]
-      }
     end
 
     def default_zoom

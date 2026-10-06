@@ -33,11 +33,15 @@
         ) %>
       <% end %>
 
+      <%# Outside the form: the panel carries the matches with their own support
+          buttons, and button_to inside a form is dropped by the HTML parser. %>
+      <%= render SimilarContributions::DecisionComponent.new(@draft_resource) %>
+
       <div class="ai-proposal-flow--navigation">
         <button
           type="submit"
           form="<%= dom_id(@draft_resource, :form) %>"
-          class="button ai-proposal-flow--navigation--submit js-ai-flow-step2-submit"
+          class="button ai-proposal-flow--navigation--submit js-ai-flow-step2-submit js-user-resource-submit"
         >
           <% if has_criteria %>
             <%= t("ai_proposal_flow.nav.next_evaluation") %> <i class="fas fa-arrow-right"></i>
@@ -56,4 +60,11 @@
       submessage_key: loader_submessage_key
     ) %>
   </div>
+
+  <%# Outside the step body so the flow's own loader overlay never sits between
+      the citizen and the check's modal. %>
+  <%= render SimilarContributions::CheckSectionComponent.new(
+    @draft_resource,
+    embbeded_in_ai_flow: true
+  ) %>
 </main>

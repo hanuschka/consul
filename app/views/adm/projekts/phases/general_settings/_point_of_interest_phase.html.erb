@@ -1,3 +1,5 @@
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.general.users_can_create_pins"), :value, :boolean) %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.form.map_features_limit"), :value, :string) %>
+<%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "feature.form.restrict_map_features_to_marked_areas"), :value, :boolean) %>
+<%= render "adm/projekts/phases/general_settings/marked_areas_hint", projekt_phase: projekt_phase %>
 <%= render Adm::AttributeEditorComponent.new(projekt_phase.settings.find_by!(key: "option.general.max_number_of_pins_per_user"), :value, :string) %>

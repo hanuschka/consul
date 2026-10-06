@@ -39,4 +39,12 @@ FactoryBot.define do
     price { 1_000_000 }
     max_ballot_lines { 1 }
   end
+
+  factory :budget_investment, class: "Budget::Investment" do
+    heading { create(:budget, :with_heading).heading }
+    author factory: :user
+    sequence(:title) { |n| "Investment #{n}" }
+    description { "Investment description" }
+    resource_terms { "1" }
+  end
 end

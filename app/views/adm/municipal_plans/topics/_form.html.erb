@@ -1,0 +1,10 @@
+<% url = @topic.persisted? ? adm_municipal_plans_topic_path(@topic) : adm_municipal_plans_topics_path %>
+
+<%= form_with model: @topic, url: url do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint"),
+                                          required: true) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_placeholder") %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

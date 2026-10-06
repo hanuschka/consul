@@ -15,28 +15,54 @@ en:
           lost_text: The linked survey no longer exists on the Mitmachbox platform. You can create a new survey.
           create_survey_button: Create survey now
           recreate_survey_button: Create new survey
-          state_label: Status
+          survey_section_title: Survey
+          survey_scope_pill: Takes effect immediately on all devices and the online survey
+          status_row_title: Survey status
+          status_row_text: Controls whether the survey is currently accepting responses. The status applies to all Mitmachbox devices and to the online survey on the project page at once. Close the survey when collection should end; the responses collected so far are kept.
+          status_badges:
+            open: "Open: accepting responses"
+            closed: "Closed: not accepting responses"
+            draft: Not opened yet
+            archived: "Archived: not accepting responses"
           open_button: Open survey
           close_button: Close survey
-          archive_button: Archive
           reopen_button: Reopen
-          open_confirm: The survey will be opened for data collection on the devices. Continue?
-          close_confirm: Data collection will be stopped. Collected responses are retained. Continue?
-          archive_confirm: The survey will be archived and hidden from active lists. Continue?
+          archive_button: Archive survey
+          open_confirm: The survey will be opened for data collection on all devices and in the online survey.
+          close_confirm: Data collection will stop on all devices and in the online survey. Responses collected so far are kept. You can reopen the survey later.
+          reopen_confirm: The survey will accept responses again, on all devices and in the online survey. The current version applies.
+          archive_confirm: The survey will be ended and hidden from active lists. It cannot be reopened in the administration.
           open_requires_published_hint: The survey can only be opened once a version has been published.
-          draft_section_title: Draft (version %{number})
-          published_section_title: Published version %{number}
-          no_published_version: No version published yet.
           responses_total: "Total responses: %{count}"
-          add_question_button: Add question
-          publish_button: Publish draft
-          publish_confirm: After publishing, this version can no longer be edited. Continue?
+          current_section_title: Current version (version %{number})
+          current_scope_pill: What participants see right now
+          current_row_title: Questions in the current version
+          current_row_text: Participants currently see these questions on the devices and online. A published version can no longer be edited. Create a draft to change questions.
+          current_questions_toggle:
+            one: "Show %{count} question"
+            other: "Show %{count} questions"
           new_draft_button: Create new draft
+          new_draft_confirm: The current version will be copied into an editable draft. Devices and the online survey keep showing the current version until you publish the draft.
           test_run_button: Test run
-          new_draft_hint: The published version is copied into an editable draft. The current version stays unchanged on the devices until the next publish.
-          read_only_hint: Published versions cannot be edited. Create a new draft to make changes.
-          no_questions: No questions yet.
+          draft_section_title: Draft (version %{number})
+          draft_scope_pill: Not visible to participants
+          draft_row_title: Edit questions
+          draft_row_text: Prepare changes to the questions here. Devices and the online survey keep showing the current version until you publish the draft. Check the draft with a test run first.
+          add_question_button: Add question
           max_questions_hint: This version has reached the maximum of 20 questions – the Mitmachbox cannot load more.
+          publish_row_title: Publish draft
+          publish_row_text: Replaces the current version on all devices and in the online survey with this draft, even while the survey is open. The version can no longer be edited afterwards.
+          publish_button: Publish draft
+          publish_confirm_replace: Version %{draft} replaces the current version %{current} on all devices and in the online survey.
+          publish_confirm_first: Version %{draft} will run on all devices and in the online survey as soon as the survey is opened.
+          publish_confirm_while_open: The survey is open, so the switch happens during data collection.
+          publish_confirm_locked: Version %{draft} can no longer be edited afterwards.
+          no_questions: No questions yet.
+          no_published_version: No version published yet.
+          end_section_title: End survey
+          end_scope_pill: Cannot be undone
+          archive_row_title: Archive survey
+          archive_row_text: Ends the survey and hides it from active lists. An archived survey cannot be reopened in the administration. Only archive once participation has finished and been evaluated.
           table:
             order: Order
             prompt: Question

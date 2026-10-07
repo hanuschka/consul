@@ -114,8 +114,8 @@ class Whatsapp::Inbound::MessageReading
       @raw_message.dig("interactive", "list_reply", "title")
     end
 
-    # What was read is recorded: the /adm dialog history shows the message
-    # body, so a successful transcript replaces the empty audio body.
+    # What was read is recorded: the recent dialog the assistant reads shows the
+    # message body, so a successful transcript replaces the empty audio body.
     def transcribed_text
       transcript = Whatsapp::Inbound::TranscribeVoiceService.call(
         media_id: @raw_message.dig("audio", "id")

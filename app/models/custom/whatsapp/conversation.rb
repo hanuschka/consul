@@ -26,15 +26,15 @@ class Whatsapp::Conversation < ApplicationRecord
   # order of the conversation, and what it does next follows from the tools it is
   # given and the state it is told. What the column still answers is "what was
   # this conversation doing when it broke", which is the only cheap answer to
-  # that question — and it is what the /adm dialog view renders and what every
+  # that question — and it is what the /adm reach page counts and what every
   # log line already written says. It is stamped from the last tool that ran (see
   # Ai::Tools::WhatsappAiAssistant::BaseTool#diagnostic_step).
   #
   # Kept as an enum so a value nothing translates cannot be persisted, and every
   # value stays declared even where no tool stamps one any more: rows written by
-  # the scripted flow still hold them, /adm looks each one up under
-  # adm.whatsapp.steps, and the dialog filter offers the whole map. Retiring a
-  # value would break the reading of conversations that already happened.
+  # the scripted flow still hold them, and /adm looks each one up under
+  # adm.whatsapp.steps. Retiring a value would break the reading of
+  # conversations that already happened.
   module Step
     IDLE = "idle".freeze
     AWAITING_LINK = "awaiting_link".freeze

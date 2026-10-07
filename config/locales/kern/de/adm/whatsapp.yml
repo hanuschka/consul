@@ -202,73 +202,6 @@ de:
         flows_title: Laufende Vorgänge
         flows_intro: Kontakte, die gerade mitten in einem Bot-Dialog stecken – nach Schritt.
         no_flows: Derzeit steckt niemand in einem laufenden Vorgang.
-      dialogs:
-        title: Dialoge
-        intro: >-
-          Alle Chatverläufe mit dem Bot. Verläufe öffnen, um den kompletten Austausch zu lesen und
-          bei Bedarf zu antworten.
-        none_title: Noch keine Dialoge
-        none_body: Sobald jemand den Bot anschreibt, erscheint der Verlauf hier.
-        no_results: Keine Dialoge für diese Filter.
-        contact: Kontakt
-        status: Status
-        step: Schritt
-        steps_idle: –
-        message_count: Nachrichten
-        last_message: Letzte Nachricht
-        last_active: Zuletzt aktiv
-        never: nie
-        open: Öffnen
-        subscribed: Abonniert
-        states:
-          unlinked: Ohne Konto
-          link_pending: Verknüpfung offen
-          linked: Verknüpft
-        directions:
-          inbound: Eingehend
-          outbound: Ausgehend
-        statuses:
-          sent: zugestellt
-          failed: fehlgeschlagen
-        filters:
-          search_label: Suche
-          search_placeholder: Nummer oder Profilname
-          state_label: Status
-          step_label: Schritt
-          activity_label: Aktivität
-          any: Alle
-          reset: Zurücksetzen
-        activity_options:
-          recent: Aktiv (7 Tage)
-          month: Aktiv (30 Tage)
-          stale: Länger inaktiv
-        thread_title: Dialog mit %{contact}
-        thread_hint: >-
-          Kompletter Chatverlauf mit diesem Kontakt. Freie Antworten erreichen WhatsApp nur innerhalb
-          von 24 Stunden nach der letzten eingehenden Nachricht.
-        truncated: Es werden die letzten %{shown} von %{total} Nachrichten angezeigt.
-        no_messages: In diesem Dialog gibt es noch keine Nachrichten.
-        time_format: '%H:%M'
-        profile_name: Profilname
-        phone: Nummer
-        account: Nutzerkonto
-        no_account: nicht verknüpft
-        unknown: unbekannt
-        active_phase: Aktive Phase
-        verified_at: Verknüpft am
-        reply_label: Antwort senden
-        reply_hint: Wird als normale Textnachricht vom Portal-Konto verschickt und erscheint direkt
-          im Verlauf.
-        reply_placeholder: Antwort an diesen Kontakt …
-        reply_submit: Antwort senden
-        reply_blank: Bitte einen Text eingeben.
-        reply_sent: Antwort wurde übergeben.
-        reply_failed: 'Antwort konnte nicht gesendet werden: %{error}'
-        reply_window_closed: Das 24-Stunden-Antwortfenster ist inzwischen geschlossen.
-        window_closed_title: Antwortfenster geschlossen
-        window_closed_body: >-
-          Die letzte eingehende Nachricht liegt mehr als 24 Stunden zurück. WhatsApp lässt freie Textnachrichten
-          erst wieder zu, wenn der Kontakt erneut schreibt.
       show:
         title: WhatsApp
         hint_text: >-
@@ -307,7 +240,6 @@ de:
           templates: Bot-Nachrichtenvorlagen
           qr_code: QR-Code
           reach: Reichweite
-          dialogs: Dialoge
         feature_title: WhatsApp-Bot
         model_tier_title: Sprachmodell des Bots (vorübergehend)
         settings_title: Einstellungen
@@ -534,9 +466,9 @@ de:
             Sie den Test dann erneut.
           - >-
             Der Test legt einen Gesprächseintrag für die Nummer an, falls noch keiner besteht; eine
-            getestete Nummer erscheint danach also in der Gesprächsliste. Das ist so gewollt und
-            zugleich der schnellste Weg, auch den eingehenden Weg zu prüfen: Antworten Sie auf die
-            Testnachricht und sehen Sie zu, wie sie ankommt.
+            getestete Nummer zählt danach also auf der Seite Reichweite als Kontakt. Das ist so
+            gewollt und zugleich der schnellste Weg, auch den eingehenden Weg zu prüfen: Antworten
+            Sie auf die Testnachricht, dann antwortet der Bot.
         settings:
           hint: Werte, die der Bot im Betrieb liest. Jedes leere Feld greift auf einen Standard zurück.
           description_title: Wofür diese Seite da ist
@@ -677,37 +609,6 @@ de:
             nicht diese Seite, sondern die Seite QR-Code: dort steht jede dieser Phasen mit ihrem
             eigenen Code. Reichweite sagt, wie viele Menschen der Kanal erreicht; welche Codes es
             gibt, ist eine andere Frage.
-        dialogs:
-          hint: Alle Gespräche des Bots, mit Filtern und einer Antwortmöglichkeit.
-          description_title: Wofür diese Seite da ist
-          description:
-          - >-
-            Hier sind alle Gespräche aufgeführt, die der Bot geführt hat, das mit der jüngsten Aktivität
-            zuerst. Dies kommt einem Posteingang für Rückfragen am nächsten und ist die einzige Stelle,
-            an der ein Mensch lesen kann, was Bürgerinnen und Bürger tatsächlich geschrieben haben.
-          - >-
-            Die Filter grenzen die Liste auf drei Arten ein. Der Status ist der Verknüpfungsstand
-            der Nummer. Der Schritt beschreibt, wo das Gespräch gerade steht; ruhende Gespräche werden
-            ausgeblendet, sodass dieser Filter ausschließlich Menschen zeigt, die mitten in etwas
-            stecken. Die Aktivität grenzt nach Aktualität ein und ist der schnellste Weg zu den Gesprächen,
-            die jetzt Aufmerksamkeit brauchen, statt zu jenen, die vor Wochen endeten.
-          - >-
-            Beim Öffnen eines Gesprächs erscheint der vollständige Nachrichtenverlauf in beide Richtungen,
-            mit Zustellstatus zu allem, was der Bot gesendet hat. Eine als fehlgeschlagen markierte
-            Nachricht wurde von WhatsApp abgewiesen und nicht etwa verloren. Der übliche Grund ist
-            ein geschlossenes Vierundzwanzig-Stunden-Fenster, das der Bot vor dem Senden prüft; auch
-            eine Nummer, die das Unternehmen blockiert hat, schlägt fehl.
-          - >-
-            Aus einem Gespräch heraus können Sie direkt antworten. Diese Antwort ist eine gewöhnliche
-            freie Nachricht und unterliegt derselben Vierundzwanzig-Stunden-Regel: Hat die Person
-            am Vortag nichts geschrieben, geht sie nicht hinaus, und der Fehlschlag erscheint im Verlauf.
-            Von hier aus führt daran kein Weg vorbei — außerhalb des Fensters braucht es eine freigegebene
-            Vorlage, und das ist eine Rundnachricht und keine Antwort.
-          - >-
-            Gespräche bleiben nicht unbegrenzt erhalten. Nachrichten, die älter sind als die auf der
-            Seite Einstellungen festgelegte Aufbewahrungsfrist, werden nächtlich gelöscht; diese Liste
-            dünnt sich also planmäßig aus. Sichern Sie alles, was Sie als Nachweis benötigen, bevor
-            es verfällt.
     projekts:
       projekts:
         tabs:

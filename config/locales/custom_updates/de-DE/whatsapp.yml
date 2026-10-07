@@ -109,7 +109,7 @@ de:
           Datenschutz: %{privacy_url}
         contact: "Fragen an die Verwaltung: %{contact}"
       compliance:
-        disclosure: 👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet Ihnen kein Mensch direkt.
+        disclosure: 👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet Ihnen kein Mensch.
         opted_out: >-
           Verstanden, Sie erhalten keine Nachrichten mehr von uns. Schreiben Sie
           %{keyword}, wenn Sie wieder Nachrichten erhalten möchten.

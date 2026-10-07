@@ -194,71 +194,6 @@ en:
         flows_title: Flows in progress
         flows_intro: Contacts currently in the middle of a bot flow, by step.
         no_flows: Nobody is in an active flow right now.
-      dialogs:
-        title: Dialogs
-        intro: >-
-          Every chat history with the bot. Open a thread to read the full exchange and reply if needed.
-        none_title: No dialogs yet
-        none_body: As soon as someone messages the bot, the thread appears here.
-        no_results: No dialogs match these filters.
-        contact: Contact
-        status: Status
-        step: Step
-        steps_idle: –
-        message_count: Messages
-        last_message: Last message
-        last_active: Last active
-        never: never
-        open: Open
-        subscribed: Subscribed
-        states:
-          unlinked: Without account
-          link_pending: Link pending
-          linked: Linked
-        directions:
-          inbound: Inbound
-          outbound: Outbound
-        statuses:
-          sent: delivered
-          failed: failed
-        filters:
-          search_label: Search
-          search_placeholder: Number or profile name
-          state_label: Status
-          step_label: Step
-          activity_label: Activity
-          any: All
-          reset: Reset
-        activity_options:
-          recent: Active (7 days)
-          month: Active (30 days)
-          stale: Inactive for longer
-        thread_title: Dialog with %{contact}
-        thread_hint: >-
-          Full chat history with this contact. Free-form replies only reach WhatsApp within 24 hours
-          of the last inbound message.
-        truncated: Showing the last %{shown} of %{total} messages.
-        no_messages: This dialog has no messages yet.
-        time_format: '%H:%M'
-        profile_name: Profile name
-        phone: Number
-        account: User account
-        no_account: not linked
-        unknown: unknown
-        active_phase: Active phase
-        verified_at: Linked on
-        reply_label: Send a reply
-        reply_hint: Sent as a plain text message from the portal account and shown right in the thread.
-        reply_placeholder: Reply to this contact …
-        reply_submit: Send reply
-        reply_blank: Please enter some text.
-        reply_sent: Reply has been handed over.
-        reply_failed: 'Reply could not be sent: %{error}'
-        reply_window_closed: The 24-hour reply window has closed in the meantime.
-        window_closed_title: Reply window closed
-        window_closed_body: >-
-          The last inbound message is more than 24 hours old. WhatsApp only allows free-form text
-          messages again once the contact writes back.
       show:
         title: WhatsApp
         hint_text: >-
@@ -297,7 +232,6 @@ en:
           templates: Bot message templates
           qr_code: QR code
           reach: Reach
-          dialogs: Dialogs
         feature_title: WhatsApp bot
         model_tier_title: Bot language model (temporary)
         settings_title: Settings
@@ -514,8 +448,8 @@ en:
             again.
           - >-
             The test creates a conversation record for the number if none exists, so a tested number
-            appears in the conversation list afterwards. That is expected, and it is the quickest
-            way to confirm the inbound side works too: reply to the test message and watch it arrive.
+            counts as a contact on the reach page afterwards. That is expected, and it is the quickest
+            way to confirm the inbound side works too: reply to the test message and the bot answers.
         settings:
           hint: Values the bot reads while it runs. Every field has a default when left empty.
           description_title: What this page is for
@@ -644,36 +578,6 @@ en:
             Which participation phases currently accept a submission through the bot is not answered
             here but on the QR code page, where each of them is listed with its own code. Reach says
             how many people this channel gets to; which codes exist is a different question.
-        dialogs:
-          hint: Every conversation the bot has had, with filters and a way to reply.
-          description_title: What this page is for
-          description:
-          - >-
-            Every conversation the bot has had is listed here, most recent activity first. This is
-            the closest thing the portal has to a support inbox, and it is the only place a person
-            can read what a citizen actually wrote.
-          - >-
-            The filters narrow the list three ways. State is the linking status of the number. Step
-            is where the conversation currently sits; idle conversations are hidden, so this filter
-            only ever surfaces people who are part-way through something. Activity narrows by recency,
-            which is the fastest route to the conversations that need attention now rather than those
-            that ended weeks ago.
-          - >-
-            Opening a conversation shows its full message history in both directions, with delivery
-            status on everything the bot sent. A message marked failed was rejected by WhatsApp rather
-            than lost. The usual reason is that the twenty-four hour window had closed, which the
-            bot checks before sending, though a number that has blocked the business will fail as
-            well.
-          - >-
-            You can reply directly from a conversation. That reply is an ordinary freeform message
-            and is subject to the same twenty-four hour rule: if the citizen has not written in the
-            last day it will not go out, and the failure appears in the history. There is no way around
-            this from here — reaching someone outside the window needs an approved template, which
-            is a broadcast rather than a reply.
-          - >-
-            Conversations are not kept indefinitely. Messages older than the retention window configured
-            on the settings page are deleted nightly, so this list thins out over time by design.
-            Export anything you need to keep as a record before it ages out.
     projekts:
       projekts:
         tabs:

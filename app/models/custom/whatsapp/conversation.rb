@@ -481,6 +481,10 @@ class Whatsapp::Conversation < ApplicationRecord
   # list. It outlives the discard and the publishing, which both rebuild the
   # context (#retained_context); a new submission takes it with the rest, having
   # either taken it up or moved past it, and so does going back to the beginning.
+  #
+  # Parked again for the same phase without words — the tap on the card's pill,
+  # then start_draft for that tap — it keeps the words it already holds: the
+  # second time is the same request, not a request with nothing said.
   def parked_projekt_phase
     projekt_phase_id = context.dig("parked_submission", "projekt_phase_id")
 
@@ -494,10 +498,13 @@ class Whatsapp::Conversation < ApplicationRecord
   end
 
   def park_submission!(projekt_phase:, text:)
+    same_phase = context.dig("parked_submission", "projekt_phase_id") == projekt_phase.id
+    kept_text = same_phase ? parked_submission_text : nil
+
     merge_context!(
       parked_submission: {
         "projekt_phase_id" => projekt_phase.id,
-        "text" => text.to_s.strip.presence
+        "text" => text.to_s.strip.presence || kept_text
       }
     )
   end

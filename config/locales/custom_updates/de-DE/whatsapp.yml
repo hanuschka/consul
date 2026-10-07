@@ -420,6 +420,9 @@ de:
         # Vom Modell formuliert, hieß derselbe Schritt in einer Sitzung sechsmal anders.
         submit_proposal: Vorschlag erstellen
         draft_revise: Entwurf ändern
+        # Unter der Frage, ob das Offene für einen neuen Beitrag verworfen werden soll.
+        keep_draft: Entwurf behalten
+        keep_comment: Kommentar behalten
         submit_anyway: So beibehalten
         location_share: Ort übernehmen
         choose_projekt: Projekt wählen

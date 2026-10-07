@@ -331,6 +331,9 @@ en:
         # model, the same step read six different ways in one session.
         submit_proposal: Submit an idea
         draft_revise: Edit draft
+        # Under the question whether to discard what is open for a new contribution.
+        keep_draft: Keep draft
+        keep_comment: Keep comment
         submit_anyway: Keep as it is
         location_share: Use this place
         choose_projekt: Choose project

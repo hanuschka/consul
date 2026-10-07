@@ -83,8 +83,8 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
   end
 
   # How many list rows one question needs at its widest. A `multiple` question
-  # spends one on the pill that says the citizen is finished, and the widest it
-  # gets is its first send, before any choice has dropped out of the list.
+  # spends one on the pill that says the citizen is finished, and every send of it
+  # is that wide: chosen options stay in the list, marked, to be taken back.
   def self.rows_available(question)
     return ::Whatsapp::MAX_OFFERED_LIST_ROWS - 1 if question.multiple?
 

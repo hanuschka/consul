@@ -16,9 +16,11 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
               "in the language the draft is written in. Returns the revised draft for you to show " \
               "them; nothing is published."
 
-  params do
+  parameters do
     optional :title,
-      description: "The revised title, or empty to keep the current one." do
+      description: "The revised title, or empty to keep the current one. It says what is " \
+                   "proposed, and where if the citizen said, in plain words — never a slogan, a " \
+                   "pun or a motto." do
       string
     end
     optional :text,
@@ -26,13 +28,21 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
                    "current one. Must not repeat the title." do
       string
     end
+    optional :additions_beyond_idea,
+      description: "With a revised text: what it still proposes or claims that the citizen " \
+                   "neither said nor asked for, each as a short phrase — the additions reported " \
+                   "so far, less any they had taken out. Empty when nothing goes beyond their " \
+                   "words any more, as after a tap on remove_additions; null keeps the " \
+                   "additions reported so far. Ignored when the text is kept." do
+      array of: :string
+    end
   end
 
   def diagnostic_step
     ::Whatsapp::Conversation::Step::AWAITING_DRAFT_DECISION
   end
 
-  def execute(title: nil, text: nil)
+  def execute(title: nil, text: nil, additions_beyond_idea: nil)
     return no_draft_error if draft_resource.blank?
 
     refusal = refuse_if_not_permitted
@@ -40,7 +50,7 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
     return refusal if refusal.present?
     return nothing_to_change_error if title.blank? && text.blank?
 
-    apply(title, text)
+    apply(title, text, additions_beyond_idea)
   end
 
   private
@@ -53,7 +63,7 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
     # The stored assessment is cleared with the text it was reached on, which is what
     # lets the publish treat a verdict that is present as "already judged, do not pay
     # for it twice".
-    def apply(title, text)
+    def apply(title, text, additions_beyond_idea)
       draft_resource.title = title if title.present?
 
       if text.present?
@@ -73,8 +83,12 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
       # with the text they were read from: a citizen who changed their mind while
       # revising ("doch, ein Foto habe ich") would otherwise have had no way to send
       # one at all.
+      #
+      # The additions are restated with the text they describe, so the question
+      # under the next preview never names a part the citizen already had removed.
       if text.present?
         conversation.reset_settled_slots!
+        restate_additions(additions_beyond_idea)
       end
 
       {
@@ -82,9 +96,21 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
           title: draft_resource.title,
           text: ::Whatsapp.plain_text(draft_resource.description, length: DESCRIPTION_LENGTH)
         },
+        additions_beyond_idea: conversation.additions_beyond_idea.presence,
         hint: "Show them the revised draft with show_draft_for_confirmation and ask whether it " \
-              "can go in now — nothing can be published until they have seen this version."
-      }
+              "can go in now — nothing can be published until they have seen this version. " \
+              "While additions_beyond_idea remains, name it again in additions_note."
+      }.compact
+    end
+
+    # Kept rather than cleared when the model left the list out. Emptied by
+    # omission, it dropped the note and the button that takes the additions out
+    # while the text still carried them; an empty list is the model saying that
+    # none remain.
+    def restate_additions(additions_beyond_idea)
+      return if additions_beyond_idea.nil?
+
+      conversation.store_additions_beyond_idea!(additions_beyond_idea)
     end
 
     def nothing_to_change_error

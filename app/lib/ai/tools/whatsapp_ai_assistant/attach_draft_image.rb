@@ -1,4 +1,6 @@
 class Ai::Tools::WhatsappAiAssistant::AttachDraftImage < Ai::Tools::WhatsappAiAssistant::BaseTool
+  requires_approval
+
   # The photo the citizen sent, attached to their draft. It takes no arguments and
   # reads the picture off the conversation instead: an image arrives as a WhatsApp
   # media id, which the protocol layer parks the moment it comes in, and a media id
@@ -8,7 +10,10 @@ class Ai::Tools::WhatsappAiAssistant::AttachDraftImage < Ai::Tools::WhatsappAiAs
               "and whether this phase collects pictures at all. It reads the picture the citizen " \
               "actually sent, so it needs nothing from you. A picture is always optional: never " \
               "hold a finished draft for one, and where they say they have none, go on. Say " \
-              "afterwards, in your own words, that it arrived."
+              "afterwards, in your own words, that it arrived. Where the photo came without " \
+              "having been asked for, this first sends the notices about pictures with a button " \
+              "to use it and one to go on without, and keeps the photo waiting; call it again " \
+              "once they have said to use it."
 
   def diagnostic_step
     ::Whatsapp::Conversation::Step::AWAITING_IMAGE_UPLOAD
@@ -25,11 +30,37 @@ class Ai::Tools::WhatsappAiAssistant::AttachDraftImage < Ai::Tools::WhatsappAiAs
     refusal = refuse_if_not_permitted
 
     return refusal if refusal.present?
+    return show_notices if !notices_shown?
 
     attach(media_id)
   end
 
   private
+
+    def notices_shown?
+      conversation.image_notices_shown?
+    end
+
+    # A photo sent without being asked reached the draft without either notice, so
+    # it waits while they are sent, with the choice of using it under them. The
+    # preview comes first where this turn wrote the draft: a photo sent with the
+    # idea as its caption is still a draft the citizen has not seen.
+    def show_notices
+      refusal = refuse_before_preview
+
+      return refusal if refusal.present?
+
+      ::Whatsapp::ImageQuestion.ask(
+        conversation: conversation,
+        body: ::Whatsapp.copy("whatsapp.bot.proposal.image_use_question"),
+        answers: ::Whatsapp::FlowActions::UNASKED_IMAGE_ANSWERS
+      )
+
+      halt(
+        "Sent both picture notices and asked whether to use the photo. It stays waiting: " \
+        "attach it once they say to use it."
+      )
+    end
 
     # Cleared whether or not it worked. A media id WhatsApp would not give us stays
     # unusable, and leaving it parked would attach the same failure to whatever the

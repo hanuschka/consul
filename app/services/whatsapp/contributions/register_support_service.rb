@@ -30,6 +30,7 @@ class Whatsapp::Contributions::RegisterSupportService < ApplicationService
     return :gone if proposal.blank?
     return :already_supported if proposal.voted_up_by?(@user)
     return :archived if proposal.archived?
+    return :gone if !publicly_listed?
     return refusal if !proposal.votable_by?(@user)
 
     proposal.register_vote(@user, "yes")
@@ -81,5 +82,13 @@ class Whatsapp::Contributions::RegisterSupportService < ApplicationService
       return @proposal if defined?(@proposal)
 
       @proposal = ::Proposal.not_retired.find_by(id: @proposal_id)
+    end
+
+    # Asked after archived rather than folded into the lookup, so an archived
+    # proposal keeps its own answer. What remains — a draft, a proposal still
+    # awaiting moderation — answers as gone: whether it exists is not the chat's
+    # to confirm, and #votable_by? asks only about the citizen.
+    def publicly_listed?
+      ::Whatsapp::ReachableContributionsQuery.actionable_proposals.exists?(id: proposal.id)
     end
 end

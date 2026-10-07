@@ -80,23 +80,41 @@ module Whatsapp::DraftPreview
   # attached that the citizen never typed. The last of those is the point of the
   # group: a photo and a pin are part of what they are confirming, and neither
   # appears anywhere in the text.
+  #
+  # A pin is shown by the name of its place, because "Standort" alone confirms
+  # nothing: the citizen cannot tell a pin in their street from one in the next
+  # town. Only a pin whose name could not be looked up falls back to the bare
+  # label among the attachments.
   def meta_lines(conversation:, resource:, labels:)
     phase = conversation.projekt_phase
+    place_name = pin_place_name(conversation: conversation, resource: resource)
 
     ::Whatsapp::MessageBlock.labelled_lines(
       [
         [labels["projekt"], phase.present? ? ::Whatsapp::ProjektLink.title(phase.projekt) : nil],
         [labels["phase"], phase&.title],
-        [labels["attachments"], attached_names(resource: resource, labels: labels)]
+        [labels["location"], place_name],
+        [
+          labels["attachments"],
+          attached_names(resource: resource, labels: labels, place_name: place_name)
+        ]
       ]
     )
   end
 
-  def attached_names(resource:, labels:)
+  def attached_names(resource:, labels:, place_name:)
+    unnamed_pin = pin_coordinates(resource).present? && place_name.blank?
+
     [
       image_blob_id(resource).present? ? labels["photo"] : nil,
-      pin_coordinates(resource).present? ? labels["location"] : nil
+      unnamed_pin ? labels["location"] : nil
     ].compact_blank.join(", ").presence
+  end
+
+  def pin_place_name(conversation:, resource:)
+    return if pin_coordinates(resource).blank?
+
+    conversation.attached_location_name
   end
 
   def description_text(resource)
@@ -115,6 +133,6 @@ module Whatsapp::DraftPreview
     [pin.latitude, pin.longitude].join(",")
   end
 
-  private_class_method :meta_lines, :attached_names
+  private_class_method :meta_lines, :attached_names, :pin_place_name
   private_class_method :description_text, :image_blob_id, :pin_coordinates
 end

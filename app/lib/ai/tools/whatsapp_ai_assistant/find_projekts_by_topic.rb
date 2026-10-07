@@ -12,14 +12,17 @@ class Ai::Tools::WhatsappAiAssistant::FindProjektsByTopic < Ai::Tools::WhatsappA
               "reaches finished projekts as well as running ones. Where a row carries a " \
               "matched_phase, the subject named that phase or its ballot rather than the " \
               "projekt: it is the phase the citizen means, so take them into it instead of " \
-              "asking which one. Where several rows come back, ask which of them they mean — " \
-              "never report that nothing was found."
+              "asking which one. A row marked loose_match only shares the start of a word with " \
+              "the subject — \"Parken\" and a projekt about a park — so read its subtitle and " \
+              "name it only where it really is about what the citizen means. Where several " \
+              "rows that are come back, ask which of them they mean — never report that " \
+              "nothing was found while one of them is."
 
   # Long enough to keep the length of a whole subtitle out of the prompt ten
   # times over, short enough to tell two projekts on one subject apart.
   SUBTITLE_LENGTH = 160
 
-  params do
+  parameters do
     string :topic, description: "The subject the citizen wants to talk about, in their own words"
   end
 
@@ -65,7 +68,8 @@ class Ai::Tools::WhatsappAiAssistant::FindProjektsByTopic < Ai::Tools::WhatsappA
         subtitle: ::Whatsapp::ProjektCard.subtitle(projekt, max_length: SUBTITLE_LENGTH),
         open_for_submission: open_phase_counts[projekt.id].positive?,
         url: projekt_url(projekt),
-        matched_phase: matched_phase_of(match)
+        matched_phase: matched_phase_of(match),
+        loose_match: match.loose || nil
       }.compact
     end
 
@@ -81,12 +85,22 @@ class Ai::Tools::WhatsappAiAssistant::FindProjektsByTopic < Ai::Tools::WhatsappA
     # Several projekts on one subject is the answer, and the question that follows it
     # is which one — said here rather than left to the model, because the refusal it
     # used to give instead was the whole of this ticket.
+    #
+    # Unless every row is a loose one. Then none of them is known to be about the
+    # subject, and "ask which one" would have the citizen choose between a park and
+    # nothing when they asked about parking.
     def ambiguity_hint(matches)
+      return LOOSE_ONLY_HINT if matches.all?(&:loose)
       return if matches.one?
 
       "Several projekts are about this. Ask the citizen which of them they mean rather than " \
         "reporting that nothing was found."
     end
+
+    LOOSE_ONLY_HINT = "Every row only shares the start of a word with the subject. Name one only " \
+                      "where it really is about what the citizen means; where none is, tell them " \
+                      "the portal has nothing on it and offer the open projekts with " \
+                      "list_open_projekts.".freeze
 
     # The near-misses, and only when nothing matched: a subject that found its
     # projekts needs no "did you mean", and offering both at once invites a reply

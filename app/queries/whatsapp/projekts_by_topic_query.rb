@@ -54,7 +54,12 @@ class Whatsapp::ProjektsByTopicQuery < ApplicationQuery
   # The id rather than the record, because the names are read from a cache and a
   # cached ActiveRecord object is a stale one. What the caller does with it —
   # start_draft, start_poll_vote — takes the id anyway.
-  Match = Struct.new(:projekt, :projekt_phase_id, :phase_name, keyword_init: true)
+  #
+  # `loose` is a match on the word layer alone, where two words only share their
+  # first letters: it is how "Parken" reaches a Parkraumkonzept, and also how it
+  # reaches a projekt about a park. Nothing in the letters tells the two apart, so
+  # the match is kept and marked rather than dropped, and whoever reads it judges.
+  Match = Struct.new(:projekt, :projekt_phase_id, :phase_name, :loose, keyword_init: true)
 
   # The same set a named projekt resolves against, deliberately wider than the
   # overview: a citizen asking about a topic is often asking what came of it, and
@@ -100,7 +105,12 @@ class Whatsapp::ProjektsByTopicQuery < ApplicationQuery
     def match_of(projekt, rank)
       projekt_phase_id, name = named_phase(projekt) if rank == PHASE_MATCH
 
-      Match.new(projekt: projekt, projekt_phase_id: projekt_phase_id, phase_name: name)
+      Match.new(
+        projekt: projekt,
+        projekt_phase_id: projekt_phase_id,
+        phase_name: name,
+        loose: rank == WORD_MATCH
+      )
     end
 
     def rank_of(projekt)

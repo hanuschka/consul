@@ -16,6 +16,23 @@ class Polls::MapPointAddress
   # timeout travels with the query rather than being left to the default.
   TIMEOUT_SECONDS = 3
 
+  # The same line for a result already in hand, so a place found by searching for
+  # it reads exactly like a pin looked up afterwards.
+  #
+  # A result carrying a postcode and nothing else composes to a line of
+  # punctuation, which is worse than the long form it was meant to replace. Asked
+  # of the composed line rather than of the parts, because what matters is whether
+  # there is anything in it left to read.
+  def self.place_name(result)
+    composed = ::Geocoding::ApproximateAddress.call(result.data&.dig("address"))
+
+    if composed.present? && composed.match?(/[[:alpha:]]/)
+      composed
+    else
+      result.address.presence
+    end
+  end
+
   def initialize(latitude:, longitude:)
     @latitude = latitude
     @longitude = longitude
@@ -28,11 +45,7 @@ class Polls::MapPointAddress
 
     return if result.blank?
 
-    composed = ::Geocoding::ApproximateAddress.call(result.data&.dig("address"))
-
-    return composed if names_a_place?(composed)
-
-    result.address.presence
+    self.class.place_name(result)
   rescue StandardError => e
     Rails.logger.error("[Polls::MapPointAddress] lookup failed: #{e.message}")
 
@@ -45,13 +58,5 @@ class Polls::MapPointAddress
       Geocoder.search(
         [@latitude.to_f, @longitude.to_f], timeout: TIMEOUT_SECONDS
       ).first
-    end
-
-    # A result carrying a postcode and nothing else composes to a line of
-    # punctuation, which is worse than the long form it was meant to replace. Asked
-    # of the composed line rather than of the parts, because what matters is whether
-    # there is anything in it left to read.
-    def names_a_place?(composed)
-      composed.present? && composed.match?(/[[:alpha:]]/)
     end
 end

@@ -16,9 +16,10 @@ class Whatsapp::Drafting::PersistDraftService < ApplicationService
     resource = @conversation.draft_resource || build_resource
 
     assign_content(resource)
+    resource.skip_marked_areas_check = true
     resource.save!
 
-    geocode(resource)
+    propose_location(resource)
 
     resource
   end
@@ -97,21 +98,37 @@ class Whatsapp::Drafting::PersistDraftService < ApplicationService
     end
 
     # Only where the phase offers a map at all. The pin inferred from the
-    # citizen's own wording lands in the same field the web form shows, so a
+    # citizen's own wording would land in the same field the web form shows, so a
     # phase with the map switched off has nowhere to render it and no business
-    # deriving it — and the citizen is never shown what was guessed.
+    # deriving it.
+    #
+    # Proposed, never attached: the citizen is asked about the place by name
+    # first (Whatsapp::Conversation#proposed_location). A revision that finds the
+    # pin already on the draft proposes nothing, so a confirmed place is not asked
+    # about twice.
     #
     # Budget phases included: an investment is `Mappable` like a proposal, and
     # the bot now offers both of them an explicit pin, so inferring one from the
     # text for only one of the two would be the odd case rather than the safe
     # one.
-    def geocode(resource)
+    def propose_location(resource)
       return if !@conversation.location_question_available?
 
-      location_name = @draft_data["location"]
+      place = ::ProposalAiDraft::LocationLookupService.call(
+        projekt_phase: projekt_phase, location_name: @draft_data["location"]
+      )
 
-      return if location_name.blank?
+      @conversation.store_proposed_location!(unpinned_place(resource, place))
+    end
 
-      ::ProposalAiDraft::GeocodeLocationService.call(mappable: resource, location_name: location_name)
+    def unpinned_place(resource, place)
+      pin = resource.map_location
+
+      already_pinned =
+        place.present? && pin.present? &&
+        pin.latitude.to_f == place["latitude"].to_f &&
+        pin.longitude.to_f == place["longitude"].to_f
+
+      already_pinned ? nil : place
     end
 end

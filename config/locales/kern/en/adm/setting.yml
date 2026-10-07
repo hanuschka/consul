@@ -44,6 +44,12 @@ en:
       message_retention_days_description: "Messages older than this period are deleted nightly at 3:15. This is a data-protection obligation, not a matter of tidiness. Enter a whole number greater than zero; empty, zero or anything that is not a number means ninety days. Shorten the period when your deletion policy requires it — the list on the Dialogs page thins out accordingly."
       max_voice_megabytes: "Size limit for voice messages in MB"
       max_voice_megabytes_description: "Checked before a voice message is downloaded from WhatsApp. A higher value allows longer messages; one that is too low makes them fail without the reason being visible — the person only gets the request to write their idea as text. Empty, zero or anything that is not a number means 16."
+      administration_contact_phone: "Administration phone number"
+      administration_contact_phone_description: "The number under which the administration takes general enquiries, such as the public-service number 115 or the citizens' hotline. Free text: you can add opening hours, and the bot passes the entry on exactly as written here. Empty means the bot names no phone number."
+      administration_contact_email: "Administration e-mail address"
+      administration_contact_email_description: "The address for general enquiries to the administration, such as the citizen service mailbox. Anything that is not a valid e-mail address is rejected. Empty means the bot names no e-mail address."
+      administration_contact_url: "Link to the citizen service"
+      administration_contact_url_description: "The administration's page with services, opening hours and contact persons. Enter the full link including https://. When all three fields are empty, the bot points to this portal's contact page or, if there is none, to its front page."
       auto_broadcast_new_projekts: "Broadcast on every project publication"
       auto_broadcast_new_projekts_description: "Sends a message to every subscribed number automatically whenever a project is published. Off by default, and the only setting on this page that can reach thousands of people through a single click elsewhere. Enable it only when your publications are deliberate and a template is active."
     projekt_option:
@@ -195,7 +201,7 @@ en:
         two_click_iframe_solution_description: "Enable this option to use a GDPR-compliant blur effect for embedded content (e.g. maps or videos). The content is only loaded after an active click by the user (the 'two-click solution'). This ensures that no data is sent to third-party providers before consent has been given."
       general:
         language_switcher_in_menu: Language switcher in navigation
-        language_switcher_in_menu_description: "Shows a picker for all available languages in the navigation bar. Cannot be used together with Google Translate — if Google Translate is on, the switcher is hidden."
+        language_switcher_in_menu_description: "Shows a picker for all available languages in the navigation bar. Choosing one reloads the current page in that language. The picker is hidden while Google Translate is on, since the two cannot be combined."
         enable_google_translate: Enable Google Translate
         enable_google_translate_description: 'Embeds the Google Translate widget. A language icon appears in the main menu and the platform''s own language selector is dropped. Enable it for many languages, and first agree to the <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform" target="_blank" rel="noopener">terms of use</a>.'
         show_guest_login_links: Show guest login
@@ -285,6 +291,13 @@ en:
       external_video: Embed external video
       external_video_description: >
         Allows users to embed external videos from YouTube or Vimeo in their ideas. Explainer videos, visualizations, or reference material can be shown directly inside the idea without uploading large files to the platform — and without additional storage requirements.
+    municipal_plans:
+      officers_see_all: Visibility for officers
+      officers_see_all_description: >
+        Gives officers read access to all plans in the administration area, not only to the ones assigned to them. They can still edit, submit and archive only assigned plans. They may also change the order of the plan list. Enable this when officers need an overview of all plans, beyond their own responsibility.
+      auto_archive: Archive plans automatically
+      auto_archive_description: >
+        Archives a plan by itself as soon as the archive date entered on it is reached. At that point it disappears from the public overview and stays reachable in the archive under the same address. Enable this when your departments reliably enter the end of a plan in advance and you want to save the manual archiving step.
     deficiency_reports:
       feature_name: Feature name
       feature_name_description: >
@@ -375,6 +388,9 @@ en:
       projekts: Projects overview
       projekts_description: >
         Enables the projects overview page, on which all ongoing and completed participation projects are accessible to citizens. The overview offers filters and shows the current status of each project. Individual projects remain reachable via direct links even when the overview is disabled.
+      municipal_plans: Municipal plans
+      municipal_plans_description: >
+        Makes the municipal plan list publicly available: the overview of published plans, the archive, the detail pages and the notice form. While disabled, these pages are unreachable and the menu entry is hidden. The administration area of the plan list stays usable either way, so plans can be prepared before launch.
       deficiency_reports: Deficiency reporter
       deficiency_reports_description: >
         Enables the deficiency reporter, through which citizens can report damage, pollution, or other deficiencies in public space. Reports are captured with location, category, and description, and can be processed and responded to by officers.
@@ -391,6 +407,13 @@ en:
         notice_active: "Notice active"
         notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
       deficiency_reports:
+        intro_text: "Intro text"
+        intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
+        notice_message: "Notice message"
+        notice_message_description: "The notice message is displayed as a yellow info box at the top of this area's home page. Use it for current information, deadlines, or processing notes. The message can be dismissed per session."
+        notice_active: "Notice active"
+        notice_active_description: "Controls whether the notice message above is shown on the home page as a yellow info box. Disable this option to temporarily hide the message without deleting its text."
+      municipal_plans:
         intro_text: "Intro text"
         intro_text_description: "This text is shown on the home page of this admin area as a short orientation for your team. Describe in a few sentences what this area is responsible for (max. 350 characters)."
         notice_message: "Notice message"

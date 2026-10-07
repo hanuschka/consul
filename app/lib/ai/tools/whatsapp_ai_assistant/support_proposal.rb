@@ -15,13 +15,15 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
               "been retired refuses rather than acting. On success the proposal, its new count " \
               "and its address are sent to them for you — do not write them out again."
 
-  params do
+  parameters do
     integer :contribution_id,
       description: "Id of the proposal, exactly as find_contribution returned it"
   end
 
   def execute(contribution_id:)
     return not_linked_error("support a proposal") if user.blank?
+
+    ::Whatsapp::StatePills.focus_proposal(contribution_id)
 
     outcome = ::Whatsapp::Contributions::RegisterSupportService.call(
       proposal_id: contribution_id, user: user
@@ -44,11 +46,16 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
       send_recap(proposal: proposal, supports: supports)
 
       {
+        completed: true,
         supported: true,
         supports: supports,
-        hint: "The proposal, its new count and its address have already been sent to them, so do " \
-              "not repeat any of it. Say briefly that it is registered, and offer no reassurance " \
-              "about it being final — it is not. Do not invite them to support anything else."
+        hint: "The proposal, its new count and its address have already been sent to them, and " \
+              "that message is the confirmation: do not say again that it is registered, and do " \
+              "not repeat any of it. Your reply is the way on only — a short line on what they " \
+              "can do next, with its buttons — and it offers no reassurance about the support " \
+              "being final, because it is not. Do not invite them to support anything else. " \
+              "Its withdraw button, and its comment button where comments are open, are put " \
+              "under your reply for you; your own buttons are for the next step."
       }
     end
 
@@ -91,8 +98,9 @@ class Ai::Tools::WhatsappAiAssistant::SupportProposal < Ai::Tools::WhatsappAiAss
       {
         supported: false,
         already: true,
-        hint: "They had already supported it. Say so plainly rather than as a failure, and offer " \
-              "them the way back: withdraw_support takes it back again."
+        hint: "They had already supported it. Say so plainly rather than as a failure; its " \
+              "withdraw button is put under your reply for you, and withdraw_support takes it " \
+              "back if they ask in words."
       }
     end
 end

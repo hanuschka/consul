@@ -4,7 +4,7 @@ class Ai::Tools::WhatsappAiAssistant::ListEvents < Ai::Tools::WhatsappAiAssistan
               "are never returned, so nothing here has happened yet. Returns facts for you to " \
               "answer in your own words — it sends nothing to the citizen itself."
 
-  params do
+  parameters do
     optional :projekt_name,
       description: "The project name as the citizen wrote it, or null for the whole portal" do
       string

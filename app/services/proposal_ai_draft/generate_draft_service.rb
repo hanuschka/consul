@@ -26,7 +26,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         .with_instructions(system_instructions)
         .ask(user_prompt)
 
-    normalized_content(response.content)
+    normalized_content(::Ai::StructuredOutput.content_of(response))
   rescue StandardError => e
     Rails.logger.error("[ProposalAiDraft] GenerateDraftService failed: #{e.class} - #{e.message}")
     Rails.logger.error("[ProposalAiDraft] Backtrace: #{e.backtrace.first(10).join("\n")}")
@@ -53,7 +53,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
 
         The citizen described their idea as:
         "#{@idea_text}"
-        #{taxonomy_prompt_section}#{submission_slots_prompt_section}
+        #{taxonomy_prompt_section}#{submission_slots_prompt_section}#{additions_prompt_section}
       PROMPT
     end
 
@@ -70,6 +70,26 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
         other in later messages. Report whether the citizen already settled either of them in
         the message above, so they are not asked again for something they have already said.
         Judge only their words: when they did not mention it, the answer is false.
+      SECTION
+    end
+
+    # The draft is published under the citizen's name, so the chat tells them what
+    # it proposes that they never said. Asked of this call because it is the one
+    # that added it; the assistant only sees an excerpt of the finished text.
+    def additions_prompt_section
+      return "" if !required_taxonomy?
+
+      <<~SECTION
+
+        The draft may go beyond what the citizen said, and that is wanted. Because it is
+        published under their name, list in additions_beyond_idea what it proposes or claims
+        that they did not give: each measure, feature, partner or rule you added, and each
+        claim they did not make — what it costs, how much effort it takes, that it is easy,
+        common or feasible, facts or numbers about the place, and specific reasons or effects
+        they did not name. Rewording, structuring and the general purpose their idea plainly
+        serves are not additions. The shorter their words — a title, a few words chosen from
+        buttons — the more the text adds, so check it sentence by sentence against what they
+        actually said. When the draft only rephrases their words, the list is empty.
       SECTION
     end
 
@@ -182,7 +202,8 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       if required_taxonomy?
         properties[:photo_declined] = photo_declined_schema
         properties[:location_stated] = location_stated_schema
-        required.push(*SUBMISSION_SLOT_KEYS)
+        properties[:additions_beyond_idea] = additions_beyond_idea_schema
+        required.push(*SUBMISSION_SLOT_KEYS, "additions_beyond_idea")
       end
 
       if available_sentiments.any?
@@ -230,6 +251,19 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
                      "Bahnhof\", \"Hauptstraße 14\", \"im Stadtpark\"), or said there is no " \
                      "particular place. False whenever they did not say where. Never infer " \
                      "this from the projekt's own name or area."
+      }
+    end
+
+    def additions_beyond_idea_schema
+      {
+        type: "array",
+        items: { type: "string" },
+        description: "What the draft proposes or claims that the citizen's own words did not: " \
+                     "each added measure, feature, partner or rule, and each claim about cost, " \
+                     "effort, feasibility, facts or effects they did not make, as a short phrase " \
+                     "in the draft's language (\"Kooperation mit Energieversorgern\", " \
+                     "\"Umsetzung mit überschaubarem Aufwand\"). Empty when the draft only " \
+                     "rephrases what they said."
       }
     end
 
@@ -282,12 +316,31 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       }
     end
 
-    def base_schema_properties
-      {
-        title: {
+    # The chat's title names the proposal rather than selling it. "Compelling" read
+    # as an invitation to write copy, and a chat is where the title is all the
+    # citizen sees of the draft before its card: "Gut geladen in die Zukunft" says
+    # nothing about the charging points it proposes. The web keeps its wording —
+    # there the title sits in a form field the citizen edits anyway.
+    def title_schema
+      if required_taxonomy?
+        {
+          type: "string",
+          description: "The proposal's title: say what is proposed, and where if the citizen " \
+                       "said, in the plain words a neighbour would use (\"Mehr Fahrradbügel am " \
+                       "Bahnhof\"). Never a slogan, a pun, a motto or a headline written to sound " \
+                       "appealing."
+        }
+      else
+        {
           type: "string",
           description: "A concise, compelling title for the citizen proposal."
-        },
+        }
+      end
+    end
+
+    def base_schema_properties
+      {
+        title: title_schema,
         description: {
           type: "string",
           description: "A detailed description of the proposal explaining the problem, solution, and " \

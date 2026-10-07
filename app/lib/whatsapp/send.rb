@@ -383,16 +383,25 @@ module Whatsapp::Send
   # call rather than three, so a body and its buttons can never come back in two
   # different ones.
   def recovery(conversation:, body:, actions:)
-    pills = recovery_buttons(actions)
-    lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+    locale_buttons(
       account: conversation.whatsapp_account,
-      lines: [body, *pills.map { |pill| pill[:title] }]
+      body: body,
+      buttons: recovery_buttons(actions, conversation)
+    )
+  end
+
+  # The bot's own locale copy with fixed pills under it, the sentence and the labels
+  # put into the citizen's language in one batch so the two cannot drift apart.
+  def locale_buttons(account:, body:, buttons:)
+    lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+      account: account,
+      lines: [body, *buttons.map { |pill| pill[:title] }]
     )
 
     recovery_buttons_message(
-      account: conversation.whatsapp_account,
+      account: account,
       body: lines.first,
-      buttons: pills.zip(lines.drop(1)).map do |pill, title|
+      buttons: buttons.zip(lines.drop(1)).map do |pill, title|
         pill.merge(
           title: ::Whatsapp::AssistantActions.fitting_label(
             translated: title, original: pill[:title]
@@ -405,11 +414,14 @@ module Whatsapp::Send
   # The one message that cannot be put into the citizen's language, because it is sent
   # precisely when the assistant did not answer: asking the same provider to translate
   # it would spend a second timeout on the reply that exists to survive the first one.
-  # It goes out in the portal's own language, which is the point of there being fixed
+  # It goes out as rendered — in the conversation's language where the portal has copy
+  # in it, in the portal's own otherwise — which is the point of there being fixed
   # copy at all.
   def recovery_without_assistant(conversation:, body:, actions:)
     recovery_buttons_message(
-      account: conversation.whatsapp_account, body: body, buttons: recovery_buttons(actions)
+      account: conversation.whatsapp_account,
+      body: body,
+      buttons: recovery_buttons(actions, conversation)
     )
   end
 
@@ -488,7 +500,7 @@ module Whatsapp::Send
   def main_menu_pill(account)
     {
       id: ::Whatsapp::FlowActions.id_for(action: :main_menu),
-      title: I18n.t(
+      title: ::Whatsapp.copy(
         "whatsapp.bot.buttons.main_menu", locale: ::Whatsapp.locale_for(account)
       )
     }
@@ -508,13 +520,17 @@ module Whatsapp::Send
   # One recovery pill on its own, for the deterministic messages that offer a way
   # out. Its label is locale copy rather than the assistant's, which is the whole
   # point of the recovery namespace: these are the buttons that have to be readable
-  # when nothing else is.
-  def recovery_button(action)
-    { id: RECOVERY_ACTION_IDS.fetch(action), title: ::Whatsapp.copy("whatsapp.bot.buttons.#{action}") }
+  # when nothing else is. The conversation names the cancel pill after the work it
+  # throws away, as it does when the assistant offers the same pill.
+  def recovery_button(action, conversation)
+    {
+      id: RECOVERY_ACTION_IDS.fetch(action),
+      title: ::Whatsapp::AssistantActions.recovery_label(action, conversation)
+    }
   end
 
-  def recovery_buttons(actions)
-    actions.first(MAX_RECOVERY_BUTTONS).map { |action| recovery_button(action) }
+  def recovery_buttons(actions, conversation)
+    actions.first(MAX_RECOVERY_BUTTONS).map { |action| recovery_button(action, conversation) }
   end
 
   # WhatsApp dismisses the bubble after this long, and there is no way to extend
@@ -588,6 +604,11 @@ module Whatsapp::Send
   # question is not whether the bot asked but *what about*: "support" recorded
   # bare is satisfied by an offer for any proposal, so a pill shown for one and a
   # tool called with another looked identical from here.
+  #
+  # A publishing pill's parameter is the opposite case and is left off: it is the
+  # version of the preview it stood under (Whatsapp::PreviewVersion), which the
+  # tap has already been checked against, not something the tool is asked to act
+  # on — and the tools ask about the bare action.
   def irreversible_ids(entries)
     Array(entries).filter_map do |entry|
       parsed = ::Whatsapp::FlowActions.parse(entry[:id])
@@ -596,7 +617,9 @@ module Whatsapp::Send
       next if action.blank?
       next if !::Whatsapp::AssistantActions::IRREVERSIBLE_ACTIONS.include?(action)
 
-      [action, parsed[:param]].compact_blank.join(::Whatsapp::FlowActions::SEPARATOR)
+      param = ::Whatsapp::FlowActions.confirmation?(action) ? nil : parsed[:param]
+
+      [action, param].compact_blank.join(::Whatsapp::FlowActions::SEPARATOR)
     end
   end
 

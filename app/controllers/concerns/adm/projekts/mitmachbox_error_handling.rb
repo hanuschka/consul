@@ -1,6 +1,12 @@
 module Adm::Projekts::MitmachboxErrorHandling
   extend ActiveSupport::Concern
 
+  API_ERROR_MESSAGE_KEYS = {
+    "branch_order_violation" => "branch_order",
+    "condition_order_violation" => "condition_order",
+    "condition_dependency" => "condition_dependency"
+  }.freeze
+
   included do
     rescue_from Mitmachbox::Error, with: :handle_mitmachbox_error
     helper_method :mitmachbox_error_message
@@ -43,7 +49,8 @@ module Adm::Projekts::MitmachboxErrorHandling
     end
 
     def mitmachbox_error_message(error)
-      return t("adm.projekts.mitmachbox.errors.branch_order") if error.api_code == "branch_order_violation"
+      message_key = API_ERROR_MESSAGE_KEYS[error.api_code]
+      return t("adm.projekts.mitmachbox.errors.#{message_key}") if message_key
 
       case error
       when Mitmachbox::ConnectionError

@@ -47,7 +47,7 @@ class Whatsapp::Accounts::LinkOutcomeService < ApplicationService
     key = ERROR_REASONS.include?(reason.to_s) ? reason.to_s : "expired"
 
     send_bot_line(
-      I18n.t(
+      ::Whatsapp.copy(
         "whatsapp.bot.onboarding.#{key}", register_url: ::Whatsapp::PortalLinks.register_url
       ),
       actions: %i[link_retry help]

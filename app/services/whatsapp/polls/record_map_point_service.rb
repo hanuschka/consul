@@ -182,7 +182,7 @@ class Whatsapp::Polls::RecordMapPointService < ApplicationService
     def refuse_over_maximum
       ::Whatsapp::Send.locale_text(
         account: account,
-        body: I18n.t(
+        body: ::Whatsapp.copy(
           "whatsapp.bot.poll.location_maximum_reached", maximum: question.max_map_points
         )
       )

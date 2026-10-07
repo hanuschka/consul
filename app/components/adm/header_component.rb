@@ -87,6 +87,10 @@ class Adm::HeaderComponent < ApplicationComponent
         return [helpers.ideas_path, label]
       end
 
+      if controller.class.module_parent_name == "Adm::MunicipalPlans" && Setting["process.municipal_plans"].present?
+        return [helpers.municipal_plans_path, t.call(:municipal_plans)]
+      end
+
       [helpers.root_path, t.call(:default)]
     end
 

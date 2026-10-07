@@ -10,3 +10,14 @@ de:
           Diese werden im Frontend rot dargestellt.
           Es können mehrere Elemente gleichzeitig eingezeichnet werden.
           Zusätzlich lässt sich der Mittelpunkt der Karte über das zweite Symbol von oben mit einem blauen Pin festlegen.
+        geojson_import:
+          title: Flächen aus einer GeoJSON-Datei importieren
+          hint: Übernimmt die Flächen einer GeoJSON-Datei als markierte Flächen dieser Phase, zum Beispiel einen Stadtteil oder ein Bebauungsplangebiet aus Ihrem Geoportal. Die importierten Flächen ersetzen alle aktuell auf dieser Karte eingezeichneten Elemente und werden beim Speichern übernommen.
+          file_label: GeoJSON-Datei
+          messages:
+            imported: Flächen übernommen. Prüfen Sie die Karte und speichern Sie sie.
+            no_polygons: Diese Datei enthält keine Flächengeometrien.
+            too_many: Diese Datei enthält zu viele Flächen. Bitte wählen Sie eine Datei mit weniger Flächen.
+            too_large: "Diese Datei ist größer als %{size} MB."
+            invalid_file: Diese Datei konnte nicht als GeoJSON gelesen werden.
+            map_missing: Die Karte ist noch nicht bereit. Bitte laden Sie die Seite neu.

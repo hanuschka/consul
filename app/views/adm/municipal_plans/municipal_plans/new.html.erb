@@ -1,0 +1,17 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs,
+                                    back_button_url: adm_municipal_plans_root_path) %>
+
+<article class="kern-container mb-5">
+  <%= form_with model: @municipal_plan, url: adm_municipal_plans_municipal_plans_path,
+        method: :post do |form| %>
+
+    <%= render "form_fields", form: form %>
+
+    <div class="d-flex gap-2 mb-4 mt-5">
+      <%= kern_button(text: t("shared.create"), icon: "save", type: "submit") %>
+      <%= kern_link_button(adm_municipal_plans_root_path, text: t("shared.cancel"), style: :secondary) %>
+    </div>
+  <% end %>
+</article>

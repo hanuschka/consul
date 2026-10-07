@@ -34,19 +34,27 @@ class Whatsapp::Accounts::MessageDeliveryService < ApplicationService
   # Opting out also drops whatever draft was open: a citizen asking not to be
   # written to should not be left mid-submission waiting for an answer they said
   # they do not want. Nothing is offered afterwards either — the last thing
-  # someone who just opted out needs is an invitation to carry on.
+  # someone who just opted out needs is an invitation to carry on. What the
+  # sentence does carry is the word that undoes it: "Stopp" is also the ordinary
+  # word for abandoning a step, and a citizen who meant that has to learn the way
+  # back from this line rather than from a reminder days later.
   def turn_off
     account.opt_out!
     @conversation.discard_draft!
 
-    send_bot_line(::Whatsapp.copy("whatsapp.bot.compliance.opted_out"))
+    send_bot_line(
+      ::Whatsapp.copy(
+        "whatsapp.bot.compliance.opted_out",
+        keyword: ::Whatsapp::Inbound::ProcessMessageService.opt_in_keyword
+      )
+    )
   end
 
   private
 
     # The sentence stays the locale copy's rather than the assistant's, for the reason
     # above; which language it reaches the citizen in is a separate question, and the
-    # answer to it is the one they wrote in.
+    # answer to it is the one the conversation is held in — never the keyword itself.
     def send_bot_line(body)
       ::Whatsapp::Send.locale_text(account: account, body: body)
     end

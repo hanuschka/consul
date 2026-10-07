@@ -54,8 +54,31 @@ module Whatsapp::AiAssistant::DecisionLog
   # in German. It is counted separately because the remedy is the opposite one —
   # nothing the model does affects it, and what has to give is the German source
   # line being too long to survive being translated.
+  #
+  # `preview_required` is a send refused because a draft or a comment written in
+  # this turn had not been shown yet, and `preview_skipped` the one path that
+  # cannot be refused: a plain-text answer that went out before the preview
+  # anyway. Together they are the rate of the message that asked citizens to
+  # approve a text they had not read.
+  #
+  # `tool_result` is `tool_called` finished: the same call once it has run, with the
+  # shape of its arguments and of its answer (Whatsapp::AiAssistant::ToolCallDigest).
+  # The replayed history keeps a turn's arguments only until it scrolls out of the
+  # window, and a reply reported days later has to be traced back to the page it was
+  # read off and the numbers it was given.
+  #
+  # `additions_note_missing` is a preview refused because the draft proposes things
+  # the citizen never said and the model wrote no note naming them — the rate of the
+  # draft that would have gone in under their name unexplained.
+  #
+  # `preview_repeated` is a second preview of an unchanged draft or comment under the
+  # same citizen message, held back (Whatsapp::Conversation#claim_preview!), and
+  # `preview_outdated_tap` a publishing pill tapped under a preview of an earlier
+  # version, answered with the current one instead (Whatsapp::PreviewVersion). Both
+  # are the rate of a citizen answering a preview the bot had already replaced.
   EVENTS = %i[
     tool_called
+    tool_result
     action_dropped
     actions_unusable
     actions_missed
@@ -67,6 +90,11 @@ module Whatsapp::AiAssistant::DecisionLog
     start_over
     assistant_unavailable
     send_refused
+    preview_required
+    preview_skipped
+    additions_note_missing
+    preview_repeated
+    preview_outdated_tap
   ].freeze
 
   COUNTER_TTL = 40.days

@@ -8,6 +8,7 @@ class Budget
     include Memoable
     include ConditionallyVotable
     include SimilarContributionsCheckable
+    include MarkedAreasValidation
 
     default_scope { where(draft: false) }
 

@@ -10,7 +10,11 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
               "running when its running field says so, whether or not it takes a written " \
               "contribution — a voting phase that is running is running. Every phase is a row " \
               "of its own, several of the same kind included, each with its own name and its " \
-              "own dates: never merge them. " \
+              "own dates: never merge them, and where two share a name, tell them apart by " \
+              "their dates or by what they are about, never by a number. Where " \
+              "running_phases_not_listed is present, that " \
+              "many more phases are running than the rows name — say so rather than " \
+              "presenting the listed ones as all of them. " \
               "Identified by name rather than by id, so it reaches finished projekts as " \
               "well as running ones. Returns facts for you to answer in your own words — it " \
               "sends nothing to the citizen. Answer from what it returned and nothing else; a " \
@@ -19,7 +23,7 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
               "answered by send_projekt_card, and the phases and deadlines this returns are " \
               "what its summary carries."
 
-  params do
+  parameters do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
   end
 
@@ -28,11 +32,17 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
 
     return unknown_projekt_error(projekt_name) if projekt.blank?
 
+    ::Whatsapp::StatePills.focus_projekt(projekt.id)
+
+    query = ::Whatsapp::ProjektPhasesQuery.new(projekt: projekt)
+    projekt_phases = query.call
+
     {
       projekt: projekt_title(projekt),
       subtitle: ::Whatsapp::ProjektCard.subtitle(projekt),
       description: description_of(projekt),
-      phases: phases_of(projekt),
+      phases: phases_of(projekt_phases),
+      running_phases_not_listed: running_not_listed(query, projekt_phases),
       url: projekt_url(projekt)
     }.compact
   end
@@ -68,8 +78,7 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
     # portal has switched the bot off as a channel — and a summary reading only the
     # verdict called those closed, which is what let four running voting phases arrive
     # as one collective sentence.
-    def phases_of(projekt)
-      projekt_phases = ::Whatsapp::ProjektPhasesQuery.call(projekt: projekt)
+    def phases_of(projekt_phases)
       facts = ::Whatsapp::ProjektCard.phase_facts(projekt_phases)
 
       projekt_phases.map do |candidate|
@@ -78,11 +87,28 @@ class Ai::Tools::WhatsappAiAssistant::DescribeProjekt < Ai::Tools::WhatsappAiAss
         {
           projekt_phase_id: candidate.id,
           phase: phase_facts.name,
+          about: phase_about(candidate),
+          starts_on: ::Whatsapp::DatePhrase.absolute(candidate.start_date),
           ends_on: ::Whatsapp::DatePhrase.absolute(phase_facts.ends_on),
           ends_in: ::Whatsapp::DatePhrase.relative(phase_facts.ends_on),
           running: candidate.current?,
           open_for_submission: ::Whatsapp::EligiblePhasesQuery.eligible?(candidate)
         }.compact
       end
+    end
+
+    # The running phases the rows above had no room for. The rows stop at what a
+    # list holds, with the running ones first, so a projekt running more than
+    # that at once was summarised as though the ones listed were all of them —
+    # while its card, which reads every phase, offered more. Counted only when
+    # the rows came back full, the one case where anything can be missing.
+    def running_not_listed(query, projekt_phases)
+      return if projekt_phases.size < ::Whatsapp::MAX_OFFERED_LIST_ROWS
+
+      missing = query.running_count - projekt_phases.count(&:current?)
+
+      return if !missing.positive?
+
+      missing
     end
 end

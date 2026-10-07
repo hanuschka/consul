@@ -89,6 +89,10 @@ en:
                 %{field} must be a language code the platform offers, e.g. "de" or "en"
               whatsapp_positive_integer_invalid: >-
                 %{field} must be a whole number greater than zero
+              whatsapp_email_invalid: >-
+                %{field} must be a valid e-mail address, e.g. "citizen-service@city.gov"
+              whatsapp_url_invalid: >-
+                %{field} must be a full link starting with https:// or http://
         deficiency_report:
           attributes:
             map_location:
@@ -132,7 +136,15 @@ en:
             image:
               min_image_width: "Image width must be at least %{required_min_width}px"
               min_image_height: "Image height must be at least %{required_min_height}px"
+        site_customization/content_block:
+          attributes:
+            visible_until:
+              before_visible_from: must not be before the start of the visibility period
     attributes:
+      site_customization/content_block:
+        visible: Visible
+        visible_from: Visible from
+        visible_until: Visible until
       map_location:
         latitude: Latitude
         longitude: Longitude

@@ -8,7 +8,8 @@ class Masterportal::Converters::PointOfInterestPinBuilder < ApplicationService
       projekt_phase: @pin.projekt_phase,
       author: User.system,
       description: description_with_title,
-      masterportal_pin_id: @pin.id
+      masterportal_pin_id: @pin.id,
+      skip_marked_areas_check: true
     )
 
     poi_pin.map_location = build_map_location

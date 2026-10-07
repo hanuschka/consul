@@ -16,7 +16,7 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
   # "stop", "remove" — fell through to subscribing: the opposite of what the citizen
   # asked for, and not something they can tell from the confirmation they get back.
   # An enum means the provider cannot emit a third value at all.
-  params(
+  parameters(
     type: "object",
     properties: {
       projekt_name: {
@@ -27,9 +27,10 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
         type: "string",
         enum: DIRECTIONS,
         description: "Whether to start or stop following the projekt"
-      }
+      },
+      **COMPLETION_LINE_PARAMETER
     },
-    required: %w[projekt_name action],
+    required: %w[projekt_name action completion_line],
     additionalProperties: false
   )
 
@@ -71,16 +72,22 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
     end
 
     def apply(projekt, direction)
+      title = projekt_title(projekt)
+
       if direction == SUBSCRIBE
         ::Whatsapp::Subscriptions.follow(user: user, projekt: projekt)
       else
         ::Whatsapp::Subscriptions.unfollow(user: user, projekt: projekt)
       end
 
+      ::Whatsapp::StatePills.focus_projekt(projekt.id)
+
       {
-        projekt: projekt_title(projekt),
+        completed: true,
+        projekt: title,
         following: direction == SUBSCRIBE,
-        hint: "Say what changed in one line, and say how they can undo it."
+        hint: "Say what changed in one line, and say how they can undo it: the button that " \
+              "does is put under your reply for you."
       }
     end
 

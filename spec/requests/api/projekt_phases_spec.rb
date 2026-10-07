@@ -63,7 +63,7 @@ end
       end
 
       response '200', 'projekt phases found and returned (public_data sees only visible/active)' do
-        let(:projekt) { Projekt.create!(name: 'Projekt With Phases') }
+        let(:projekt) { Projekt.create!(name: 'Projekt With Phases', activated: true) }
         let(:projekt_id) { projekt.id }
 
         before do

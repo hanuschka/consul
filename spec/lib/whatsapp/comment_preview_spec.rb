@@ -34,22 +34,31 @@ describe Whatsapp::CommentPreview do
     end
   end
 
-  describe ".posted_block" do
-    it "repeats the words and writes the address out" do
-      block = Whatsapp::CommentPreview.posted_block(
+  describe ".posted_confirmation" do
+    it "writes the comment's own address out under the sentence" do
+      block = Whatsapp::CommentPreview.posted_confirmation(
         conversation: conversation, url: "https://example.org/proposals/1#comment_9"
       )
 
-      expect(block).to include(text)
-      expect(block).to include("https://example.org/proposals/1#comment_9")
+      expect(block).to eq(
+        "#{I18n.t("whatsapp.bot.comment.online")}\nhttps://example.org/proposals/1#comment_9"
+      )
+    end
+
+    it "does not repeat the words the citizen has just confirmed" do
+      block = Whatsapp::CommentPreview.posted_confirmation(
+        conversation: conversation, url: "https://example.org/proposals/1#comment_9"
+      )
+
+      expect(block).not_to include(text)
     end
   end
 
-  describe ".awaiting_review_block" do
-    it "repeats the words and offers no address at all" do
-      block = Whatsapp::CommentPreview.awaiting_review_block(conversation: conversation)
+  describe ".awaiting_review_confirmation" do
+    it "offers no address at all" do
+      block = Whatsapp::CommentPreview.awaiting_review_confirmation(conversation: conversation)
 
-      expect(block).to include(text)
+      expect(block).to eq(I18n.t("whatsapp.bot.comment.awaiting_review"))
       expect(block).not_to include("http")
     end
   end

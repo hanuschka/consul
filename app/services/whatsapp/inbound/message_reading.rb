@@ -39,8 +39,27 @@ class Whatsapp::Inbound::MessageReading
       end
   end
 
+  # What the keyword gate compares, so only the edges are trimmed: "STOPP!",
+  # "Stopp." and "🛑 stop" are the keyword written the way people write, and a
+  # transcribed voice note ends in a full stop as a rule. Anything inside the
+  # words stays, because "stopp bitte" is a sentence for the assistant to read
+  # rather than a keyword for Ruby to match. Missing a keyword here is not
+  # harmless: with no model reachable it leaves a number subscribed after it
+  # asked to stop.
+  SURROUNDING_NON_WORD_CHARACTERS = /\A[^\p{L}\p{N}]+|[^\p{L}\p{N}]+\z/
+
   def normalized_text
-    @normalized_text ||= text.to_s.strip.downcase
+    @normalized_text ||= self.class.keyword_form(text)
+  end
+
+  # The keyword lists are written in the same form, so a word is spelled there
+  # the way people write it. Turkish is why the i's are folded: downcase leaves
+  # "İ" as "i" plus a combining dot and "I" as "i" rather than "ı", so
+  # "ABONELİKTEN ÇIK" never met "abonelikten çık". The spaces are squished
+  # because some keywords are two words.
+  def self.keyword_form(text)
+    text.to_s.downcase.delete("̇").tr("ı", "i").squish
+      .gsub(SURROUNDING_NON_WORD_CHARACTERS, "")
   end
 
   # A voice note nothing could be read from. Asking forces the one

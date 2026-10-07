@@ -13,15 +13,13 @@ class Whatsapp::ProjektPhasesQuery < ApplicationQuery
   # The window here has to be the one ProjektPhase.current draws: a debate phase is
   # never current whatever its dates, so ranking it as running would let it outrank a
   # vote that is.
-  RUNNING_FIRST_SQL = <<~SQL.squish
-    CASE
-      WHEN projekt_phases.type <> 'ProjektPhase::DebatePhase'
-        AND (projekt_phases.start_date IS NULL OR projekt_phases.start_date <= :today)
-        AND (projekt_phases.end_date IS NULL OR projekt_phases.end_date >= :today)
-      THEN 0
-      ELSE 1
-    END
+  RUNNING_SQL = <<~SQL.squish
+    projekt_phases.type <> 'ProjektPhase::DebatePhase'
+      AND (projekt_phases.start_date IS NULL OR projekt_phases.start_date <= :today)
+      AND (projekt_phases.end_date IS NULL OR projekt_phases.end_date >= :today)
   SQL
+
+  RUNNING_FIRST_SQL = "CASE WHEN #{RUNNING_SQL} THEN 0 ELSE 1 END".freeze
 
   def initialize(projekt:)
     @projekt = projekt
@@ -29,6 +27,21 @@ class Whatsapp::ProjektPhasesQuery < ApplicationQuery
 
   def call
     scope.limit(::Whatsapp::MAX_OFFERED_LIST_ROWS).to_a
+  end
+
+  # Every phase, for the projekt card. It orders its rows by what the citizen
+  # still has to do and offers the votes it has no room for behind "more",
+  # and neither works over a set that stops at ten: a projekt running a
+  # proposal phase and ten votes never showed the last of them anywhere.
+  def uncapped
+    scope.to_a
+  end
+
+  # How many of the phases are running, counted past the cap: #call puts them
+  # first, so it only ever leaves one out when more than a list holds are
+  # running at once, and then nothing it returns says so.
+  def running_count
+    scope.reorder(nil).where(RUNNING_SQL, today: Time.zone.today).count
   end
 
   def exists?

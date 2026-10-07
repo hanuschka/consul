@@ -4,6 +4,9 @@ class Mitmachbox::SurveyPath
                                   .sort_by { |question, index| [question["position"].to_i, index] }
                                   .map(&:first)
     @index_by_id = @questions.each_with_index.to_h { |question, index| [question["id"], index] }
+    @question_id_by_option_id = @questions.flat_map do |question|
+      (question["options"] || []).map { |option| [option["id"], question["id"]] }
+    end.to_h
   end
 
   def reached_question_ids(chosen_option_ids_by_question)
@@ -12,6 +15,11 @@ class Mitmachbox::SurveyPath
 
     while index < @questions.size
       question = @questions[index]
+      unless condition_met?(question, chosen_option_ids_by_question, reached)
+        index += 1
+        next
+      end
+
       reached << question["id"]
       option = branching_option(question, chosen_option_ids_by_question[question["id"]])
 
@@ -39,6 +47,14 @@ class Mitmachbox::SurveyPath
   end
 
   private
+
+    def condition_met?(question, chosen_option_ids_by_question, reached)
+      option_ids = Array(question.dig("condition", "option_ids"))
+      return true if option_ids.empty?
+
+      source_id = question.dig("condition", "question_id") || @question_id_by_option_id[option_ids.first]
+      reached.include?(source_id) && Array(chosen_option_ids_by_question[source_id]).intersect?(option_ids)
+    end
 
     def branching_option(question, chosen_option_ids)
       return unless question["question_type"] == "single_choice"

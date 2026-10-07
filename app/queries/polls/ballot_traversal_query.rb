@@ -44,8 +44,87 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     end
   end
 
+  # What a traversal reads from the database, loaded for several polls at once by
+  # .for_polls and handed to each: the root questions in configured order, the
+  # titles this citizen chose keyed by question, and their map points counted by
+  # question.
+  Preloaded = Struct.new(:roots, :answered_titles, :map_point_counts, keyword_init: true)
+
   def self.for(poll:, user:, order_seed: nil)
     new(poll: poll, user: user, order_seed: order_seed)
+  end
+
+  # One citizen's traversals of several polls, as {poll_id => traversal}, for the
+  # lists that ask of every row whether it was answered in full. Asked poll by poll,
+  # a traversal loads the ballot's questions and every preload behind them, the
+  # citizen's answers and their map points — a fixed handful of queries repeated for
+  # each poll they have begun. Here each of those runs once for the whole list.
+  #
+  # Only for the chat, which seeds a shuffled question by the user's id (#initialize);
+  # the page passes a seed of its own and walks one poll at a time.
+  def self.for_polls(polls:, user:)
+    return {} if polls.blank?
+
+    poll_ids = polls.map(&:id)
+    roots = root_questions(::Poll::Question.where(poll_id: poll_ids)).to_a.group_by(&:poll_id)
+    poll_ids_by_question = ::Poll::Question.where(poll_id: poll_ids).pluck(:id, :poll_id).to_h
+    answered = answered_titles_by_poll(poll_ids_by_question, user)
+    map_points = map_point_counts_by_poll(poll_ids_by_question, user)
+
+    polls.to_h do |poll|
+      preloaded = Preloaded.new(
+        roots: roots.fetch(poll.id, []),
+        answered_titles: answered.fetch(poll.id, {}),
+        map_point_counts: map_points.fetch(poll.id, {})
+      )
+
+      [poll.id, new(poll: poll, user: user, preloaded: preloaded)]
+    end
+  end
+
+  # The root questions a ballot's steps are built from, read the way
+  # PollsController#show reads them so the page and the chat walk one list rather
+  # than two that agree by coincidence (#sequence).
+  def self.root_questions(questions)
+    questions
+      .root_questions
+      .where(contextualize_by_poll_question_id: nil)
+      .with_wizard_associations
+      .in_configured_order
+  end
+
+  # {poll_id => {question_id => [chosen titles]}} over the questions given, which
+  # map to their polls. Keyed per poll the way #answered_titles is keyed per ballot.
+  def self.answered_titles_by_poll(poll_ids_by_question, user)
+    if user.blank? || poll_ids_by_question.empty?
+      return {}
+    end
+
+    ::Poll::Answer
+      .where(question_id: poll_ids_by_question.keys, author: user)
+      .pluck(:question_id, :answer)
+      .group_by { |question_id, _| poll_ids_by_question[question_id] }
+      .transform_values do |rows|
+        rows.group_by(&:first).transform_values { |answers| answers.map(&:last) }
+      end
+  end
+
+  # {poll_id => {question_id => points placed}}, the same way.
+  def self.map_point_counts_by_poll(poll_ids_by_question, user)
+    if user.blank? || poll_ids_by_question.empty?
+      return {}
+    end
+
+    counts =
+      ::Poll::Answer::MapPoint
+        .joins(:answer)
+        .where(poll_answers: { question_id: poll_ids_by_question.keys, author_id: user.id })
+        .group("poll_answers.question_id")
+        .count
+
+    counts
+      .group_by { |question_id, _| poll_ids_by_question[question_id] }
+      .transform_values(&:to_h)
   end
 
   # `order_seed` is what a question asking to be shuffled is shuffled by, and it has
@@ -54,10 +133,14 @@ class Polls::BallotTraversalQuery < ApplicationQuery
   # the guest User's id at all — seeded from the id instead, the page would order the
   # steps one way and the questions rendered into it another. The chat has no session
   # and cannot be voted in by a guest, so there the id is the seed.
-  def initialize(poll:, user:, order_seed: nil)
+  #
+  # `preloaded` is what .for_polls loaded for this poll alongside the others; left
+  # out, the traversal loads its own.
+  def initialize(poll:, user:, order_seed: nil, preloaded: nil)
     @poll = poll
     @user = user
     @order_seed = order_seed.presence || user&.id
+    @preloaded = preloaded
   end
 
   # The root questions this citizen actually walks, in order: hidden clones
@@ -158,6 +241,15 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     first_owed.blank?
   end
 
+  # Every question on this citizen's path still without a full answer, in the order
+  # they are asked. Blind to the conversation's markers for the reason #nothing_owed?
+  # is: a question they skipped is still owed, and listed here.
+  def owed_questions
+    return [] if @user.blank?
+
+    expanded_path.reject { |question| answered?(question) }
+  end
+
   # How many questions the ballot holds, for the line that tells a citizen how much
   # of it is left. Counted over the whole sequence rather than the path, and in slots
   # — a template's set of contexted clones is one, since exactly one of them is ever
@@ -168,6 +260,19 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     @total ||= expanded_sequence
       .map { |question| question.contexted_clone_of_poll_question_id || question.id }
       .uniq.size
+  end
+
+  # Every question this citizen is asked, in the order they are asked it — the path
+  # with each bundle's sub-questions after their heading, which is how a chat walks
+  # it one message at a time.
+  def expanded_path
+    @expanded_path ||= expanded(path)
+  end
+
+  # How many points this citizen has placed on a map question, read from the one
+  # count the walk already holds for the whole ballot.
+  def map_points_placed(question)
+    map_point_counts.fetch(question.id, 0)
   end
 
   private
@@ -182,14 +287,19 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     # ordinary question.
     #
     def sequence
-      @sequence ||= participant_ordered_roots.select { |question| asks_something?(question) }
+      @sequence ||= participant_ordered_roots.select { |question| step?(question) }
+    end
+
+    # A root is a step when it asks something itself or heads a bundle whose
+    # sub-questions do. The heading carries no options of its own, and reading
+    # that alone as "asks nothing" took the whole bundle off the page's wizard
+    # and out of the chat.
+    def step?(root)
+      asks_something?(root) || root.nested_questions.any? { |nested| asks_something?(nested) }
     end
 
     def participant_ordered_roots
-      roots = @poll.questions.root_questions
-        .where(contextualize_by_poll_question_id: nil)
-        .with_wizard_associations
-        .in_configured_order
+      roots = @preloaded&.roots || self.class.root_questions(@poll.questions)
 
       @poll.questions_in_participant_order(roots, @order_seed)
     end
@@ -199,10 +309,6 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     def expanded(roots)
       roots.flat_map { |root| [root] + root.nested_questions.to_a }
         .select { |question| asks_something?(question) }
-    end
-
-    def expanded_path
-      @expanded_path ||= expanded(path)
     end
 
     def expanded_sequence
@@ -230,10 +336,6 @@ class Polls::BallotTraversalQuery < ApplicationQuery
       chosen_options(question).any?
     end
 
-    def map_points_placed(question)
-      map_point_counts.fetch(question.id, 0)
-    end
-
     # One query for every map question of the ballot, keyed the way #answered_titles
     # is: a count asked per question would be one round trip per step of a walk that
     # already costs a fixed handful.
@@ -243,6 +345,8 @@ class Polls::BallotTraversalQuery < ApplicationQuery
       @map_point_counts =
         if @user.blank?
           {}
+        elsif @preloaded.present?
+          @preloaded.map_point_counts
         else
           ::Poll::Answer::MapPoint
             .joins(:answer)
@@ -297,6 +401,8 @@ class Polls::BallotTraversalQuery < ApplicationQuery
       @answered_titles =
         if @user.blank?
           {}
+        elsif @preloaded.present?
+          @preloaded.answered_titles
         else
           ::Poll::Answer
             .where(question_id: @poll.question_ids, author: @user)

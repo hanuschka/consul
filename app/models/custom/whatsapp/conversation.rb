@@ -114,6 +114,18 @@ class Whatsapp::Conversation < ApplicationRecord
     unsaved_submission? || pending_comment.present?
   end
 
+  # Wider again, for the one question that is about the citizen rather than about
+  # what a reset would lose: whether they are in the middle of something that
+  # "Stopp" could mean leaving. A ballot is saved answer by answer, so it is not
+  # unsaved work, but a citizen half-way through one is just as likely to mean the
+  # vote rather than the channel. So is one who has only just been asked for their
+  # words — invited to comment, asked for their idea, sent to link before a vote:
+  # nothing is written yet, and the "Stopp" that answers the invitation is still
+  # most likely about the step it opened.
+  def step_in_progress?
+    unsaved_work? || active_poll_id.present? || pending_poll_id.present? || opened_steps.any?
+  end
+
   # What this phase collects besides the text, asked of the conversation because
   # two places each need one of the answers and they must not drift: the tool that
   # offers a pin and the drafting call that infers one from the citizen's wording
@@ -136,6 +148,13 @@ class Whatsapp::Conversation < ApplicationRecord
   # submission.
   def image_question_pending?
     image_question_available? && !photo_declined?
+  end
+
+  # Whether the draft on the table carries a picture. One predicate for the tools
+  # that talk about the picture and the prompt's draft line, so a request to replace
+  # it is answered from the same fact wherever it comes up.
+  def draft_picture_attached?
+    draft_resource&.image&.attachment&.attached? == true
   end
 
   def location_question_pending?
@@ -169,9 +188,11 @@ class Whatsapp::Conversation < ApplicationRecord
 
   # Entering a submission. The context is replaced rather than merged — a new
   # submission has settled nothing — except for the assistant's own stored
-  # history, which is the conversation and outlives any one draft in it.
+  # history, which is the conversation and outlives any one draft in it. A
+  # contribution held back for later goes too: this is it being taken up, or the
+  # citizen having moved on to another.
   def start_draft!(new_projekt_phase)
-    next_context = retained_context
+    next_context = retained_context.except("parked_submission")
 
     if new_projekt_phase&.id != projekt_phase_id
       next_context = next_context.merge(subject_change_stamp)
@@ -192,11 +213,15 @@ class Whatsapp::Conversation < ApplicationRecord
   # path that destroys a half-written contribution. Whoever calls it has already
   # established there is nothing to lose (#unsaved_submission?), and discarding,
   # where that is what the citizen meant, stays the one implementation in
-  # AbortSubmission.
+  # AbortSubmission. The contribution the citizen had only said they wanted to
+  # make goes with the phase, in the same write: there is nothing of it to lose.
   def leave_projekt!
     return if projekt_phase_id.blank?
 
-    update!(projekt_phase_id: nil, context: context.merge(subject_change_stamp))
+    update!(
+      projekt_phase_id: nil,
+      context: context.merge(subject_change_stamp, "opened_steps" => opened_steps - ["contribution"])
+    )
   end
 
   # ── When the conversation stopped being about what it was about ─────────
@@ -292,9 +317,10 @@ class Whatsapp::Conversation < ApplicationRecord
   SETTLED_SLOT_KEYS = %w[photo_declined location_stated].freeze
 
   # One batched write, under the inbound job's advisory lock: the draft, the
-  # questions the citizen already answered unasked, and the drafting throttle
-  # clock. The settled slots ride under their own key because the stash is emptied
-  # at persist while the photo and location questions are asked after the record
+  # questions the citizen already answered unasked, what the draft added to their
+  # words, and the drafting throttle clock. The settled slots and the additions
+  # ride under their own keys because the stash is emptied at persist while the
+  # photo and location questions are asked, and the draft shown, after the record
   # exists.
   #
   # Replaced rather than merged, which matters on a revision: a revision reports
@@ -303,10 +329,24 @@ class Whatsapp::Conversation < ApplicationRecord
   # their mind while revising would have had no way to send one at all.
   def store_generated_draft!(generated)
     merge_context!(
-      draft_data: generated.except(*SETTLED_SLOT_KEYS),
+      draft_data: generated.except(*SETTLED_SLOT_KEYS, "additions_beyond_idea"),
       settled_slots: generated.slice(*SETTLED_SLOT_KEYS),
+      additions_beyond_idea: listed_additions(generated["additions_beyond_idea"]),
       last_draft_at: Time.current.iso8601
     )
+  end
+
+  # What the draft proposes that the citizen never said, as short phrases, so the
+  # question under the preview can tell them what goes in under their name. Written
+  # by the drafting call through store_generated_draft! and restated by
+  # revise_draft whenever the text changes; read by draft_proposal, revise_draft
+  # and draft_status. Empty when the draft only rephrases them.
+  def additions_beyond_idea
+    Array(context["additions_beyond_idea"])
+  end
+
+  def store_additions_beyond_idea!(additions)
+    merge_context!(additions_beyond_idea: listed_additions(additions))
   end
 
   def settled_slots
@@ -347,15 +387,18 @@ class Whatsapp::Conversation < ApplicationRecord
   end
 
   # That the citizen asked to be put back at the beginning while a contribution
-  # was still in the way. Written by the inbound layer, which resets nothing on
-  # that turn because throwing away what they wrote cannot be taken back, and
-  # read by AbortSubmission once they have said to discard — so the reply that
-  # follows the discard is the fresh start they asked for rather than a full stop.
+  # or a comment not yet posted was still in the way. Written by the inbound
+  # layer, which resets nothing on that turn because throwing away what they
+  # wrote cannot be taken back, and read by AbortSubmission once they have said to
+  # discard — so the reply that follows the discard is the fresh start they asked
+  # for rather than a full stop.
   #
-  # Nothing clears it explicitly, and nothing needs to: discard_draft!,
+  # For a draft nothing clears it explicitly, and nothing needs to: discard_draft!,
   # complete_draft! and start_draft! each replace the whole context, and every way
   # out of having a draft goes through one of them, so the key cannot outlive the
-  # submission it was written for. What it does outlive is a change of mind — ask
+  # submission it was written for. Posting a comment keeps the context, so
+  # clear_pending_comment! takes the request with it where no draft is left to
+  # hold it. What it does outlive is a change of mind — ask
   # to start over, carry on with the draft instead, abandon it an hour later, and
   # the overview comes with the discard. They did ask for it, so that is the
   # harmless direction for this to be wrong in.
@@ -365,6 +408,106 @@ class Whatsapp::Conversation < ApplicationRecord
 
   def request_start_over!
     merge_context!(subject_change_stamp.merge("start_over_requested" => true))
+  end
+
+  # Going back to the beginning, from the pill and from the citizen saying so in
+  # their own words alike: one implementation, so the two cannot come to mean
+  # different things. The ballot goes and the phase goes; a submission or a
+  # comment in progress stays until the citizen says to discard it, because
+  # neither the tap nor the sentence is consent to losing what they wrote. With
+  # nothing written, every invitation goes too, and the proposal a comment was
+  # asked for with it: a comment asked for and not yet written used to outlive
+  # the way back, and the prompt still named the proposal it was meant for.
+  def begin_start_over!
+    note_start_over!
+    clear_ballot!
+    clear_submission_wish!
+    clear_parked_submission!
+
+    if unsaved_work?
+      close_step!("comment")
+      request_start_over!
+    else
+      close_opened_steps!
+      leave_projekt!
+    end
+  end
+
+  # ── A submission asked for before its projekt ───────────────────────────
+  # "Vorschlag erstellen" tapped with no phase open: the citizen has said they want
+  # to submit something and not yet where. The assistant answers it with the open
+  # projekts, and the projekt they picked from those used to be answered with its
+  # whole card — nine votes and the contributions included — on which the wish they
+  # had just tapped was nowhere to be seen. Held here until that card is sent, so it
+  # can offer only the way to submit (Ai::Tools::WhatsappAiAssistant::SendProjektCard).
+  #
+  # A timestamp rather than a flag, read against the window below: a wish the
+  # citizen never followed up is not one a card sent later should act on. Picking a
+  # projekt from the list the tap is answered with takes a minute, so the window is
+  # short. Cleared sooner by the card that uses it, by going back to the beginning,
+  # and with the rest of the context by start_draft!.
+  SUBMISSION_WISH_TTL = 10.minutes
+
+  def submission_wished?
+    wished_at = context["submission_wished_at"]
+
+    return false if wished_at.blank?
+
+    Time.zone.parse(wished_at) > SUBMISSION_WISH_TTL.ago
+  end
+
+  def record_submission_wish!
+    merge_context!(submission_wished_at: Time.current.iso8601)
+  end
+
+  def clear_submission_wish!
+    if context["submission_wished_at"].blank?
+      return
+    end
+
+    merge_context!(submission_wished_at: nil)
+  end
+
+  # ── A contribution asked for while another is open ──────────────────────
+  # A citizen part-way through a draft or a comment who asks to contribute
+  # somewhere is asked first whether to discard what they have, because StartDraft
+  # refuses until they say so. The idea they gave with the request used to go with
+  # the answer: the discard ended on "it is gone", and the idea had to be written
+  # again. Held here from the refusal, so the reply to the discard carries on with
+  # it (Whatsapp::DiscardNotes), and kept through the draft they chose to finish
+  # instead, so it is offered once that one is done (SystemPromptService).
+  #
+  # Their words as they wrote them, or none where they picked the projekt from a
+  # list. It outlives the discard and the publishing, which both rebuild the
+  # context (#retained_context); a new submission takes it with the rest, having
+  # either taken it up or moved past it, and so does going back to the beginning.
+  def parked_projekt_phase
+    projekt_phase_id = context.dig("parked_submission", "projekt_phase_id")
+
+    return if projekt_phase_id.blank?
+
+    ::ProjektPhase.find_by(id: projekt_phase_id)
+  end
+
+  def parked_submission_text
+    context.dig("parked_submission", "text")
+  end
+
+  def park_submission!(projekt_phase:, text:)
+    merge_context!(
+      parked_submission: {
+        "projekt_phase_id" => projekt_phase.id,
+        "text" => text.to_s.strip.presence
+      }
+    )
+  end
+
+  def clear_parked_submission!
+    if context["parked_submission"].blank?
+      return
+    end
+
+    merge_context!(parked_submission: nil)
   end
 
   # Cleared on a revision, where the record is already persisted. Deliberately: a
@@ -393,6 +536,83 @@ class Whatsapp::Conversation < ApplicationRecord
     return if context["shared_location"].blank?
 
     merge_context!(shared_location: nil)
+  end
+
+  # That this draft's optional pin has been asked for. Asked once and never again,
+  # and held as a fact the tool checks rather than left to "never ask twice", which
+  # was a sentence the model was told and could talk itself past. Outside the
+  # settled slots on purpose, which clear on a revision — a revised text is still
+  # the same draft, and the pin was still asked for — and gone with the rest of the
+  # context when the draft ends.
+  def location_requested?
+    context["location_requested"] == true
+  end
+
+  def record_location_requested!
+    merge_context!(location_requested: true)
+  end
+
+  # That this draft's citizen has been shown both picture notices — the rights one
+  # and the generated-picture one — which every way a picture reaches the draft
+  # reads first. Held for the draft rather than for the last message like the
+  # irreversible offers, because a photo can arrive turns after it was asked for;
+  # gone with the rest of the context when the draft ends.
+  def image_notices_shown?
+    context["image_notices_shown"] == true
+  end
+
+  def record_image_notices_shown!
+    merge_context!(image_notices_shown: true)
+  end
+
+  # A place read from the citizen's own words, held until they say it is the right
+  # one: {"latitude", "longitude", "name"}. It used to be written onto the draft the
+  # moment it was found, and a chat has no map — so the citizen saw "Standort" and
+  # nothing else, and the contribution went online pinned in another town. Written
+  # by PersistDraftService on every draft and revision (nil drops a stale one), read
+  # by draft_status and set_draft_location.
+  def proposed_location
+    context["proposed_location"]
+  end
+
+  def store_proposed_location!(place)
+    if place.present? || context["proposed_location"].present?
+      merge_context!(proposed_location: place)
+    end
+  end
+
+  # What the pin on the draft is called, for the block the citizen confirms: a
+  # place is only confirmed by a name they recognise, and the coordinates are not
+  # one. Held here because map_locations has nowhere to keep it.
+  def attached_location_name
+    context["attached_location_name"]
+  end
+
+  # The four keys travel together: whatever was waiting is used up, the name
+  # belongs to the pin just written, and a yes given before it was a yes to a
+  # different contribution.
+  def record_attached_location!(name)
+    merge_context!(
+      shared_location: nil,
+      proposed_location: nil,
+      attached_location_name: name,
+      draft_preview_digest: nil
+    )
+  end
+
+  def record_removed_location!
+    merge_context!(
+      shared_location: nil,
+      proposed_location: nil,
+      attached_location_name: nil,
+      draft_preview_digest: nil
+    )
+  end
+
+  # A pin that could not be written, so that neither the shared nor the proposed
+  # one can be re-attached to whatever the citizen does next.
+  def clear_waiting_locations!
+    merge_context!(shared_location: nil, proposed_location: nil)
   end
 
   # The photo the citizen sent, parked for the same reason: an image arrives as a
@@ -446,8 +666,10 @@ class Whatsapp::Conversation < ApplicationRecord
     context["draft_preview_digest"]
   end
 
+  # The draft just shown is the version a later change starts from, so a change
+  # still open from before it closes in the same write.
   def store_draft_preview_digest!(digest)
-    merge_context!(draft_preview_digest: digest)
+    merge_context!(draft_preview_digest: digest, **revision_closed("draft"))
   end
 
   def revoke_draft_preview_digest!
@@ -470,11 +692,29 @@ class Whatsapp::Conversation < ApplicationRecord
   end
 
   # Both keys in one write: the words are gone, so a digest of them is a digest of
-  # nothing, and leaving it behind would let the next comment inherit a yes.
+  # nothing, and leaving it behind would let the next comment inherit a yes. The
+  # invitation that asked for the words goes in the same write, because the
+  # comment it opened is over, and so does a change to it still open.
   def clear_pending_comment!
-    return if context["pending_comment"].blank? && context["comment_preview_digest"].blank?
+    return if context["pending_comment"].blank? &&
+      context["comment_preview_digest"].blank? &&
+      !opened_steps.include?("comment") &&
+      revision_kind != "comment"
 
-    merge_context!(pending_comment: nil, comment_preview_digest: nil)
+    merge_context!(
+      pending_comment: nil,
+      comment_preview_digest: nil,
+      opened_steps: opened_steps - ["comment"],
+      **revision_closed("comment"),
+      **start_over_request_closed
+    )
+  end
+
+  # The invitation to comment is out and nothing has been written yet: the next
+  # thing the citizen sends is their comment, and a button asking for it again
+  # only repeats the message it sits under.
+  def comment_invited?
+    opened_steps.include?("comment") && pending_comment.blank?
   end
 
   # The ballot a citizen was about to be given when it turned out they had no account
@@ -595,6 +835,22 @@ class Whatsapp::Conversation < ApplicationRecord
     merge_context!(declined_poll_question_ids: declined_poll_question_ids + [question_id])
   end
 
+  # The questions of this ballot already put to the citizen again after they turned
+  # to something else. Once each: a question re-sent under every reply is a script
+  # talking over the conversation — a map question sent its picker and the way past
+  # it under "Welche Projekte gibt es?" for minutes on end. After that one time the
+  # question stays in the state and whether to bring it back is the assistant's.
+  # Scoped to the ballot like the declined questions, and cleared with them.
+  def resumed_poll_question_ids
+    Array(context["resumed_poll_question_ids"])
+  end
+
+  def record_resumed_poll_question!(question_id)
+    return if resumed_poll_question_ids.include?(question_id)
+
+    merge_context!(resumed_poll_question_ids: resumed_poll_question_ids + [question_id])
+  end
+
   # All of them in one write, for the end of a ballot and for starting over.
   # Separate clears would leave a window in which the poll was gone and a question
   # of it was still expecting an answer.
@@ -606,7 +862,8 @@ class Whatsapp::Conversation < ApplicationRecord
       open_multiple_question_id: nil,
       pending_open_question_id: nil,
       pending_map_question_id: nil,
-      declined_poll_question_ids: nil
+      declined_poll_question_ids: nil,
+      resumed_poll_question_ids: nil
     )
   end
 
@@ -618,8 +875,9 @@ class Whatsapp::Conversation < ApplicationRecord
     context["comment_preview_digest"]
   end
 
+  # The same as the draft's: the comment just shown closes a change still open.
   def store_comment_preview_digest!(digest)
-    merge_context!(comment_preview_digest: digest)
+    merge_context!(comment_preview_digest: digest, **revision_closed("comment"))
   end
 
   # The proposal the bot last asked about, written by the tools that resolve one
@@ -644,6 +902,83 @@ class Whatsapp::Conversation < ApplicationRecord
   # prompt.
   def active_proposal_id
     support_proposal_id || comment_proposal_id
+  end
+
+  # The steps the bot has opened by asking for the citizen's words before any of
+  # them have arrived: "comment" once it has invited a comment, "contribution"
+  # once the citizen has said they want to contribute. Nothing is written yet, so
+  # a reset loses nothing and unsaved_work? finds nothing, but step_in_progress?
+  # reads this, so a "Stopp" answering the invitation is asked about rather than
+  # read as leaving the channel.
+  #
+  # Written by StartComment and StartDraft, never by start_draft! itself: a
+  # projekt card and a scanned code enter a phase too, and neither is the citizen
+  # saying they want to contribute. The whole-context replacements clear both,
+  # clear_pending_comment! the comment, leave_projekt! the contribution, and
+  # going back to the beginning all of them, or only the comment while something
+  # written waits on the citizen's answer.
+  def opened_steps
+    Array(context["opened_steps"])
+  end
+
+  def open_step!(kind)
+    return if opened_steps.include?(kind)
+
+    merge_context!(opened_steps: opened_steps + [kind])
+  end
+
+  def close_step!(kind)
+    return if !opened_steps.include?(kind)
+
+    merge_context!(opened_steps: opened_steps - [kind])
+  end
+
+  # ── A change on its way ─────────────────────────────────────────────────
+  # The comment or the draft as the citizen last read it in its preview, kept from
+  # the tap that asks to change it until the changed version is shown. The cancel
+  # pill under that request used to throw the whole thing away, which is not what
+  # "Änderung verwerfen" says; with this it takes back the change and nothing else
+  # (Inbound::ProcessMessageService#revert_change).
+  #
+  # Kept only where what is on the table is still what the preview showed — past
+  # that there is no version the citizen read to go back to. One level and one at a
+  # time: a second change starts from the version shown after the first, and a
+  # change to the draft replaces one to the comment. Closed by the next preview of
+  # the same kind and by posting the comment; the whole-context replacements clear
+  # it with everything else.
+  def revision_open?
+    context["revision_base"].present?
+  end
+
+  # "comment" or "draft", nil while no change is open.
+  def revision_kind
+    context["revision_base"].to_h["kind"]
+  end
+
+  def begin_comment_revision!
+    return if pending_comment.blank?
+    return if ::Whatsapp::CommentPreview.digest(conversation: self) != comment_preview_digest
+
+    merge_context!(revision_base: { "kind" => "comment", "snapshot" => pending_comment })
+  end
+
+  def begin_draft_revision!
+    return if draft_resource.blank?
+    return if ::Whatsapp::DraftPreview.digest(conversation: self) != draft_preview_digest
+
+    merge_context!(revision_base: { "kind" => "draft", "snapshot" => draft_snapshot })
+  end
+
+  # The version the citizen last read, back on the table. Their yes to it is not:
+  # the digest goes with the change, so nothing is posted or published before the
+  # preview has been sent again.
+  def revert_revision!
+    snapshot = context["revision_base"].to_h["snapshot"].to_h
+
+    case revision_kind
+    when "comment" then revert_comment!(snapshot)
+    when "draft" then revert_draft!(snapshot)
+    end
   end
 
   # The irreversible actions the bot's last interactive message offered, written by
@@ -673,6 +1008,95 @@ class Whatsapp::Conversation < ApplicationRecord
   # Called once at the top of the inbound chain, before anything can send.
   def hold_offered_confirmations!
     @held_confirmations = pending_confirmations
+  end
+
+  # Whether the bot had already asked "only this, or all messages?" when the
+  # citizen's message arrived. Asked once and only once: the next opt-out keyword
+  # is honoured without a model, and stop_messages acts on a plain yes. Held on
+  # arrival for the same reason as the confirmations above — the turn that asks
+  # must not be able to count its own question as answered.
+  def hold_stop_question!
+    @held_stop_question = context["stop_question_asked"].present?
+  end
+
+  def stop_question_asked?
+    return @held_stop_question if defined?(@held_stop_question)
+
+    context["stop_question_asked"].present?
+  end
+
+  def ask_stop_question!
+    merge_context!(stop_question_asked: true)
+  end
+
+  # Any message after the question answers it, so the question is settled
+  # whatever that answer was: a citizen who went on with their comment and
+  # typed "Stopp" an hour later is asked again rather than unsubscribed.
+  def clear_stop_question!
+    return if context["stop_question_asked"].blank?
+
+    merge_context!(stop_question_asked: nil)
+  end
+
+  # The draft and the comment as they stood when the assistant's turn began, held
+  # in memory like the confirmations above. What they answer is whether this turn
+  # wrote or changed one, which neither the record nor the stored preview digest
+  # can say on its own: a digest that differs from the preview's may be a draft
+  # the citizen was never shown last week, and it is this turn's change that has
+  # to be shown before anything else is sent about it.
+  #
+  # Called by Whatsapp::AiAssistant::RouterService before the model is asked,
+  # because a turn is not always started by the inbound chain.
+  def hold_preview_digests!
+    @held_preview_digests = {
+      draft: ::Whatsapp::DraftPreview.digest(conversation: self),
+      comment: ::Whatsapp::CommentPreview.digest(conversation: self)
+    }
+  end
+
+  # :draft or :comment when this turn wrote or changed one the citizen has not
+  # been shown since, nil otherwise. Nil wherever nothing was held, which is every
+  # caller outside a turn: without the digest from the turn's start there is no
+  # telling a change from what was already there.
+  def unshown_preview_kind
+    return if @held_preview_digests.nil?
+    return :draft if unshown_draft_change?
+    return :comment if unshown_comment_change?
+
+    nil
+  end
+
+  # The citizen message being answered, held in memory like the confirmations
+  # above. Called once at the top of the inbound chain, before anything can send,
+  # with the message the citizen is looking at — so a retry tap is a message of
+  # its own and may be answered with the preview again.
+  def hold_inbound_message_id!(message_id)
+    @held_inbound_message_id = message_id
+  end
+
+  # Whether a preview of this version may go out: false where the same version
+  # of the same kind has already been shown in answer to the same message. One
+  # change, one preview — a second one under the same message is a second set of
+  # pills for one question, and a tap under the first answers a message the bot
+  # itself has replaced.
+  #
+  # Claimed before the send, like the preview digest, so a send that fails
+  # halfway leaves a claim rather than an opening for a second preview. True
+  # wherever no message is held: a turn started outside the inbound chain has
+  # nothing to key it on. No row lock, because the inbound job already holds
+  # the conversation's advisory lock for the whole answer
+  # (Whatsapp::ProcessInboundMessageJob).
+  def claim_preview!(kind:, digest:)
+    return true if @held_inbound_message_id.blank? || digest.blank?
+
+    claim = { "digest" => digest, "inbound_message_id" => @held_inbound_message_id }
+    claims = context["preview_claims"].to_h
+
+    return false if claims[kind.to_s] == claim
+
+    merge_context!(preview_claims: claims.merge(kind.to_s => claim))
+
+    true
   end
 
   # That the citizen has just asked to start over, held in memory rather than
@@ -705,6 +1129,42 @@ class Whatsapp::Conversation < ApplicationRecord
     @submission_completed == true
   end
 
+  # What this turn has already done, held the same way and for the same length of
+  # time: the result of every tool that reported `completed: true` — a comment
+  # posted, a support counted, a projekt followed — exactly as the model read it.
+  # Kept as JSON so the retry snapshot can store it unchanged. Read by
+  # Inbound::ProcessMessageService when the turn then fails, because a reply that
+  # could not be written must not be answered as though nothing had happened — nor
+  # retried as though it had not.
+  #
+  # The completion line the model wrote with the call sits beside the result rather
+  # than in it: it is for the citizen's fallback line, and the retry hands the model
+  # only what the tool answered.
+  def note_completed_tool_result!(tool:, result:, completion_line: nil)
+    entry = {
+      "tool" => tool.to_s,
+      "result" => result.as_json,
+      "completion_line" => completion_line
+    }.compact
+
+    @completed_tool_results = completed_tool_results + [entry]
+  end
+
+  # A retry of a turn that had completed something starts out holding those results,
+  # so what reads this turn's completed actions — its fallback line, its failure
+  # report, its log — counts them too when the retry fails as well.
+  def carry_completed_tool_results!(entries)
+    @completed_tool_results = completed_tool_results + Array(entries)
+  end
+
+  def completed_tool_results
+    @completed_tool_results || []
+  end
+
+  def completed_tool_names
+    completed_tool_results.map { |entry| entry["tool"] }
+  end
+
   # Nothing to write on the common path: most messages offer nothing irreversible,
   # and clearing a key that was never set would cost an UPDATE per reply.
   def remember_confirmations!(action_ids)
@@ -719,6 +1179,9 @@ class Whatsapp::Conversation < ApplicationRecord
   # Inbound::ProcessMessageService when a turn fails, read by its retry gate, and
   # cleared by the next turn that succeeds; a cancel wipes it with the rest of the
   # context. One snapshot only: a retry that fails again overwrites it with itself.
+  # Where the failed turn had already completed something, the snapshot holds a note
+  # saying so instead of the inbound, and the completed tool results beside it, so
+  # that a retry which fails as well can still tell the citizen it went through.
   def retry_inbound
     context["retry_inbound"]
   end
@@ -734,9 +1197,14 @@ class Whatsapp::Conversation < ApplicationRecord
     retry_inbound.to_h["text"].present?
   end
 
-  def store_retry_inbound!(text:, message_id:)
+  def store_retry_inbound!(text:, message_id:, citizen_words:, completed_tool_results: [])
     merge_context!(
-      retry_inbound: { "text" => text, "message_id" => message_id }.compact
+      retry_inbound: {
+        "text" => text,
+        "message_id" => message_id,
+        "citizen_words" => citizen_words,
+        "completed_tool_results" => completed_tool_results.presence
+      }.compact
     )
   end
 
@@ -832,10 +1300,93 @@ class Whatsapp::Conversation < ApplicationRecord
       update!(context: context.merge(attributes.stringify_keys))
     end
 
+    def listed_additions(additions)
+      Array(additions).map { |addition| addition.to_s.squish }.compact_blank
+    end
+
+    # The change of this kind closed in the same write as whatever ends it, and
+    # nothing where none of this kind is open.
+    def revision_closed(kind)
+      return {} if revision_kind != kind
+
+      { revision_base: nil }
+    end
+
+    # A request to start over that only the comment was holding up ends with it;
+    # one a draft still holds up stays for the draft.
+    def start_over_request_closed
+      return {} if !start_over_requested?
+      return {} if unsaved_submission?
+
+      { start_over_requested: nil }
+    end
+
+    # Every step opened by asking for the citizen's words, and the proposal the
+    # comment one was asked about. Nothing is written yet, so nothing is lost.
+    def close_opened_steps!
+      return if opened_steps.empty? && comment_proposal_id.blank?
+
+      merge_context!(opened_steps: [], comment_proposal_id: nil)
+    end
+
+    # What revise_draft changes: the record's title and text, the assessment that is
+    # cleared with the text, and the two keys restated beside them.
+    def draft_snapshot
+      {
+        "title" => draft_resource.title,
+        "description" => draft_resource.description,
+        "ai_evaluation_result" => draft_resource.ai_evaluation_result,
+        "additions_beyond_idea" => additions_beyond_idea,
+        "settled_slots" => settled_slots
+      }
+    end
+
+    def revert_comment!(snapshot)
+      merge_context!(pending_comment: snapshot, comment_preview_digest: nil, revision_base: nil)
+    end
+
+    # Saved without a second look from the model: the snapshot is a version the
+    # record already held and the citizen already read.
+    def revert_draft!(snapshot)
+      if draft_resource.present?
+        draft_resource.title = snapshot["title"]
+        draft_resource.description = snapshot["description"]
+        draft_resource.ai_evaluation_result = snapshot["ai_evaluation_result"]
+        draft_resource.save!
+      end
+
+      merge_context!(
+        additions_beyond_idea: Array(snapshot["additions_beyond_idea"]),
+        settled_slots: snapshot["settled_slots"].to_h,
+        draft_preview_digest: nil,
+        revision_base: nil
+      )
+    end
+
+    def unshown_draft_change?
+      unshown_change?(
+        ::Whatsapp::DraftPreview.digest(conversation: self),
+        held: @held_preview_digests[:draft],
+        shown: draft_preview_digest
+      )
+    end
+
+    def unshown_comment_change?
+      unshown_change?(
+        ::Whatsapp::CommentPreview.digest(conversation: self),
+        held: @held_preview_digests[:comment],
+        shown: comment_preview_digest
+      )
+    end
+
+    def unshown_change?(current, held:, shown:)
+      current.present? && current != held && current != shown
+    end
+
     def ballot_keys
       %w[
         active_poll_id open_multiple_question_id pending_open_question_id
-        pending_map_question_id declined_poll_question_ids
+        pending_map_question_id declined_poll_question_ids resumed_poll_question_ids
       ]
     end
 
@@ -847,9 +1398,13 @@ class Whatsapp::Conversation < ApplicationRecord
     # about a draft in it — dropped with the rest, a citizen would be told again the
     # moment they started a submission, which is the one point in the conversation
     # where they are least in need of it.
+    #
+    # A contribution held back for later belongs to the next draft rather than to
+    # this one, so it outlives this one's end (#parked_projekt_phase).
     def retained_context
       context.slice(
-        "ai_chat", "ai_chain", "typing_hint_at_message_id", "subject_changed_at"
+        "ai_chat", "ai_chain", "typing_hint_at_message_id", "subject_changed_at",
+        "parked_submission"
       )
     end
 

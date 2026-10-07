@@ -20,6 +20,9 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       projekt_phase_id: projekt_phase.id,
       draft_resource: resource,
       draft_preview_digest: nil,
+      image_question_pending?: false,
+      image_notices_shown?: false,
+      draft_picture_attached?: false,
       step: "idle"
     )
   end
@@ -30,6 +33,39 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
     allow(Whatsapp::DraftPreview).to receive(:digest).and_return("current-digest")
 
     allow(conversation).to receive(:confirmation_offered?).and_return(false)
+  end
+
+  # Nothing can be added to a published contribution from the chat, so a phase
+  # that takes pictures has to have asked for one first.
+  describe "the picture question gate" do
+    before do
+      allow(conversation).to receive(:image_question_pending?).and_return(true)
+      allow(conversation).to receive(:confirmation_offered?).and_return(true)
+      allow(conversation).to receive(:draft_preview_digest).and_return("current-digest")
+    end
+
+    it "refuses when the citizen has not been asked for a picture" do
+      answer = tool.execute
+
+      expect(answer[:error]).to match(/has not been asked for one/)
+      expect(answer[:hint]).to match(/request_photo/)
+    end
+
+    it "does not publish when it refuses" do
+      expect(Whatsapp::Drafting::CompleteDraftService).not_to receive(:call)
+
+      tool.execute
+    end
+
+    it "lets a picture already attached answer it" do
+      allow(conversation).to receive(:draft_picture_attached?).and_return(true)
+
+      expect(Whatsapp::Drafting::CompleteDraftService)
+        .to receive(:call)
+        .and_return(double(:stored, invalid?: true, errors: []))
+
+      tool.execute
+    end
   end
 
   describe "the confirmation gate" do
@@ -77,57 +113,67 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
   end
 
   describe "once the citizen has confirmed the draft as it stands" do
-    let(:proposal) { instance_double(Proposal, is_a?: true, admin_accepted?: true) }
+    let(:proposal) { instance_double(Proposal, id: 77, is_a?: true, admin_accepted?: true) }
 
     before do
       allow(conversation).to receive(:confirmation_offered?).and_return(true)
       allow(conversation).to receive(:draft_preview_digest).and_return("current-digest")
       allow(conversation).to receive(:complete_draft!)
+      allow(conversation).to receive(:note_submission_completed!)
 
       allow(Whatsapp::Drafting::CompleteDraftService).to receive(:call).and_return(
         double(:stored, invalid?: false, missing?: false, resource: proposal)
       )
       allow(Whatsapp::Drafting::PublishDraftService).to receive(:call).and_return(proposal)
       allow(Whatsapp::PublishedResourceUrl).to receive(:call).and_return("https://example.org/p/1")
-      allow(Whatsapp::DraftPreview).to receive(:published_block).and_return("the contribution")
-      allow(Whatsapp::DraftPreview).to receive(:chunks).and_return(["the contribution"])
-      allow(Whatsapp::Send).to receive(:text)
+      allow(Whatsapp::DraftPreview).to receive(:published_confirmation).and_return("published")
+      allow(Whatsapp::Send).to receive(:message_block)
     end
 
     it "publishes" do
       expect(tool.execute[:published]).to be(true)
     end
 
-    it "sends the contribution back composed from the record, not described to the model" do
-      expect(Whatsapp::Send)
-        .to receive(:text)
-        .with(account: account, body: "the contribution")
+    it "sends where it went, with the platform's own address" do
+      expect(Whatsapp::DraftPreview)
+        .to receive(:published_confirmation)
+        .with(conversation: conversation, url: "https://example.org/p/1")
+        .and_return("published")
+      expect(Whatsapp::Send).to receive(:message_block).with(account: account, block: "published")
 
       tool.execute
     end
 
-    it "sends the recap before the draft is dropped" do
-      expect(Whatsapp::DraftPreview).to receive(:published_block).ordered
+    it "sends the confirmation before the draft is dropped" do
+      expect(Whatsapp::DraftPreview).to receive(:published_confirmation).ordered
       expect(conversation).to receive(:complete_draft!).ordered
 
       tool.execute
     end
 
+    # The reply after it carries the new proposal's state pills (Whatsapp::StatePills).
+    it "keeps the published proposal in focus for the reply" do
+      tool.execute
+
+      expect(Current.whatsapp_pill_focus).to eq(proposal_id: 77)
+    ensure
+      Current.reset
+    end
+
     context "when the phase holds contributions for review" do
-      let(:proposal) { instance_double(Proposal, is_a?: true, admin_accepted?: false) }
+      let(:proposal) { instance_double(Proposal, id: 77, is_a?: true, admin_accepted?: false) }
 
       before do
-        allow(Whatsapp::DraftPreview).to receive(:awaiting_review_block).and_return("held")
-        allow(Whatsapp::DraftPreview).to receive(:chunks).and_return(["held"])
+        allow(Whatsapp::DraftPreview).to receive(:awaiting_review_confirmation).and_return("held")
       end
 
       it "offers no address" do
         expect(tool.execute[:url]).to be_nil
       end
 
-      it "says plainly that it is waiting rather than sending the published block" do
-        expect(Whatsapp::DraftPreview).to receive(:awaiting_review_block)
-        expect(Whatsapp::DraftPreview).not_to receive(:published_block)
+      it "says plainly that it is waiting rather than sending the published confirmation" do
+        expect(Whatsapp::DraftPreview).to receive(:awaiting_review_confirmation)
+        expect(Whatsapp::DraftPreview).not_to receive(:published_confirmation)
 
         tool.execute
       end

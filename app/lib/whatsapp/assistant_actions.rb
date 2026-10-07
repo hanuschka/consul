@@ -39,19 +39,23 @@ module Whatsapp::AssistantActions
   # projekt page and now from the chat as well, so the ceremony that made it cost
   # two taps was protecting against a consequence that does not exist. What is left
   # here has no undo anywhere — a published contribution, a submitted one, a comment
-  # on a public page, a severed account link.
-  IRREVERSIBLE_ACTIONS = %i[draft_publish submit_final comment_post unlink_confirm].freeze
+  # on a public page, a severed account link, and consent to the terms, which is
+  # recorded once per number for good.
+  IRREVERSIBLE_ACTIONS = %i[
+    draft_publish submit_final comment_post unlink_confirm terms_accept
+  ].freeze
 
   # The pills the model may offer but not name. Every other label it offers is a
   # sentence it wrote, checked for length and nothing else, because the dispatcher
   # re-resolves the id on the tap and a poor label costs a badly-worded button.
   #
-  # The support toggle is here because the same id does opposite things: it gives
-  # support or takes it back depending on the vote as it stands when the tap arrives.
-  # A label the model wrote a message earlier can therefore say the precise opposite
-  # of what tapping it does, and the citizen has no way to tell. Read from the vote
-  # instead, and the model's own words for this one are discarded rather than
-  # preferred.
+  # The support toggle is here because the same id the model offers does opposite
+  # things: it gives support or takes it back depending on the vote. A label the
+  # model wrote can therefore say the precise opposite of what tapping it does, and
+  # the citizen has no way to tell. The vote is read when the message is composed
+  # and decides both halves of the pill — the direction written into the id
+  # (#directed_action) and the fixed words on it — so the model's own words for this
+  # one are discarded rather than preferred.
   #
   # The other three are the irreversible pills a citizen still has to be able to
   # recognise: a comment going onto a public page under their name, a contribution
@@ -65,15 +69,54 @@ module Whatsapp::AssistantActions
   # and not only the words on it. Here the model still decides when to offer, which is
   # safe because each of these is re-checked on the tap — against the vote, against the
   # digest of what was shown.
-  FORCED_LABEL_ACTIONS = %i[support_toggle comment_post draft_publish submit_final].freeze
+  #
+  # The rest are the steps a submission passes through again and again — starting
+  # one, changing the draft, keeping it as it is, taking or skipping a place,
+  # starting over. Worded afresh on every message, one step reached a citizen
+  # under six labels in one session, and a button that reads differently each
+  # time reads as a different button. Fixed so the same step always reads alike.
+  FORCED_LABEL_ACTIONS = %i[
+    support_toggle support_register support_withdraw comment_post draft_publish submit_final
+    submit_proposal draft_revise submit_anyway location_share location_skip main_menu
+  ].freeze
 
   # The fixed labels that have no record behind them to be read off. `submit_final` is
   # the id `draft_publish` took over and is still accepted as proof of the question
   # having been asked, so it says the same thing rather than something of its own.
   FORCED_LABEL_COPY_KEYS = {
+    support_register: "whatsapp.bot.buttons.support",
+    support_withdraw: "whatsapp.bot.buttons.support_withdraw",
+    comment_start: "whatsapp.bot.buttons.comment_start",
     comment_post: "whatsapp.bot.buttons.comment_post",
+    follow_enable: "whatsapp.bot.buttons.follow_enable",
+    follow_disable: "whatsapp.bot.buttons.follow_disable",
     draft_publish: "whatsapp.bot.buttons.draft_publish",
-    submit_final: "whatsapp.bot.buttons.draft_publish"
+    submit_final: "whatsapp.bot.buttons.draft_publish",
+    submit_proposal: "whatsapp.bot.buttons.submit_proposal",
+    draft_revise: "whatsapp.bot.buttons.draft_revise",
+    submit_anyway: "whatsapp.bot.buttons.submit_anyway",
+    location_share: "whatsapp.bot.buttons.location_share",
+    location_skip: "whatsapp.bot.buttons.location_skip",
+    main_menu: "whatsapp.bot.buttons.main_menu"
+  }.freeze
+
+  # The cancel pill named after what it throws away. "Abbrechen" under a draft
+  # was written up as "Entwurf löschen" on one message and "Kommentar abbrechen"
+  # on the next; named by the work that is open, it says what tapping it does.
+  CANCEL_LABEL_KEYS = {
+    change: "whatsapp.bot.buttons.cancel_change",
+    draft: "whatsapp.bot.buttons.cancel_draft",
+    comment: "whatsapp.bot.buttons.cancel_comment",
+    step: "whatsapp.bot.buttons.cancel"
+  }.freeze
+
+  # What opens a list, by what its rows are. The model used to word it, and one
+  # overview opened under "Projekt wählen" and "Übersicht öffnen" on two
+  # consecutive messages.
+  LIST_OPENER_KEYS = {
+    projekts: "whatsapp.bot.buttons.choose_projekt",
+    contributions: "whatsapp.bot.buttons.contribution_choose",
+    mixed: "whatsapp.bot.buttons.choose"
   }.freeze
 
   module_function
@@ -103,22 +146,80 @@ module Whatsapp::AssistantActions
     ).map(&:to_s)
   end
 
+  # The offerable ids whose label is fixed, for the tool descriptions that tell
+  # the model to leave it empty.
+  def fixed_label_action_names
+    (
+      (FORCED_LABEL_ACTIONS - ::Whatsapp::FlowActions.unofferable) +
+        [:idea_start] +
+        ::Whatsapp::Send::RECOVERY_ACTION_IDS.keys
+    ).map(&:to_s)
+  end
+
   # The one entry point the tools build a model-written pill through. Which of the
   # two namespaces a spec belongs to is not the caller's business, and it stopped
   # being expressible as a fallback the moment a recovery pill could be refused on
   # state: five call sites read a nil from the recovery side as "not a recovery id"
   # and asked the catalog for it, which answered nil again and logged the drop a
   # second time under the wrong reason.
-  def offered_button(spec:, label:, conversation:, length: MAX_LABEL_LENGTH)
+  #
+  # `idea_start` on a button says what tapping it does, in the card's words for the
+  # phase: offered beside a sentence it is the step, not a choice of projekt.
+  def offered_button(spec:, label:, conversation:)
+    action, param = parse(spec)
+
+    if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
+      return recovery_button(spec: spec, conversation: conversation)
+    end
+
+    button(
+      spec: spec,
+      label: button_label(action: action, param: param, label: label, conversation: conversation),
+      conversation: conversation
+    )
+  end
+
+  # The same pill as a list row. A row with `idea_start` is one projekt among
+  # several, so it keeps the name it was given: labelled with the step, every
+  # row of the list would read the same and WhatsApp refuses the whole list.
+  #
+  # `length` is how much of the title the caller keeps: a caller that splits the
+  # name over the row's two lines (Whatsapp::ListRowText) asks for more than a
+  # title holds, so the words past it are there to carry on underneath.
+  def offered_row(spec:, label:, conversation:, length: MAX_ROW_TITLE_LENGTH)
     action, = parse(spec)
 
     if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
-      return recovery_button(
-        spec: spec, label: label, conversation: conversation, length: length
-      )
+      return recovery_button(spec: spec, conversation: conversation, length: length)
     end
 
     button(spec: spec, label: label, conversation: conversation, length: length)
+  end
+
+  # The words a button goes out with before any fixed label replaces them: the
+  # model's own, except where the step has its card wording.
+  def button_label(action:, param:, label:, conversation:)
+    return label if action != :idea_start
+
+    phase_action_label(param, conversation).presence || label
+  end
+
+  # The opener of a list, read off its rows rather than written by the model.
+  def list_opener(row_ids)
+    ::Whatsapp.copy(LIST_OPENER_KEYS.fetch(list_kind(row_ids)))
+  end
+
+  # Projekts only, contributions only, or anything else, which is an overview.
+  def list_kind(row_ids)
+    actions = Array(row_ids).map { |row_id| ::Whatsapp::FlowActions.parse(row_id)&.dig(:action) }
+
+    if actions.all? { |action| ::Whatsapp::FlowActions::PROJEKT_CHOICE_ACTIONS.include?(action) }
+      :projekts
+    elsif actions.all?(::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION)
+      :contributions
+    else
+      :mixed
+    end
   end
 
   # The pill neither half of which is the model's, for the ids withheld from it
@@ -130,12 +231,54 @@ module Whatsapp::AssistantActions
   # The title is composed by the caller rather than looked up here, because it comes
   # out of the same translation batch as the block it is sent with: asking for it
   # again would put a label from one cache state under a sentence from another.
-  def platform_button(action:, title:, conversation:)
+  def platform_button(action:, title:, conversation:, param: nil)
     return if title.blank?
 
     record_irreversible_offer(action, conversation)
 
-    { id: ::Whatsapp::FlowActions.id_for(action: action), title: title }
+    { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
+  end
+
+  # The pill a preview tool builds, which is every pill #offered_button builds plus
+  # the one that acts on what the preview just showed
+  # (Whatsapp::FlowActions::CONFIRMATION_ACTIONS). `confirms` names which of those
+  # this preview may carry, so a comment's preview cannot arm publishing a draft and
+  # the reverse.
+  #
+  # The label is the fixed one whatever the model wrote, as it always was for these.
+  # The id carries the version of what the preview shows (Whatsapp::PreviewVersion),
+  # whatever parameter the model wrote, so a tap can tell which version it answers.
+  def confirmation_button(spec:, label:, conversation:, confirms:)
+    action, param = parse(spec)
+
+    if !confirmation?(action)
+      return offered_button(spec: spec, label: label, conversation: conversation)
+    end
+
+    if !confirms.include?(action)
+      return dropped(spec, conversation, :confirmation_elsewhere)
+    end
+
+    platform_button(
+      action: action,
+      title: truncated(forced_label(action: action, param: param, conversation: conversation)),
+      conversation: conversation,
+      param: ::Whatsapp::PreviewVersion.tag(action: action, conversation: conversation)
+    )
+  end
+
+  def confirmation?(action)
+    ::Whatsapp::FlowActions.confirmation?(action)
+  end
+
+  # Whether the words the model wrote for a pill are the words it ships with. They
+  # are not on a forced pill or a confirmation, whose labels are fixed — so a long
+  # label written for one of those costs nothing and is not the model's to shorten.
+  def written_label?(spec)
+    action, = parse(spec)
+
+    !FORCED_LABEL_ACTIONS.include?(action) && !confirmation?(action) &&
+      !::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
   end
 
   # One tappable button from the action id and the label the model wrote, or nil
@@ -147,25 +290,65 @@ module Whatsapp::AssistantActions
 
     return dropped(spec, conversation, :unparseable) if action.blank?
     return dropped(spec, conversation, :unknown_action) if !::Whatsapp::FlowActions.known?(action)
+
+    if confirmation?(action)
+      return dropped(spec, conversation, :confirmation_only)
+    end
+
     return dropped(spec, conversation, :unofferable) if ::Whatsapp::FlowActions.unofferable?(action)
     return dropped(spec, conversation, :unknown_scope) if !known_scope?(action, param)
     return dropped(spec, conversation, :nothing_to_tell) if !tells_more?(action, param)
 
+    if !reachable_contribution?(action, param, conversation)
+      return dropped(spec, conversation, :unreachable)
+    end
+
+    if !submittable?(action, param, conversation)
+      return dropped(spec, conversation, :closed_to_submission)
+    end
+
+    if restates_request?(action, conversation)
+      return dropped(spec, conversation, :restates_request)
+    end
+
+    sent_action = directed_action(action, param, conversation)
+
+    return dropped(spec, conversation, :unlabelled) if sent_action.blank?
+
     title = title_for(
-      action: action, param: param, label: label, conversation: conversation, length: length
+      action: sent_action, param: param, label: label, conversation: conversation, length: length
     )
 
     return dropped(spec, conversation, :unlabelled) if title.blank?
 
-    record_irreversible_offer(action, conversation)
+    record_irreversible_offer(sent_action, conversation)
 
-    { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
+    { id: ::Whatsapp::FlowActions.id_for(action: sent_action, param: param), title: title }
   end
 
-  # One of the two parameters checked before the label rather than through it —
-  # `view_projekt` below is the other, for a different reason. Most parameterised
-  # pills point at a record, and a label the model wrote is accepted without reading
-  # that record because the dispatcher resolves it again on the tap. `show_more`'s
+  # The toggles the model offers, turned into the direction they have at the moment
+  # the message is composed. A toggle id read again on the tap does whatever the
+  # state says by then — and a citizen who taps "Unterstützen" twice while the reply
+  # is still on its way registers the support with the first tap and takes it back
+  # with the second. Written into the id, the direction is what the label said, so a
+  # repeated tap finds it already done and changes nothing.
+  #
+  # Nil where there is nothing to offer — a proposal that is gone, or one that can
+  # no longer be supported by someone who has not supported it — which drops the
+  # pill the same way a blank label did.
+  def directed_action(action, param, conversation)
+    case action
+    when :support_toggle then support_action(param, conversation)
+    when :notify_toggle then notification_action(param, conversation)
+    else action
+    end
+  end
+
+  # One of the three parameters checked before the label rather than through it —
+  # `view_projekt` and `view_contribution` below are the others, each for a
+  # different reason. Most parameterised pills point at a record, and a label the
+  # model wrote is accepted without reading that record because the dispatcher
+  # resolves it again on the tap. `show_more`'s
   # parameter is a scope name instead: nothing resolves it later, so an invented one
   # is a pill that is tapped and does nothing.
   def known_scope?(action, param)
@@ -174,7 +357,7 @@ module Whatsapp::AssistantActions
     ::Whatsapp::FlowActions::MORE_SCOPES.include?(param.to_s)
   end
 
-  # The other one, and the one pill that does read its record before the label: a
+  # The second, and a pill that does read its record before the label: a
   # "view projekt" on a projekt whose card already says everything would deliver
   # that card again, so it is not offered — the same rule the card and the
   # notification follow-ups apply. A projekt that does not exist has nothing to
@@ -187,6 +370,152 @@ module Whatsapp::AssistantActions
     return false if projekt.blank?
 
     ::Whatsapp::ProjektCard.tells_more?(projekt)
+  end
+
+  # The third, because the tap is not the only thing that reads the record: a
+  # row the model labelled itself takes its second line from the contribution's
+  # own title. One this citizen may not open — someone else's draft, a proposal
+  # still awaiting moderation — is dropped here, the same as one that is gone,
+  # rather than offered and then answered with nothing on the tap.
+  def reachable_contribution?(action, param, conversation)
+    return true if action != ::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION
+
+    contribution_for(param, conversation).present?
+  end
+
+  # The fourth, for the list after "Idee einreichen": a pill starting a submission
+  # into a phase the chat cannot take one into — or, while the citizen's wish to
+  # submit stands (Whatsapp::Conversation#submission_wished?), a projekt with no such
+  # phase — is a row offering what the text above it calls impossible. Dropped here
+  # rather than left to the model, which is told every projekt's open_for_submission
+  # and offered the closed ones anyway.
+  def submittable?(action, param, conversation)
+    return true if !submission_pill?(action, conversation)
+
+    ids = submittable_ids(action, param)
+
+    return ids[:phase_ids].include?(param.to_i) if action == :idea_start
+
+    ids[:projekt_ids].include?(param.to_i)
+  end
+
+  def submission_pill?(action, conversation)
+    return true if action == :idea_start
+
+    action == :view_projekt && conversation.submission_wished?
+  end
+
+  # Read from the message's preload where one is running, and asked of the one
+  # record otherwise — the card and the follow-ups build their pills one at a time.
+  def submittable_ids(action, param)
+    preloaded = ::Current.whatsapp_pill_records&.submittable
+
+    return preloaded if preloaded.present?
+    return submittable_ids_of(eligible_phases_for_phase(param)) if action == :idea_start
+
+    projekt = ::Projekt.find_by(id: param.to_i)
+    phases = projekt.present? ? ::Whatsapp::EligiblePhasesQuery.uncapped(projekt: projekt) : []
+
+    submittable_ids_of(phases)
+  end
+
+  def eligible_phases_for_phase(param)
+    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+
+    return [] if !::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+
+    [projekt_phase]
+  end
+
+  def submittable_ids_of(phases)
+    {
+      phase_ids: phases.map(&:id).to_set,
+      projekt_ids: phases.map(&:projekt_id).to_set
+    }
+  end
+
+  # The fifth, for a pill asking for what the message above it already asks for.
+  # Offered under "Schreiben Sie jetzt bitte Ihren Kommentar", a "Kommentar
+  # schreiben" pill was tapped and answered with the same request again: the
+  # citizen's next step there is writing, not tapping.
+  #
+  # Under the comment's preview the same id is the way to change it, which is why
+  # this asks the state rather than withholding the id.
+  def restates_request?(action, conversation)
+    action == :comment_prompt && conversation.comment_invited?
+  end
+
+  # The records one message's pills point at, read at once. A list of ten
+  # contributions asked the same record three times a row — whether it may be
+  # opened, what it is called, what goes under it — and every support pill asked
+  # whether its proposal may still be supported: a query each, thirty for one list.
+  # Inside the block they are answered from one query per kind.
+  #
+  # Scoped to the one message being built rather than to the turn: a draft
+  # published earlier in the same turn becomes openable, and a cache held that long
+  # would go on answering that it is not.
+  def with_records_preloaded(specs, conversation:)
+    previous = ::Current.whatsapp_pill_records
+    ::Current.whatsapp_pill_records = preloaded_records(specs, conversation)
+
+    yield
+  ensure
+    ::Current.whatsapp_pill_records = previous
+  end
+
+  PillRecords = Struct.new(:contributions, :supportable, :submittable, keyword_init: true)
+
+  def preloaded_records(specs, conversation)
+    parsed = Array(specs).map { |spec| parse(spec) }
+
+    contribution_params = parsed.filter_map do |action, param|
+      param if action == ::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION
+    end
+
+    proposal_ids = parsed.filter_map do |action, param|
+      param.to_i if action == :support_toggle && param.present?
+    end
+
+    PillRecords.new(
+      contributions: ::Whatsapp::ContributionPill.resolve_all(
+        contribution_params, user: conversation.user
+      ),
+      supportable: supportable_by_id(proposal_ids),
+      submittable: preloaded_submittable_ids(parsed, conversation)
+    )
+  end
+
+  # Every phase the chat takes a submission into, read once for the whole list
+  # rather than once per row: a list of ten projekts after "Idee einreichen" asked
+  # the same question ten times over. Nil where no pill of the message asks it.
+  def preloaded_submittable_ids(parsed, conversation)
+    return if parsed.none? { |action, _param| submission_pill?(action, conversation) }
+
+    submittable_ids_of(::Whatsapp::EligiblePhasesQuery.uncapped)
+  end
+
+  def supportable_by_id(proposal_ids)
+    return {} if proposal_ids.empty?
+
+    actionable =
+      ::Whatsapp::ReachableContributionsQuery
+        .actionable_proposals
+        .where(id: proposal_ids)
+        .pluck(:id)
+        .to_set
+
+    proposal_ids.index_with { |id| actionable.include?(id) }
+  end
+
+  # Read from the message's preload where one is running and holds the pill, and
+  # asked on its own otherwise — the card and the notification follow-ups build
+  # their pills one at a time.
+  def contribution_for(param, conversation)
+    preloaded = ::Current.whatsapp_pill_records&.contributions
+
+    return preloaded[param.to_s] if preloaded&.key?(param.to_s)
+
+    ::Whatsapp::ContributionPill.resolve(param, user: conversation.user)
   end
 
   # The recovery pills whose offer depends on the state rather than on the id being
@@ -220,7 +549,10 @@ module Whatsapp::AssistantActions
   # once per process, so the conversation is the only place the rule can actually be
   # enforced. The slot it frees is not backfilled: nothing is appended to a recovery
   # line any more except the way back, and that one is added on the way out.
-  def recovery_button(spec:, label:, conversation:, length: MAX_LABEL_LENGTH)
+  #
+  # Labelled from the copy like the recovery lines' own pills, so a way out reads
+  # the same whether the model offered it or a fixed line did.
+  def recovery_button(spec:, conversation:, length: MAX_LABEL_LENGTH)
     action, = parse(spec)
     recovery_id = ::Whatsapp::Send::RECOVERY_ACTION_IDS[action]
 
@@ -230,11 +562,36 @@ module Whatsapp::AssistantActions
       return dropped(spec, conversation, :recovery_unavailable)
     end
 
-    title = truncated(label, length: length)
+    title = truncated(recovery_label(action, conversation), length: length)
 
     return if title.blank?
 
     { id: recovery_id, title: title }
+  end
+
+  # The one place a recovery pill's words come from, for the model's pills and
+  # for Whatsapp::Send's fixed lines alike.
+  def recovery_label(action, conversation)
+    if action == :cancel
+      return ::Whatsapp.copy(CANCEL_LABEL_KEYS.fetch(cancelled_work(conversation)))
+    end
+
+    ::Whatsapp.copy("whatsapp.bot.buttons.#{action}")
+  end
+
+  # Which of the four things a cancel tap throws away. A change the citizen has
+  # asked for comes first: while one is open the tap takes back only the change
+  # (Whatsapp::Conversation#revert_revision!). Then the draft, as the larger loss.
+  def cancelled_work(conversation)
+    if conversation.revision_open?
+      :change
+    elsif conversation.unsaved_submission?
+      :draft
+    elsif conversation.pending_comment.present?
+      :comment
+    else
+      :step
+    end
   end
 
   # Asked of the conversation as it stands when the message is built, which is when
@@ -324,6 +681,10 @@ module Whatsapp::AssistantActions
   # paraphrase would, so reporting those would put a note on most turns — and a note
   # that arrives every turn is one that stops being read, which is the whole reason
   # this is silent whenever every written label survived.
+  #
+  # Worded for either cause: a label cut to fit, or one replaced by the fixed words
+  # its step always carries (FORCED_LABEL_ACTIONS). Both leave the model's sentence
+  # naming words no button shows.
   def wording_note(offers)
     changed = offers.filter_map do |written, title|
       words = written.to_s.squish
@@ -335,9 +696,9 @@ module Whatsapp::AssistantActions
 
     return if changed.empty?
 
-    "Your label did not fit on #{changed.size == 1 ? "one button" : "some buttons"} — the " \
-      "citizen reads #{changed.join(", ")}. Say it that way if you refer to them again, and " \
-      "write shorter labels from here."
+    "#{changed.size == 1 ? "One button does" : "Some buttons do"} not carry the words you " \
+      "wrote — the citizen reads #{changed.join(", ")}. Say it that way if you refer to " \
+      "#{changed.size == 1 ? "it" : "them"} again."
   end
 
   # The label of a translated fixed line, as it will actually arrive. Preferring the
@@ -395,17 +756,16 @@ module Whatsapp::AssistantActions
 
     case action
     when :view_projekt then projekt_label(param)
-    when :view_contribution then contribution_label(param)
+    when :view_contribution then contribution_label(param, conversation)
     when :idea_start then phase_projekt_label(param)
     when :phase_open then phase_action_label(param, conversation)
     when :phase_contributions then ::Whatsapp.copy("whatsapp.bot.buttons.phase_contributions")
     when :support then proposal_label(param)
-    when :support_toggle then support_toggle_label(param, conversation)
     when :category
       taxonomy_label(::Whatsapp::DraftTaxonomy.category(conversation.projekt_phase), param)
     when :sentiment
       taxonomy_label(::Whatsapp::DraftTaxonomy.sentiment(conversation.projekt_phase), param)
-    when :notify_toggle then notification_label(param)
+    when :notify_enable, :notify_disable then notification_label(param)
     when :discover_category then browse_category_label(param)
     when :show_more then ::Whatsapp.copy("whatsapp.bot.buttons.show_more")
     end
@@ -448,21 +808,36 @@ module Whatsapp::AssistantActions
   #
   # The label keeps the action's own words either way. Which record a row points at
   # is worth a second line, not the twenty characters that say what tapping it does.
-  def row_description(spec:)
+  def row_description(spec:, conversation:)
     action, param = parse(spec)
 
-    return phase_row_description(param) if ::Whatsapp::FlowActions.direct_phase?(action)
+    return phase_row_description(param) if phase_row?(action)
     return if action != ::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION
 
-    contribution_row_description(param)
+    contribution_row_description(param, conversation)
   end
 
+  # `idea_start` carries a phase id like the direct phase pills, but its row is a
+  # projekt choice and shows the name alone — until two of them share that name,
+  # which is one projekt offered once per phase (SendList#dated_where_alike).
+  def phase_row?(action)
+    ::Whatsapp::FlowActions.direct_phase?(action) || action == :idea_start
+  end
+
+  # The phase's name, its dates and its projekt, in that order. Dated because a
+  # projekt may run three phases all called "Vorschläge", and the dates are then the
+  # only thing that differs; ahead of the projekt's name because the description is
+  # cut at its end, and the name is what the row above usually says already.
   def phase_row_description(param)
     projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
 
     return if projekt_phase.blank?
 
-    [::Whatsapp::ProjektLink.title(projekt_phase.projekt), projekt_phase.title]
+    [
+      projekt_phase.title,
+      ::Whatsapp::DatePhrase.range(projekt_phase.start_date, projekt_phase.end_date),
+      ::Whatsapp::ProjektLink.title(projekt_phase.projekt)
+    ]
       .compact_blank
       .join(" · ")
       .presence
@@ -472,8 +847,8 @@ module Whatsapp::AssistantActions
   # row above says roughly what it is and this line says which one it is. Dated
   # because a citizen's history is where the same title turns up twice — a Beitrag
   # they sent in twice, or two of them named after the same street.
-  def contribution_row_description(param)
-    contribution = ::Whatsapp::ContributionPill.resolve(param)
+  def contribution_row_description(param, conversation)
+    contribution = contribution_for(param, conversation)
 
     return if contribution.blank?
 
@@ -499,29 +874,58 @@ module Whatsapp::AssistantActions
   # twenty characters name a projekt but rarely a proposal, so the row the citizen
   # reads carries the title in its description and the model writes something
   # shorter above it. Blank for a contribution that is gone, which drops the row.
-  def contribution_label(param)
-    ::Whatsapp::ContributionPill.resolve(param)&.title
+  def contribution_label(param, conversation)
+    contribution_for(param, conversation)&.title
   end
 
   # Which way the toggle goes, read off the citizen's own vote at the moment the
-  # message is composed rather than carried in the id. The vote is the only thing
-  # that can say whether tapping this gives a support or takes one back, and the
-  # inbound side reads it again on the tap — so a label built from anything else is
-  # a label that can disagree with what happens.
+  # message is composed and carried in the id. The vote is the only thing that can
+  # say whether tapping this gives a support or takes one back, and the label is
+  # the fixed copy of the direction chosen here — so the words on the pill and what
+  # the tap does come from the one reading.
   #
-  # Blank for a proposal that is gone, which drops the pill: the same rule every
+  # Nil for a proposal that is gone, which drops the pill: the same rule every
   # other record-backed label follows.
-  def support_toggle_label(param, conversation)
+  def support_action(param, conversation)
     proposal = ::Proposal.not_retired.find_by(id: param.to_i)
 
     return if proposal.blank?
 
+    support_direction(proposal, conversation)
+  end
+
+  # The same reading for a caller that has the proposal in hand already
+  # (Whatsapp::StatePills), so the vote is read one way wherever a support pill is
+  # composed.
+  def support_direction(proposal, conversation)
     user = conversation.user
-    supported = user.present? && proposal.voted_up_by?(user)
 
-    return ::Whatsapp.copy("whatsapp.bot.buttons.support_withdraw") if supported
+    return :support_withdraw if user.present? && proposal.voted_up_by?(user)
+    return if !supportable?(proposal)
 
-    ::Whatsapp.copy("whatsapp.bot.buttons.support")
+    :support_register
+  end
+
+  # The same for a notification switch: a type that is on is offered as the switch
+  # that turns it off. Nil for a type nobody has heard of, which drops the pill.
+  def notification_action(param, conversation)
+    type = notification_type(param)
+
+    return if type.blank?
+    return :notify_disable if conversation.whatsapp_account.notifies?(type)
+
+    :notify_enable
+  end
+
+  # Asked only on the way to "Unterstützen": a support already given is theirs to
+  # take back whatever has become of the proposal since, and the withdraw pill
+  # above stays offered for it.
+  def supportable?(proposal)
+    preloaded = ::Current.whatsapp_pill_records&.supportable
+
+    return preloaded[proposal.id] if preloaded&.key?(proposal.id)
+
+    ::Whatsapp::ReachableContributionsQuery.actionable_proposals.exists?(id: proposal.id)
   end
 
   # Only the options the phase on the table actually offers. This is the check
@@ -533,11 +937,15 @@ module Whatsapp::AssistantActions
   end
 
   def notification_label(param)
-    type = ::Whatsapp::Account::NOTIFICATION_TYPES.find { |known| known.to_s == param.to_s }
+    type = notification_type(param)
 
     return if type.blank?
 
     ::Whatsapp.copy("whatsapp.bot.notifications.types.#{type}.short")
+  end
+
+  def notification_type(param)
+    ::Whatsapp::Account::NOTIFICATION_TYPES.find { |known| known.to_s == param.to_s }
   end
 
   def browse_category_label(param)
@@ -560,8 +968,12 @@ module Whatsapp::AssistantActions
   # Nil with a line saying why. Which reason it was decides what to do about it:
   # `unknown_action` is a name that is not one at all and belongs in the tool
   # description, `unlabelled` is a pill the model wrote no words for and whose
-  # record could not name it either, `unparseable` an empty or malformed spec, and
-  # `unknown_scope` a `show_more` naming a list the bot does not keep.
+  # record could not name it either, `unparseable` an empty or malformed spec,
+  # `unknown_scope` a `show_more` naming a list the bot does not keep,
+  # `confirmation_only` a publishing pill offered away from its preview,
+  # `confirmation_elsewhere` one offered under the other preview,
+  # `closed_to_submission` a way to submit where the chat cannot take one, and
+  # `restates_request` a pill asking for what the message already asks for.
   def dropped(spec, conversation, reason)
     ::Whatsapp::AiAssistant::DecisionLog.record(
       event: :action_dropped, conversation: conversation, spec: spec, reason: reason

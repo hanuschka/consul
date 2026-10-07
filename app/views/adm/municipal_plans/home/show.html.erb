@@ -1,0 +1,60 @@
+<% page_title = t("adm.municipal_plans.home.title") %>
+<% policy = Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, MunicipalPlan) %>
+<%= content_for :title, page_title %>
+
+<%= render Adm::HeaderComponent.new(title: page_title, breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container">
+  <%= render Adm::Dashboard::NoticeComponent.new(message: @notice) if @notice.present? %>
+
+  <div class="adm-dashboard__intro-row">
+    <div class="adm-dashboard__intro-col">
+      <% if @intro_text.present? %>
+        <p class="adm-dashboard__intro"><%= @intro_text %></p>
+      <% end %>
+
+      <% if policy.new? || policy.reorder? %>
+        <div class="adm-dashboard__section-actions">
+          <% if policy.new? %>
+            <%= kern_link_button new_adm_municipal_plans_municipal_plan_path,
+                  text: t("adm.municipal_plans.municipal_plans.index.new_button"),
+                  style: :primary,
+                  data: { turbo_frame: "_top" } %>
+          <% end %>
+
+          <% if policy.reorder? %>
+            <%= kern_link_button order_adm_municipal_plans_municipal_plans_path,
+                  text: t("adm.municipal_plans.municipal_plans.index.order_button"),
+                  icon: "swap_vert",
+                  data: { turbo_frame: "_top" } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @contact_persons.any? %>
+      <div class="adm-dashboard__intro-aside">
+        <%= render Adm::Dashboard::ContactsComponent.new(contacts: @contact_persons) %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="adm-dashboard__section">
+    <div class="adm-dashboard__section-header adm-dashboard__section-header--with-stats">
+      <div class="adm-dashboard__section-header-title">
+        <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+        <h3><%= t("adm.municipal_plans.menu.items.municipal_plans") %></h3>
+      </div>
+
+      <%= render Adm::Dashboard::StatPillsComponent.new(stats: @stats) %>
+    </div>
+
+    <%= turbo_frame_tag "municipal_plans_table", src: adm_municipal_plans_municipal_plans_list_path, loading: :eager %>
+  </div>
+
+  <div class="adm-dashboard__feed-row">
+    <%= render Adm::ActivityFeedComponent.new(activities: @activities, pagy: @pagy_activities) %>
+
+    <%= render Adm::Dashboard::TeamComponent.new(members: @team_members, add_url: adm_municipal_plans_officers_path) %>
+  </div>
+</div>

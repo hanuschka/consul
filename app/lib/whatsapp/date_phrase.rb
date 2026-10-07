@@ -30,6 +30,22 @@ module Whatsapp::DatePhrase
     I18n.l(value.in_time_zone, format: ::Whatsapp.copy("whatsapp.bot.date.absolute_with_time_format"))
   end
 
+  # A phase's window, for the line that tells two phases of one name apart: the
+  # names are the same, so the dates are what differs. Either end may be missing —
+  # a portal need never fill in projekt_phases.end_date.
+  def range(starts_on, ends_on)
+    from = absolute(starts_on)
+    to = absolute(ends_on)
+
+    if from.present? && to.present?
+      ::Whatsapp.copy("whatsapp.bot.date.range", from: from, to: to)
+    elsif to.present?
+      ::Whatsapp.copy("whatsapp.bot.date.until", to: to)
+    elsif from.present?
+      ::Whatsapp.copy("whatsapp.bot.date.since", from: from)
+    end
+  end
+
   # Bucketed here rather than through distance_of_time_in_words, whose German is
   # nominative: wrapping its "5 Tage" in a "vor %{time}" line reads "vor 5
   # Tage". The dative belongs to the copy, so each unit is its own pluralised

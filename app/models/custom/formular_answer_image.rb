@@ -33,7 +33,7 @@ class FormularAnswerImage < ApplicationRecord
 
   def variant(style)
     if style
-      attachment.variant(self.class.styles[style])
+      attachment.variant(**self.class.styles[style], strip: true)
     else
       attachment
     end

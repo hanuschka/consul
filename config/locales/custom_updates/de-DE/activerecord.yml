@@ -110,6 +110,10 @@ de:
                 %{field} muss ein Sprachkürzel sein, das die Plattform anbietet, z. B. „de“ oder „en“
               whatsapp_positive_integer_invalid: >-
                 %{field} muss eine ganze Zahl größer als Null sein
+              whatsapp_email_invalid: >-
+                %{field} muss eine gültige E-Mail-Adresse sein, z. B. „buergerservice@stadt.de“
+              whatsapp_url_invalid: >-
+                %{field} muss ein vollständiger Link sein, der mit https:// oder http:// beginnt
         deficiency_report:
           attributes:
             map_location:
@@ -170,7 +174,15 @@ de:
           attributes:
             operator:
               must_be_include_for_first_filter: muss „Hinzufügen" sein, solange noch kein anderer Filter vorhanden ist
+        site_customization/content_block:
+          attributes:
+            visible_until:
+              before_visible_from: darf nicht vor dem Beginn des Sichtbarkeitszeitraums liegen
     attributes:
+      site_customization/content_block:
+        visible: Sichtbar
+        visible_from: Sichtbar ab
+        visible_until: Sichtbar bis
       map_location:
         latitude: Breitengrad
         longitude: Längengrad

@@ -7093,6 +7093,221 @@ paths:
               required:
               - milestone
         description: Milestone attributes
+  "/api/municipal_plan_topics":
+    get:
+      summary: List municipal plan topics
+      tags:
+      - Municipal Plans
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve the Themen of the Vorhabenliste in their editorial order. Their ids are what the `topics` filter of `/api/municipal_plans` takes. Returns 404 while the Vorhabenliste module is switched off.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      responses:
+        '200':
+          description: municipal plan topics found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      municipal_plan_topics:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - municipal_plan_topics
+                required:
+                - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+  "/api/municipal_plans":
+    get:
+      summary: List municipal plans
+      tags:
+      - Municipal Plans
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve the published Vorhaben of the Vorhabenliste with every field the public detail page shows. Drafts, internal notes and the change log are never part of the response. Without `changed_since` only published Vorhaben are listed. With `changed_since` the list holds every Vorhaben whose last public change (release, archiving, re-activation) happened at or after that point, including archived ones (`status: archived`), so a consumer can remove them. Returns 404 while the Vorhabenliste module is switched off.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Pagination page number (**default:** 1)
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: Number of Vorhaben per page (**default and maximum:** 500)
+        schema:
+          type: integer
+      - name: districts
+        in: query
+        required: false
+        description: Comma-separated Ortsteil ids; a Vorhaben matches if it lies in
+          any of them
+        schema:
+          type: string
+      - name: topics
+        in: query
+        required: false
+        description: Comma-separated Thema ids; a Vorhaben matches if it carries any
+          of them
+        schema:
+          type: string
+      - name: changed_since
+        in: query
+        required: false
+        description: ISO 8601 date or timestamp. A date alone means 00:00 of that
+          day, so the day itself is included.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: municipal plans found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      municipal_plans:
+                        type: array
+                        items:
+                          type: object
+                    required:
+                    - municipal_plans
+                  pagination:
+                    type: object
+                required:
+                - data
+        '400':
+          description: changed_since is not a date
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+  "/api/municipal_plans/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: Vorhaben id
+      schema:
+        type: integer
+    get:
+      summary: Show a municipal plan
+      tags:
+      - Municipal Plans
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve one published Vorhaben. Drafts and archived Vorhaben return 404.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      responses:
+        '200':
+          description: municipal plan found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      municipal_plan:
+                        type: object
+                    required:
+                    - municipal_plan
+                required:
+                - data
+        '404':
+          description: municipal plan not published
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/{invalid_path}":
     parameters:
     - name: invalid_path
@@ -11538,7 +11753,7 @@ paths:
         in: query
         required: false
         description: |
-          If true, includes content blocks in response with HTML content organized by locale.
+          If true, includes content blocks in response with HTML content organized by locale. Content blocks that are switched off or outside their visibility period are left out.
 
           **Default:** false (excludes content blocks).
         schema:
@@ -11547,7 +11762,7 @@ paths:
         in: query
         required: false
         description: |
-          Includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position); pass include_text=false to omit them. Always included in the single projekt (show) response.
+          Includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position); pass include_text=false to omit them. Always included in the single projekt (show) response. Content blocks that are switched off or outside their visibility period are left out.
 
           **Default:** true (the fields are included).
         schema:
@@ -11764,7 +11979,7 @@ paths:
         in: query
         required: false
         description: |
-          If true, includes content blocks in response with all localized content blocks.
+          If true, includes content blocks in response with all localized content blocks. Content blocks that are switched off or outside their visibility period are left out.
 
           **Default:** false (excludes content blocks).
         schema:

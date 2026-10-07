@@ -61,3 +61,10 @@ en:
       badge:
         one: "%{count} similar contribution"
         other: "%{count} similar contributions"
+    sidebar:
+      contact_person_component:
+        title: "Contact person"
+        phone: "Phone"
+        email: "Email"
+        write: "write"
+        email_to_name: "Email to %{name}"

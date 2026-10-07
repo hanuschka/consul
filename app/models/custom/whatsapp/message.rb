@@ -50,6 +50,17 @@ class Whatsapp::Message < ApplicationRecord
       .pick(:wa_message_id)
   end
 
+  # The language the assistant last wrote to this number in. Only the rows of an
+  # assistant turn carry one (Whatsapp::AiAssistant::ReplyLanguageService), so a
+  # fixed line sent since — a keyword confirmation, a cancellation — leaves the
+  # answer where the assistant put it.
+  def self.latest_reply_language(account:)
+    where(whatsapp_account_id: account.id, direction: "outbound")
+      .where.not(language: nil)
+      .order(id: :desc)
+      .pick(:language)
+  end
+
   def self.record_outbound!(account:, kind:, body:, response:, projekt_id: nil)
     create!(
       whatsapp_account: account,

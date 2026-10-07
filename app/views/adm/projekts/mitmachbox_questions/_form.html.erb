@@ -17,10 +17,55 @@
           { label: false } %>
   <% end %>
 
-  <%= f.check_box :required,
-        label: t("adm.projekts.mitmachbox.questions.required_label"),
-        hint: t("adm.projekts.mitmachbox.questions.required_hint"),
-        checked: @question["required"] == true %>
+  <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.questions.required_label"),
+                                          hint: t("adm.projekts.mitmachbox.questions.required_hint")) do %>
+    <%= f.check_box :required,
+          label: t("adm.projekts.mitmachbox.questions.required_checkbox_label"),
+          checked: @question["required"] == true %>
+  <% end %>
+
+  <% condition_sources = @condition_sources.select { |source| source["options"].present? } %>
+
+  <% if condition_sources.any? %>
+    <% question_numbers = @draft_detail["questions"].sort_by { |question| question["position"].to_i }
+                                                    .each_with_index.to_h { |question, index| [question["id"], index + 1] } %>
+    <% condition_option_ids = Array(@question.dig("condition", "option_ids")) %>
+
+    <div data-controller="adm--mitmachbox-condition">
+      <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.questions.condition_title"),
+                                              hint: t("adm.projekts.mitmachbox.questions.condition_hint")) do %>
+        <%= f.select :condition_question_id,
+              options_for_select(
+                [[t("adm.projekts.mitmachbox.questions.condition_none"), ""]] +
+                  condition_sources.map do |source|
+                    [t("adm.projekts.mitmachbox.questions.condition_source_option",
+                       number: question_numbers[source["id"]], prompt: source["prompt"]),
+                     source["id"]]
+                  end,
+                @question.dig("condition", "question_id")
+              ),
+              {},
+              { label: t("adm.projekts.mitmachbox.questions.condition_question_label"),
+                data: { "adm--mitmachbox-condition-target": "select",
+                        action: "adm--mitmachbox-condition#toggle" } } %>
+
+        <% condition_sources.each do |source| %>
+          <div class="mt-3" data-adm--mitmachbox-condition-target="group" data-question-id="<%= source["id"] %>">
+            <%= f.collection_check_boxes :condition_option_ids,
+                  source["options"].sort_by { |option| option["position"].to_i }.map { |option| [option["id"], option["label"]] },
+                  :first,
+                  :last,
+                  legend: t("adm.projekts.mitmachbox.questions.condition_options_legend", prompt: source["prompt"]),
+                  checked: condition_option_ids,
+                  include_hidden: false %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.questions.condition_title"),
+                                            hint: t("adm.projekts.mitmachbox.questions.condition_unavailable")) %>
+  <% end %>
 
   <%= form_submit_button(text: t("adm.projekts.mitmachbox.questions.save_button")) %>
 <% end %>

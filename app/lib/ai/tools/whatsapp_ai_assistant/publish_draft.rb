@@ -13,8 +13,10 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
               "that merely agrees with something else, and never to move things along. Call " \
               "draft_status first if you are not certain nothing is outstanding. It refuses on " \
               "its own when the terms have not been accepted, when the phase no longer allows " \
-              "the citizen to contribute, when a category or sentiment is missing, or when the " \
-              "phase's criteria reject the text; each refusal says what would resolve it. It also " \
+              "the citizen to contribute, when a category or sentiment is missing, when the phase " \
+              "takes a picture and the citizen has not been asked for one with request_photo, or " \
+              "when the phase's criteria reject the text; each refusal says what would resolve " \
+              "it. It also " \
               "refuses when the citizen has not been shown the contribution as it now stands: " \
               "call show_draft_for_confirmation, and call it again after any change to the draft. " \
               "On success the citizen is told for you that it went in, with its address or with " \
@@ -47,9 +49,33 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     # and the citizen should not be sent to accept terms for a phase that has closed.
     # The confirmation comes last: it is the only one of the three the citizen can
     # resolve in a single message, so it is worth asking for only once the rest holds.
+    # The picture question sits before it, because answering it changes the draft
+    # the confirmation would be given to.
     def precondition_refusal
-      refuse_if_not_permitted || refuse_without_consent || refuse_without_confirmation ||
-        refuse_on_stale_preview
+      refuse_if_not_permitted || refuse_without_consent || refuse_without_image_question ||
+        refuse_without_confirmation || refuse_on_stale_preview
+    end
+
+    # A phase that takes pictures asks for one before anything goes in, because
+    # nothing can be added to a published contribution from the chat. Asked means
+    # the notices went out with the question (Whatsapp::ImageQuestion); a picture
+    # already attached, or a citizen who said up front they have none, has
+    # answered it.
+    def refuse_without_image_question
+      return if image_question_settled?
+
+      {
+        error: "This phase takes a picture and the citizen has not been asked for one, so it " \
+               "was not published. Nothing can be added to it once it is in.",
+        hint: "Ask for the picture with request_photo, which carries the notices that have to " \
+              "come with it. Once they have answered, show them the contribution again with " \
+              "show_draft_for_confirmation."
+      }
+    end
+
+    def image_question_settled?
+      !conversation.image_question_pending? || conversation.image_notices_shown? ||
+        conversation.draft_picture_attached?
     end
 
     # The guarantee the retired step machine made structurally: it had two steps that
@@ -123,7 +149,12 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       conversation.complete_draft!
       conversation.note_submission_completed!
 
+      if resource.is_a?(::Proposal)
+        ::Whatsapp::StatePills.focus_proposal(resource.id)
+      end
+
       {
+        completed: true,
         published: true,
         awaiting_review: awaiting_review,
         url: awaiting_review ? nil : url,

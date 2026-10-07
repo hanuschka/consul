@@ -11,8 +11,10 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
   description "Returns everything about the draft in this conversation: its title and text as " \
               "they stand, which phase it belongs to, whether a category or sentiment is still " \
               "needed, whether a picture is attached, whether this phase collects a picture or a " \
-              "map pin at all, and whether the citizen has already said they have no photo or " \
-              "named the place in words. Call it before asking them for anything about the draft " \
+              "map pin at all, whether the citizen has already been asked for a photo or said " \
+              "they have none or named the place in words, which place is attached or " \
+              "waiting for their answer, and what the draft proposes beyond their own words. " \
+              "Call it before asking them for anything about the draft " \
               "— it is the only way to avoid asking for something they have already given — and " \
               "before publishing, to be sure nothing is outstanding. Sends nothing."
 
@@ -28,7 +30,8 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
       outstanding: outstanding_requirements,
       picture: picture_status,
       location: location_status,
-      citizens_own_words: conversation.last_idea_text
+      citizens_own_words: conversation.last_idea_text,
+      additions_beyond_idea: conversation.additions_beyond_idea.presence
     }.compact
   end
 
@@ -41,6 +44,8 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
         projekt_phase_id: projekt_phase.id,
         projekt: projekt_title(projekt_phase.projekt),
         phase: projekt_phase.title,
+        about: phase_about(projekt_phase),
+        starts_on: ::Whatsapp::DatePhrase.absolute(projekt_phase.start_date),
         ends_in: ::Whatsapp::DatePhrase.relative(projekt_phase.end_date)
       }.compact
     end
@@ -96,7 +101,7 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
     end
 
     def picture_attached?
-      draft_resource&.image&.attachment&.attached? == true
+      conversation.draft_picture_attached?
     end
 
     def picture_status
@@ -104,15 +109,50 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
       return "attached" if picture_attached?
       return "the citizen said they have no photo" if conversation.photo_declined?
 
-      "still open"
+      conversation.image_notices_shown? ? PICTURE_ASKED : "still open"
     end
 
-    def location_status
-      return "not collected by this phase" if !conversation.location_question_available?
-      return "the citizen already named the place in words" if conversation.location_stated?
-      return "a shared pin is waiting — call set_draft_location" if
-        conversation.shared_location.present?
+    # Read off the notices having gone out, because nothing else marks the question
+    # as asked: until a photo arrives or a button is tapped, a draft that was asked
+    # for one looks exactly like a draft that never was.
+    PICTURE_ASKED = "already asked for with request_photo — do not ask again; attach a photo " \
+                    "they send, generate one if they chose that, and otherwise go on " \
+                    "without".freeze
 
-      "still open"
+    # The waiting pins come first because each needs something done, and a place
+    # read from the citizen's words is put ahead of one already attached: on a
+    # revision it may be the place they meant all along.
+    def location_status
+      if !conversation.location_question_available?
+        "not collected by this phase"
+      elsif conversation.shared_location.present?
+        "a shared pin is waiting — call set_draft_location"
+      elsif conversation.proposed_location.present?
+        proposed_location_status
+      elsif draft_resource&.map_location.present?
+        attached_location_status
+      elsif conversation.location_stated?
+        "the citizen already named the place in words"
+      elsif conversation.location_requested?
+        "already asked for once — do not ask again; go on without one"
+      else
+        "still open"
+      end
+    end
+
+    def proposed_location_status
+      name = conversation.proposed_location["name"].presence || "unnamed place"
+
+      "a place read from the citizen's words is waiting for their answer: #{name}. Nothing " \
+        "is attached yet. Ask them whether that is the place they mean; set_draft_location " \
+        "attaches it once they agree, remove_draft_location drops it"
+    end
+
+    def attached_location_status
+      name = conversation.attached_location_name
+
+      return "a pin is attached" if name.blank?
+
+      "a pin is attached: #{name}"
     end
 end

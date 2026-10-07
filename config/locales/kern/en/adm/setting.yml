@@ -1,5 +1,8 @@
 en:
   setting:
+    handbook:
+      url: User manual address
+      url_description: "Sets the address of the user manual shown under “Help” in every dashboard. In the administration area each menu ends with a “Help” entry that opens the matching section of the manual. The address is preset. Leave the field empty to hide the entry."
     proposals:
       email_on_official_answer: "Email notification on official answer (proposals)"
       email_on_official_answer_description: "Sends an email to the submitting person as soon as an official answer to their proposal is saved or changed. The email contains the text of the official answer and a link to the proposal; on the proposal page itself the answer stays publicly visible as before. Enable this setting if submitters should be actively informed about the administration's response instead of having to return to the platform themselves."
@@ -41,7 +44,7 @@ en:
       transcription_model: "Model for voice messages"
       transcription_model_description: "Turns incoming voice messages into text before the bot processes them. Citizens send them often, and each one costs a call. Empty means gpt-4o-mini-transcribe, the cheapest model that handles German reliably. Change the value only when another model demonstrably transcribes better."
       message_retention_days: "Message retention in days"
-      message_retention_days_description: "Messages older than this period are deleted nightly at 3:15. This is a data-protection obligation, not a matter of tidiness. Enter a whole number greater than zero; empty, zero or anything that is not a number means ninety days. Shorten the period when your deletion policy requires it — the list on the Dialogs page thins out accordingly."
+      message_retention_days_description: "Messages older than this period are deleted nightly at 3:15. This is a data-protection obligation, not a matter of tidiness. Enter a whole number greater than zero; empty, zero or anything that is not a number means ninety days. Shorten the period when your deletion policy requires it."
       max_voice_megabytes: "Size limit for voice messages in MB"
       max_voice_megabytes_description: "Checked before a voice message is downloaded from WhatsApp. A higher value allows longer messages; one that is too low makes them fail without the reason being visible — the person only gets the request to write their idea as text. Empty, zero or anything that is not a number means 16."
       administration_contact_phone: "Administration phone number"

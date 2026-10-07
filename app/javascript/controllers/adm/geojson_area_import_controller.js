@@ -10,6 +10,7 @@ export default class extends Controller {
   static targets = ["file", "status"]
 
   static values = {
+    armPolygonTool: { type: Boolean, default: true },
     maxFileSize: Number,
     messages: Object
   }
@@ -21,7 +22,7 @@ export default class extends Controller {
     await this.mapReady()
 
     this.adapter.featuresLimit = Infinity
-    this.armPolygonTool()
+    if (this.armPolygonToolValue) this.armPolygonTool()
   }
 
   async importFile() {

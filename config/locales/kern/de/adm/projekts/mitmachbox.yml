@@ -15,28 +15,54 @@ de:
           lost_text: Die verknüpfte Umfrage existiert auf der Mitmachbox-Plattform nicht mehr. Sie können eine neue Umfrage anlegen.
           create_survey_button: Umfrage jetzt anlegen
           recreate_survey_button: Neue Umfrage anlegen
-          state_label: Status
+          survey_section_title: Umfrage
+          survey_scope_pill: Wirkt sofort auf alle Geräte und die Online-Umfrage
+          status_row_title: Status der Umfrage
+          status_row_text: Legt fest, ob die Umfrage gerade Antworten annimmt. Der Status gilt gleichzeitig für alle Mitmachbox-Geräte und für die Online-Umfrage auf der Projektseite. Schließen Sie die Umfrage, wenn die Erfassung enden soll; die gesammelten Antworten bleiben erhalten.
+          status_badges:
+            open: "Geöffnet: nimmt Antworten an"
+            closed: "Geschlossen: nimmt keine Antworten an"
+            draft: Noch nicht geöffnet
+            archived: "Archiviert: nimmt keine Antworten an"
           open_button: Umfrage öffnen
           close_button: Umfrage schließen
-          archive_button: Archivieren
           reopen_button: Wieder öffnen
-          open_confirm: Die Umfrage wird für die Datenerfassung auf den Geräten geöffnet. Fortfahren?
-          close_confirm: Die Datenerfassung wird beendet. Bereits gesammelte Antworten bleiben erhalten. Fortfahren?
-          archive_confirm: Die Umfrage wird archiviert und aus aktiven Listen ausgeblendet. Fortfahren?
+          archive_button: Umfrage archivieren
+          open_confirm: Die Umfrage wird für die Datenerfassung auf allen Geräten und in der Online-Umfrage geöffnet.
+          close_confirm: Die Datenerfassung wird auf allen Geräten und in der Online-Umfrage beendet. Bereits gesammelte Antworten bleiben erhalten. Sie können die Umfrage später wieder öffnen.
+          reopen_confirm: Die Umfrage nimmt wieder Antworten an, auf allen Geräten und in der Online-Umfrage. Es gilt die laufende Version.
+          archive_confirm: Die Umfrage wird beendet und aus den aktiven Listen ausgeblendet. Sie lässt sich in der Verwaltung nicht wieder öffnen.
           open_requires_published_hint: Die Umfrage kann erst geöffnet werden, wenn eine Version veröffentlicht wurde.
-          draft_section_title: Entwurf (Version %{number})
-          published_section_title: Veröffentlichte Version %{number}
-          no_published_version: Noch keine Version veröffentlicht.
           responses_total: "Antworten insgesamt: %{count}"
-          add_question_button: Frage hinzufügen
-          publish_button: Entwurf veröffentlichen
-          publish_confirm: Nach der Veröffentlichung kann diese Version nicht mehr bearbeitet werden. Fortfahren?
+          current_section_title: Laufende Version (Version %{number})
+          current_scope_pill: Das sehen die Teilnehmenden gerade
+          current_row_title: Fragen der laufenden Version
+          current_row_text: Diese Fragen sehen die Teilnehmenden gerade an den Geräten und online. Eine veröffentlichte Version lässt sich nicht mehr bearbeiten. Erstellen Sie einen Entwurf, um Fragen zu ändern.
+          current_questions_toggle:
+            one: "%{count} Frage anzeigen"
+            other: "%{count} Fragen anzeigen"
           new_draft_button: Neuen Entwurf erstellen
+          new_draft_confirm: Die laufende Version wird in einen bearbeitbaren Entwurf kopiert. Geräte und Online-Umfrage zeigen weiterhin die laufende Version, bis Sie den Entwurf veröffentlichen.
           test_run_button: Probedurchlauf
-          new_draft_hint: Die veröffentlichte Version wird in einen bearbeitbaren Entwurf kopiert. Die laufende Version bleibt bis zur nächsten Veröffentlichung unverändert auf den Geräten.
-          read_only_hint: Veröffentlichte Versionen können nicht bearbeitet werden. Erstellen Sie einen neuen Entwurf, um Änderungen vorzunehmen.
-          no_questions: Noch keine Fragen vorhanden.
+          draft_section_title: Entwurf (Version %{number})
+          draft_scope_pill: Für Teilnehmende nicht sichtbar
+          draft_row_title: Fragen bearbeiten
+          draft_row_text: Hier bereiten Sie Änderungen an den Fragen vor. Geräte und Online-Umfrage zeigen weiterhin die laufende Version, bis Sie den Entwurf veröffentlichen. Prüfen Sie den Entwurf vorher mit dem Probedurchlauf.
+          add_question_button: Frage hinzufügen
           max_questions_hint: Diese Version hat die maximale Anzahl von 20 Fragen erreicht – mehr kann die Mitmachbox nicht laden.
+          publish_row_title: Entwurf veröffentlichen
+          publish_row_text: Ersetzt die laufende Version auf allen Geräten und in der Online-Umfrage durch diesen Entwurf, auch während die Umfrage geöffnet ist. Danach lässt sich die Version nicht mehr bearbeiten.
+          publish_button: Entwurf veröffentlichen
+          publish_confirm_replace: Version %{draft} ersetzt die laufende Version %{current} auf allen Geräten und in der Online-Umfrage.
+          publish_confirm_first: Version %{draft} wird auf allen Geräten und in der Online-Umfrage ausgespielt, sobald die Umfrage geöffnet ist.
+          publish_confirm_while_open: Die Umfrage ist geöffnet, der Wechsel passiert also während der laufenden Erfassung.
+          publish_confirm_locked: Danach lässt sich Version %{draft} nicht mehr bearbeiten.
+          no_questions: Noch keine Fragen vorhanden.
+          no_published_version: Noch keine Version veröffentlicht.
+          end_section_title: Umfrage beenden
+          end_scope_pill: Lässt sich nicht rückgängig machen
+          archive_row_title: Umfrage archivieren
+          archive_row_text: Beendet die Umfrage und blendet sie aus den aktiven Listen aus. Eine archivierte Umfrage lässt sich in der Verwaltung nicht wieder öffnen. Archivieren Sie erst, wenn die Beteiligung abgeschlossen und ausgewertet ist.
           table:
             order: Reihenfolge
             prompt: Frage

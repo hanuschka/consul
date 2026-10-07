@@ -142,8 +142,8 @@ application.register("adm--form--image", AdmFormImageController)
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
 
-import AdmPollQuestionsBoundaryMapController from "./adm/poll_questions/boundary_map_controller"
-application.register("adm-poll-questions--boundary-map", AdmPollQuestionsBoundaryMapController)
+import AdmGeojsonAreaImportController from "./adm/geojson_area_import_controller"
+application.register("adm--geojson-area-import", AdmGeojsonAreaImportController)
 
 import AdmPollQuestionAnswersOpenAnswerController from "./adm/poll_question_answers/open_answer_controller"
 application.register("adm--poll-question-answers--open-answer", AdmPollQuestionAnswersOpenAnswerController)
@@ -195,6 +195,12 @@ application.register("shared--visibility-toggle", SharedVisibilityToggleControll
 
 import AdmColumnSelectorController from "./adm/column_selector_controller"
 application.register("adm-column-selector", AdmColumnSelectorController)
+
+import AdmListStateController from "./adm/list_state_controller"
+application.register("adm-list-state", AdmListStateController)
+
+import AdmListResetController from "./adm/list_reset_controller"
+application.register("adm-list-reset", AdmListResetController)
 
 import AdmDashboardNoticeController from "./adm/dashboard_notice_controller"
 application.register("adm-dashboard-notice", AdmDashboardNoticeController)

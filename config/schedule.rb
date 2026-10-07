@@ -53,6 +53,10 @@ every 6.hours, roles: [:cron] do
   runner "AiUsageRecords::PushCurrentMonths.call", job_template: staggered_job_template
 end
 
+every 5.hours, roles: [:cron] do
+  rake "-s ai_models:refresh", job_template: staggered_job_template
+end
+
 every 1.day, at: "3:30 am", roles: [:cron] do
   rake "-s similar_contributions:prune_abandoned_drafts"
 end

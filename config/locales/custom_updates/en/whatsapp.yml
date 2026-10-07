@@ -101,7 +101,7 @@ en:
           Privacy: %{privacy_url}
         contact: "Questions for the administration: %{contact}"
       compliance:
-        disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
+        disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here.
         opted_out: >-
           Understood, you won't receive any more messages from us. Write %{keyword} if
           you would like to receive messages again.

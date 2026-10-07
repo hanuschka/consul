@@ -8,6 +8,7 @@ class Poll::Question < ApplicationRecord
   accepts_nested_attributes_for :map_location, allow_destroy: true, update_only: true
 
   translates :description, :min_rating_scale_label, :max_rating_scale_label, :intro, touch: true
+  include MachineTranslatable
   has_many :nested_questions, -> { order "given_order asc" },
     class_name: "Poll::Question", dependent: :destroy, foreign_key: :parent_question_id
 

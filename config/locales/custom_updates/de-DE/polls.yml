@@ -47,6 +47,7 @@ de:
         question_street_details_csv_link: Straßenauswertung herunterladen
         question_answer_details_tooltip: Einzelauswertung
         question_answer_details_csv_link: Kreuztabellen-Auswertung herunterladen
+        export_in_progress: "Export wird vorbereitet. Sie erhalten eine E-Mail, sobald der Export fertig ist."
         table:
           votes: Stimmen
           answer: Antwort

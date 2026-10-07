@@ -70,12 +70,18 @@ module Globalizable
 
       def searchable_globalized_values
         values = {}
-        translations.each do |translation|
-          Globalize.with_locale(translation.locale) do
+        searchable_locales.each do |locale|
+          Globalize.with_locale(locale) do
             values.merge! searchable_translations_definitions
           end
         end
         values
+      end
+
+      def searchable_locales
+        return translations.map(&:locale) unless MachineTranslation.enabled?
+
+        [MachineTranslation.authored_locale(self)].compact
       end
   end
 

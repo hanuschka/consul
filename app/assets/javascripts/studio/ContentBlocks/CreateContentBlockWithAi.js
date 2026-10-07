@@ -13,8 +13,7 @@
       generateUrl: null,
       statusUrl: null,
       cancelUrl: null,
-      pollAttempts: 0,
-      pollActive: false,
+      poller: null,
       categoriesAvailable: false,
       categories: []
     },
@@ -56,12 +55,25 @@
       this.handleSubmit(e);
     },
 
+    // sendBeacon can only issue POST and carries no CSRF token, so it never
+    // reached the DELETE-only cancel route. fetch with keepalive survives the
+    // unload the same way while keeping one verb and one route.
     bindUnloadCancel() {
       window.addEventListener("beforeunload", () => {
-        if (!this.state.pollActive) return
+        if (!this.isPolling()) return
         if (!this.state.cancelUrl) return
 
-        navigator.sendBeacon && navigator.sendBeacon(this.state.cancelUrl, "");
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+
+        fetch(this.state.cancelUrl, {
+          method: "DELETE",
+          keepalive: true,
+          credentials: "same-origin",
+          headers: {
+            "X-CSRF-Token": csrfMeta ? csrfMeta.getAttribute("content") : "",
+            "X-Requested-With": "XMLHttpRequest"
+          }
+        }).catch(() => {});
       });
     },
 
@@ -259,6 +271,7 @@
 
       $(".js-content-block-ai-submit").prop("disabled", true);
       $(".js-content-block-ai-loader").show();
+      $(".js-content-block-ai-step").text("");
       $(".js-content-block-ai-error").hide().text("");
       $(".js-content-block-ai-modal-close").hide();
     },
@@ -271,74 +284,37 @@
       $(".js-content-block-ai-loader").hide();
       $(".js-content-block-ai-modal-close").show();
 
-      this.state.pollActive = false;
+      this.stopPolling();
     },
 
     startPolling() {
-      this.state.pollActive = true;
-      this.state.pollAttempts = 0;
-      this.poll();
+      this.state.poller = App.Studio.ContentBlocks.AiGenerationPoller.start(this.state.statusUrl, {
+        onProgress: (stepLabel) => $(".js-content-block-ai-step").text(stepLabel),
+        onCompleted: (response) => this.handleCompletion(response),
+        onCancelled: () => {
+          this.exitProcessingMode();
+          this.closeModal();
+        },
+        onError: (message) => {
+          this.exitProcessingMode();
+          this.showError(message);
+        }
+      });
     },
 
-    poll() {
-      if (!this.state.pollActive) return
-      if (this.state.pollAttempts >= 300) {
-        this.handlePollTimeout();
-        return
-      }
+    stopPolling() {
+      if (!this.state.poller) return
 
-      this.state.pollAttempts++;
-
-      App.Ajax
-        .request({
-          url: this.state.statusUrl,
-          method: "GET",
-          dataType: "json"
-        })
-        .then((response) => this.handlePollResponse(response))
-        .catch(() => this.handlePollError());
+      this.state.poller.stop();
+      this.state.poller = null;
     },
 
-    handlePollResponse(response) {
-      if (!this.state.pollActive) return
-
-      if (response.status === "completed") {
-        this.handleCompletion(response);
-      }
-      else if (response.status === "failed") {
-        this.handlePollFailure(response);
-      }
-      else if (response.status === "cancelled") {
-        this.exitProcessingMode();
-        this.closeModal();
-      }
-      else {
-        setTimeout(() => this.poll(), 3000);
-      }
-    },
-
-    handlePollError() {
-      if (this.state.pollActive) {
-        setTimeout(() => this.poll(), 3000);
-      }
-    },
-
-    handlePollTimeout() {
-      this.exitProcessingMode();
-      this.showError("Zeitüberschreitung beim Generieren. Bitte versuchen Sie es erneut.");
-    },
-
-    handlePollFailure(response) {
-      const message = (response && response.error && response.error.message)
-        ? response.error.message
-        : "Fehler beim Generieren des Inhaltsblocks.";
-
-      this.exitProcessingMode();
-      this.showError(message);
+    isPolling() {
+      return Boolean(this.state.poller && this.state.poller.active)
     },
 
     handleCompletion(response) {
-      this.state.pollActive = false;
+      this.stopPolling();
 
       if (this.state.mode === "replace") {
         this.applyReplace(response);
@@ -425,7 +401,7 @@
     },
 
     handleCloseRequest(e) {
-      if (this.state.pollActive) {
+      if (this.isPolling()) {
         e.preventDefault();
         e.stopPropagation();
         return

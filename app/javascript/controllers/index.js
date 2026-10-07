@@ -28,6 +28,9 @@ application.register("adm--ai-question-row", AdmAiQuestionRowController)
 import AdmMenuPopoverController from "./adm/menu_popover_controller"
 application.register("adm--menu-popover", AdmMenuPopoverController)
 
+import AdmSimilarContributionsPopupController from "./adm/similar_contributions_popup_controller"
+application.register("adm--similar-contributions-popup", AdmSimilarContributionsPopupController)
+
 
 import AdmVisibilityGroupController from "./adm/visibility_group_controller"
 application.register("adm--visibility-group", AdmVisibilityGroupController)
@@ -70,8 +73,8 @@ application.register("kern--registered-address-selector", KernRegisteredAddressS
 import TableHeaderController from "./components/table/header_controller"
 application.register("table-header", TableHeaderController)
 
-import TableActionsController from "./components/table/actions_controller"
-application.register("table-actions", TableActionsController)
+import SharedDropdownMenuController from "./shared/dropdown_menu_controller"
+application.register("shared--dropdown-menu", SharedDropdownMenuController)
 
 
 
@@ -139,8 +142,8 @@ application.register("adm--form--image", AdmFormImageController)
 import AdmPollQuestionsVotationTypeController from "./adm/poll_questions/votation_type_controller"
 application.register("adm-poll-questions--votation-type", AdmPollQuestionsVotationTypeController)
 
-import AdmPollQuestionsBoundaryMapController from "./adm/poll_questions/boundary_map_controller"
-application.register("adm-poll-questions--boundary-map", AdmPollQuestionsBoundaryMapController)
+import AdmGeojsonAreaImportController from "./adm/geojson_area_import_controller"
+application.register("adm--geojson-area-import", AdmGeojsonAreaImportController)
 
 import AdmPollQuestionAnswersOpenAnswerController from "./adm/poll_question_answers/open_answer_controller"
 application.register("adm--poll-question-answers--open-answer", AdmPollQuestionAnswersOpenAnswerController)
@@ -153,6 +156,9 @@ application.register("adm-newsletters--filter-stack", AdmNewslettersFilterStackC
 
 import AdmRecipientGroupsNameAutosaveController from "./adm/recipient_groups/name_autosave_controller"
 application.register("adm-recipient-groups--name-autosave", AdmRecipientGroupsNameAutosaveController)
+
+import AdmProjektsImportReviewAutosaveController from "./adm/projekts/import_review_autosave_controller"
+application.register("adm-projekts--import-review-autosave", AdmProjektsImportReviewAutosaveController)
 
 import AdmBudgetInvestmentsPhasesAccordionController from "./adm/budget_investments/phases_accordion_controller"
 application.register("adm-budget-investments--phases-accordion", AdmBudgetInvestmentsPhasesAccordionController)
@@ -190,11 +196,23 @@ application.register("shared--visibility-toggle", SharedVisibilityToggleControll
 import AdmColumnSelectorController from "./adm/column_selector_controller"
 application.register("adm-column-selector", AdmColumnSelectorController)
 
+import AdmListStateController from "./adm/list_state_controller"
+application.register("adm-list-state", AdmListStateController)
+
+import AdmListResetController from "./adm/list_reset_controller"
+application.register("adm-list-reset", AdmListResetController)
+
 import AdmDashboardNoticeController from "./adm/dashboard_notice_controller"
 application.register("adm-dashboard-notice", AdmDashboardNoticeController)
 
 import AdmAutogrowController from "./adm/autogrow_controller"
 application.register("adm-autogrow", AdmAutogrowController)
+
+import AdmMemoController from "./adm/memo_controller"
+application.register("adm--memo", AdmMemoController)
+
+import AdmMemoFormController from "./adm/memo_form_controller"
+application.register("adm--memo-form", AdmMemoFormController)
 
 import AdmUserSelectController from "./adm/user_select_controller"
 application.register("adm-user-select", AdmUserSelectController)
@@ -232,6 +250,9 @@ application.register("poll-question-imports--preview", PollQuestionImportsPrevie
 import AdmPhaseRegenerateController from "./adm/phase_regenerate_controller"
 application.register("adm--phase-regenerate", AdmPhaseRegenerateController)
 
+import AdmCheckboxFilterController from "./adm/checkbox_filter_controller"
+application.register("adm--checkbox-filter", AdmCheckboxFilterController)
+
 import AdmEvaluationPdfDownloadController from "./adm/evaluation_pdf_download_controller"
 application.register("adm--evaluation-pdf-download", AdmEvaluationPdfDownloadController)
 
@@ -241,6 +262,11 @@ application.register("adm--evaluation-tabs", AdmEvaluationTabsController)
 import AdmBudgetResultsController from "./adm/budget_results_controller"
 application.register("adm--budget-results", AdmBudgetResultsController)
 
+import AdmWhatsappTestMessageController from "./adm/whatsapp_test_message_controller"
+application.register("adm--whatsapp-test-message", AdmWhatsappTestMessageController)
+
+import AdmWhatsappQrDownloadController from "./adm/whatsapp_qr_download_controller"
+application.register("adm--whatsapp-qr-download", AdmWhatsappQrDownloadController)
 
 import ProjektImportsChatController from "./projekt_imports/chat_controller"
 application.register("projekt-imports--chat", ProjektImportsChatController)
@@ -262,3 +288,6 @@ application.register("shared--anchor-highlight", SharedAnchorHighlightController
 
 import SharedDropdownSelectMenuController from "./shared/dropdown_select_menu_controller"
 application.register("shared--dropdown-select-menu", SharedDropdownSelectMenuController)
+
+import AdmMitmachboxConditionController from "./adm/mitmachbox_condition_controller"
+application.register("adm--mitmachbox-condition", AdmMitmachboxConditionController)

@@ -45,8 +45,15 @@ App.Studio.Projekt.Sidebar = {
     const newTitle = sectionDeactivatedNew ? e.currentTarget.dataset.offTitle : e.currentTarget.dataset.onTitle;
     App.Studio.utils.updateRichTooltipTitle(e.currentTarget, newTitle);
 
-    // const settingKey = sectionWrapper.dataset.projektSettingKey;
+    const settingKey = sectionWrapper.dataset.projektSettingKey;
     const settingId = sectionWrapper.dataset.projektSettingId;
+
+    if (settingKey === "projekt_feature.sidebar.show_phases_in_projekt_page_sidebar") {
+      document.querySelectorAll(".js-banner-phase-chip").forEach(function(chip) {
+        chip.classList.toggle("-deactivated", sectionDeactivatedNew);
+      });
+    }
+
     const settingValue = sectionDeactivatedNew  ? "" : "active"
 
     $.ajax({

@@ -21,7 +21,7 @@ class Admin::SiteCustomization::CardsController < Admin::SiteCustomization::Base
     end
 
     def redirect_path
-      if @page.projekt.present? && @page.published? && params[:site_customization_page][:origin] == 'public_page'
+      if @page.projekt.present? && params[:site_customization_page][:origin] == 'public_page'
         page_path(@page.slug)
       elsif @page.projekt.present?
         namespace = params[:controller].split('/').first

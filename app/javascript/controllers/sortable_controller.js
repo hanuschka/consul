@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { Turbo } from "@hotwired/turbo-rails"
 import Sortable from "sortablejs"
 
 export default class extends Controller {
@@ -45,6 +46,7 @@ export default class extends Controller {
   save() {
     fetch(this.urlValue, {
       method: "PATCH",
+      redirect: "manual",
       headers: {
         "Content-Type": "application/json",
         "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -53,6 +55,14 @@ export default class extends Controller {
         tree: this.serialize(this.element)
       })
     })
+      .then((response) => {
+        if (!response.ok) this.reloadPage()
+      })
+      .catch(() => this.reloadPage())
+  }
+
+  reloadPage() {
+    Turbo.visit(window.location.href, { action: "replace" })
   }
 
   serialize(container) {

@@ -30,7 +30,7 @@
   <% if @proposal.image.present? && params[:controller] == 'admin/proposals' %>
     <div class='column'>
       <%= link_to polymorphic_path([@namespace, @projekt_phase, @proposal], action: :toggle_image_concealed), method: :patch, remote: true, class: 'button hollow' do %>
-        <% @proposal.image.concealed ? "Bild einblenden" : "Bild ausblenden" %>
+        <%= @proposal.image.concealed ? t("custom.proposals.info.show_image") : t("custom.proposals.info.hide_image") %>
       <% end %>
       <hr>
     </div>

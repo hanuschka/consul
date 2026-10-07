@@ -5,6 +5,10 @@ en:
         success: The topic has been hidden.
       restore:
         success: The topic has been restored.
+      show:
+        intro: "Every comment counts – it keeps the discussion going and adds new insight. Take a quick look at the existing comments to see whether similar feedback has already been given, so you avoid repetition."
+      new:
+        intro: "A workgroup depends on its members taking part. Would you like to bring a new topic to the group for the project below? Then give it a heading and explain what your topic is about. Every contribution counts and helps bring clarity to the proposal."
       list:
         empty_list_text: No entries
         orders:

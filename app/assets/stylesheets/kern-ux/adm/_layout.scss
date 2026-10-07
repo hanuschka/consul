@@ -9,9 +9,13 @@ html {
   --adm-sidebar-width: 250px;
   --adm-icon-rail-width: 56px;
   --adm-nav-total-width: calc(var(--adm-sidebar-width) + var(--adm-icon-rail-width));
+
+  @media (min-width: 992px) {
+    --adm-sidebar-width: 290px;
+  }
 }
 
-header {
+.adm-header {
   height: var(--kern-adm-header-height);
   background-color: var(--adm-color-primary);
   color: #fff;
@@ -23,6 +27,12 @@ header {
     #123aa8 55%,
     #1b5fd6 115%
   );
+
+  @media (min-width: 992px) {
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+  }
 
   .header__decorations {
     position: absolute;
@@ -37,6 +47,7 @@ header {
   top: 0;
   height: 100vh;
   z-index: 1000;
+  width: var(--adm-sidebar-width);
   min-width: var(--adm-sidebar-width);
   border-right: var(--kern-metric-border-width-light) solid var(--kern-color-layout-border);
 }
@@ -71,6 +82,15 @@ main {
 
   &--full {
     max-width: 100%;
+  }
+}
+
+// Measure for running text — section intros, hints, explanations. Caps a
+// paragraph at 70% of its container so it stays readable instead of spanning
+// the full admin width; below md the container is already narrow enough.
+.kern-prose {
+  @media (min-width: map.get(breakpoints.$grid-breakpoints, md)) {
+    max-width: 70%;
   }
 }
 

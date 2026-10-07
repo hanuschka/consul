@@ -1,10 +1,30 @@
 <%= turbo_frame_tag dom_id(map_location, :editor) do %>
-  <div class="mb-5">
+  <%= tag.div class: "mb-5", data: geojson_import_data do %>
     <div class="kern-title kern-title--small mb-3">
       <%= t('components.adm.map_setting_component.map_label') %>
     </div>
 
     <p class="kern-body mb-3 mb-md-0"><%= t('components.adm.map_setting_component.map_description') %></p>
+
+    <% if geojson_import? %>
+      <div class="mt-4 mb-4">
+        <div class="kern-title kern-title--small mb-1"><%= t(".geojson_import.title") %></div>
+        <p class="kern-body kern-body--small mb-3"><%= t(".geojson_import.hint") %></p>
+
+        <div class="kern-form-input">
+          <label class="kern-label" for="<%= geojson_file_input_id %>">
+            <%= t(".geojson_import.file_label") %>
+          </label>
+          <input type="file" id="<%= geojson_file_input_id %>" class="kern-form-input__input"
+                 accept=".geojson,application/geo+json,application/json"
+                 data-adm--geojson-area-import-target="file"
+                 data-action="change->adm--geojson-area-import#importFile">
+        </div>
+
+        <p class="kern-body kern-body--small mt-2" role="status"
+           data-adm--geojson-area-import-target="status"></p>
+      </div>
+    <% end %>
 
     <%= form_with model: map_location, url: path, method: :patch do |form| %>
       <%= render Kern::MapComponent.new(
@@ -23,5 +43,5 @@
         <%= flash[:success] %>
       </div>
     <% end %>
-  </div>
+  <% end %>
 <% end %>

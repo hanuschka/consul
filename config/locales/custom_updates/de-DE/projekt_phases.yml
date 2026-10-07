@@ -79,6 +79,21 @@ de:
         mitmachbox_phase: Vor Ort mitmachen
       mitmachbox_phase:
         public_info: In dieser Phase können Sie vor Ort an einer Umfrage teilnehmen. Die Mitmachboxen finden Sie an den ausgewiesenen Standorten.
+        online_intro: Sie können die Umfrage hier direkt online beantworten oder eine Mitmachbox an einem der ausgewiesenen Standorte nutzen.
+        submit_button: Antwort absenden
+        next_question: Weiter
+        prev_question: Zurück
+        progress: Frage {current} von {total}
+        select_answer: Bitte wählen Sie eine Antwort.
+        required: Pflichtfrage
+        multiple_hint: Mehrfachauswahl möglich
+        thank_you: Vielen Dank für Ihre Teilnahme!
+        already_answered: Sie haben an dieser Umfrage bereits teilgenommen. Vielen Dank!
+        closed: Diese Umfrage ist derzeit nicht für die Teilnahme geöffnet.
+        unavailable: Die Umfrage ist derzeit nicht verfügbar. Bitte versuchen Sie es später erneut.
+        no_answers: Bitte wählen Sie mindestens eine Antwort aus.
+        missing_required: Bitte beantworten Sie alle Pflichtfragen.
+        submit_failed: Ihre Antwort konnte nicht gespeichert werden. Bitte versuchen Sie es später erneut.
       permission_problem:
         new_button_component:
           shared:

@@ -8,10 +8,15 @@ describe "Poll question order", type: :request do
     [2, 3, 4, 6, 7].map { |order| create_question(order, randomize_position: true) }
   end
 
+  # With an option, because the wizard walks only questions that ask something
+  # (Polls::BallotTraversalQuery) and an option-less question asks nothing.
   def create_question(given_order, randomize_position:)
-    create(:poll_question, poll: poll, given_order: given_order,
-                           randomize_position: randomize_position,
-                           title: "Question #{given_order}")
+    question = create(:poll_question, poll: poll, given_order: given_order,
+                                      randomize_position: randomize_position,
+                                      title: "Question #{given_order}")
+    create(:poll_question_answer, question: question)
+
+    question
   end
 
   def configured_ids
@@ -86,27 +91,47 @@ describe "Poll question order", type: :request do
           .update!(value: "active")
     end
 
+    # The wizard only walks the clone of the option the citizen chose, so the
+    # context question is answered with that option first.
     it "places a contexted clone at the position configured for its template" do
       template = create(:poll_question, poll: poll, given_order: 8,
                                         contextualize_by_poll_question_id: first_pinned.id,
                                         title: "Contextualized question")
-      create(:poll_question_answer, question: first_pinned)
+      create(:poll_question_answer, question: template)
       template.regenerate_contexted_clones
       clone = template.contexted_clones.reload.first
       clone.update_column(:given_order, 0)
 
-      visit_poll_as(create(:user))
+      user = create(:user)
+      context = clone.context
+      Poll::Answer.create!(question: first_pinned, author: user,
+                           answer: context.title, question_answer: context)
 
-      wizard_ids = controller.view_assigns["wizard_map"].map { |entry| entry[:id] }
+      visit_poll_as(user)
+
+      wizard_ids = controller.view_assigns["wizard_question_ids"]
 
       expect(wizard_ids).not_to include(template.id)
       expect(wizard_ids.last).to eq(clone.id)
     end
 
+    # A bundle's heading has no options of its own; its sub-questions do.
+    it "keeps a bundle on the wizard path" do
+      bundle = create(:poll_question, poll: poll, given_order: 8, bundle_question: true,
+                                      title: "Bundle")
+      nested = create(:poll_question, poll: poll, parent_question_id: bundle.id,
+                                      title: "Nested question")
+      create(:poll_question_answer, question: nested)
+
+      visit_poll_as(create(:user))
+
+      expect(controller.view_assigns["wizard_question_ids"].last).to eq(bundle.id)
+    end
+
     it "hands the wizard the same order it renders" do
       visit_poll_as(create(:user))
 
-      wizard_ids = controller.view_assigns["wizard_map"].map { |entry| entry[:id] }
+      wizard_ids = controller.view_assigns["wizard_question_ids"]
 
       expect(wizard_ids).to eq(rendered_question_ids)
       expect(wizard_ids.values_at(0, 4)).to eq([first_pinned.id, second_pinned.id])

@@ -109,10 +109,10 @@
       const $answersContainer = $element.find('.rating-scale-answer-container');
       const $parentContainer = $element.parent();
 
+      $element.removeClass('vertical-rating-scale-answers');
+
       if ($answersContainer.width() > $parentContainer.width()) {
         $element.addClass('vertical-rating-scale-answers');
-      } else {
-        $element.removeClass('vertical-rating-scale-answers');
       }
     },
 

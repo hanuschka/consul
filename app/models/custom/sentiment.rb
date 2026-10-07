@@ -1,6 +1,7 @@
 class Sentiment < ApplicationRecord
   translates :name, touch: true
   include Globalizable
+  include MachineTranslatable
 
   belongs_to :projekt_phase
   has_many :proposals, dependent: :nullify

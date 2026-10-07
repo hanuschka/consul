@@ -131,6 +131,7 @@ en:
             no_restriction: No restriction
         general_settings:
           title: Features
+          no_marked_areas: No areas are drawn on this phase's Map tab yet. Until then the map stays unrestricted.
         form_author:
           title: Form author
         user_functions:

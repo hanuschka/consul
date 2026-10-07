@@ -116,6 +116,49 @@ jeweilige Beteiligungsfunktion erforderlich ist. Der Zugriff auf
 Verwaltungsfunktionen ist auf berechtigte Personen beschränkt und
 rollenbasiert geregelt.
 
+### WhatsApp-Bot: gespeicherte Daten und Aufbewahrung
+
+Der WhatsApp-Bot verarbeitet zwangsläufig Klartextdaten. Was gespeichert wird,
+wie lange und warum es nicht anders geht:
+
+**Telefonnummer (`whatsapp_accounts.wa_id`).** Im Klartext, unverschlüsselt und
+nicht gehasht. Das ist keine Nachlässigkeit, sondern eine Anforderung des
+Kanals: die Nummer ist die Zustelladresse und wird bei jedem ausgehenden
+Aufruf als `to`-Feld an die WhatsApp-Schnittstelle übergeben. Ein Hash lässt
+sich nicht zurückrechnen, also könnte der Bot damit keine Nachricht mehr
+senden. Eine Verschlüsselung im Ruhezustand wäre technisch möglich, verlagert
+den Schutz aber nur auf die Schlüsselverwaltung, da der Klartext bei jedem
+Versand ohnehin im Anwendungsspeicher vorliegt.
+
+Die Spalte `whatsapp_accounts.phone` ist eine reine Anzeigekopie derselben
+Nummer für die Verwaltungsoberfläche und wird für den Versand nicht gelesen.
+
+**Nachrichteninhalte (`whatsapp_messages.body`).** Im Klartext, sowohl
+eingehend als auch ausgehend. Sie werden gebraucht, damit die Verwaltung einen
+gemeldeten Dialog nachvollziehen kann, und damit ein angefangener Entwurf über
+mehrere Nachrichten hinweg fortgesetzt werden kann.
+
+**Aufbewahrungsfristen.** Ein täglicher Auftrag um 3:15 Uhr
+(`Whatsapp::PurgeOldMessagesJob`, siehe `config/schedule.rb`) löscht:
+
+- Nachrichten nach der eingestellten Frist. Voreinstellung: **90 Tage**,
+  administrativ änderbar unter `/adm` → WhatsApp → Einstellungen
+  (`whatsapp.message_retention_days`).
+- Rohe Webhook-Ereignisse nach **7 Tagen**. Sie enthalten dieselbe Nummer und
+  denselben Text noch einmal in der ursprünglichen Form der Schnittstelle.
+
+Nicht automatisch gelöscht werden: der Kontodatensatz selbst (Nummer,
+WhatsApp-Profilname, Benachrichtigungseinstellungen), der aktuelle
+Gesprächszustand einschließlich eines unfertigen Entwurfs, sowie die
+Zustellprotokolle der Benachrichtigungen.
+
+**Verknüpfung aufheben.** Das Aufheben der Verknüpfung löst den Bezug zum
+Consul-Konto (`user_id`, Verifizierung, Anmelde-Token). Nummer, Profilname und
+Nachrichtenverlauf bleiben bis zum Ablauf der oben genannten Frist bestehen —
+die Bestätigungsnachricht im Chat sagt das inzwischen auch so. Beim Löschen
+eines Consul-Kontos wird der zugehörige WhatsApp-Datensatz vollständig
+entfernt.
+
 ## Support & Ansprechpartner
 
 Bei Fragen zum Betrieb wenden Sie sich an:

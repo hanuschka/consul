@@ -13,6 +13,16 @@
   height: 30px;
 }
 
+.ai-edit-mode--step {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #6b7280;
+
+  &:empty {
+    display: none;
+  }
+}
+
 .ai-edit-success-indicator {
   display: inline-flex;
   align-items: center;

@@ -2,6 +2,7 @@ body.-preview-mode {
   .sdg-goal-tag-list input:not(:checked) + label,
   .js-add-tag-link:not(.selected),
   .js-toggle-section-with-setting.-deactivated,
+  .js-banner-phase-chip.-deactivated,
   .js-studio-hide-on-preview
   {
     display: none !important;

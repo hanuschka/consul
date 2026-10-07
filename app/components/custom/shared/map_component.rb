@@ -123,6 +123,11 @@ class Shared::MapComponent < ApplicationComponent
       options[:editing_projekt_map] = editing_projekt_map?
       options[:map_features_limit] = map_features_limit if @editable
 
+      if marked_areas_check_phase
+        options[:marked_areas_check_url] = helpers.marked_areas_check_projekt_phase_path(marked_areas_check_phase)
+        options[:marked_areas_outside_text] = I18n.t("activerecord.errors.messages.map_features_outside_marked_areas")
+      end
+
       if rendering_library == "mapbox"
         options[:mapbox_public_token] = ExternalApiKey.mapbox_public_token
         options[:mapbox_style_id] = map_location.mapbox_style_id.presence || Rails.application.secrets.dig(:mapbox, :style_id)
@@ -278,5 +283,15 @@ class Shared::MapComponent < ApplicationComponent
       else
         1
       end
+    end
+
+    def marked_areas_check_phase
+      return @marked_areas_check_phase if defined?(@marked_areas_check_phase)
+
+      @marked_areas_check_phase =
+        if @editable && !admin_editor?
+          phase = @mappable.try(:projekt_phase)
+          phase if phase&.map_features_restricted_to_marked_areas?
+        end
     end
 end

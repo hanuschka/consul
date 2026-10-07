@@ -69,7 +69,12 @@ de:
           random_title: Zufällig
           votes_up: Am meisten gewählt
           votes_up_title: Am meisten gewählt
+      info:
+        show_image: Bild einblenden
+        hide_image: Bild ausblenden
       show:
+        support_card_title: Unterstützung
+        objection_card_title: Einwand
         community_section:
           title: Beteiligen Sie sich
           description: Für diesen Vorschlag gibt es bereits einen Arbeitskreis, der sich mit der Umsetzung des Vorschlags beschäftigt.
@@ -93,6 +98,11 @@ de:
           other: "%{count} Stimmabgaben"
       dashboard:
         default_welcome_text_html: Wollen Sie als Autor eines Vorschlages ein konkretes Meinungsbild zu einer Sachfrage einholen? Dann nutzen Sie hierfür die Abstimmungsfunktion. Sie können eine oder mehrere Abstimmungen initiieren.
+        show:
+          description: "Sie können Sich hier einen Überblick über die Unterstützung zu Ihrem Vorschlag verschaffen. Darüber hinaus stehen Ihnen mit der Benachrichtigungsfunktion sowie der Möglichkeit Abstimmungen zum Vorschlag zu initiieren, weitere Hilfsmittel zur Verfügung, um mit anderen BürgerInnen in Kontakt zu treten. Zusätzlich können Sie sich Material für Werbekampagnen herunterladen."
+          campaign_link: Material für Kampagne
+        campaign:
+          title: Material für eine Werbekampagne zu Ihrem Vorschlag
         polls:
           new:
             title: Abstimmungen erstellen

@@ -46,6 +46,7 @@ en:
         question_street_details_csv_link: Download details about streets
         question_answer_details_tooltip: Crosssecrional details
         question_answer_details_csv_link: Download details about crossectional voting
+        export_in_progress: "The export is being prepared. You will receive an email as soon as it is ready."
         table:
           votes: Votes
           answer: Answer

@@ -12,7 +12,8 @@ describe "Creating an Anliegen in /adm while AI categorization is on", type: :re
 
   def stub_llm_content(content)
     chat = double("chat")
-    allow(chat).to receive(:ask).and_return(double("response", content: content))
+    allow(chat).to receive(:ask)
+      .and_return(RubyLLM::Message.new(role: :assistant, content: content.to_json))
     allow(Ai::RubyLlmFactory).to receive(:chat_with_json_output)
       .and_return(double("chat_builder", with_instructions: chat))
   end

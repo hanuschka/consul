@@ -1,0 +1,42 @@
+<% preserved_query = request.query_parameters.except("updated_from", "updated_to", "page").to_query %>
+
+<%= form_tag form_url, method: :get, enforce_utf8: false,
+      class: "municipal-plans-filter-form",
+      data: { turbolinks: false } do %>
+  <% %w[order search].each do |key| %>
+    <% if params[key].present? %>
+      <%= hidden_field_tag key, params[key], id: nil %>
+    <% end %>
+  <% end %>
+
+  <% %w[districts topics participation recency].each do |key| %>
+    <% Array(params[key]).each do |value| %>
+      <%= hidden_field_tag "#{key}[]", value, id: nil %>
+    <% end %>
+  <% end %>
+
+  <fieldset>
+    <legend class="show-for-sr"><%= t("custom.municipal_plans.index.sidebar.updated_range.title") %></legend>
+
+    <div>
+      <%= label_tag :updated_from, t("custom.municipal_plans.index.sidebar.updated_range.from_label") %>
+      <%= date_field_tag :updated_from, params[:updated_from], id: "updated_from" %>
+    </div>
+
+    <div>
+      <%= label_tag :updated_to, t("custom.municipal_plans.index.sidebar.updated_range.to_label") %>
+      <%= date_field_tag :updated_to, params[:updated_to], id: "updated_to" %>
+    </div>
+  </fieldset>
+
+  <div class="sidebar-filter-group">
+    <%= submit_tag t("custom.municipal_plans.index.sidebar.apply"), name: nil,
+          class: "sidebar-filter-button" %>
+
+    <%= link_to [form_url, preserved_query.presence].compact.join("?"),
+          class: "sidebar-reset-filter-button",
+          title: t("custom.municipal_plans.index.sidebar.updated_range.reset") do %>
+      <span class="show-for-sr"><%= t("custom.municipal_plans.index.sidebar.updated_range.reset") %></span>
+    <% end %>
+  </div>
+<% end %>

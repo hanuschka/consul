@@ -1,5 +1,8 @@
 de:
   setting:
+    handbook:
+      url: Adresse des Nutzerhandbuchs
+      url_description: "Legt die Adresse des Nutzerhandbuchs fest, das in allen Dashboards unter „Hilfe“ angezeigt wird. Im Verwaltungsbereich erscheint in jedem Menü ganz unten der Eintrag „Hilfe“, der den passenden Abschnitt des Handbuchs öffnet. Die Adresse ist voreingestellt. Lassen Sie das Feld leer, um den Eintrag auszublenden."
     proposals:
       email_on_official_answer: "E-Mail-Benachrichtigung bei offizieller Antwort (Vorschläge)"
       email_on_official_answer_description: "Versendet eine E-Mail an die einreichende Person, sobald zu ihrem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Die E-Mail enthält den Text der offiziellen Antwort sowie einen Link zum Vorschlag, auf der Vorschlagsseite selbst bleibt die Antwort wie bisher öffentlich sichtbar. Aktivieren Sie diese Einstellung, wenn Einreichende aktiv über die Rückmeldung der Verwaltung informiert werden sollen und nicht selbst auf die Plattform zurückkehren müssen."
@@ -18,6 +21,40 @@ de:
       kobil_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine Schaltfläche mit KOBIL-Logo (OpenID Connect). Aktivieren Sie es, wenn KOBIL Ihr zentrales Identitätssystem ist. Erfordert Zugangsdaten in der Serverkonfiguration."
       kobil_address_verification: "KOBIL Adressverifizierung"
       kobil_address_verification_description: "Übernimmt die Adresse aus dem KOBIL-Konto (Straße, PLZ, Ort) in das Nutzerprofil, ohne sie mit dem Adressregister zu verknüpfen. Gebietsbeschränkte Phasen schaltet sie nicht frei. Aktivieren Sie es, um Tipparbeit zu ersparen."
+      whatsapp_bot: "WhatsApp-Bot aktivieren"
+      whatsapp_bot_description: "Schaltet den WhatsApp-Bot für Bürger:innen frei. Wirkt erst, wenn euer technisches Team das WhatsApp-Geschäftskonto auf dem Server eingerichtet hat."
+    ai:
+      whatsapp_model_tier: "Sprachmodell des WhatsApp-Bots (vorübergehend)"
+      whatsapp_model_tier_description: "Bestimmt, welches der drei OpenAI-Modelle die Antworten des Bots formuliert. Ein höheres Modell antwortet sorgfältiger, kostet je Nachricht mehr und braucht länger, bis die Antwort im Chat steht. Die Auswahl dient dem Vergleich auf dem Testsystem und wird danach wieder entfernt. Sie erscheint nur, solange OpenAI ohne eigenen API-Endpunkt genutzt wird; bei jedem anderen Anbieter gilt weiterhin das dort konfigurierte Modell. Voreinstellung ist das schnelle Modell."
+      whatsapp_model_tier_options:
+        big: "Hauptmodell (%{model})"
+        fast: "Schnelles Modell (%{model})"
+        ultrafast: "Sehr schnelles Modell (%{model})"
+    whatsapp:
+      default_locale: "Standardsprache des Bots"
+      default_locale_description: "Bestimmt, in welcher Sprache der Bot mit Nummern spricht, die noch kein Konto verknüpft haben. Sobald eine Nummer mit einem Konto verbunden ist, folgt der Bot stattdessen der Spracheinstellung dieser Person. Tragen Sie ein Sprachkürzel ein, das die Plattform anbietet, etwa de oder en. Leer oder ein unbekanntes Kürzel bedeutet die Standardsprache der Plattform."
+      address_form: "Anrede des Bots"
+      address_form_description: "Legt fest, ob der Bot duzt oder siezt. Erlaubt sind genau zwei Werte: sie oder du. Die Einstellung wirkt auf alle Texte, die die KI selbst formuliert — im Chat und ebenso in der zweistufigen Bewertung von Vorschlägen — und ebenso auf die festen Textbausteine des Bots, die für beide Anreden vorliegen. Setzen Sie du für Jugendbeteiligung, sie für eine Stadtverwaltung. Leer oder ein anderer Wert bedeutet sie."
+      broadcast_template: "Aktive Vorlage für Projekt-Rundnachrichten"
+      broadcast_template_description: "Zeigt, welche von Meta freigegebene Vorlage eine Rundnachricht versendet. Ist das Feld leer, kann keine Rundnachricht hinausgehen und die Schaltfläche dazu erscheint auf der Projektseite nicht. Wählen Sie die Vorlage auf der Seite Bot-Nachrichtenvorlagen aus, statt hier einen Namen einzutippen: Ein Name, den Meta nicht freigegeben hat, lässt jeden Versand scheitern."
+      broadcast_card_template: "Aktive Kartenvorlage für Projekt-Rundnachrichten"
+      broadcast_card_template_description: "Die Variante mit Projektbild und Link auf einer Schaltfläche. Sie ist optional: Ist das Feld leer, geht jede Rundnachricht als reiner Text hinaus, und Projekte ohne Bild nutzen die Textvariante ohnehin. Die Auswahl läuft ebenfalls über die Seite Bot-Nachrichtenvorlagen."
+      broadcast_template_language: "Sprache der Vorlagen"
+      broadcast_template_language_description: "Muss zu der Sprache passen, in der Meta die Vorlage freigegeben hat. Eine Abweichung fällt erst beim Senden auf und wird dort abgewiesen. Beim Aktivieren einer Vorlage wird dieser Wert automatisch mitgeschrieben, damit Name und Sprache nicht auseinanderlaufen. Leer bedeutet de."
+      transcription_model: "Modell für Sprachnachrichten"
+      transcription_model_description: "Wandelt eingehende Sprachnachrichten in Text um, bevor der Bot sie verarbeitet. Bürgerinnen und Bürger senden sie häufig, und jede kostet einen Aufruf. Leer bedeutet gpt-4o-mini-transcribe, das günstigste Modell, das Deutsch zuverlässig verarbeitet. Ändern Sie den Wert nur, wenn ein anderes Modell nachweislich besser transkribiert."
+      message_retention_days: "Aufbewahrung der Nachrichten in Tagen"
+      message_retention_days_description: "Nachrichten, die älter sind als diese Frist, werden nächtlich um 3:15 Uhr gelöscht. Das ist eine datenschutzrechtliche Pflicht und keine Frage der Ordnung. Tragen Sie eine ganze Zahl größer als Null ein; leer, Null oder eine Eingabe, die keine Zahl ist, bedeutet neunzig Tage. Verkürzen Sie die Frist, wenn Ihr Löschkonzept das verlangt."
+      max_voice_megabytes: "Größengrenze für Sprachnachrichten in MB"
+      max_voice_megabytes_description: "Wird geprüft, bevor eine Sprachnachricht von WhatsApp heruntergeladen wird. Ein höherer Wert erlaubt längere Nachrichten; ein zu niedriger lässt sie scheitern, ohne dass der Grund sichtbar wird — die Person erhält lediglich die Bitte, ihre Idee als Text zu schreiben. Leer, Null oder keine Zahl bedeutet 16."
+      administration_contact_phone: "Telefonnummer der Verwaltung"
+      administration_contact_phone_description: "Die Nummer, unter der die Verwaltung für allgemeine Anfragen erreichbar ist, etwa die Behördennummer 115 oder das Bürgertelefon. Freitext: Sie können Sprechzeiten dazuschreiben, der Bot gibt die Angabe so weiter, wie sie hier steht. Leer bedeutet, dass der Bot keine Telefonnummer nennt."
+      administration_contact_email: "E-Mail-Adresse der Verwaltung"
+      administration_contact_email_description: "Die Adresse für allgemeine Anfragen an die Verwaltung, etwa das Postfach des Bürgerservice. Eine Eingabe, die keine gültige E-Mail-Adresse ist, wird abgewiesen. Leer bedeutet, dass der Bot keine E-Mail-Adresse nennt."
+      administration_contact_url: "Link zum Bürgerservice"
+      administration_contact_url_description: "Die Seite der Verwaltung mit Anliegen, Öffnungszeiten und Ansprechpersonen. Tragen Sie den vollständigen Link mit https:// ein. Sind alle drei Felder leer, verweist der Bot auf die Kontaktseite dieses Portals oder, falls es keine gibt, auf seine Startseite."
+      auto_broadcast_new_projekts: "Rundnachricht bei jeder Projektveröffentlichung"
+      auto_broadcast_new_projekts_description: "Schickt bei jeder Veröffentlichung eines Projekts automatisch eine Nachricht an alle angemeldeten Nummern. Standardmäßig aus, und die einzige Einstellung dieser Seite, die durch einen einzigen Klick an anderer Stelle Tausende Menschen erreicht. Aktivieren Sie sie nur, wenn Ihre Veröffentlichungen bewusst gesetzt sind und eine Vorlage aktiv ist."
     projekt_option:
       general:
         external_participation_link: Alternativen Link in den Projektressourcen verwenden
@@ -168,6 +205,8 @@ de:
         two_click_iframe_solution: "Zwei-Klick-Lösung für iFrames"
         two_click_iframe_solution_description: "Aktivieren Sie diese Option, um einen datenschutzkonformen Blur-Effekt für eingebettete Inhalte (z. B. Karten oder Videos) zu verwenden. Der Inhalt wird erst nach einem aktiven Klick durch die Nutzer geladen („Zwei-Klick-Lösung“). So stellen Sie sicher, dass keine Daten an Drittanbieter übertragen werden, bevor eine Zustimmung erfolgt ist."
       general:
+        language_switcher_in_menu: Sprachumschalter in der Navigation
+        language_switcher_in_menu_description: "Zeigt in der Navigationsleiste eine Auswahl aller verfügbaren Sprachen an. Ein Wechsel lädt die aktuelle Seite in der gewählten Sprache neu. Bei aktivem Google Translate wird der Sprachumschalter ausgeblendet."
         enable_google_translate: Google Translate aktivieren
         enable_google_translate_description: 'Bindet das Übersetzungs-Widget von Google Translate ein. Im Hauptmenü erscheint ein Sprach-Symbol, die eigene Sprachauswahl entfällt. Aktivieren Sie es für viele Sprachen und stimmen Sie zuvor den <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform" target="_blank" rel="noopener">Nutzungsbedingungen</a> zu.'
         show_guest_login_links: Zeige Gast-Login an
@@ -258,6 +297,13 @@ de:
       external_video: Externes Video einbinden
       external_video_description: >
         Ermöglicht es Nutzern, externe Videos von YouTube oder Vimeo in ihre Ideen einzubetten. So können z.B. Erklärvideos, Visualisierungen oder Anschauungsmaterial direkt in der Idee angezeigt werden, ohne dass große Dateien auf die Plattform hochgeladen werden müssen — und ohne zusätzlichen Speicherbedarf.
+    municipal_plans:
+      officers_see_all: Sichtbarkeit für die Sachbearbeitung
+      officers_see_all_description: >
+        Gibt der Sachbearbeitung im Verwaltungsbereich Leserechte auf alle Vorhaben, nicht nur auf die ihr zugeordneten. Bearbeiten, einreichen und archivieren kann sie weiterhin nur zugeordnete Vorhaben. Zusätzlich darf sie die Reihenfolge der Vorhabenliste ändern. Aktivieren Sie diese Funktion, wenn die Sachbearbeitung einen Überblick über alle Vorhaben braucht, auch außerhalb ihrer eigenen Zuständigkeit.
+      auto_archive: Vorhaben automatisch archivieren
+      auto_archive_description: >
+        Archiviert ein Vorhaben selbsttätig, sobald das an ihm hinterlegte Archivdatum erreicht ist. Im Frontend verschwindet es zu diesem Zeitpunkt aus der Übersicht und bleibt im Archivbereich unter derselben Adresse erreichbar. Aktivieren Sie diese Funktion, wenn Ihre Fachbereiche das Ende eines Vorhabens verlässlich im Voraus eintragen und Sie sich das manuelle Archivieren sparen wollen.
     deficiency_reports:
       feature_name: Bezeichnung des Bereichs
       feature_name_description: >
@@ -348,6 +394,9 @@ de:
       projekts: Projektübersicht
       projekts_description: >
         Aktiviert die Projektübersichtsseite, auf der alle laufenden und abgeschlossenen Beteiligungsprojekte für Bürger zugänglich sind. Die Übersicht bietet Filtermöglichkeiten und zeigt den aktuellen Stand jedes Projekts. Einzelne Projekte bleiben auch bei deaktivierter Übersicht über direkte Links erreichbar.
+      municipal_plans: Vorhabenliste
+      municipal_plans_description: >
+        Macht die Vorhabenliste öffentlich zugänglich: die Übersicht der veröffentlichten Vorhaben, das Archiv, die Detailseiten und das Hinweisformular. Ist die Einstellung deaktiviert, sind diese Seiten nicht erreichbar, und der Menüeintrag entfällt. Der Verwaltungsbereich der Vorhabenliste bleibt unabhängig davon nutzbar, sodass Vorhaben schon vor dem Start gepflegt werden können.
       deficiency_reports: Mängelmelder
       deficiency_reports_description: >
         Aktiviert den Mängelmelder, über den Bürger Schäden, Verschmutzungen oder andere Mängel im öffentlichen Raum melden können. Meldungen werden mit Standort, Kategorie und Beschreibung erfasst und können von Sachbearbeitern bearbeitet und beantwortet werden.
@@ -364,6 +413,13 @@ de:
         notice_active: "Hinweis aktiv"
         notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
       deficiency_reports:
+        intro_text: "Einleitungstext"
+        intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
+        notice_message: "Hinweismeldung"
+        notice_message_description: "Die Hinweismeldung wird als gelbe Infobox ganz oben auf der Startseite des Bereichs angezeigt. Nutzen Sie sie für aktuelle Informationen, Fristen oder Bearbeitungshinweise. Die Meldung kann pro Sitzung ausgeblendet werden."
+        notice_active: "Hinweis aktiv"
+        notice_active_description: "Steuert, ob die oben eingetragene Hinweismeldung auf der Startseite als gelbe Infobox angezeigt wird. Deaktivieren Sie diese Option, um die Meldung vorübergehend auszublenden, ohne den Text zu löschen."
+      municipal_plans:
         intro_text: "Einleitungstext"
         intro_text_description: "Dieser Text wird auf der Startseite dieses Verwaltungsbereichs als kurze Orientierung für Ihr Team angezeigt. Beschreiben Sie in wenigen Sätzen, wofür der Bereich zuständig ist (max. 350 Zeichen)."
         notice_message: "Hinweismeldung"

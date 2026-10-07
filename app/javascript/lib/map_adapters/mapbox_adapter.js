@@ -1,4 +1,5 @@
 import BaseAdapter from "./base_adapter"
+import { loadMapbox } from "../map_vendor_assets"
 import { getBrandColor, hexToRgba, MapPopup, numberOrDefault } from "./map_utils"
 
 /**
@@ -8,10 +9,6 @@ import { getBrandColor, hexToRgba, MapPopup, numberOrDefault } from "./map_utils
  * Scripts are loaded asynchronously on first use.
  */
 export default class MapboxAdapter extends BaseAdapter {
-  static scriptsLoaded = false
-  static scriptsLoading = false
-  static loadQueue = []
-
   // ===========================================================================
   // 1. INITIALIZATION & CONFIGURATION
   // ===========================================================================
@@ -64,60 +61,7 @@ export default class MapboxAdapter extends BaseAdapter {
    * Load Mapbox GL and all plugins asynchronously
    */
   loadScripts() {
-    return new Promise((resolve) => {
-      if (MapboxAdapter.scriptsLoaded) {
-        resolve()
-        return
-      }
-
-      MapboxAdapter.loadQueue.push(resolve)
-
-      if (MapboxAdapter.scriptsLoading) return
-
-      MapboxAdapter.scriptsLoading = true
-
-      const cssUrls = [
-        "https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css",
-        "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.css",
-        "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.3/mapbox-gl-geocoder.css"
-      ]
-
-      cssUrls.forEach(url => {
-        if (!document.querySelector(`link[href="${url}"]`)) {
-          const link = document.createElement("link")
-          link.rel = "stylesheet"
-          link.href = url
-          document.head.appendChild(link)
-        }
-      })
-
-      const jsUrls = [
-        "https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js",
-        "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.js",
-        "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.3/mapbox-gl-geocoder.min.js"
-      ]
-
-      const loadNext = (index) => {
-        if (index >= jsUrls.length) {
-          MapboxAdapter.scriptsLoaded = true
-          MapboxAdapter.loadQueue.forEach(cb => cb())
-          MapboxAdapter.loadQueue = []
-          return
-        }
-
-        const script = document.createElement("script")
-        script.src = jsUrls[index]
-        script.async = false
-        script.onload = () => loadNext(index + 1)
-        script.onerror = () => {
-          console.error(`Failed to load: ${jsUrls[index]}`)
-          loadNext(index + 1)
-        }
-        document.head.appendChild(script)
-      }
-
-      loadNext(0)
-    })
+    return loadMapbox()
   }
 
   // ===========================================================================

@@ -16,7 +16,7 @@ class ProjektManagement::SiteCustomization::PagesController < ProjektManagement:
   private
 
     def redirect_path
-      if @page.projekt.present? && @page.published? && params[:origin] == "public_page"
+      if @page.projekt.present? && params[:origin] == "public_page"
         page_path(@page.slug)
       elsif @page.projekt.present?
         polymorphic_path([@namespace, @page.projekt], action: :edit, anchor: "tab-projekt-page")

@@ -1,0 +1,44 @@
+<%= content_for :title, t("adm.projekts.imports.from_consul_projekts.new.title") %>
+
+<%= render Adm::HeaderComponent.new(
+      title: t("adm.projekts.imports.from_consul_projekts.new.title"),
+      breadcrumbs: @breadcrumbs,
+      back_button_url: adm_projekts_imports_path,
+      compact: true
+    ) do |header| %>
+  <% header.with_actions do %>
+    <%= kern_link_button adm_projekts_inspiration_path,
+          text: t("adm.projekts.imports.from_consul_projekts.new.browse_inspiration"),
+          icon: "travel_explore",
+          style: :secondary %>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-3">
+  <div class="projekt-import-source-page">
+    <p class="kern-body"><%= t("adm.projekts.imports.from_consul_projekts.new.intro") %></p>
+
+    <%= render Kern::FormFieldComponent.new(
+          label: t("adm.projekts.imports.from_consul_projekts.new.url_label"),
+          hint: t("adm.projekts.imports.from_consul_projekts.new.url_hint"),
+          stacked: true,
+          divider: false
+        ) do %>
+      <%= form_with(
+        url: adm_projekts_imports_from_consul_projekt_path,
+        method: :post,
+        class: "projekt-import-source-form"
+      ) do |f| %>
+        <%= f.url_field :source_url,
+          label: t("adm.projekts.imports.from_consul_projekts.new.url_field_label"),
+          placeholder: t("adm.projekts.imports.from_consul_projekts.new.url_placeholder") %>
+
+        <%= kern_button(
+          text: t("adm.projekts.imports.from_consul_projekts.new.action"),
+          icon: "move_down",
+          type: :submit
+        ) %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

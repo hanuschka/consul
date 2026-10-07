@@ -62,6 +62,7 @@
         openEffect: "fade",
         closeEffect: "fade",
         preload: false,
+        plyr: App.GlightboxPlyrOptions(),
         ...additionalParams
       });
 

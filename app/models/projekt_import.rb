@@ -5,6 +5,12 @@ class ProjektImport < ApplicationRecord
   has_one :ai_chat, as: :resource, dependent: :destroy
   has_many_attached :source_files
 
+  # The serialized projekt a Consul-projekt import was built from, fetched and
+  # format-checked before the review step so the copy at the end has nothing
+  # left that can fail on arrival. An attachment rather than a column: the list
+  # page loads whole rows, and a bundle carries every record of a projekt.
+  has_one_attached :source_bundle
+
   # The pictures found inside the source documents, extracted once during
   # analysis so the admin can look at them and choose a title image before the
   # projekt exists. Ordered by attachment id, which is the document order they
@@ -21,6 +27,15 @@ class ProjektImport < ApplicationRecord
     failed: "failed",
     abandoned: "abandoned"
   }
+
+  # Where the projekt being imported comes from. All three run the same record
+  # through the same states; they differ in how the material is gathered before
+  # the review step and in what the execute step builds from it.
+  enum source_kind: {
+    file: "file",
+    url: "url",
+    consul_projekt: "consul_projekt"
+  }, _prefix: :from
 
   enum image_status: {
     image_pending: "pending",
@@ -59,9 +74,25 @@ class ProjektImport < ApplicationRecord
   ANALYZING_STATUSES = %w[pending extracting processing].freeze
 
   FAILURE_STAGES = %w[
-    extract ai_processing resolve_content_blocks
-    create_projekt image_generation unknown
+    extract fetch_url extract_html fetch_bundle
+    ai_processing resolve_content_blocks
+    create_projekt copy_projekt image_generation unknown
   ].freeze
+
+  # The steps of the final import in the order the job runs them, reported to
+  # the chat's progress overlay. Only the steps a given import actually
+  # reaches are ever written, so a projekt without a generated title image
+  # never claims to be generating one.
+  SUBMIT_STAGES = %w[
+    creating_projekt resolving_content_blocks creating_content_blocks
+    generating_image copying_projekt
+  ].freeze
+
+  # The fields a Consul-projekt import lets the admin change before the copy
+  # runs. The bundle itself is not editable — the chat's edit tools only know
+  # the ai_result shape — so these are read off it into source_overlay and
+  # written back onto the copied projekt once it exists.
+  OVERLAY_FIELDS = %w[name starts_at ends_at phase_names].freeze
 
   ERROR_BACKTRACE_LINES = 15
 
@@ -70,6 +101,45 @@ class ProjektImport < ApplicationRecord
 
   def analyzing?
     status.in?(ANALYZING_STATUSES)
+  end
+
+  # Whether the material for this import is something the AI produced and the
+  # chat can therefore renegotiate. A copied Consul projekt is not: it arrives
+  # as a finished structure, so its review step is a plain form and it stays
+  # usable on an instance with the AI switched off.
+  def ai_negotiated?
+    !from_consul_projekt?
+  end
+
+  def review_step_path_key
+    ai_negotiated? ? :chat : :review
+  end
+
+  def overlay
+    (source_overlay.presence || {}).slice(*OVERLAY_FIELDS)
+  end
+
+  def apply_overlay!(attributes)
+    update!(source_overlay: overlay.merge(attributes.to_h.stringify_keys.slice(*OVERLAY_FIELDS)))
+  end
+
+  # A failure the admin can act on without supplying the source again: the
+  # files, the address or the fetched bundle are all still on the record.
+  def retryable?
+    return false if !failed?
+
+    from_file? ? source_files.attached? : source_url.present?
+  end
+
+  def reset_for_retry!
+    update!(
+      status: "pending",
+      error_message: nil,
+      failure_stage: nil,
+      submit_stage: nil,
+      error_details: {},
+      warnings: []
+    )
   end
 
   def stalled?
@@ -156,6 +226,17 @@ class ProjektImport < ApplicationRecord
 
   def mark_abandoned!
     update!(status: "abandoned")
+  end
+
+  def start_submit!(warnings)
+    update!(status: "submitting", submit_stage: nil, warnings: warnings)
+  end
+
+  def advance_submit_stage!(stage)
+    stage = stage.to_s
+    raise ArgumentError, "unknown submit stage #{stage}" if !SUBMIT_STAGES.include?(stage)
+
+    update!(submit_stage: stage)
   end
 
   def add_warning!(message, stage: SUBMIT_WARNING_STAGE)

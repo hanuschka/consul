@@ -139,6 +139,8 @@
 //= require custom
 //= require_tree ./custom
 //= require lib/files/filter_serializer
+//= require vendor_asset_urls
+//= require maps/mapbox_loader
 //= require_tree ./maps
 
 var initialize_modules = function() {
@@ -182,6 +184,7 @@ var initialize_modules = function() {
   App.Map.initialize();
   App.PollMapPoints.initialize();
   App.PollMapResults.initialize();
+  App.MunicipalPlansMap.initialize();
   App.Polls.initialize();
   App.Sortable.initialize();
   App.TableSortable.initialize();
@@ -245,6 +248,7 @@ var destroy_non_idempotent_modules = function() {
   App.HTMLEditor.destroy();
   App.LegislationAnnotatable.destroy();
   App.Map.destroy();
+  App.MunicipalPlansMap.destroy();
   App.SocialShare.destroy();
   App.StikyHeader.destroy();
   App.PollsCustom.destroy();
@@ -252,6 +256,7 @@ var destroy_non_idempotent_modules = function() {
   App.VoiceAssistantWidget.destroy();
   App.FocusTrap.resetInert();
   App.SharedModal.reset();
+  App.SimilarContributionsCheck.destroy();
 };
 
 

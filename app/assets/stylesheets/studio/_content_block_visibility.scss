@@ -1,0 +1,172 @@
+// Eye/calendar toolbar controls, the editor-only visibility hint and the
+// visibility period popup of content blocks
+// (App.Studio.ContentBlocks.Visibility).
+.custom-content-block-visibility-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+// Eye, calendar, copy and move get their own toolbar, shown just before the
+// main one in the shared toolbar row. It comes after the main toolbar in the
+// DOM, so lookups of the first .custom-content-block--toolbar still find the
+// main one. None of these controls apply while an edit mode is open.
+.custom-content-block-wrapper .custom-content-block--toolbar.-start {
+  order: -1;
+}
+
+.custom-content-block-wrapper:not([data-edit-mode=""]) .custom-content-block--toolbar.-start {
+  display: none;
+}
+
+// Same single-row cap as the main toolbar's groups (.custom-content-block-edit),
+// so both toolbars come out at the same height.
+.custom-content-block-start-controls {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 32px;
+  max-height: 32px;
+}
+
+.studio-icon-button.-visibility-off {
+  color: $dt-base;
+  background: $dt-base-light;
+
+  &:hover {
+    color: $dt-base;
+    background: $dt-base-light-hover;
+  }
+}
+
+// Blocks citizens can't see right now carry the hint as a label on their top
+// edge. It is an overlay, so the content never moves when the eye toggles.
+.content-block-visibility-hint {
+  position: absolute;
+  top: -14px;
+  left: 16px;
+  z-index: 3;
+
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 8px;
+  max-width: calc(100% - 32px);
+  padding: 2px 12px;
+
+  font-size: 0.875rem;
+  line-height: 1.5;
+
+  color: $dt-base;
+  background: $dt-base-light;
+  border: 1px solid $dt-base-light-hover;
+  border-radius: 14px;
+
+  &[hidden] {
+    display: none;
+  }
+
+  // A visible block has no frame to sit on, so its period label stays in
+  // the flow above the content.
+  &.-visible {
+    position: static;
+    display: flex;
+    width: fit-content;
+    margin-bottom: 12px;
+  }
+}
+
+.content-block-visibility-hint--icon {
+  flex-shrink: 0;
+}
+
+.content-block-visibility-hint--title {
+  font-weight: 500;
+}
+
+// Editors see blocks citizens can't see half-transparent; an open editor
+// brings the block back to full strength so its text stays readable.
+.custom-content-block-wrapper.-hidden-from-visitors:not(.-in-edit-mode) > .custom-content-block-wrapper--inner > .custom-content-block {
+  opacity: 0.5;
+}
+
+// Preview-as-user shows the page as citizens see it right now, so blocks they
+// can't see drop out of it entirely.
+body.-preview-mode .custom-content-block-wrapper.-hidden-from-visitors {
+  display: none;
+}
+
+// The <inline-popup> body of the period form, cloned into each calendar
+// button's popup. It renders in the top layer but still inherits from the
+// toolbar it sits in, hence the text-align and user-select resets.
+.content-block-visibility-period-popup {
+  --inline-popup-max-width: min(420px, calc(100vw - 24px));
+  width: 420px;
+
+  text-align: left;
+  user-select: text;
+}
+
+// The toolbar row only shows while its block is hovered or focused; the open
+// popup is a descendant of the row, so without this it would vanish the
+// moment the pointer leaves the block on its way into the form.
+.custom-content-block-wrapper--inner:has(.content-block-visibility-period-popup:popover-open) .custom-content-block--toolbar-row,
+.custom-content-block-wrapper--inner:has(.content-block-visibility-period-popup.-visible) .custom-content-block--toolbar-row {
+  display: flex;
+}
+
+.content-block-visibility-period-popup--actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.content-block-visibility-period-popup--clear {
+  margin-left: auto;
+}
+
+.content-block-visibility-period-popup--intro {
+  margin-bottom: 12px;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.content-block-visibility-period-popup--note {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: $dt-base-light;
+  color: $dt-base;
+  font-size: 14px;
+  line-height: 1.4;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.content-block-visibility-period-popup--fields {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  input {
+    width: 100%;
+    margin: 4px 0 0;
+    font-weight: normal;
+  }
+}
+
+.content-block-visibility-period-popup--error {
+  margin-bottom: 12px;
+  color: #b91c1c;
+  font-size: 14px;
+
+  &[hidden] {
+    display: none;
+  }
+}

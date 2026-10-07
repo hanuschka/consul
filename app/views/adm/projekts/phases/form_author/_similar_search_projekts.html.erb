@@ -1,0 +1,148 @@
+<% selectable_projekts = ::SimilarContributions::SelectableProjektsQuery.call(projekt_phase) %>
+<% ai_missing = !Ai::Settings.ai_available? %>
+<% nothing_selected = projekt_phase.published_similar_search_projekts.empty? %>
+<% recheck_running = projekt_phase.similar_search_recheck_processing? %>
+<% recheck_url = recheck_similar_contributions_adm_projekts_phase_path(projekt_phase) %>
+
+<%= turbo_frame_tag "form_author__similar_search_projekts" do %>
+  <div class="attribute-editor-component similar-search-projekts mb-2">
+    <div class="kern-title kern-title--small mb-3">
+      <%= t("adm.projekt_phases.form_author.similar_search_projekts.label") %>
+    </div>
+
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-9">
+        <p class="kern-body mb-4">
+          <%= t("adm.projekt_phases.form_author.similar_search_projekts.description") %>
+        </p>
+      </div>
+    </div>
+
+    <% if selectable_projekts.empty? %>
+      <p class="kern-body">
+        <%= t("adm.projekt_phases.form_author.similar_search_projekts.empty") %>
+      </p>
+    <% else %>
+      <%= form_with model: projekt_phase, url: adm_projekts_phase_path(projekt_phase), method: :patch do |f| %>
+        <div
+          class="similar-search-projekts--picker"
+          data-controller="adm--checkbox-filter"
+          data-action="change->adm--checkbox-filter#refreshSelected"
+        >
+          <div class="similar-search-projekts--toolbar">
+            <div class="similar-search-projekts--search">
+              <%= label_tag :similar_search_projekts_filter,
+                    t("adm.projekt_phases.form_author.similar_search_projekts.filter_label"),
+                    class: "kern-sr-only" %>
+              <%= search_field_tag :similar_search_projekts_filter, nil,
+                    class: "similar-search-projekts--search-input",
+                    autocomplete: "off",
+                    placeholder: t("adm.projekt_phases.form_author.similar_search_projekts.filter_placeholder"),
+                    data: {
+                      "adm--checkbox-filter-target": "input",
+                      action: "input->adm--checkbox-filter#filter"
+                    } %>
+            </div>
+
+            <p class="similar-search-projekts--selected">
+              <%= t("adm.projekt_phases.form_author.similar_search_projekts.selected_label") %>
+              <span class="similar-search-projekts--selected-count"
+                    data-adm--checkbox-filter-target="count">0</span>
+            </p>
+          </div>
+
+          <div class="similar-search-projekts--list">
+            <%= f.collection_check_boxes :similar_search_projekt_ids, selectable_projekts, :id,
+                  ->(projekt) { similar_search_projekt_label(projekt) } do |b| %>
+              <div
+                class="similar-search-projekts--item"
+                data-adm--checkbox-filter-target="item"
+                data-filter-text="<%= b.text %>"
+              >
+                <div class="kern-form-check">
+                  <%= b.check_box class: "kern-form-check__checkbox", disabled: ai_missing %>
+                  <%= b.label class: "kern-label" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <p
+            class="similar-search-projekts--no-matches kern-body"
+            data-adm--checkbox-filter-target="empty"
+            hidden
+          >
+            <%= t("adm.projekt_phases.form_author.similar_search_projekts.filter_no_matches") %>
+          </p>
+        </div>
+
+        <%= form_submit_button(disabled: ai_missing) %>
+      <% end %>
+
+      <div
+        class="similar-search-projekts--recheck"
+        data-controller="adm--phase-regenerate"
+        data-adm--phase-regenerate-status-url-value="<%= similar_contributions_recheck_status_adm_projekts_phase_path(projekt_phase) %>"
+        data-adm--phase-regenerate-confirm-value="<%= t('adm.projekt_phases.form_author.similar_search_projekts.recheck_confirm', count: ::SimilarContributions::PhaseContributionsQuery.call(projekt_phase).count) %>"
+      >
+        <div
+          class="similar-search-projekts--recheck-running"
+          data-adm--phase-regenerate-target="loading"
+          <%= "hidden" if !recheck_running %>
+        >
+          <span class="material-symbols-outlined adm-spinner" aria-hidden="true">progress_activity</span>
+          <p class="kern-body">
+            <%= t("adm.projekt_phases.form_author.similar_search_projekts.recheck_running") %>
+          </p>
+        </div>
+
+        <div
+          class="similar-search-projekts--recheck-content"
+          data-adm--phase-regenerate-target="content"
+          <%= "hidden" if recheck_running %>
+        >
+          <% if projekt_phase.similar_search_recheck_failed? %>
+            <p class="similar-search-projekts--recheck-failed kern-body">
+              <%= t("adm.projekt_phases.form_author.similar_search_projekts.recheck_failed") %>
+            </p>
+          <% end %>
+
+          <% if !ai_missing && !nothing_selected %>
+            <a
+              href="<%= recheck_url %>"
+              class="kern-btn kern-btn--secondary"
+              data-action="click->adm--phase-regenerate#start"
+              data-turbo-prefetch="false"
+            >
+              <span class="kern-label material-symbols-outlined" aria-hidden="true">sync</span>
+              <span class="kern-label">
+                <%= t("adm.projekt_phases.form_author.similar_search_projekts.recheck") %>
+              </span>
+            </a>
+          <% end %>
+
+          <p class="kern-body">
+            <%= t("adm.projekt_phases.form_author.similar_search_projekts.recheck_hint") %>
+          </p>
+
+          <% if projekt_phase.similar_search_recheck_finished_at.present? %>
+            <p class="similar-search-projekts--recheck-last kern-body">
+              <%= t("adm.projekt_phases.form_author.similar_search_projekts.recheck_last_run",
+                    time: l(projekt_phase.similar_search_recheck_finished_at, format: :long)) %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if ai_missing %>
+      <p class="attribute-editor-component--note kern-body mt-2"><%= t("adm.ai_required_note") %></p>
+    <% end %>
+  </div>
+
+  <div class="kern-row">
+    <div class="kern-col-12 kern-col-md-10">
+      <hr class="kern-divider mb-4" aria-hidden="true" />
+    </div>
+  </div>
+<% end %>

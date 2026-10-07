@@ -8,6 +8,8 @@ de:
           title: Antwortoption bearbeiten
         create:
           success: Antwort wurde erfolgreich erstellt.
+        update:
+          error: Der Antworttext kann nicht geändert werden, da bereits Stimmen abgegeben wurden.
         destroy:
           success: Antwort wurde erfolgreich gelöscht.
           error: Antworten können nicht gelöscht werden, da bereits Stimmen abgegeben wurden.

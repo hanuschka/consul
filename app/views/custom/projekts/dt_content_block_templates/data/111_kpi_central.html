@@ -1,0 +1,54 @@
+<!-- BlockID: E08 -->
+<!-- J2: KPI – Zentrale Hauptkennzahl + 3 unterstuetzende Kacheln -->
+<!-- Geeignet für: Eine dominante Zahl hervorheben + Kontext geben -->
+
+<div style="background: linear-gradient(160deg, #1a2e44 0%, #243b55 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+
+  <!-- Zentrale Hauptkennzahl -->
+  <div style="text-align: center; padding: 40px 24px; background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; margin-bottom: 20px;">
+    <div style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">Gesamtbudget Buergerbeteiligung 2025</div>
+    <div style="font-size: 56px; font-weight: 800; color: #ffffff; line-height: 1; margin-bottom: 10px; letter-spacing: -1px;">&euro; 1.200.000</div>
+    <div style="font-size: 14px; color: rgba(255,255,255,0.5);">Vom Stadtrat beschlossen &middot; Haushaltsjahr 2025</div>
+  </div>
+
+  <!-- Unterstuetzende Kacheln -->
+  <ul class="row" style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap;">
+
+    <li class="column small-12 medium-4" style="margin-bottom: 12px;">
+      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 18px 18px; display: flex; flex-wrap: wrap; align-items: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+        <div style="width: 40px; height: 40px; background: rgba(22,163,106,0.15); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-right: 14px; font-size: 14px; font-weight: 700; color: #4ade80;">&#10003;</div>
+        <div>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 2px;">Abgeschlossene Projekte</div>
+          <div style="font-size: 24px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">34</div>
+        </div>
+      </div>
+    </li>
+
+    <li class="column small-12 medium-4" style="margin-bottom: 12px;">
+      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 18px 18px; display: flex; flex-wrap: wrap; align-items: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+        <div style="width: 40px; height: 40px; background: rgba(23,121,186,0.15); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-right: 14px; font-size: 14px; font-weight: 700; color: var(--brand-color, #60a5fa);">&bull;</div>
+        <div>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 2px;">Aktive Beteiligungen</div>
+          <div style="font-size: 24px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">8</div>
+        </div>
+      </div>
+    </li>
+
+    <li class="column small-12 medium-4" style="margin-bottom: 12px;">
+      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 18px 18px; display: flex; flex-wrap: wrap; align-items: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
+        <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-right: 14px; font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.8);">&#9829;</div>
+        <div>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 2px;">Registrierte Buerger:innen</div>
+          <div style="font-size: 24px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">2.847</div>
+        </div>
+      </div>
+    </li>
+
+  </ul>
+</div>
+<script>
+document.querySelectorAll('.kpi-card').forEach(function(card){
+  card.addEventListener('mouseenter',function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.24)';});
+  card.addEventListener('mouseleave',function(){this.style.transform='translateY(0)';this.style.boxShadow='none';});
+});
+</script>

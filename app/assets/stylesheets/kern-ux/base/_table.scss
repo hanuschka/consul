@@ -62,7 +62,6 @@
   line-height: 1;
 }
 
-[data-controller="table-actions"] > [data-table-actions-target="button"],
 .round-icon-button {
   display: block;
   height: 38px;
@@ -80,13 +79,22 @@
     background-color: color-mix(in srgb, var(--kern-color-action-default), white 85%);
   }
 
+  &:active {
+    background-color: color-mix(in srgb, var(--kern-color-action-default), white 76%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--kern-color-action-default);
+    outline-offset: 2px;
+  }
+
   .material-symbols-outlined {
     font-size: 24px !important;
     color: var(--kern-color-action-default);
   }
 }
 
-[data-controller="table-actions"] > [data-table-actions-target="button"] {
+.kern-table__actions-toggle {
   .material-symbols-outlined {
     font-size: 28px !important;
   }
@@ -147,4 +155,39 @@
   border: none;
   border-top: 1px solid var(--kern-grey-100);
   margin-inline: 0.5rem;
+}
+
+
+// Keeps an icon-action row exactly as tall as a text row (24px line-height
+// + 14px/10px cell padding), so action cells never stretch the table.
+.kern-table__cell:has(.kern-table__inline-actions) {
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.kern-table__inline-action {
+  height: 34px;
+  width: 34px;
+
+  .material-symbols-outlined {
+    font-size: 21px !important;
+  }
+
+  &--delete {
+    .material-symbols-outlined {
+      color: var(--kern-color-feedback-danger);
+    }
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--kern-color-feedback-danger), white 90%);
+    }
+
+    &:active {
+      background-color: color-mix(in srgb, var(--kern-color-feedback-danger), white 84%);
+    }
+
+    &:focus-visible {
+      outline-color: var(--kern-color-feedback-danger);
+    }
+  }
 }

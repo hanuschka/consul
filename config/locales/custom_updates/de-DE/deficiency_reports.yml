@@ -28,9 +28,6 @@ de:
           placeholder: Bitte wählen
         documents:
           title: Dokumente hinzufügen
-        languages:
-          title: Sprachen
-          description: "Wählen Sie aus, in welcher Sprache/welchen Sprachen Ihre Diskussion stattfinden soll:"
         video:
           title: Video hinzufügen
           description: Gibt es Videos, die Ihre Argumentation und Sichtweise stützen? Dann fügen Sie diese über einen Link hinzu.
@@ -151,6 +148,7 @@ de:
         admin_actions:
           title: Admin
         submit_official_answer_button: Antwort speichern
+        officer_notification_title: "Benachrichtigung für Sachbearbeiter*in"
       feedback_form:
         new:
           already_submitted: Sie haben bereits eine Rückmeldung zu diesem Anliegen abgegeben.

@@ -71,6 +71,18 @@ en:
           votes_up_title: Highest voted
         proposal:
           by: by
+      info:
+        show_image: Show image
+        hide_image: Hide image
+      show:
+        support_card_title: Support
+        objection_card_title: Objection
+      dashboard:
+        show:
+          description: "Here you can get an overview of the support for your proposal. The notification feature and the option to start a poll on your proposal give you further tools for getting in touch with other citizens. You can also download material for advertising campaigns."
+          campaign_link: Campaign material
+        campaign:
+          title: Material for an advertising campaign for your proposal
       proposal:
         support: Support
         unsupport: Withdraw

@@ -103,7 +103,7 @@
 
         <% if current_user&.administrator? %>
           <%= render(Shared::SidebarCardComponent.new(
-            title: "Benachrichtigung für Sachbearbeiter*in",
+            title: t("custom.deficiency_reports.show.officer_notification_title"),
             icon_name: "envelope")) do |c| %>
             <%= render Admin::LivesubmitCheckbox::Component.new(
               url: notify_officer_about_new_comments_deficiency_report_path(@deficiency_report),

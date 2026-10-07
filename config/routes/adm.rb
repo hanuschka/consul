@@ -152,6 +152,8 @@ namespace :adm do
 
   resource :statistics, controller: "statistics", only: [:show]
   resource :matomo, controller: "matomo", only: [:show]
+  get "help(/:adm_section)", to: "help#show", as: :help,
+      constraints: { adm_section: /#{Adm::Section::NAMES.join("|")}/ }
   resource :apps, controller: "apps", only: [:show]
   resource :connection, controller: "connection", only: [:show]
   get "connect", to: "connection#show"

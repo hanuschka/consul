@@ -1,5 +1,8 @@
 de:
   setting:
+    handbook:
+      url: Adresse des Nutzerhandbuchs
+      url_description: "Legt die Adresse des Nutzerhandbuchs fest, das in allen Dashboards unter „Hilfe“ angezeigt wird. Im Verwaltungsbereich erscheint in jedem Menü ganz unten der Eintrag „Hilfe“, der den passenden Abschnitt des Handbuchs öffnet. Die Adresse ist voreingestellt. Lassen Sie das Feld leer, um den Eintrag auszublenden."
     proposals:
       email_on_official_answer: "E-Mail-Benachrichtigung bei offizieller Antwort (Vorschläge)"
       email_on_official_answer_description: "Versendet eine E-Mail an die einreichende Person, sobald zu ihrem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Die E-Mail enthält den Text der offiziellen Antwort sowie einen Link zum Vorschlag, auf der Vorschlagsseite selbst bleibt die Antwort wie bisher öffentlich sichtbar. Aktivieren Sie diese Einstellung, wenn Einreichende aktiv über die Rückmeldung der Verwaltung informiert werden sollen und nicht selbst auf die Plattform zurückkehren müssen."

@@ -33,7 +33,7 @@ de:
 
           Datenschutz: %{privacy_url}
       compliance:
-        disclosure: "👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet dir kein Mensch direkt."
+        disclosure: "👋 Ich bin ein KI-Bot für %{portal_name} — hier antwortet dir kein Mensch."
         opted_out: >-
           Verstanden, du erhältst keine Nachrichten mehr von uns. Schreib %{keyword},
           wenn du wieder Nachrichten erhalten möchtest.

@@ -29,10 +29,13 @@ module Adm
         flash.now[:error] = @record.errors.full_messages.to_sentence
       end
 
-      render turbo_stream: turbo_stream.replace(
-        helpers.dom_id(@record, params[:attribute]),
-        Adm::AttributeEditorComponent.new(@record, params[:attribute], params[:kind], **component_options)
-      )
+      render turbo_stream: [
+        turbo_stream.replace(
+          helpers.dom_id(@record, params[:attribute]),
+          Adm::AttributeEditorComponent.new(@record, params[:attribute], params[:kind], **component_options)
+        ),
+        @whatsapp_webhook_alert
+      ].compact
     end
 
     private
@@ -40,13 +43,28 @@ module Adm
       # Switching the bot on is the only moment we know both that WhatsApp should
       # be live and which host the admin is working on, so the webhook is pushed
       # to 360dialog from here rather than from a rake task or console.
+      #
+      # In the request rather than a job: a worker booted before the credentials
+      # existed skipped the job without a word, and 360dialog went on delivering
+      # without the header every delivery is then refused for. A failure is said
+      # on the page, to the admin who just switched the bot on.
       def register_whatsapp_webhook_if_enabled
         return if !@record.is_a?(::Setting)
         return if @record.key != "feature.whatsapp_bot"
         return if !@record.saved_change_to_value?
         return if @record.value.blank?
+        return if !::Whatsapp.configured?
 
-        ::Whatsapp::RegisterWebhookJob.perform_later(request.base_url)
+        response = ::Whatsapp::Platform::RegisterWebhookService.call(base_url: request.base_url)
+
+        return if response.success?
+
+        @whatsapp_webhook_alert = turbo_stream.append(
+          "flash-messages",
+          ::Kern::FlashComponent.new(
+            flash: { alert: t("adm.whatsapp.show.webhook_registration_failed", code: response.code) }
+          )
+        )
       end
 
       def attachment_kind?

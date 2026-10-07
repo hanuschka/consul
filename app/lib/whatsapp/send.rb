@@ -177,8 +177,9 @@ module Whatsapp::Send
     buttons(account: account, body: body, buttons: buttons)
   end
 
-  # The caption is recorded as the message body: the dialog history in /adm is
-  # read to find out what the bot said, and "image" alone answers nothing.
+  # The caption is recorded as the message body: Whatsapp::RecentDialogQuery
+  # reads it to tell the assistant what the bot said, and "image" alone answers
+  # nothing.
   def image(account:, image_url:, caption: nil)
     deliver_within_service_window(account: account, kind: "image", body: caption.to_s) do |messages|
       messages.send_image(to: account.wa_id, image_url: image_url, caption: caption)
@@ -273,7 +274,7 @@ module Whatsapp::Send
   end
 
   # The native location picker. Recorded as an interactive message like every
-  # other tappable one, so the dialog history in /adm reads in order.
+  # other tappable one, so the recent dialog the assistant reads stays in order.
   def location_request(account:, body:)
     fitting = within_interactive_body(account: account, body: body)
 
@@ -542,7 +543,7 @@ module Whatsapp::Send
   # Shown only on the turns that make the citizen wait: an LLM call, a draft, a
   # criteria evaluation. Deliberately not routed through `deliver` — this is not
   # a message, so it gets no whatsapp_messages row and never appears in the
-  # dialog history the admin pages read.
+  # recent dialog the assistant reads.
   #
   # Never raises. The bubble is cosmetic: someone who does not see it waits
   # exactly as long, whereas an exception here would cost them the reply itself.

@@ -76,6 +76,8 @@ class DeficiencyReportsController < ApplicationController
       end
 
       format.csv do
+        redirect_to deficiency_reports_path and return unless current_user&.administrator?
+
         formated_time = Time.current.strftime("%d-%m-%Y-%H-%M-%S")
         send_data CsvServices::DeficiencyReportsExporter.call(@deficiency_reports),
           filename: "deficiency_reports-#{formated_time}.csv"

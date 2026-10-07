@@ -222,6 +222,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
 
     def set_investment
       @investment = @projekt_phase.budget.investments.with_hidden.find(params[:id])
+      @investment.skip_marked_areas_check = true
     end
 
     def investment_params

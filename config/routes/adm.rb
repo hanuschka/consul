@@ -32,11 +32,11 @@ namespace :adm do
     get :templates
     get :qr_code
     get :reach
-    get :dialogs
     get :test_message
 
     # Named apart from the GET page above, which owns `test_message`.
     post :send_test_message
+    post :register_webhook
     post :create_template
     patch :use_template
     post :create_notification_template
@@ -45,10 +45,6 @@ namespace :adm do
     delete :delete_template
     # PDF QR poster disabled for now — see Adm::WhatsappController.
     # get :qr_poster
-
-    resources :dialogs, controller: "whatsapp_dialogs", only: [:show] do
-      post :reply, on: :member
-    end
   end
   resources :registered_addresses, only: [:index]
   resources :registered_address_streets, only: [] do

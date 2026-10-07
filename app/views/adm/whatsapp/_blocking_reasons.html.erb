@@ -1,0 +1,20 @@
+<%# Every reason the bot cannot answer citizens, listed together and on every
+    page: fixing the credentials alone used to leave a portal without AI
+    replying "I can't answer you right now" with nothing here saying why. %>
+<% if reasons.any? %>
+  <%= kern_alert(title: t("adm.whatsapp.blocking_reasons.title"), style: :danger) do %>
+    <p class="kern-body"><%= t("adm.whatsapp.blocking_reasons.intro") %></p>
+
+    <ul class="kern-list kern-list--bullet">
+      <% reasons.each do |reason| %>
+        <li>
+          <p class="kern-body">
+            <strong><%= t("adm.whatsapp.blocking_reasons.#{reason}.title") %></strong>
+            <%= whatsapp_blocking_reason_body(reason) %>
+          </p>
+          <%= whatsapp_blocking_reason_link(reason) %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>

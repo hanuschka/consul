@@ -21,12 +21,6 @@ class Adm::AiSettings::FormComponent < ApplicationComponent
       provider = Setting["ai.llm_provider"]
       return [] if provider.blank?
 
-      RubyLLM
-        .models
-        .refresh
-        .by_provider(provider.to_sym)
-        .chat_models
-        .sort_by { |model| model.created_at || Time.new(2000) }.reverse
-        .map { |model| [model.id, model.id] }
+      ::Ai::ModelRegistry.chat_model_ids(provider).map { |model_id| [model_id, model_id] }
     end
 end

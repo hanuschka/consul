@@ -126,6 +126,10 @@
           ]
         },
 
+        link: {
+          defaultProtocol: 'https://'
+        },
+
         extraPlugins: [
           function(editor) {
             editor.data.processor.originalToView =  editor.data.processor.toView;

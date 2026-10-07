@@ -132,6 +132,10 @@ export default class extends Controller {
         allow: [{ name: /.*/, attributes: true, classes: true, styles: true }]
       },
 
+      link: {
+        defaultProtocol: "https://"
+      },
+
     })
 
     editorPromise.then(editor => {

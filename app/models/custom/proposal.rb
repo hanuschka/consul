@@ -8,6 +8,7 @@ include MachineTranslatable
   include Memoable
   include ConditionallyVotable
   include SimilarContributionsCheckable
+  include MarkedAreasValidation
 
   VOTES_FOR_SUCCESS_KEY = "option.resource.votes_for_proposal_success".freeze
 

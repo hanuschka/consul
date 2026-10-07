@@ -1,8 +1,8 @@
-# The models each provider offers, as the five-hourly ai_models:refresh task last
-# saved them to the ruby_llm_models table. A refresh downloads the catalogue
-# and rewrites every row in one transaction, so it never runs in a request:
-# two admins opening the AI settings page at once raced each other into the
-# table's unique index on (provider, model_id).
+# The models each provider offers, as the scheduled ai_models:refresh task
+# last saved them to the ruby_llm_models table. A refresh downloads the
+# catalogue and saves it row by row in one transaction, so it never runs in a
+# request: two admins opening the AI settings page at once raced each other
+# into the table's unique index on (provider, model_id).
 module Ai::ModelRegistry
   # Read from the table on every call rather than through RubyLLM.models,
   # which each process loads once and would keep serving until a restart.

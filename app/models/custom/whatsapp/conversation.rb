@@ -157,8 +157,28 @@ class Whatsapp::Conversation < ApplicationRecord
     draft_resource&.image&.attachment&.attached? == true
   end
 
+  # Whether the picture question has been answered for this draft. Asked means
+  # the notices went out with the question (Whatsapp::ImageQuestion); a picture
+  # already attached, or a citizen who said up front they have none, has
+  # answered it. One predicate for the tool that refuses to publish before it
+  # and the preview that names it as the next step, so the button never says
+  # one thing while publishing does another.
+  def image_question_settled?
+    !image_question_pending? || image_notices_shown? || draft_picture_attached?
+  end
+
   def location_question_pending?
     location_question_available? && !location_stated?
+  end
+
+  # Whether the place is still to be asked for once the citizen has seen the
+  # draft. Not where a pin is attached or waiting, not where they declined one,
+  # and not where the picker has been opened once already: request_location
+  # refuses a second ask. A place read from the citizen's words is asked about
+  # in the preview's own question, so it is not a step after it.
+  def location_question_open?
+    location_question_pending? && !location_requested? && !location_declined? &&
+      shared_location.blank? && proposed_location.blank? && draft_resource&.map_location.blank?
   end
 
   # Everything the submission collected, dropped. The phase goes with it, so the
@@ -557,6 +577,18 @@ class Whatsapp::Conversation < ApplicationRecord
 
   def record_location_requested!
     merge_context!(location_requested: true)
+  end
+
+  # That this draft's citizen said in words they would rather go without a
+  # place, so the preview no longer leads to the picker. Held beside the
+  # request rather than in the settled slots for the same reason: a revised
+  # text is still the same draft, and the place was still declined.
+  def location_declined?
+    context["location_declined"] == true
+  end
+
+  def record_location_declined!
+    merge_context!(location_declined: true)
   end
 
   # That this draft's citizen has been shown both picture notices — the rights one

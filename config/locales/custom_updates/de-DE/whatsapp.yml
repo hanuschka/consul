@@ -506,6 +506,12 @@ de:
         # vorschlägt. Vom Werkzeug gesetzt, nicht vom Modell, damit es sie immer
         # gibt, wo es Zusätze gibt.
         remove_additions: Zusätze entfernen
+        # Der Weg weiter unter der Vorschau, solange der Entwurf noch eine Frage vor
+        # sich hat, benannt nach dieser Frage. Nie „einreichen“: Auf diesen Tipp
+        # hin wird nichts eingereicht.
+        draft_continue:
+          photo: Weiter zum Foto
+          location: Weiter zum Ort
         image_skip: Ohne Foto weiter
         # Die einzige Beschriftung, die das Modell nicht einmal anbieten darf: Die
         # Schaltfläche löst die Verknüpfung, und was das bedeutet, steht im Block

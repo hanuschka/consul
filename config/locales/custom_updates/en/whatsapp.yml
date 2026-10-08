@@ -407,6 +407,11 @@ en:
         # words. Set by the tool rather than by the model, so it is there wherever
         # there are additions.
         remove_additions: Remove additions
+        # The way on from a preview while the draft still has a question to come,
+        # named by that question. Never "submit": nothing goes in on this tap.
+        draft_continue:
+          photo: Continue to photo
+          location: Continue to location
       notifications:
         follow_up:
           deadline_approaching: You can still take part here until the deadline passes.

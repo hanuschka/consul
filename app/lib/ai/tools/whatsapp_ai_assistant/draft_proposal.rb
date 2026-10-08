@@ -139,7 +139,9 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
                       "them — say nothing about it. Where " \
                       "collects_picture is true, the picture is asked for after the preview " \
                       "and only with request_photo, which carries the notices that have to " \
-                      "come with it — publishing is refused until it has been.".freeze
+                      "come with it — publishing is refused until it has been. The preview's " \
+                      "first button goes on to it, to the place, or to publishing, and is " \
+                      "added for you.".freeze
 
     def draft_payload(resource)
       {

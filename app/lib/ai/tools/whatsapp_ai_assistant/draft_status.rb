@@ -133,6 +133,8 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
         attached_location_status
       elsif conversation.location_stated?
         "the citizen already named the place in words"
+      elsif conversation.location_declined?
+        "the citizen said they would rather go without one — do not ask"
       elsif conversation.location_requested?
         "already asked for once — do not ask again; go on without one"
       else

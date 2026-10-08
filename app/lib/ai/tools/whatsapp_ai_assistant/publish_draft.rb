@@ -57,12 +57,9 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     end
 
     # A phase that takes pictures asks for one before anything goes in, because
-    # nothing can be added to a published contribution from the chat. Asked means
-    # the notices went out with the question (Whatsapp::ImageQuestion); a picture
-    # already attached, or a citizen who said up front they have none, has
-    # answered it.
+    # nothing can be added to a published contribution from the chat.
     def refuse_without_image_question
-      return if image_question_settled?
+      return if conversation.image_question_settled?
 
       {
         error: "This phase takes a picture and the citizen has not been asked for one, so it " \
@@ -71,11 +68,6 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
               "come with it. Once they have answered, show them the contribution again with " \
               "show_draft_for_confirmation."
       }
-    end
-
-    def image_question_settled?
-      !conversation.image_question_pending? || conversation.image_notices_shown? ||
-        conversation.draft_picture_attached?
     end
 
     # The guarantee the retired step machine made structurally: it had two steps that
@@ -90,9 +82,9 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       {
         error: "The citizen has not been shown this draft and asked whether it should go in, so " \
                "it was not published.",
-        hint: "Show them the contribution with show_draft_for_confirmation, offering a button " \
-              "whose label says it submits. Call this again once they have answered that " \
-              "question."
+        hint: "Show them the contribution with show_draft_for_confirmation, which adds the " \
+              "button that submits once nothing is left to ask. Call this again once they have " \
+              "answered that question."
       }
     end
 

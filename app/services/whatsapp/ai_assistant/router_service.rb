@@ -405,17 +405,21 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       record_missed_actions
       record_skipped_preview
 
-      # Through the way-out send rather than text, and it is the one path that has to
-      # use it: this composes no buttons of its own, so without the pill the message
-      # would be an interactive one with nothing in it, which WhatsApp refuses
-      # outright. It is also honestly a dead end — the model answered in words and
-      # named no next step — which is what the pill is now for. The state pills of
-      # what the turn was about go on it all the same (Whatsapp::StatePills).
-      message = ::Whatsapp::Send.buttons_with_way_out(
-        account: @conversation.whatsapp_account,
-        body: body,
-        buttons: ::Whatsapp::StatePills.buttons(conversation: @conversation)
-      )
+      # Mid-question the reply is plain text: the question follows it with its own
+      # buttons, and a way-out or state pill under the words would be a second set.
+      # Otherwise it is honestly a dead end — the model answered in words and named no
+      # next step — so the way-out send carries the pill and the state pills of what
+      # the turn was about (Whatsapp::StatePills).
+      message =
+        if @conversation.mid_question?
+          ::Whatsapp::Send.text(account: @conversation.whatsapp_account, body: body)
+        else
+          ::Whatsapp::Send.buttons_with_way_out(
+            account: @conversation.whatsapp_account,
+            body: body,
+            buttons: ::Whatsapp::StatePills.buttons(conversation: @conversation)
+          )
+        end
 
       # A refused send is not an answer. Reported as its own failure so the
       # caller says so and offers the retry pill, and — because the failure

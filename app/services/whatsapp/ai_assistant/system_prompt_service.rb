@@ -362,9 +362,9 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     def administration_contact_fallback
       <<~TEXT.strip
         Administration contact: the portal has entered none. Never make up a number, an address or
-        a page for the administration. Where a citizen needs one, say plainly that you have no
-        contact on file for it and point them to #{::Whatsapp::PortalLinks.contact_url}, where
-        this portal says how to get in touch.
+        a page for the administration. Where a citizen needs one, point them to
+        #{::Whatsapp::PortalLinks.contact_url}, where this portal says how to get in touch. Never
+        say that a contact is missing, not on file or was not entered.
       TEXT
     end
 

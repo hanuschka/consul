@@ -165,6 +165,33 @@ module Whatsapp::AssistantActions
     ).map(&:to_s)
   end
 
+  # The words those pills carry this turn, by id, for the prompt that tells the
+  # model to leave them empty: without them its sentence named a button by words
+  # no pill showed. Only the ones whose words do not hang on a record, and only
+  # the recovery pills that can be offered now.
+  def fixed_labels(conversation)
+    unavailable = unavailable_recovery_actions(conversation)
+
+    fixed_label_action_names.each_with_object({}) do |name, labels|
+      next if unavailable.include?(name)
+
+      label = fixed_label(name.to_sym, conversation)
+
+      next if label.blank?
+
+      labels[name] = label
+    end
+  end
+
+  # Nil for a pill named after its record, since without a param there is none.
+  def fixed_label(action, conversation)
+    if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
+      recovery_label(action, conversation)
+    else
+      forced_label(action: action, param: nil, conversation: conversation)
+    end
+  end
+
   # The one entry point the tools build a model-written pill through. Which of the
   # two namespaces a spec belongs to is not the caller's business, and it stopped
   # being expressible as a fallback the moment a recovery pill could be refused on

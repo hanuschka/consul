@@ -205,7 +205,9 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         Address the citizen #{address_form_instruction}. The portal chose that form and every
         message it sends uses it, so never switch, not even when the citizen writes to you the
         other way. WhatsApp understands *bold* and _italic_ but no headings, tables or links in
-        brackets; write a URL out in full, and never write a date as digits with dots.
+        brackets; write a URL out in full, and never write a date as digits with dots. A count
+        of one is never written as the numeral in front of its noun: "einen öffentlichen
+        Beitrag", "one public contribution", never "1 öffentlichen Beitrag".
 
         How every reply is built, and this is the default rather than an option:
         - Lay the reply out on the screen. One that names more than one thing — the projekts that
@@ -269,8 +271,8 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           the rest behind one more tap rather than falling back to a plain list of names. The
           steps that recur all through a conversation — starting a proposal, changing the draft,
           taking or skipping a place, discarding or keeping what is open, starting over — carry
-          fixed labels written for you, so the same step reads the same every time; refer to
-          them by those words. Write
+          fixed labels written for you, so the same step reads the same every time; the
+          state below lists their words, and you refer to them by exactly those. Write
           every other label yourself, saying what it does rather than "Next", and count its
           characters:
           a button holds #{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} and a list row
@@ -375,13 +377,14 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       <<~TEXT.strip
         Dates: today is #{today}. Every date a tool gives you comes written out for you to copy
         word for word, next to a plain statement of how far off it is ("in 5 Tagen", "vor 3
-        Monaten"). Lead with that relative statement and give the written-out date after it,
-        and answer what was asked — how long is left, whether something has already passed,
-        whether a deadline is today. Never rewrite a date into digits: 13.08.2026 is rendered
-        as a phone number and offers to call it. For something that has already happened give
-        the age alone ("vor 5 Tagen") with no date beside it. A milestone dated in the future is
-        planned rather than done — never report a planned step as progress that has already been
-        made.
+        Monaten"). For something still ahead the written-out date alone is the answer — "läuft
+        bis 31. Dezember 2026", never "läuft noch in 2 Monaten, bis 31. Dezember 2026". Use how
+        far off it is only where that is what was asked: how long is left, whether something
+        has already passed, whether a deadline is today. Never rewrite a date into digits:
+        13.08.2026 is rendered as a phone number and offers to call it. For something that has
+        already happened give the age alone ("vor 5 Tagen") with no date beside it. A milestone
+        dated in the future is planned rather than done — never report a planned step as
+        progress that has already been made.
       TEXT
     end
 
@@ -418,6 +421,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         parked_submission_line,
         empty_draft_line,
         comment_invited_line,
+        fixed_labels_line,
         revision_line,
         picture_waiting_line,
         location_waiting_line,
@@ -451,6 +455,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Already said in this chat, oldest first. Refer back to it when it helps; never",
         "  answer these again unprompted — but a question the citizen asks again is answered",
         "  again, in full:",
+        "  Names in it, and in earlier messages of this chat, yours and theirs, are as they",
+        "  were when sent: a projekt, a phase or a vote may have been renamed since. Name one",
+        "  as the lines above or a tool result of this turn give it, and where only this",
+        "  transcript names it, look it up before naming it.",
         subject_boundary_rule,
         transcript.lines.map { |line| "  #{line.chomp}" }.join("\n")
       ].compact.join("\n")
@@ -665,6 +673,20 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "step here, and no button asks for it again"
     end
 
+    # The words on the pills the model is told to leave unlabelled, which never
+    # reach it otherwise (AssistantActions.fixed_labels): asked what to change,
+    # it explained "Abbrechen" above a pill reading "Änderung verwerfen".
+    def fixed_labels_line
+      labels = ::Whatsapp::AssistantActions.fixed_labels(@conversation)
+
+      return if labels.empty?
+
+      words = labels.map { |action, label| "#{action} \"#{label}\"" }.join(", ")
+
+      "- Buttons with fixed words, as they read right now: #{words}. Wherever you mention " \
+        "one of them, call it exactly that"
+    end
+
     # What the cancel button does while a change is open, which nothing else in the
     # state says: it brings back the version the citizen read rather than discarding.
     def revision_line
@@ -736,8 +758,8 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       )
 
       [
-        "- Ballot question in front of the citizen: \"#{question.title}\" " \
-        "(#{ballot_question_shape(question, asking)})",
+        "- Ballot question in front of the citizen: \"#{question.title}\" in the vote " \
+        "\"#{question.poll.name}\" (#{ballot_question_shape(question, asking)})",
         ballot_options_lines(question, asking),
         ballot_typed_answer_line(question),
         ballot_answers_line(question),

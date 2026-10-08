@@ -30,6 +30,12 @@
       <% @administration_contact_settings.each do |setting| %>
         <%= render Adm::AttributeEditorComponent.new(setting, :value, :string) %>
       <% end %>
+
+      <% if @contact_page_missing %>
+        <%= kern_alert(title: t("adm.whatsapp.show.contact_page_missing_title"), style: :warning) do %>
+          <p class="kern-body"><%= t("adm.whatsapp.show.contact_page_missing_body") %></p>
+        <% end %>
+      <% end %>
     </section>
   <% end %>
 

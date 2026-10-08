@@ -93,6 +93,8 @@ module Whatsapp::AssistantActions
     draft_publish: "whatsapp.bot.buttons.draft_publish",
     submit_final: "whatsapp.bot.buttons.draft_publish",
     submit_proposal: "whatsapp.bot.buttons.submit_proposal",
+    my_contributions: "whatsapp.bot.buttons.my_contributions",
+    discover: "whatsapp.bot.buttons.discover",
     draft_revise: "whatsapp.bot.buttons.draft_revise",
     submit_anyway: "whatsapp.bot.buttons.submit_anyway",
     location_share: "whatsapp.bot.buttons.location_share",
@@ -163,6 +165,33 @@ module Whatsapp::AssistantActions
         [:idea_start] +
         ::Whatsapp::Send::RECOVERY_ACTION_IDS.keys
     ).map(&:to_s)
+  end
+
+  # The words those pills carry this turn, by id, for the prompt that tells the
+  # model to leave them empty: without them its sentence named a button by words
+  # no pill showed. Only the ones whose words do not hang on a record, and only
+  # the recovery pills that can be offered now.
+  def fixed_labels(conversation)
+    unavailable = unavailable_recovery_actions(conversation)
+
+    fixed_label_action_names.each_with_object({}) do |name, labels|
+      next if unavailable.include?(name)
+
+      label = fixed_label(name.to_sym, conversation)
+
+      next if label.blank?
+
+      labels[name] = label
+    end
+  end
+
+  # Nil for a pill named after its record, since without a param there is none.
+  def fixed_label(action, conversation)
+    if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
+      recovery_label(action, conversation)
+    else
+      forced_label(action: action, param: nil, conversation: conversation)
+    end
   end
 
   # The one entry point the tools build a model-written pill through. Which of the
@@ -937,10 +966,15 @@ module Whatsapp::AssistantActions
   # The same reading for a caller that has the proposal in hand already
   # (Whatsapp::StatePills), so the vote is read one way wherever a support pill is
   # composed.
+  #
+  # No "Unterstützen" on the citizen's own proposal: the bot does not take an
+  # author's support for what they wrote. One they gave on the page before keeps
+  # its withdraw pill, which is why the author is asked after the vote.
   def support_direction(proposal, conversation)
     user = conversation.user
 
     return :support_withdraw if user.present? && proposal.voted_up_by?(user)
+    return if ::Whatsapp::ContributionFacts.written_by?(proposal, user)
     return if !supportable?(proposal)
 
     :support_register

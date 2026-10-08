@@ -5,7 +5,7 @@ describe Whatsapp::StatePills do
   # offered, read off the state: the support pill's direction off the vote, the
   # comment pill off whether a comment would be taken, the follow pill off the
   # subscription.
-  let(:user) { double(:user) }
+  let(:user) { double(:user, id: 1) }
   let(:conversation) { double(:conversation, user: user, comment_invited?: false) }
 
   around { |example| I18n.with_locale(:de) { example.run } }
@@ -21,7 +21,7 @@ describe Whatsapp::StatePills do
   end
 
   describe "for a proposal" do
-    let(:proposal) { double(:proposal, id: 482) }
+    let(:proposal) { double(:proposal, id: 482, author_id: 2) }
     let(:supported) { false }
     let(:comment_refusal) { nil }
 
@@ -77,6 +77,29 @@ describe Whatsapp::StatePills do
       )
     end
 
+    describe "that the citizen wrote" do
+      let(:proposal) { double(:proposal, id: 482, author_id: 1) }
+
+      it "leaves out Jetzt unterstützen" do
+        expect(Whatsapp::StatePills.buttons(conversation: conversation)).to eq(
+          [pill(:comment_start, 482, "Kommentieren")]
+        )
+      end
+
+      describe "and supported on the page before" do
+        let(:supported) { true }
+
+        it "keeps Zurücknehmen" do
+          expect(Whatsapp::StatePills.buttons(conversation: conversation)).to eq(
+            [
+              pill(:support_withdraw, 482, "Zurücknehmen"),
+              pill(:comment_start, 482, "Kommentieren")
+            ]
+          )
+        end
+      end
+    end
+
     it "offers nothing while the citizen has been asked to write their comment" do
       allow(conversation).to receive(:comment_invited?).and_return(true)
 
@@ -125,6 +148,20 @@ describe Whatsapp::StatePills do
       it "offers nothing, since following needs an account" do
         expect(Whatsapp::StatePills.buttons(conversation: conversation)).to eq([])
       end
+    end
+  end
+
+  describe "after a submission" do
+    before { Whatsapp::StatePills.focus_submission_completed }
+
+    it "comes with another idea, the citizen's own contributions and the projekts" do
+      expect(Whatsapp::StatePills.buttons(conversation: conversation)).to eq(
+        [
+          pill(:submit_proposal, nil, "Vorschlag erstellen"),
+          pill(:my_contributions, nil, "Meine Beiträge"),
+          pill(:discover, nil, "Projekte ansehen")
+        ]
+      )
     end
   end
 

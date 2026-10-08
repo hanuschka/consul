@@ -57,6 +57,14 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
                    "describe_projekt returned in this conversation."
   end
 
+  # Where the card gave way to the submission it would have offered
+  # (#open_wished_submission), the conversation is waiting for the idea.
+  def diagnostic_step
+    return if !@submission_opened
+
+    ::Whatsapp::Conversation::Step::AWAITING_IDEA
+  end
+
   def execute(projekt_name:, summary:)
     refusal = refuse_before_preview
 
@@ -70,7 +78,9 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     submission_actions = wished_submission_actions(all_actions)
 
     if submission_actions.one?
-      return open_wished_submission(submission_actions.first)
+      opened = open_wished_submission(submission_actions.first)
+
+      return opened if opened.present?
     end
 
     actions = submission_actions.presence || all_actions
@@ -111,21 +121,32 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
     # answered: a single "Vorschlag erstellen" row under the "Vorschlag erstellen"
     # they tapped to get here. The submission opens instead and the model asks for
     # the idea. Opened through StartDraft so that the unsaved-work, permission and
-    # consent refusals stay that tool's alone.
+    # consent refusals stay that tool's alone, and called the way the model calls
+    # it, so the decision log records it as its own tool result.
     #
-    # The wish is cleared here rather than left to start_draft!, which the
-    # unsaved-work refusal never reaches: a wish still standing would cut down the
-    # next card the citizen asks to see.
+    # Without the citizen's words: they picked a projekt with them, and StartDraft
+    # would park them as the idea held over an unsaved-work question.
+    #
+    # Nil for a phase the chat cannot take a submission into, which leaves the card
+    # to be sent with the wish still standing. Otherwise the wish is cleared here
+    # rather than left to start_draft!, which the unsaved-work refusal never
+    # reaches: a wish still standing would cut down the next card the citizen asks
+    # to see.
     def open_wished_submission(submission_action)
+      projekt_phase_id = ::Whatsapp::FlowActions.parse(submission_action[:id])[:param]
+
+      return if eligible_phase(projekt_phase_id).blank?
+
       conversation.clear_submission_wish!
 
-      projekt_phase_id = ::Whatsapp::FlowActions.parse(submission_action[:id])[:param]
       start_result =
         ::Ai::Tools::WhatsappAiAssistant::StartDraft
-          .new(conversation: conversation, citizen_words: citizen_words)
-          .execute(projekt_phase_id: projekt_phase_id)
+          .new(conversation: conversation, citizen_words: nil)
+          .call(projekt_phase_id: projekt_phase_id)
 
       return start_result if !start_result[:started]
+
+      @submission_opened = true
 
       start_result.merge(
         card_sent: false,

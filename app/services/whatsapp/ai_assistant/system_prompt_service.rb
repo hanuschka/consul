@@ -359,13 +359,24 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       }.compact.map { |label, value| "- #{label}: #{value}" }
     end
 
+    # Without a published contact page the portal's address is its home page, which
+    # says nothing about getting in touch, so it is named as what it is.
     def administration_contact_fallback
       <<~TEXT.strip
         Administration contact: the portal has entered none. Never make up a number, an address or
-        a page for the administration. Where a citizen needs one, point them to
-        #{::Whatsapp::PortalLinks.contact_url}, where this portal says how to get in touch. Never
+        a page for the administration. Where a citizen needs one, #{contact_page_pointer} Never
         say that a contact is missing, not on file or was not entered.
       TEXT
+    end
+
+    def contact_page_pointer
+      if ::Whatsapp::PortalLinks.published_page(:contact).present?
+        return "point them to #{::Whatsapp::PortalLinks.contact_url}, where this portal says " \
+               "how to get in touch."
+      end
+
+      "point them to the portal's website, #{::Whatsapp::PortalLinks.root_url}, and never " \
+        "claim it lists contact details."
     end
 
     # The model has no clock, and every answer it works from carries dates: a phase

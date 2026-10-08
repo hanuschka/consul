@@ -152,14 +152,27 @@ describe Whatsapp::StatePills do
   end
 
   describe "after a submission" do
-    before { Whatsapp::StatePills.focus_submission_completed }
+    let(:projekt_phase) { double(:projekt_phase, id: 7) }
+    let(:same_phase_pill) { pill(:idea_start, 7, "Vorschlag erstellen") }
 
-    it "comes with another idea, the citizen's own contributions and the projekts" do
+    before do
+      allow(ProjektPhase).to receive(:find_by).with(id: 7).and_return(projekt_phase)
+      allow(Whatsapp::Drafting::SubmissionAuthorService).to receive(:call).and_return(user)
+      allow(Whatsapp::Drafting::ResourceCreationValidationService).to receive(:call)
+        .with(projekt_phase: projekt_phase, user: user).and_return(nil)
+      allow(Whatsapp::AssistantActions).to receive(:offered_button)
+        .with(spec: "idea_start-7", label: nil, conversation: conversation)
+        .and_return(same_phase_pill)
+
+      Whatsapp::StatePills.focus_submission_completed(7)
+    end
+
+    it "comes with another idea in the same phase, the projekts and the citizen's own" do
       expect(Whatsapp::StatePills.buttons(conversation: conversation)).to eq(
         [
-          pill(:submit_proposal, nil, "Vorschlag erstellen"),
-          pill(:my_contributions, nil, "Meine Beiträge"),
-          pill(:discover, nil, "Projekte ansehen")
+          same_phase_pill,
+          pill(:discover, nil, "Projekte ansehen"),
+          pill(:my_contributions, nil, "Meine Beiträge")
         ]
       )
     end

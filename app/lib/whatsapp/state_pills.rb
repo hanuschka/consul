@@ -13,18 +13,19 @@ module Whatsapp::StatePills
   # Put ahead of the model's own pills, which fill the slots that are left: the
   # state pills are the ones the citizen has to be able to rely on finding.
   #
-  # A reply right after a submission carries what follows from it instead: another
-  # idea, their own contributions and the projekts. Left to the model, it suggested
-  # another idea in words while the slots went to the support and comment pills of
-  # the proposal just published — the citizen's own, which they cannot support.
-
-  # Every slot a message has, so the reply's pills are these three and no others.
-  SUBMISSION_COMPLETED_ACTIONS = %i[submit_proposal my_contributions discover].freeze
+  # A reply right after a submission carries what follows from it instead: the
+  # help message's starter pills (Whatsapp::HelpMessage::STARTER_ACTIONS), with
+  # "Vorschlag erstellen" pointed at the phase just submitted to wherever the
+  # citizen may submit there again. Left to the model, it suggested another idea in
+  # words while the slots went to the support and comment pills of the proposal
+  # just published — the citizen's own, which they cannot support.
 
   module_function
 
-  def focus_submission_completed
-    ::Current.whatsapp_pill_focus = { submission_completed: true }
+  def focus_submission_completed(projekt_phase_id)
+    ::Current.whatsapp_pill_focus = {
+      submission_completed: true, projekt_phase_id: projekt_phase_id
+    }
   end
 
   def focus_proposal(proposal_id)
@@ -48,7 +49,7 @@ module Whatsapp::StatePills
     return [] if conversation.comment_invited?
 
     if focus[:submission_completed]
-      return submission_completed_buttons(conversation)
+      return submission_completed_buttons(focus[:projekt_phase_id], conversation)
     end
 
     if focus[:proposal_id].present?
@@ -58,10 +59,36 @@ module Whatsapp::StatePills
     projekt_buttons(focus[:projekt_id], conversation)
   end
 
-  def submission_completed_buttons(conversation)
-    SUBMISSION_COMPLETED_ACTIONS.filter_map do |action|
+  def submission_completed_buttons(projekt_phase_id, conversation)
+    ::Whatsapp::HelpMessage::STARTER_ACTIONS.filter_map do |action|
+      if action == :submit_proposal
+        next same_phase_idea_button(projekt_phase_id, conversation) ||
+          pill(action: action, param: nil, conversation: conversation)
+      end
+
       pill(action: action, param: nil, conversation: conversation)
     end
+  end
+
+  # Only where the phase would take another submission from this citizen: one at
+  # their submission limit or closed since would answer the tap with a refusal.
+  # Built as a model-offered `idea_start` is, so it carries the card's words for
+  # the phase rather than the projekt's name.
+  def same_phase_idea_button(projekt_phase_id, conversation)
+    projekt_phase = ::ProjektPhase.find_by(id: projekt_phase_id)
+
+    return if projekt_phase.blank?
+
+    problem = ::Whatsapp::Drafting::ResourceCreationValidationService.call(
+      projekt_phase: projekt_phase,
+      user: ::Whatsapp::Drafting::SubmissionAuthorService.call(conversation: conversation)
+    )
+
+    return if problem.present?
+
+    ::Whatsapp::AssistantActions.offered_button(
+      spec: "idea_start-#{projekt_phase.id}", label: nil, conversation: conversation
+    )
   end
 
   def proposal_buttons(proposal_id, conversation)
@@ -122,6 +149,6 @@ module Whatsapp::StatePills
     { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
   end
 
-  private_class_method :submission_completed_buttons, :proposal_buttons, :support_button,
-    :comment_button, :projekt_buttons, :pill
+  private_class_method :submission_completed_buttons, :same_phase_idea_button,
+    :proposal_buttons, :support_button, :comment_button, :projekt_buttons, :pill
 end

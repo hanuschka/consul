@@ -446,7 +446,9 @@ module Adm
         @text_settings = TEXT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
         @administration_contact_settings =
           ADMINISTRATION_CONTACT_SETTING_KEYS.filter_map { |key| settings_by_key[key] }
-        @contact_page_missing = ::Whatsapp::PortalLinks.published_page(:contact).blank?
+        @contact_falls_back_to_home_page =
+          !::Whatsapp.administration_contact_entered? &&
+          ::Whatsapp::PortalLinks.published_page(:contact).blank?
         @auto_broadcast_setting = settings_by_key[AUTO_BROADCAST_SETTING_KEY]
         @model_tier_setting = model_tier_setting_from(settings_by_key)
         @model_tier_options = model_tier_options

@@ -250,10 +250,11 @@ en:
           When this is on, the platform sends the WhatsApp notification by itself as soon as a projekt
           is published — that is, activated and backed by a published projekt page. Projekts restricted
           to individual districts are skipped; for those the button on the projekt page remains available.
-        contact_page_missing_title: No contact page published
+        contact_page_missing_title: No way to get in touch entered
         contact_page_missing_body: >-
-          The bot points citizens to the portal's home page instead of a contact page. Publish a
-          contact page in the page settings so citizens can reach the administration.
+          With no contact details and no published contact page, the bot points citizens to the
+          portal's home page. Enter contact details above or publish a contact page in the page
+          settings.
         auto_broadcast_missing_template_title: Automatic sending has no effect
         auto_broadcast_missing_template_body: >-
           As long as no approved message template is active, nothing is sent even with the switch

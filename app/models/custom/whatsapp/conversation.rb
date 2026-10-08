@@ -806,6 +806,13 @@ class Whatsapp::Conversation < ApplicationRecord
     context["active_poll_id"]
   end
 
+  # A ballot question or a comment still being written is in front of the citizen,
+  # and its own buttons are the only ones that belong under it: a button leaving the
+  # ballot beside them reads as a second set to choose from.
+  def mid_question?
+    active_poll_id.present? || pending_comment.present?
+  end
+
   def store_active_poll!(poll_id)
     merge_context!(active_poll_id: poll_id)
   end

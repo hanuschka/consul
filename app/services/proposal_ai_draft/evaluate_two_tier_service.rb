@@ -11,6 +11,8 @@ class ProposalAiDraft::EvaluateTwoTierService < ApplicationService
   SCORE_MIN = 0
   SCORE_MAX = 25
 
+  FEATURE = "proposal_ai_draft.evaluate_two_tier".freeze
+
   # Both tiers ride one completion: the two stage services this replaces read
   # the same title and description twice, and the soft half was paid on every
   # draft and every revision round whenever the hard half passed — the common
@@ -57,7 +59,7 @@ class ProposalAiDraft::EvaluateTwoTierService < ApplicationService
 
       response =
         Ai::RubyLlmFactory
-          .chat_with_json_output(output_schema)
+          .chat_with_json_output(output_schema, feature: FEATURE)
           .with_instructions(build_system_instructions)
           .ask(build_user_prompt)
 

@@ -1,0 +1,15 @@
+<div class="adm-mitmachbox-box">
+  <canvas class="adm-mitmachbox-box__screen" width="800" height="480" aria-hidden="true" data-adm--mitmachbox-box-target="screen"></canvas>
+
+  <svg class="adm-mitmachbox-box__shell" viewBox="-122 -94.5 244 189" aria-hidden="true" focusable="false">
+    <path class="adm-mitmachbox-box__case" fill-rule="evenodd" d="M-110 -94.5H110A12 12 0 0 1 122 -82.5V82.5A12 12 0 0 1 110 94.5H-110A12 12 0 0 1 -122 82.5V-82.5A12 12 0 0 1 -110 -94.5Z M-100 -82.5H100A10 10 0 0 1 110 -72.5V72.5A10 10 0 0 1 100 82.5H-100A10 10 0 0 1 -110 72.5V-72.5A10 10 0 0 1 -100 -82.5Z" />
+    <path class="adm-mitmachbox-box__case-edge" d="M-100 -82.5H100A10 10 0 0 1 110 -72.5V72.5A10 10 0 0 1 100 82.5H-100A10 10 0 0 1 -110 72.5V-72.5A10 10 0 0 1 -100 -82.5Z" />
+    <path class="adm-mitmachbox-box__frame" fill-rule="evenodd" d="M-100 -82.5H100A10 10 0 0 1 110 -72.5V72.5A10 10 0 0 1 100 82.5H-100A10 10 0 0 1 -110 72.5V-72.5A10 10 0 0 1 -100 -82.5Z M-84 -59.1H63.2A6 6 0 0 1 69.2 -53.1V29.8A6 6 0 0 1 63.2 35.8H-84A6 6 0 0 1 -90 29.8V-53.1A6 6 0 0 1 -84 -59.1Z" />
+    <path class="adm-mitmachbox-box__frame-edge" d="M-84 -59.1H63.2A6 6 0 0 1 69.2 -53.1V29.8A6 6 0 0 1 63.2 35.8H-84A6 6 0 0 1 -90 29.8V-53.1A6 6 0 0 1 -84 -59.1Z" />
+    <% [[-80.15, 58.39], [-45.15, 58.39], [-10.15, 58.39], [24.85, 58.39], [59.85, 58.39], [91.9, -17.25]].each do |x, y| %>
+      <circle class="adm-mitmachbox-box__collar" cx="<%= x %>" cy="<%= y %>" r="9.9" />
+    <% end %>
+  </svg>
+
+  <%= yield %>
+</div>

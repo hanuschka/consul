@@ -24,11 +24,13 @@ class Mitmachbox::TestRun
   end
 
   def step
-    questions.index(current_question).to_i + 1
+    @step ||= @path.reached_question_ids(answers).index(current_question&.dig("id")).to_i + 1
   end
 
   def total
-    questions.size
+    return @total if defined?(@total)
+
+    @total = (@path.progress_total(current_question["id"], step, drafted_answers) if current_question)
   end
 
   def previous_answers
@@ -36,6 +38,12 @@ class Mitmachbox::TestRun
   end
 
   private
+
+    def drafted_answers
+      previous_answers.flat_map do |question_id, option_ids|
+        Array(option_ids).map { |option_id| [question_id, option_id] }
+      end
+    end
 
     def next_question_id
       reached = @path.reached_question_ids(answers)

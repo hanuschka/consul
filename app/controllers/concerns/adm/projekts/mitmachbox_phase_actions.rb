@@ -13,8 +13,8 @@ module Adm::Projekts::MitmachboxPhaseActions
 
     begin
       @survey = mitmachbox_client.surveys.find(@projekt_phase.mitmachbox_survey_id)
-      version_ref = @survey["draft_version"] || @survey["current_version"]
-      @version_detail = version_ref && mitmachbox_client.versions.find(@survey["id"], version_ref["id"])
+      @draft_detail = find_version_detail(@survey["draft_version"])
+      @current_detail = find_version_detail(@survey["current_version"])
     rescue Mitmachbox::NotFoundError
       @survey_lost = true
     rescue Mitmachbox::Error => e
@@ -142,6 +142,10 @@ module Adm::Projekts::MitmachboxPhaseActions
   end
 
   private
+
+    def find_version_detail(version_ref)
+      version_ref && mitmachbox_client.versions.find(@survey["id"], version_ref["id"])
+    end
 
     def test_run_answers
       answers = params[:answers]

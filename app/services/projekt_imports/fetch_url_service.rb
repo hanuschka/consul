@@ -109,10 +109,9 @@ class ProjektImports::FetchUrlService < ApplicationService
     end
 
     def private_address?(address)
-      ip = IPAddr.new(address)
+      ip = IPAddr.new(address).native
 
       ip.loopback? || ip.private? || ip.link_local? ||
-        (ip.ipv6? && ip.ipv6_unique_local?) ||
         UNSPECIFIED_RANGES.any? { |range| range.include?(ip) }
     rescue IPAddr::InvalidAddressError
       true

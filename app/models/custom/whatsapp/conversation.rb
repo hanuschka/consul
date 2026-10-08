@@ -26,15 +26,15 @@ class Whatsapp::Conversation < ApplicationRecord
   # order of the conversation, and what it does next follows from the tools it is
   # given and the state it is told. What the column still answers is "what was
   # this conversation doing when it broke", which is the only cheap answer to
-  # that question — and it is what the /adm dialog view renders and what every
+  # that question — and it is what the /adm reach page counts and what every
   # log line already written says. It is stamped from the last tool that ran (see
   # Ai::Tools::WhatsappAiAssistant::BaseTool#diagnostic_step).
   #
   # Kept as an enum so a value nothing translates cannot be persisted, and every
   # value stays declared even where no tool stamps one any more: rows written by
-  # the scripted flow still hold them, /adm looks each one up under
-  # adm.whatsapp.steps, and the dialog filter offers the whole map. Retiring a
-  # value would break the reading of conversations that already happened.
+  # the scripted flow still hold them, and /adm looks each one up under
+  # adm.whatsapp.steps. Retiring a value would break the reading of
+  # conversations that already happened.
   module Step
     IDLE = "idle".freeze
     AWAITING_LINK = "awaiting_link".freeze
@@ -481,6 +481,10 @@ class Whatsapp::Conversation < ApplicationRecord
   # list. It outlives the discard and the publishing, which both rebuild the
   # context (#retained_context); a new submission takes it with the rest, having
   # either taken it up or moved past it, and so does going back to the beginning.
+  #
+  # Parked again for the same phase without words — the tap on the card's pill,
+  # then start_draft for that tap — it keeps the words it already holds: the
+  # second time is the same request, not a request with nothing said.
   def parked_projekt_phase
     projekt_phase_id = context.dig("parked_submission", "projekt_phase_id")
 
@@ -494,10 +498,13 @@ class Whatsapp::Conversation < ApplicationRecord
   end
 
   def park_submission!(projekt_phase:, text:)
+    same_phase = context.dig("parked_submission", "projekt_phase_id") == projekt_phase.id
+    kept_text = same_phase ? parked_submission_text : nil
+
     merge_context!(
       parked_submission: {
         "projekt_phase_id" => projekt_phase.id,
-        "text" => text.to_s.strip.presence
+        "text" => text.to_s.strip.presence || kept_text
       }
     )
   end

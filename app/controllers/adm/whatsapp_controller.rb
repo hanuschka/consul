@@ -32,9 +32,6 @@ module Adm
       whatsapp.broadcast_template_language
     ].freeze
 
-    DIALOGS_PER_PAGE = 20
-    DIALOGS_FRAME_ID = "whatsapp_dialogs".freeze
-
     TEMPLATES_TAB = "templates".freeze
     DEFAULT_TEMPLATE_NAME = "neues_projekt".freeze
 
@@ -90,15 +87,6 @@ module Adm
       load_reach_stats
     end
 
-    # The only page whose own controls re-request it: filtering and paginating
-    # happen inside the turbo-frame, which renders the list alone.
-    def dialogs
-      return render_dialogs_frame if dialogs_frame_request?
-
-      load_page_chrome
-      load_dialogs
-    end
-
     # The test message now lives as a section of the connection page, next to
     # the webhook status: one asks whether Meta can reach this installation,
     # the other whether it actually delivers. The route stays so a bookmark
@@ -117,6 +105,23 @@ module Adm
         )
 
       render json: result
+    end
+
+    # The fix the webhook alert offers when 360dialog holds another address or
+    # header than this installation expects. It used to tell the admin to switch
+    # the bot off and on, which re-registered as a side effect.
+    def register_webhook
+      return head :forbidden if !@configured
+
+      response = ::Whatsapp::Platform::RegisterWebhookService.call(base_url: request.base_url)
+
+      if response.success?
+        flash[:success] = t("adm.whatsapp.show.webhook_registered")
+      else
+        flash[:error] = t("adm.whatsapp.show.webhook_registration_failed", code: response.code)
+      end
+
+      redirect_to connection_adm_whatsapp_path
     end
 
     # def qr_poster
@@ -398,23 +403,12 @@ module Adm
         @configured = ::Whatsapp.configured?
       end
 
-      # Filtering and pagination happen inside the dialogs turbo-frame, so those
-      # requests render the list alone — skipping the six other tab panels and
-      # the 360dialog round-trip the connection page makes.
-      def dialogs_frame_request?
-        @configured && turbo_frame_request_id == DIALOGS_FRAME_ID
-      end
-
-      def render_dialogs_frame
-        load_dialogs
-
-        render partial: "adm/whatsapp/dialogs_frame", layout: false
-      end
-
       # Everything every page needs and nothing any single one does: the tab
-      # strip reads @active_tab, the header reads @breadcrumbs.
+      # strip reads @active_tab, the header reads @breadcrumbs, the alert under
+      # the tabs reads @blocking_reasons.
       def load_page_chrome
         @active_tab = action_name
+        @blocking_reasons = ::Whatsapp.blocking_reasons
         @breadcrumbs = [
           { name: t("adm.menu.items.application"), icon: "desktop_windows" },
           { name: t("adm.whatsapp.show.title") }
@@ -549,50 +543,6 @@ module Adm
       def load_reach_stats
         @reach_stats = ::Whatsapp::Platform::ReachStatsService.call
         @reach_tiles = ::Whatsapp::Platform::ReachTilesService.call(@reach_stats)
-      end
-
-      def load_dialogs
-        @dialogs_present = ::Whatsapp::Account.exists?
-        scope = ::Whatsapp::Account.includes(:user, :whatsapp_conversation)
-
-        @pagy, @dialogs = pagy(
-          ::Adm::Whatsapp::DialogsQuery.call(scope, params),
-          limit: DIALOGS_PER_PAGE
-        )
-
-        @dialog_message_counts = dialog_message_counts
-        @dialog_last_messages = dialog_last_messages
-
-        assign_dialog_filter_options
-      end
-
-      def assign_dialog_filter_options
-        @dialog_state_options = ::Whatsapp::Account.states.keys.map do |state|
-          [t("adm.whatsapp.dialogs.states.#{state}"), state]
-        end
-
-        @dialog_step_options = ::Whatsapp::Conversation.steps.keys.excluding("idle").map do |step|
-          [t("adm.whatsapp.steps.#{step}"), step]
-        end
-
-        @dialog_activity_options = ::Adm::Whatsapp::DialogsQuery::ACTIVITY_OPTIONS.map do |option|
-          [t("adm.whatsapp.dialogs.activity_options.#{option}"), option]
-        end
-      end
-
-      def dialog_message_counts
-        ::Whatsapp::Message
-          .where(whatsapp_account_id: @dialogs.map(&:id))
-          .group(:whatsapp_account_id)
-          .count
-      end
-
-      def dialog_last_messages
-        ::Whatsapp::Message
-          .where(whatsapp_account_id: @dialogs.map(&:id))
-          .select("DISTINCT ON (whatsapp_account_id) whatsapp_messages.*")
-          .order(:whatsapp_account_id, created_at: :desc)
-          .index_by(&:whatsapp_account_id)
       end
   end
 end

@@ -129,6 +129,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     disclose_ai
 
     track_submission_wish
+    park_tapped_submission
 
     return if handle_cancel_tap
     return if handle_help_request
@@ -1106,6 +1107,36 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       return if action != :submit_proposal
 
       conversation.record_submission_wish!
+    end
+
+    # The same for a phase picked from a card or a list while a draft or a comment
+    # is still open: the pick is held over the question whether to discard that one
+    # (Whatsapp::Conversation#parked_projekt_phase). Left to the assistant, it was
+    # held only where start_draft was called for the pick before the question was
+    # asked, and the reply to the discard offered the projekt all over again.
+    #
+    # Not the phase of the draft that is open: tapped there, the card is as likely
+    # the way back to that draft as a wish for another one.
+    def park_tapped_submission
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+
+      if flow_action&.fetch(:action) != :idea_start
+        return
+      end
+
+      return if !conversation.unsaved_work?
+
+      projekt_phase = ::ProjektPhase.find_by(id: flow_action[:param].to_i)
+
+      if !::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+        return
+      end
+
+      if conversation.unsaved_submission? && projekt_phase.id == conversation.projekt_phase_id
+        return
+      end
+
+      conversation.park_submission!(projekt_phase: projekt_phase, text: nil)
     end
 
     # The projekt card's last row, which opens every vote of its projekt. Answered

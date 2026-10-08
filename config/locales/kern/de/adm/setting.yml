@@ -1,5 +1,8 @@
 de:
   setting:
+    handbook:
+      url: Adresse des Nutzerhandbuchs
+      url_description: "Legt die Adresse des Nutzerhandbuchs fest, das in allen Dashboards unter „Hilfe“ angezeigt wird. Im Verwaltungsbereich erscheint in jedem Menü ganz unten der Eintrag „Hilfe“, der den passenden Abschnitt des Handbuchs öffnet. Die Adresse ist voreingestellt. Lassen Sie das Feld leer, um den Eintrag auszublenden."
     proposals:
       email_on_official_answer: "E-Mail-Benachrichtigung bei offizieller Antwort (Vorschläge)"
       email_on_official_answer_description: "Versendet eine E-Mail an die einreichende Person, sobald zu ihrem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Die E-Mail enthält den Text der offiziellen Antwort sowie einen Link zum Vorschlag, auf der Vorschlagsseite selbst bleibt die Antwort wie bisher öffentlich sichtbar. Aktivieren Sie diese Einstellung, wenn Einreichende aktiv über die Rückmeldung der Verwaltung informiert werden sollen und nicht selbst auf die Plattform zurückkehren müssen."
@@ -41,7 +44,7 @@ de:
       transcription_model: "Modell für Sprachnachrichten"
       transcription_model_description: "Wandelt eingehende Sprachnachrichten in Text um, bevor der Bot sie verarbeitet. Bürgerinnen und Bürger senden sie häufig, und jede kostet einen Aufruf. Leer bedeutet gpt-4o-mini-transcribe, das günstigste Modell, das Deutsch zuverlässig verarbeitet. Ändern Sie den Wert nur, wenn ein anderes Modell nachweislich besser transkribiert."
       message_retention_days: "Aufbewahrung der Nachrichten in Tagen"
-      message_retention_days_description: "Nachrichten, die älter sind als diese Frist, werden nächtlich um 3:15 Uhr gelöscht. Das ist eine datenschutzrechtliche Pflicht und keine Frage der Ordnung. Tragen Sie eine ganze Zahl größer als Null ein; leer, Null oder eine Eingabe, die keine Zahl ist, bedeutet neunzig Tage. Verkürzen Sie die Frist, wenn Ihr Löschkonzept das verlangt — die Liste auf der Seite Dialoge dünnt sich entsprechend aus."
+      message_retention_days_description: "Nachrichten, die älter sind als diese Frist, werden nächtlich um 3:15 Uhr gelöscht. Das ist eine datenschutzrechtliche Pflicht und keine Frage der Ordnung. Tragen Sie eine ganze Zahl größer als Null ein; leer, Null oder eine Eingabe, die keine Zahl ist, bedeutet neunzig Tage. Verkürzen Sie die Frist, wenn Ihr Löschkonzept das verlangt."
       max_voice_megabytes: "Größengrenze für Sprachnachrichten in MB"
       max_voice_megabytes_description: "Wird geprüft, bevor eine Sprachnachricht von WhatsApp heruntergeladen wird. Ein höherer Wert erlaubt längere Nachrichten; ein zu niedriger lässt sie scheitern, ohne dass der Grund sichtbar wird — die Person erhält lediglich die Bitte, ihre Idee als Text zu schreiben. Leer, Null oder keine Zahl bedeutet 16."
       administration_contact_phone: "Telefonnummer der Verwaltung"

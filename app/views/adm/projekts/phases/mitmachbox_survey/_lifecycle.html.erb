@@ -1,54 +1,53 @@
 <% state = @survey["state"].to_s %>
-<% badge_variants = Hash.new("").merge("draft" => "kern-badge--info", "open" => "kern-badge--success", "closed" => "kern-badge--warning") %>
 <% open_disabled = @survey["current_version_id"].nil? %>
+<% badge_variants = { "open" => "kern-badge--success", "closed" => "kern-badge--warning", "draft" => "kern-badge--info" } %>
+<% badge_icons = { "open" => "radio_button_checked", "closed" => "pause_circle", "draft" => "radio_button_unchecked", "archived" => "inventory_2" } %>
 
-<div class="d-flex flex-wrap align-items-center gap-3 mb-2">
-  <h3 class="kern-title kern-title--small mb-0"><%= @survey["title"] %></h3>
-  <span class="kern-badge <%= badge_variants[state] %>">
-    <%= t("adm.projekts.mitmachbox.survey.states.#{state}") %>
-  </span>
-</div>
+<section>
+  <%= render "adm/projekts/phases/mitmachbox_survey/section_header",
+        title: t("adm.projekts.phases.mitmachbox_survey.survey_section_title"),
+        pill_text: t("adm.projekts.phases.mitmachbox_survey.survey_scope_pill"),
+        pill_icon: "sensors",
+        pill_variant: "kern-badge--warning" %>
 
-<p class="kern-body kern-body--small mb-4">
-  <%= t("adm.projekts.phases.mitmachbox_survey.responses_total", count: @survey["responses_count"]) %>
-</p>
+  <%= render layout: "adm/projekts/phases/mitmachbox_survey/setting_row",
+        locals: { title: t("adm.projekts.phases.mitmachbox_survey.status_row_title"),
+                  text: t("adm.projekts.phases.mitmachbox_survey.status_row_text") } do %>
+    <div class="d-flex flex-column align-items-start gap-2">
+      <span class="kern-badge <%= badge_variants[state] %>">
+        <span class="material-symbols-outlined" aria-hidden="true"><%= badge_icons[state] %></span>
+        <span class="kern-label"><%= t("adm.projekts.phases.mitmachbox_survey.status_badges.#{state}") %></span>
+      </span>
 
-<div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-  <% if state.in?(%w[draft closed]) %>
-    <%= form_with url: mitmachbox_survey_state_adm_projekts_phase_path(@projekt_phase, state: "open"),
-          method: :patch,
-          data: { turbo_confirm: t("adm.projekts.phases.mitmachbox_survey.open_confirm") } do %>
-      <%= kern_button type: :submit,
-            text: t("adm.projekts.phases.mitmachbox_survey.#{state == "closed" ? "reopen_button" : "open_button"}"),
-            icon: "play_arrow",
-            disabled: open_disabled %>
-    <% end %>
+      <p class="kern-body kern-body--small text-muted mb-0">
+        <%= t("adm.projekts.phases.mitmachbox_survey.responses_total", count: @survey["responses_count"]) %>
+      </p>
+
+      <% if state == "open" %>
+        <%= form_with url: mitmachbox_survey_state_adm_projekts_phase_path(@projekt_phase, state: "closed"),
+              method: :patch,
+              data: { turbo_confirm: t("adm.projekts.phases.mitmachbox_survey.close_confirm") } do %>
+          <%= kern_button type: :submit,
+                text: t("adm.projekts.phases.mitmachbox_survey.close_button"),
+                icon: "stop_circle" %>
+        <% end %>
+      <% elsif state.in?(%w[draft closed]) %>
+        <% reopen = state == "closed" %>
+        <%= form_with url: mitmachbox_survey_state_adm_projekts_phase_path(@projekt_phase, state: "open"),
+              method: :patch,
+              data: { turbo_confirm: t("adm.projekts.phases.mitmachbox_survey.#{reopen ? "reopen_confirm" : "open_confirm"}") } do %>
+          <%= kern_button type: :submit,
+                text: t("adm.projekts.phases.mitmachbox_survey.#{reopen ? "reopen_button" : "open_button"}"),
+                icon: "play_circle",
+                disabled: open_disabled %>
+        <% end %>
+
+        <% if open_disabled %>
+          <p class="kern-body kern-body--small mb-0">
+            <%= t("adm.projekts.phases.mitmachbox_survey.open_requires_published_hint") %>
+          </p>
+        <% end %>
+      <% end %>
+    </div>
   <% end %>
-
-  <% if state == "open" %>
-    <%= form_with url: mitmachbox_survey_state_adm_projekts_phase_path(@projekt_phase, state: "closed"),
-          method: :patch,
-          data: { turbo_confirm: t("adm.projekts.phases.mitmachbox_survey.close_confirm") } do %>
-      <%= kern_button type: :submit,
-            text: t("adm.projekts.phases.mitmachbox_survey.close_button"),
-            icon: "stop_circle" %>
-    <% end %>
-  <% end %>
-
-  <% if state != "archived" %>
-    <%= form_with url: mitmachbox_survey_state_adm_projekts_phase_path(@projekt_phase, state: "archived"),
-          method: :patch,
-          data: { turbo_confirm: t("adm.projekts.phases.mitmachbox_survey.archive_confirm") } do %>
-      <%= kern_button type: :submit,
-            text: t("adm.projekts.phases.mitmachbox_survey.archive_button"),
-            icon: "archive",
-            style: :secondary %>
-    <% end %>
-  <% end %>
-</div>
-
-<% if state.in?(%w[draft closed]) && open_disabled %>
-  <p class="kern-body kern-body--small mb-4">
-    <%= t("adm.projekts.phases.mitmachbox_survey.open_requires_published_hint") %>
-  </p>
-<% end %>
+</section>

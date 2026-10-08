@@ -101,7 +101,7 @@ en:
           Privacy: %{privacy_url}
         contact: "Questions for the administration: %{contact}"
       compliance:
-        disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
+        disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here.
         opted_out: >-
           Understood, you won't receive any more messages from us. Write %{keyword} if
           you would like to receive messages again.
@@ -331,6 +331,9 @@ en:
         # model, the same step read six different ways in one session.
         submit_proposal: Submit an idea
         draft_revise: Edit draft
+        # Under the question whether to discard what is open for a new contribution.
+        keep_draft: Keep draft
+        keep_comment: Keep comment
         submit_anyway: Keep as it is
         location_share: Use this place
         choose_projekt: Choose project

@@ -13,6 +13,7 @@ class Whatsapp::Platform::RegisterWebhookService < ApplicationService
     )
 
     log(response)
+    Rails.cache.delete(::Whatsapp::Platform::WebhookStatusService::CACHE_KEY)
 
     response
   end

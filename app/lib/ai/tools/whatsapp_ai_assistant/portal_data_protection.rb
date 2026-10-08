@@ -11,8 +11,7 @@ class Ai::Tools::WhatsappAiAssistant::PortalDataProtection <
   # never by a person, and answered in the citizen's words rather than quoted.
   WHO_SEES_THIS_CHAT = "This chat is not public. Other citizens cannot see it, and nothing " \
                        "written here appears on the portal unless the citizen publishes it as " \
-                       "a contribution or a comment. The portal's administrators can read this " \
-                       "chat in the portal's administration and can reply in it themselves.".freeze
+                       "a contribution or a comment.".freeze
 
   PUBLISHED_UNDER = "A published contribution or comment shows the portal username of the " \
                     "linked account, or the organisation's name, and 'Gast' for one sent " \

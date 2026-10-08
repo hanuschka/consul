@@ -212,7 +212,7 @@ module Schemas
                 - `replace`: the array becomes the complete, ordered list of blocks. Items with id update those blocks, items without id become new blocks, and every existing block not listed is deleted. An empty array deletes all blocks.
                 - `delete`: every item must carry an id; those blocks are deleted. Other fields are ignored.
 
-                Any id that does not belong to this projekt fails the request with 422.
+                Any id that does not belong to this projekt fails the request with 422, and so does a replace or delete that would remove a block whose AI generation is still running.
               DESC
             }
           },
@@ -570,8 +570,8 @@ module Schemas
         visible: { type: :boolean, description: 'Switch the block on or off. New blocks are on by default.', example: true },
         visible_from: { type: :string, format: :date_time, nullable: true, description: 'Show the block to visitors from this time on. Send null to remove the start restriction.', example: nil },
         visible_until: { type: :string, format: :date_time, nullable: true, description: 'Show the block to visitors until this time. Must not be before visible_from. Send null to remove the end restriction.', example: nil },
-        margin_bottom: { type: :integer, description: 'Space below the block in pixels (default 20)', example: 20 },
-        position: { type: :integer, minimum: 1, description: 'upsert mode only: move the block to this place (1 = top). Other blocks shift down.', example: 1 }
+        margin_bottom: { type: :integer, description: 'Space below the block in pixels (default 20, minimum 15: lower values are raised to 15)', example: 20 },
+        position: { type: :integer, minimum: 1, description: 'upsert mode only: move the block to this place (1 = top). Other blocks shift down. A position past the last block moves it to the bottom.', example: 1 }
       }
     }.freeze
 

@@ -20,7 +20,7 @@ describe Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation do
       user: nil,
       additions_beyond_idea: [],
       image_question_settled?: true,
-      location_question_open?: false,
+      location_question_settled?: true,
       step: "idle"
     ).tap do |stub|
       allow(stub).to receive(:claim_preview!).and_return(claimed)
@@ -108,7 +108,7 @@ describe Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation do
         user: nil,
         additions_beyond_idea: ["eine Bank"],
         image_question_settled?: true,
-        location_question_open?: false,
+        location_question_settled?: true,
         step: "idle"
       ).tap do |stub|
         allow(stub).to receive(:claim_preview!).and_return(true)

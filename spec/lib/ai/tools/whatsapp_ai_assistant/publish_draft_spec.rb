@@ -21,6 +21,7 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       draft_resource: resource,
       draft_preview_digest: nil,
       image_question_settled?: true,
+      location_question_settled?: true,
       step: "idle"
     )
   end

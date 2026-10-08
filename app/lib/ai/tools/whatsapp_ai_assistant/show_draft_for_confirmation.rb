@@ -31,9 +31,9 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
   # first preview it offered none: the photo and the place were still to come, so
   # "Jetzt einreichen" would have said something that was not going to happen, and
   # what was left were the ways to change the draft. So the first pill is added
-  # here and named by what comes next, read off the draft: the photo first, since
-  # publishing refuses until it has been asked and not until the place has, then
-  # the place, then publishing itself. When the preview goes out stays the model's.
+  # here and named by what comes next, read off the draft: the photo, then the
+  # place — publishing refuses until each has been asked — then publishing
+  # itself. When the preview goes out stays the model's.
   CONTINUE_LABEL_KEYS = {
     photo: "whatsapp.bot.buttons.draft_continue.photo",
     location: "whatsapp.bot.buttons.draft_continue.location"
@@ -47,6 +47,15 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
     location: "request_location"
   }.freeze
 
+  # A place already waiting is not a pin to ask for: a shared one is attached,
+  # and one read from the citizen's words is theirs to confirm. Opening the
+  # picker over it would ask for what they have already given.
+  WAITING_PLACE_ANSWER = "with set_draft_location where a pin they shared is waiting, and " \
+                         "where a place read from their words is, by asking whether it is the " \
+                         "one they mean — set_draft_location attaches it once they agree, " \
+                         "remove_draft_location drops it, and request_location is only for a " \
+                         "different place".freeze
+
   description "Shows the citizen their contribution exactly as it will be stored — its title and " \
               "text, which projekt and which participation phase it goes into, and whether a " \
               "photo or a place is attached — and then asks your question with up to three " \
@@ -55,7 +64,8 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
               "first button is always the way on, added for you and named by what comes next: " \
               "while the photo or the place is still to be asked for, it names that step, and a " \
               "tap on it arrives as action draft_continue — answer it with request_photo or " \
-              "request_location as its label says; once nothing is left to ask, it is the " \
+              "request_location as its label says, or, where a place is already waiting, as " \
+              "this tool's result says; once nothing is left to ask, it is the " \
               "button that publishes, which cannot be undone and carries a fixed label saying " \
               "so. This is the only thing that lets a draft be published, so publishing is " \
               "refused until it has been called and called again after any change to the " \
@@ -162,8 +172,15 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
 
       return "" if tool.blank?
 
+      answer = place_waiting? ? WAITING_PLACE_ANSWER : "with #{tool}"
+
       " The first button goes on to the #{next_step}: answer a tap on it (action " \
-        "draft_continue) with #{tool}."
+        "draft_continue) #{answer}."
+    end
+
+    def place_waiting?
+      next_step == :location &&
+        (conversation.shared_location.present? || conversation.proposed_location.present?)
     end
 
     # The note goes first so that where the two do not fit together it is the
@@ -222,7 +239,7 @@ class Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation <
       @next_step ||=
         if !conversation.image_question_settled?
           :photo
-        elsif conversation.location_question_open?
+        elsif !conversation.location_question_settled?
           :location
         else
           :publish

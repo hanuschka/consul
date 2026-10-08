@@ -387,8 +387,6 @@ class Api::ProjektsController < Api::BaseController
   # strings would pass as an empty list, which in replace mode deletes every
   # block of the projekt.
   def validate_content_blocks_shape
-    raw_content_blocks = params[:projekt][:content_blocks]
-
     if !raw_content_blocks.is_a?(Array)
       raise ProjektContentBlocks::BulkWrite::InvalidRequestError.new(
         "content_blocks" => ["must be an array of objects"]
@@ -396,12 +394,24 @@ class Api::ProjektsController < Api::BaseController
     end
 
     raw_content_blocks.each_with_index do |raw_content_block, index|
-      if !raw_content_block.is_a?(ActionController::Parameters)
+      if !raw_content_block.is_a?(Hash) && !raw_content_block.is_a?(ActionController::Parameters)
         raise ProjektContentBlocks::BulkWrite::InvalidRequestError.new(
           "content_blocks[#{index}]" => ["must be an object"]
         )
       end
     end
+  end
+
+  # Rails drops null items from JSON arrays while it builds params, so a list
+  # of nulls would reach params as an empty list. Only the raw body still
+  # holds them.
+  def raw_content_blocks
+    @raw_content_blocks ||=
+      if request.content_mime_type == Mime[:json]
+        ActiveSupport::JSON.decode(request.raw_post).dig("projekt", "content_blocks")
+      else
+        params[:projekt][:content_blocks]
+      end
   end
 
   def save_with_content_blocks(projekt)
@@ -446,20 +456,23 @@ class Api::ProjektsController < Api::BaseController
 
   # Every block write touches the projekt on its own, up to three times per
   # block counting the after_commit of its body translation. When a request
-  # writes blocks those touches are held back until the transaction has
-  # committed, and the projekt is touched once instead.
+  # writes blocks those touches are only recorded until the transaction has
+  # committed, and the projekt is touched once instead, if any block changed.
   def touching_projekt_once(projekt)
     if !content_blocks_sent?
       return yield
     end
 
-    projekt_written = Projekt.no_touching { yield }
+    Current.content_block_touched_projekt_ids = Set.new
+    projekt_written = yield
 
-    if projekt_written
+    if projekt_written && Current.content_block_touched_projekt_ids.include?(projekt.id)
       projekt.touch(:content_updated_at)
     end
 
     projekt_written
+  ensure
+    Current.content_block_touched_projekt_ids = nil
   end
 
   def serialize_written_projekt(projekt)

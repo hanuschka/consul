@@ -7,14 +7,34 @@ module OpenaiApi::Usage
   # cost column of the usage table populated on this transport as well —
   # a nil cost counts every call as unpriced instead.
   def self.record(response:, feature:, requested_model:)
-    ::AiUsageRecords::RecordChatUsage.call(
-      message: message_for(response),
+    message = message_for(response)
+
+    ::AiUsageRecords::RecordAttemptUsage.call(
       feature: feature,
       provider: PROVIDER,
-      requested_model: requested_model
+      model: message.model.presence || requested_model,
+      status: :succeeded,
+      tokens: message.tokens,
+      cost: message.cost
     )
   rescue => e
     Rails.logger.error("[AiUsageRecord] Failed to record usage for #{feature}: #{e.message}")
+  end
+
+  # No response means nothing to read a model or tokens off, so the attempt is
+  # booked against the model that was asked for. A timed-out request may still
+  # have been billed, and the failed count is what shows a provider struggling.
+  def self.record_failure(feature:, requested_model:)
+    ::AiUsageRecords::RecordAttemptUsage.call(
+      feature: feature,
+      provider: PROVIDER,
+      model: requested_model,
+      status: :failed,
+      tokens: nil,
+      cost: nil
+    )
+  rescue => e
+    Rails.logger.error("[AiUsageRecord] Failed to record failed attempt for #{feature}: #{e.message}")
   end
 
   def self.message_for(response)

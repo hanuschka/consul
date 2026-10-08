@@ -15,6 +15,10 @@ class ContentBlockSerializer < BaseSerializer
         :key,
         :projekt_id,
         :position,
+        :visible,
+        :visible_from,
+        :visible_until,
+        :margin_bottom,
         :created_at,
         :updated_at
       ]

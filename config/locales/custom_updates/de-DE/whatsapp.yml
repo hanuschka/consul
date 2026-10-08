@@ -182,10 +182,12 @@ de:
           nicht.
         # Die Frage unter dem erneut gezeigten Entwurf, wenn unter einer älteren Vorschau
         # auf „Jetzt einreichen“ getippt wurde (Whatsapp::PreviewVersion), und der Hinweis
-        # auf das, was der Entwurf über die eigenen Worte hinaus enthält.
+        # auf das, was der Entwurf über die eigenen Worte hinaus enthält. Die Frage
+        # spricht nicht vom Veröffentlichen: Die erste Schaltfläche darunter kann
+        # auch erst zum Foto oder zum Ort führen.
         outdated_question: >-
           Ihr Beitrag hat sich seit dieser Vorschau geändert. Oben sehen Sie ihn so, wie er
-          jetzt veröffentlicht würde. Soll er so online gehen?
+          jetzt aussieht. Passt er so?
         outdated_additions_note: >-
           Darin steht auch etwas, das Sie so nicht gesagt haben: %{additions}. Das kann ich
           wieder herausnehmen.
@@ -506,6 +508,12 @@ de:
         # vorschlägt. Vom Werkzeug gesetzt, nicht vom Modell, damit es sie immer
         # gibt, wo es Zusätze gibt.
         remove_additions: Zusätze entfernen
+        # Der Weg weiter unter der Vorschau, solange der Entwurf noch eine Frage vor
+        # sich hat, benannt nach dieser Frage. Nie „einreichen“: Auf diesen Tipp
+        # hin wird nichts eingereicht.
+        draft_continue:
+          photo: Weiter zum Foto
+          location: Weiter zum Ort
         image_skip: Ohne Foto weiter
         # Die einzige Beschriftung, die das Modell nicht einmal anbieten darf: Die
         # Schaltfläche löst die Verknüpfung, und was das bedeutet, steht im Block

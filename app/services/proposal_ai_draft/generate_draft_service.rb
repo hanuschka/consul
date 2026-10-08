@@ -67,9 +67,11 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       <<~SECTION
 
         This idea arrived by chat, where the photo and the location are asked for one after the
-        other in later messages. Report whether the citizen already settled either of them in
-        the message above, so they are not asked again for something they have already said.
-        Judge only their words: when they did not mention it, the answer is false.
+        other in later messages. Report what the citizen already said about them in the message
+        above, so they are not asked again for something they have already answered: whether
+        they declined a photo, whether they named the place, and whether they said there is no
+        particular place. Naming a place and declining one are two different answers. Judge
+        only their words: when they did not mention it, the answer is false.
       SECTION
     end
 
@@ -193,7 +195,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
     # property added to its schema is one nothing has told the model about. Every
     # property here is required, so that would be a demand with no instruction
     # behind it.
-    SUBMISSION_SLOT_KEYS = %w[photo_declined location_stated].freeze
+    SUBMISSION_SLOT_KEYS = %w[photo_declined location_stated location_declined].freeze
 
     def output_schema
       properties = base_schema_properties
@@ -202,6 +204,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       if required_taxonomy?
         properties[:photo_declined] = photo_declined_schema
         properties[:location_stated] = location_stated_schema
+        properties[:location_declined] = location_declined_schema
         properties[:additions_beyond_idea] = additions_beyond_idea_schema
         required.push(*SUBMISSION_SLOT_KEYS, "additions_beyond_idea")
       end
@@ -233,7 +236,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
     # Read strictly off what the citizen wrote, never inferred from the subject
     # matter: a proposal about a photo exhibition does not mean they declined to
     # send one, and skipping a question they never answered is worse than asking
-    # it. Both default false, which is the flow exactly as it behaved before.
+    # it. All default false, which is the flow exactly as it behaved before.
     def photo_declined_schema
       {
         type: "boolean",
@@ -244,13 +247,24 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       }
     end
 
+    # Named and declined are two answers rather than one: a named place still
+    # has to reach the map, which a citizen who wants none has already settled.
     def location_stated_schema
       {
         type: "boolean",
         description: "True only if the citizen named where this is, in their own words (\"am " \
-                     "Bahnhof\", \"Hauptstraße 14\", \"im Stadtpark\"), or said there is no " \
-                     "particular place. False whenever they did not say where. Never infer " \
-                     "this from the projekt's own name or area."
+                     "Bahnhof\", \"Hauptstraße 14\", \"im Stadtpark\"). False whenever they " \
+                     "did not say where. Never infer this from the projekt's own name or area."
+      }
+    end
+
+    def location_declined_schema
+      {
+        type: "boolean",
+        description: "True only if the citizen's own words say there is no particular place or " \
+                     "they do not want to give one (\"überall in der Stadt\", \"ohne Ort\"). " \
+                     "False whenever they did not mention a place at all, and whenever they " \
+                     "named one."
       }
     end
 

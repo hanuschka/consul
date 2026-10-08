@@ -7,13 +7,16 @@ module OpenaiApi::Responses
   # Everything the assistant asks for is one turn of a conversation somebody is
   # waiting on, so nothing here streams and nothing runs in the background.
   # Usage is recorded off every response, including the intermediate ones a tool
-  # loop spends — each is a billed request.
+  # loop spends — each is a billed request. A request that fails is booked as a
+  # failed attempt, the way ruby_llm books its own. The feature doubles as the
+  # prompt cache key, the same one the ruby_llm transport sends.
   def self.create(feature:, requested_model:, timeout_seconds: nil, **params)
     response =
       ::OpenaiApi::ClientFactory
         .build
         .responses
         .create(
+          prompt_cache_key: ::Ai::RubyLlmFactory.prompt_cache_key(feature),
           **params.compact,
           **::OpenaiApi::ClientFactory.request_options(timeout_seconds)
         )
@@ -23,6 +26,10 @@ module OpenaiApi::Responses
     )
 
     response
+  rescue ::OpenaiApi::Error
+    ::OpenaiApi::Usage.record_failure(feature: feature, requested_model: requested_model)
+
+    raise
   end
 
   # Not stored: a single-shot judgement has no next turn to chain to, so asking

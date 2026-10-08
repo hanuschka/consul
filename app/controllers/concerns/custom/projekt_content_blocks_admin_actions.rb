@@ -48,8 +48,8 @@ module ProjektContentBlocksAdminActions
     update_params[:body] = params[:html] if params.key?(:html)
 
     if params.key?(:margin_bottom)
-      min = SiteCustomization::ContentBlock::MIN_MARGIN_BOTTOM
-      update_params[:margin_bottom] = [params[:margin_bottom].to_i, min].max
+      update_params[:margin_bottom] =
+        SiteCustomization::ContentBlock.clamp_margin_bottom(params[:margin_bottom])
     end
 
     update_params.merge!(content_block_visibility_params)

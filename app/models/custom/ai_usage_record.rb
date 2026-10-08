@@ -21,12 +21,16 @@ class AiUsageRecord < ApplicationRecord
     projekt_imports.chat_response
     projekt_imports.process
     projekt_imports.resolve_content_block_html
+    poll_question_imports.generate
     projekts.banner_image_prompt
+    proposal_ai_draft.content_safety
     proposal_ai_draft.evaluate_criteria
+    proposal_ai_draft.evaluate_two_tier
     proposal_ai_draft.generate_draft
-    proposal_ai_draft.hard_criteria
-    proposal_ai_draft.soft_criteria
+    whatsapp.assistant
     whatsapp.bot_copy
+    whatsapp.reply_language
+    whatsapp.voice_transcription
     similar_contributions.embed
     similar_contributions.find_for_additional_projekts
     similar_contributions.find_for_phase
@@ -39,7 +43,7 @@ class AiUsageRecord < ApplicationRecord
 
   COUNTER_COLUMNS = (
     %i[
-      request_count unpriced_request_count
+      request_count unpriced_request_count failed_request_count
       input_tokens output_tokens cache_read_tokens cache_write_tokens
       thinking_tokens audio_seconds cost_total
     ] + COST_COMPONENT_COLUMNS.values

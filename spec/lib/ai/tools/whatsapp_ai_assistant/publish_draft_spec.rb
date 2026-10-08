@@ -20,9 +20,7 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       projekt_phase_id: projekt_phase.id,
       draft_resource: resource,
       draft_preview_digest: nil,
-      image_question_pending?: false,
-      image_notices_shown?: false,
-      draft_picture_attached?: false,
+      image_question_settled?: true,
       step: "idle"
     )
   end
@@ -39,7 +37,7 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
   # that takes pictures has to have asked for one first.
   describe "the picture question gate" do
     before do
-      allow(conversation).to receive(:image_question_pending?).and_return(true)
+      allow(conversation).to receive(:image_question_settled?).and_return(false)
       allow(conversation).to receive(:confirmation_offered?).and_return(true)
       allow(conversation).to receive(:draft_preview_digest).and_return("current-digest")
     end
@@ -57,8 +55,8 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       tool.execute
     end
 
-    it "lets a picture already attached answer it" do
-      allow(conversation).to receive(:draft_picture_attached?).and_return(true)
+    it "lets an answered picture question through" do
+      allow(conversation).to receive(:image_question_settled?).and_return(true)
 
       expect(Whatsapp::Drafting::CompleteDraftService)
         .to receive(:call)

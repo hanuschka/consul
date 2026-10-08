@@ -23,10 +23,38 @@ class MapLayer < ApplicationRecord
     where(mappable_id: nil, mappable_type: nil)
   end
 
+  def self.for_mappable(mappable, with_global_base: true)
+    layers = own_layers_for(mappable).to_a
+    return layers if !with_global_base || layers.any?(&:base)
+
+    layers + default.where(base: true).order(:id).to_a
+  end
+
+  def self.own_layers_for(mappable)
+    return mappable.map_layers if mappable.respond_to?(:map_layers)
+
+    (mappable.inherited_map_layers if mappable.respond_to?(:inherited_map_layers)) ||
+      (mappable.projekt_phase&.map_layers if mappable.respond_to?(:projekt_phase)) ||
+      (mappable.projekt&.map_layers if mappable.respond_to?(:projekt)) ||
+      default
+  end
+  private_class_method :own_layers_for
+
   def self.protocol_attributes_for_select
     protocols.map do |protocol, _|
       [protocol, I18n.t("activerecord.attributes.map_layer.protocols.#{protocol}")]
     end
+  end
+
+  def tile_layer_attributes
+    {
+      protocol: protocol,
+      provider: provider,
+      layer_names: layer_names,
+      attribution: attribution,
+      transparent: transparent,
+      opacity: opacity&.to_f
+    }
   end
 
   def flat_style

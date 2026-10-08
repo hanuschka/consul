@@ -1,9 +1,10 @@
-<%
-  heatmap = (phase["full_stats"] || {})["heatmap"] || {}
-  coordinates = heatmap["coordinates"] || []
-  center = heatmap["map_center"] || []
-  zoom = heatmap["map_zoom"] || 12
-%>
+<% heatmap = (phase["full_stats"] || {})["heatmap"] || {} %>
+<% coordinates = heatmap["coordinates"] || [] %>
+<% center = heatmap["map_center"] || [] %>
+<% zoom = heatmap["map_zoom"] || 12 %>
+<% phase_record = ProjektPhase.find_by(id: phase["phase_id"]) %>
+<% base_layer = MapLayer.for_mappable(phase_record || @projekt).find(&:base) %>
+<% base_layer_json = (base_layer&.tile_layer_attributes || {}).to_json %>
 
 <div class="card phase-heatmap-card">
   <div class="card-title"><%= t("adm.projekts.projekts.evaluation.heatmap_title") %></div>
@@ -14,6 +15,6 @@
     data-adm--evaluation-heatmap-coordinates-value="<%= coordinates.to_json %>"
     data-adm--evaluation-heatmap-center-value="<%= center.to_json %>"
     data-adm--evaluation-heatmap-zoom-value="<%= zoom %>"
-    data-adm--evaluation-heatmap-empty-text-value="<%= t("adm.projekts.projekts.evaluation.heatmap_empty") %>"
-  ></div>
+    data-adm--evaluation-heatmap-base-layer-value="<%= base_layer_json %>"
+    data-adm--evaluation-heatmap-empty-text-value="<%= t("adm.projekts.projekts.evaluation.heatmap_empty") %>"></div>
 </div>

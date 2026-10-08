@@ -120,14 +120,8 @@ class Kern::MapComponent < ApplicationComponent
     end
 
     def layers_json
-      layers = if mappable.respond_to?(:map_layers)
-                 mappable.map_layers
-               else
-                 mappable.try(:inherited_map_layers) ||
-                   mappable.try(:projekt_phase)&.map_layers ||
-                   mappable.try(:projekt)&.map_layers ||
-                   MapLayer.default
-               end
+      leaflet = rendering_library.to_s.start_with?("leaflet")
+      layers = MapLayer.for_mappable(mappable, with_global_base: leaflet)
 
       serialized = layers.filter_map { |layer| serialize_layer(layer) }
 

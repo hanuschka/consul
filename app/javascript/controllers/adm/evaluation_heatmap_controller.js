@@ -23,7 +23,8 @@ export default class extends Controller {
     coordinates: Array,
     center: Array,
     zoom: Number,
-    emptyText: String
+    emptyText: String,
+    baseLayer: Object
   }
 
   connect() {
@@ -59,15 +60,42 @@ export default class extends Controller {
       maxZoom: zoomLimits.MAX
     }).setView(center, zoom)
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>",
-      maxZoom: zoomLimits.MAX,
-      maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
-    }).addTo(this.map)
+    this.baseTileLayer().addTo(this.map)
 
     L.heatLayer(this.coordinatesValue, HEAT_OPTIONS).addTo(this.map)
 
     requestAnimationFrame(() => this.map.invalidateSize())
+  }
+
+  baseTileLayer() {
+    const L = window.L
+    const zoomLimits = window.App.MapZoom
+    const item = this.baseLayerValue
+
+    if (item && item.provider && item.protocol === "wms") {
+      return L.tileLayer.wms(item.provider, {
+        attribution: item.attribution,
+        layers: item.layer_names,
+        format: item.transparent ? "image/png" : "image/jpeg",
+        transparent: item.transparent,
+        opacity: item.opacity || 1,
+        maxZoom: zoomLimits.MAX
+      })
+    }
+
+    if (item && item.provider) {
+      return L.tileLayer(item.provider, {
+        attribution: item.attribution,
+        maxZoom: zoomLimits.MAX,
+        maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
+      })
+    }
+
+    return L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>",
+      maxZoom: zoomLimits.MAX,
+      maxNativeZoom: zoomLimits.MAX_NATIVE_TILE
+    })
   }
 
   renderEmpty() {

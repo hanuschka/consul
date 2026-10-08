@@ -185,14 +185,7 @@ class Shared::MapComponent < ApplicationComponent
     end
 
     def layers
-      base = if @mappable.is_a?(ProjektPhase) || @mappable.is_a?(Projekt)
-               @mappable.map_layers
-             else
-               @mappable.try(:inherited_map_layers) ||
-                 @mappable.try(:projekt_phase)&.map_layers ||
-                 @mappable.try(:projekt)&.map_layers ||
-                 MapLayer.default
-             end
+      base = MapLayer.for_mappable(@mappable, with_global_base: rendering_library == "leaflet")
 
       base_layers = base.filter_map do |layer|
         json = layer.as_json

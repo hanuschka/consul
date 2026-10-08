@@ -33,6 +33,9 @@ de:
               other: "%{count} laufende Abstimmungen"
         dt:
           ticket_system: Ticketsystem
+          community: Community
+          community_text: Handbuch, Netzwerk, Veranstaltungen und Neuigkeiten rund um die Plattform
+          community_cta: Zur Community
           meetup: Monatliches Consul-Meetup
           projekts_overview: Beteiligungsprojekte anderer Städte
           newsletter: Newsletter abonnieren

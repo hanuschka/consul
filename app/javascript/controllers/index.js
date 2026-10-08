@@ -297,3 +297,6 @@ application.register("adm--mitmachbox-box", AdmMitmachboxBoxController)
 
 import AdmMitmachboxCheckController from "./adm/mitmachbox_check_controller"
 application.register("adm--mitmachbox-check", AdmMitmachboxCheckController)
+
+import AdmHandbookEmbedController from "./adm/handbook_embed_controller"
+application.register("adm--handbook-embed", AdmHandbookEmbedController)

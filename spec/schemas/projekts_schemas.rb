@@ -58,7 +58,7 @@ module Schemas
         },
         content_blocks: {
           type: :array,
-          description: 'Array of content blocks that compose the projekt page content',
+          description: 'Array of content blocks that compose the projekt page content, ordered by position. On GET (include_content_blocks=true) only blocks currently shown to visitors are listed. Create/update responses include it whenever the request carried content_blocks, and then list every block of the projekt, hidden and scheduled ones included.',
           items: { '$ref' => '#/components/schemas/ContentBlock' }
         }
       },
@@ -185,6 +185,35 @@ module Schemas
                   permissions: { type: :array, items: { type: :string }, description: 'Array of permission names (e.g., ["admin", "edit", "view"])' }
                 }
               }
+            },
+            content_blocks: {
+              type: :array,
+              description: <<~DESC.squish,
+                Content blocks of the projekt page. Each block is a separate section of the page, shown in array order.
+                Split the page into several blocks (e.g. one per heading) instead of putting everything into one block.
+                On create, the blocks are created in the given order (any id is ignored) and content_blocks_mode is ignored;
+                without content_blocks or with an empty list, create adds one empty block. Every item must be an object; plain strings are rejected.
+                On update, what happens is set by content_blocks_mode. Omit content_blocks to leave the blocks unchanged.
+                The whole request is atomic: if one block is invalid, nothing is saved and the response is 422
+                with errors keyed by "content_blocks[<index>]".
+              DESC
+              items: { '$ref' => '#/components/schemas/ContentBlockWriteParams' }
+            },
+            content_blocks_mode: {
+              type: :string,
+              enum: %w[append prepend upsert replace delete],
+              default: 'upsert',
+              description: <<~DESC
+                How content_blocks is applied on update. Ignored on create.
+
+                - `append`: every item becomes a new block at the bottom of the page (id ignored).
+                - `prepend`: every item becomes a new block at the top of the page, in the given order (id ignored).
+                - `upsert` (default): an item with id updates that block, an item without id becomes a new block at the bottom. With `position`, the block is moved to that place. Blocks not listed stay unchanged.
+                - `replace`: the array becomes the complete, ordered list of blocks. Items with id update those blocks, items without id become new blocks, and every existing block not listed is deleted. An empty array deletes all blocks.
+                - `delete`: every item must carry an id; those blocks are deleted. Other fields are ignored.
+
+                Any id that does not belong to this projekt fails the request with 422.
+              DESC
             }
           },
           required: ['name']
@@ -516,16 +545,34 @@ module Schemas
       type: :object,
       properties: {
         id: { type: :integer, description: 'Unique identifier for the content block', example: 1 },
-        title: { type: :string, nullable: true, description: 'Optional heading or title for the content block', example: 'Introduction' },
-        body: { type: :string, nullable: true, description: 'The main text content of the block (supports HTML/rich text)', example: 'This is the content of the block.' },
-        locale: { type: :string, description: 'Language code for this content block (e.g., "en" for English, "de" for German)', example: 'en' },
-        position: { type: :integer, description: 'The display order of this block. Lower numbers appear first.', example: 0 },
-        blockable_type: { type: :string, description: 'The type of resource this block belongs to (e.g., "Projekt", "Page")', example: 'Projekt' },
-        blockable_id: { type: :integer, description: 'The ID of the resource this block belongs to', example: 1 },
+        name: { type: :string, description: 'Block type. Always "custom" for projekt page blocks.', example: 'custom' },
+        key: { type: :string, description: 'Internal unique key of the block', example: 'projekt_content_block_1_1_1704067200' },
+        body: { type: :string, nullable: true, description: 'The HTML content of the block', example: '<h2>Introduction</h2><p>This is the content of the block.</p>' },
+        locale: { type: :string, description: 'Language code for this content block (e.g., "en" for English, "de" for German)', example: 'de' },
+        projekt_id: { type: :integer, nullable: true, description: 'ID of the projekt this block belongs to', example: 1 },
+        position: { type: :integer, nullable: true, description: 'The display order of this block. Lower numbers appear first.', example: 1 },
+        visible: { type: :boolean, description: 'Whether the block is switched on. A switched-off block is never shown to visitors.', example: true },
+        visible_from: { type: :string, format: :date_time, nullable: true, description: 'The block is shown to visitors from this time on. Null means no start restriction.', example: nil },
+        visible_until: { type: :string, format: :date_time, nullable: true, description: 'The block is shown to visitors until this time. Null means no end restriction.', example: nil },
+        margin_bottom: { type: :integer, nullable: true, description: 'Space below the block in pixels', example: 20 },
         created_at: { type: :string, format: :datetime, description: 'Timestamp when the content block was created', example: '2024-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :datetime, description: 'Timestamp when the content block was last modified', example: '2024-01-01T00:00:00Z' }
       },
-      required: %w[id position blockable_type blockable_id]
+      required: %w[id position]
+    }.freeze
+
+    # Request schema for one item of projekt[content_blocks]
+    CONTENT_BLOCK_WRITE_PARAMS = {
+      type: :object,
+      properties: {
+        id: { type: :integer, description: 'ID of an existing block of this projekt. Used by the upsert, replace and delete modes; ignored on create and by append/prepend.', example: 12 },
+        body: { type: :string, description: 'HTML content of the block. New blocks without a body start empty.', example: '<h2>Background</h2><p>Why this projekt exists.</p>' },
+        visible: { type: :boolean, description: 'Switch the block on or off. New blocks are on by default.', example: true },
+        visible_from: { type: :string, format: :date_time, nullable: true, description: 'Show the block to visitors from this time on. Send null to remove the start restriction.', example: nil },
+        visible_until: { type: :string, format: :date_time, nullable: true, description: 'Show the block to visitors until this time. Must not be before visible_from. Send null to remove the end restriction.', example: nil },
+        margin_bottom: { type: :integer, description: 'Space below the block in pixels (default 20)', example: 20 },
+        position: { type: :integer, minimum: 1, description: 'upsert mode only: move the block to this place (1 = top). Other blocks shift down.', example: 1 }
+      }
     }.freeze
 
     # All schemas combined for easy reference in swagger_helper
@@ -540,6 +587,7 @@ module Schemas
         ProjektPhase: PROJEKT_PHASE_SCHEMA,
         ProjektPhaseRequestParams: PROJEKT_PHASE_REQUEST_SCHEMA,
         ContentBlock: CONTENT_BLOCK_SCHEMA,
+        ContentBlockWriteParams: CONTENT_BLOCK_WRITE_PARAMS,
         ProjektPhaseSetting: PROJEKT_PHASE_SETTING_SCHEMA,
         Poll: POLL_SCHEMA,
         ProjektEvent: PROJEKT_EVENT_SCHEMA,

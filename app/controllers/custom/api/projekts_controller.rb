@@ -5,6 +5,8 @@ class Api::ProjektsController < Api::BaseController
 
   before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_settings, :update_page, :update_page_image, :update_body]
 
+  rescue_from ProjektContentBlocks::BulkWrite::InvalidRequestError, with: :render_content_blocks_error
+
   DEFAULT_PROJEKTS_PER_PAGE = 20
 
   SORTABLE_COLUMNS = %w[
@@ -130,15 +132,11 @@ class Api::ProjektsController < Api::BaseController
     check_admin_access!
     projekt = Projekt.new(projekt_params)
 
-    if projekt.save
+    if save_with_content_blocks(projekt)
       Projekt.ensure_order_integrity
       process_image_with_base64(projekt.page, params[:projekt][:image_attributes])
 
-      create_default_content_block(projekt)
-
-      serailized_projekt = ProjektSerializer.new(projekt).serialize
-
-      render json: { data: { projekt: serailized_projekt } }, status: 201
+      render json: { data: { projekt: serialize_written_projekt(projekt) } }, status: 201
     else
       render json: { error: { messages: projekt.errors.messages }}, status: 422
     end
@@ -146,12 +144,11 @@ class Api::ProjektsController < Api::BaseController
 
   def update
     check_admin_access!
-    if @projekt.update(projekt_params)
+
+    if update_with_content_blocks(@projekt)
       Projekt.ensure_order_integrity
 
-      serailized_projekt = ProjektSerializer.new(@projekt).serialize
-
-      render json: { data: { projekt: serailized_projekt } }
+      render json: { data: { projekt: serialize_written_projekt(@projekt) } }
     else
       render json: { error: { messages: @projekt.errors.messages }}, status: 422
     end
@@ -364,6 +361,133 @@ class Api::ProjektsController < Api::BaseController
 
   def content_block_body_params
     params.require(:projekt).permit(:body)
+  end
+
+  def content_blocks_params
+    @content_blocks_params ||=
+      params.require(:projekt).permit(
+        :content_blocks_mode,
+        content_blocks: [:id, :position, *ProjektContentBlocks::BulkWrite::BlockWriter::ATTRIBUTES]
+      )
+  end
+
+  def content_blocks_sent?
+    params[:projekt].key?(:content_blocks)
+  end
+
+  def content_block_items
+    @content_block_items ||= begin
+      validate_content_blocks_shape
+
+      content_blocks_params[:content_blocks].map(&:to_h)
+    end
+  end
+
+  # Strong params drop every item that is not an object, so a list of HTML
+  # strings would pass as an empty list, which in replace mode deletes every
+  # block of the projekt.
+  def validate_content_blocks_shape
+    raw_content_blocks = params[:projekt][:content_blocks]
+
+    if !raw_content_blocks.is_a?(Array)
+      raise ProjektContentBlocks::BulkWrite::InvalidRequestError.new(
+        "content_blocks" => ["must be an array of objects"]
+      )
+    end
+
+    raw_content_blocks.each_with_index do |raw_content_block, index|
+      if !raw_content_block.is_a?(ActionController::Parameters)
+        raise ProjektContentBlocks::BulkWrite::InvalidRequestError.new(
+          "content_blocks[#{index}]" => ["must be an object"]
+        )
+      end
+    end
+  end
+
+  def save_with_content_blocks(projekt)
+    touching_projekt_once(projekt) do
+      ActiveRecord::Base.transaction do
+        projekt_saved = projekt.save
+
+        if projekt_saved
+          create_initial_content_blocks(projekt)
+        end
+
+        projekt_saved
+      end
+    end
+  end
+
+  def create_initial_content_blocks(projekt)
+    if content_blocks_sent? && content_block_items.any?
+      ProjektContentBlocks::BulkWrite::Append.call(projekt: projekt, items: content_block_items)
+    else
+      create_default_content_block(projekt)
+    end
+  end
+
+  def update_with_content_blocks(projekt)
+    touching_projekt_once(projekt) do
+      ActiveRecord::Base.transaction do
+        projekt_updated = projekt.update(projekt_params)
+
+        if projekt_updated && content_blocks_sent?
+          ProjektContentBlocks::BulkWrite::Apply.call(
+            projekt: projekt,
+            mode: content_blocks_params[:content_blocks_mode],
+            items: content_block_items
+          )
+        end
+
+        projekt_updated
+      end
+    end
+  end
+
+  # Every block write touches the projekt on its own, up to three times per
+  # block counting the after_commit of its body translation. When a request
+  # writes blocks those touches are held back until the transaction has
+  # committed, and the projekt is touched once instead.
+  def touching_projekt_once(projekt)
+    if !content_blocks_sent?
+      return yield
+    end
+
+    projekt_written = Projekt.no_touching { yield }
+
+    if projekt_written
+      projekt.touch(:content_updated_at)
+    end
+
+    projekt_written
+  end
+
+  def serialize_written_projekt(projekt)
+    if content_blocks_sent?
+      serialize_projekt_with_all_content_blocks(projekt)
+    else
+      ProjektSerializer.new(projekt).serialize
+    end
+  end
+
+  # Lists every block, hidden and scheduled ones included, so the client gets
+  # the ids of all the blocks it just wrote. The reset drops the association
+  # preloaded by find_projekt, which still holds the blocks before the write.
+  def serialize_projekt_with_all_content_blocks(projekt)
+    projekt.content_blocks.reset
+    ActiveRecord::Associations::Preloader.new.preload(projekt, content_blocks: :translations)
+
+    content_blocks =
+      projekt.content_blocks.sort_by { |content_block| content_block.position.to_i }
+
+    ProjektSerializer
+      .new(projekt)
+      .serialize
+      .merge("content_blocks" => ContentBlockSerializer.serialize_collection(content_blocks))
+  end
+
+  def render_content_blocks_error(exception)
+    render json: { error: { messages: exception.messages } }, status: 422
   end
 
   def create_default_content_block(projekt)

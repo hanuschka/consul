@@ -132,14 +132,19 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
     SHOW_DRAFT_HINT = "Call show_draft_for_confirmation now: the draft is the first thing the " \
                       "citizen sees. Anything above about similar contributions, the " \
                       "assessment or a place belongs in its question and its buttons, not in " \
-                      "a message before it. Where additions_beyond_idea is present, the draft " \
+                      "a message before it. A similar contribution whose written_by_you is " \
+                      "true is the citizen's own earlier one: say they already submitted " \
+                      "something like it, and offer no support for it. Where " \
+                      "additions_beyond_idea is present, the draft " \
                       "proposes things the citizen did not say: name them in one short " \
                       "sentence of your own in additions_note — the button that takes them " \
                       "out is added for you. Where it is absent, the draft only rephrases " \
                       "them — say nothing about it. Where " \
                       "collects_picture is true, the picture is asked for after the preview " \
                       "and only with request_photo, which carries the notices that have to " \
-                      "come with it — publishing is refused until it has been.".freeze
+                      "come with it — publishing is refused until it has been. The preview's " \
+                      "first button goes on to it, to the place, or to publishing, and is " \
+                      "added for you.".freeze
 
     def draft_payload(resource)
       {
@@ -172,6 +177,10 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
     # "Fußgängerüberweg" are two unrelated proposals. Judging which of them is
     # actually the same idea used to be a second model call of its own; it is a
     # judgement, so it belongs to the model that is already reading the draft.
+    #
+    # The citizen's own earlier proposal is marked rather than offered for support:
+    # the bot takes no support from its author, and that they already submitted the
+    # same idea is the more useful thing to hear about it.
     def similar_contributions(search_terms)
       candidates = ::Whatsapp::SimilarProposalsQuery.call(
         projekt_phase: projekt_phase,
@@ -182,12 +191,15 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
       return if candidates.blank?
 
       candidates.map do |proposal|
+        written_by_you = ::Whatsapp::ContributionFacts.written_by?(proposal, user)
+
         {
           contribution_id: proposal.id,
           title: proposal.title,
+          written_by_you: written_by_you,
           supports: proposal.cached_votes_up,
           url: ::Whatsapp::PublishedResourceUrl.call(proposal),
-          action_id: "support_toggle-#{proposal.id}"
+          action_id: written_by_you ? nil : "support_toggle-#{proposal.id}"
         }.compact
       end
     end

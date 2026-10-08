@@ -176,7 +176,9 @@ describe Whatsapp::DraftPreview do
     blob = double(:blob, id: blob_id)
     attachment = double(:attachment, blob: blob)
 
-    allow(resource).to receive(:image).and_return(double(:image, attachment: attachment))
+    allow(resource)
+      .to receive(:image)
+      .and_return(double(:image, attachment: attachment, ai_generated?: false))
   end
 
   def attach_pin(latitude:, longitude:)

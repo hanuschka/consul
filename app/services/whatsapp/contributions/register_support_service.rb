@@ -9,6 +9,10 @@ class Whatsapp::Contributions::RegisterSupportService < ApplicationService
   # first of those is also not a dead end any more — WithdrawSupportService beside
   # this one is the way back out of it.
   #
+  # The citizen's own proposal is refused as such: the bot takes no support from its
+  # author. Asked after "already supported", so a support they gave on the page
+  # before is answered with the way back out of it rather than with a refusal.
+  #
   # Archived is asked about separately from the phase's verdict, and it has to be:
   # Proposal#register_vote guards on `votable_by?(user) && !archived?` and answers a
   # failing guard with nil, so an archived proposal took the vote silently and the
@@ -29,6 +33,7 @@ class Whatsapp::Contributions::RegisterSupportService < ApplicationService
     return :not_linked if @user.blank?
     return :gone if proposal.blank?
     return :already_supported if proposal.voted_up_by?(@user)
+    return :own_proposal if ::Whatsapp::ContributionFacts.written_by?(proposal, @user)
     return :archived if proposal.archived?
     return :gone if !publicly_listed?
     return refusal if !proposal.votable_by?(@user)

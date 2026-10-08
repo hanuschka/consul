@@ -58,6 +58,8 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
     return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
 
+    return reply_in_words(body: body.strip) if conversation.mid_question?
+
     overlong = refuse_overlong_button_labels(buttons)
 
     return overlong if overlong.present?
@@ -90,6 +92,19 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
   end
 
   private
+
+    # Mid-question the buttons are the question's to show, so this sends words only
+    # and says so to the model, which then has no button to name in its reply.
+    def reply_in_words(body:)
+      message = ::Whatsapp::Send.text(account: account, body: body)
+
+      return send_refused_error if ::Whatsapp::Send.refused?(message)
+
+      halt(
+        "Replied in words only: a question is in front of the citizen and it brings its " \
+        "own buttons, so none of the buttons you named were sent. Do not name any."
+      )
+    end
 
     # The reply after a submission went in is where the conversation has actually run
     # out: the citizen has finished what they came to do, and what this offers next is

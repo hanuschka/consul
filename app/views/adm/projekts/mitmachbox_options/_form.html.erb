@@ -1,8 +1,25 @@
-<%= form_with scope: :option, url: url, method: local_assigns.fetch(:method, :post) do |f| %>
+<% sibling_options = Array(@question["options"]).sort_by { |option| option["position"].to_i } %>
+<% option_index = sibling_options.index { |option| @option["id"].present? && option["id"] == @option["id"] } ||
+                  sibling_options.size %>
+
+<%= form_with scope: :option,
+      url: url,
+      method: local_assigns.fetch(:method, :post),
+      data: { controller: "adm--mitmachbox-check",
+              "adm--mitmachbox-check-fonts-url-value" => asset_path("mitmachbox/u8g2_fonts.json"),
+              "adm--mitmachbox-check-prompt-value" => @question["prompt"].to_s,
+              "adm--mitmachbox-check-multiple-value" => @question["question_type"] == "multiple_choice",
+              "adm--mitmachbox-check-index-value" => option_index,
+              "adm--mitmachbox-check-messages-value" => t("adm.projekts.mitmachbox.display_check").to_json } do |f| %>
   <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.options.label_label"),
                                           hint: t("adm.projekts.mitmachbox.options.label_hint")) do %>
-    <%= f.text_field :label, label: false, value: @option["label"] %>
+    <%= f.text_field :label,
+          label: false,
+          value: @option["label"],
+          data: { "adm--mitmachbox-check-target": "label", action: "input->adm--mitmachbox-check#check" } %>
   <% end %>
+
+  <%= render "adm/projekts/mitmachbox_questions/display_check" %>
 
   <% if @question["question_type"] == "rating" %>
     <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.options.value_label"),

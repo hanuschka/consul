@@ -4,6 +4,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   # as it kept going, and the caller's fallback is a better reply than none.
   class ToolLoopError < StandardError; end
 
+  FEATURE = "whatsapp.assistant".freeze
+
   # The provider default is 300 seconds, written for a generation nobody waits
   # on. This one is waited on by a held advisory lock.
   REQUEST_TIMEOUT_SECONDS = 30
@@ -171,10 +173,12 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
     def build_chat
       chat = ::Ai::RubyLlmFactory.chat_for(
-        profile, request_timeout: REQUEST_TIMEOUT_SECONDS, tools: tools
+        profile, feature: FEATURE, request_timeout: REQUEST_TIMEOUT_SECONDS, tools: tools
       )
 
       chat.with_instructions(instructions)
+      ::Ai::RubyLlmFactory.cache_prefix(chat, feature: FEATURE)
+      ::Ai::RubyLlmFactory.identify_end_user(chat, end_user_id)
       chat.before_tool_call { |tool_call| track_tool_call(tool_call) }
       chat.after_tool_result { |tool_result| note_tool_halt(tool_result) }
 
@@ -298,13 +302,22 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         model: profile.model,
         instructions: instructions,
         input: input,
-        feature: ::AiUsageRecord::UNKNOWN_FEATURE,
+        feature: FEATURE,
         timeout_seconds: REQUEST_TIMEOUT_SECONDS,
         previous_response_id: previous_response_id,
-        reasoning_effort: profile.reasoning_effort
+        reasoning_effort: profile.reasoning_effort,
+        safety_identifier: end_user_id
       ) { |function_call| track_tool_call(function_call) }
 
       tool_loop.call
+    end
+
+    # Keyed with the app secret so the id the provider sees cannot be walked
+    # back to a conversation by anyone who can guess sequential ids.
+    def end_user_id
+      @end_user_id ||= OpenSSL::HMAC.hexdigest(
+        "SHA256", Rails.application.secret_key_base, "whatsapp_conversation:#{@conversation.id}"
+      )
     end
 
     def instructions
@@ -392,17 +405,21 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       record_missed_actions
       record_skipped_preview
 
-      # Through the way-out send rather than text, and it is the one path that has to
-      # use it: this composes no buttons of its own, so without the pill the message
-      # would be an interactive one with nothing in it, which WhatsApp refuses
-      # outright. It is also honestly a dead end — the model answered in words and
-      # named no next step — which is what the pill is now for. The state pills of
-      # what the turn was about go on it all the same (Whatsapp::StatePills).
-      message = ::Whatsapp::Send.buttons_with_way_out(
-        account: @conversation.whatsapp_account,
-        body: body,
-        buttons: ::Whatsapp::StatePills.buttons(conversation: @conversation)
-      )
+      # Mid-question the reply is plain text: the question follows it with its own
+      # buttons, and a way-out or state pill under the words would be a second set.
+      # Otherwise it is honestly a dead end — the model answered in words and named no
+      # next step — so the way-out send carries the pill and the state pills of what
+      # the turn was about (Whatsapp::StatePills).
+      message =
+        if @conversation.mid_question?
+          ::Whatsapp::Send.text(account: @conversation.whatsapp_account, body: body)
+        else
+          ::Whatsapp::Send.buttons_with_way_out(
+            account: @conversation.whatsapp_account,
+            body: body,
+            buttons: ::Whatsapp::StatePills.buttons(conversation: @conversation)
+          )
+        end
 
       # A refused send is not an answer. Reported as its own failure so the
       # caller says so and offers the retry pill, and — because the failure

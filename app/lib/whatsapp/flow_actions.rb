@@ -66,6 +66,7 @@ module Whatsapp::FlowActions
     terms_decline
     draft_publish
     draft_revise
+    draft_continue
     keep_open
     remove_additions
     submit_final
@@ -188,8 +189,16 @@ module Whatsapp::FlowActions
   # it carries — a similar proposal, the assessment — so
   # Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation adds the pill itself
   # wherever the draft carries them.
+  #
+  # `draft_continue` is the way on from a preview while the draft still has a
+  # question to come — the photo, the place. Left to the model, the first preview
+  # carried no way on at all: "Jetzt einreichen" would have said something that
+  # was not going to happen, so it offered only ways to change the draft, and the
+  # citizen had to type "passt so". Its label names the step, read off the draft,
+  # so the same tool adds it to every preview.
   PLATFORM_WORDED_ACTIONS = [
-    :unlink_confirm, :terms_accept, :remove_additions, *IMAGE_ANSWERS, *UNASKED_IMAGE_ANSWERS
+    :unlink_confirm, :terms_accept, :remove_additions, :draft_continue, *IMAGE_ANSWERS,
+    *UNASKED_IMAGE_ANSWERS
   ].uniq.freeze
 
   # The pills that publish or post, withheld from every message but the preview of

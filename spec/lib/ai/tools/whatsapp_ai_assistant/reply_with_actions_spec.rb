@@ -15,7 +15,8 @@ describe Ai::Tools::WhatsappAiAssistant::ReplyWithActions do
       whatsapp_account: account,
       unshown_preview_kind: nil,
       step: nil,
-      submission_completed?: false
+      submission_completed?: false,
+      mid_question?: false
     )
   end
   let(:state_pills) { [] }

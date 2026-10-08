@@ -1,8 +1,23 @@
-<%= form_with scope: :question, url: url, method: local_assigns.fetch(:method, :post) do |f| %>
+<% option_labels = Array(@question["options"]).sort_by { |option| option["position"].to_i }
+                                              .first(5)
+                                              .map { |option| option["label"].to_s } %>
+
+<%= form_with scope: :question,
+      url: url,
+      method: local_assigns.fetch(:method, :post),
+      data: { controller: "adm--mitmachbox-check",
+              "adm--mitmachbox-check-fonts-url-value" => asset_path("mitmachbox/u8g2_fonts.json"),
+              "adm--mitmachbox-check-options-value" => option_labels.to_json,
+              "adm--mitmachbox-check-messages-value" => t("adm.projekts.mitmachbox.display_check").to_json } do |f| %>
   <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.questions.prompt_label"),
                                           hint: t("adm.projekts.mitmachbox.questions.prompt_hint")) do %>
-    <%= f.text_field :prompt, label: false, value: @question["prompt"] %>
+    <%= f.text_field :prompt,
+          label: false,
+          value: @question["prompt"],
+          data: { "adm--mitmachbox-check-target": "prompt", action: "input->adm--mitmachbox-check#check" } %>
   <% end %>
+
+  <%= render "adm/projekts/mitmachbox_questions/display_check" %>
 
   <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.questions.question_type_label"),
                                           hint: t("adm.projekts.mitmachbox.questions.question_type_hint")) do %>
@@ -14,7 +29,8 @@
             @question["question_type"]
           ),
           {},
-          { label: false } %>
+          { label: false,
+            data: { "adm--mitmachbox-check-target": "type", action: "change->adm--mitmachbox-check#check" }} %>
   <% end %>
 
   <%= render Kern::FormFieldComponent.new(label: t("adm.projekts.mitmachbox.questions.required_label"),
@@ -47,7 +63,7 @@
               {},
               { label: t("adm.projekts.mitmachbox.questions.condition_question_label"),
                 data: { "adm--mitmachbox-condition-target": "select",
-                        action: "adm--mitmachbox-condition#toggle" } } %>
+                        action: "adm--mitmachbox-condition#toggle" }} %>
 
         <% condition_sources.each do |source| %>
           <div class="mt-3" data-adm--mitmachbox-condition-target="group" data-question-id="<%= source["id"] %>">

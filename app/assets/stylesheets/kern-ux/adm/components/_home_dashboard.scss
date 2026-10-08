@@ -858,6 +858,10 @@
   margin: 0;
   padding: 0;
 
+  &--wide {
+    grid-template-columns: 1fr;
+  }
+
   &__card {
     position: relative;
     display: flex;

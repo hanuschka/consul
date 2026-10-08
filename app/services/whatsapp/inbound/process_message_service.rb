@@ -1759,7 +1759,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # is why it is here rather than behind a tool of its own.
     SETTLED_BY_TAP = {
       image_skip: "photo_declined",
-      location_skip: "location_stated"
+      location_skip: "location_declined"
     }.freeze
 
     def settle_slot_for(action)

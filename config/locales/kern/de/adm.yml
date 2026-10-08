@@ -59,7 +59,8 @@ de:
           external_api_keys: API-Schlüssel
           whatsapp: WhatsApp
           machine_translations: Maschinelle Übersetzung
-        help: Hilfe
+        handbook: Handbuch
+        community: Community
     email_templates:
       send_test:
         success: "Test-E-Mail wurde an %{email} gesendet."

@@ -1067,6 +1067,14 @@ paths:
                       description: Admin feasibility assessment (admin only). Set
                         to "feasible" (can be completed), "unfeasible" (cannot be
                         done), or "undecided" (still evaluating).
+                    valuator_explanation:
+                      type: string
+                      nullable: true
+                      description: 'Admin-only: Explanation of the feasibility assessment,
+                        shown on the public proposal page. HTML, stored as-is like
+                        the /adm feasibility editor (e.g. "<p>Does not meet the criteria
+                        because ...</p>"). Required when feasibility is "unfeasible"
+                        and valuation_finished is true; can be sent in the same request.'
                     valuation_finished:
                       type: boolean
                       nullable: true
@@ -1342,8 +1350,12 @@ paths:
       - bearer_auth: []
       description: "Update a budget investment details. Allows editing project information,
         admin feasibility assessment, selection status, or image. Can add, replace,
-        or remove the investment image. Admin-only: can set feasibility status and
-        mark as selected. All fields are optional - only provide fields to change.
+        or remove the investment image. Admin-only: can set feasibility status, the
+        valuator explanation, valuation completion, and mark as selected. The full
+        criteria check (feasibility, explanation, valuation_finished) works in a single
+        request. Like the /adm feasibility form, a request that sets feasibility or
+        valuation_finished emails the author once when the valuation is finished as
+        feasible or unfeasible. All fields are optional - only provide fields to change.
         \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
         access level will receive `403 Forbidden`.*"
       parameters: []
@@ -1449,6 +1461,14 @@ paths:
                       description: Admin feasibility assessment (admin only). Set
                         to "feasible" (can be completed), "unfeasible" (cannot be
                         done), or "undecided" (still evaluating).
+                    valuator_explanation:
+                      type: string
+                      nullable: true
+                      description: 'Admin-only: Explanation of the feasibility assessment,
+                        shown on the public proposal page. HTML, stored as-is like
+                        the /adm feasibility editor (e.g. "<p>Does not meet the criteria
+                        because ...</p>"). Required when feasibility is "unfeasible"
+                        and valuation_finished is true; can be sent in the same request.'
                     valuation_finished:
                       type: boolean
                       nullable: true
@@ -1582,7 +1602,8 @@ paths:
                         type: string
                       description: Tags for categorization
         description: Investment attributes to update (title, description, price, feasibility,
-          selection status, image, translations). Any field not provided remains unchanged.
+          valuator explanation, selection status, image, translations). Any field
+          not provided remains unchanged.
     delete:
       summary: Delete a budget investment
       tags:
@@ -11875,9 +11896,11 @@ paths:
       - bearer_auth: []
       description: "Create a new projekt with the provided configuration. Supports
         hierarchy (sub-projekts), geographic restrictions, phases, and manager assignments.
-        The response includes the full projekt object with all nested relationships.
-        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
-        access level will receive `403 Forbidden`.*"
+        Pass content_blocks to build the projekt page from several content blocks
+        in one request; each block is a separate section of the page. The response
+        includes the full projekt object with all nested relationships. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -11945,8 +11968,20 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ProjektCreateParams"
+            examples:
+              with_content_blocks:
+                summary: Create a projekt whose page has three content blocks
+                value:
+                  projekt:
+                    name: Neugestaltung Marktplatz
+                    content_blocks:
+                    - body: "<h2>Worum geht es?</h2><p>Der Marktplatz wird neu gestaltet.</p>"
+                    - body: "<h2>Zeitplan</h2><ul><li>Beteiligung bis Juni</li><li>Baubeginn
+                        2027</li></ul>"
+                    - body: "<h2>Ergebnisse</h2><p>Folgen nach der Auswertung.</p>"
+                      visible: false
         description: Projekt creation payload with required name and optional configuration
-          (dates, geozones, phases, managers, etc.)
+          (dates, geozones, phases, managers, content blocks, etc.)
   "/api/projekts/{id}":
     parameters:
     - name: id
@@ -12042,9 +12077,11 @@ paths:
       security:
       - bearer_auth: []
       description: "Update an existing projekt with new values. All fields are optional
-        - only provide the fields you want to change. Returns the updated projekt
-        object. \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
-        access level will receive `403 Forbidden`.*"
+        - only provide the fields you want to change. Content blocks of the projekt
+        page are added, updated, reordered, replaced or deleted through content_blocks
+        together with content_blocks_mode. Returns the updated projekt object. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -12114,8 +12151,47 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ProjektUpdateParams"
+            examples:
+              append_content_blocks:
+                summary: Add two content blocks at the bottom of the page
+                value:
+                  projekt:
+                    content_blocks_mode: append
+                    content_blocks:
+                    - body: "<h2>Termine</h2><p>Infoabend am 12. Mai.</p>"
+                    - body: "<h2>Kontakt</h2><p>Stadtplanungsamt</p>"
+              upsert_content_blocks:
+                summary: Edit one block, move another to the top and add a new one
+                value:
+                  projekt:
+                    content_blocks_mode: upsert
+                    content_blocks:
+                    - id: 12
+                      body: "<h2>Zeitplan</h2><p>Baubeginn verschoben auf 2028.</p>"
+                    - id: 14
+                      position: 1
+                    - body: "<h2>FAQ</h2><p>Antworten auf häufige Fragen.</p>"
+                      visible_from: '2026-11-01T08:00:00+01:00'
+              replace_content_blocks:
+                summary: 'Rebuild the page: keep block 12, add one new block, delete
+                  every other block'
+                value:
+                  projekt:
+                    content_blocks_mode: replace
+                    content_blocks:
+                    - body: "<h2>Einleitung</h2><p>Neu geschriebener Text.</p>"
+                    - id: 12
+              delete_content_blocks:
+                summary: Delete two content blocks
+                value:
+                  projekt:
+                    content_blocks_mode: delete
+                    content_blocks:
+                    - id: 13
+                    - id: 15
         description: Projekt attributes to update (name, dates, visibility settings,
-          geozones, phases, managers, etc.). Any field not provided remains unchanged.
+          geozones, phases, managers, content blocks, etc.). Any field not provided
+          remains unchanged.
     delete:
       summary: Delete a projekt
       tags:
@@ -12669,11 +12745,12 @@ paths:
       - Projekts
       security:
       - bearer_auth: []
-      description: "Update the main content block body (HTML) for a projekt. This
-        is the primary rich-text description that appears on the projekt detail page.
-        Supports HTML formatting. Updates the default locale content block. \n\n*Authorization:
-        Requires `admin` access level. Requests with `public_data` access level will
-        receive `403 Forbidden`.*"
+      description: "Replace the HTML body of the projekt's FIRST content block only;
+        every other block stays unchanged. A projekt page is made of several content
+        blocks, so to write the page as several sections (add, edit, reorder, replace
+        or delete blocks) send content_blocks to POST /api/projekts or PATCH /api/projekts/{id}
+        instead. \n\n*Authorization: Requires `admin` access level. Requests with
+        `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -14955,7 +15032,11 @@ components:
             "$ref": "#/components/schemas/ProjektPhase"
         content_blocks:
           type: array
-          description: Array of content blocks that compose the projekt page content
+          description: Array of content blocks that compose the projekt page content,
+            ordered by position. On GET (include_content_blocks=true) only blocks
+            currently shown to visitors are listed. Create/update responses include
+            it whenever the request carried content_blocks, and then list every block
+            of the projekt, hidden and scheduled ones included.
           items:
             "$ref": "#/components/schemas/ContentBlock"
       required:
@@ -15190,6 +15271,39 @@ components:
                       type: string
                     description: Array of permission names (e.g., ["admin", "edit",
                       "view"])
+            content_blocks:
+              type: array
+              description: 'Content blocks of the projekt page. Each block is a separate
+                section of the page, shown in array order. Split the page into several
+                blocks (e.g. one per heading) instead of putting everything into one
+                block. On create, the blocks are created in the given order (any id
+                is ignored) and content_blocks_mode is ignored; without content_blocks
+                or with an empty list, create adds one empty block. Every item must
+                be an object; plain strings are rejected. On update, what happens
+                is set by content_blocks_mode. Omit content_blocks to leave the blocks
+                unchanged. The whole request is atomic: if one block is invalid, nothing
+                is saved and the response is 422 with errors keyed by "content_blocks[<index>]".'
+              items:
+                "$ref": "#/components/schemas/ContentBlockWriteParams"
+            content_blocks_mode:
+              type: string
+              enum:
+              - append
+              - prepend
+              - upsert
+              - replace
+              - delete
+              default: upsert
+              description: |
+                How content_blocks is applied on update. Ignored on create.
+
+                - `append`: every item becomes a new block at the bottom of the page (id ignored).
+                - `prepend`: every item becomes a new block at the top of the page, in the given order (id ignored).
+                - `upsert` (default): an item with id updates that block, an item without id becomes a new block at the bottom. With `position`, the block is moved to that place. Blocks not listed stay unchanged.
+                - `replace`: the array becomes the complete, ordered list of blocks. Items with id update those blocks, items without id become new blocks, and every existing block not listed is deleted. An empty array deletes all blocks.
+                - `delete`: every item must carry an id; those blocks are deleted. Other fields are ignored.
+
+                Any id that does not belong to this projekt fails the request with 422, and so does a replace or delete that would remove a block whose AI generation is still running.
           required:
           - name
       required:
@@ -15302,6 +15416,39 @@ components:
                       type: string
                     description: Array of permission names (e.g., ["admin", "edit",
                       "view"])
+            content_blocks:
+              type: array
+              description: 'Content blocks of the projekt page. Each block is a separate
+                section of the page, shown in array order. Split the page into several
+                blocks (e.g. one per heading) instead of putting everything into one
+                block. On create, the blocks are created in the given order (any id
+                is ignored) and content_blocks_mode is ignored; without content_blocks
+                or with an empty list, create adds one empty block. Every item must
+                be an object; plain strings are rejected. On update, what happens
+                is set by content_blocks_mode. Omit content_blocks to leave the blocks
+                unchanged. The whole request is atomic: if one block is invalid, nothing
+                is saved and the response is 422 with errors keyed by "content_blocks[<index>]".'
+              items:
+                "$ref": "#/components/schemas/ContentBlockWriteParams"
+            content_blocks_mode:
+              type: string
+              enum:
+              - append
+              - prepend
+              - upsert
+              - replace
+              - delete
+              default: upsert
+              description: |
+                How content_blocks is applied on update. Ignored on create.
+
+                - `append`: every item becomes a new block at the bottom of the page (id ignored).
+                - `prepend`: every item becomes a new block at the top of the page, in the given order (id ignored).
+                - `upsert` (default): an item with id updates that block, an item without id becomes a new block at the bottom. With `position`, the block is moved to that place. Blocks not listed stay unchanged.
+                - `replace`: the array becomes the complete, ordered list of blocks. Items with id update those blocks, items without id become new blocks, and every existing block not listed is deleted. An empty array deletes all blocks.
+                - `delete`: every item must carry an id; those blocks are deleted. Other fields are ignored.
+
+                Any id that does not belong to this projekt fails the request with 422, and so does a replace or delete that would remove a block whose AI generation is still running.
       required:
       - projekt
     ProjektPhase:
@@ -15572,34 +15719,58 @@ components:
           type: integer
           description: Unique identifier for the content block
           example: 1
-        title:
+        name:
           type: string
-          nullable: true
-          description: Optional heading or title for the content block
-          example: Introduction
+          description: Block type. Always "custom" for projekt page blocks.
+          example: custom
+        key:
+          type: string
+          description: Internal unique key of the block
+          example: projekt_content_block_1_1_1704067200
         body:
           type: string
           nullable: true
-          description: The main text content of the block (supports HTML/rich text)
-          example: This is the content of the block.
+          description: The HTML content of the block
+          example: "<h2>Introduction</h2><p>This is the content of the block.</p>"
         locale:
           type: string
           description: Language code for this content block (e.g., "en" for English,
             "de" for German)
-          example: en
+          example: de
+        projekt_id:
+          type: integer
+          nullable: true
+          description: ID of the projekt this block belongs to
+          example: 1
         position:
           type: integer
+          nullable: true
           description: The display order of this block. Lower numbers appear first.
-          example: 0
-        blockable_type:
-          type: string
-          description: The type of resource this block belongs to (e.g., "Projekt",
-            "Page")
-          example: Projekt
-        blockable_id:
-          type: integer
-          description: The ID of the resource this block belongs to
           example: 1
+        visible:
+          type: boolean
+          description: Whether the block is switched on. A switched-off block is never
+            shown to visitors.
+          example: true
+        visible_from:
+          type: string
+          format: date_time
+          nullable: true
+          description: The block is shown to visitors from this time on. Null means
+            no start restriction.
+          example:
+        visible_until:
+          type: string
+          format: date_time
+          nullable: true
+          description: The block is shown to visitors until this time. Null means
+            no end restriction.
+          example:
+        margin_bottom:
+          type: integer
+          nullable: true
+          description: Space below the block in pixels
+          example: 20
         created_at:
           type: string
           format: datetime
@@ -15613,8 +15784,49 @@ components:
       required:
       - id
       - position
-      - blockable_type
-      - blockable_id
+    ContentBlockWriteParams:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of an existing block of this projekt. Used by the upsert,
+            replace and delete modes; ignored on create and by append/prepend.
+          example: 12
+        body:
+          type: string
+          description: HTML content of the block. New blocks without a body start
+            empty.
+          example: "<h2>Background</h2><p>Why this projekt exists.</p>"
+        visible:
+          type: boolean
+          description: Switch the block on or off. New blocks are on by default.
+          example: true
+        visible_from:
+          type: string
+          format: date_time
+          nullable: true
+          description: Show the block to visitors from this time on. Send null to
+            remove the start restriction.
+          example:
+        visible_until:
+          type: string
+          format: date_time
+          nullable: true
+          description: Show the block to visitors until this time. Must not be before
+            visible_from. Send null to remove the end restriction.
+          example:
+        margin_bottom:
+          type: integer
+          description: 'Space below the block in pixels (default 20, minimum 15: lower
+            values are raised to 15)'
+          example: 20
+        position:
+          type: integer
+          minimum: 1
+          description: 'upsert mode only: move the block to this place (1 = top).
+            Other blocks shift down. A position past the last block moves it to the
+            bottom.'
+          example: 1
     ProjektPhaseSetting:
       type: object
       properties:
@@ -16354,6 +16566,12 @@ components:
           format: date_time
           description: Timestamp when the investment was last modified
           example: '2024-01-18T14:30:00Z'
+        valuator_explanation:
+          type: string
+          nullable: true
+          description: Explanation of the feasibility assessment as HTML, shown on
+            the public proposal page. Omitted when empty.
+          example: "<p>Does not meet the criteria.</p>"
         similar_contributions_count:
           type: integer
           nullable: true

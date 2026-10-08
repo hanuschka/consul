@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_07_171753) do
+ActiveRecord::Schema.define(version: 2026_10_08_121239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3453,6 +3453,7 @@ ActiveRecord::Schema.define(version: 2026_10_07_171753) do
     t.index "((ai_generation_data ->> 'status'::text))", name: "index_site_customization_content_blocks_on_ai_status"
     t.index ["key", "name", "locale"], name: "locale_key_name_index", unique: true
     t.index ["newsletter_id"], name: "index_site_customization_content_blocks_on_newsletter_id"
+    t.index ["projekt_id", "position"], name: "index_scb_on_projekt_id_and_position"
   end
 
   create_table "site_customization_content_card_translations", force: :cascade do |t|

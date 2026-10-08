@@ -168,10 +168,12 @@ en:
           on the page once it has been approved — which is why there is no link to it yet.
         # The question under the draft shown again after a tap on the publishing pill
         # under an older preview (Whatsapp::PreviewVersion), and the note on what the
-        # draft adds beyond the citizen's own words.
+        # draft adds beyond the citizen's own words. The question says nothing about
+        # publishing: the first button under it can still lead to the photo or the
+        # place.
         outdated_question: >-
-          Your contribution has changed since that preview. Above is how it would be published
-          now. Should it go online like this?
+          Your contribution has changed since that preview. Above is how it looks now. Is it
+          right like this?
         outdated_additions_note: >-
           It also contains something you did not say: %{additions}. I can take that out again.
       proposal:

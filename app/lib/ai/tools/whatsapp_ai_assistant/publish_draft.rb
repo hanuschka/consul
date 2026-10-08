@@ -14,7 +14,8 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
               "draft_status first if you are not certain nothing is outstanding. It refuses on " \
               "its own when the terms have not been accepted, when the phase no longer allows " \
               "the citizen to contribute, when a category or sentiment is missing, when the phase " \
-              "takes a picture and the citizen has not been asked for one with request_photo, or " \
+              "takes a picture and the citizen has not been asked for one with request_photo, " \
+              "when the phase takes a place and it has not been asked about yet, or " \
               "when the phase's criteria reject the text; each refusal says what would resolve " \
               "it. It also " \
               "refuses when the citizen has not been shown the contribution as it now stands: " \
@@ -49,11 +50,12 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     # and the citizen should not be sent to accept terms for a phase that has closed.
     # The confirmation comes last: it is the only one of the three the citizen can
     # resolve in a single message, so it is worth asking for only once the rest holds.
-    # The picture question sits before it, because answering it changes the draft
-    # the confirmation would be given to.
+    # The picture and place questions sit before it, because answering either
+    # changes the draft the confirmation would be given to.
     def precondition_refusal
       refuse_if_not_permitted || refuse_without_consent || refuse_without_image_question ||
-        refuse_without_confirmation || refuse_on_stale_preview
+        refuse_without_location_question || refuse_without_confirmation ||
+        refuse_on_stale_preview
     end
 
     # A phase that takes pictures asks for one before anything goes in, because
@@ -67,6 +69,25 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
         hint: "Ask for the picture with request_photo, which carries the notices that have to " \
               "come with it. Once they have answered, show them the contribution again with " \
               "show_draft_for_confirmation."
+      }
+    end
+
+    # The place, for the same reason and after the picture, in the order the
+    # preview names them. The bot tells the citizen it will ask for both, so a
+    # contribution that goes in without the second question is one that broke
+    # that promise — on a map nothing can be pinned from the chat afterwards.
+    # Asked, not answered: opening the picker once or a "no" settles it.
+    def refuse_without_location_question
+      return if conversation.location_question_settled?
+
+      {
+        error: "This phase takes a place and the citizen has not been asked about it, so it " \
+               "was not published. Nothing can be added to it once it is in.",
+        hint: "Call draft_status for the place: attach one that is waiting with " \
+              "set_draft_location once they agree to it, or offer the pin with " \
+              "request_location. Once they have answered, show them the contribution again " \
+              "with show_draft_for_confirmation — with location_declined where they said " \
+              "they would rather go without one."
       }
     end
 

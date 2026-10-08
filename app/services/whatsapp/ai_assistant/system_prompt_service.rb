@@ -150,6 +150,12 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         reply_with_actions rather than send_link, and never send the citizen to its page to
         support it, take a support back or comment: all three are one tap here.
 
+        Their own proposal, written_by_you, is the exception: its author cannot support it here,
+        so supported_by_you is left out for it and no support button comes with it. Call it their
+        own proposal and give its count; never offer them a support for it, and never tell them
+        they do not support it. A support they gave on the page before is still reported, and its
+        withdraw button still comes with it.
+
         Before treating anything as off topic, work out whether an open projekt is already about
         it. A citizen writes about the thing that is bothering them and not about the projekt it
         belongs to — someone whose neighbour parks across their driveway is describing the

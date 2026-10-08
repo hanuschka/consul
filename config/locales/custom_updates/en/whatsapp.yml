@@ -161,6 +161,7 @@ en:
         phase: Participation
         attachments: Attached
         photo: Photo
+        ai_image: AI image
         location: Location
         online: "Your contribution is now online:"
         awaiting_review: >-

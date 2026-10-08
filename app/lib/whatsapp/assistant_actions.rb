@@ -93,6 +93,8 @@ module Whatsapp::AssistantActions
     draft_publish: "whatsapp.bot.buttons.draft_publish",
     submit_final: "whatsapp.bot.buttons.draft_publish",
     submit_proposal: "whatsapp.bot.buttons.submit_proposal",
+    my_contributions: "whatsapp.bot.buttons.my_contributions",
+    discover: "whatsapp.bot.buttons.discover",
     draft_revise: "whatsapp.bot.buttons.draft_revise",
     submit_anyway: "whatsapp.bot.buttons.submit_anyway",
     location_share: "whatsapp.bot.buttons.location_share",
@@ -964,10 +966,15 @@ module Whatsapp::AssistantActions
   # The same reading for a caller that has the proposal in hand already
   # (Whatsapp::StatePills), so the vote is read one way wherever a support pill is
   # composed.
+  #
+  # No "Unterstützen" on the citizen's own proposal: the bot does not take an
+  # author's support for what they wrote. One they gave on the page before keeps
+  # its withdraw pill, which is why the author is asked after the vote.
   def support_direction(proposal, conversation)
     user = conversation.user
 
     return :support_withdraw if user.present? && proposal.voted_up_by?(user)
+    return if ::Whatsapp::ContributionFacts.written_by?(proposal, user)
     return if !supportable?(proposal)
 
     :support_register

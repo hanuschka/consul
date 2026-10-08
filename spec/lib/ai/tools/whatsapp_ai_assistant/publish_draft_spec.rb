@@ -150,11 +150,12 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       tool.execute
     end
 
-    # The reply after it carries the new proposal's state pills (Whatsapp::StatePills).
-    it "keeps the published proposal in focus for the reply" do
+    # The reply after it carries the next steps after a submission
+    # (Whatsapp::StatePills).
+    it "puts the completed submission in focus for the reply" do
       tool.execute
 
-      expect(Current.whatsapp_pill_focus).to eq(proposal_id: 77)
+      expect(Current.whatsapp_pill_focus).to eq(submission_completed: true)
     ensure
       Current.reset
     end

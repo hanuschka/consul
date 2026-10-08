@@ -148,10 +148,8 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     # The phase is kept so the citizen's next idea goes to the same one; everything
     # about the draft is dropped, because it is a published record now and nothing
     # about it is still a draft.
-    # The phase id is reported because the reply is asked to offer taking part in the
-    # same phase again, and that pill is parameterised: without the id here the model
-    # has nothing to build it from and the offer is dropped as a record that does not
-    # exist. So it is read before complete_draft! drops it.
+    # The phase id is reported so that another idea, once asked for, can be offered
+    # in the same phase again. So it is read before complete_draft! drops it.
     def published_answer(resource)
       url = ::Whatsapp::PublishedResourceUrl.call(resource)
       awaiting_review = resource.is_a?(::Proposal) && !resource.admin_accepted?
@@ -162,9 +160,7 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       conversation.complete_draft!
       conversation.note_submission_completed!
 
-      if resource.is_a?(::Proposal)
-        ::Whatsapp::StatePills.focus_proposal(resource.id)
-      end
+      ::Whatsapp::StatePills.focus_submission_completed
 
       {
         completed: true,
@@ -191,32 +187,36 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       ::Whatsapp::Send.message_block(account: account, block: block)
     end
 
+    # What plausibly follows a submission: another idea, the list of their own and the
+    # projekts. Offering those is not pushiness — they have just acted, and the
+    # alternative is a citizen reading "it is online" with nothing to do but type.
+    # What stays out is anything unrelated to the thing they just did, and a support
+    # for it, which its author cannot give.
+    #
+    # The buttons are Whatsapp::StatePills' rather than the model's, so the sentence
+    # is told which three they are: it offered another idea in words while the slots
+    # under it carried something else.
+    NEXT_STEPS = "Three buttons are put under your reply for you: submitting another idea, their " \
+                 "own contributions, and the projekts. Offer exactly those in a short line, add " \
+                 "no buttons of your own, and do not invite them to support or comment on the " \
+                 "contribution they just submitted.".freeze
+
     AWAITING_REVIEW_HINT = "It is in, but held for review. They have already been told that it " \
                            "arrived and is with the administration, so do not say it again, do " \
-                           "not repeat the contribution and do not offer a link. Offer what " \
-                           "follows: taking part in this same phase again, and their own " \
-                           "contributions.".freeze
+                           "not repeat the contribution and do not offer a link. " \
+                           "#{NEXT_STEPS}".freeze
 
-    # What plausibly follows a submission, which is not the same as an invitation to
-    # submit again: the contribution they just made, the phase they made it in, and
-    # the list of their own. Offering those is not pushiness — they have just acted,
-    # and the alternative is a citizen reading "it is online" with nothing to do but
-    # type. What stays out is anything unrelated to the thing they just did.
-    #
     # That it is online is said once, in the message this tool has already sent, and
     # a model that says it again turns one fact into two messages carrying it. So the
     # buttons arrive under the offers alone.
     #
     # The address went out written into that message rather than on a button of its
     # own, because a URL button is the only thing on the message it sits on: taking it
-    # would cost the other two offers. WhatsApp makes a written-out address tappable
+    # would cost the three offers. WhatsApp makes a written-out address tappable
     # anyway.
     PUBLISHED_HINT = "They have already been told that it is online, and its address has already " \
                      "been sent to them, so do not say either again and do not repeat the " \
-                     "contribution. Offer what follows from what they just did — taking part in " \
-                     "this same phase again, and their own contributions — as buttons. Do not " \
-                     "invite them to anything unrelated to the contribution they just " \
-                     "submitted.".freeze
+                     "contribution. #{NEXT_STEPS}".freeze
 
     def draft_errors
       conversation.draft_resource&.errors&.full_messages

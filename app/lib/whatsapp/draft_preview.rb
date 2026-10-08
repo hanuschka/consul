@@ -18,7 +18,7 @@ module Whatsapp::DraftPreview
 
   SCOPE = "whatsapp.bot.preview".freeze
 
-  CONFIRMATION_LABEL_KEYS = %w[projekt phase attachments photo location].freeze
+  CONFIRMATION_LABEL_KEYS = %w[projekt phase attachments photo ai_image location].freeze
 
   module_function
 
@@ -106,9 +106,15 @@ module Whatsapp::DraftPreview
     unnamed_pin = pin_coordinates(resource).present? && place_name.blank?
 
     [
-      image_blob_id(resource).present? ? labels["photo"] : nil,
+      image_label(resource: resource, labels: labels),
       unnamed_pin ? labels["location"] : nil
     ].compact_blank.join(", ").presence
+  end
+
+  def image_label(resource:, labels:)
+    return if image_blob_id(resource).blank?
+
+    resource.image.ai_generated? ? labels["ai_image"] : labels["photo"]
   end
 
   def pin_place_name(conversation:, resource:)
@@ -133,6 +139,6 @@ module Whatsapp::DraftPreview
     [pin.latitude, pin.longitude].join(",")
   end
 
-  private_class_method :meta_lines, :attached_names, :pin_place_name
+  private_class_method :meta_lines, :attached_names, :image_label, :pin_place_name
   private_class_method :description_text, :image_blob_id, :pin_coordinates
 end

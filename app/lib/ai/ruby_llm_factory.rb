@@ -3,6 +3,18 @@ module Ai::RubyLlmFactory
   # endpoint serves the Gemini models without pinning a region.
   VERTEX_AI_LOCATION = "global".freeze
 
+  EXPLICIT_CACHING_PROVIDERS = %w[anthropic bedrock].freeze
+
+  CONVERSATION_FEATURES = %w[whatsapp.assistant].freeze
+
+  REPEATED_PREFIX_FEATURES = %w[
+    whatsapp.assistant
+    whatsapp.bot_copy
+    similar_contributions.find_for_additional_projekts
+    similar_contributions.find_for_phase
+    similar_contributions.find_for_projekt
+  ].freeze
+
   # The one builder. A chat is pinned to the model its profile chose and carries
   # the tools it was asked for in the same call, so the model it talks to and the
   # effort those tools are named with are always answers from the same profile —
@@ -74,23 +86,17 @@ module Ai::RubyLlmFactory
   # and embeddable? is what retrieval checks before relying on vectors.
   def self.embed(input, model:, dimensions:, feature: AiUsageRecord::UNKNOWN_FEATURE)
     provider = Ai::Settings.current_llm_provider
+    context = attribute_usage(
+      init, feature: feature, provider: provider, requested_model: model
+    )
 
-    embedding = init.embed(
+    context.embed(
       input,
       model: model,
       provider: provider.to_sym,
       assume_model_exists: true,
       dimensions: dimensions
     )
-
-    AiUsageRecords::RecordEmbeddingUsage.call(
-      embedding: embedding,
-      feature: feature,
-      provider: provider,
-      requested_model: model
-    )
-
-    embedding
   end
 
   def self.embeddable?
@@ -101,14 +107,16 @@ module Ai::RubyLlmFactory
     model = model_for(gpt_model)
     provider = Ai::Settings.current_llm_provider
 
-    chat = context.chat(
-      model: model,
-      provider: provider.to_sym,
-      protocol: protocol_for_endpoint,
-      assume_model_exists: true
-    )
+    chat =
+      attribute_usage(context, feature: feature, provider: provider, requested_model: model)
+        .chat(
+          model: model,
+          provider: provider.to_sym,
+          protocol: protocol_for_endpoint,
+          assume_model_exists: true
+        )
 
-    record_usage_from(chat, feature: feature, provider: provider, model: model)
+    apply_prompt_caching(chat, feature)
   end
 
   # ruby_llm speaks OpenAI's Responses API by default, and so does this app on
@@ -122,24 +130,89 @@ module Ai::RubyLlmFactory
     :chat_completions
   end
 
-  # after_message also fires for every tool result the chat appends, and a tool
-  # result is no request to the provider: counted, each one was a request with no
-  # tokens and no price.
-  def self.record_usage_from(chat, feature:, provider:, model:)
-    chat.after_message do |message|
-      next if message.role != :assistant
+  # Usage is booked off ruby_llm's per-attempt usage events rather than off the
+  # messages a chat receives: a request that failed or was retried produced no
+  # message and was still sent, often billed. Every call made through the
+  # context — chat, embedding, transcription — reports to the instrumenter.
+  #
+  # Each context is built for one call, so the instrumenter set here never
+  # leaks to another feature; the guard is the same one the timeout needs.
+  def self.attribute_usage(context, feature:, provider:, requested_model:)
+    return context if !context.is_a?(RubyLLM::Context)
 
-      AiUsageRecords::RecordChatUsage.call(
-        message: message,
-        feature: feature,
-        provider: provider,
-        requested_model: model
-      )
-    rescue => e
-      Rails.logger.error("[AiUsageRecord] Failed to record usage for #{feature}: #{e.message}")
+    context.config.instrumenter = ::Ai::UsageInstrumenter.new(
+      feature: feature,
+      provider: provider,
+      requested_model: requested_model,
+      delegate: context.config.instrumenter
+    )
+
+    context
+  end
+
+  # On OpenAI's own API caching is automatic and free; a prompt_cache_key per
+  # feature only routes requests sharing a prefix to the same cache, raising the
+  # hit rate. The key is withheld from an OpenAI-compatible endpoint, which may
+  # refuse a parameter it does not know, and from the unknown feature, which
+  # would pool unrelated prompts under one key.
+  #
+  # Anthropic and Bedrock charge a premium for every cache write, so caching
+  # there is opt-in: automatic caching only for a conversation, whose next
+  # request repeats everything the last one sent, and a boundary after the
+  # instructions (cache_prefix) only for features whose instructions repeat.
+  def self.apply_prompt_caching(chat, feature)
+    cache_key = prompt_cache_key(feature)
+
+    if Ai::Settings.standard_openai? && cache_key.present?
+      chat.with_caching(key: cache_key)
+    elsif explicit_caching_provider? && CONVERSATION_FEATURES.include?(feature)
+      chat.with_caching
+    else
+      chat
+    end
+  end
+
+  # Read by OpenaiApi::Responses as well, so both transports key a feature's
+  # requests the same way.
+  def self.prompt_cache_key(feature)
+    if AiUsageRecord.known_feature(feature) == AiUsageRecord::UNKNOWN_FEATURE
+      return
+    end
+
+    feature
+  end
+
+  # Called right after with_instructions: marks the tools and instructions sent
+  # so far as the prefix to keep, on the providers that cache only where told
+  # to. Elsewhere it does nothing, because on OpenAI the same mark moves the
+  # instructions into the input and changes the request the app has tested.
+  def self.cache_prefix(chat, feature:)
+    if explicit_caching_provider? && REPEATED_PREFIX_FEATURES.include?(feature)
+      return chat.cache_until_here
     end
 
     chat
+  end
+
+  def self.explicit_caching_provider?
+    EXPLICIT_CACHING_PROVIDERS.include?(Ai::Settings.current_llm_provider)
+  end
+
+  # An opaque id for the person behind a conversation, for the provider's abuse
+  # monitoring. ruby_llm's Responses protocol drops with_end_user, so on
+  # OpenAI's own API the field is written into the payload directly; an
+  # OpenAI-compatible endpoint gets nothing, for the same reason it gets no
+  # cache key.
+  def self.identify_end_user(chat, end_user_id)
+    return chat if end_user_id.blank?
+
+    if Ai::Settings.standard_openai?
+      return chat.before_request { |payload| payload[:safety_identifier] = end_user_id }
+    end
+
+    return chat if Ai::Settings.openai?
+
+    chat.with_end_user(end_user_id)
   end
 
   # A model id named for one provider means nothing to another, and an

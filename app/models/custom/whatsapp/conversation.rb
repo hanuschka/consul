@@ -26,15 +26,15 @@ class Whatsapp::Conversation < ApplicationRecord
   # order of the conversation, and what it does next follows from the tools it is
   # given and the state it is told. What the column still answers is "what was
   # this conversation doing when it broke", which is the only cheap answer to
-  # that question — and it is what the /adm dialog view renders and what every
+  # that question — and it is what the /adm reach page counts and what every
   # log line already written says. It is stamped from the last tool that ran (see
   # Ai::Tools::WhatsappAiAssistant::BaseTool#diagnostic_step).
   #
   # Kept as an enum so a value nothing translates cannot be persisted, and every
   # value stays declared even where no tool stamps one any more: rows written by
-  # the scripted flow still hold them, /adm looks each one up under
-  # adm.whatsapp.steps, and the dialog filter offers the whole map. Retiring a
-  # value would break the reading of conversations that already happened.
+  # the scripted flow still hold them, and /adm looks each one up under
+  # adm.whatsapp.steps. Retiring a value would break the reading of
+  # conversations that already happened.
   module Step
     IDLE = "idle".freeze
     AWAITING_LINK = "awaiting_link".freeze
@@ -157,8 +157,34 @@ class Whatsapp::Conversation < ApplicationRecord
     draft_resource&.image&.attachment&.attached? == true
   end
 
-  def location_question_pending?
-    location_question_available? && !location_stated?
+  # Whether the picture question has been answered for this draft. Asked means
+  # the notices went out with the question (Whatsapp::ImageQuestion); a picture
+  # already attached, or a citizen who said up front they have none, has
+  # answered it. One predicate for the tool that refuses to publish before it
+  # and the preview that names it as the next step, so the button never says
+  # one thing while publishing does another.
+  def image_question_settled?
+    !image_question_pending? || image_notices_shown? || draft_picture_attached?
+  end
+
+  # Whether the place question has been answered for this draft, the picture's
+  # counterpart: a pin is attached, the picker has been opened once
+  # (request_location refuses a second ask), or the citizen said they would
+  # rather go without. A place still waiting is no answer — a shared pin until
+  # it is written, a place read from their words until they say it is the
+  # right one — and neither is a place they only named: nothing reaches the
+  # map from the text. One predicate for the preview that names the step and
+  # the tool that refuses to publish before it, for the same reason as above.
+  #
+  # A shared pin outranks an earlier "ohne Ort", because sending it is the
+  # later answer; a place read from their words does not, because they never
+  # chose it.
+  def location_question_settled?
+    return true if !location_question_available?
+    return false if shared_location.present?
+    return true if location_declined?
+
+    proposed_location.blank? && (location_requested? || draft_resource&.map_location.present?)
   end
 
   # Everything the submission collected, dropped. The phase goes with it, so the
@@ -314,7 +340,7 @@ class Whatsapp::Conversation < ApplicationRecord
   # What the citizen answered before being asked, read off their own words by the
   # drafting call. Written by store_generated_draft!; read by the two tools that
   # would otherwise ask again.
-  SETTLED_SLOT_KEYS = %w[photo_declined location_stated].freeze
+  SETTLED_SLOT_KEYS = %w[photo_declined location_stated location_declined].freeze
 
   # One batched write, under the inbound job's advisory lock: the draft, the
   # questions the citizen already answered unasked, what the draft added to their
@@ -353,7 +379,7 @@ class Whatsapp::Conversation < ApplicationRecord
     context["settled_slots"].to_h
   end
 
-  # Both default false on every path that cannot answer — a revision, a provider
+  # Each defaults false on every path that cannot answer — a revision, a provider
   # that returned nothing. False is the safe direction: asking a question twice
   # costs a message, skipping one the citizen never answered costs them the photo
   # they meant to send.
@@ -371,6 +397,10 @@ class Whatsapp::Conversation < ApplicationRecord
     settled_slots["photo_declined"] == true
   end
 
+  # That they said where it is, which puts nothing on the map: a place the
+  # lookup found waits as proposed_location, and one it did not find still
+  # leaves the pin to ask for. So it shapes how draft_status words the place
+  # question and settles nothing — "ohne Ort" is location_declined.
   def location_stated?
     settled_slots["location_stated"] == true
   end
@@ -481,6 +511,10 @@ class Whatsapp::Conversation < ApplicationRecord
   # list. It outlives the discard and the publishing, which both rebuild the
   # context (#retained_context); a new submission takes it with the rest, having
   # either taken it up or moved past it, and so does going back to the beginning.
+  #
+  # Parked again for the same phase without words — the tap on the card's pill,
+  # then start_draft for that tap — it keeps the words it already holds: the
+  # second time is the same request, not a request with nothing said.
   def parked_projekt_phase
     projekt_phase_id = context.dig("parked_submission", "projekt_phase_id")
 
@@ -494,10 +528,13 @@ class Whatsapp::Conversation < ApplicationRecord
   end
 
   def park_submission!(projekt_phase:, text:)
+    same_phase = context.dig("parked_submission", "projekt_phase_id") == projekt_phase.id
+    kept_text = same_phase ? parked_submission_text : nil
+
     merge_context!(
       parked_submission: {
         "projekt_phase_id" => projekt_phase.id,
-        "text" => text.to_s.strip.presence
+        "text" => text.to_s.strip.presence || kept_text
       }
     )
   end
@@ -550,6 +587,21 @@ class Whatsapp::Conversation < ApplicationRecord
 
   def record_location_requested!
     merge_context!(location_requested: true)
+  end
+
+  # That this draft's citizen said in words they would rather go without a
+  # place, so the preview no longer leads to the picker. Held beside the
+  # request rather than in the settled slots for the same reason: a revised
+  # text is still the same draft, and the place was still declined.
+  #
+  # The settled slot is the same answer given unasked in the opening message or
+  # by the "Ohne Ort weiter" tap, and clears on a revision like photo_declined.
+  def location_declined?
+    context["location_declined"] == true || settled_slots["location_declined"] == true
+  end
+
+  def record_location_declined!
+    merge_context!(location_declined: true)
   end
 
   # That this draft's citizen has been shown both picture notices — the rights one

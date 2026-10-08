@@ -96,7 +96,7 @@ App.Studio.Projekt.templateFunctions.wrapWithContentBlockListHtml = function(con
   `
 }
 
-App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context, updateUrl, destroyUrl, updatePositionUrl, aiUrl, generateUrl, toolbarPosition, visibility} = {}) {
+App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(contentBlockHTML, {contentBlockId, draftContentBlockIndex, context = App.Studio.Projekt.config.context, updateUrl, destroyUrl, updatePositionUrl, aiUrl, generateUrl, toolbarPosition, visibility} = {}) {
   const isSiteContext = context === 'site';
   const showEmptyHint = !context || context === 'projekt';
   const isEmpty = showEmptyHint && App.Studio.ContentBlocks.Crud.isContentEmpty(contentBlockHTML);

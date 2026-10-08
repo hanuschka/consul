@@ -182,7 +182,17 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   def touch_projekt_content_updated_at
     return if destroyed_by_association.present?
 
-    projekt&.touch(:content_updated_at)
+    touched_projekt_ids = Current.content_block_touched_projekt_ids
+
+    if touched_projekt_ids.nil?
+      projekt&.touch(:content_updated_at)
+    elsif projekt_id.present?
+      touched_projekt_ids << projekt_id
+    end
+  end
+
+  def self.clamp_margin_bottom(margin_bottom)
+    [type_for_attribute("margin_bottom").cast(margin_bottom).to_i, MIN_MARGIN_BOTTOM].max
   end
 
   private

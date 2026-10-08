@@ -1,0 +1,112 @@
+<%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+<% turbo_refreshes_with(method: :replace, scroll: :preserve) %>
+
+<% stepped = params[:answered].present? %>
+<% key_count = 5 %>
+
+<%= render Adm::HeaderComponent.new(title: @projekt_phase.title, breadcrumbs: @breadcrumbs) %>
+
+<%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase, current_action: "mitmachbox_survey")) %>
+
+<div class="kern-container mb-5">
+  <h3 class="kern-title kern-title--small mb-2">
+    <%= t(".version_#{@test_run_version}", number: @test_run_version_ref["version_number"]) %>
+  </h3>
+
+  <p class="kern-body kern-body--small mb-4"><%= t(".hint") %></p>
+
+  <% if @test_run.questions.empty? %>
+    <%= empty_state(title: t(".no_questions"), icon: "quiz") %>
+  <% elsif @test_run.finished? %>
+    <div class="adm-mitmachbox-device mb-4">
+      <div class="adm-mitmachbox-device__case">
+        <div class="adm-mitmachbox-device__bezel">
+          <div class="adm-mitmachbox-device__screen">
+            <h4 class="adm-mitmachbox-device__message" tabindex="-1"<% if stepped %> autofocus<% end %>><%= t(".finished") %></h4>
+          </div>
+        </div>
+
+        <span class="adm-mitmachbox-device__key adm-mitmachbox-device__key--confirm" aria-hidden="true"></span>
+
+        <div class="adm-mitmachbox-device__keys" aria-hidden="true">
+          <% key_count.times do %>
+            <span class="adm-mitmachbox-device__key"></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%= kern_link_button mitmachbox_test_run_adm_projekts_phase_path(@projekt_phase, version: @test_run_version),
+          text: t(".restart"),
+          icon: "restart_alt",
+          data: { turbo_action: "replace" } %>
+  <% else %>
+    <% question = @test_run.current_question %>
+    <% options = (question["options"] || []).sort_by { |option| option["position"].to_i }.first(key_count) %>
+    <% multiple = question["question_type"] == "multiple_choice" %>
+    <% field_name = "answers[#{question["id"]}][]" %>
+    <% chosen_option_ids = Array(@test_run.answers[question["id"]]) %>
+    <% missing = @test_run.missing_required_answer? %>
+
+    <%= form_with url: mitmachbox_test_run_adm_projekts_phase_path(@projekt_phase),
+          method: :get,
+          data: { turbo_action: "replace" } do %>
+      <%= hidden_field_tag "version", @test_run_version, id: nil %>
+      <%= hidden_field_tag "answered", question["id"], id: nil %>
+      <% @test_run.previous_answers.each do |question_id, option_ids| %>
+        <% option_ids.each do |option_id| %>
+          <%= hidden_field_tag "answers[#{question_id}][]", option_id, id: nil %>
+        <% end %>
+      <% end %>
+
+      <div class="adm-mitmachbox-device">
+        <div class="adm-mitmachbox-device__case">
+          <div class="adm-mitmachbox-device__bezel">
+            <div class="adm-mitmachbox-device__screen">
+              <h4 class="adm-mitmachbox-device__prompt" id="mitmachbox-test-run-prompt"><%= question["prompt"] %></h4>
+
+              <%= tag.div class: "adm-mitmachbox-device__answers",
+                    role: "group",
+                    aria: { labelledby: "mitmachbox-test-run-prompt", describedby: ("mitmachbox-test-run-error" if missing) } do %>
+                <% options.each_with_index do |option, index| %>
+                  <% input_options = { id: "mitmachbox-test-run-option-#{option["id"]}",
+                                       class: "sr-only adm-mitmachbox-device__input",
+                                       data: { key: index + 1 },
+                                       autofocus: stepped && index.zero? } %>
+                  <% if multiple %>
+                    <%= check_box_tag field_name, option["id"], chosen_option_ids.include?(option["id"]), input_options %>
+                  <% else %>
+                    <%= radio_button_tag field_name, option["id"], chosen_option_ids.include?(option["id"]), input_options %>
+                  <% end %>
+                  <span class="adm-mitmachbox-device__answer" aria-hidden="true">
+                    <span class="adm-mitmachbox-device__label"><%= option["label"] %></span>
+                    <span class="adm-mitmachbox-device__number"><%= index + 1 %></span>
+                  </span>
+                <% end %>
+              <% end %>
+
+              <p class="adm-mitmachbox-device__footer"><span><% if missing %><span id="mitmachbox-test-run-error" role="alert"><%= t(".required") %></span>    <% end %><%= t(".step", current: @test_run.step, total: @test_run.total) %></span></p>
+            </div>
+          </div>
+
+          <button type="submit" class="adm-mitmachbox-device__key adm-mitmachbox-device__key--confirm" title="<%= t(".next") %>">
+            <span class="kern-sr-only"><%= t(".next") %></span>
+          </button>
+
+          <div class="adm-mitmachbox-device__keys">
+            <% key_count.times do |index| %>
+              <% option = options[index] %>
+              <% if option %>
+                <label class="adm-mitmachbox-device__key" for="mitmachbox-test-run-option-<%= option["id"] %>" data-key="<%= index + 1 %>">
+                  <span class="kern-sr-only"><%= option["label"] %></span>
+                </label>
+              <% else %>
+                <span class="adm-mitmachbox-device__key" aria-hidden="true"></span>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

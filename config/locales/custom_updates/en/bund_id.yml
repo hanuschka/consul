@@ -4,3 +4,7 @@ en:
       sign_in: Sign in with BundID
       sign_up: Sign up with BundID
       name: BundID
+  custom:
+    account:
+      connected_accounts:
+        bund_id: BundID

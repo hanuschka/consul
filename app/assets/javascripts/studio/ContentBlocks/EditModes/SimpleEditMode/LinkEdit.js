@@ -325,7 +325,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     }
 
     if (link) {
-      urlInput.value = link.href
+      urlInput.value = link.getAttribute("href") || ""
 
       const blankCheckbox = document.querySelector(".js-content-block-url-black-checkbox")
       blankCheckbox.checked = link.target === "_blank";
@@ -336,7 +336,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
 
   acceptLinkEdit() {
     const $urlInput = $(".js-content-block-url-input")
-    const url = $urlInput.val().trim();
+    const url = this.normalizeLinkUrl($urlInput.val());
     if (!url) {
       alert("Bitte geben Sie eine URL ein");
       return;
@@ -349,7 +349,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     else if (this.savedLinkIdToEdit) {
       const link = document.querySelector(`[data-content-block-edit-link-id="${this.savedLinkIdToEdit}"]`)
 
-      link.href = url;
+      link.setAttribute("href", url);
 
       if (blankCheckbox.checked) {
         link.target = "_blank"
@@ -381,9 +381,20 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     blankCheckbox.checked = true;
   },
 
+  normalizeLinkUrl(url) {
+    const value = (url || "").trim();
+    const emailAddress = /^[^\s@\/:?#]+@[^\s@\/:?#]+\.[a-z]{2,}$/i;
+    const bareWebAddress = /^[^\s\/:?#@]+\.[^\s\/:?#@]+(?:[\/?#].*)?$/i;
+
+    if (emailAddress.test(value)) return `mailto:${value}`;
+    if (bareWebAddress.test(value)) return `https://${value}`;
+
+    return value;
+  },
+
   createNewLinkWithWrapper(linkWrapper, url, targetBlank = true, contentType = null) {
     const a = document.createElement("a");
-    a.href = url;
+    a.setAttribute("href", this.normalizeLinkUrl(url));
     a.classList.add("js-content-block-disable-link-click", "js-content-block-inline-link")
 
     if (targetBlank) {

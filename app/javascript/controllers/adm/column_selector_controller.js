@@ -56,6 +56,8 @@ export default class extends Controller {
   }
 
   buildCheckboxes() {
+    this.listTarget.replaceChildren()
+
     const headers = this.tableTarget.querySelectorAll("thead th[data-field]")
     headers.forEach(header => this.appendCheckbox(header))
   }

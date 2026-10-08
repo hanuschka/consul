@@ -76,6 +76,11 @@ class Api::Budgets::InvestmentsController < Api::BaseController
 
     if @budget_investment.save
       process_image_with_base64(@budget_investment, params[:budget_investment][:image_attributes])
+
+      if feasibility_assessment_submitted?
+        @budget_investment.send_feasibility_email
+      end
+
       serialized_budget_investment = BudgetInvestmentSerializer.new(@budget_investment).serialize
 
       render json: { data: { budget_investment: serialized_budget_investment } }
@@ -105,6 +110,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
       :resource_terms,
       :price,
       :feasibility,
+      :valuator_explanation,
       :valuation_finished,
       :selected,
       :visible_to_valuators,
@@ -112,6 +118,11 @@ class Api::Budgets::InvestmentsController < Api::BaseController
       documents_attributes: document_attributes,
       tag_list: []
     )
+  end
+
+  def feasibility_assessment_submitted?
+    budget_investment_params.key?(:feasibility) ||
+      budget_investment_params.key?(:valuation_finished)
   end
 
   def find_budget

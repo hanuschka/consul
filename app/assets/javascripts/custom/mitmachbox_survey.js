@@ -48,7 +48,9 @@
         self.disableOffPath($form);
       });
 
-      this.showQuestion($form, state, 0, { focus: false });
+      var first = this.indexOfQuestion(this.questions($form), this.reachedIds(this.questions($form))[0]);
+
+      this.showQuestion($form, state, Math.max(first, 0), { focus: false });
     },
 
     questions: function($form) {
@@ -155,19 +157,15 @@
     // -1 when the run ends here.
     nextIndex: function($form, index) {
       var $questions = this.questions($form);
-      var $chosen = $questions.eq(index).find("input[type=radio]:checked");
+      var next = -1;
 
-      if ($chosen.length === 1) {
-        if ($chosen.data("ends-survey")) return -1;
+      $.each(this.reachedIds($questions), function(_, questionId) {
+        var candidate = App.MitmachboxSurvey.indexOfQuestion($questions, questionId);
 
-        var next = $chosen.data("next-question-id");
-        if (next) {
-          var target = this.indexOfQuestion($questions, next);
-          return target > index ? target : -1;
-        }
-      }
+        if (next < 0 && candidate > index) next = candidate;
+      });
 
-      return index + 1 < $questions.length ? index + 1 : -1;
+      return next;
     },
 
     reachedIds: function($questions) {
@@ -176,6 +174,12 @@
 
       while (index < $questions.length) {
         var $question = $questions.eq(index);
+
+        if (!this.conditionMet($questions, $question, reached)) {
+          index++;
+          continue;
+        }
+
         reached.push($question.data("question-id"));
 
         var $chosen = $question.find("input[type=radio]:checked");
@@ -198,6 +202,22 @@
       }
 
       return reached;
+    },
+
+    conditionMet: function($questions, $question, reached) {
+      var optionIds = $question.data("condition-option-ids");
+      if (!optionIds || !optionIds.length) return true;
+
+      var sourceId = $question.data("condition-question-id");
+      if (reached.indexOf(sourceId) === -1) return false;
+
+      var chosen = $questions.eq(this.indexOfQuestion($questions, sourceId)).find("input:checked").map(function() {
+        return Number($(this).val());
+      }).get();
+
+      return chosen.some(function(optionId) {
+        return optionIds.indexOf(optionId) !== -1;
+      });
     },
 
     indexOfQuestion: function($questions, questionId) {

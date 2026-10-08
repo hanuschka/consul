@@ -9,6 +9,13 @@ class Current < ActiveSupport::CurrentAttributes
   attribute :multiple_registered_address_cities
   attribute :registered_address_first_city_names
 
+  # Ids of the projekts whose content blocks changed while an API bulk write
+  # ran. Set and cleared by Api::ProjektsController around that write, which
+  # touches each projekt once afterwards instead of once per written block.
+  # While it is set, SiteCustomization::ContentBlock records its projekt here
+  # rather than touching it.
+  attribute :content_block_touched_projekt_ids
+
   # Whether a WhatsApp assistant turn is running in this job. Set by
   # Whatsapp::AiAssistant::RouterService and read by
   # Whatsapp::AiAssistant::ContinueConversationService, which must not start a turn

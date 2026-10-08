@@ -66,6 +66,7 @@ module Whatsapp::FlowActions
     terms_decline
     draft_publish
     draft_revise
+    keep_open
     remove_additions
     submit_final
     submit_anyway

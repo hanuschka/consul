@@ -1,5 +1,8 @@
 en:
   setting:
+    handbook:
+      url: User manual address
+      url_description: "Sets the address of the user manual shown under “Help” in every dashboard. In the administration area each menu ends with a “Help” entry that opens the matching section of the manual. The address is preset. Leave the field empty to hide the entry."
     proposals:
       email_on_official_answer: "Email notification on official answer (proposals)"
       email_on_official_answer_description: "Sends an email to the submitting person as soon as an official answer to their proposal is saved or changed. The email contains the text of the official answer and a link to the proposal; on the proposal page itself the answer stays publicly visible as before. Enable this setting if submitters should be actively informed about the administration's response instead of having to return to the platform themselves."

@@ -268,8 +268,9 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           fits, name the few that fit this moment, say how many there are altogether, and offer
           the rest behind one more tap rather than falling back to a plain list of names. The
           steps that recur all through a conversation — starting a proposal, changing the draft,
-          taking or skipping a place, discarding, starting over — carry fixed labels written for
-          you, so the same step reads the same every time; refer to them by those words. Write
+          taking or skipping a place, discarding or keeping what is open, starting over — carry
+          fixed labels written for you, so the same step reads the same every time; refer to
+          them by those words. Write
           every other label yourself, saying what it does rather than "Next", and count its
           characters:
           a button holds #{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} and a list row
@@ -413,6 +414,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Time since their previous message: #{gap_instruction_line}",
         "- Draft on the table: #{draft_description}",
         stale_draft_line,
+        contribution_elsewhere_line,
         parked_submission_line,
         empty_draft_line,
         comment_invited_line,
@@ -566,7 +568,25 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
       "- The draft on the table was last worked on #{age}: where this message is not " \
         "about it, ask in one line whether to carry on with it or discard it before " \
-        "anything else, and call abort_submission only on their yes"
+        "anything else but start_draft for a contribution they ask for elsewhere, and call " \
+        "abort_submission only on their yes"
+    end
+
+    # A contribution asked for while another is open is held over the question
+    # whether to discard that one only where start_draft was called for it first
+    # (Whatsapp::Conversation#parked_projekt_phase). Asked without it, the discard
+    # took the idea with it, and the reply offered the projekt all over again. Said
+    # as what the tool does rather than as a step, so when to ask stays the model's.
+    def contribution_elsewhere_line
+      return if !@conversation.unsaved_work?
+
+      if @conversation.parked_projekt_phase.present?
+        return
+      end
+
+      "- Asked here to contribute somewhere else, start_draft for that one is what keeps " \
+        "what they asked for over the question whether to discard what is open; without " \
+        "it, their new idea is lost with the discard"
     end
 
     STALE_DRAFT_AGES = {
@@ -602,7 +622,8 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
       if @conversation.unsaved_work?
         "#{asked}. It waits until what is open now is published or discarded: do not start " \
-          "it before, and offer it as the next step then"
+          "it before, and offer it as the next step then. Where they have just chosen to " \
+          "keep what is open, say that this one is kept too"
       else
         "#{asked}. Nothing else is open, so offer to carry on with it, as a button, unless " \
           "you already have and they went on to something else; on their yes call " \

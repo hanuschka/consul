@@ -4,6 +4,8 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
   # as it kept going, and the caller's fallback is a better reply than none.
   class ToolLoopError < StandardError; end
 
+  FEATURE = "whatsapp.assistant".freeze
+
   # The provider default is 300 seconds, written for a generation nobody waits
   # on. This one is waited on by a held advisory lock.
   REQUEST_TIMEOUT_SECONDS = 30
@@ -171,10 +173,12 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
 
     def build_chat
       chat = ::Ai::RubyLlmFactory.chat_for(
-        profile, request_timeout: REQUEST_TIMEOUT_SECONDS, tools: tools
+        profile, feature: FEATURE, request_timeout: REQUEST_TIMEOUT_SECONDS, tools: tools
       )
 
       chat.with_instructions(instructions)
+      ::Ai::RubyLlmFactory.cache_prefix(chat, feature: FEATURE)
+      ::Ai::RubyLlmFactory.identify_end_user(chat, end_user_id)
       chat.before_tool_call { |tool_call| track_tool_call(tool_call) }
       chat.after_tool_result { |tool_result| note_tool_halt(tool_result) }
 
@@ -298,13 +302,22 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
         model: profile.model,
         instructions: instructions,
         input: input,
-        feature: ::AiUsageRecord::UNKNOWN_FEATURE,
+        feature: FEATURE,
         timeout_seconds: REQUEST_TIMEOUT_SECONDS,
         previous_response_id: previous_response_id,
-        reasoning_effort: profile.reasoning_effort
+        reasoning_effort: profile.reasoning_effort,
+        safety_identifier: end_user_id
       ) { |function_call| track_tool_call(function_call) }
 
       tool_loop.call
+    end
+
+    # Keyed with the app secret so the id the provider sees cannot be walked
+    # back to a conversation by anyone who can guess sequential ids.
+    def end_user_id
+      @end_user_id ||= OpenSSL::HMAC.hexdigest(
+        "SHA256", Rails.application.secret_key_base, "whatsapp_conversation:#{@conversation.id}"
+      )
     end
 
     def instructions

@@ -1,0 +1,10 @@
+<%= content_for :title, t("adm.help.show.title") %>
+
+<%= render Adm::HeaderComponent.new(title: t("adm.help.show.title"), breadcrumbs: @breadcrumbs) %>
+
+<div class="kern-container adm-embed">
+  <iframe class="adm-embed__iframe"
+          src="<%= @help_url %>"
+          title="<%= t("adm.help.show.iframe_title") %>"
+          referrerpolicy="no-referrer"></iframe>
+</div>

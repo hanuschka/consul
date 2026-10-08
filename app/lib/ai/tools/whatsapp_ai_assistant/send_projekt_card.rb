@@ -38,7 +38,8 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
               "every vote, one that opens them all — so never offer taking part, a phase to " \
               "choose from, the existing contributions or the list of votes yourself alongside " \
               "it. Where the citizen asked to submit something before picking the projekt, the " \
-              "card offers only the way to submit."
+              "card offers only the way to submit — and where the projekt takes a submission " \
+              "in one phase only, no card is sent and their submission there is opened instead."
 
   parameters do
     string :projekt_name, description: "The projekt name as the citizen wrote it"
@@ -67,6 +68,11 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
 
     all_actions = ::Whatsapp::ProjektCardActions.call(projekt, user: conversation.user)
     submission_actions = wished_submission_actions(all_actions)
+
+    if submission_actions.one?
+      return open_wished_submission(submission_actions.first)
+    end
+
     actions = submission_actions.presence || all_actions
 
     send_card(projekt, summary, actions)
@@ -98,6 +104,35 @@ class Ai::Tools::WhatsappAiAssistant::SendProjektCard < Ai::Tools::WhatsappAiAss
       return [] if !conversation.submission_wished?
 
       ::Whatsapp::ProjektCardActions.submission_entries(actions)
+    end
+
+    # The citizen asked to submit something and picked a projekt that takes it in
+    # one phase only, so the card would have repeated the question they had just
+    # answered: a single "Vorschlag erstellen" row under the "Vorschlag erstellen"
+    # they tapped to get here. The submission opens instead and the model asks for
+    # the idea. Opened through StartDraft so that the unsaved-work, permission and
+    # consent refusals stay that tool's alone.
+    #
+    # The wish is cleared here rather than left to start_draft!, which the
+    # unsaved-work refusal never reaches: a wish still standing would cut down the
+    # next card the citizen asks to see.
+    def open_wished_submission(submission_action)
+      conversation.clear_submission_wish!
+
+      projekt_phase_id = ::Whatsapp::FlowActions.parse(submission_action[:id])[:param]
+      start_result =
+        ::Ai::Tools::WhatsappAiAssistant::StartDraft
+          .new(conversation: conversation, citizen_words: citizen_words)
+          .execute(projekt_phase_id: projekt_phase_id)
+
+      return start_result if !start_result[:started]
+
+      start_result.merge(
+        card_sent: false,
+        hint: "No card was sent: the citizen had asked to submit something and this projekt " \
+              "takes it in one phase only, so their submission there is open. Name the " \
+              "projekt when you ask for their idea, and do not offer it or its phases again."
+      )
     end
 
     def submission_note(submission_actions)

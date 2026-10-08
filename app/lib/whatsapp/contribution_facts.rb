@@ -11,18 +11,26 @@ module Whatsapp::ContributionFacts
   # class nor the shape has to be branched on here.
   module_function
 
+  # The citizen's own proposal reads as not supportable rather than as one they have
+  # not supported yet: the bot takes no support from its author
+  # (Whatsapp::AssistantActions#support_direction), and "you do not support it"
+  # about their own proposal was the sentence that offered one. A support they gave
+  # on the page before still reads as given, with its withdraw pill.
   def call(contribution, user:)
     projekt = contribution.projekt_phase&.projekt
+    written_by_you = written_by?(contribution, user)
+    supported_by_you = supported_by?(contribution, user)
+    own_unsupported_proposal = written_by_you && supported_by_you == false
 
     {
       contribution_id: contribution.id,
       title: contribution.title,
       projekt: projekt.present? ? ::Whatsapp::ProjektLink.title(projekt) : nil,
-      written_by_you: written_by?(contribution, user),
+      written_by_you: written_by_you,
       supports: contribution.cached_votes_up,
-      supported_by_you: supported_by?(contribution, user),
-      supportable: contribution.is_a?(::Proposal),
-      support_action_id: support_action_id(contribution)
+      supported_by_you: own_unsupported_proposal ? nil : supported_by_you,
+      supportable: contribution.is_a?(::Proposal) && !own_unsupported_proposal,
+      support_action_id: own_unsupported_proposal ? nil : support_action_id(contribution)
     }.compact
   end
 

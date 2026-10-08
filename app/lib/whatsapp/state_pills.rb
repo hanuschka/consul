@@ -12,8 +12,20 @@ module Whatsapp::StatePills
   #
   # Put ahead of the model's own pills, which fill the slots that are left: the
   # state pills are the ones the citizen has to be able to rely on finding.
+  #
+  # A reply right after a submission carries what follows from it instead: another
+  # idea, their own contributions and the projekts. Left to the model, it suggested
+  # another idea in words while the slots went to the support and comment pills of
+  # the proposal just published — the citizen's own, which they cannot support.
+
+  # Every slot a message has, so the reply's pills are these three and no others.
+  SUBMISSION_COMPLETED_ACTIONS = %i[submit_proposal my_contributions discover].freeze
 
   module_function
+
+  def focus_submission_completed
+    ::Current.whatsapp_pill_focus = { submission_completed: true }
+  end
 
   def focus_proposal(proposal_id)
     return if proposal_id.blank?
@@ -35,11 +47,21 @@ module Whatsapp::StatePills
     return [] if focus.blank?
     return [] if conversation.comment_invited?
 
+    if focus[:submission_completed]
+      return submission_completed_buttons(conversation)
+    end
+
     if focus[:proposal_id].present?
       return proposal_buttons(focus[:proposal_id], conversation)
     end
 
     projekt_buttons(focus[:projekt_id], conversation)
+  end
+
+  def submission_completed_buttons(conversation)
+    SUBMISSION_COMPLETED_ACTIONS.filter_map do |action|
+      pill(action: action, param: nil, conversation: conversation)
+    end
   end
 
   def proposal_buttons(proposal_id, conversation)
@@ -100,6 +122,6 @@ module Whatsapp::StatePills
     { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
   end
 
-  private_class_method :proposal_buttons, :support_button, :comment_button,
-    :projekt_buttons, :pill
+  private_class_method :submission_completed_buttons, :proposal_buttons, :support_button,
+    :comment_button, :projekt_buttons, :pill
 end

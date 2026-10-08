@@ -1,0 +1,52 @@
+en:
+  custom:
+    studio:
+      delete_all_content_blocks:
+        title: "Delete all content blocks"
+        text: "Removes every content block on this page at once. This cannot be undone — the content has to be recreated afterwards."
+        button_label: "Delete all content blocks"
+        confirm: "Are you sure you want to delete all content blocks? This cannot be undone."
+      add_phase:
+        title: "Add phase"
+        text: "Opens phase management in a new tab so you can add another phase to this project."
+      delete_phase:
+        title: "Delete phase"
+        text: "Permanently removes this phase."
+        note: "This cannot be undone."
+      change_banner:
+        title: "Change banner image"
+        text: "Uploads a new banner image for this page. A wide landscape image in high resolution works best."
+      toggle_phase_visibility:
+        hide_title: "Hide phase"
+        show_title: "Show phase"
+        text: "Controls whether this phase appears in the public footer."
+        note: "Hidden phases are only visible to administrators."
+      send_notification:
+        title: "Send notification"
+        text: "Notifies everyone subscribed to this phase."
+      edit_phase:
+        title: "Edit phase"
+        text: "Opens the settings for this phase."
+        note: "Opens in a new tab."
+      remove_banner:
+        title: "Remove banner image"
+        text: "Removes the current banner image. The page will then be shown without a banner."
+      edit_sidebar_card:
+        title: "Edit section"
+        text: "Opens the settings for this sidebar section."
+      copy_template:
+        title: "Copy template"
+        text: "Copies this template's HTML to the clipboard so you can paste it elsewhere."
+      toggle_section:
+        text: "Controls whether this section appears in the public sidebar. Hidden sections are only visible to administrators."
+      upload_image:
+        title: "Manage images"
+        button_label: "Upload image"
+      upload_document:
+        title: "Manage documents"
+        button_label: "Upload document"
+      toggle_default_phase:
+        make_default_title: "Set as default phase"
+        unset_default_title: "Clear default phase"
+        text: "This phase is shown first when the project is opened."
+        note: "There can only be one default phase."

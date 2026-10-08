@@ -6,11 +6,6 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-# Opt into RubyLLM's association-based Active Record API. Must run before any
-# initializer loads ActiveRecord::Base, since the gem picks the legacy or the
-# new acts_as module inside an `on_load :active_record` hook.
-RubyLLM.config.use_new_acts_as = true
-
 module Consul
   class Application < Rails::Application
     config.load_defaults 6.1
@@ -88,27 +83,14 @@ module Consul
       "zh-CN",
       "zh-TW"]
     config.i18n.available_locales = available_locales
-    config.i18n.fallbacks = {
-      "ca"    => "es",
-      "es-PE" => "es",
-      "eu"    => "es",
-      "fr"    => "es",
-      "gl"    => "es",
-      "it"    => "es",
-      "oc"    => "fr",
-      "pt-BR" => "es",
-      "val"   => "es"
-    }
+    config.i18n.fallbacks.defaults = [:de]
+    config.i18n.fallbacks.map = { de: :en }
 
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**[^custom]*", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom", "**", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom_updates", "**", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "cli", "**", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "kern", "**", "*.{rb,yml}")]
-
-    config.after_initialize do
-      Globalize.set_fallbacks_to_all_available_locales
-    end
 
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
     config.assets.paths << Rails.root.join("vendor", "assets", "fonts")

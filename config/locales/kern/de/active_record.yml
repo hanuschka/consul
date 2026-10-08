@@ -1,6 +1,8 @@
 de:
   activerecord:
     errors:
+      messages:
+        map_features_outside_marked_areas: Diese Markierung liegt nicht vollständig im zugelassenen Gebiet.
       models:
         map_layer:
           attributes:

@@ -1,7 +1,6 @@
 class InternalApi::BaseController < ActionController::API
   class UnauthentificatedError < StandardError; end
 
-  include GlobalizeFallbacks
   include AccessDeniedHandler
 
   before_action :find_api_client

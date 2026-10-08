@@ -1,0 +1,16 @@
+<%# The action a rejected push offers. It deletes the rejected template before
+    submitting a fresh one, because the rejected one still occupies the name the
+    kind submits under — so the button is destructive and confirms first.
+
+    POST rather than PATCH or DELETE: it creates the template that ends up on the
+    account, and the delete is a step on the way there rather than the point. %>
+<%= form_with url: resubmit_notification_template_adm_whatsapp_path, method: :post,
+  data: { turbo_confirm: t("adm.whatsapp.show.notification_template_resubmit_confirm") } do |form| %>
+  <%= form.hidden_field :kind, value: kind, id: nil %>
+  <%= kern_button(
+    text: t("adm.whatsapp.show.notification_template_resubmit"),
+    type: "submit",
+    style: :tertiary,
+    **button_options
+  ) %>
+<% end %>

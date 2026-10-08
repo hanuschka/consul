@@ -8,7 +8,7 @@
         Thema kommentieren
       </h1>
       <div class="resource-page--intro-text">
-        Jeder Kommentar ist wertvoll, fördert die Diskussion und damit den Erkenntnisgewinn. Schauen Sie kurz in den bisherigen Kommentaren, ob es Ihr Feedback in ähnlicher Form bereits gibt, um Wiederholungen zu vermeiden.
+        <%= t("custom.topics.show.intro") %>
       </div>
     </div>
   </div>
@@ -47,7 +47,7 @@
           <% else %>
             <%= button_to t("custom.community.sidebar.topic.hide"),
               hide_community_topic_path(@community.id, @topic),
-              data: { confirm: "Sind Sie sicher?" },
+              data: { confirm: t("custom.shared.destroy_confirmation") },
               class: "button hollow expanded alert" %>
           <% end %>
         <% end %>

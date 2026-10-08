@@ -39,6 +39,11 @@
       this.enableShapes = $element.data("enable-shapes");
       this.editableLayers = [];
       this.editableLayersLimit = $element.data("map-features-limit")
+      this.markedAreasCheckUrl = $element.data("marked-areas-check-url");
+      this.markedAreasOutsideText = $element.data("marked-areas-outside-text");
+      this.markedAreasAcceptedGeometries = {};
+      this.markedAreasReplacedFeatures = {};
+      this.markedAreasCheckIds = {};
       this.currentMarker = null;
       this.defaultFeatureColor = this.adminEditor ? "#ff0000" : App.Utils.getBrandColor();
       this.featureColor = null;
@@ -52,6 +57,7 @@
       this.longitudeInput = document.querySelector('[data-longitude-input-for="' + this.element.id + '"]');
       this.zoomInput = document.querySelector('[data-zoom-input-for="' + this.element.id + '"]');
       this.featuresInput = document.querySelector('[data-features-input-for="' + this.element.id + '"]');
+      this.markedAreasStatus = document.querySelector('[data-marked-areas-status-for="' + this.element.id + '"]');
     }
 
     // Public Interface method for assistant map update and external use
@@ -95,51 +101,7 @@
         if (callback) callback(map);
       }
 
-      if (window.mapboxgl) {
-        initMapInstance();
-        return;
-      }
-
-      window._mapboxMapQueue.push(initMapInstance);
-
-      if (window._mapboxScriptsLoading) return;
-      window._mapboxScriptsLoading = true;
-
-      const cssUrls = [
-        'https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css',
-        'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.css',
-        'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.3/mapbox-gl-geocoder.css'
-      ];
-      cssUrls.forEach(url => {
-        if (!document.querySelector(`link[href="${url}"]`)) {
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = url;
-          document.head.appendChild(link);
-        }
-      });
-
-      const jsUrls = [
-        'https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js',
-        'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.5.0/mapbox-gl-draw.js',
-        'https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.3/mapbox-gl-geocoder.min.js'
-      ];
-
-      function loadNext(index) {
-        if (index >= jsUrls.length) {
-          window._mapboxMapQueue.forEach(function(initFn) { initFn(); });
-          window._mapboxMapQueue = [];
-          return;
-        }
-
-        const script = document.createElement('script');
-        script.src = jsUrls[index];
-        script.async = false; // preserve order
-        script.onload = function() { loadNext(index + 1); };
-        document.head.appendChild(script);
-      }
-
-      loadNext(0);
+      App.MapboxLoader.load(initMapInstance);
     }
 
     createMap() {
@@ -475,28 +437,6 @@
 
         this.layerControl.dropdownList.appendChild(label);
       }
-
-      const popupContent = '<div class="map-popup-status-message">Alle markierten Flächen und Pins in rot sind vom System vorgegeben</div>';
-      instance.map.on('click', 'admin-features-circles', function(e) {
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(popupContent)
-          .addTo(instance.map);
-      });
-
-      instance.map.on('click', 'admin-features-lines', function(e) {
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(popupContent)
-          .addTo(instance.map);
-      });
-
-      instance.map.on('click', 'admin-features-polygons', function(e) {
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(popupContent)
-          .addTo(instance.map);
-      });
 
       this.renderAdminFeaturesNote();
     }
@@ -1028,6 +968,10 @@
 
       instance.map.on('draw.update', function(e) {
         instance.updateFeaturesInput(instance.featuresInput, instance.editableLayers);
+
+        e.features.forEach(function(feature) {
+          instance.checkFeatureInsideMarkedAreas(feature.id);
+        });
       });
 
       instance.map.addControl(this.draw, 'top-right');
@@ -1038,6 +982,7 @@
 
         if (added && added.length > 0) {
           instance.editableLayers.push(added[0]);
+          instance.rememberMarkedAreasGeometry(added[0]);
         }
       });
 
@@ -1219,8 +1164,12 @@
           instance.draw.setFeatureProperty(newFeature.id, 'feature_category_name', instance.featureCategoryName);
         }
 
+        let replacedFeature = null;
+
         if (!instance.adminEditor && instance.editableLayers.length >= instance.editableLayersLimit) {
-          instance.draw.delete(instance.editableLayers.pop());
+          const replacedId = instance.editableLayers.pop();
+          replacedFeature = instance.draw.get(replacedId);
+          instance.draw.delete(replacedId);
         }
 
         setTimeout(() => {
@@ -1230,6 +1179,7 @@
         instance.editableLayers.push(newFeature.id);
         instance.updateFeaturesInput(instance.featuresInput, instance.editableLayers);
         instance.zoomInput.value = instance.map.getZoom();
+        instance.checkFeatureInsideMarkedAreas(newFeature.id, replacedFeature);
       });
 
       this.map.on('draw.delete', function(e) {
@@ -1261,6 +1211,107 @@
       };
 
       featuresInput.value = JSON.stringify(featureCollection);
+    }
+
+    checkFeatureInsideMarkedAreas(id, replacedFeature) {
+      if (!this.markedAreasCheckUrl) return;
+
+      const feature = this.draw.get(id);
+      if (!feature) return;
+
+      const instance = this;
+      const checkId = (this.markedAreasCheckIds[id] || 0) + 1;
+
+      this.markedAreasCheckIds[id] = checkId;
+
+      if (replacedFeature) {
+        this.markedAreasReplacedFeatures[id] = replacedFeature;
+      }
+
+      this.setMarkedAreasMessage("");
+
+      this.requestMarkedAreasCheck(feature).then(function(inside) {
+        if (instance.markedAreasCheckIds[id] !== checkId) return;
+        if (instance.editableLayers.indexOf(id) === -1 || !instance.draw.get(id)) return;
+
+        if (inside) {
+          instance.markedAreasAcceptedGeometries[id] = feature.geometry;
+          delete instance.markedAreasReplacedFeatures[id];
+          instance.setMarkedAreasMessage("");
+        } else {
+          instance.rejectMarkedAreasFeature(id);
+          instance.updateFeaturesInput(instance.featuresInput, instance.editableLayers);
+          instance.setMarkedAreasMessage(instance.markedAreasOutsideText);
+        }
+      }, function() {});
+    }
+
+    requestMarkedAreasCheck(feature) {
+      const token = document.querySelector("meta[name=csrf-token]");
+      const featureCollection = {
+        type: 'FeatureCollection',
+        features: [feature]
+      };
+
+      return fetch(this.markedAreasCheckUrl, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "X-CSRF-Token": token ? token.getAttribute("content") : ""
+        },
+        body: JSON.stringify({ features: JSON.stringify(featureCollection) })
+      }).then(function(response) {
+        if (!response.ok) throw new Error(response.statusText);
+
+        return response.json();
+      }).then(function(body) {
+        return body.inside !== false;
+      });
+    }
+
+    rejectMarkedAreasFeature(id) {
+      const acceptedGeometry = this.markedAreasAcceptedGeometries[id];
+
+      if (acceptedGeometry) {
+        const feature = this.draw.get(id);
+        feature.geometry = acceptedGeometry;
+        this.draw.add(feature);
+        return;
+      }
+
+      const index = this.editableLayers.indexOf(id);
+      const replacedFeature = this.markedAreasReplacedFeatures[id];
+
+      this.draw.delete(id);
+      delete this.markedAreasReplacedFeatures[id];
+
+      if (replacedFeature && this.markedAreasAcceptedGeometries[replacedFeature.id]) {
+        replacedFeature.geometry = this.markedAreasAcceptedGeometries[replacedFeature.id];
+        this.draw.add(replacedFeature);
+        this.editableLayers.splice(index, 1, replacedFeature.id);
+      } else {
+        this.editableLayers.splice(index, 1);
+      }
+    }
+
+    rememberMarkedAreasGeometry(id) {
+      if (!this.markedAreasCheckUrl) return;
+
+      const feature = this.draw.get(id);
+
+      if (feature) {
+        this.markedAreasAcceptedGeometries[id] = feature.geometry;
+      }
+    }
+
+    setMarkedAreasMessage(text) {
+      const message = this.markedAreasStatus && this.markedAreasStatus.querySelector(".form-error");
+      if (!message) return;
+
+      message.textContent = text || "";
+      message.classList.toggle("is-visible", !!text);
     }
 
     toggleControlVisibility() {

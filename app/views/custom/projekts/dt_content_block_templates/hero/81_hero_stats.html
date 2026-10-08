@@ -1,0 +1,57 @@
+<!-- BlockID: B08 – Hero mit Stats-Leiste: Dunkler Hero oben, KPI-Bar unten -->
+<!-- Geeignet für: Projektseiten mit Kennzahlen, Beteiligungsstart mit Kontext -->
+
+<div style="position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.16);">
+
+  <!-- Hero-Bereich (dunkel) -->
+  <div style="position: relative; background: linear-gradient(160deg, #1a2e44 0%, #243b55 100%); padding: 56px 36px 48px; text-align: center;">
+
+    <!-- Mesh-Gradient -->
+    <div style="position: absolute; top: -30%; right: -10%; width: 60%; height: 160%; background: radial-gradient(ellipse at center, rgba(23,121,186,0.12) 0%, transparent 70%); pointer-events: none;"></div>
+
+    <!-- Badge -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 24px; position: relative; z-index: 1;">
+      <div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #ffffff; font-weight: 600; letter-spacing: 0.04em; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">Stadtentwicklung 2025</div>
+    </div>
+
+    <h3 style="font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 16px; margin-top: 0; line-height: 1.15; letter-spacing: -0.5px; position: relative; z-index: 1; max-width: 600px; margin-left: auto; margin-right: auto;">Gemeinsam planen, gemeinsam entscheiden</h3>
+
+    <p style="font-size: 17px; color: rgba(255,255,255,0.8); max-width: 520px; margin: 0 auto 32px auto; line-height: 1.65; position: relative; z-index: 1;">
+      Bringen Sie Ihre Ideen ein und gestalten Sie die Zukunft Ihres Stadtteils aktiv mit.
+    </p>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; position: relative; z-index: 1;">
+      <a href="#" class="button"
+         style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; background: #ffffff; color: #1a2e44; text-decoration: none; font-size: 15px; font-weight: 700; height: 48px; box-sizing: border-box; border: none; border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'"
+         onmouseout="this.style.transform='none';this.style.boxShadow='none'">Jetzt beteiligen</a>
+      <a href="#" class="button hollow"
+         style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 600; height: 48px; box-sizing: border-box; border: 2px solid rgba(255,255,255,0.35); border-radius: 8px; background: transparent; transition: transform 0.2s ease, border-color 0.2s ease;"
+         onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(255,255,255,0.6)'"
+         onmouseout="this.style.transform='none';this.style.borderColor='rgba(255,255,255,0.35)'">Projekt-Details</a>
+    </div>
+  </div>
+
+  <!-- Stats-Leiste -->
+  <div style="background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06); padding: 0;">
+    <div class="row" style="margin: 0;">
+      <div class="column small-6 medium-3" style="padding: 20px 16px; text-align: center; border-right: 1px solid rgba(0,0,0,0.06);">
+        <div style="font-size: 28px; font-weight: 800; color: #1a202c; letter-spacing: -0.5px; line-height: 1;">1.247</div>
+        <div style="font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500;">Beitr&auml;ge</div>
+      </div>
+      <div class="column small-6 medium-3" style="padding: 20px 16px; text-align: center; border-right: 1px solid rgba(0,0,0,0.06);">
+        <div style="font-size: 28px; font-weight: 800; color: #1a202c; letter-spacing: -0.5px; line-height: 1;">89%</div>
+        <div style="font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500;">Zufriedenheit</div>
+      </div>
+      <div class="column small-6 medium-3" style="padding: 20px 16px; text-align: center; border-right: 1px solid rgba(0,0,0,0.06);">
+        <div style="font-size: 28px; font-weight: 800; color: #1a202c; letter-spacing: -0.5px; line-height: 1;">12</div>
+        <div style="font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500;">Stadtteile</div>
+      </div>
+      <div class="column small-6 medium-3" style="padding: 20px 16px; text-align: center;">
+        <div style="font-size: 28px; font-weight: 800; color: var(--brand-color, #1779ba); letter-spacing: -0.5px; line-height: 1;">47</div>
+        <div style="font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500;">Tage verbleibend</div>
+      </div>
+    </div>
+  </div>
+
+</div>

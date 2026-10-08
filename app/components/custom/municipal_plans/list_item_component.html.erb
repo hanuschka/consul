@@ -1,0 +1,30 @@
+<%= render(Resources::ListItemComponent.new(**component_attributes)) do |c| %>
+  <% c.with_header do %>
+    <%= header_label %>
+  <% end %>
+
+  <% if topics.any? %>
+    <% c.with_subheading do %>
+      <span class="show-for-sr"><%= t("custom.municipal_plans.show.topics") %>:</span>
+      <div class="resource-item--tags">
+        <% topics.each do |topic| %>
+          <%= link_to topic.name, topic_path(topic), class: "resource-item--tag", rel: "nofollow" %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% if district_names.any? %>
+    <% c.with_additional_body_section do %>
+      <span>
+        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+        <span class="show-for-sr"><%= t("custom.municipal_plans.show.districts") %>:</span>
+        <%= district_names.to_sentence %>
+      </span>
+    <% end %>
+  <% end %>
+
+  <% c.with_footer_section do %>
+    <%= link_to t("custom.municipal_plans.index.to_municipal_plan"), helpers.municipal_plan_path(municipal_plan), class: "button -grey", tabindex: "-1", data: { turbolinks: false }, aria: { hidden: true } %>
+  <% end %>
+<% end %>

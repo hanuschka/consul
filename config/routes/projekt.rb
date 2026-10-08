@@ -31,6 +31,8 @@ end
 resources :projekt_phases, only: [] do
   member do
     get :map_html
+    post :mitmachbox_response, to: "mitmachbox_responses#create"
+    post :marked_areas_check, to: "marked_areas_checks#create"
     post :toggle_subscription
     post :create_stat_question
     get :stat_question_status

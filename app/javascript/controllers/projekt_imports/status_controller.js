@@ -14,7 +14,7 @@ export default class extends Controller {
 
   static values = {
     statusUrl: String,
-    chatUrl: String,
+    reviewUrl: String,
     pollInterval: { type: Number, default: 2000 },
     progressExtracting: String,
     progressProcessing: String,
@@ -81,7 +81,7 @@ export default class extends Controller {
         break
       case "chatting":
         this.advance(this.progressChattingValue, 100)
-        window.location.href = data.chat_url || this.chatUrlValue
+        window.location.href = data.review_url || this.reviewUrlValue
         break
       case "failed":
         this.clearPollTimer()

@@ -6,11 +6,14 @@ class Api::ProgressBarsController < Api::BaseController
 
   def index
     check_read_access!
-    progress_bars = @projekt_phase.progress_bars.order(:kind, :id)
+    progress_bars = paginate(@projekt_phase.progress_bars.order(:kind, :id))
 
     serialized = ProgressBarSerializer.serialize_collection(progress_bars)
 
-    render json: { data: { progress_bars: serialized } }
+    render json: {
+      data: { progress_bars: serialized },
+      pagination: pagination_meta(progress_bars)
+    }
   end
 
   def create

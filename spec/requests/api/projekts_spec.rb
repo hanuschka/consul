@@ -11,7 +11,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a list of all projekts. By default ordered by creation date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring next at the top). By default returns only public projekts (activated with published pages). Users with public_data access level can only access public projekts. Pagination is optional: by default all matching projekts are returned, but supplying 'page' (and optionally 'per_page', default 20) paginates the results and adds a 'pagination' object to the response. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a list of all projekts. By default ordered by creation date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring next at the top). By default returns only public projekts (activated and shown in the overview). Users with public_data access level can only access public projekts. Pagination is optional: by default all matching projekts are returned, but supplying 'page' (and optionally 'per_page', default 20) paginates the results and adds a 'pagination' object to the response. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :filter, in: :query, type: :string, required: false,
                 description: <<~DESC
                   Filter projekts by lifecycle stage or special status. Valid values:
@@ -23,7 +23,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                   - 'index_order_expired': Projekts past their end date. Shows completed projects.
 
                   **Special status filters**:
-                  - 'index_order_all': All activated projekts with published pages shown in overview. Broader view excluding special lists.
+                  - 'index_order_all': All activated projekts shown in overview. Broader view excluding special lists.
                   - 'index_order_individual_list': Projekts configured to appear in individual lists (separate display area). Requires 'show_in_individual_list' setting.
                   - 'index_order_drafts': Draft or inactive projekts (not activated). Admin only. Useful for content management and previewing unpublished projects.
 
@@ -52,7 +52,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 DESC
       parameter name: :only_public, in: :query, type: :boolean, required: false,
                 description: <<~DESC
-                  If false, returns all projekts (admin only); true returns only activated projekts with published pages shown in overview. Users with public_data access can only access public projekts.
+                  If false, returns all projekts (admin only); true returns only activated projekts shown in overview. Users with public_data access can only access public projekts.
 
                   **Default:** true (only public projekts).
                 DESC
@@ -64,13 +64,13 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 DESC
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
                 description: <<~DESC
-                  If true, includes content blocks in response with HTML content organized by locale.
+                  If true, includes content blocks in response with HTML content organized by locale. Content blocks that are switched off or outside their visibility period are left out.
 
                   **Default:** false (excludes content blocks).
                 DESC
       parameter name: :include_text, in: :query, type: :boolean, required: false,
                 description: <<~DESC
-                  Includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position); pass include_text=false to omit them. Always included in the single projekt (show) response.
+                  Includes the combined content block body in the response as both text and text_html (the concatenated content block bodies, ordered by position); pass include_text=false to omit them. Always included in the single projekt (show) response. Content blocks that are switched off or outside their visibility period are left out.
 
                   **Default:** true (the fields are included).
                 DESC
@@ -90,7 +90,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 description: <<~DESC
                   Number of projekts per page when paginating. Only applies when page or per_page is provided.
 
-                  **Default:** 20.
+                  **Default:** 20. **Max:** 2000 (higher values are clamped).
                 DESC
       parameter name: :image_variant_versions, in: :query, type: :string, required: false,
                 description: <<~DESC
@@ -245,9 +245,24 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Create a new projekt with the provided configuration. Supports hierarchy (sub-projekts), geographic restrictions, phases, and manager assignments. The response includes the full projekt object with all nested relationships. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Create a new projekt with the provided configuration. Supports hierarchy (sub-projekts), geographic restrictions, phases, and manager assignments. Pass content_blocks to build the projekt page from several content blocks in one request; each block is a separate section of the page. The response includes the full projekt object with all nested relationships. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt, in: :body, description: 'Projekt creation payload with required name and optional configuration (dates, geozones, phases, managers, etc.)', schema: { '$ref' => '#/components/schemas/ProjektCreateParams' }
+      parameter name: :projekt, in: :body, description: 'Projekt creation payload with required name and optional configuration (dates, geozones, phases, managers, content blocks, etc.)', schema: { '$ref' => '#/components/schemas/ProjektCreateParams' }
+
+      request_body_example(
+        name: 'with_content_blocks',
+        summary: 'Create a projekt whose page has three content blocks',
+        value: {
+          projekt: {
+            name: 'Neugestaltung Marktplatz',
+            content_blocks: [
+              { body: '<h2>Worum geht es?</h2><p>Der Marktplatz wird neu gestaltet.</p>' },
+              { body: '<h2>Zeitplan</h2><ul><li>Beteiligung bis Juni</li><li>Baubeginn 2027</li></ul>' },
+              { body: '<h2>Ergebnisse</h2><p>Folgen nach der Auswertung.</p>', visible: false }
+            ]
+          }
+        }
+      )
 
       response '201', 'projekt created successfully' do
         let(:projekt) do
@@ -353,7 +368,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 DESC
       parameter name: :include_content_blocks, in: :query, type: :boolean, required: false,
                 description: <<~DESC
-                  If true, includes content blocks in response with all localized content blocks.
+                  If true, includes content blocks in response with all localized content blocks. Content blocks that are switched off or outside their visibility period are left out.
 
                   **Default:** false (excludes content blocks).
                 DESC
@@ -469,9 +484,60 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update an existing projekt with new values. All fields are optional - only provide the fields you want to change. Returns the updated projekt object. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update an existing projekt with new values. All fields are optional - only provide the fields you want to change. Content blocks of the projekt page are added, updated, reordered, replaced or deleted through content_blocks together with content_blocks_mode. Returns the updated projekt object. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt, in: :body, description: 'Projekt attributes to update (name, dates, visibility settings, geozones, phases, managers, etc.). Any field not provided remains unchanged.', schema: { '$ref' => '#/components/schemas/ProjektUpdateParams' }
+      parameter name: :projekt, in: :body, description: 'Projekt attributes to update (name, dates, visibility settings, geozones, phases, managers, content blocks, etc.). Any field not provided remains unchanged.', schema: { '$ref' => '#/components/schemas/ProjektUpdateParams' }
+
+      request_body_example(
+        name: 'append_content_blocks',
+        summary: 'Add two content blocks at the bottom of the page',
+        value: {
+          projekt: {
+            content_blocks_mode: 'append',
+            content_blocks: [
+              { body: '<h2>Termine</h2><p>Infoabend am 12. Mai.</p>' },
+              { body: '<h2>Kontakt</h2><p>Stadtplanungsamt</p>' }
+            ]
+          }
+        }
+      )
+      request_body_example(
+        name: 'upsert_content_blocks',
+        summary: 'Edit one block, move another to the top and add a new one',
+        value: {
+          projekt: {
+            content_blocks_mode: 'upsert',
+            content_blocks: [
+              { id: 12, body: '<h2>Zeitplan</h2><p>Baubeginn verschoben auf 2028.</p>' },
+              { id: 14, position: 1 },
+              { body: '<h2>FAQ</h2><p>Antworten auf häufige Fragen.</p>', visible_from: '2026-11-01T08:00:00+01:00' }
+            ]
+          }
+        }
+      )
+      request_body_example(
+        name: 'replace_content_blocks',
+        summary: 'Rebuild the page: keep block 12, add one new block, delete every other block',
+        value: {
+          projekt: {
+            content_blocks_mode: 'replace',
+            content_blocks: [
+              { body: '<h2>Einleitung</h2><p>Neu geschriebener Text.</p>' },
+              { id: 12 }
+            ]
+          }
+        }
+      )
+      request_body_example(
+        name: 'delete_content_blocks',
+        summary: 'Delete two content blocks',
+        value: {
+          projekt: {
+            content_blocks_mode: 'delete',
+            content_blocks: [{ id: 13 }, { id: 15 }]
+          }
+        }
+      )
 
       response '200', 'projekt updated successfully' do
         let(:test_projekt) { Projekt.create!(name: 'Original Name') }
@@ -1145,7 +1211,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update the main content block body (HTML) for a projekt. This is the primary rich-text description that appears on the projekt detail page. Supports HTML formatting. Updates the default locale content block. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Replace the HTML body of the projekt's FIRST content block only; every other block stays unchanged. A projekt page is made of several content blocks, so to write the page as several sections (add, edit, reorder, replace or delete blocks) send content_blocks to POST /api/projekts or PATCH /api/projekts/{id} instead. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt, in: :body, description: 'Content block body containing HTML-formatted text for the projekt description', schema: {
         type: :object,
@@ -1319,6 +1385,218 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       unauthorized_response { let(:id) { 1 } }
     end
   end
+
+  describe 'content blocks on create and update' do
+    let(:headers) { { 'Authorization' => "Bearer #{api_client.access_token}" } }
+    let(:existing_projekt) { Projekt.create!(name: 'Projekt with blocks') }
+
+    def add_block(projekt, body, position)
+      projekt.content_blocks.create!(
+        name: 'custom',
+        locale: SiteCustomization::ContentBlock.canonical_locale,
+        key: "projekt_content_block_#{projekt.id}_#{position}_spec",
+        body: body,
+        position: position
+      )
+    end
+
+    def block_bodies(projekt)
+      projekt.content_blocks.reload.sort_by(&:position).map(&:body)
+    end
+
+    def create_projekt(projekt_attributes)
+      post(
+        api_projekts_path,
+        params: { projekt: projekt_attributes },
+        headers: headers,
+        as: :json
+      )
+    end
+
+    def update_projekt(projekt, projekt_attributes)
+      patch(
+        api_projekt_path(projekt),
+        params: { projekt: projekt_attributes },
+        headers: headers,
+        as: :json
+      )
+    end
+
+    def update_blocks(projekt, mode, content_blocks)
+      update_projekt(projekt, { content_blocks_mode: mode, content_blocks: content_blocks })
+    end
+
+    def created_projekt
+      Projekt.find(JSON.parse(response.body).dig('data', 'projekt', 'id'))
+    end
+
+    def response_blocks
+      JSON.parse(response.body).dig('data', 'projekt', 'content_blocks')
+    end
+
+    def error_messages
+      JSON.parse(response.body).dig('error', 'messages')
+    end
+
+    it 'creates every given block in order instead of one empty block' do
+      create_projekt(
+        name: 'Several blocks',
+        content_blocks: [
+          { body: '<p>First</p>' },
+          { body: '<p>Second</p>', visible: false, margin_bottom: 40 }
+        ]
+      )
+
+      expect(response).to have_http_status(:created)
+      expect(block_bodies(created_projekt)).to eq(['<p>First</p>', '<p>Second</p>'])
+      expect(created_projekt.content_blocks.find_by(position: 2)).to have_attributes(visible: false, margin_bottom: 40)
+      expect(response_blocks.map { |block| block['body'] }).to eq(['<p>First</p>', '<p>Second</p>'])
+    end
+
+    it 'still creates one empty block when no content blocks are sent' do
+      create_projekt(name: 'No blocks')
+
+      expect(block_bodies(created_projekt)).to eq([''])
+      expect(JSON.parse(response.body).dig('data', 'projekt')).not_to have_key('content_blocks')
+    end
+
+    it 'creates one empty block for an empty list' do
+      create_projekt(name: 'Empty list', content_blocks: [])
+
+      expect(response).to have_http_status(:created)
+      expect(block_bodies(created_projekt)).to eq([''])
+    end
+
+    it 'creates nothing when one block is invalid' do
+      expect do
+        create_projekt(
+          name: 'Invalid block',
+          content_blocks: [
+            { body: '<p>Fine</p>' },
+            { body: '<p>Broken</p>', visible_from: '2026-05-02T10:00', visible_until: '2026-05-01T10:00' }
+          ]
+        )
+      end.not_to change { Projekt.count }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(error_messages).to have_key('content_blocks[1]')
+    end
+
+    it 'creates nothing when the blocks are plain strings' do
+      expect do
+        create_projekt(name: 'String blocks', content_blocks: ['<p>One</p>', '<p>Two</p>'])
+      end.not_to change { Projekt.count }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(error_messages).to have_key('content_blocks[0]')
+    end
+
+    it 'appends blocks at the bottom' do
+      add_block(existing_projekt, '<p>Old</p>', 1)
+
+      update_blocks(existing_projekt, 'append', [{ body: '<p>New 1</p>' }, { body: '<p>New 2</p>' }])
+
+      expect(response).to have_http_status(:ok)
+      expect(block_bodies(existing_projekt)).to eq(['<p>Old</p>', '<p>New 1</p>', '<p>New 2</p>'])
+      expect(response_blocks.size).to eq(3)
+    end
+
+    it 'prepends blocks at the top in the given order' do
+      add_block(existing_projekt, '<p>Old</p>', 1)
+
+      update_blocks(existing_projekt, 'prepend', [{ body: '<p>New 1</p>' }, { body: '<p>New 2</p>' }])
+
+      expect(block_bodies(existing_projekt)).to eq(['<p>New 1</p>', '<p>New 2</p>', '<p>Old</p>'])
+    end
+
+    it 'upserts by default: updates, moves and adds blocks, leaving the rest unchanged' do
+      first_block = add_block(existing_projekt, '<p>One</p>', 1)
+      add_block(existing_projekt, '<p>Two</p>', 2)
+      third_block = add_block(existing_projekt, '<p>Three</p>', 3)
+
+      update_projekt(
+        existing_projekt,
+        content_blocks: [
+          { id: first_block.id, body: '<p>One edited</p>' },
+          { id: third_block.id, position: 1 },
+          { body: '<p>Four</p>', visible: false }
+        ]
+      )
+
+      expect(response).to have_http_status(:ok)
+      expect(block_bodies(existing_projekt)).to eq(['<p>Three</p>', '<p>One edited</p>', '<p>Two</p>', '<p>Four</p>'])
+      expect(response_blocks.map { |block| block['body'] }).to include('<p>Four</p>')
+    end
+
+    it 'replaces the whole list, deleting the blocks not listed' do
+      first_block = add_block(existing_projekt, '<p>One</p>', 1)
+      add_block(existing_projekt, '<p>Two</p>', 2)
+
+      update_blocks(existing_projekt, 'replace', [{ body: '<p>New</p>' }, { id: first_block.id }])
+
+      expect(block_bodies(existing_projekt)).to eq(['<p>New</p>', '<p>One</p>'])
+      expect(existing_projekt.content_blocks.ids).to include(first_block.id)
+    end
+
+    it 'keeps every block when replace receives plain strings' do
+      add_block(existing_projekt, '<p>Mine</p>', 1)
+
+      update_blocks(existing_projekt, 'replace', ['<p>One</p>'])
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(block_bodies(existing_projekt)).to eq(['<p>Mine</p>'])
+    end
+
+    it 'deletes the listed blocks' do
+      first_block = add_block(existing_projekt, '<p>One</p>', 1)
+      add_block(existing_projekt, '<p>Two</p>', 2)
+
+      update_blocks(existing_projekt, 'delete', [{ id: first_block.id }])
+
+      expect(block_bodies(existing_projekt)).to eq(['<p>Two</p>'])
+    end
+
+    it 'rejects a block of another projekt without changing anything' do
+      add_block(existing_projekt, '<p>Mine</p>', 1)
+      foreign_block = add_block(Projekt.create!(name: 'Other projekt'), '<p>Foreign</p>', 1)
+
+      update_blocks(existing_projekt, 'replace', [{ id: foreign_block.id, body: '<p>Hijacked</p>' }])
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(block_bodies(existing_projekt)).to eq(['<p>Mine</p>'])
+      expect(foreign_block.reload.body).to eq('<p>Foreign</p>')
+    end
+
+    it 'touches the projekt once for the whole write' do
+      first_block = add_block(existing_projekt, '<p>One</p>', 1)
+      add_block(existing_projekt, '<p>Two</p>', 2)
+      existing_projekt.update_column(:content_updated_at, 1.day.ago)
+      projekt_touches = []
+
+      count_projekt_touches = lambda do |*, payload|
+        if payload[:sql].start_with?('UPDATE "projekts"') && payload[:sql].include?('"content_updated_at"')
+          projekt_touches << payload[:sql]
+        end
+      end
+
+      ActiveSupport::Notifications.subscribed(count_projekt_touches, 'sql.active_record') do
+        update_blocks(
+          existing_projekt,
+          'replace',
+          [{ id: first_block.id, body: '<p>One edited</p>' }, { body: '<p>Three</p>' }, { body: '<p>Four</p>' }]
+        )
+      end
+
+      expect(response).to have_http_status(:ok)
+      expect(projekt_touches.size).to eq(1)
+      expect(existing_projekt.reload.content_updated_at).to be > 1.minute.ago
+    end
+
+    it 'rejects an unknown mode' do
+      update_blocks(existing_projekt, 'shuffle', [{ body: '<p>New</p>' }])
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(error_messages).to have_key('content_blocks_mode')
+    end
+  end
 end
-
-

@@ -1,0 +1,109 @@
+$mitmachbox-answered-color: #207868;
+
+.custom-new-design {
+  .mitmachbox-survey-form [hidden] {
+    display: none;
+  }
+
+  .mitmachbox-survey-progress {
+    margin-bottom: 1.5rem;
+  }
+
+  .mitmachbox-survey-progress-label {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .mitmachbox-survey-error {
+    margin-bottom: 1rem;
+    font-weight: 500;
+    color: $alert-color;
+  }
+
+  .mitmachbox-survey-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+
+    .button {
+      margin: 0;
+    }
+  }
+
+  .mitmachbox-survey-question {
+    min-width: 0;
+    margin: 0 0 2rem;
+    padding: 0;
+    border: 0;
+
+    &:last-of-type {
+      margin-bottom: 1.5rem;
+    }
+
+    .help-text {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .mitmachbox-survey-question-legend {
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 0.75rem;
+  }
+
+  .mitmachbox-survey-question-prompt {
+    margin-bottom: 0;
+  }
+
+  .mitmachbox-survey-question-required {
+    display: inline-block;
+    margin-top: 0.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--brand-color);
+  }
+
+  .mitmachbox-survey-option {
+    position: relative;
+    margin-bottom: 10px;
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      @include element-invisible;
+    }
+
+    .mitmachbox-survey-option-label {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 2.75rem;
+      margin: 0;
+      font-weight: 400;
+      line-height: 1.3;
+      text-align: left;
+      overflow-wrap: anywhere;
+      cursor: pointer;
+    }
+
+    input:checked + .mitmachbox-survey-option-label {
+      border-color: $mitmachbox-answered-color;
+      background-color: $mitmachbox-answered-color;
+      color: #fff;
+    }
+
+    input:checked + .mitmachbox-survey-option-label:hover {
+      border-color: darken($mitmachbox-answered-color, 5%);
+      background-color: darken($mitmachbox-answered-color, 5%);
+      color: #fff;
+    }
+
+    input:focus-visible + .mitmachbox-survey-option-label {
+      outline: $outline-focus;
+      outline-offset: 2px;
+    }
+  }
+}

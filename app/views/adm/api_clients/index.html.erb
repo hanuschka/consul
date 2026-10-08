@@ -67,7 +67,7 @@
               </td>
               <td class="kern-table__cell"><%= l(api_client.created_at, format: :short) %></td>
               <td class="kern-table__cell">
-                <%= render Kern::Table::ActionsComponent.new do |actions| %>
+                <%= render Kern::Table::InlineActionsComponent.new do |actions| %>
                   <% actions.with_action(
                     label: t("adm.shared.show"),
                     url: adm_api_client_path(api_client),
@@ -82,7 +82,6 @@
                     label: t("adm.shared.delete"),
                     url: adm_api_client_path(api_client),
                     style: :delete,
-                    divider: true,
                     data: { turbo_method: :delete, turbo_confirm: t("adm.api_clients.index.delete_confirm") }
                   ) %>
                 <% end %>

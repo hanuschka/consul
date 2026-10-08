@@ -1,6 +1,29 @@
 module Ai::Settings
   DEFAULT_GPT_MODEL = "gpt-5.6-sol"
-  # DEFAULT_GPT_MODEL = "gpt-5.2"
+
+  # Cheaper tiers of the same generation, for calls that classify pre-filtered
+  # candidates rather than generate prose. Read them through fast_model and
+  # ultrafast_model, never directly: the names exist only on OpenAI itself, as
+  # does DEFAULT_GPT_MODEL read through big_model.
+  FAST_MODEL = "gpt-5.6-terra".freeze
+  ULTRAFAST_MODEL = "gpt-5.6-luna".freeze
+  private_constant :FAST_MODEL, :ULTRAFAST_MODEL
+
+  # A temporary control for comparing the three tiers against each other on the
+  # staging system, read by the WhatsApp chat services and nothing else. When
+  # the comparison has been made, the tier that won is named in those services
+  # directly and all of this comes out again.
+  WHATSAPP_MODEL_TIER_SETTING_KEY = "ai.whatsapp_model_tier".freeze
+  WHATSAPP_TIER_BIG = "big".freeze
+  WHATSAPP_TIER_FAST = "fast".freeze
+  WHATSAPP_TIER_ULTRAFAST = "ultrafast".freeze
+  WHATSAPP_MODEL_TIERS = [
+    WHATSAPP_TIER_BIG, WHATSAPP_TIER_FAST, WHATSAPP_TIER_ULTRAFAST
+  ].freeze
+
+  # An AI provider call that never answers would otherwise hold the worker,
+  # and every job queued behind it, for the worker-wide max_run_time.
+  JOB_MAX_RUN_TIME = 18.minutes
 
   def self.feature_enabled?
     Rails.application.secrets.dig(:ai, :enabled) == true
@@ -97,6 +120,9 @@ module Ai::Settings
     ExternalApiKey.vertex_ai_credentials
   end
 
+  # DEFAULT_GPT_MODEL is only the fallback. When OpenAI changes what a model
+  # accepts, an instance has to be able to move off it from the settings screen;
+  # without this the escape hatch would be a deploy for the whole fleet at once.
   def self.current_llm_model
     custom_model = Setting["ai.llm_custom_model"]
     custom_endpoint = Setting["ai.llm_api_endpoint"]
@@ -105,14 +131,88 @@ module Ai::Settings
       return custom_model
     end
 
-    if current_llm_provider == "openai"
-      DEFAULT_GPT_MODEL
-    else
-      Setting["ai.llm_model"]
-    end
+    configured_model = Setting["ai.llm_model"]
+    return configured_model if configured_model.present?
+
+    DEFAULT_GPT_MODEL if current_llm_provider == "openai"
   end
 
   def self.current_llm_provider
     Setting["ai.llm_provider"].presence || "openai"
+  end
+
+  # The big tier names DEFAULT_GPT_MODEL rather than current_llm_model so the
+  # three tiers stay the three models being compared: an instance that has
+  # moved ai.llm_model onto one of the cheaper ids would otherwise offer the
+  # same model twice.
+  def self.big_model
+    openai_tier_model(DEFAULT_GPT_MODEL)
+  end
+
+  def self.fast_model
+    openai_tier_model(FAST_MODEL)
+  end
+
+  def self.ultrafast_model
+    openai_tier_model(ULTRAFAST_MODEL)
+  end
+
+  # The three tiers are three separate models only on OpenAI's own catalogue,
+  # so anywhere else the choice is neither offered nor read: a stored value
+  # survives a provider switch without taking effect while it is switched.
+  def self.whatsapp_model_tier
+    return WHATSAPP_TIER_FAST if !standard_openai?
+
+    tier = Setting[WHATSAPP_MODEL_TIER_SETTING_KEY].to_s
+
+    return tier if WHATSAPP_MODEL_TIERS.include?(tier)
+
+    WHATSAPP_TIER_FAST
+  end
+
+  def self.whatsapp_model
+    whatsapp_tier_model(whatsapp_model_tier)
+  end
+
+  # Asked per tier rather than only for the selected one so the admin dropdown
+  # can name the model id each option would send.
+  def self.whatsapp_tier_model(tier)
+    case tier
+    when WHATSAPP_TIER_BIG
+      big_model
+    when WHATSAPP_TIER_ULTRAFAST
+      ultrafast_model
+    else
+      fast_model
+    end
+  end
+
+  # An instance pointed at another provider, or at an OpenAI-compatible endpoint
+  # serving its own catalogue, gets the model it configured instead.
+  def self.openai_tier_model(model)
+    return model if standard_openai?
+
+    current_llm_model
+  end
+
+  # Whether the provider is OpenAI at all, custom endpoint or not. Asked apart
+  # from standard_openai?, which is the narrower question of whether the model
+  # *catalogue* is OpenAI's own: the tier model names below exist only on OpenAI
+  # itself, while the chat-completions request schema is served by anything
+  # configured under this provider.
+  def self.openai?
+    current_llm_provider == "openai"
+  end
+
+  def self.standard_openai?
+    openai? && Setting["ai.llm_api_endpoint"].blank?
+  end
+
+  # Model ids belong to one provider only, so a value chosen for the previous
+  # provider would be sent to an API that has never heard of it — and since the
+  # setting now wins over DEFAULT_GPT_MODEL, that would break every AI call
+  # instead of being quietly ignored as it was before.
+  def self.reset_llm_model!
+    Setting["ai.llm_model"] = nil
   end
 end

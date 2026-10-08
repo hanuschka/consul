@@ -44,6 +44,8 @@ resources :proposals do
     get :json_data
     patch :retire
     patch :publish
+    patch :publish_draft
+    get :similar_contributions_status
   end
 
   collection do

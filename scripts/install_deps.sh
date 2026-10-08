@@ -23,6 +23,14 @@
 # report too, but swapping it in needs a systemd drop-in that capistrano
 # regenerates on each deploy, so installing the library alone would report a
 # change that has not actually taken effect.
+#
+# Also deliberately not installed: pgvector. It is reported under features.ai
+# as well, but the package belongs to the database host rather than the app
+# host, and creating the extension needs a superuser -- so nothing here can
+# do it. The report itself names the command to run:
+#
+#   sudo apt-get install -y postgresql-<major>-pgvector   # on the DB host
+#   CREATE EXTENSION vector;                              # as superuser
 
 set -euo pipefail
 

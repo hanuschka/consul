@@ -5,6 +5,10 @@ de:
         success: Das Thema wurde ausgeblendet.
       restore:
         success: Das Thema wurde eingeblendet.
+      show:
+        intro: "Jeder Kommentar ist wertvoll, fördert die Diskussion und damit den Erkenntnisgewinn. Schauen Sie kurz in den bisherigen Kommentaren, ob es Ihr Feedback in ähnlicher Form bereits gibt, um Wiederholungen zu vermeiden."
+      new:
+        intro: "Ein Arbeitskreis lebt von der Beteiligung seiner Teilnehmer. Sie möchten der Runde für das nachstehende Projekt ein neues Thema zur Diskussion bereitstellen? Dann beschreiben Sie anhand einer Überschrift und der Erläuterung Ihres Themas, worum es Ihnen geht. Jeder Beitrag ist wertvoll und hilft dabei, Klarheit über den Vorschlag zu gewinnen."
       list:
         empty_list_text: Keine Beiträge
         orders:

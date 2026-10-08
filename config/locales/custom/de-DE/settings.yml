@@ -127,8 +127,6 @@ de:
       public_stats_description: "Statistiken im Administrationsbereich anzeigen"
       help_page: "Hilfeseite"
       help_page_description: 'Zeigt eine Hilfeseite zu den aktivieren Modulen'
-      remote_translations: "Übersetzung ablegen"
-      remote_translations_description: "Zeigt eine Schaltfläche an, mit der Benutzer eine Übersetzung anfordern können, wenn keine Inhalte in ihrer Sprache existieren."
       translation_interface: "Übersetzung Interface"
       translation_interface_description: "Ermöglicht es Nutzern ihre Inhalte in mehreren Sprachen zu erstellen"
       remote_census: "Konfigurieren Sie die Verbindung zu einem Melderegister per API (SOAP)"

@@ -1,0 +1,16 @@
+<% if resource.errors.any? %>
+  <div data-alert class="callout alert" role="alert">
+    <strong>
+      <% errors_count = resource.errors.messages.reject { |attribute| attribute == :base }.count %>
+
+      <%= pluralize errors_count, t("form.error"), t("form.errors") %>
+      <%= sanitize(t("form.not_saved", resource: t("form.#{resource.class.to_s.underscore}"))) %>
+    </strong>
+
+    <ul>
+      <% resource.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

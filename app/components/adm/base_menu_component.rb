@@ -3,6 +3,12 @@ class Adm::BaseMenuComponent < ApplicationComponent
     raise NotImplementedError, "Subclasses must implement #menu_items"
   end
 
+  def menu_items_with_help
+    help = help_item
+
+    help ? menu_items + [help] : menu_items
+  end
+
   def aria_label
     t("adm.menu.aria_label")
   end
@@ -59,5 +65,17 @@ class Adm::BaseMenuComponent < ApplicationComponent
 
     def material_icon(name)
       tag.span(name, class: "material-symbols-outlined", aria: { hidden: "true" })
+    end
+
+    def help_item
+      return unless Adm::Handbook.configured?
+
+      { label: t("adm.menu.items.help"), icon: "help", path: adm_help_path(adm_section: help_section) }
+    end
+
+    def help_section
+      namespace = self.class.module_parent_name
+
+      namespace == "Adm" ? nil : namespace.demodulize.underscore
     end
 end

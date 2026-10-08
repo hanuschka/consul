@@ -22,6 +22,8 @@ class NewsletterContentBlocks::DispatchCreateWithAi < ApplicationService
   end
 
   def call
+    purge_failed_placeholders
+
     if replace_mode?
       build_replace_placeholder
     else
@@ -39,6 +41,18 @@ class NewsletterContentBlocks::DispatchCreateWithAi < ApplicationService
 
   def replace_mode?
     @mode == "replace"
+  end
+
+  # Failed add-mode placeholders are kept so the poller can read the error off
+  # them. They are invisible to the newsletter, so the next generation for the
+  # same newsletter is the natural point to clear the previous one out.
+  def purge_failed_placeholders
+    return if @newsletter.blank?
+
+    SiteCustomization::ContentBlock
+      .failed_ai_placeholders
+      .where(newsletter_id: @newsletter.id)
+      .destroy_all
   end
 
   def options_payload
@@ -60,6 +74,7 @@ class NewsletterContentBlocks::DispatchCreateWithAi < ApplicationService
       position: nil,
       ai_generation_data: {
         "status" => "pending",
+        "step" => "queued",
         "mode" => "add",
         "options" => options_payload,
         "insertion_context" => {
@@ -84,6 +99,7 @@ class NewsletterContentBlocks::DispatchCreateWithAi < ApplicationService
     target.update_columns(
       ai_generation_data: {
         "status" => "pending",
+        "step" => "queued",
         "mode" => "replace",
         "options" => options_payload,
         "prior_body" => target.body.to_s

@@ -1,0 +1,39 @@
+<%
+  pending = proposal["state"] == ProjektImports::AiEditJournal::PENDING
+  description = import_chat_proposal_description(proposal)
+%>
+<li class="projekt-import-chat--proposal<%= " -resolved" if !pending %>">
+  <span class="material-symbols-outlined projekt-import-chat--proposal-icon" aria-hidden="true">
+    <%= import_chat_proposal_icon(proposal) %>
+  </span>
+
+  <span class="projekt-import-chat--proposal-text">
+    <span class="projekt-import-chat--proposal-title"><%= description %></span>
+    <span class="projekt-import-chat--proposal-meta">
+      <%= t("adm.projekts.imports.proposals.state.#{proposal["state"]}") %>
+    </span>
+  </span>
+
+  <% if pending %>
+    <span class="projekt-import-chat--proposal-actions">
+      <%= tag.button(
+            type: "button",
+            class: "projekt-import-chat--proposal-action -apply",
+            data: {
+              message_id: message.id,
+              proposal_id: proposal["proposal_id"],
+              action: "click->projekt-imports--chat#applyProposal"
+            }
+          ) { t("adm.projekts.imports.proposals.apply") } %>
+      <%= tag.button(
+            type: "button",
+            class: "projekt-import-chat--proposal-action -discard",
+            data: {
+              message_id: message.id,
+              proposal_id: proposal["proposal_id"],
+              action: "click->projekt-imports--chat#discardProposal"
+            }
+          ) { t("adm.projekts.imports.proposals.discard") } %>
+    </span>
+  <% end %>
+</li>

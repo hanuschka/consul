@@ -1,4 +1,4 @@
-<% phase_enabled = budget.publishing_prices_or_later? %>
+<% phase_enabled = budget.selection_open? %>
 <% phase_completed = investment.selected? %>
 <% phase_state = phase_enabled ? (phase_completed ? "completed" : "active") : "disabled" %>
 

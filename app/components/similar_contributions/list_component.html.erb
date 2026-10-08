@@ -1,0 +1,49 @@
+<section id="similar-contributions" class="similar-contributions-list">
+  <h2 class="similar-contributions-list--title"><%= t(".title") %></h2>
+
+  <% if matches.empty? %>
+    <p class="similar-contributions-list--empty"><%= t(".empty") %></p>
+  <% else %>
+    <ul class="similar-contributions-matches">
+      <% matches.each do |match| %>
+        <%= render SimilarContributions::MatchItemComponent.new(match.resource, variant: :list) do |item| %>
+          <% item.with_meta do %>
+            <p class="similar-contributions-match--meta">
+              <% if projekt_name_for(match.resource).present? %>
+                <span class="similar-contributions-match--projekt">
+                  <%= projekt_name_for(match.resource) %>
+                </span>
+                &middot;
+              <% end %>
+              <%= phase_title_for(match.resource) %>
+              &middot;
+              <%= processing_status_for(match.resource) %>
+              &middot;
+              <%= created_at_for(match.resource) %>
+              &middot;
+              <span class="material-symbols-outlined" aria-hidden="true">thumb_up</span>
+              <%= match.resource.cached_votes_up %>
+              &middot;
+              <span class="material-symbols-outlined" aria-hidden="true">comment</span>
+              <%= match.resource.comments_count %>
+            </p>
+          <% end %>
+
+          <% item.with_footer do %>
+            <%= button_to exclude_path_for(match.resource),
+                  method: :delete,
+                  class: "kern-btn kern-btn--secondary kern-btn--danger",
+                  form: {
+                    class: "similar-contributions-match--exclude",
+                    data: { turbo_confirm: t(".not_a_duplicate_confirm") }
+                  },
+                  data: { confirm: t(".not_a_duplicate_confirm") } do %>
+              <span class="kern-label material-symbols-outlined" aria-hidden="true">link_off</span>
+              <span class="kern-label"><%= t(".not_a_duplicate") %></span>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </ul>
+  <% end %>
+</section>

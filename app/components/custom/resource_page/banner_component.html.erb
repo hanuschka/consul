@@ -9,7 +9,7 @@
         <i class="fa fa-calendar"></i>
         <%= date_string %>
       </div>
-      <% if !resource.respond_to?(:projekt_phase) || projekt_phase_feature?(resource&.projekt_phase, "resource.show_comments") %>
+      <% if resource.respond_to?(:comments) && (!resource.respond_to?(:projekt_phase) || projekt_phase_feature?(resource&.projekt_phase, "resource.show_comments")) %>
         <div class="resource-page-banner--detail">
           <%= link_to('#comments') do %>
             <i class="fa fa-comment"></i>
@@ -73,7 +73,7 @@
     <%= links_section %>
   </div>
 
-  <% if resource.image&.attached? && big_image_url.present? %>
+  <% if resource.respond_to?(:image) && resource.image&.attached? && big_image_url.present? %>
     <%= link_to big_image_url,
       target: "_blank",
       class: "glightbox resource-page-banner--image",

@@ -11,6 +11,10 @@
   .content-blocks-container {
     min-height: 40px;
   }
+
+  .custom-content-block-wrapper.-in-edit-mode .custom-content-block-edit-main-controlls {
+    display: none;
+  }
 }
 
 .newsletter-content-block-editor .custom-content-block-wrapper--inner {

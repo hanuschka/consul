@@ -6,7 +6,7 @@
     </div>
   </div>
 
-  <% cache [deficiency_report, "image", deficiency_report.category] do %>
+  <% cache [I18n.locale, deficiency_report, "image", deficiency_report.category] do %>
     <div class='columns small-12 medium-3 large-2 show-for-small-only'>
       <% if show_image_thumbnail?(deficiency_report) %>
         <%= link_to deficiency_report do %>
@@ -31,7 +31,7 @@
 
     <div class='resource-info' data-equalizer='details'>
       <div class='column small-12 medium-6 large-8 resource-details' data-equalizer-watch='details'>
-        <% cache [deficiency_report, "details"] do %>
+        <% cache [I18n.locale, deficiency_report, "details"] do %>
           <h4 class='resource-name'><%= link_to deficiency_report.title, deficiency_report %></h4>
           <div class="resource-summary margin-bottom">
             <%= link_to deficiency_report do %>

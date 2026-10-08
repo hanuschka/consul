@@ -1,5 +1,6 @@
 class ProjektImports::ChatMessageJob < ApplicationJob
   queue_as :projekt_imports
+  self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
 
   def perform(user_message_id)
     user_message = AiChatMessage.find(user_message_id)

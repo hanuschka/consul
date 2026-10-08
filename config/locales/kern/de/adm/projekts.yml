@@ -21,7 +21,6 @@ de:
           projekts: Projekte
           managers: Team
           inspiration: Projektinspirationen
-          instance_import: Externes Projekt kopieren
           landing_pages: Themenseiten
           settings: Konfiguration
       inspiration:
@@ -99,26 +98,6 @@ de:
             note: Beiträge, Stimmen, Kommentare und Abonnements der Teilnehmenden.
           status_processing: Wird kopiert …
           status_failed: Kopieren fehlgeschlagen
-        instance_import:
-          action: Projekt importieren
-          pending_name: Importiertes Projekt (in Arbeit)
-          url_label: Projekt einer anderen Plattform übernehmen
-          url_hint: >
-            Fügen Sie die Adresse eines Projekts ein, das Sie unter
-            Projektinspirationen gefunden haben. Phasen, Einstellungen, Inhalte
-            und Karten werden als neuer, deaktivierter Entwurf auf dieser
-            Plattform angelegt. Bilder, Videos und Beiträge der Teilnehmenden
-            werden nicht übernommen – Bilder kommen als Platzhalter an und
-            können ersetzt werden.
-          browse_inspiration: Projektinspirationen ansehen
-          url_field_label: Projektadresse
-          url_placeholder: z.B. https://app.demokratie.today/beteiligung-innenstadt
-          invalid_url: Bitte fügen Sie eine vollständige Projektadresse inklusive https:// ein.
-          started: Das Projekt wird importiert. Das kann einen Moment dauern.
-          finished: Das importierte Projekt „%{name}“ wurde erstellt.
-          failed_notice: >
-            Das Projekt konnte nicht importiert werden. Bitte prüfen Sie die
-            Adresse und ob das Projekt auf app.demokratie.today veröffentlicht ist.
         projekt:
           top_level_projekt: Top-Level-Projekt
           frontend_page: Projektseite
@@ -148,6 +127,8 @@ de:
             den Titel der Startseite, die Projektlaufzeit, die Zuordnung zu Themenseiten sowie
             die geografische Einordnung. Diese Angaben bestimmen, wie das Projekt auf der Plattform
             dargestellt und gefunden wird.
+          activated_label: Projekt aktiviert
+          activated_description: Schaltet das Projekt auf der Plattform frei. Nur aktivierte Projekte erscheinen in der öffentlichen Projektübersicht und können von Nutzern aufgerufen werden. Deaktivierte Projekte bleiben vollständig erhalten und sind weiterhin in der Verwaltung bearbeitbar.
           duration_label: Projektlaufzeit
           duration_description: Legt den Zeitraum fest, in dem das Projekt auf der Plattform sichtbar und zugänglich ist – unabhängig davon, ob gerade eine aktive Beteiligungsphase läuft. Das Start- und Enddatum bestimmt, wann das Projekt in der öffentlichen Projektübersicht erscheint und von Nutzern aufgerufen werden kann.
           landing_pages_label: Zuordnung zu Themenseiten

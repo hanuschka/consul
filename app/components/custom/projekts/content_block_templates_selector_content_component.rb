@@ -1,22 +1,11 @@
 class Projekts::ContentBlockTemplatesSelectorContentComponent < ApplicationComponent
-  def initialize(dt_templates_by_category: [], context: "projekt", fallback: false)
-    @dt_templates_by_category = dt_templates_by_category
+  def initialize(templates_by_category: [], context: "projekt")
+    @templates_by_category = templates_by_category
     @context = context
-    @fallback = fallback
   end
 
-  def dt_templates_by_category
-    @dt_templates_by_category
-  end
-
-  def fallback?
-    @fallback
-  end
-
-  def local_template_categories
-    return [] if !fallback? || newsletter_context?
-
-    Projekts::ContentBlockTemplatesSelectorComponent.new.local_template_categories
+  def templates_by_category
+    @templates_by_category
   end
 
   def category_id(category)

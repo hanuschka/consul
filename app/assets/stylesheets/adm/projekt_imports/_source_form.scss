@@ -1,0 +1,52 @@
+// The whole page is one field and one button, inside a 1600px container that
+// would otherwise stretch both across the screen. Capping the measure is what
+// makes it read as a form rather than as a page-wide banner.
+.projekt-import-source-page .kern-body {
+  max-width: 62ch;
+}
+
+.projekt-import-source-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--kern-metric-space-small);
+  max-width: 46rem;
+}
+
+// The wrapper kern renders around the field, never the input inside it: the
+// input carries kern-form-input__input, and a basis matched on both would
+// resolve along the wrapper's column axis and give the input that height.
+.projekt-import-source-form > .kern-form-input {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.projekt-import-source-form > .kern-btn {
+  flex: 0 0 auto;
+}
+
+// From the breakpoint where the row has room for both, the input gives up
+// width instead of pushing the button onto a line of its own, where it reads
+// as a second, unrelated action rather than this field's submit.
+@media (min-width: 768px) {
+  .projekt-import-source-form {
+    flex-wrap: nowrap;
+  }
+
+  .projekt-import-source-form > .kern-form-input {
+    flex: 1 1 auto;
+  }
+}
+
+.projekt-import-source-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-small);
+}
+
+.projekt-import-source-form--actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kern-metric-space-small);
+  margin-top: var(--kern-metric-space-small);
+}

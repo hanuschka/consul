@@ -3,7 +3,7 @@
 class Ckeditor::AssetsController < ApplicationController
   def index
     authorize! :index, AdminAsset
-    @assets = AdminAssetsQuery.new(params).call.page(params[:page]).per(15)
+    @assets = visible_assets(AdminAssetsQuery.new(params).call).page(params[:page]).per(15)
 
     respond_to do |format|
       format.html { render layout: false }
@@ -12,6 +12,15 @@ class Ckeditor::AssetsController < ApplicationController
   end
 
   private
+
+    def visible_assets(assets)
+      return assets if current_user.administrator?
+
+      projekt_assets = assets.merge(Adm::AdminAssetPolicy::Scope.new(current_user, assets.klass).resolve)
+      return projekt_assets unless assets.klass == AdminImage
+
+      projekt_assets.or(assets.where(projekt_id: nil, user_id: current_user.id))
+    end
 
     def assets_json
       allowed_attributes = %i[

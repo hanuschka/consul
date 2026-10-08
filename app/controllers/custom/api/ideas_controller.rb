@@ -10,10 +10,7 @@ class Api::IdeasController < Api::BaseController
 
   def index
     check_read_access!
-    ideas = Idea.accepted
-      .includes(:author, :category, :map_location)
-      .page(params[:page])
-      .per(params[:per_page] || DEFAULT_PER_PAGE)
+    ideas = paginate(Idea.accepted.includes(:author, :category, :map_location))
 
     ideas = apply_filters(ideas)
     ideas = apply_sorting(ideas)
@@ -114,15 +111,6 @@ class Api::IdeasController < Api::BaseController
       ideas = ideas.send("sort_by_#{order}")
     end
     ideas
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end
 

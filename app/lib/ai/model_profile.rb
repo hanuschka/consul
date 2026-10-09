@@ -13,6 +13,15 @@ class Ai::ModelProfile
   # effort is given the model's own default rather than none.
   TOOL_REASONING_EFFORT = "none".freeze
 
+  # Models that cannot switch reasoning off: they answer 400 for none and
+  # minimal, so they are named the lowest effort they accept instead. Read only
+  # for a model the registry does not list with its efforts; matched as
+  # prefixes so dated snapshots of the same model are covered too.
+  ALWAYS_REASONING_MODEL_PREFIXES = %w[gpt-6.1-sol gpt-6-astra].freeze
+  ALWAYS_REASONING_LOWEST_EFFORT = "low".freeze
+
+  EFFORTS_ASCENDING = %w[none minimal low medium high xhigh max].freeze
+
   def self.default
     new(::Ai::Settings.current_llm_model)
   end
@@ -51,30 +60,32 @@ class Ai::ModelProfile
     transport == RESPONSES
   end
 
-  # Named for any endpoint configured under the OpenAI provider, custom or not,
-  # because reasoning_effort belongs to the chat-completions request schema that
-  # endpoint serves. Gating it on the *catalogue* being OpenAI's own instead was
-  # an outage rather than caution: from the GPT-5.5 generation on, a request
-  # carrying function tools and naming no effort is refused outright — "set
-  # reasoning_effort to 'none'" — so withholding the parameter from a portal
-  # with a custom endpoint broke every tool-carrying turn it made, the whole
-  # WhatsApp assistant included.
+  # Every call runs at the model's own default effort, except where the request
+  # schema forces one to be named. OpenAI itself is reached over the Responses
+  # API, which takes tools at any effort, so nothing is named there. An endpoint
+  # configured under the OpenAI provider with its own URL serves the
+  # chat-completions schema, and from the GPT-5.5 generation on that refuses a
+  # request carrying function tools and naming no effort — "set
+  # reasoning_effort to 'none'". Withholding the parameter from such a portal
+  # once broke every tool-carrying turn it made, the whole WhatsApp assistant
+  # included.
   #
-  # The one model it is withheld from is one ruby_llm both knows and lists
-  # without reasoning: gpt-4.1 behind a LiteLLM proxy to Azure answers 400 for
-  # the parameter. The gate is the model, never the endpoint, so the GPT-5
-  # generation keeps it everywhere. The remaining trade is a custom id the
-  # registry has never heard of, served by a proxy that refuses the parameter:
-  # a misconfiguration with a legible error, where the other was every reply
-  # going missing.
+  # There the effort named is none, or the lowest the model accepts when it
+  # cannot switch reasoning off. The one model it is withheld from is one
+  # ruby_llm both knows and lists without reasoning: gpt-4.1 behind a LiteLLM
+  # proxy to Azure answers 400 for the parameter. The remaining trade is a
+  # custom id the registry has never heard of, served by a proxy that refuses
+  # the parameter: a misconfiguration with a legible error, where the other was
+  # every reply going missing.
   def reasoning_effort
     return nil if !::Ai::Settings.openai?
+    return nil if ::Ai::Settings.standard_openai?
 
     info = registry_info
 
     return nil if info.present? && !info.supports?(:reasoning)
 
-    TOOL_REASONING_EFFORT
+    lowest_accepted_effort(info)
   end
 
   # Only a model ruby_llm both knows and lists without function calling answers
@@ -90,6 +101,20 @@ class Ai::ModelProfile
   end
 
   private
+
+    def lowest_accepted_effort(info)
+      accepted_efforts = Array(info&.reasoning_option_values(:effort))
+      lowest_effort = EFFORTS_ASCENDING.find { |effort| accepted_efforts.include?(effort) }
+
+      return lowest_effort if lowest_effort.present?
+      return ALWAYS_REASONING_LOWEST_EFFORT if always_reasoning?
+
+      TOOL_REASONING_EFFORT
+    end
+
+    def always_reasoning?
+      ALWAYS_REASONING_MODEL_PREFIXES.any? { |prefix| model.to_s.start_with?(prefix) }
+    end
 
     def registry_info
       ::RubyLLM.models.find(model)

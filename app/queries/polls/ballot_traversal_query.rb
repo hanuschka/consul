@@ -93,6 +93,17 @@ class Polls::BallotTraversalQuery < ApplicationQuery
       .in_configured_order
   end
 
+  # The same, loaded once per request or job and shared by every traversal of the
+  # poll in it. A WhatsApp turn walks one ballot several times — the prompt, the
+  # reply, the re-ask — and each walk loaded the same questions, options and
+  # translations again. Only the questions are shared: each traversal still reads
+  # the citizen's answers itself, so an answer recorded mid-turn is seen by the
+  # next walk.
+  def self.cached_root_questions(poll)
+    ::Current.ballot_root_questions ||= {}
+    ::Current.ballot_root_questions[poll.id] ||= root_questions(poll.questions).to_a
+  end
+
   # {poll_id => {question_id => [chosen titles]}} over the questions given, which
   # map to their polls. Keyed per poll the way #answered_titles is keyed per ballot.
   def self.answered_titles_by_poll(poll_ids_by_question, user)
@@ -299,7 +310,7 @@ class Polls::BallotTraversalQuery < ApplicationQuery
     end
 
     def participant_ordered_roots
-      roots = @preloaded&.roots || self.class.root_questions(@poll.questions)
+      roots = @preloaded&.roots || self.class.cached_root_questions(@poll)
 
       @poll.questions_in_participant_order(roots, @order_seed)
     end

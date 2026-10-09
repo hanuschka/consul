@@ -60,11 +60,19 @@ class Ai::ModelProfile
   # with a custom endpoint broke every tool-carrying turn it made, the whole
   # WhatsApp assistant included.
   #
-  # The trade is a proxy serving a catalogue that has never heard of the
-  # parameter, which answers 400 for it. That one is a misconfiguration with a
-  # legible error; the other was every reply going missing.
+  # The one model it is withheld from is one ruby_llm both knows and lists
+  # without reasoning: gpt-4.1 behind a LiteLLM proxy to Azure answers 400 for
+  # the parameter. The gate is the model, never the endpoint, so the GPT-5
+  # generation keeps it everywhere. The remaining trade is a custom id the
+  # registry has never heard of, served by a proxy that refuses the parameter:
+  # a misconfiguration with a legible error, where the other was every reply
+  # going missing.
   def reasoning_effort
     return nil if !::Ai::Settings.openai?
+
+    info = registry_info
+
+    return nil if info.present? && !info.supports?(:reasoning)
 
     TOOL_REASONING_EFFORT
   end

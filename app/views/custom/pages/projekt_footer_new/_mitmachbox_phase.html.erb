@@ -16,6 +16,10 @@
 <% end %>
 
 <% if @projekt_phase.online_answering_enabled? %>
+  <% survey_open = @mitmachbox_survey&.dig("state") == "open" %>
+  <% participation_open = @projekt_phase.current? && survey_open %>
+  <% manager_preview = !participation_open && @projekt_phase.managed_by?(current_user) %>
+
   <div class="row">
     <div class="small-12 medium-8 column mitmachbox-survey">
       <% if @mitmachbox_already_answered %>
@@ -28,12 +32,18 @@
           <%= t("custom.projekt_phases.mitmachbox_phase.unavailable") %>
         </div>
 
-      <% elsif !@projekt_phase.current? || @mitmachbox_survey["state"] != "open" %>
+      <% elsif !participation_open && !manager_preview %>
         <div class="callout primary">
           <%= t("custom.projekt_phases.mitmachbox_phase.closed") %>
         </div>
 
       <% else %>
+        <% if manager_preview %>
+          <div class="callout warning" role="note">
+            <%= t("custom.projekt_phases.mitmachbox_phase.manager_preview.#{survey_open ? "submittable" : "not_submittable"}") %>
+          </div>
+        <% end %>
+
         <p><%= t("custom.projekt_phases.mitmachbox_phase.online_intro") %></p>
 
         <%= form_with url: mitmachbox_response_projekt_phase_path(@projekt_phase),
@@ -105,7 +115,7 @@
             </button>
 
             <%= submit_tag t("custom.projekt_phases.mitmachbox_phase.submit_button"),
-                  class: "button js-mitmachbox-submit" %>
+                  class: "button js-mitmachbox-submit", disabled: !survey_open %>
           </div>
         <% end %>
       <% end %>

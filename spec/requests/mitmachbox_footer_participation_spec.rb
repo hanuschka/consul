@@ -227,6 +227,90 @@ describe "Answering a Mitmachbox survey from the projekt footer", type: :request
     end
   end
 
+  context "as someone who manages the projekt, before the phase has started" do
+    let(:admin) { create(:administrator).user }
+
+    before do
+      projekt_phase.update!(start_date: 3.days.from_now, end_date: 10.days.from_now)
+    end
+
+    def preview_note(key)
+      I18n.t("custom.projekt_phases.mitmachbox_phase.manager_preview.#{key}")
+    end
+
+    it "lets an admin submit" do
+      login_as(admin)
+      expect(Mitmachbox::SubmitWebResponseService).to receive(:call)
+        .with(hash_including(user: admin, survey_version_id: 42))
+
+      submit("1" => "10")
+
+      expect(flash_notice).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.thank_you"))
+    end
+
+    it "lets a projekt manager with the manage permission submit" do
+      manager = create(:projekt_manager)
+      create(:projekt_manager_assignment, :manage, projekt: projekt, projekt_manager: manager)
+      login_as(manager.user)
+      expect(Mitmachbox::SubmitWebResponseService).to receive(:call)
+
+      submit("1" => "10")
+
+      expect(flash_notice).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.thank_you"))
+    end
+
+    it "refuses a projekt manager without the manage permission" do
+      manager = create(:projekt_manager)
+      create(:projekt_manager_assignment, projekt: projekt, projekt_manager: manager)
+      login_as(manager.user)
+      expect(Mitmachbox::SubmitWebResponseService).not_to receive(:call)
+
+      submit("1" => "10")
+
+      expect(flash_alert).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.closed"))
+    end
+
+    it "still refuses an admin while the survey is not open" do
+      survey["state"] = "draft"
+      login_as(admin)
+      expect(Mitmachbox::SubmitWebResponseService).not_to receive(:call)
+
+      submit("1" => "10")
+
+      expect(flash_alert).to eq(I18n.t("custom.projekt_phases.mitmachbox_phase.closed"))
+    end
+
+    it "shows an admin the survey with a preview note" do
+      login_as(admin)
+
+      get page_path(projekt.page.slug, projekt_phase_id: projekt_phase.id)
+
+      expect(response.body).to include("js-mitmachbox-survey-form")
+      expect(response.body).to include(CGI.escapeHTML(preview_note("submittable")))
+      expect(response.body).not_to include(I18n.t("custom.projekt_phases.mitmachbox_phase.closed"))
+    end
+
+    it "shows an admin a draft survey with the submit button disabled" do
+      survey["state"] = "draft"
+      login_as(admin)
+
+      get page_path(projekt.page.slug, projekt_phase_id: projekt_phase.id)
+
+      expect(response.body).to include(CGI.escapeHTML(preview_note("not_submittable")))
+      submit_button = Nokogiri::HTML(response.body).at_css(".js-mitmachbox-submit")
+      expect(submit_button["disabled"]).to be_present
+    end
+
+    it "keeps showing a regular user the closed note" do
+      login_as(user)
+
+      get page_path(projekt.page.slug, projekt_phase_id: projekt_phase.id)
+
+      expect(response.body).not_to include("js-mitmachbox-survey-form")
+      expect(response.body).to include(I18n.t("custom.projekt_phases.mitmachbox_phase.closed"))
+    end
+  end
+
   context "guest participation" do
     it "lets a guest submit" do
       guest = create(:user, guest: true)

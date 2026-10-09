@@ -84,6 +84,7 @@ en:
         next_question: Next
         prev_question: Back
         progress: Question {current} of {total}
+        progress_open: Question {current}
         select_answer: Please choose an answer.
         required: Required
         multiple_hint: Multiple answers possible

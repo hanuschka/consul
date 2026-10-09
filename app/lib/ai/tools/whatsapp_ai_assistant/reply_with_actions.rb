@@ -58,21 +58,27 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
     return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
 
-    overlong = refuse_overlong_button_labels(buttons)
-
-    return overlong if overlong.present?
-
     page_url = ::Whatsapp::PillPageUrl.call(link, user: user)
 
     if link.present? && page_url.blank?
       return unknown_link_error
     end
 
+    text = [body.strip, page_url].compact.join("\n\n")
+
+    if ::Whatsapp::BallotResume.question_follows_reply?(conversation)
+      return reply_in_words(body: text, sent_link: page_url.present? ? link : nil)
+    end
+
+    overlong = refuse_overlong_button_labels(buttons)
+
+    return overlong if overlong.present?
+
     offerable = offerable_buttons(buttons)
 
     return unusable_actions_error if offerable.empty?
 
-    message = send_reply(body: [body.strip, page_url].compact.join("\n\n"), buttons: offerable)
+    message = send_reply(body: text, buttons: offerable)
 
     return send_refused_error if ::Whatsapp::Send.refused?(message)
 
@@ -91,10 +97,29 @@ class Ai::Tools::WhatsappAiAssistant::ReplyWithActions < Ai::Tools::WhatsappAiAs
 
   private
 
+    # The ballot question put again under this reply brings its own buttons
+    # (Whatsapp::BallotResume), so this sends words only — the page included — and
+    # says so to the model, which then has no button to name in its reply.
+    def reply_in_words(body:, sent_link:)
+      message = ::Whatsapp::Send.text(account: account, body: body)
+
+      return send_refused_error if ::Whatsapp::Send.refused?(message)
+
+      halt(
+        [
+          "Replied in words only: the ballot question is put to the citizen again under " \
+          "it with its own buttons, so none of the buttons you named were sent. Do not " \
+          "name any.",
+          sent_link.present? ? "The page #{sent_link} opens was put under the text." : nil
+        ].compact.join(" ")
+      )
+    end
+
     # The reply after a submission went in is where the conversation has actually run
     # out: the citizen has finished what they came to do, and what this offers next is
-    # an invitation rather than a step they are in the middle of. It is also the only
-    # message that can carry the way back, because the confirmation before it is plain
+    # an invitation rather than a step they are in the middle of. Its state pills
+    # normally take every slot (Whatsapp::StatePills); the way back fills one only
+    # where one of them cannot be offered, since the confirmation before it is plain
     # text with nothing to tap.
     def send_reply(body:, buttons:)
       if conversation.submission_completed?

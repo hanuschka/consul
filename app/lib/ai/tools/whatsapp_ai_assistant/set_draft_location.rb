@@ -74,7 +74,8 @@ class Ai::Tools::WhatsappAiAssistant::SetDraftLocation <
         attached: true,
         place: name,
         hint: "Say the place has been noted, then show them the contribution with " \
-              "show_draft_for_confirmation and ask whether it can go in."
+              "show_draft_for_confirmation and ask whether it is right with it — the " \
+              "preview's first button names what follows."
       }.compact
     rescue StandardError => e
       conversation.clear_waiting_locations!

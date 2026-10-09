@@ -83,6 +83,9 @@ de:
           version_draft: "Entwurf (Version %{number})"
           version_current: "Veröffentlichte Version %{number}"
           step: "Frage %{current} von %{total}"
+          step_open: "Frage %{current}"
+          start: Start
+          welcome: "Die Mitmachbox zeigt ihre Begrüßung. Mit „%{start}“ beginnt die Umfrage."
           next: Weiter
           required: Bitte wählen Sie eine Antwort.
           finished: Vielen Dank für Ihre Teilnahme!
@@ -199,6 +202,15 @@ de:
             value: Punktwert
             follow_up: Folgefrage
             actions: Aktionen
+        display_check:
+          title: Hinweise zur Anzeige auf der Mitmachbox
+          prompt_overflow: Die Frage ist auch in der kleinsten Schrift zu lang und stößt an die Zeile über den Antworten. Bitte kürzen Sie sie.
+          prompt_shrunk: Die Frage ist lang und erscheint auf der Box in kleinerer Schrift.
+          word_split: "Das Wort %{word} passt nicht in eine Zeile und wird an einer beliebigen Stelle getrennt."
+          missing: "Diese Zeichen kann die Box nicht anzeigen, sie bleiben leer: %{characters}."
+          option_overflow: "Die Antwort braucht %{lines} Zeilen, auf ihre Karte passen %{room}. Bitte kürzen Sie sie."
+          existing_option_overflow: "Antwort %{number} (%{label}) braucht mit dieser Frage %{lines} Zeilen, auf ihre Karte passen %{room}."
+          quoted: "„%{text}“"
         deployments:
           created: Die Umfrage wird auf dem Gerät ausgespielt.
           updated: Der Standort wurde aktualisiert.

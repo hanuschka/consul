@@ -22,13 +22,19 @@
     ) %>
   </section>
 
-  <% if @administration_contact_settings.any? %>
+  <% if @administration_contact_settings.any? || @contact_falls_back_to_home_page %>
     <section class="mb-5">
       <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.administration_contact_title") %></h2>
       <p class="kern-body kern-prose mb-3"><%= t("adm.whatsapp.show.administration_contact_intro") %></p>
 
       <% @administration_contact_settings.each do |setting| %>
         <%= render Adm::AttributeEditorComponent.new(setting, :value, :string) %>
+      <% end %>
+
+      <% if @contact_falls_back_to_home_page %>
+        <%= kern_alert(title: t("adm.whatsapp.show.contact_page_missing_title"), style: :warning) do %>
+          <p class="kern-body"><%= t("adm.whatsapp.show.contact_page_missing_body") %></p>
+        <% end %>
       <% end %>
     </section>
   <% end %>

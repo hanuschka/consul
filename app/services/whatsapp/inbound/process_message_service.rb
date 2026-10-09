@@ -365,6 +365,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Never without a word either. The assistant's reply is what says why the question
     # comes again (SystemPromptService#ballot_line asks it to); a turn that failed
     # wrote none, so a fixed line says it instead of the question arriving alone.
+    #
+    # Whatsapp::BallotResume reads the same conditions during the turn to send the
+    # reply in words alone, so a condition changed here changes there too.
     def resume_ballot(poll_id)
       return if poll_id.blank?
       return if @opt_out_deferred
@@ -1759,7 +1762,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # is why it is here rather than behind a tool of its own.
     SETTLED_BY_TAP = {
       image_skip: "photo_declined",
-      location_skip: "location_stated"
+      location_skip: "location_declined"
     }.freeze
 
     def settle_slot_for(action)

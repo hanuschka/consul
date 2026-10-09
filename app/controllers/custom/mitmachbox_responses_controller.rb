@@ -9,7 +9,7 @@ class MitmachboxResponsesController < ApplicationController
       return redirect_back(fallback_location: root_path)
     end
 
-    unless @projekt_phase.online_answering_open?
+    unless @projekt_phase.online_answering_open_for?(current_user)
       return redirect_to(footer_path, alert: mitmachbox_t("closed"))
     end
 

@@ -29,7 +29,7 @@
         <span><i class="far fa-calendar" style="margin-right: 7px;"></i><%= format_date(phase.projekt_livestreams.order(starts_at: :desc).first.starts_at&.to_date) %></span>
       <% elsif phase.is_a?(ProjektPhase::BudgetPhase) && phase.budget.present? %>
         <span class="time-icon"><%= format_budget_phase_duration(phase.budget.current_phase) %></span>
-      <% elsif phase.start_date.present? && phase.regular? %>
+      <% elsif phase.start_date.present? && (phase.regular? || phase.is_a?(ProjektPhase::MitmachboxPhase)) %>
         <span class="time-icon"><%= format_date_range(phase.start_date, phase.end_date) %></span>
       <% else phase.regular? %>
         <span class="time-icon"><%= t("custom.shared.dates.no_dates") %></span>

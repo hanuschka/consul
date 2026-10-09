@@ -5,9 +5,12 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
               "produces is the only way to get an exact position, so this is the tool for a " \
               "phase that collects one — draft_status says whether this phase does. Always " \
               "optional: never hold a finished draft for a pin, and never ask twice — a second " \
-              "call for the same draft is refused. When they have already named the place in " \
-              "words there is nothing to ask, and when they say they do not know it, publish " \
-              "without one. This sends the picker itself — do not " \
+              "call for the same draft is refused. Where a place read from their words is " \
+              "waiting for their answer, ask about that place instead; where they named one " \
+              "that was not found on the map, this is how it gets there. Publishing refuses " \
+              "until the place has been asked about once, not until a pin arrives, so when " \
+              "they say they do not know it, go on without one. This sends the picker itself " \
+              "— do not " \
               "write a message as well. The picker can carry no buttons of its own, so a second " \
               "short message follows it with the way to go on without a pin and the note that a " \
               "pin can only be set in the app on the phone — WhatsApp Web and Desktop cannot " \
@@ -33,7 +36,9 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
     return already_requested_error if conversation.location_requested?
     return blank_body_error if body.to_s.strip.blank?
 
-    ::Whatsapp::Send.location_request(account: account, body: body.strip)
+    picker = ::Whatsapp::Send.location_request(account: account, body: body.strip)
+
+    return picker_failed_error if !delivered?(picker)
 
     offer_to_continue_without
 
@@ -76,6 +81,19 @@ class Ai::Tools::WhatsappAiAssistant::RequestLocation < Ai::Tools::WhatsappAiAss
           }
         ]
       )
+    end
+
+    # Publishing counts the place as asked once this is recorded, so a picker
+    # the citizen never received must not count — the same rule the picture
+    # notices follow (Whatsapp::ImageQuestion).
+    def delivered?(message)
+      message.present? && !::Whatsapp::Send.refused?(message)
+    end
+
+    def picker_failed_error
+      { error: "The location picker could not be sent, so the place has not been asked about. " \
+               "Ask in words whether they want to add one; where they would rather go without, " \
+               "pass location_declined when you show them the contribution again." }
     end
 
     def not_collected_error

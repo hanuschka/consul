@@ -20,12 +20,13 @@ module Ai::SingleTurn
       )
     end
 
-    response =
+    chat =
       ::Ai::RubyLlmFactory
         .chat_for(profile, feature: feature, request_timeout: timeout_seconds)
         .with_schema(schema)
         .with_instructions(instructions)
-        .ask(input)
+
+    response = ::Ai::RubyLlmFactory.cache_prefix(chat, feature: feature).ask(input)
 
     ::Ai::StructuredOutput.content_of(response).to_h
   end
@@ -46,12 +47,13 @@ module Ai::SingleTurn
       )
     end
 
-    response =
+    chat =
       ::Ai::RubyLlmFactory
         .chat_for(profile, feature: feature)
         .with_schema(schema)
         .with_instructions(instructions)
-        .ask(input)
+
+    response = ::Ai::RubyLlmFactory.cache_prefix(chat, feature: feature).ask(input)
 
     ::Ai::StructuredOutput.content_of(response).to_h
   end
@@ -75,6 +77,7 @@ module Ai::SingleTurn
     )
 
     chat.with_instructions(instructions)
+    ::Ai::RubyLlmFactory.cache_prefix(chat, feature: feature)
 
     chat.ask(input).content.to_s
   end

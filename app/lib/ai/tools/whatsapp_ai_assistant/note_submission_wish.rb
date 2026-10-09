@@ -6,9 +6,10 @@ class Ai::Tools::WhatsappAiAssistant::NoteSubmissionWish < Ai::Tools::WhatsappAi
   # wish they had just written was nowhere on it. Words are the model's to read,
   # so this is the one place they can be turned into the same fact.
   description "Notes that the citizen wants to submit something — an idea, a proposal, a " \
-              "suggestion — before they have said which projekt it is for, so that the card " \
-              "of the projekt they pick next offers only the way to submit there rather than " \
-              "everything the projekt runs. Call it when they say so in their own words " \
+              "suggestion — before they have said which projekt it is for, so that picking a " \
+              "projekt next opens their submission there, or where it takes one in several " \
+              "phases its card offers only the way to submit rather than everything the " \
+              "projekt runs. Call it when they say so in their own words " \
               "(\"Ich möchte eine Idee einreichen\", \"ich hab einen Vorschlag\") and name no " \
               "projekt; tapping \"Vorschlag erstellen\" notes it already. Not needed where they " \
               "name the projekt or the phase themselves — start the submission there. It " \
@@ -24,8 +25,8 @@ class Ai::Tools::WhatsappAiAssistant::NoteSubmissionWish < Ai::Tools::WhatsappAi
 
     {
       noted: true,
-      hint: "Offer the projekts open for a submission. The card of the one they pick will " \
-            "offer only the way to submit there."
+      hint: "Offer the projekts open for a submission. Picking one opens their submission " \
+            "there, or offers only the ways to submit where it has several."
     }
   end
 end

@@ -90,6 +90,9 @@ en:
         thank_you: Thank you for taking part!
         already_answered: You have already taken part in this survey. Thank you!
         closed: This survey is currently not open for participation.
+        manager_preview:
+          submittable: "Preview: this survey is not open to visitors yet. Only you (admins & managers) can see it. You can still answer it — your response counts in the results."
+          not_submittable: "Preview: this survey is not open to visitors yet. Only you (admins & managers) can see it. Submitting is possible once the survey is opened in the “Survey” tab."
         unavailable: The survey is currently unavailable. Please try again later.
         no_answers: Please select at least one answer.
         missing_required: Please answer all required questions.

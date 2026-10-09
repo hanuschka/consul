@@ -83,6 +83,7 @@ en:
           version_draft: "Draft (version %{number})"
           version_current: "Published version %{number}"
           step: "Question %{current} of %{total}"
+          step_open: "Question %{current}"
           next: Next
           required: Please choose an answer.
           finished: Thank you for taking part!

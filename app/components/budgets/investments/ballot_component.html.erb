@@ -34,7 +34,11 @@
 
         <% if ballot.conditional? %>
           <div class='callout warning'>
-            <%= t("custom.budgets.investments.investment.unverified_note") %>
+            <% if ballot.user.data_complete? %>
+              <%= t("custom.budgets.investments.investment.unverified_note") %>
+            <% else %>
+              <%= t("custom.budgets.investments.investment.unverified_note_no_data_html", verify_account: link_to_verify_account) %>
+            <% end %>
           </div>
         <% end %>
 

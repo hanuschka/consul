@@ -8,10 +8,8 @@ module Adm
       return head(:not_found) unless Adm::Handbook.configured?
 
       @help_url = Adm::Handbook.page_url(params[:page]) || Adm::Handbook.section_url(section_key)
-      @breadcrumbs = [
-        { name: adm_header_title, icon: Adm::Section::ICONS.fetch(section_key)[:material] },
-        { name: t("adm.help.show.title") }
-      ]
+      @help_origin = Adm::Handbook.origin
+      @title = t(section_key == "administration" ? ".title_community" : ".title_handbook")
     end
   end
 end

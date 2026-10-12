@@ -131,16 +131,21 @@ class Ai::Tools::WhatsappAiAssistant::DraftStatus < Ai::Tools::WhatsappAiAssista
         proposed_location_status
       elsif draft_resource&.map_location.present?
         attached_location_status
-      elsif conversation.location_stated?
-        "the citizen already named the place in words"
       elsif conversation.location_declined?
         "the citizen said they would rather go without one — do not ask"
       elsif conversation.location_requested?
         "already asked for once — do not ask again; go on without one"
+      elsif conversation.location_stated?
+        NAMED_LOCATION_STATUS
       else
         "still open"
       end
     end
+
+    NAMED_LOCATION_STATUS = "the citizen named the place in words, but nothing on the map is " \
+                            "attached for it — still open: offer the pin with " \
+                            "request_location, saying it puts the place they named on the " \
+                            "map".freeze
 
     def proposed_location_status
       name = conversation.proposed_location["name"].presence || "unnamed place"

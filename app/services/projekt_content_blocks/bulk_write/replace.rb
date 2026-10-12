@@ -10,7 +10,7 @@ class ProjektContentBlocks::BulkWrite::Replace < ApplicationService
     listed_blocks_by_index = find_listed_blocks
 
     removed_blocks = block_writer.existing_blocks - listed_blocks_by_index.values
-    removed_blocks.each(&:destroy!)
+    block_writer.destroy_all(removed_blocks)
 
     ordered_blocks =
       items.each_with_index.map do |item, index|

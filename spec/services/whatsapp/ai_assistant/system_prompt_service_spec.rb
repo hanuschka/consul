@@ -42,6 +42,8 @@ describe Whatsapp::AiAssistant::SystemPromptService do
       awaiting_link?: false,
       comment_invited?: false,
       revision_kind: nil,
+      revision_open?: false,
+      pending_comment: nil,
       parked_projekt_phase: parked_projekt_phase,
       parked_submission_text: parked_text
     )

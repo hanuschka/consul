@@ -260,6 +260,11 @@ de:
           ein Projekt veröffentlicht wird – also aktiviert ist und eine veröffentlichte Projektseite
           hat. Projekte, die auf einzelne Stadtteile beschränkt sind, werden dabei übersprungen; für
           diese steht die Schaltfläche auf der Projektseite weiterhin zur Verfügung.
+        contact_page_missing_title: Keine Kontaktmöglichkeit hinterlegt
+        contact_page_missing_body: >-
+          Ohne Kontaktdaten und ohne veröffentlichte Kontaktseite verweist der Bot Bürgerinnen und
+          Bürger auf die Startseite des Portals. Tragen Sie oben Kontaktdaten ein oder
+          veröffentlichen Sie eine Kontaktseite in den Seiteneinstellungen.
         auto_broadcast_missing_template_title: Automatischer Versand ohne Wirkung
         auto_broadcast_missing_template_body: >-
           Solange keine freigegebene Nachrichtenvorlage aktiv ist, wird auch bei aktivem Schalter

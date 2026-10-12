@@ -291,3 +291,12 @@ application.register("shared--dropdown-select-menu", SharedDropdownSelectMenuCon
 
 import AdmMitmachboxConditionController from "./adm/mitmachbox_condition_controller"
 application.register("adm--mitmachbox-condition", AdmMitmachboxConditionController)
+
+import AdmMitmachboxBoxController from "./adm/mitmachbox_box_controller"
+application.register("adm--mitmachbox-box", AdmMitmachboxBoxController)
+
+import AdmMitmachboxCheckController from "./adm/mitmachbox_check_controller"
+application.register("adm--mitmachbox-check", AdmMitmachboxCheckController)
+
+import AdmHandbookEmbedController from "./adm/handbook_embed_controller"
+application.register("adm--handbook-embed", AdmHandbookEmbedController)

@@ -12,6 +12,6 @@ class ProjektContentBlocks::BulkWrite::Delete < ApplicationService
         block_writer.find(item, index)
       end
 
-    content_blocks.uniq.each(&:destroy!)
+    block_writer.destroy_all(content_blocks.uniq)
   end
 end

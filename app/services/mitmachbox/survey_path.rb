@@ -1,4 +1,6 @@
 class Mitmachbox::SurveyPath
+  RANGE_BUDGET = 20_000
+
   def initialize(questions)
     @questions = (questions || []).each_with_index
                                   .sort_by { |question, index| [question["position"].to_i, index] }
@@ -7,6 +9,9 @@ class Mitmachbox::SurveyPath
     @question_id_by_option_id = @questions.flat_map do |question|
       (question["options"] || []).map { |option| [option["id"], question["id"]] }
     end.to_h
+    @condition_option_ids = @questions.flat_map do |question|
+      Array(question.dig("condition", "option_ids"))
+    end.uniq
   end
 
   def reached_question_ids(chosen_option_ids_by_question)
@@ -38,6 +43,15 @@ class Mitmachbox::SurveyPath
     reached
   end
 
+  def progress_total(question_id, shown, answers)
+    index = @index_by_id[question_id]
+    return if index.nil?
+
+    @range_budget = RANGE_BUDGET
+    range = path_range(index, answers)
+    shown - 1 + range.last if range && range.first == range.last
+  end
+
   def on_path(answers)
     chosen = answers.group_by { |answer| answer[:question_id] }
                     .transform_values { |group| group.map { |answer| answer[:option_id] } }
@@ -47,6 +61,62 @@ class Mitmachbox::SurveyPath
   end
 
   private
+
+    def path_range(index, answers)
+      return [0, 0] if index >= @questions.size
+      return if @range_budget.zero?
+
+      @range_budget -= 1
+      question = @questions[index]
+      ranges = []
+      seen = []
+      visit = lambda do |target, option_id|
+        next true if seen.include?([target, option_id])
+
+        seen << [target, option_id]
+        followed = option_id ? answers + [[question["id"], option_id]] : answers
+        range = path_range(skip_hidden(target, followed), followed)
+        ranges << range if range
+        !range.nil?
+      end
+
+      options = (question["options"] || []).sort_by { |option| option["position"].to_i }.first(5)
+      if question["question_type"] == "single_choice" && options.any?
+        options.each do |option|
+          return unless visit.call(branch_target(index, option), condition_option(option["id"]))
+        end
+        return if !question["required"] && !visit.call(index + 1, nil)
+      else
+        return unless visit.call(index + 1, nil)
+      end
+
+      [1 + ranges.map(&:first).min, 1 + ranges.map(&:last).max]
+    end
+
+    def branch_target(index, option)
+      return @questions.size if option["ends_survey"]
+      return index + 1 if option["next_question_id"].blank?
+
+      target = @index_by_id[option["next_question_id"]]
+      target && target > index ? target : @questions.size
+    end
+
+    def condition_option(option_id)
+      option_id if @condition_option_ids.include?(option_id)
+    end
+
+    def skip_hidden(target, answers)
+      target += 1 while target < @questions.size && !condition_met_by?(@questions[target], answers)
+      target
+    end
+
+    def condition_met_by?(question, answers)
+      option_ids = Array(question.dig("condition", "option_ids"))
+      return true if option_ids.empty?
+
+      source_id = question.dig("condition", "question_id") || @question_id_by_option_id[option_ids.first]
+      answers.any? { |question_id, option_id| question_id == source_id && option_ids.include?(option_id) }
+    end
 
     def condition_met?(question, chosen_option_ids_by_question, reached)
       option_ids = Array(question.dig("condition", "option_ids"))

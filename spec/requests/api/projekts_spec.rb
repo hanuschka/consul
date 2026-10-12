@@ -1592,6 +1592,67 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       expect(existing_projekt.reload.content_updated_at).to be > 1.minute.ago
     end
 
+    it 'does not touch the projekt when no block changes' do
+      first_block = add_block(existing_projekt, '<p>One</p>', 1)
+      existing_projekt.update_column(:content_updated_at, 1.day.ago)
+
+      update_blocks(existing_projekt, 'upsert', [{ id: first_block.id, body: '<p>One</p>' }])
+
+      expect(response).to have_http_status(:ok)
+      expect(existing_projekt.reload.content_updated_at).to be < 1.hour.ago
+    end
+
+    it 'keeps every block when replace receives a list of nulls' do
+      add_block(existing_projekt, '<p>Mine</p>', 1)
+
+      update_blocks(existing_projekt, 'replace', [nil])
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(error_messages).to have_key('content_blocks[0]')
+      expect(block_bodies(existing_projekt)).to eq(['<p>Mine</p>'])
+    end
+
+    it 'keeps every block when replace would delete a block that AI is still generating' do
+      add_block(existing_projekt, '<p>Mine</p>', 1)
+        .update_column(:ai_generation_data, { 'status' => 'processing', 'mode' => 'replace', 'prior_body' => '<p>Mine</p>' })
+
+      update_blocks(existing_projekt, 'replace', [{ body: '<p>New</p>' }])
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(block_bodies(existing_projekt)).to eq(['<p>Mine</p>'])
+    end
+
+    it 'keeps pending AI placeholders after the renumbered blocks' do
+      add_block(existing_projekt, '<p>Old</p>', 1)
+      placeholder = add_block(existing_projekt, '', 2)
+      placeholder.update_column(:ai_generation_data, { 'status' => 'pending', 'mode' => 'add' })
+
+      update_blocks(existing_projekt, 'prepend', [{ body: '<p>New 1</p>' }, { body: '<p>New 2</p>' }])
+
+      positions = SiteCustomization::ContentBlock.unscoped.where(projekt_id: existing_projekt.id).order(:position).pluck(:id, :position)
+      expect(positions.map(&:last)).to eq([1, 2, 3, 4])
+      expect(positions.last.first).to eq(placeholder.id)
+    end
+
+    it 'raises margin_bottom to the minimum the editor allows' do
+      first_block = add_block(existing_projekt, '<p>One</p>', 1)
+
+      update_blocks(existing_projekt, 'upsert', [{ id: first_block.id, margin_bottom: -40 }])
+
+      expect(first_block.reload.margin_bottom).to eq(SiteCustomization::ContentBlock::MIN_MARGIN_BOTTOM)
+    end
+
+    it 'moves a block given a position past the end to the bottom' do
+      first_block = add_block(existing_projekt, '<p>One</p>', 1)
+      add_block(existing_projekt, '<p>Two</p>', 2)
+
+      update_blocks(existing_projekt, 'upsert', [{ id: first_block.id, position: 999 }])
+
+      expect(response).to have_http_status(:ok)
+      expect(first_block.reload.position).to eq(2)
+      expect(block_bodies(existing_projekt)).to eq(['<p>Two</p>', '<p>One</p>'])
+    end
+
     it 'rejects an unknown mode' do
       update_blocks(existing_projekt, 'shuffle', [{ body: '<p>New</p>' }])
 

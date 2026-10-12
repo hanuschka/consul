@@ -38,6 +38,7 @@ describe Budgets::Investments::BallotComponent, type: :component, controller: Ap
 
       expect(page).not_to have_content(I18n.t("custom.budgets.investments.investment.unverified_note"))
       expect(page).to have_link(I18n.t("users.verify_account"), href: "/verification")
+      expect(page).to have_css(".callout.alert .fa-exclamation-triangle")
     end
   end
 end

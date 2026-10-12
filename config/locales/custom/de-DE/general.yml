@@ -1030,27 +1030,3 @@ de:
     info_text: "Inhalt per AI / Machine Learning generiert"
   alerts:
     select_one_category: "Bitte wählen Sie nur eine Kategorie"
-  search:
-    go_to_discusstion: "Diskussion öffnen..."
-    search_form:
-      placeholder: "Suchen..."
-      button: "Suche"
-    tabs:
-      all: "Alle Ergebnisse %{doc_count}"
-      debate: "Diskussionen %{doc_count}"
-      proposal: "Vorschläge %{doc_count}"
-      poll: "Abstimmungen %{doc_count}"
-      budget_investment: "Budgets %{doc_count}"
-      legislation_proposal: "Beteiligungsverfahren %{doc_count}"
-      comment: "Kommentare %{doc_count}"
-      site_customization_page: "Webseiten %{doc_count}"
-      event: "Event %{doc_count}"
-      projekt_events: "Event %{doc_count}"
-    result_tag:
-      de: "d"
-      pr: "v"
-      po: "a"
-      bu: "b"
-      le: "l"
-      co: "k"
-      si: "s"

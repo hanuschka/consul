@@ -28,26 +28,3 @@ en:
           other: "There are deficiency reports with the term '%{query}', you can contribute to these instead of creating a new one"
         message: "You see %{limit} of %{count} DeficiencyReports with the term \"%{query}\""
         see_all: "View all"
-  search:
-    go_to_discusstion: "open discussion..."
-    search_form:
-      placeholder: "Search..."
-      button: "Search"
-    tabs:
-      all: "All results %{doc_count}"
-      debate: "Debates %{doc_count}"
-      proposal: "Proposals %{doc_count}"
-      poll: "Votings %{doc_count}"
-      budget_investment: "Budgets %{doc_count}"
-      legislation_proposal: "Legislations %{doc_count}"
-      comment: "Comments %{doc_count}"
-      site_customization_page: "Pages %{doc_count}"
-      project_events: "Events %{doc_count}"
-    result_tag:
-      de: "d"
-      pr: "p"
-      po: "P"
-      bu: "b"
-      le: "L"
-      co: "c"
-      si: "s"

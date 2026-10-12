@@ -146,7 +146,6 @@ span.icon-account {
     display: inline;
   }
 
-  .search-icon,
   .account-icon,
   .admin-icon {
     position: absolute;
@@ -364,8 +363,6 @@ span.icon-account {
       padding-left: 1em;
     }
 
-
-    .search-items-icon,
     .account-items-icon,
     .admin-items-icon {
       width: 20px;
@@ -379,12 +376,6 @@ span.icon-account {
     .account-items-link,
     .admin-items-link {
       display: none;
-    }
-
-    .search-icon {
-      top: 9px;
-      right: 0;
-      padding-bottom: 14px;
     }
 
     .admin-icon {

@@ -205,7 +205,6 @@ var initialize_modules = function() {
   App.Geozones.initialize();
   App.ExpandOverviewMap.initialize();
   App.MapRefresh.initialize();
-  App.ElasticSearchModal.initialize();
   App.PollsCustom.initialize();
   App.RadioButtonFilter.initialize();
   App.DeficiencyReports.initialize();

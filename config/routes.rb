@@ -38,7 +38,6 @@ Rails.application.routes.draw do
   draw :valuation
   draw :verification
   draw :projekt
-  draw :search
   draw :ideas
   draw :projekt_management
   draw :deficiency_report_management

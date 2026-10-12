@@ -2,7 +2,6 @@ require_dependency Rails.root.join("app", "models", "poll").to_s
 
 class Poll < ApplicationRecord
   include Taggable
-  include Search::Generic
   include ResourceBelongsToProjekt
 
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: "projekt_id" # TODO: remove column after data migration con1538
@@ -53,10 +52,6 @@ class Poll < ApplicationRecord
 
   def reason_for_not_being_answerable_by(user)
     projekt_phase.permission_problem(user)
-  end
-
-  def elastic_searchable?
-    published? && hidden_at.nil?
   end
 
   def comments_allowed?(user)

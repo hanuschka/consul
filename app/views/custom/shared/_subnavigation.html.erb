@@ -3,11 +3,6 @@
     <ul class="content-items-list">
       <%= render partial: 'shared/subnavigation_home', locals: { placement: placement } %>
       <% unless launch_page %>
-        <% if extended_feature?("general.elasticsearch") %>
-          <div class='search-box show-for-small-only'>
-            <%= render "shared/elasticsearch_form" %>
-          </div>
-        <% end %>
         <%= render partial: 'shared/subnavigation_projekts_overview', locals: { placement: placement } if Setting['extended_feature.projekts_overview_page_navigation.show_in_navigation'].present? %>
         <%= raw content_block("subnavigation_left_desktop") if placement == 'desktop' %>
         <%= raw content_block("subnavigation_left_mobile") if placement == 'mobile' %>
@@ -24,9 +19,6 @@
       <%= render partial: 'shared/subnavigation_custom_newsletter', locals: { placement: placement } %>
       <%= render partial: 'shared/subnavigation_locale', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") && !extended_feature?("general.enable_google_translate") && placement == 'desktop' %>
       <ul class="account-admin-items-list">
-        <% if extended_feature?("general.elasticsearch") %>
-          <%= render partial: 'shared/subnavigation_search', locals: { placement: placement } %>
-        <% end %>
         <%= render partial: "layouts/notification_item", locals: { placement: placement } %>
         <%= render partial: 'shared/subnavigation_konto', locals: { placement: placement } %>
         <%= render partial: 'shared/subnavigation_admin', locals: { placement: placement } %>
@@ -35,13 +27,3 @@
     </li>
   <% end %>
 </ul>
-
-<% if extended_feature?("general.elasticsearch") %>
-  <div class='hide-for-small-only'>
-    <div class='elasticSearchModal'>
-      <div class='modal-search-box'>
-        <%= render "shared/elasticsearch_form" %>
-      </div>
-    </div>
-  </div>
-<% end %>

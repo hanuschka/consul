@@ -12,9 +12,6 @@ group :development do
   gem 'foreman', '~> 0.90.0'
 end
 
-gem 'elasticsearch-model', github: 'elastic/elasticsearch-rails', branch: '6.x'
-gem 'elasticsearch-rails', github: 'elastic/elasticsearch-rails', branch: '6.x'
-
 gem 'httparty'
 gem 'sd_notify', '~> 0.1.1'
 

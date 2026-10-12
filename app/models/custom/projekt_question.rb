@@ -5,6 +5,7 @@ class ProjektQuestion < ApplicationRecord
 
   translates :title, touch: true
   include Globalizable
+  include MachineTranslatable
 
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: "projekt_id", optional: true # TODO: remove column after data migration con1538
   delegate :projekt, to: :projekt_phase

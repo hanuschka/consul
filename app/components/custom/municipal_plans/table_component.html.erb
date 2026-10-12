@@ -1,0 +1,60 @@
+<div class="municipal-plans-table">
+  <div class="municipal-plans-table--legend">
+    <ul class="municipal-plans-table--legend-list" aria-label="<%= legend_label %>">
+      <% badge_kinds.each do |badge| %>
+        <li>
+          <i class="fas fa-<%= badge_icon(badge) %>" aria-hidden="true"></i>
+          <%= badge_label(badge) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="municipal-plans-table--scroll" role="region" tabindex="0" aria-label="<%= region_label %>">
+    <table class="municipal-plans-table--table" role="table" aria-labelledby="<%= caption_id %>">
+      <caption id="<%= caption_id %>" class="municipal-plans-table--caption show-for-sr"><%= caption %></caption>
+      <thead role="rowgroup">
+        <tr role="row">
+          <% COLUMN_KEYS.each do |key| %>
+            <%= tag.th scope: "col", role: "columnheader", class: "municipal-plans-table--#{key}", "aria-sort": aria_sort(key) do %>
+              <% if sortable?(key) %>
+                <%= link_to sort_path(key), class: "municipal-plans-table--sort-link" do %>
+                  <%= label_for(key) %>
+                  <span class="municipal-plans-table--sort-hint"><%= sort_hint(key) %></span>
+                  <span class="fa <%= sort_icon(key) %>" aria-hidden="true"></span>
+                <% end %>
+              <% else %>
+                <%= label_for(key) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody role="rowgroup">
+        <% municipal_plans.each do |municipal_plan| %>
+          <tr role="row">
+            <th scope="row" role="rowheader" data-label="<%= label_for(:title) %>"><%= link_to municipal_plan.title, helpers.municipal_plan_path(municipal_plan) %></th>
+            <td role="cell" data-label="<%= label_for(:date) %>"><%= formatted_date(municipal_plan) %></td>
+            <td role="cell" data-label="<%= label_for(:topics) %>"><%= municipal_plan.sorted_topic_names.join(", ") %></td>
+            <td role="cell" data-label="<%= label_for(:districts) %>"><%= municipal_plan.sorted_district_names.join(", ") %></td>
+            <td role="cell" data-label="<%= label_for(:badges) %>"><% if municipal_plan.badges.any? %>
+              <ul class="municipal-plans-table--badges">
+                <% municipal_plan.badges.each do |badge| %>
+                  <li>
+                    <rich-tooltip>
+                      <span class="municipal-plans-table--badge" role="img" aria-label="<%= badge_label(badge) %>" tabindex="0">
+                        <i class="fas fa-<%= badge_icon(badge) %>" aria-hidden="true"></i>
+                        <span class="municipal-plans-table--badge-label" aria-hidden="true"><%= badge_label(badge) %></span>
+                      </span>
+                      <template><%= badge_label(badge) %></template>
+                    </rich-tooltip>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -14,7 +14,7 @@ class ProposalAiDraft::EvaluateCriteriaService < ApplicationService
         .with_instructions(system_instructions)
         .ask(user_prompt)
 
-    response.content
+    ::Ai::StructuredOutput.content_of(response)
   rescue StandardError => e
     Rails.logger.error("[ProposalAiDraft] EvaluateCriteriaService failed: #{e.class} - #{e.message}")
     Rails.logger.error("[ProposalAiDraft] Backtrace: #{e.backtrace.first(5).join("\n")}")

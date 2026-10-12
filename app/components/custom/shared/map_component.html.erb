@@ -17,3 +17,9 @@
 <% else %>
   <%= map_body %>
 <% end %>
+
+<% if marked_areas_check_phase %>
+  <div role="status" aria-live="polite" data-marked-areas-status-for="<%= map_id %>">
+    <small class="form-error margin-top-10"></small>
+  </div>
+<% end %>

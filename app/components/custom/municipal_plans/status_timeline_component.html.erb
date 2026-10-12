@@ -1,0 +1,30 @@
+<div class="new-card main-content-card municipal-plan-block municipal-plan-timeline">
+  <div class="municipal-plan-block--header">
+    <h2 class="municipal-plan-block--title"><%= t("custom.municipal_plans.show.timeline.title") %></h2>
+    <p class="municipal-plan-timeline--updated">
+      <i class="fas fa-sync-alt" aria-hidden="true"></i>
+      <%= updated_on_label %>
+    </p>
+  </div>
+
+  <ol class="municipal-plan-timeline--stations">
+    <% stations.each do |station| %>
+      <li class="<%= station_classes(station) %>"<% if station[:current] %> aria-current="step"<% end %>>
+        <span class="municipal-plan-timeline--marker" aria-hidden="true">
+          <i class="fas fa-<%= station[:icon] %>"></i>
+        </span>
+        <div class="municipal-plan-timeline--content">
+          <h3 class="municipal-plan-timeline--label">
+            <%= t("custom.municipal_plans.show.#{station[:key]}") %>
+            <% if station[:current] %>
+              <span class="municipal-plan-timeline--now"><%= t("custom.municipal_plans.show.timeline.now") %></span>
+            <% end %>
+          </h3>
+          <div class="municipal-plan-timeline--text">
+            <%= helpers.auto_link_already_sanitized_html simple_format(station[:value]) %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ol>
+</div>

@@ -1,0 +1,138 @@
+en:
+  custom:
+    municipal_plans:
+      index:
+        title: Municipal plans
+        intro_text: The plan list presents the city's ongoing and planned projects. For each plan you will find the current processing status, the next steps, the districts affected and a contact person in the administration.
+        empty_list_text: No plans are published at the moment.
+        archive_title: Municipal plans archive
+        archive_intro_text: The archive holds plans that have been completed or are no longer being pursued. The entries keep all their information but are no longer updated.
+        archive_empty_list_text: There are no plans in the archive at the moment.
+        archive_link: Go to the municipal plans archive
+        overview_link: Back to the plan list
+        to_municipal_plan: View plan
+        updated_on: "Updated on %{date}"
+        count: Plans
+        orders:
+          relevance: Relevance
+          given_order: Editorial order
+          content_updated_at: Updated on (newest first)
+          content_updated_at_asc: Updated on (oldest first)
+          title: Title (A–Z)
+          title_desc: Title (Z–A)
+          topics: Category (A–Z)
+          topics_desc: Category (Z–A)
+          districts: Location (A–Z)
+          districts_desc: Location (Z–A)
+        search_form:
+          placeholder: e.g. market square
+          button_title: Search plans
+        sidebar_information: The plan list gives an overview of the city's planned and ongoing plans. For each plan, you can send a note to the responsible office through the notice form.
+        sidebar:
+          apply: Apply filters
+          districts:
+            title: District
+            empty: No districts have been set up.
+          topics:
+            title: Topic
+            empty: No topics have been set up.
+          participation:
+            title: Citizen participation
+            options:
+              formal: formal citizen participation
+              informal: informal citizen participation
+          recency:
+            title: Label
+          updated_range:
+            title: Updated on
+            from_label: Updated from
+            to_label: Updated until
+            reset: Reset date range
+        table:
+          caption: Municipal plans
+          archive_caption: Municipal plans archive
+          region_label: Table of municipal plans
+          legend: Legend
+          columns:
+            title: Plan
+            date: Date
+            topics: Category
+            districts: Location
+            badges: Labels
+          sort:
+            ascending: sort ascending
+            descending: sort descending
+        overview_map:
+          region_label: Map of the districts
+          note: The map shows the districts and where the plans are located. Every district can also be filtered through the "District" list.
+      badges:
+        new: new entry
+        updated: updated entry
+        formal_participation: formal citizen participation
+        informal_participation: informal citizen participation
+      notices:
+        create:
+          success: Thank you! Your notice was forwarded to the responsible department.
+        form:
+          title: Your notice on this plan
+          subline: Your message goes directly to the responsible department.
+          name: Name (optional)
+          email: E-mail
+          body: Your notice
+          required_legend: Required field
+          submit: Send notice
+          error_title: Your notice could not be sent
+
+      show:
+        hero:
+          status_archived_chip: completed
+          status_new: new
+          status_updated: updated
+        intro:
+          title: What it is about
+        timeline:
+          title: Where does the plan stand?
+          now: Now
+        background:
+          eyebrow: Background
+          title: Further information on the plan
+        participation_block:
+          formal: Formal
+          informal: Informal
+          status_yes: "Yes"
+          status_no: "No"
+          projekt_text: A participation process is running for this plan.
+          projekt_button: Go to the project
+        banner:
+          version: Version
+          topics: Topics
+          districts: Districts
+        back: Back to the plan list
+        at_a_glance:
+          title: At a glance
+          area: Area
+          costs: Costs
+          formal: Formal participation
+          informal: Informal participation
+        last_resolution: Last resolution
+        processing_status: Current processing status
+        next_steps: Schedule, next steps
+        districts: Affected area / district
+        topics: Main topics affected
+        participation: Citizen participation
+        links: Links & documents
+        opens_in_new_tab: (opens in a new tab)
+        location:
+          title: Location
+          approximate: Approximate location
+        map_address_missing: No address is available for this plan. Its location is shown on the map only.
+        updated_on: "Updated on %{date}"
+        notice_card:
+          title: Questions or comments?
+          text: Write directly to the responsible department about this plan.
+          button: Submit a notice
+        projekt_card:
+          title: Participation project
+          text: A participation process for this plan is running on this platform.
+      projekt_sidebar:
+        title: Related plan

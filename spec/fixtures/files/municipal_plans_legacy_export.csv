@@ -1,0 +1,85 @@
+'rel_vorhabensliste_kategorien'	'flag_buergerbeteiligung'	'flag_buergerbeteiligung_formell'	'flag_buergerbeteiligung_informell'	'change_date_manuel'	'rel_ortschaften'	'txt_versionsnummer'	'archive_date'	'title'	'txt_text'	'status'	'message'	'rel_derivate_kontakt_box'	'rel_derivate_absaetze'	'rel_derivate_downloads'	'rel_derivate_links'	'id'
+'Bauen / Wohnen,Umwelt/Energie'	'on'	'on'	'off'	'2024-05-10 00:00:00'	'Jena-Zentrum,Münchenroda / Remderoda'	'2.1'	'2999-12-31 00:00:00'	'Bebauungsplan B-Lo 13 "Möbelhaus ''An der Autobahn''"'	'<p>Kurzbeschreibung des Bebauungsplans.</p>'	''	''	'Ostermann'	'<p>Das Plangebiet liegt am Stadtrand.</p>
+<ul>
+<li>Gewerbe ansiedeln</li>
+</ul>
+<h3>Letzter Beschluss zum Vorhaben</h3>
+<p>Beschluss des Stadtrates Nr. 19/0057-BV vom 22.01.2020</p>
+<h3>Aktueller Bearbeitungsstand</h3>
+<p>Der Vorentwurf wurde erarbeitet.</p>
+<p>&nbsp;</p>
+<h3>Geplanter Zeitpunkt der Umsetzung / nächste Schritte</h3>
+<p>Der Entwurf folgt im Jahr 2027.</p>
+<h3>Kosten soweit bezifferbar -</h3>
+<p>ca. 1,2 Mio. &euro;</p>
+<h3>Betroffenes Gebiet</h3>
+<p>Jena-Zentrum</p>
+<h3>Schwerpunktmäßig betroffene Themen</h3>
+<p>Bauen / Wohnen<br>Umwelt / Energie</p>
+<h3>Bürgerbeteiligung</h3>
+<p><b>Formell:</b> Ja.<br>Die Beteiligung erfolgt im Zuge des Planverfahrens gemäß BauGB.</p>
+<p>Informell: Nein.<br>Derzeit sind keine Gründe erkennbar.</p>
+<p>&nbsp;</p>'	''	'https://sessionnet.owl-it.de/jena/bi/vo0050.asp?__kvonr=17476&smcspf=4,https://rathaus.jena.de/system/files/2026-06/Satzung_Gr%C3%BCne-Aue.pdf,https://www.jena.de/stadtentwicklung'	'5001'
+'Mobilität/Verkehr'	'on'	'off'	'on'	'2023-01-15 00:00:00'	'Gesamtes Stadtgebiet'	'1.1'	'2023-03-01 00:00:00'	'Stra&szlig;enerneuerung Gr&uuml;ne Aue'	'<p>Erneuerung der Stra&szlig;e &bdquo;Gr&uuml;ne Aue&ldquo;.</p>'	''	''	'Ostermann'	'<p>Die Stra&szlig;e wird f&uuml;r den Verkehr ge&ouml;ffnet &amp; bleibt barrierefrei.</p>
+<h3>Letzter Beschluss zum Vorhaben</h3>
+<p>Beschluss vom 01.02.2021 zur &Auml;nderung</p>
+<h3>Aktueller Bearbeitungsstand</h3>
+<p>Die Bauarbeiten sind abgeschlossen, die Stadt sagt ''danke''.</p>
+<h3>Geplanter Zeitpunkt der Umsetzung / n&auml;chste Schritte</h3>
+<p>Keine weiteren Schritte.</p>
+<h3>Kosten soweit bezifferbar</h3>
+<p>-</p>
+<h3>Schwerpunktm&auml;&szlig;ig betroffene Themen</h3>
+<p>Mobilit&auml;t</p>
+<h3>B&uuml;rgerbeteiligung</h3>
+<p>Formell: Nein.<br>Es gibt keine gesetzliche Grundlage.</p>
+<p>Informell: Ja.<br>Es gab eine <a href="https://mitmachen.example/x">Online-Beteiligung</a>.</p>
+<p>Zus&auml;tzlich eine Begehung.</p>'	''	'https://blog.jena.de/gruene-aue'	'5002'
+'Mobilität/Verkehr'	'on'	'on'	'on'	'2024-02-01 00:00:00'	'Jena-Zentrum'	'1.0'	'2999-12-31 00:00:00'	'Umbau Holzmarkt'	'<p>Umbau des Holzmarkts.</p>'	''	''	'Ostermann'	'<p>Einleitung</p>
+<h3>Letzter politischer Beschluss zum Vorhaben</h3>
+<p>Beschluss vom 03.03.2019</p>
+<h3>Aktueller Bearbeitungsstand</h3>
+<p>In Planung</p>
+<h4>Geplanter Zeitpunkt der Umsetzung / nächste Schritte</h4>
+<p>2026</p>'	''	''	'5003'
+'Mobilität/Verkehr'	'off'	'on'	'off'	'2024-03-01 00:00:00'	'Jena-Zentrum,Atlantis'	'3.0'	'2999-12-31 00:00:00'	'Radweg Saale'	'<p>Neuer Radweg.</p>'	'in Arbeit'	''	'Ostermann'	'<h3>Letzter Beschluss zum Vorhaben</h3>
+<p>Beschluss vom 04.04.2022</p>
+<h3>Aktueller Bearbeitungsstand</h3>
+<p>Laufend</p>
+<h3>Geplanter Zeitpunkt der Umsetzung / nächste Schritte</h3>
+<p>Baubeginn 2025</p>
+<h3>Bürgerbeteiligung</h3>
+<p>Formell: Nein.<br>Keine Grundlage.</p>
+<p>Informell: Nein.<br>Nicht vorgesehen.</p>'	''	''	'5004'
+''	'off'	'off'	'off'	''	''	''	'2999-12-31 00:00:00'	''	''	''	''	''	'<p><br />Fragment ohne Titel</p>'	''	''	'5005'
+'Bauen/Wohnen'	'on'	'on'	'off'	'2024-04-01 00:00:00'	'Jena-Zentrum'	'1.0'	'2999-12-31 00:00:00'	'Bebauungsplan B-Lo 13 "Möbelhaus ''An der Autobahn''"'	'<p>Zweiter Eintrag.</p>'	''	''	'Ostermann'	'<p>Das Plangebiet liegt am Stadtrand.</p>
+<ul>
+<li>Gewerbe ansiedeln</li>
+</ul>
+<h3>Letzter Beschluss zum Vorhaben</h3>
+<p>Beschluss des Stadtrates Nr. 19/0057-BV vom 22.01.2020</p>
+<h3>Aktueller Bearbeitungsstand</h3>
+<p>Der Vorentwurf wurde erarbeitet.</p>
+<p>&nbsp;</p>
+<h3>Geplanter Zeitpunkt der Umsetzung / nächste Schritte</h3>
+<p>Der Entwurf folgt im Jahr 2027.</p>
+<h3>Kosten soweit bezifferbar -</h3>
+<p>ca. 1,2 Mio. &euro;</p>
+<h3>Betroffenes Gebiet</h3>
+<p>Jena-Zentrum</p>
+<h3>Schwerpunktmäßig betroffene Themen</h3>
+<p>Bauen / Wohnen<br>Umwelt / Energie</p>
+<h3>Bürgerbeteiligung</h3>
+<p><b>Formell:</b> Ja.<br>Die Beteiligung erfolgt im Zuge des Planverfahrens gemäß BauGB.</p>
+<p>Informell: Nein.<br>Derzeit sind keine Gründe erkennbar.</p>
+<p>&nbsp;</p>'	''	''	'5006'
+'Bauen/Wohnen'	'on'	'on'	'off'	'2024-01-20 00:00:00'	'Jena-Zentrum'	''	'2999-12-31 00:00:00'	'Wohngebiet Nord'	''	''	''	'Ostermann'	'<h3>Letzter Beschluss zum Vorhaben</h3>
+<p>Beschluss vom 05.05.2020</p>
+<h3>Aktueller Bearbeitungsstand</h3>
+<p>Ruht</p>'	''	''	'5007'
+'Mobilität/Verkehr'	'on'	'off'	'on'	'2024-01-25 00:00:00'	'Jena-Zentrum'	'1.2'	'2999-12-31 00:00:00'	'Erneuerung Burgweg'	'<p>Grundhafte Erneuerung.</p>'	''	''	'Ostermann'	'<h3>Aktueller Bearbeitungsstand</h3>
+<p>Fertig</p>
+<h3>Geplanter Zeitpunkt der Umsetzung / nächste Schritte</h3>
+<p>Keine</p>
+<h3>Bürgerbeteiligung</h3>
+<p>Ja<br>Es wurden Informationsveranstaltungen durchgeführt.</p>'	''	''	'5008'

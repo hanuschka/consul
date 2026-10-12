@@ -1,0 +1,251 @@
+<%= content_for :body_class, "municipal-plans-show" %>
+<% provide :title do %><%= @municipal_plan.title %><% end %>
+<% content_for :meta_description do %><%= truncate(strip_tags(@municipal_plan.short_description.to_s), length: 300) %><% end %>
+<% provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+              social_url: municipal_plan_url(@municipal_plan),
+              social_title: @municipal_plan.title,
+              social_description: truncate(strip_tags(@municipal_plan.short_description.to_s), length: 300) %>
+<% end %>
+<% content_for :canonical do %>
+  <%= render "shared/canonical", href: municipal_plan_url(@municipal_plan) %>
+<% end %>
+
+<% rich_text_present = ->(value) { strip_tags(value.to_s).strip.present? } %>
+<% map_location = @municipal_plan.map_location %>
+<% projekts = @municipal_plan.visible_projekts_for(current_user).select(&:page) %>
+
+<main>
+  <div class="resource-page">
+    <div class="flex-layout">
+      <div class="main-column">
+        <%= back_link_to(municipal_plans_path, t("custom.municipal_plans.show.back")) %>
+
+        <div class="common-page-description">
+          <%= render_custom_block("municipal_plans_show_welcome_text") %>
+        </div>
+      </div>
+      <div class="sidebar-placeholder"></div>
+    </div>
+
+    <%= render MunicipalPlans::HeroComponent.new(municipal_plan: @municipal_plan) %>
+
+    <div class="flex-layout">
+      <div class="main-column">
+        <% if rich_text_present.call(@municipal_plan.short_description) %>
+          <div class="new-card main-content-card municipal-plan-block municipal-plan-intro">
+            <h2 class="municipal-plan-block--eyebrow"><%= t("custom.municipal_plans.show.intro.title") %></h2>
+            <div class="municipal-plan-block--text">
+              <%= auto_link_already_sanitized_html simple_format(@municipal_plan.short_description) %>
+            </div>
+          </div>
+        <% end %>
+
+        <%= render MunicipalPlans::StatusTimelineComponent.new(municipal_plan: @municipal_plan) %>
+
+        <% if rich_text_present.call(@municipal_plan.further_information) %>
+          <div class="new-card main-content-card municipal-plan-block municipal-plan-background">
+            <div class="municipal-plan-block--heading">
+              <span class="municipal-plan-block--icon" aria-hidden="true"><i class="fas fa-book-open"></i></span>
+              <div>
+                <p class="municipal-plan-block--eyebrow"><%= t("custom.municipal_plans.show.background.eyebrow") %></p>
+                <h2 class="municipal-plan-block--title"><%= t("custom.municipal_plans.show.background.title") %></h2>
+              </div>
+            </div>
+            <div class="municipal-plan-block--text">
+              <%= auto_link_already_sanitized_html simple_format(@municipal_plan.further_information) %>
+            </div>
+          </div>
+        <% end %>
+
+        <%= render MunicipalPlans::ParticipationComponent.new(municipal_plan: @municipal_plan, projekts: projekts) %>
+
+        <% if map_location.present? %>
+          <section class="municipal-plan-block municipal-plan-location" aria-labelledby="municipal-plan-location-title">
+            <h2 id="municipal-plan-location-title" class="show-for-sr">
+              <%= t("custom.municipal_plans.show.location.title") %>
+            </h2>
+
+            <div class="new-card main-content-card municipal-plan-location--card">
+              <div class="municipal-plan-location--map not-print">
+                <%= render Shared::MapComponent.new(
+                  mappable: @municipal_plan,
+                  features: map_location.features_json_data
+                ) %>
+              </div>
+
+              <div class="municipal-plan-location--footer">
+                <span class="municipal-plan-location--icon" aria-hidden="true"><i class="fas fa-map-marker-alt"></i></span>
+                <div>
+                  <h3 class="municipal-plan-location--label"><%= t("custom.municipal_plans.show.location.approximate") %></h3>
+                  <p class="municipal-plan-location--address">
+                    <% if map_location.approximated_address.present? %>
+                      <%= map_location.approximated_address %>
+                    <% else %>
+                      <%= t("custom.municipal_plans.show.map_address_missing") %>
+                    <% end %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        <% end %>
+
+        <% if @municipal_plan.published? %>
+          <% plan_notice = @notice || MunicipalPlan::Notice.new %>
+          <% required_mark = tag.span("*", class: "municipal-plan-notice--required", aria: { hidden: true }) %>
+          <section class="new-card main-content-card municipal-plan-block municipal-plan-notice"
+                   id="municipal-plan-notice-form" tabindex="-1" aria-labelledby="municipal-plan-notice-title">
+            <div class="municipal-plan-notice--header">
+              <span class="municipal-plan-notice--icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
+              <div>
+                <h2 id="municipal-plan-notice-title" class="municipal-plan-block--title municipal-plan-notice--title">
+                  <%= t("custom.municipal_plans.notices.form.title") %>
+                </h2>
+                <p class="municipal-plan-notice--subline"><%= t("custom.municipal_plans.notices.form.subline") %></p>
+              </div>
+            </div>
+
+            <div class="municipal-plan-notice--body">
+              <%= form_with model: plan_notice, url: municipal_plan_notices_path(@municipal_plan),
+                    scope: :municipal_plan_notice, local: true do |f| %>
+                <% if plan_notice.errors.any? %>
+                  <div class="callout alert" role="alert">
+                    <h3><%= t("custom.municipal_plans.notices.form.error_title") %></h3>
+                    <ul>
+                      <% plan_notice.errors.each do |error| %>
+                        <li>
+                          <% if error.attribute.in?(%i[name email body]) %>
+                            <%= link_to error.full_message,
+                                  "#municipal_plan_notice_#{error.attribute}" %>
+                          <% else %>
+                            <%= error.full_message %>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+
+                <div class="municipal-plan-notice--row">
+                  <div class="municipal-plan-notice--field">
+                    <%= f.text_field :name, autocomplete: "name",
+                          label: t("custom.municipal_plans.notices.form.name") %>
+                  </div>
+
+                  <div class="municipal-plan-notice--field">
+                    <%= f.email_field :email, autocomplete: "email", required: true,
+                          label: safe_join([t("custom.municipal_plans.notices.form.email"), " ", required_mark]) %>
+                  </div>
+                </div>
+
+                <div class="municipal-plan-notice--field">
+                  <%= f.text_area :body, rows: 4, required: true,
+                        label: safe_join([t("custom.municipal_plans.notices.form.body"), " ", required_mark]) %>
+                </div>
+
+                <%= f.invisible_captcha :subtitle %>
+
+                <div class="municipal-plan-notice--footer">
+                  <p class="municipal-plan-notice--legend" aria-hidden="true">
+                    * <%= t("custom.municipal_plans.notices.form.required_legend") %>
+                  </p>
+                  <%= f.submit t("custom.municipal_plans.notices.form.submit"), class: "button municipal-plan-notice--submit" %>
+                </div>
+              <% end %>
+            </div>
+          </section>
+        <% end %>
+      </div>
+
+      <aside class="sidebar">
+        <%= render Sidebar::ContactPersonComponent.new(
+              name: @municipal_plan.contact_name,
+              role: @municipal_plan.contact_role,
+              phone: @municipal_plan.contact_phone,
+              email: @municipal_plan.contact_email
+            ) %>
+
+        <%= render(Shared::SidebarCardComponent.new(title: t("custom.municipal_plans.show.at_a_glance.title"), icon_name: "info-circle")) do %>
+          <% district_names = @municipal_plan.sorted_district_names %>
+          <dl class="municipal-plan-glance">
+            <% if district_names.any? %>
+              <div class="municipal-plan-glance--row">
+                <dt><%= t("custom.municipal_plans.show.at_a_glance.area") %></dt>
+                <dd><%= district_names.join(", ") %></dd>
+              </div>
+            <% end %>
+            <% if @municipal_plan.costs.present? %>
+              <div class="municipal-plan-glance--row">
+                <dt><%= t("custom.municipal_plans.show.at_a_glance.costs") %></dt>
+                <dd><%= @municipal_plan.costs %></dd>
+              </div>
+            <% end %>
+            <% { formal: @municipal_plan.formal_participation?, informal: @municipal_plan.informal_participation? }.each do |kind, value| %>
+              <div class="municipal-plan-glance--row">
+                <dt><%= t("custom.municipal_plans.show.at_a_glance.#{kind}") %></dt>
+                <dd><%= t("custom.municipal_plans.show.participation_block.#{value ? "status_yes" : "status_no"}") %></dd>
+              </div>
+            <% end %>
+            <% if @municipal_plan.version.present? %>
+              <div class="municipal-plan-glance--row">
+                <dt><%= t("custom.municipal_plans.show.banner.version") %></dt>
+                <dd><%= @municipal_plan.version %></dd>
+              </div>
+            <% end %>
+          </dl>
+        <% end %>
+
+        <% if @municipal_plan.links.any? %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.municipal_plans.show.links"), icon_name: "link")) do %>
+            <ul class="municipal-plan-links">
+              <% @municipal_plan.links.each do |link| %>
+                <li>
+                  <%= link_to link.url, target: "_blank", rel: "noopener", class: "municipal-plan-links--link" do %>
+                    <span class="municipal-plan-links--title"><%= link.title.presence || link.url %></span>
+                    <span class="show-for-sr"><%= t("custom.municipal_plans.show.opens_in_new_tab") %></span>
+                    <i class="fas fa-external-link-alt municipal-plan-links--icon" aria-hidden="true"></i>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        <% end %>
+
+        <% if @municipal_plan.published? %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.municipal_plans.show.notice_card.title"), icon_name: "envelope")) do %>
+            <p><%= t("custom.municipal_plans.show.notice_card.text") %></p>
+            <%= link_to t("custom.municipal_plans.show.notice_card.button"), "#municipal-plan-notice-form",
+                  class: "button expanded municipal-plan-sidebar--button" %>
+          <% end %>
+        <% end %>
+
+        <% if projekts.any? %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.municipal_plans.show.projekt_card.title"),
+                                                      icon_name: "code-branch", class_name: "municipal-plan-projekt-card")) do %>
+            <p><%= t("custom.municipal_plans.show.projekt_card.text") %></p>
+            <% projekts.each do |projekt| %>
+              <%= link_to page_path(projekt.page.slug), class: "button hollow expanded municipal-plan-sidebar--button" do %>
+                <% if projekts.size > 1 %>
+                  <%= projekt.title %>
+                <% else %>
+                  <%= t("custom.municipal_plans.show.participation_block.projekt_button") %>
+                  <span class="show-for-sr">: <%= projekt.title %></span>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <%= render(Shared::SidebarCardComponent.new(title: t("proposals.show.share"), icon_name: "share")) do |c| %>
+          <%= render "shared/social_share",
+            share_title: t("proposals.show.share"),
+            title: @municipal_plan.title,
+            url: municipal_plan_url(@municipal_plan),
+            description: @municipal_plan.title,
+            mobile: @municipal_plan.title %>
+        <% end %>
+      </aside>
+    </div>
+  </div>
+</main>

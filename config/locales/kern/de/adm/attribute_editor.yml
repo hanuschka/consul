@@ -91,6 +91,9 @@ de:
           registrations:
             body_label: "Registrierungsseite – linke Spalte"
             body_description: "Wird auf der Registrierungsseite (/users/sign_up) in der linken Spalte neben dem Formular angezeigt. Nutzen Sie diesen Bereich, um Ihre Plattform vorzustellen, den Nutzen einer Registrierung zu erklären oder rechtliche Hinweise zu ergänzen. Bleibt das Feld leer, wird stattdessen ein Standardtext angezeigt."
+          passwords:
+            body_label: "Passwort-vergessen-Seite – linke Spalte"
+            body_description: "Wird auf der Seite zum Anfordern eines neuen Passworts (/users/password/new) in der linken Spalte neben dem Formular angezeigt. Nutzen Sie diesen Bereich, um zu erklären, wie die Passwortzurücksetzung abläuft, oder um auf Hilfsangebote hinzuweisen. Bleibt das Feld leer, wird stattdessen ein Standardtext angezeigt."
           sessions:
             body_label: "Anmeldeseite – linke Spalte"
             body_description: "Wird auf der Anmeldeseite (/users/sign_in) in der linken Spalte neben dem Formular angezeigt. Nutzen Sie diesen Bereich, um Nutzer willkommen zu heißen, auf laufende Beteiligungen hinzuweisen oder Hilfetexte einzublenden. Bleibt das Feld leer, wird stattdessen ein Standardtext angezeigt."

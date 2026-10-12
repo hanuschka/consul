@@ -12,8 +12,7 @@ class Ai::Tools::WhatsappAiAssistant::MyContributions < Ai::Tools::WhatsappAiAss
               "gives, for all of their contributions and not only the rows returned, how many " \
               "there are, how many are public and how many still wait for review — take any " \
               "number about their contributions as a whole from counts, never by counting rows. " \
-              "The sentence above the list names how many contributions it shows, which the " \
-              "row that loads more is not one of. #{MORE_ROWS_HINT}"
+              "#{MORE_ROWS_HINT}"
 
   parameters do
     optional :from, description: FROM_DESCRIPTION do

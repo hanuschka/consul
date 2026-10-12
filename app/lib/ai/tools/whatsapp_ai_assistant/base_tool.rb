@@ -9,9 +9,16 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
   # How the rest of a paged list is reached, for the same tools. A list carries no
   # buttons beside it, so the one place more_action_id fits there is a row — which
   # is the row a page leaves free (Whatsapp::ListWindow::ROWS).
+  #
+  # The row-count rule is here rather than in each tool for the same reason: the
+  # tools that each described their own list sentence were the ones whose
+  # sentence said nine above four rows.
   MORE_ROWS_HINT = "#{::Whatsapp::ListWindow::ROWS} at a time: where next_from is present " \
                    "there are more — offer more_action_id as the last row of a list, or as a " \
-                   "button under a reply in text.".freeze
+                   "button under a reply in text. Never say how many rows a list or reply " \
+                   "shows, or how many are on a later page: the citizen sees the rows, and a " \
+                   "number you give them is a total this result returns, said as the total " \
+                   "it is.".freeze
 
   # Named in the "none of these can be offered" answer of the two tools whose set can
   # actually be emptied by it. Without the reason spelled out the model reads the
@@ -266,41 +273,6 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       yield(projekt)
     end
 
-    # What a contribution search hands back when it cannot decide on its own.
-    # Shared because several tools resolve one from what the citizen called it,
-    # and a second wording of the same refusal is a second situation for the model
-    # to tell apart.
-    #
-    # Reads the same four things off a proposal and off a budget investment:
-    # Budget::Investment delegates projekt_phase to its budget, so neither the
-    # class nor the shape has to be branched on here.
-    def contribution_candidate_summary(contribution)
-      projekt = contribution.projekt_phase&.projekt
-
-      {
-        contribution_id: contribution.id,
-        title: contribution.title,
-        projekt: projekt.present? ? projekt_title(projekt) : nil,
-        supports: contribution.cached_votes_up,
-        supported_by_you: supported_by_user?(contribution)
-      }.compact
-    end
-
-    # Read the way the pill beside the sentence reads it, through
-    # Whatsapp::AssistantActions#support_action, so the two cannot come
-    # apart: a support registered in an earlier session is not in the transcript,
-    # and with no fact to write from the model offers a support the button under
-    # it is already labelled "withdraw".
-    #
-    # Absent rather than false for a budget investment and for an unlinked number.
-    # Neither is a proposal this citizen has not supported yet, and reported as
-    # false both would read as one.
-    def supported_by_user?(contribution)
-      return if !contribution.is_a?(::Proposal) || user.blank?
-
-      contribution.voted_up_by?(user)
-    end
-
     # The pills under a statement the model may not word — what unlinking does, what
     # accepting the terms accepts. The platform's pill comes first and is built
     # here, not filtered out of what the model passed: it is unofferable through the
@@ -484,6 +456,27 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       preview_required_error(kind)
     end
 
+    # The other half of the same order: one version of a preview per citizen
+    # message. A second preview of an unchanged draft under the same message is a
+    # second set of pills for one question, and the citizen who taps under the
+    # first is answering a message the bot itself has already replaced. Nil when
+    # this preview may go out (Whatsapp::Conversation#claim_preview!).
+    #
+    # A halt rather than a refusal, because the citizen has already been shown
+    # exactly this: handed an error, the model would write a reply on top of it.
+    def repeated_preview_halt(kind:, digest:)
+      return if conversation.claim_preview!(kind: kind, digest: digest)
+
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :preview_repeated, conversation: conversation, tool: name, kind: kind
+      )
+
+      halt(
+        "Nothing was sent: they were already shown this #{kind} exactly as it stands in " \
+        "answer to this message, with its buttons."
+      )
+    end
+
     def preview_required_error(kind)
       ::Whatsapp::AiAssistant::DecisionLog.record(
         event: :preview_required, conversation: conversation, tool: name, kind: kind
@@ -532,6 +525,40 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     def no_proposal_error(verb)
       { error: "This conversation is not about a specific proposal, so there is nothing to " \
                "#{verb}. Ask which proposal they mean." }
+    end
+
+    # What Whatsapp::Contributions::CreateCommentService refused, for the tools that
+    # ask it before anything is posted: the one inviting the comment and the one
+    # writing it down.
+    def comment_refusal_error(reason)
+      return comment_gone_error if reason == :gone
+      return comment_closed_error if reason == :closed
+      return comment_blank_error if reason == :blank
+      return comment_confirmation_only_error if reason == :confirmation_only
+
+      not_linked_error("comment on a proposal")
+    end
+
+    def comment_gone_error
+      { error: "That proposal is not there any more, so there is nothing to comment on. Tell the " \
+               "citizen so; nothing was written down." }
+    end
+
+    def comment_closed_error
+      { error: "Comments are not open on that proposal. Tell the citizen plainly; nothing was " \
+               "written down." }
+    end
+
+    def comment_blank_error
+      { error: "There was no comment text. Ask the citizen what they want to say." }
+    end
+
+    # Refused rather than written down. A single word of agreement is the citizen
+    # answering a question, not their contribution to a public page, and their name
+    # would be under it.
+    def comment_confirmation_only_error
+      { error: "That is a yes or a no rather than a comment, so nothing was written down. Ask " \
+               "them for what they actually want to say on the page." }
     end
 
     # Two situations, and telling them apart matters more than it looks. A draft that
@@ -649,10 +676,10 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     end
 
     # ── Typed ballot answers ────────────────────────────────────────────────
-    # What the two tools recording a typed ballot answer hand back. Shared because
-    # the ballot's record services answer both in the same three ways: false where
-    # the answer could not be taken, COMPLETED where it was the last one — said by
-    # this turn, since a completion reached inside one is left to it
+    # What the tools recording a typed ballot answer hand back. Shared because the
+    # ballot's record services answer all of them in the same three ways: false where
+    # the answer could not be taken, one of the ENDINGS where it was the last one —
+    # said by this turn, since a completion reached inside one is left to it
     # (Whatsapp::AiAssistant::ContinueConversationService) — and anything else
     # where the ballot's next message has already gone out.
     #
@@ -662,10 +689,12 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     def ballot_answer_outcome(outcome, poll:)
       return ballot_answer_refused_error if !outcome
 
-      if outcome == ::Whatsapp::Polls::AdvanceBallotService::COMPLETED
+      if ::Whatsapp::Polls::AdvanceBallotService::ENDINGS.include?(outcome)
         return {
           completed: true,
-          status: ::Whatsapp::CompletionNotes.ballot_finished(poll: poll)
+          status: ::Whatsapp::CompletionNotes.ballot_ended(
+            ::Whatsapp::Polls::BallotEndingQuery.call(poll: poll, user: user)
+          )
         }
       end
 
@@ -673,6 +702,18 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
 
       halt("Handled: the ballot's next message has gone out and says where it stands, so " \
            "nothing further is owed here.")
+    end
+
+    # A typed ballot answer that records nothing ends here, so the question never
+    # comes back without a word about why. The sentence is the model's to write: it
+    # is the one that knows what it could not take from the message.
+    def ballot_ask_back_error(reason)
+      {
+        error: "#{reason} Nothing was recorded.",
+        hint: "Ask them back in one sentence: say what you could not take from their message, " \
+              "that the question is still open, and how to answer it — tap an option in the " \
+              "list, or type its number or its wording."
+      }
     end
 
     def no_ballot_question_error

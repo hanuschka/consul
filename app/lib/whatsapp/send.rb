@@ -177,8 +177,9 @@ module Whatsapp::Send
     buttons(account: account, body: body, buttons: buttons)
   end
 
-  # The caption is recorded as the message body: the dialog history in /adm is
-  # read to find out what the bot said, and "image" alone answers nothing.
+  # The caption is recorded as the message body: Whatsapp::RecentDialogQuery
+  # reads it to tell the assistant what the bot said, and "image" alone answers
+  # nothing.
   def image(account:, image_url:, caption: nil)
     deliver_within_service_window(account: account, kind: "image", body: caption.to_s) do |messages|
       messages.send_image(to: account.wa_id, image_url: image_url, caption: caption)
@@ -273,7 +274,7 @@ module Whatsapp::Send
   end
 
   # The native location picker. Recorded as an interactive message like every
-  # other tappable one, so the dialog history in /adm reads in order.
+  # other tappable one, so the recent dialog the assistant reads stays in order.
   def location_request(account:, body:)
     fitting = within_interactive_body(account: account, body: body)
 
@@ -383,16 +384,25 @@ module Whatsapp::Send
   # call rather than three, so a body and its buttons can never come back in two
   # different ones.
   def recovery(conversation:, body:, actions:)
-    pills = recovery_buttons(actions)
-    lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+    locale_buttons(
       account: conversation.whatsapp_account,
-      lines: [body, *pills.map { |pill| pill[:title] }]
+      body: body,
+      buttons: recovery_buttons(actions, conversation)
+    )
+  end
+
+  # The bot's own locale copy with fixed pills under it, the sentence and the labels
+  # put into the citizen's language in one batch so the two cannot drift apart.
+  def locale_buttons(account:, body:, buttons:)
+    lines = ::Whatsapp::AiAssistant::BotCopyService.call(
+      account: account,
+      lines: [body, *buttons.map { |pill| pill[:title] }]
     )
 
     recovery_buttons_message(
-      account: conversation.whatsapp_account,
+      account: account,
       body: lines.first,
-      buttons: pills.zip(lines.drop(1)).map do |pill, title|
+      buttons: buttons.zip(lines.drop(1)).map do |pill, title|
         pill.merge(
           title: ::Whatsapp::AssistantActions.fitting_label(
             translated: title, original: pill[:title]
@@ -410,7 +420,9 @@ module Whatsapp::Send
   # copy at all.
   def recovery_without_assistant(conversation:, body:, actions:)
     recovery_buttons_message(
-      account: conversation.whatsapp_account, body: body, buttons: recovery_buttons(actions)
+      account: conversation.whatsapp_account,
+      body: body,
+      buttons: recovery_buttons(actions, conversation)
     )
   end
 
@@ -509,13 +521,17 @@ module Whatsapp::Send
   # One recovery pill on its own, for the deterministic messages that offer a way
   # out. Its label is locale copy rather than the assistant's, which is the whole
   # point of the recovery namespace: these are the buttons that have to be readable
-  # when nothing else is.
-  def recovery_button(action)
-    { id: RECOVERY_ACTION_IDS.fetch(action), title: ::Whatsapp.copy("whatsapp.bot.buttons.#{action}") }
+  # when nothing else is. The conversation names the cancel pill after the work it
+  # throws away, as it does when the assistant offers the same pill.
+  def recovery_button(action, conversation)
+    {
+      id: RECOVERY_ACTION_IDS.fetch(action),
+      title: ::Whatsapp::AssistantActions.recovery_label(action, conversation)
+    }
   end
 
-  def recovery_buttons(actions)
-    actions.first(MAX_RECOVERY_BUTTONS).map { |action| recovery_button(action) }
+  def recovery_buttons(actions, conversation)
+    actions.first(MAX_RECOVERY_BUTTONS).map { |action| recovery_button(action, conversation) }
   end
 
   # WhatsApp dismisses the bubble after this long, and there is no way to extend
@@ -527,7 +543,7 @@ module Whatsapp::Send
   # Shown only on the turns that make the citizen wait: an LLM call, a draft, a
   # criteria evaluation. Deliberately not routed through `deliver` — this is not
   # a message, so it gets no whatsapp_messages row and never appears in the
-  # dialog history the admin pages read.
+  # recent dialog the assistant reads.
   #
   # Never raises. The bubble is cosmetic: someone who does not see it waits
   # exactly as long, whereas an exception here would cost them the reply itself.
@@ -589,6 +605,11 @@ module Whatsapp::Send
   # question is not whether the bot asked but *what about*: "support" recorded
   # bare is satisfied by an offer for any proposal, so a pill shown for one and a
   # tool called with another looked identical from here.
+  #
+  # A publishing pill's parameter is the opposite case and is left off: it is the
+  # version of the preview it stood under (Whatsapp::PreviewVersion), which the
+  # tap has already been checked against, not something the tool is asked to act
+  # on — and the tools ask about the bare action.
   def irreversible_ids(entries)
     Array(entries).filter_map do |entry|
       parsed = ::Whatsapp::FlowActions.parse(entry[:id])
@@ -597,7 +618,9 @@ module Whatsapp::Send
       next if action.blank?
       next if !::Whatsapp::AssistantActions::IRREVERSIBLE_ACTIONS.include?(action)
 
-      [action, parsed[:param]].compact_blank.join(::Whatsapp::FlowActions::SEPARATOR)
+      param = ::Whatsapp::FlowActions.confirmation?(action) ? nil : parsed[:param]
+
+      [action, param].compact_blank.join(::Whatsapp::FlowActions::SEPARATOR)
     end
   end
 

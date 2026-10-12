@@ -7,9 +7,6 @@ en:
       count:
         one: 1 note
         other: "%{count} notes"
-      empty:
-        title: No internal notes yet
-        text: Use this space to record questions, agreements and decisions about this contribution.
       form:
         submit: Create note
         submit_reply: Send reply

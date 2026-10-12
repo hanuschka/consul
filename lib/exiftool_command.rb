@@ -105,6 +105,14 @@ module ExiftoolCommand
     GuardedCommand.run(binary_path.to_s, *arguments, timeout: TIMEOUT)
   end
 
+  def self.strip_metadata(path, keep: [])
+    run(
+      "-m", "-q", "-q", "-overwrite_original",
+      "-all=", "-tagsfromfile", "@", "-Orientation", "-ICC_Profile", *keep.map { |tag| "-#{tag}" },
+      path.to_s
+    )
+  end
+
   # Returns the value of a single tag, or nil when the tag is absent. -s3 gives
   # the bare value with no tag name or padding, which is what a caller comparing
   # it against a known constant needs.

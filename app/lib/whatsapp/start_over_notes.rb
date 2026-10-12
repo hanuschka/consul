@@ -17,7 +17,11 @@ module Whatsapp::StartOverNotes
                   "about one carries into what follows: do not offer that projekt, its " \
                   "phases or a contribution to it unless they name it again themselves. " \
                   "Send them what applies right now — what is open to take part in, what " \
-                  "they have already done, what there is to read.".freeze
+                  "they have already done, what there is to read — as a sentence or two " \
+                  "with the options to tap, never as a numbered rundown of everything in " \
+                  "the text. Answer it as if it were asked for the first time: never say " \
+                  "that nothing has changed since an earlier overview, and never remark " \
+                  "on having shown it before.".freeze
 
   WITH_DRAFT = "The citizen asked to go back to the start while part-way through a " \
                "contribution. Nothing has been discarded and the projekt is still selected, " \
@@ -25,10 +29,34 @@ module Whatsapp::StartOverNotes
                "what is unsaved, and ask whether to discard it or carry on with it. Call " \
                "abort_submission only if they say to discard.".freeze
 
+  WITH_COMMENT = "The citizen asked to go back to the start while a comment they wrote is " \
+                 "not posted yet. Nothing has been discarded and the projekt is still " \
+                 "selected, because throwing away what they wrote cannot be taken back. Say " \
+                 "in one line that their comment is not posted, and ask whether to discard " \
+                 "it or carry on with it. Call abort_submission only if they say to " \
+                 "discard.".freeze
+
+  # One question for both, because one abort_submission discards both.
+  WITH_DRAFT_AND_COMMENT = "The citizen asked to go back to the start while part-way " \
+                           "through a contribution and with a comment they wrote not " \
+                           "posted yet. Nothing has been discarded and the projekt is " \
+                           "still selected, because throwing away what they wrote cannot " \
+                           "be taken back. Name both in one line and ask once whether to " \
+                           "discard them or carry on: discarding throws away both. Call " \
+                           "abort_submission only if they say to discard.".freeze
+
   module_function
 
   def for(conversation)
-    return WITH_DRAFT if conversation.unsaved_submission?
+    draft_unsaved = conversation.unsaved_submission?
+    comment_unsaved = conversation.pending_comment.present?
+
+    if draft_unsaved && comment_unsaved
+      return WITH_DRAFT_AND_COMMENT
+    end
+
+    return WITH_DRAFT if draft_unsaved
+    return WITH_COMMENT if comment_unsaved
 
     WITHOUT_DRAFT
   end

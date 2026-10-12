@@ -67,9 +67,11 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       <<~SECTION
 
         This idea arrived by chat, where the photo and the location are asked for one after the
-        other in later messages. Report whether the citizen already settled either of them in
-        the message above, so they are not asked again for something they have already said.
-        Judge only their words: when they did not mention it, the answer is false.
+        other in later messages. Report what the citizen already said about them in the message
+        above, so they are not asked again for something they have already answered: whether
+        they declined a photo, whether they named the place, and whether they said there is no
+        particular place. Naming a place and declining one are two different answers. Judge
+        only their words: when they did not mention it, the answer is false.
       SECTION
     end
 
@@ -82,10 +84,14 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       <<~SECTION
 
         The draft may go beyond what the citizen said, and that is wanted. Because it is
-        published under their name, list in additions_beyond_idea what it proposes that they
-        did not give: each measure, feature, partner or rule you added. Rewording, structuring
-        and spelling out what they plainly meant are not additions. When the draft only
-        rephrases their words, the list is empty.
+        published under their name, list in additions_beyond_idea what it proposes or claims
+        that they did not give: each measure, feature, partner or rule you added, and each
+        claim they did not make — what it costs, how much effort it takes, that it is easy,
+        common or feasible, facts or numbers about the place, and specific reasons or effects
+        they did not name. Rewording, structuring and the general purpose their idea plainly
+        serves are not additions. The shorter their words — a title, a few words chosen from
+        buttons — the more the text adds, so check it sentence by sentence against what they
+        actually said. When the draft only rephrases their words, the list is empty.
       SECTION
     end
 
@@ -189,7 +195,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
     # property added to its schema is one nothing has told the model about. Every
     # property here is required, so that would be a demand with no instruction
     # behind it.
-    SUBMISSION_SLOT_KEYS = %w[photo_declined location_stated].freeze
+    SUBMISSION_SLOT_KEYS = %w[photo_declined location_stated location_declined].freeze
 
     def output_schema
       properties = base_schema_properties
@@ -198,6 +204,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       if required_taxonomy?
         properties[:photo_declined] = photo_declined_schema
         properties[:location_stated] = location_stated_schema
+        properties[:location_declined] = location_declined_schema
         properties[:additions_beyond_idea] = additions_beyond_idea_schema
         required.push(*SUBMISSION_SLOT_KEYS, "additions_beyond_idea")
       end
@@ -229,7 +236,7 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
     # Read strictly off what the citizen wrote, never inferred from the subject
     # matter: a proposal about a photo exhibition does not mean they declined to
     # send one, and skipping a question they never answered is worse than asking
-    # it. Both default false, which is the flow exactly as it behaved before.
+    # it. All default false, which is the flow exactly as it behaved before.
     def photo_declined_schema
       {
         type: "boolean",
@@ -240,13 +247,24 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       }
     end
 
+    # Named and declined are two answers rather than one: a named place still
+    # has to reach the map, which a citizen who wants none has already settled.
     def location_stated_schema
       {
         type: "boolean",
         description: "True only if the citizen named where this is, in their own words (\"am " \
-                     "Bahnhof\", \"Hauptstraße 14\", \"im Stadtpark\"), or said there is no " \
-                     "particular place. False whenever they did not say where. Never infer " \
-                     "this from the projekt's own name or area."
+                     "Bahnhof\", \"Hauptstraße 14\", \"im Stadtpark\"). False whenever they " \
+                     "did not say where. Never infer this from the projekt's own name or area."
+      }
+    end
+
+    def location_declined_schema
+      {
+        type: "boolean",
+        description: "True only if the citizen's own words say there is no particular place or " \
+                     "they do not want to give one (\"überall in der Stadt\", \"ohne Ort\"). " \
+                     "False whenever they did not mention a place at all, and whenever they " \
+                     "named one."
       }
     end
 
@@ -254,10 +272,12 @@ class ProposalAiDraft::GenerateDraftService < ApplicationService
       {
         type: "array",
         items: { type: "string" },
-        description: "What the draft proposes that the citizen's own words did not: each added " \
-                     "measure, feature, partner or rule as a short phrase in the draft's " \
-                     "language (\"Kooperation mit Energieversorgern\"). Empty when the draft " \
-                     "only rephrases what they said."
+        description: "What the draft proposes or claims that the citizen's own words did not: " \
+                     "each added measure, feature, partner or rule, and each claim about cost, " \
+                     "effort, feasibility, facts or effects they did not make, as a short phrase " \
+                     "in the draft's language (\"Kooperation mit Energieversorgern\", " \
+                     "\"Umsetzung mit überschaubarem Aufwand\"). Empty when the draft only " \
+                     "rephrases what they said."
       }
     end
 

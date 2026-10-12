@@ -19,11 +19,5 @@
 
   <div class="adm-memos-timeline">
     <%= render "adm/memos/memos_tree", memos: memoable.memos.roots.order(created_at: :desc), memoable: memoable %>
-
-    <div class="adm-memos-empty">
-      <span class="adm-memos-empty__icon material-symbols-outlined" aria-hidden="true">sticky_note_2</span>
-      <p class="adm-memos-empty__title"><%= t("adm.memos.empty.title") %></p>
-      <p class="adm-memos-empty__text"><%= t("adm.memos.empty.text") %></p>
-    </div>
   </div>
 </div>

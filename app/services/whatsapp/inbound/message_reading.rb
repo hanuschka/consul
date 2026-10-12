@@ -49,7 +49,17 @@ class Whatsapp::Inbound::MessageReading
   SURROUNDING_NON_WORD_CHARACTERS = /\A[^\p{L}\p{N}]+|[^\p{L}\p{N}]+\z/
 
   def normalized_text
-    @normalized_text ||= text.to_s.downcase.gsub(SURROUNDING_NON_WORD_CHARACTERS, "")
+    @normalized_text ||= self.class.keyword_form(text)
+  end
+
+  # The keyword lists are written in the same form, so a word is spelled there
+  # the way people write it. Turkish is why the i's are folded: downcase leaves
+  # "İ" as "i" plus a combining dot and "I" as "i" rather than "ı", so
+  # "ABONELİKTEN ÇIK" never met "abonelikten çık". The spaces are squished
+  # because some keywords are two words.
+  def self.keyword_form(text)
+    text.to_s.downcase.delete("̇").tr("ı", "i").squish
+      .gsub(SURROUNDING_NON_WORD_CHARACTERS, "")
   end
 
   # A voice note nothing could be read from. Asking forces the one
@@ -104,8 +114,8 @@ class Whatsapp::Inbound::MessageReading
       @raw_message.dig("interactive", "list_reply", "title")
     end
 
-    # What was read is recorded: the /adm dialog history shows the message
-    # body, so a successful transcript replaces the empty audio body.
+    # What was read is recorded: the recent dialog the assistant reads shows the
+    # message body, so a successful transcript replaces the empty audio body.
     def transcribed_text
       transcript = Whatsapp::Inbound::TranscribeVoiceService.call(
         media_id: @raw_message.dig("audio", "id")

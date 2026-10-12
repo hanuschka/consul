@@ -69,8 +69,15 @@ module Whatsapp::AssistantActions
   # and not only the words on it. Here the model still decides when to offer, which is
   # safe because each of these is re-checked on the tap — against the vote, against the
   # digest of what was shown.
+  #
+  # The rest are the steps a submission passes through again and again — starting
+  # one, changing the draft, keeping it as it is, taking or skipping a place,
+  # starting over. Worded afresh on every message, one step reached a citizen
+  # under six labels in one session, and a button that reads differently each
+  # time reads as a different button. Fixed so the same step always reads alike.
   FORCED_LABEL_ACTIONS = %i[
     support_toggle support_register support_withdraw comment_post draft_publish submit_final
+    submit_proposal draft_revise keep_open submit_anyway location_share location_skip main_menu
   ].freeze
 
   # The fixed labels that have no record behind them to be read off. `submit_final` is
@@ -79,9 +86,48 @@ module Whatsapp::AssistantActions
   FORCED_LABEL_COPY_KEYS = {
     support_register: "whatsapp.bot.buttons.support",
     support_withdraw: "whatsapp.bot.buttons.support_withdraw",
+    comment_start: "whatsapp.bot.buttons.comment_start",
     comment_post: "whatsapp.bot.buttons.comment_post",
+    follow_enable: "whatsapp.bot.buttons.follow_enable",
+    follow_disable: "whatsapp.bot.buttons.follow_disable",
     draft_publish: "whatsapp.bot.buttons.draft_publish",
-    submit_final: "whatsapp.bot.buttons.draft_publish"
+    submit_final: "whatsapp.bot.buttons.draft_publish",
+    submit_proposal: "whatsapp.bot.buttons.submit_proposal",
+    my_contributions: "whatsapp.bot.buttons.my_contributions",
+    discover: "whatsapp.bot.buttons.discover",
+    draft_revise: "whatsapp.bot.buttons.draft_revise",
+    submit_anyway: "whatsapp.bot.buttons.submit_anyway",
+    location_share: "whatsapp.bot.buttons.location_share",
+    location_skip: "whatsapp.bot.buttons.location_skip",
+    main_menu: "whatsapp.bot.buttons.main_menu"
+  }.freeze
+
+  # The cancel pill named after what it throws away. "Abbrechen" under a draft
+  # was written up as "Entwurf löschen" on one message and "Kommentar abbrechen"
+  # on the next; named by the work that is open, it says what tapping it does.
+  CANCEL_LABEL_KEYS = {
+    change: "whatsapp.bot.buttons.cancel_change",
+    draft: "whatsapp.bot.buttons.cancel_draft",
+    comment: "whatsapp.bot.buttons.cancel_comment",
+    step: "whatsapp.bot.buttons.cancel"
+  }.freeze
+
+  # Its counterpart under the question whether to discard what is open for a new
+  # contribution: keeping it. Offered with nothing else to say it, the keeping was
+  # "Entwurf ändern" — the pill that opens a change to the draft, and a citizen who
+  # tapped it to keep their draft was asked what to change in it.
+  KEEP_LABEL_KEYS = {
+    draft: "whatsapp.bot.buttons.keep_draft",
+    comment: "whatsapp.bot.buttons.keep_comment"
+  }.freeze
+
+  # What opens a list, by what its rows are. The model used to word it, and one
+  # overview opened under "Projekt wählen" and "Übersicht öffnen" on two
+  # consecutive messages.
+  LIST_OPENER_KEYS = {
+    projekts: "whatsapp.bot.buttons.choose_projekt",
+    contributions: "whatsapp.bot.buttons.contribution_choose",
+    mixed: "whatsapp.bot.buttons.choose"
   }.freeze
 
   module_function
@@ -111,22 +157,107 @@ module Whatsapp::AssistantActions
     ).map(&:to_s)
   end
 
+  # The offerable ids whose label is fixed, for the tool descriptions that tell
+  # the model to leave it empty.
+  def fixed_label_action_names
+    (
+      (FORCED_LABEL_ACTIONS - ::Whatsapp::FlowActions.unofferable) +
+        [:idea_start] +
+        ::Whatsapp::Send::RECOVERY_ACTION_IDS.keys
+    ).map(&:to_s)
+  end
+
+  # The words those pills carry this turn, by id, for the prompt that tells the
+  # model to leave them empty: without them its sentence named a button by words
+  # no pill showed. Only the ones whose words do not hang on a record, and only
+  # the recovery pills that can be offered now.
+  def fixed_labels(conversation)
+    unavailable = unavailable_recovery_actions(conversation)
+
+    fixed_label_action_names.each_with_object({}) do |name, labels|
+      next if unavailable.include?(name)
+
+      label = fixed_label(name.to_sym, conversation)
+
+      next if label.blank?
+
+      labels[name] = label
+    end
+  end
+
+  # Nil for a pill named after its record, since without a param there is none.
+  def fixed_label(action, conversation)
+    if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
+      recovery_label(action, conversation)
+    else
+      forced_label(action: action, param: nil, conversation: conversation)
+    end
+  end
+
   # The one entry point the tools build a model-written pill through. Which of the
   # two namespaces a spec belongs to is not the caller's business, and it stopped
   # being expressible as a fallback the moment a recovery pill could be refused on
   # state: five call sites read a nil from the recovery side as "not a recovery id"
   # and asked the catalog for it, which answered nil again and logged the drop a
   # second time under the wrong reason.
-  def offered_button(spec:, label:, conversation:, length: MAX_LABEL_LENGTH)
+  #
+  # `idea_start` on a button says what tapping it does, in the card's words for the
+  # phase: offered beside a sentence it is the step, not a choice of projekt.
+  def offered_button(spec:, label:, conversation:)
+    action, param = parse(spec)
+
+    if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
+      return recovery_button(spec: spec, conversation: conversation)
+    end
+
+    button(
+      spec: spec,
+      label: button_label(action: action, param: param, label: label, conversation: conversation),
+      conversation: conversation
+    )
+  end
+
+  # The same pill as a list row. A row with `idea_start` is one projekt among
+  # several, so it keeps the name it was given: labelled with the step, every
+  # row of the list would read the same and WhatsApp refuses the whole list.
+  #
+  # `length` is how much of the title the caller keeps: a caller that splits the
+  # name over the row's two lines (Whatsapp::ListRowText) asks for more than a
+  # title holds, so the words past it are there to carry on underneath.
+  def offered_row(spec:, label:, conversation:, length: MAX_ROW_TITLE_LENGTH)
     action, = parse(spec)
 
     if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
-      return recovery_button(
-        spec: spec, label: label, conversation: conversation, length: length
-      )
+      return recovery_button(spec: spec, conversation: conversation, length: length)
     end
 
     button(spec: spec, label: label, conversation: conversation, length: length)
+  end
+
+  # The words a button goes out with before any fixed label replaces them: the
+  # model's own, except where the step has its card wording.
+  def button_label(action:, param:, label:, conversation:)
+    return label if action != :idea_start
+
+    phase_action_label(param, conversation).presence || label
+  end
+
+  # The opener of a list, read off its rows rather than written by the model.
+  def list_opener(row_ids)
+    ::Whatsapp.copy(LIST_OPENER_KEYS.fetch(list_kind(row_ids)))
+  end
+
+  # Projekts only, contributions only, or anything else, which is an overview.
+  def list_kind(row_ids)
+    actions = Array(row_ids).map { |row_id| ::Whatsapp::FlowActions.parse(row_id)&.dig(:action) }
+
+    if actions.all? { |action| ::Whatsapp::FlowActions::PROJEKT_CHOICE_ACTIONS.include?(action) }
+      :projekts
+    elsif actions.all?(::Whatsapp::FlowActions::DIRECT_CONTRIBUTION_ACTION)
+      :contributions
+    else
+      :mixed
+    end
   end
 
   # The pill neither half of which is the model's, for the ids withheld from it
@@ -138,12 +269,12 @@ module Whatsapp::AssistantActions
   # The title is composed by the caller rather than looked up here, because it comes
   # out of the same translation batch as the block it is sent with: asking for it
   # again would put a label from one cache state under a sentence from another.
-  def platform_button(action:, title:, conversation:)
+  def platform_button(action:, title:, conversation:, param: nil)
     return if title.blank?
 
     record_irreversible_offer(action, conversation)
 
-    { id: ::Whatsapp::FlowActions.id_for(action: action), title: title }
+    { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
   end
 
   # The pill a preview tool builds, which is every pill #offered_button builds plus
@@ -153,6 +284,8 @@ module Whatsapp::AssistantActions
   # the reverse.
   #
   # The label is the fixed one whatever the model wrote, as it always was for these.
+  # The id carries the version of what the preview shows (Whatsapp::PreviewVersion),
+  # whatever parameter the model wrote, so a tap can tell which version it answers.
   def confirmation_button(spec:, label:, conversation:, confirms:)
     action, param = parse(spec)
 
@@ -167,7 +300,8 @@ module Whatsapp::AssistantActions
     platform_button(
       action: action,
       title: truncated(forced_label(action: action, param: param, conversation: conversation)),
-      conversation: conversation
+      conversation: conversation,
+      param: ::Whatsapp::PreviewVersion.tag(action: action, conversation: conversation)
     )
   end
 
@@ -181,7 +315,8 @@ module Whatsapp::AssistantActions
   def written_label?(spec)
     action, = parse(spec)
 
-    !FORCED_LABEL_ACTIONS.include?(action) && !confirmation?(action)
+    !FORCED_LABEL_ACTIONS.include?(action) && !confirmation?(action) &&
+      !::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
   end
 
   # One tappable button from the action id and the label the model wrote, or nil
@@ -204,6 +339,18 @@ module Whatsapp::AssistantActions
 
     if !reachable_contribution?(action, param, conversation)
       return dropped(spec, conversation, :unreachable)
+    end
+
+    if !submittable?(action, param, conversation)
+      return dropped(spec, conversation, :closed_to_submission)
+    end
+
+    if restates_request?(action, conversation)
+      return dropped(spec, conversation, :restates_request)
+    end
+
+    if keeps_nothing?(action, conversation)
+      return dropped(spec, conversation, :nothing_to_keep)
     end
 
     sent_action = directed_action(action, param, conversation)
@@ -278,6 +425,83 @@ module Whatsapp::AssistantActions
     contribution_for(param, conversation).present?
   end
 
+  # The fourth, for the list after "Idee einreichen": a pill starting a submission
+  # into a phase the chat cannot take one into — or, while the citizen's wish to
+  # submit stands (Whatsapp::Conversation#submission_wished?), a projekt with no such
+  # phase — is a row offering what the text above it calls impossible. Dropped here
+  # rather than left to the model, which is told every projekt's open_for_submission
+  # and offered the closed ones anyway.
+  def submittable?(action, param, conversation)
+    return true if !submission_pill?(action, conversation)
+
+    ids = submittable_ids(action, param)
+
+    return ids[:phase_ids].include?(param.to_i) if action == :idea_start
+
+    ids[:projekt_ids].include?(param.to_i)
+  end
+
+  def submission_pill?(action, conversation)
+    return true if action == :idea_start
+
+    action == :view_projekt && conversation.submission_wished?
+  end
+
+  # Read from the message's preload where one is running, and asked of the one
+  # record otherwise — the card and the follow-ups build their pills one at a time.
+  def submittable_ids(action, param)
+    preloaded = ::Current.whatsapp_pill_records&.submittable
+
+    return preloaded if preloaded.present?
+    return submittable_ids_of(eligible_phases_for_phase(param)) if action == :idea_start
+
+    projekt = ::Projekt.find_by(id: param.to_i)
+    phases = projekt.present? ? ::Whatsapp::EligiblePhasesQuery.uncapped(projekt: projekt) : []
+
+    submittable_ids_of(phases)
+  end
+
+  def eligible_phases_for_phase(param)
+    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+
+    return [] if !::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+
+    [projekt_phase]
+  end
+
+  def submittable_ids_of(phases)
+    {
+      phase_ids: phases.map(&:id).to_set,
+      projekt_ids: phases.map(&:projekt_id).to_set
+    }
+  end
+
+  # The fifth, for a pill asking for what the message above it already asks for.
+  # Offered under "Schreiben Sie jetzt bitte Ihren Kommentar", a "Kommentar
+  # schreiben" pill was tapped and answered with the same request again: the
+  # citizen's next step there is writing, not tapping.
+  #
+  # Under the comment's preview the same id is the way to change it, which is why
+  # this asks the state rather than withholding the id.
+  def restates_request?(action, conversation)
+    action == :comment_prompt && conversation.comment_invited?
+  end
+
+  # The sixth: a keep pill with nothing open to keep would answer a question
+  # nobody is being asked.
+  def keeps_nothing?(action, conversation)
+    action == :keep_open && kept_work(conversation).blank?
+  end
+
+  # What a keep tap leaves standing, by the order the cancel pill names it in.
+  def kept_work(conversation)
+    if conversation.unsaved_submission?
+      :draft
+    elsif conversation.pending_comment.present?
+      :comment
+    end
+  end
+
   # The records one message's pills point at, read at once. A list of ten
   # contributions asked the same record three times a row — whether it may be
   # opened, what it is called, what goes under it — and every support pill asked
@@ -296,7 +520,7 @@ module Whatsapp::AssistantActions
     ::Current.whatsapp_pill_records = previous
   end
 
-  PillRecords = Struct.new(:contributions, :supportable, keyword_init: true)
+  PillRecords = Struct.new(:contributions, :supportable, :submittable, keyword_init: true)
 
   def preloaded_records(specs, conversation)
     parsed = Array(specs).map { |spec| parse(spec) }
@@ -313,8 +537,18 @@ module Whatsapp::AssistantActions
       contributions: ::Whatsapp::ContributionPill.resolve_all(
         contribution_params, user: conversation.user
       ),
-      supportable: supportable_by_id(proposal_ids)
+      supportable: supportable_by_id(proposal_ids),
+      submittable: preloaded_submittable_ids(parsed, conversation)
     )
+  end
+
+  # Every phase the chat takes a submission into, read once for the whole list
+  # rather than once per row: a list of ten projekts after "Idee einreichen" asked
+  # the same question ten times over. Nil where no pill of the message asks it.
+  def preloaded_submittable_ids(parsed, conversation)
+    return if parsed.none? { |action, _param| submission_pill?(action, conversation) }
+
+    submittable_ids_of(::Whatsapp::EligiblePhasesQuery.uncapped)
   end
 
   def supportable_by_id(proposal_ids)
@@ -372,7 +606,10 @@ module Whatsapp::AssistantActions
   # once per process, so the conversation is the only place the rule can actually be
   # enforced. The slot it frees is not backfilled: nothing is appended to a recovery
   # line any more except the way back, and that one is added on the way out.
-  def recovery_button(spec:, label:, conversation:, length: MAX_LABEL_LENGTH)
+  #
+  # Labelled from the copy like the recovery lines' own pills, so a way out reads
+  # the same whether the model offered it or a fixed line did.
+  def recovery_button(spec:, conversation:, length: MAX_LABEL_LENGTH)
     action, = parse(spec)
     recovery_id = ::Whatsapp::Send::RECOVERY_ACTION_IDS[action]
 
@@ -382,11 +619,36 @@ module Whatsapp::AssistantActions
       return dropped(spec, conversation, :recovery_unavailable)
     end
 
-    title = truncated(label, length: length)
+    title = truncated(recovery_label(action, conversation), length: length)
 
     return if title.blank?
 
     { id: recovery_id, title: title }
+  end
+
+  # The one place a recovery pill's words come from, for the model's pills and
+  # for Whatsapp::Send's fixed lines alike.
+  def recovery_label(action, conversation)
+    if action == :cancel
+      return ::Whatsapp.copy(CANCEL_LABEL_KEYS.fetch(cancelled_work(conversation)))
+    end
+
+    ::Whatsapp.copy("whatsapp.bot.buttons.#{action}")
+  end
+
+  # Which of the four things a cancel tap throws away. A change the citizen has
+  # asked for comes first: while one is open the tap takes back only the change
+  # (Whatsapp::Conversation#revert_revision!). Then the draft, as the larger loss.
+  def cancelled_work(conversation)
+    if conversation.revision_open?
+      :change
+    elsif conversation.unsaved_submission?
+      :draft
+    elsif conversation.pending_comment.present?
+      :comment
+    else
+      :step
+    end
   end
 
   # Asked of the conversation as it stands when the message is built, which is when
@@ -476,6 +738,10 @@ module Whatsapp::AssistantActions
   # paraphrase would, so reporting those would put a note on most turns — and a note
   # that arrives every turn is one that stops being read, which is the whole reason
   # this is silent whenever every written label survived.
+  #
+  # Worded for either cause: a label cut to fit, or one replaced by the fixed words
+  # its step always carries (FORCED_LABEL_ACTIONS). Both leave the model's sentence
+  # naming words no button shows.
   def wording_note(offers)
     changed = offers.filter_map do |written, title|
       words = written.to_s.squish
@@ -487,9 +753,9 @@ module Whatsapp::AssistantActions
 
     return if changed.empty?
 
-    "Your label did not fit on #{changed.size == 1 ? "one button" : "some buttons"} — the " \
-      "citizen reads #{changed.join(", ")}. Say it that way if you refer to them again, and " \
-      "write shorter labels from here."
+    "#{changed.size == 1 ? "One button does" : "Some buttons do"} not carry the words you " \
+      "wrote — the citizen reads #{changed.join(", ")}. Say it that way if you refer to " \
+      "#{changed.size == 1 ? "it" : "them"} again."
   end
 
   # The label of a translated fixed line, as it will actually arrive. Preferring the
@@ -530,11 +796,23 @@ module Whatsapp::AssistantActions
   # record at all — #record_label's own first guard would answer nil for them, and a
   # blank title is the one value WhatsApp refuses the whole message over.
   def forced_label(action:, param:, conversation:)
+    if action == :keep_open
+      return keep_label(conversation)
+    end
+
     key = FORCED_LABEL_COPY_KEYS[action]
 
     return ::Whatsapp.copy(key) if key.present?
 
     record_label(action: action, param: param, conversation: conversation)
+  end
+
+  def keep_label(conversation)
+    key = KEEP_LABEL_KEYS[kept_work(conversation)]
+
+    return if key.blank?
+
+    ::Whatsapp.copy(key)
   end
 
   # The label read off the thing the pill points at. A projekt that does not
@@ -682,9 +960,21 @@ module Whatsapp::AssistantActions
 
     return if proposal.blank?
 
+    support_direction(proposal, conversation)
+  end
+
+  # The same reading for a caller that has the proposal in hand already
+  # (Whatsapp::StatePills), so the vote is read one way wherever a support pill is
+  # composed.
+  #
+  # No "Unterstützen" on the citizen's own proposal: the bot does not take an
+  # author's support for what they wrote. One they gave on the page before keeps
+  # its withdraw pill, which is why the author is asked after the vote.
+  def support_direction(proposal, conversation)
     user = conversation.user
 
     return :support_withdraw if user.present? && proposal.voted_up_by?(user)
+    return if ::Whatsapp::ContributionFacts.written_by?(proposal, user)
     return if !supportable?(proposal)
 
     :support_register
@@ -754,8 +1044,10 @@ module Whatsapp::AssistantActions
   # description, `unlabelled` is a pill the model wrote no words for and whose
   # record could not name it either, `unparseable` an empty or malformed spec,
   # `unknown_scope` a `show_more` naming a list the bot does not keep,
-  # `confirmation_only` a publishing pill offered away from its preview, and
-  # `confirmation_elsewhere` one offered under the other preview.
+  # `confirmation_only` a publishing pill offered away from its preview,
+  # `confirmation_elsewhere` one offered under the other preview,
+  # `closed_to_submission` a way to submit where the chat cannot take one, and
+  # `restates_request` a pill asking for what the message already asks for.
   def dropped(spec, conversation, reason)
     ::Whatsapp::AiAssistant::DecisionLog.record(
       event: :action_dropped, conversation: conversation, spec: spec, reason: reason

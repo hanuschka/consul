@@ -21,6 +21,8 @@ class Ai::Tools::WhatsappAiAssistant::WithdrawSupport < Ai::Tools::WhatsappAiAss
   def execute(contribution_id:)
     return not_linked_error("take back a support") if user.blank?
 
+    ::Whatsapp::StatePills.focus_proposal(contribution_id)
+
     outcome = ::Whatsapp::Contributions::WithdrawSupportService.call(
       proposal_id: contribution_id, user: user
     )
@@ -45,7 +47,9 @@ class Ai::Tools::WhatsappAiAssistant::WithdrawSupport < Ai::Tools::WhatsappAiAss
               "to them, and that message is the confirmation: do not say again that it is " \
               "withdrawn, and do not repeat any of it. Your reply is the way on only — a short " \
               "line on what they can do next, with its buttons. Do not ask why and do not talk " \
-              "them back into it."
+              "them back into it. Its support button, and its comment button where comments " \
+              "are open, are put under your reply for you; your own buttons are for the next " \
+              "step."
       }
     end
 

@@ -15,6 +15,15 @@ class Whatsapp::BrowsableProjektsQuery < ApplicationQuery
     new.uncapped
   end
 
+  # The same projekts as an id subquery, for a query that lists something inside
+  # them and has to stay inside what this list names: the portal's open votes
+  # were drawn from every activated projekt, so a citizen told eight projekts
+  # were running was offered votes in a ninth. Unordered, because the overview's
+  # order means nothing inside a subquery.
+  def self.projekt_ids
+    Projekt.index_order_underway.unscope(:order).select(:id)
+  end
+
   def initialize(from: 0)
     @from = from
   end

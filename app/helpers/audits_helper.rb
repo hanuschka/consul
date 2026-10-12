@@ -8,6 +8,8 @@ module AuditsHelper
       value.join(",")
     elsif resource.type_for_attribute(field.to_s).type == :boolean
       resource.class.human_attribute_name("#{field}_#{value}")
+    elsif resource.type_for_attribute(field.to_s).type == :datetime && value.present?
+      l(Time.zone.parse(value.to_s), format: "%d.%m.%Y %H:%M")
     else
       value.to_s
     end

@@ -1,0 +1,349 @@
+en:
+  adm:
+    municipal_plans:
+      title: Municipal plans
+      home:
+        title: Welcome to the municipal plans
+        stats:
+          total: Total
+          new_this_week: New this week
+          published: Published
+          archived: Archived
+      menu:
+        aria_label: Municipal plans navigation
+        items:
+          home: Home
+          municipal_plans: Plans
+          officers: Team
+          officer_groups: Officer groups
+          topics: Categories
+          settings: Configuration
+      settings:
+        title: Configuration
+        tabs:
+          features: Features
+          dashboard: Dashboard settings
+          contact_persons: Contact persons
+        dashboard:
+          intro: "Configure the welcome text and the notice message shown on the admin home page of the municipal plans."
+      statuses:
+        draft: Draft
+        published: Published
+        archived: Archived
+      municipal_plan_notices:
+        destroy:
+          success: The notice was deleted.
+
+      municipal_plans:
+        index:
+          title: Plans
+          page_hint: "Manage the municipal plans of the city. Each plan describes an administrative project with its processing status, schedule, affected districts and contact people. Published plans appear in the public plan list; drafts and archived plans stay internal. The version number is raised automatically whenever content changes."
+          new_button: New plan
+          order_button: Set order
+          no_items_title: No plans yet
+          no_items_description: Create a plan to publish it in the plan list.
+          no_results_filtered_title: No matches
+          no_results_filtered_description: No plans match the selected filters. Adjust the filters or reset them.
+          table:
+            id: ID
+            title: Title
+            status: Status
+            districts: Districts
+            topics: Categories
+            responsible: Responsible officer
+            content_updated_at: Updated on
+            version: Version
+        order:
+          title: Plan order
+          page_hint: "Set the order in which plans appear by default in the public plan list. Drag a plan by its handle to the position you want; the new order is stored immediately, there is no save button. Archived plans are not listed here."
+          drag_handle: "Move plan \"%{title}\""
+          no_items_title: No plans yet
+          no_items_description: As soon as plans are released you can set their order here.
+          none: "—"
+          table:
+            order: Order
+            title: Title
+            status: Status
+            content_updated_at: Updated on
+        new:
+          title: Create new plan
+        edit:
+          title: Edit plan
+        create:
+          success: The plan was created.
+        update:
+          success: The plan was updated.
+        destroy:
+          success: The plan was deleted.
+        submit:
+          success: The plan was submitted for release.
+          no_changes: This version contains no changes against the released version and was not submitted.
+        release:
+          success: The plan was released and is now public.
+        archive_date:
+          success: The archive date was saved.
+        archive:
+          success: The plan was archived.
+        discard:
+          success: The changes were discarded.
+        unarchive:
+          success: The plan was taken out of the archive.
+        tabs:
+          show: Manage
+          audits: Change log
+        audits:
+          title: Change log
+        action_row:
+          title: Actions
+          website: Website
+          edit: Edit
+          hints:
+            website: "Opens the public page of the plan in a new tab."
+            edit: "Changes the details. For a published plan this creates a working copy; the public page stays unchanged until the changes are released."
+            submit: "Tells the administration that the draft or working copy is ready and can be released."
+            release: "Publishes the draft or applies the changes of the working copy to the public page."
+            discard: "Deletes the working copy with all its changes; the released version stays public as it is."
+            archive: "Takes the plan out of the public overview; it stays reachable in the archive at its address."
+            unarchive: "Brings the plan back from the archive, as a published plan, or as a draft if it was never released."
+            convert: "Creates a new participation project from the plan, deactivated at first, that stays linked to the plan."
+        show:
+          sections:
+            content: Plan
+            administration: Administration
+          links: Links and documents
+          map_label: Map position
+          further_information: Further information
+          last_resolution: Last resolution
+          processing_status: Current processing status
+          next_steps: Schedule / next steps
+          costs: Costs where quantifiable
+          districts: Affected area / district
+          topics: Main categories affected
+          formal_participation: Formal citizen participation
+          informal_participation: Informal citizen participation
+          content_updated_at: Updated on
+          version: Version
+          no_links: No links or documents added.
+          contact_name: Name
+          contact_role: Role
+          contact_phone: Phone
+          contact_email: Email
+          responsible: Responsible officer
+          system_mailbox_email: System mailbox for notices
+          status: Status
+          none: "—"
+          archive_date:
+            label: Archive date
+            submit: Save archive date
+            hint: >
+              The archive date only archives the plan by itself when the platform setting "Archive plans automatically" is switched on. Clear the field to remove the planned archive date again.
+          submitted_hint: This plan has been submitted for release and is waiting for a decision by the administration.
+          actions:
+            submit: Submit for release
+            release: Release
+            discard: Discard changes
+            discard_confirm: "Do you really want to discard the changes in this working version? The released version stays as it is. This cannot be undone."
+            archive: Archive
+            unarchive: Take out of the archive
+            convert: Convert into project
+          projekts:
+            title: Linked participation projects
+          changes:
+            title: Changes against the released version
+            field: Field
+            released: Released version
+            new: Working version
+            map_changed: The map position was changed.
+            no_changes: This version contains no changes against the released version.
+          notices:
+            title: Notices from citizens
+            no_name: No name given
+            delete: Delete
+            delete_aria: "Delete the notice from %{date}"
+            delete_confirm: "Do you really want to delete the notice from %{date}? This cannot be undone."
+            empty: There are no notices for this plan.
+        form_fields:
+          blocks:
+            basics: "Basic data"
+            progress: "Status & schedule"
+            participation: "Participation & context"
+            contact: "Contact & responsibility"
+          errors_title: The plan could not be saved
+          add_link: Add link
+          officer_groups: Officer groups
+          officers: Officers
+          no_responsible: "-- No responsible officer --"
+          no_districts_title: No districts yet
+          no_districts_description: Districts are taken from the registered addresses. Without districts a plan cannot be saved.
+          no_topics_title: No categories yet
+          no_topics_description: Create a category under "Categories" first. Without a category a plan cannot be saved.
+          labels:
+            title: Plan title
+            short_description: Short description
+            further_information: Further information
+            last_resolution: Last resolution
+            processing_status: Current processing status
+            next_steps: Schedule / next steps
+            costs: Costs where quantifiable
+            districts: Affected area / district
+            topics: Main categories affected
+            formal_participation: Formal citizen participation
+            formal_participation_checkbox: Formal citizen participation is planned
+            formal_participation_reason: Note on formal citizen participation
+            informal_participation: Informal citizen participation
+            informal_participation_checkbox: Informal citizen participation is planned
+            informal_participation_reason: Note on informal citizen participation
+            links: Links and documents
+            link_title: Label
+            link_url: Address (URL)
+            contact_name: Name
+            contact_role: Role
+            contact_phone: Phone
+            contact_email: Email
+            map_location: Map position
+            responsible: Responsible officer
+            system_mailbox_email: System mailbox for notices
+          hints:
+            title: The title names the plan the way citizens see it in the plan list. Use a short, understandable wording without file numbers or abbreviations.
+            short_description: The short description is the entry text in the public plan list and should summarise the plan in about 420 characters. Explain in a few sentences what it is about and why the city is pursuing it.
+            further_information: Additional background for interested readers, for example planning stages or general conditions. This field is optional and is shown below the short description.
+            last_resolution: The latest political resolution on this plan, for example the committee, the date and the content of the decision. Leave empty if no resolution has been passed yet.
+            processing_status: The current processing status describes where the plan stands right now. Keep it up to date — it is the most important information for citizens and raises the version number on every change.
+            next_steps: The planned next steps with a time frame, as far as foreseeable. Rough statements such as "first half of 2027" are welcome when no exact date is fixed.
+            costs: The cost statement is a free text field and ranges from a concrete sum to a general statement about funding.
+            districts: Select the districts affected by the plan. At most four districts can be selected; if more areas are affected, pick the four most relevant ones.
+            topics: Assign the plan to the categories that are mainly affected. Categories are used as a filter by citizens in the plan list. At least one category is required.
+            formal_participation: Formal citizen participation is required by law, for example the public display in a land-use planning procedure.
+            formal_participation_reason: Briefly explain which formal participation is planned — or why none takes place.
+            informal_participation: Informal citizen participation is voluntary, for example workshops, surveys or participation processes on this platform.
+            informal_participation_reason: Briefly explain which informal participation is planned — or why none takes place.
+            links: Link to further pages and documents, for example resolutions, plans or the council information system. Each entry needs a label and a full address.
+            contact_name: Name of the contact person citizens can reach with questions about this plan.
+            contact_role: Role or job title of the contact person, for example "Project lead urban development".
+            contact_phone: Phone number of the contact person. Prefer a direct line that is reachable during absences.
+            contact_email: Email address of the contact person. A functional address is preferable to a personal one.
+            map_location: Set the map position of the plan by clicking on the map. The position is required and is shown in the public map view.
+            responsible: Define who maintains the plan inside the administration. You can pick a single officer or a whole officer group.
+            system_mailbox_email: Notices from citizens about this plan are forwarded to this mailbox. Use a functional address so notices are handled during absences.
+          placeholders:
+            title: e.g. Redesign of the market square
+            short_description: e.g. The market square will be made barrier-free and get more greenery and seating.
+            further_information: e.g. Background, goals and planning steps so far
+            last_resolution: e.g. City council resolution of 12 March 2026 on the preliminary design
+            processing_status: e.g. The design is complete, the tender is being prepared.
+            next_steps: e.g. Award of construction contracts in spring, start of construction in summer
+            costs: e.g. approx. EUR 50,000 or budgeted
+            formal_participation_reason: e.g. public display in Q2 2027
+            informal_participation_reason: e.g. citizens' workshop in autumn, results feed into the planning
+            link_title: e.g. Resolution in the council information system
+            link_url: https://
+            contact_name: e.g. Maria Muster
+            contact_role: e.g. Project lead urban development
+            contact_phone: e.g. +49 3641 49-0
+            contact_email: e.g. urban-development@city.example
+            system_mailbox_email: e.g. plans@city.example
+      projekt_conversions:
+        new:
+          title: Convert into project
+          intro_title: Turning a plan into a participation project
+          intro_text: Title and short description are taken from the plan and can still be adjusted here. Districts and map position are copied as well and can be changed afterwards in the project settings. The plan itself stays unchanged and is linked to the new project.
+          name_label: Project title
+          subtitle_label: Subtitle
+          subtitle_hint: Shown below the project title. At most %{count} characters and five lines.
+          submit: Create project
+          errors_title: The participation project could not be created
+        create:
+          success: The participation project has been created and linked to the plan.
+        errors:
+          name_blank: Please enter a project title.
+          subtitle_too_long: The subtitle may be at most %{count} characters long. Please shorten it.
+          subtitle_too_many_lines: The subtitle may contain at most %{count} lines.
+      municipal_plan_audits:
+        show:
+          title: Change details
+          audit_details: Change details
+          edited_at: Edited at
+          edited_by: Edited by
+          changes: Changes
+          field: Field
+          old_value: Old value
+          new_value: New value
+      officers:
+        index:
+          title: Officers
+          page_hint: "Manage the people who are allowed to edit municipal plans. Search for an existing user account by email address and add it to the officers. Officers maintain the plans assigned to them and keep their processing status up to date. Only registered user accounts can be added."
+          search_label: Search user
+          search_description: Search by email address for registered users listed under <a href="/adm/users" target="_blank">Users</a>. Only registered users can be added as officers. Officers edit the plans assigned to them or to their officer group.
+          no_items_title: No officers yet
+          no_items_description: Search for a user account and add it to the officers.
+          table:
+            name: Name
+            email: Email
+        officer:
+          add: Add
+        search:
+          table:
+            name: Name
+            email: Email
+        user_not_found:
+          user_not_found: User not found
+        create:
+          success: The user was added to the officers.
+        destroy:
+          success: The user was removed from the officers.
+      officer_groups:
+        index:
+          title: Officer groups
+          page_hint: "Manage the officer groups of the municipal plans module. A group bundles several officers and can be set as the responsible unit for a plan. Each group has a default email address for notifications. Groups that still have plans assigned to them cannot be deleted."
+          new_officer_group: New officer group
+          no_items_title: No officer groups yet
+          no_items_description: Create an officer group to bundle responsibilities for plans.
+          table:
+            name: Name
+            officers: Members
+        new:
+          title: New officer group
+        edit:
+          title: Edit officer group
+        create:
+          success: The officer group was created.
+        update:
+          success: The officer group was updated.
+        destroy:
+          success: The officer group was deleted.
+          cannot_destroy: The officer group cannot be deleted because plans are still assigned to it.
+        form:
+          name_label: Name
+          name_hint: The name of the officer group appears in the lists where you assign the responsible unit to a plan. Use a unique, descriptive name that matches your administration, for example "Urban planning department". The name is only visible in the admin area.
+          name_placeholder: e.g. Urban planning department
+          officers_label: Members
+          officers_hint: Select the officers who belong to this group. All members can edit the plans the group is responsible for. An officer can belong to several groups.
+          no_officers_title: No officers yet
+          no_officers_description: Add officers under "Officers" first before assigning them to a group.
+          submit: Save
+      topics:
+        index:
+          title: Categories
+          page_hint: "Manage the categories of the municipal plans module. Categories assign each plan to a subject area such as mobility, education or urban development and are used as a filter by citizens. Use drag and drop to set the order in which categories are displayed. Categories that still have plans assigned to them cannot be deleted."
+          new_topic: New category
+          no_items_title: No categories yet
+          no_items_description: Create a category so plans can be assigned to a subject area.
+          table:
+            order: Order
+            name: Name
+        new:
+          title: New category
+        edit:
+          title: Edit category
+        create:
+          success: The category was created.
+        update:
+          success: The category was updated.
+        destroy:
+          success: The category was deleted.
+          cannot_destroy: The category cannot be deleted because plans are still assigned to it.
+        form:
+          name_label: Name
+          name_hint: The name of the category is shown to citizens as a filter in the municipal plans list and appears on every plan it is assigned to. Use a short, generally understandable term such as "Mobility and traffic".
+          name_placeholder: e.g. Mobility and traffic
+          submit: Save

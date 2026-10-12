@@ -39,9 +39,11 @@ module Whatsapp::ProjektCardActions
   # the word underneath while leaving the two rows just as alike as before.
   RowText = Struct.new(:title, :note, :named, keyword_init: true)
 
-  # What the parts of the line under a row's title are joined with — the name,
-  # the note and the closing date — counted into the room that line has.
-  NOTE_SEPARATOR = " · ".freeze
+  # The action of the row that opens every vote of the projekt. Its parameter is the
+  # projekt itself, so the tap is answered on the inbound side with that projekt's
+  # votes: the row used to carry the scope name alone, and the model left to work out
+  # whose votes it meant answered it twice with a ballot instead of the list.
+  MORE_VOTES_ACTION = :projekt_polls
 
   module_function
 
@@ -87,23 +89,56 @@ module Whatsapp::ProjektCardActions
     )
     ordered = still_to_do_first(phases, voted_ids)
     contributions = contributions_entry(ordered, facts)
-    kept = ordered.first(phase_row_budget(ordered, contributions))
+    offered = ordered.reject { |projekt_phase| closed_to_chat_submission?(projekt_phase) }
+    kept = offered.first(phase_row_budget(offered, contributions))
     texts = row_texts(kept, facts, voted_ids)
     entries =
-      (kept.map { |phase| action_entry(phase, facts[phase.id], texts[phase.id]) } +
-        [contributions, more_votes_entry(ordered, kept)]).compact
+      (kept.map { |phase| action_entry(phase, texts[phase.id]) } +
+        [contributions, more_votes_entry(projekt, offered, kept)]).compact
 
-    log_phases_cut(projekt, ordered, kept)
+    log_phases_cut(projekt, offered, kept)
     log_entries_reading_alike(projekt, entries)
 
     entries
   end
 
+  # Of a card's entries, only the rows that start a submission, for a citizen who
+  # asked to submit something before they had picked the projekt. The whole card
+  # used to answer that choice, nine votes and the contributions included, and the
+  # wish they had just tapped was nowhere on it.
+  def submission_entries(entries)
+    entries.select { |entry| action_of(entry) == :idea_start }
+  end
+
   # Whether these entries end on the row that opens every vote, which the card's
-  # tool has to tell the model about: the tap on it arrives as a scope name and
-  # nothing else, so which projekt's votes it means is the model's to know.
+  # tool tells the model about so that it does not offer the same list again.
   def more_votes?(entries)
-    entries.any? { |entry| entry[:id] == more_votes_id }
+    entries.any? { |entry| action_of(entry) == MORE_VOTES_ACTION }
+  end
+
+  def action_of(entry)
+    ::Whatsapp::FlowActions.parse(entry[:id])&.dig(:action)
+  end
+
+  # The card's entries as reply buttons, or nil where the card has to be a list. A
+  # card with three entries or fewer arrives with its buttons under the picture, one
+  # tap from the action; past that, or where a title would have to be cut to fit a
+  # button, or where two titles read alike, it stays a list. A reply button carries
+  # a title and nothing else — WhatsappApi::Resources::Messages drops the line a
+  # list row shows underneath — so a title that only tells its row apart together
+  # with that line cannot go out as a button.
+  #
+  # Asked of the entries the card actually sends rather than of the projekt, so the
+  # card cut down to the ways to submit (#submission_entries) is a set of buttons
+  # even for a projekt whose whole card is a list.
+  def buttons(entries)
+    return if !::Whatsapp.buttons?(entries.size)
+
+    titles = entries.map { |entry| entry[:button_title] }
+
+    return if titles.any?(&:blank?) || titles.uniq.size != titles.size
+
+    entries.zip(titles).map { |entry, title| { id: entry[:id], title: title } }
   end
 
   # The phases the citizen still has something to do in ahead of the votes they
@@ -134,45 +169,25 @@ module Whatsapp::ProjektCardActions
     end
   end
 
-  # The row the votes the card has no room for are reached through. It opens
-  # ListOpenPolls' own list of the projekt's votes rather than a second page of
-  # this card: that list already pages, marks what the citizen has answered and
-  # holds every vote, those above this row included, so nothing needs to know
-  # where the card stopped.
-  def more_votes_entry(phases, kept)
+  # The row the votes the card has no room for are reached through. It opens the
+  # list of the projekt's votes (Whatsapp::Polls::ListProjektPollsService) rather
+  # than a second page of this card: that list pages, marks what the citizen has
+  # answered and holds every vote, those above this row included, so nothing needs
+  # to know where the card stopped.
+  def more_votes_entry(projekt, phases, kept)
     left_over = phases.drop(kept.size)
 
     return if !any_vote?(left_over)
 
     {
-      id: more_votes_id,
+      id: ::Whatsapp::FlowActions.id_for(action: MORE_VOTES_ACTION, param: projekt.id),
       title: ::Whatsapp.copy("whatsapp.bot.buttons.show_more"),
       description: ::Whatsapp.copy("whatsapp.bot.buttons.show_more_votes")
     }
   end
 
-  def more_votes_id
-    ::Whatsapp::ListWindow.more_action_id(
-      ::Ai::Tools::WhatsappAiAssistant::ListOpenPolls::MORE_SCOPE
-    )
-  end
-
   def any_vote?(phases)
     phases.any? { |projekt_phase| projekt_phase.is_a?(::ProjektPhase::VotingPhase) }
-  end
-
-  # Whether these entries have to arrive behind the list picker rather than as reply
-  # buttons. Two reasons now, where it used to be only the first: more entries than a
-  # message holds buttons for, or two entries whose titles read alike. A reply button
-  # carries a title and nothing else — WhatsappApi::Resources::Messages drops the
-  # description a list row shows — so entries reading alike are indistinguishable there.
-  # #row_texts settles most of that before this is asked, by naming a repeated title after
-  # its own phase; what is left for the second reason is the collision it cannot resolve,
-  # which is two phases carrying the same name as well as the same action.
-  def list_required?(entries)
-    titles = entries.map { |entry| entry[:title] }
-
-    !::Whatsapp.buttons?(titles.size) || titles.uniq.size != titles.size
   end
 
   def actionable_phases(projekt)
@@ -190,24 +205,43 @@ module Whatsapp::ProjektCardActions
     I18n.t(ACTION_LABEL_SCOPE, locale: ::Whatsapp.default_locale, default: {}).keys.map(&:to_s)
   end
 
+  # A submission phase the chat cannot take a submission into — the portal has
+  # switched the bot off as a channel, or closed submissions — gets no row of its
+  # own. Its only label is "Vorschlag erstellen", and a card saying that nothing can
+  # be submitted here, above a button offering to, was a button leading to a bare
+  # link. What is already in the phase stays reachable: #contributions_entry is
+  # chosen from every phase, this one included.
+  def closed_to_chat_submission?(projekt_phase)
+    return false if !::Whatsapp::EligiblePhasesQuery::PHASE_CLASSES.include?(projekt_phase.class)
+
+    !::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+  end
+
   # Which pill the phase gets, and the split is EligiblePhasesQuery's rather than a
   # list of its own: a phase the bot can take a submission into enters the drafting
   # flow on the tap, and every other one is acted on where the action actually lives,
-  # which is the portal. That also covers a proposal phase whose portal has switched
-  # the bot off as a submission channel — still open on the website, so still worth
-  # naming, but as a link.
+  # which is the portal. A proposal phase whose portal has switched the bot off as a
+  # submission channel used to be named here as a link; it no longer reaches this
+  # (#closed_to_chat_submission?).
+  #
+  # So a submission phase that does reach it is eligible already, and is not asked a
+  # second time: eligible? loads a budget phase's heading, and a card asked it twice
+  # per phase.
   def action_for(projekt_phase)
-    return :idea_start if ::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+    if ::Whatsapp::EligiblePhasesQuery::PHASE_CLASSES.include?(projekt_phase.class)
+      return :idea_start
+    end
 
     :phase_open
   end
 
-  def action_entry(projekt_phase, phase_facts, row_text)
+  def action_entry(projekt_phase, row_lines)
     entry(
       action: action_for(projekt_phase),
       projekt_phase: projekt_phase,
-      title: row_text.title,
-      description: phase_description(phase_facts, row_text.note)
+      title: row_lines&.dig(:title),
+      description: row_lines&.dig(:description),
+      button_title: row_lines&.dig(:button_title)
     )
   end
 
@@ -217,22 +251,6 @@ module Whatsapp::ProjektCardActions
   # every proposal and formular row of every card.
   def markable(phases)
     phases.select { |projekt_phase| scoped_label(VOTED_LABEL_SCOPE, projekt_phase).present? }
-  end
-
-  # The line under the title: whichever of the phase's two identities the title left for
-  # it, and the closing date. The date as well, because that half need not differ on its
-  # own — a portal running four voting phases may have left two of the ballots named
-  # alike — and two rows reading alike in every field are a list WhatsApp refuses
-  # outright, where the same two dated apart send and read fine. Written through
-  # DatePhrase like every other date the bot shows, so it cannot arrive as a tappable
-  # phone number.
-  def phase_description(phase_facts, note)
-    return if phase_facts.blank?
-
-    [note, ::Whatsapp::DatePhrase.absolute(phase_facts.ends_on)]
-      .compact_blank
-      .join(NOTE_SEPARATOR)
-      .presence
   end
 
   # One entry rather than one per phase: the ticket asks for the phases' actions and
@@ -247,11 +265,14 @@ module Whatsapp::ProjektCardActions
 
     return if projekt_phase.blank?
 
+    title = ::Whatsapp.copy("whatsapp.bot.buttons.phase_contributions")
+
     entry(
       action: :phase_contributions,
       projekt_phase: projekt_phase,
-      title: ::Whatsapp.copy("whatsapp.bot.buttons.phase_contributions"),
-      description: facts[projekt_phase.id]&.name
+      title: title,
+      description: facts[projekt_phase.id]&.name,
+      button_title: button_title(title)
     )
   end
 
@@ -285,133 +306,46 @@ module Whatsapp::ProjektCardActions
   # Every phase's two lines, worked out over the whole set at once. Whether a title says
   # enough to tell its row apart is a property of the set and not of the phase: "Jetzt
   # abstimmen" names the action on a card with one open vote and names nothing on a card
-  # with four. Cut to length last, once the wording is settled, so the budget is spent on
-  # the words that survived the comparison rather than on the ones about to be replaced.
+  # with four. Split into the row's two lines last, once the wording is settled, so the
+  # room is spent on the words that survived the comparison rather than on the ones about
+  # to be replaced.
+  #
+  # Split rather than cut (Whatsapp::ListRowText): two ballots named "WhatsApp-Test:
+  # Grundfragen …" that part company past the title's twenty-fourth character used to
+  # come out as the same row twice, over the same line underneath when both close on the
+  # same day. The line underneath now carries on with the name, ahead of the note and the
+  # closing date. The title whole goes along beside the two lines, for a card small
+  # enough to be sent as buttons (#buttons), which show no second line to carry it on.
   def row_texts(phases, facts, voted_ids)
     written = phases.index_by(&:id).transform_values do |projekt_phase|
       written_row(projekt_phase, facts[projekt_phase.id], voted_ids)
     end
-    length = title_length(written.values.count { |row| row.title.present? })
-    rows = told_apart(written, facts)
-    cut_rows = rows.transform_values do |row|
-      RowText.new(
-        title: ::Whatsapp::AssistantActions.truncated(row.title, length: length),
-        note: row.note,
-        named: row.named
-      )
-    end
 
-    kept_apart(rows, cut_rows, facts, length)
-  end
-
-  # Titles the cut made alike again, told apart after all. #told_apart compares
-  # the words in full, so two ballots named "WhatsApp-Test: Grundfragen …" that
-  # part company past the twenty-fourth character pass it as different and come
-  # out of the cut as the same row twice — over the same line underneath, when
-  # both close on the same day. Such a row has its name cut where it parts from
-  # the others rather than at its end, and the line underneath opens with the
-  # name as far as it fits there.
-  #
-  # Only named rows: the name is the one thing on a row that can differ, and an
-  # action label repeated is #told_apart's to settle. And only against names
-  # that do differ — two ballots a portal named the same stay as they are,
-  # which #log_entries_reading_alike is there to say.
-  def kept_apart(rows, cut_rows, facts, length)
-    names = rows.to_h { |phase_id, row| [phase_id, row_name(row, facts[phase_id])] }
-    alike =
-      cut_rows
-        .keys
-        .select { |phase_id| names[phase_id].present? }
-        .group_by { |phase_id| cut_rows[phase_id].title }
-        .values
-        .select { |phase_ids| phase_ids.size > 1 }
-
-    alike.each_with_object(cut_rows.dup) do |phase_ids, kept|
-      phase_ids.each do |phase_id|
-        neighbours = phase_ids.map { |other_id| names[other_id] } - [names[phase_id]]
-
-        next if neighbours.empty?
-
-        kept[phase_id] = apart_row(
-          rows[phase_id], names[phase_id], neighbours, facts[phase_id], length
-        )
-      end
+    told_apart(written, facts).to_h do |phase_id, row|
+      [phase_id, row_lines(row, facts[phase_id])]
     end
   end
 
-  # The name a row's title carries, where it carries one at all.
-  def row_name(row, phase_facts)
-    return if !row.named
-
-    phase_facts&.name.to_s.squish.presence
+  # The date as well as the note, because that half need not differ on its own — a
+  # portal running four voting phases may have left two of the ballots named alike — and
+  # two rows reading alike in every field are a list WhatsApp refuses outright, where the
+  # same two dated apart send and read fine. Written through DatePhrase like every other
+  # date the bot shows, so it cannot arrive as a tappable phone number.
+  def row_lines(row, phase_facts)
+    ::Whatsapp::ListRowText.call(
+      name: row.title,
+      notes: [row.note, ::Whatsapp::DatePhrase.absolute(phase_facts&.ends_on)]
+    )&.merge(button_title: button_title(row.title))
   end
 
-  # One row of a set that read alike once cut: the name in its title cut where
-  # it parts from its neighbours, and the name again at the head of the line
-  # underneath, in whatever room the note and the date leave there.
-  def apart_row(row, name, neighbours, phase_facts, length)
-    title = row.title.to_s.squish
-    name_room = length - (title.length - name.length)
-    apart_title = title.sub(name) { cut_apart(name, neighbours, name_room) || name }
-    rest = [row.note, ::Whatsapp::DatePhrase.absolute(phase_facts&.ends_on)].compact_blank
-    rest_length = rest.sum { |part| part.length + NOTE_SEPARATOR.length }
-    note_name = cut_apart(name, neighbours, ::Whatsapp::MAX_ROW_DESCRIPTION_LENGTH - rest_length)
+  # The title as a reply button would carry it: whole, or not at all. A button cut
+  # to its twenty characters is the "WhatsApp-Test: Grundf…" that could not be told
+  # from its neighbour, so a title that does not fit keeps the card a list.
+  def button_title(title)
+    text = title.to_s.squish
+    length = ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH
 
-    RowText.new(
-      title: ::Whatsapp::AssistantActions.truncated(apart_title, length: length),
-      note: [note_name, row.note].compact_blank.join(NOTE_SEPARATOR),
-      named: true
-    )
-  end
-
-  # The name cut to `length` around where it parts from its neighbours rather
-  # than at its end. What it shares with them says nothing about which row is
-  # which, so that is what gives way: the ellipsis goes in front, and the words
-  # from the one they differ in onwards are kept, filled back towards the start
-  # as far as the room allows. Where they part early enough for an ordinary cut
-  # to show it, the ordinary cut is what it gets.
-  def cut_apart(name, neighbours, length)
-    return name if name.length <= length
-
-    omission = ::Whatsapp::AssistantActions::TRUNCATION_OMISSION
-    room = length - omission.length
-
-    return if room < 1
-
-    parted_at = neighbours.map { |other| shared_prefix_length(name, other) }.max.to_i
-
-    if parted_at < room
-      name.truncate(length, omission: omission)
-    else
-      omission + tail_from(name, parted_at, room)
-    end
-  end
-
-  # The end of the name that fits `room`, beginning no later than the word it
-  # parts from its neighbours in: that word and the rest cut short where they
-  # are longer, filled back towards the start by whole words where shorter.
-  def tail_from(name, parted_at, room)
-    word_start = name.rindex(" ", parted_at)&.succ.to_i
-    tail = name[word_start..]
-
-    if tail.length > room
-      return tail.truncate(room, omission: ::Whatsapp::AssistantActions::TRUNCATION_OMISSION)
-    end
-
-    start = name.length - room
-    boundary = name.index(" ", start - 1)
-
-    if boundary.present? && boundary < word_start
-      start = boundary.succ
-    end
-
-    name[start..]
-  end
-
-  def shared_prefix_length(text, other)
-    shorter = [text.length, other.length].min
-
-    (0...shorter).find { |index| text[index] != other[index] } || shorter
+    text.presence if ::Whatsapp::AssistantActions.fits?(text, length)
   end
 
   # What a row says before anything is done about its neighbours.
@@ -494,23 +428,6 @@ module Whatsapp::ProjektCardActions
     end
   end
 
-  # The characters a title may spend. A set of rows is sent as reply buttons or behind the
-  # list picker depending only on how many there are, so a title has to be written to the
-  # button's smaller budget unless this card cannot be sent as buttons at all — only then
-  # are the four extra characters a list row allows safe to spend on it.
-  #
-  # Counted over the labelled phases alone rather than over the finished entries: the
-  # trailing contributions row only ever makes a card longer, so leaving it out can
-  # understate the count but never overstate it, and understating it only costs four
-  # characters where overstating it would ship a title WhatsApp cuts mid-word.
-  def title_length(labelled_count)
-    if ::Whatsapp.buttons?(labelled_count)
-      ::Whatsapp::AssistantActions::MAX_LABEL_LENGTH
-    else
-      ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
-    end
-  end
-
   # The voted wording where the phase type has one and the ordinary label where it has
   # none, so a marked phase nobody wrote a word for keeps its row rather than losing it
   # — a blank title is what #entry drops.
@@ -542,11 +459,11 @@ module Whatsapp::ProjektCardActions
     ::Whatsapp.copy("#{scope}.#{projekt_phase.name}", default: nil)
   end
 
-  # The description travels on every entry and is read by whichever form the card
-  # takes: WhatsappApi::Resources::Messages puts it under the row of a list and
-  # ignores it on a reply button, which holds a title and nothing else.
-  # A row is told from the one above it by its title and, in list form, by the line
-  # under it, so two rows alike in both are two the citizen cannot choose between —
+  # The description travels on every entry: WhatsappApi::Resources::Messages puts it
+  # under the row of the list the card is sent as, and a card sent as buttons
+  # (#buttons) carries none of it.
+  # A row is told from the one above it by its title and by the line under it, so two
+  # rows alike in both are two the citizen cannot choose between —
   # and a list carrying them is one WhatsApp refuses outright, which loses the whole
   # card rather than one row of it.
   #
@@ -584,13 +501,14 @@ module Whatsapp::ProjektCardActions
     )
   end
 
-  def entry(action:, projekt_phase:, title:, description:)
+  def entry(action:, projekt_phase:, title:, description:, button_title: nil)
     return if title.blank?
 
     {
       id: ::Whatsapp::FlowActions.id_for(action: action, param: projekt_phase.id),
       title: title,
-      description: description
+      description: description,
+      **{ button_title: button_title }.compact
     }
   end
 end

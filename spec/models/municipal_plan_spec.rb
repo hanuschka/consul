@@ -1,0 +1,465 @@
+require "rails_helper"
+
+describe MunicipalPlan do
+  let(:officer) { create(:municipal_plan_officer) }
+
+  describe "Aktualisierungsdatum and Versionsnummer" do
+    let(:plan) { create(:municipal_plan, responsible: officer) }
+
+    it "starts a draft at 0.1 and stamps today" do
+      expect(plan.version).to eq("0.1")
+      expect(plan.content_updated_at).to eq(Date.current)
+    end
+
+    it "counts draft edits upwards within the 0 series" do
+      plan.update!(contact_name: "Kai Ostermann")
+
+      expect(plan.reload.version).to eq("0.2")
+    end
+
+    it "moves to 1.0 on the first publication" do
+      expect { plan.update!(status: "published") }
+        .to change { plan.reload.version }.from("0.1").to("1.0")
+    end
+
+    it "does not advance Aktualisierungsdatum on publication" do
+      plan.update_columns(content_updated_at: Date.current - 10.days)
+
+      expect { plan.update!(status: "published") }
+        .not_to change { plan.reload.content_updated_at }
+    end
+
+    it "never returns to the 0 series once published" do
+      plan.update!(status: "published")
+      plan.update!(contact_name: "Kai Ostermann")
+      plan.update!(status: "draft")
+
+      expect(plan.reload.version).to eq("1.1")
+
+      plan.update!(status: "published")
+
+      expect(plan.reload.version).to eq("1.1")
+    end
+
+    it "advances both when a plain content field changes" do
+      plan.update!(status: "published")
+
+      travel_to(Date.current + 3.days) do
+        expect { plan.update!(contact_name: "Kai Ostermann") }
+          .to change { plan.reload.version }.from("1.0").to("1.1")
+
+        expect(plan.content_updated_at).to eq(Date.current)
+      end
+    end
+
+    it "advances both when a translated content field changes" do
+      plan.update!(status: "published")
+
+      expect { plan.update!(processing_status: "Neuer Stand") }
+        .to change { plan.reload.version }.from("1.0").to("1.1")
+    end
+
+    it "leaves both untouched when only the sort position changes" do
+      expect { plan.update!(given_order: 5) }.not_to change { plan.reload.version }
+    end
+
+    it "leaves both untouched when the status changes without a first publication" do
+      plan.update!(status: "published")
+
+      expect { plan.update!(status: "archived") }.not_to change { plan.reload.version }
+    end
+
+    it "counts the minor part upwards without ever reaching 2" do
+      plan.update!(status: "published")
+      9.times { |n| plan.update!(contact_phone: "0364#{n}") }
+
+      expect(plan.reload.version).to eq("1.9")
+
+      plan.update!(contact_phone: "03649999")
+
+      expect(plan.reload.version).to eq("1.10")
+
+      plan.update!(contact_phone: "03648888")
+
+      expect(plan.reload.version).to eq("1.11")
+    end
+
+    it "advances both when register_content_change! is called for an association edit" do
+      expect { plan.register_content_change! }
+        .to change { plan.reload.version }.from("0.1").to("0.2")
+    end
+  end
+
+  describe "Entwurf und Freigabe" do
+    def missing_field_message(field)
+      I18n.t("activerecord.errors.models.municipal_plan.release_required",
+             field: MunicipalPlan.human_attribute_name(field))
+    end
+
+    it "saves an Entwurf that carries nothing but a Titel" do
+      expect(MunicipalPlan.new(title: "Nur ein Titel")).to be_valid
+    end
+
+    it "still refuses an Entwurf without a Titel" do
+      expect(MunicipalPlan.new).not_to be_valid
+    end
+
+    it "names every missing field when that Entwurf is published" do
+      plan = MunicipalPlan.new(title: "Nur ein Titel", status: "published")
+
+      expect(plan).not_to be_valid
+
+      MunicipalPlan::RELEASE_REQUIRED_FIELDS.each do |field|
+        expect(plan.errors[:base]).to include(missing_field_message(field))
+      end
+
+      expect(plan.errors[:base])
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.districts_required"))
+      expect(plan.errors[:base])
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.topics_required"))
+    end
+
+    it "counts an emptied rich text field as missing" do
+      plan = build(:municipal_plan, responsible: officer, status: "published",
+                                    processing_status: "<p>&nbsp;</p>")
+
+      expect(plan).not_to be_valid
+      expect(plan.errors[:base]).to include(missing_field_message(:processing_status))
+    end
+
+    it "publishes once every required field is filled" do
+      expect(build(:municipal_plan, :published, responsible: officer)).to be_valid
+    end
+
+    it "refuses to archive an Entwurf that was never complete" do
+      expect(MunicipalPlan.new(title: "Nur ein Titel", status: "archived")).not_to be_valid
+    end
+  end
+
+  describe "automatisches Archivieren" do
+    let!(:due) do
+      create(:municipal_plan, :published, responsible: officer, archive_on: Date.current - 1)
+    end
+    let!(:due_today) do
+      create(:municipal_plan, :published, responsible: officer, archive_on: Date.current)
+    end
+    let!(:later) do
+      create(:municipal_plan, :published, responsible: officer, archive_on: Date.current + 1)
+    end
+    let!(:undated) { create(:municipal_plan, :published, responsible: officer) }
+
+    def auto_archive(enabled)
+      allow(Setting).to receive(:[]).and_call_original
+      allow(Setting).to receive(:[]).with("municipal_plans.auto_archive").and_return(enabled)
+    end
+
+    it "leaves everything alone while the setting is off" do
+      auto_archive(false)
+
+      MunicipalPlan.apply_due_archiving!
+
+      expect([due, due_today, later, undated].map { |plan| plan.reload.status }).to all(eq("published"))
+    end
+
+    it "archives what is due once the setting is on" do
+      auto_archive(true)
+
+      MunicipalPlan.apply_due_archiving!
+
+      expect(due.reload).to be_archived
+      expect(due_today.reload).to be_archived
+      expect(later.reload).to be_published
+      expect(undated.reload).to be_published
+    end
+
+    it "moves neither Aktualisierungsdatum nor Versionsnummer" do
+      auto_archive(true)
+      before_state = due.attributes.slice("version", "content_updated_at")
+
+      MunicipalPlan.apply_due_archiving!
+
+      expect(due.reload.attributes.slice("version", "content_updated_at")).to eq(before_state)
+    end
+
+    it "leaves an Entwurf out of it" do
+      auto_archive(true)
+      draft = create(:municipal_plan, responsible: officer, archive_on: Date.current - 1)
+
+      MunicipalPlan.apply_due_archiving!
+
+      expect(draft.reload).to be_draft
+    end
+
+    it "leaves a working copy out of it" do
+      auto_archive(true)
+      copy = MunicipalPlans::WorkingCopyService.call(due)
+      copy.update_columns(archive_on: Date.current - 1, status: "published")
+
+      MunicipalPlan.apply_due_archiving!
+
+      expect(copy.reload.status).to eq("published")
+    end
+  end
+
+  describe "badges in the archive" do
+    it "drops the recency badges once a Vorhaben is archived" do
+      plan = create(:municipal_plan, :published, responsible: officer, formal_participation: true)
+
+      expect(plan.badges).to include(:new)
+
+      plan.update!(status: "archived")
+
+      expect(plan.badges).not_to include(:new, :updated)
+      expect(plan.badges).to include(:formal_participation)
+    end
+  end
+
+  describe "badges" do
+    let(:plan) { create(:municipal_plan, responsible: officer) }
+
+    def age(created:, updated:)
+      plan.update_columns(created_at: created.days.ago, content_updated_at: Date.current - updated)
+      plan.reload
+    end
+
+    it "marks a brand new Vorhaben as new, not as updated" do
+      expect(plan.badges).to include(:new)
+      expect(plan.badges).not_to include(:updated)
+    end
+
+    it "marks a Vorhaben updated 29 days ago as updated" do
+      age(created: 400, updated: 29)
+
+      expect(plan.badges).to include(:updated)
+    end
+
+    it "leaves a Vorhaben updated 31 days ago unmarked" do
+      age(created: 400, updated: 31)
+
+      expect(plan.badges).not_to include(:updated)
+      expect(plan.badges).not_to include(:new)
+    end
+
+    it "carries neither badge when both dates are backdated, as after an import" do
+      age(created: 400, updated: 400)
+
+      expect(plan.badges & %i[new updated]).to be_empty
+    end
+
+    it "shows the participation flags that are set" do
+      plan.update!(formal_participation: false, informal_participation: true)
+
+      expect(plan.badges).to include(:informal_participation)
+      expect(plan.badges).not_to include(:formal_participation)
+    end
+
+    describe "scopes" do
+      it "finds new Vorhaben" do
+        fresh = plan
+        old = create(:municipal_plan, responsible: officer)
+        old.update_columns(created_at: 400.days.ago, content_updated_at: Date.current - 400)
+
+        expect(MunicipalPlan.newly_added).to eq([fresh])
+      end
+
+      it "finds updated Vorhaben without the new ones" do
+        plan
+        updated = create(:municipal_plan, responsible: officer)
+        updated.update_columns(created_at: 400.days.ago, content_updated_at: Date.current - 29)
+
+        expect(MunicipalPlan.recently_updated).to eq([updated])
+      end
+    end
+  end
+
+  describe "Bürgerbeteiligung formell and informell" do
+    [[true, true], [true, false], [false, true], [false, false]].each do |formal, informal|
+      it "accepts formell #{formal} with informell #{informal}" do
+        plan = build(:municipal_plan, responsible: officer,
+                                      formal_participation: formal,
+                                      informal_participation: informal)
+
+        expect(plan).to be_valid
+      end
+    end
+
+    it "keeps a separate justification text for each" do
+      plan = create(:municipal_plan, responsible: officer,
+                                     formal_participation: false,
+                                     informal_participation: true,
+                                     formal_participation_reason: "Keine formelle Beteiligung vorgesehen",
+                                     informal_participation_reason: "Bürgerwerkstatt im Herbst")
+
+      expect(plan.reload.formal_participation_reason).to eq("Keine formelle Beteiligung vorgesehen")
+      expect(plan.informal_participation_reason).to eq("Bürgerwerkstatt im Herbst")
+    end
+  end
+
+  describe "Ortsteile" do
+    it "accepts four districts" do
+      plan = build(:municipal_plan, responsible: officer)
+      plan.district_assignments.clear
+      4.times { plan.district_assignments.build(district: create(:registered_address_district)) }
+
+      expect(plan).to be_valid
+    end
+
+    it "rejects a fifth district" do
+      plan = build(:municipal_plan, responsible: officer)
+      plan.district_assignments.clear
+      5.times { plan.district_assignments.build(district: create(:registered_address_district)) }
+
+      expect(plan).not_to be_valid
+      expect(plan.errors[:base])
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.too_many_districts", count: 4))
+    end
+
+    it "requires at least one district for publication" do
+      plan = build(:municipal_plan, :published, responsible: officer)
+      plan.district_assignments.clear
+
+      expect(plan).not_to be_valid
+    end
+
+    it "lets an Entwurf go without one" do
+      plan = build(:municipal_plan, responsible: officer)
+      plan.district_assignments.clear
+
+      expect(plan).to be_valid
+    end
+  end
+
+  describe "Kartenposition" do
+    it "requires a map location for publication" do
+      plan = build(:municipal_plan, :published, responsible: officer)
+      plan.map_location = nil
+
+      expect(plan).not_to be_valid
+      expect(plan.errors[:base])
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.release_required",
+                           field: MunicipalPlan.human_attribute_name(:map_location)))
+    end
+
+    it "lets an Entwurf go without one" do
+      plan = build(:municipal_plan, responsible: officer)
+      plan.map_location = nil
+
+      expect(plan).to be_valid
+    end
+
+    it "lets an imported Vorhaben go without one" do
+      plan = build(:municipal_plan, :published, responsible: officer, legacy_id: "1048980")
+      plan.map_location = nil
+
+      expect(plan).to be_valid
+    end
+
+    it "still holds an imported Vorhaben to every other requirement" do
+      plan = MunicipalPlan.new(title: "Nur ein Titel", status: "published", legacy_id: "1048980")
+
+      expect(plan).not_to be_valid
+      expect(plan.errors[:base])
+        .not_to include(I18n.t("activerecord.errors.models.municipal_plan.release_required",
+                               field: MunicipalPlan.human_attribute_name(:map_location)))
+      expect(plan.errors[:base])
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.release_required",
+                           field: MunicipalPlan.human_attribute_name(:short_description)))
+    end
+
+    it "lets the working copy of an imported Vorhaben go without one" do
+      plan = create(:municipal_plan, :published, responsible: officer, legacy_id: "1048980")
+      plan.map_location.destroy!
+      copy = MunicipalPlans::WorkingCopyService.call(plan.reload)
+      copy.submitted_at = Time.current
+
+      expect(copy.legacy_id).to be_nil
+      expect(copy).to be_valid
+    end
+
+    it "exposes the district derived from the pin" do
+      plan = create(:municipal_plan, responsible: officer)
+
+      expect(plan).to respond_to(:district)
+      expect(plan.map_location).to be_present
+    end
+  end
+
+  describe "topics" do
+    it "requires at least one topic for publication" do
+      plan = build(:municipal_plan, :published, responsible: officer)
+      plan.topic_assignments.clear
+
+      expect(plan).not_to be_valid
+    end
+
+    it "lets an Entwurf go without one" do
+      plan = build(:municipal_plan, responsible: officer)
+      plan.topic_assignments.clear
+
+      expect(plan).to be_valid
+    end
+  end
+
+  describe "activity on the Vorhabenliste home" do
+    let!(:plan) { create(:municipal_plan, :published, responsible: officer) }
+
+    def activities
+      SectionActivity.for_section("municipal_plans").where(trackable: plan)
+    end
+
+    it "records the creation of a Vorhaben" do
+      expect(activities.pluck(:action)).to eq(["created"])
+    end
+
+    it "records a status change with the changed field" do
+      plan.update!(status: "archived")
+
+      expect(activities.find_by(action: "updated").metadata["changed_fields"]).to eq(["status"])
+    end
+
+    it "ignores a change of the editorial order" do
+      expect { plan.update!(given_order: 3) }.not_to change { SectionActivity.count }
+    end
+
+    it "ignores working copies" do
+      expect { MunicipalPlans::WorkingCopyService.call(plan) }.not_to change { SectionActivity.count }
+    end
+  end
+
+  describe ".changed_since and #last_public_change_at" do
+    let!(:plan) do
+      travel_to(Time.zone.local(2026, 9, 1, 10)) do
+        create(:municipal_plan, :published, released_at: Time.current)
+      end
+    end
+
+    it "finds a Vorhaben released at or after the given time" do
+      expect(MunicipalPlan.changed_since(Time.zone.local(2026, 9, 1, 10))).to include(plan)
+      expect(MunicipalPlan.changed_since(Time.zone.local(2026, 9, 2))).not_to include(plan)
+    end
+
+    it "finds a Vorhaben archived or re-activated after its release" do
+      travel_to(Time.zone.local(2026, 9, 10, 8)) { plan.update!(status: "archived") }
+
+      expect(MunicipalPlan.changed_since(Time.zone.local(2026, 9, 10))).to include(plan)
+      expect(plan.last_public_change_at).to eq(Time.zone.local(2026, 9, 10, 8))
+    end
+
+    it "ignores changes that are not public" do
+      travel_to(Time.zone.local(2026, 9, 10, 8)) do
+        plan.update!(given_order: 5, archive_on: Date.new(2027, 1, 1))
+      end
+
+      expect(MunicipalPlan.changed_since(Time.zone.local(2026, 9, 10))).not_to include(plan)
+      expect(plan.last_public_change_at).to eq(Time.zone.local(2026, 9, 1, 10))
+    end
+
+    it "reads the same time from the list query" do
+      travel_to(Time.zone.local(2026, 9, 10, 8)) { plan.update!(status: "archived") }
+
+      listed = MunicipalPlan.with_last_status_change_at.find(plan.id)
+
+      expect(listed.last_public_change_at).to eq(plan.last_public_change_at)
+    end
+  end
+end

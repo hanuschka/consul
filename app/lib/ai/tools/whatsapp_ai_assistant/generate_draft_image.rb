@@ -6,7 +6,7 @@ class Ai::Tools::WhatsappAiAssistant::GenerateDraftImage <
               "words only where the citizen says they have no photo of their own without having " \
               "tapped. It is a slow external call, so tell them it is being made before you call " \
               "this. A failure is not a problem worth stopping for: the picture is optional, so " \
-              "say it did not work and go on to publishing. It refuses until request_photo has " \
+              "say it did not work and go on without it. It refuses until request_photo has " \
               "shown the citizen the notices about pictures for this draft."
 
   def diagnostic_step
@@ -34,7 +34,8 @@ class Ai::Tools::WhatsappAiAssistant::GenerateDraftImage <
     {
       attached: true,
       hint: "Show them the picture with show_draft_for_confirmation and ask whether the " \
-            "contribution can go in with it."
+            "contribution is right with it. The place may still be to come: the preview's " \
+            "first button names what follows, so do not ask about publishing before it does."
     }
   end
 

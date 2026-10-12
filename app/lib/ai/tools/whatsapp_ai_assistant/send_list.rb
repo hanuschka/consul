@@ -13,22 +13,33 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
   MAX_ROWS = ::Whatsapp::MAX_OFFERED_LIST_ROWS
 
   # WhatsApp truncates a row description past this without saying so.
-  MAX_DESCRIPTION_LENGTH = 72
+  MAX_DESCRIPTION_LENGTH = ::Whatsapp::MAX_ROW_DESCRIPTION_LENGTH
+
+  # The most of a name a row can show once it is split over its two lines
+  # (Whatsapp::ListRowText). Labels used to be refused past the title's twenty-four
+  # characters, and the names read off a record — a proposal's title, a projekt's —
+  # were cut there instead: two ballots named "WhatsApp-Test: Grundfragen …" came out
+  # as the same row twice. Past this even the split cannot show the name, so a label
+  # the model writes that long is still refused.
+  MAX_NAME_LENGTH = ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH + MAX_DESCRIPTION_LENGTH
 
   description "Sends the citizen a selectable list — up to ten rows, each with a label you write " \
               "and an optional one-line description. Use it instead of buttons whenever there " \
               "are more than three things to choose between, or when each option needs a line " \
               "explaining it. Every row is yours to write, and every row needs an action_id " \
-              "from the same vocabulary as reply_with_actions. Nothing is sent unless every " \
+              "from the same vocabulary as reply_with_actions — where the steps with fixed " \
+              "labels keep them, except that an idea_start row is named after its projekt. " \
+              "Nothing is sent unless every " \
               "row can be: a row whose " \
               "action is unknown, whose record no longer exists, whose action id repeats " \
               "another row's, or which reads exactly like another row without a description " \
-              "to tell the two apart refuses the whole list, because the sentence you wrote " \
-              "above it " \
-              "names a number of rows and a list that quietly held fewer would contradict it. " \
-              "That sentence names how many of the things offered the list holds — a row that " \
-              "shows more or leads out of the question is not one of them — and not how many " \
-              "there are altogether, which belongs in the same sentence in words. A list carries no " \
+              "to tell the two apart refuses the whole list, because a list that quietly held " \
+              "fewer would leave out a row the sentence above it offers. That sentence never " \
+              "says how many rows the list holds — the citizen sees them — and a number in it " \
+              "is a total a tool returned, said as the total. Nor does it list or number the " \
+              "rows again: a sentence naming each of them above a list of the same is a wall " \
+              "of text the list was meant to replace. The button that opens the list is " \
+              "labelled for you from what its rows are. A list carries no " \
               "buttons beside it, so any way out of the " \
               "question has to be a row of its own. Rows cannot hold links or markup — put a URL " \
               "in the body above if one is needed. This sends the message itself: do not write " \
@@ -38,36 +49,31 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
     string :body,
       description: "The sentence above the list, in the citizen's language, laid out as the " \
                    "style rules require."
-    string :button_label,
-      description: "What the button that opens the list says, at most " \
-                   "#{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} characters counting " \
-                   "spaces (\"Projekt wählen\", \"Auswählen\"). Count them: a longer one is " \
-                   "refused, and nothing is sent until it is shorter."
     array :rows,
       of: :object,
       description: "Up to ten rows, most useful first. Each is {\"action_id\": ..., " \
                    "\"label\": ..., \"description\": ...}, where description is optional. " \
-                   "A row label holds " \
+                   "A row title holds " \
                    "#{::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH} characters counting " \
-                   "spaces and a longer one is refused, so write the words that tell this row " \
-                   "from the others first and leave the rest out; the description below it " \
-                   "holds #{MAX_DESCRIPTION_LENGTH} and is where the rest belongs. " \
+                   "spaces; a longer label is split, its opening words on top and the rest " \
+                   "carried on in the line below, ahead of the description, so write the " \
+                   "words that tell this row from the others first. A label past " \
+                   "#{MAX_NAME_LENGTH} characters is refused. The line below holds " \
+                   "#{MAX_DESCRIPTION_LENGTH}, shared between what the label ran over and the " \
+                   "description. " \
                    "Parameterless action ids: " \
                    "#{::Whatsapp::AssistantActions.offerable_action_names.join(", ")}. " \
                    "With a record id after a dash: " \
                    "#{::Whatsapp::AssistantActions.parameterised_action_names.join(", ")}."
   end
 
-  def execute(body:, button_label:, rows:)
+  def execute(body:, rows:)
     refusal = refuse_before_preview
 
     return refusal if refusal.present?
     return blank_body_error if body.to_s.strip.blank?
 
-    overlong =
-      refuse_overlong_button_labels(
-        rows, length: ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
-      ) || refuse_overlong_labels([button_label])
+    overlong = refuse_overlong_button_labels(rows, length: MAX_NAME_LENGTH)
 
     return overlong if overlong.present?
 
@@ -77,24 +83,20 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
     return unusable_rows_error if listed.empty?
     return partial_rows_error(offered: offered, listed: listed) if listed.size < offered.size
 
-    opener = ::Whatsapp::AssistantActions.truncated(button_label).presence ||
-             ::Whatsapp.copy("whatsapp.bot.buttons.choose")
+    row_ids = listed.map { |row| row[:id] }
+    opener = ::Whatsapp::AssistantActions.list_opener(row_ids)
     message = ::Whatsapp::Send.list(
       account: account, body: body.strip, button_label: opener, rows: listed
     )
 
     return send_refused_error if ::Whatsapp::Send.refused?(message)
 
-    row_ids = listed.map { |row| row[:id] }
-
     note_typing_hint_offered! if ::Whatsapp::FlowActions.projekt_choice?(row_ids)
 
     halt(
       [
-        "Sent a list of #{listed.size} rows: #{row_ids.join(", ")}.",
-        ::Whatsapp::AssistantActions.wording_note(
-          wording_offers(listed) << [button_label, opener]
-        )
+        "Sent a list of #{listed.size} rows, opened by \"#{opener}\": #{row_ids.join(", ")}.",
+        ::Whatsapp::AssistantActions.wording_note(wording_offers(listed))
       ].compact.join(" ")
     )
   end
@@ -104,9 +106,21 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
     def listable_rows(rows)
       with_pill_records(rows) do
         built = Array(rows).filter_map { |row| build(row) }.uniq { |row| row[:id] }
+        split = dated_where_alike(built).filter_map { |row| split_row(row) }
 
-        distinguishable(dated_where_alike(built)).first(MAX_ROWS)
+        distinguishable(split).first(MAX_ROWS)
       end
+    end
+
+    # The name over the row's two lines, once #dated_where_alike has compared the
+    # names whole: the title keeps the opening words and the line underneath carries
+    # on where it stopped, ahead of the description (Whatsapp::ListRowText).
+    def split_row(row)
+      lines = ::Whatsapp::ListRowText.call(name: row[:title], notes: [row[:description]])
+
+      return if lines.blank?
+
+      row.merge(lines).compact
     end
 
     # The exception to a name-only row (#name_only?): two of them under one name,
@@ -135,7 +149,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
 
       return row if description.blank?
 
-      row.merge(description: description.truncate(MAX_DESCRIPTION_LENGTH))
+      row.merge(description: description)
     end
 
     # Told apart by everything the citizen can read on them, which is the label and
@@ -154,15 +168,14 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       spec = row_value(row, "action_id")
       label = row_value(row, "label")
 
-      button =
-        ::Whatsapp::AssistantActions.offered_button(
-          spec: spec, label: label, conversation: conversation,
-          length: ::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH
-        )
+      button = ::Whatsapp::AssistantActions.offered_row(
+        spec: spec, label: label, conversation: conversation, length: MAX_NAME_LENGTH
+      )
 
       return if button.blank?
 
       written_labels[button[:id]] = label
+      sent_names[button[:id]] = button[:title]
 
       return button if name_only?(button)
 
@@ -172,14 +185,15 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
 
       return button if description.blank?
 
-      button.merge(description: description.truncate(MAX_DESCRIPTION_LENGTH))
+      button.merge(description: description)
     end
 
     # The phase and projekt selections: their row is the name alone. A second line
     # under a projekt's title says nothing that helps the citizen choose between
     # two projekts, and it is repeated back in their own reply. Enforced here
     # rather than asked for in the description, so the model cannot write one —
-    # the one line such a row can get is its phase's, from #dated_where_alike.
+    # all such a row can get underneath is the rest of a name too long for the
+    # title (#split_row) and its phase's line, from #dated_where_alike.
     def name_only?(button)
       ::Whatsapp::FlowActions.projekt_choice?([button[:id]])
     end
@@ -197,8 +211,15 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
       @written_labels ||= {}
     end
 
+    # The name each row went out with before it was split over the two lines. The
+    # model is told where that differs from what it wrote — a fixed label in place
+    # of its own — and not about the split, which keeps every word it wrote.
+    def sent_names
+      @sent_names ||= {}
+    end
+
     def wording_offers(listed)
-      listed.map { |row| [written_labels[row[:id]], row[:title]] }
+      listed.map { |row| [written_labels[row[:id]], sent_names[row[:id]]] }
     end
 
     def blank_body_error
@@ -218,7 +239,7 @@ class Ai::Tools::WhatsappAiAssistant::SendList < Ai::Tools::WhatsappAiAssistant:
                "apart, or more than #{MAX_ROWS} rows. Nothing was sent. These are the ones " \
                "that can be: #{listed.map { |row| row[:id] }.join(", ")}. Call this again with " \
                "exactly those — or with a description on each row that needs one — and a " \
-               "sentence naming how many you send."
+               "sentence that offers only those."
       }
     end
 

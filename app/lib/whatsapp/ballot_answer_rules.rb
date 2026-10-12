@@ -79,9 +79,9 @@ module Whatsapp::BallotAnswerRules
       "The vote closed #{::Whatsapp::DatePhrase.relative(end_date)} " \
         "(#{::Whatsapp::DatePhrase.absolute(end_date)}), so answers can no longer be changed."
     elsif end_date.present?
-      "Until the vote closes #{::Whatsapp::DatePhrase.relative(end_date)} " \
-        "(#{::Whatsapp::DatePhrase.absolute(end_date)}) the citizen can change or remove any " \
-        "of their answers #{change_location}. #{IN_CHAT_RULE} #{AFTER_CLOSE_RULE}"
+      "Until the vote closes on #{::Whatsapp::DatePhrase.absolute(end_date)} the citizen " \
+        "can change or remove any of their answers #{change_location}. #{IN_CHAT_RULE} " \
+        "#{AFTER_CLOSE_RULE}"
     else
       "The vote has no closing date: while it runs the citizen can change or remove any of " \
         "their answers #{change_location}. #{IN_CHAT_RULE}"

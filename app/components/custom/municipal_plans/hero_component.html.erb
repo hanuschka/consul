@@ -1,0 +1,44 @@
+<div class="municipal-plan-hero">
+  <% if chips? %>
+    <div class="municipal-plan-hero--chips">
+      <% if status_label.present? %>
+        <span class="municipal-plan-hero--chip -status"><%= status_label %></span>
+      <% end %>
+      <% if sorted_topics.any? %>
+        <span class="show-for-sr"><%= t("custom.municipal_plans.show.banner.topics") %>:</span>
+        <ul class="municipal-plan-hero--topics">
+          <% sorted_topics.each do |topic| %>
+            <li>
+              <%= link_to topic_path(topic), class: "municipal-plan-hero--chip", rel: "nofollow" do %>
+                <i class="fas fa-tag" aria-hidden="true"></i>
+                <%= topic.name %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  <% end %>
+
+  <h1 class="municipal-plan-hero--title"><%= municipal_plan.title %></h1>
+
+  <ul class="municipal-plan-hero--meta">
+    <% if district_names.any? %>
+      <li>
+        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+        <span class="show-for-sr"><%= t("custom.municipal_plans.show.banner.districts") %>:</span>
+        <%= district_names.join(", ") %>
+      </li>
+    <% end %>
+    <li>
+      <i class="fas fa-calendar" aria-hidden="true"></i>
+      <%= updated_on_label %>
+    </li>
+    <% if municipal_plan.version.present? %>
+      <li>
+        <i class="fas fa-hashtag" aria-hidden="true"></i>
+        <%= t("custom.municipal_plans.show.banner.version") %> <%= municipal_plan.version %>
+      </li>
+    <% end %>
+  </ul>
+</div>

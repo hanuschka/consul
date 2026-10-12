@@ -14,6 +14,7 @@ class Whatsapp::NotifyPhaseDeadlineJob < ApplicationJob
   BATCH_SIZE = 50
 
   def perform
+    ::Whatsapp.ensure_credentials_loaded!
     return if !::Whatsapp.enabled?
 
     notify(phases_ending_on(DAYS_BEFORE_DEADLINE.days.from_now.to_date), "deadline_approaching")

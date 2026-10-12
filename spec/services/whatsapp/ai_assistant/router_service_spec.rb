@@ -68,4 +68,51 @@ describe Whatsapp::AiAssistant::RouterService do
         .not_to raise_error
     end
   end
+
+  # One draft change, one preview: the tools that answer the citizen themselves are
+  # run one at a time, and once one has, the rest of the response is answered rather
+  # than run. ruby_llm 1.x ran every call of a batch after a halt, which is how a
+  # preview and a second answering tool from one response reached the citizen as two
+  # previews a few seconds apart.
+  describe "a response that calls two answering tools" do
+    let(:halt) { ToolHalt.new("Showed them the draft.") }
+    let(:preview_call) { double(:preview_call, id: "call_1") }
+    let(:reply_call) { double(:reply_call, id: "call_2") }
+    let(:chat) { double(:chat, ask: nil, awaiting_approval?: true, complete: nil, add_message: nil) }
+
+    before do
+      allow(chat).to receive(:pending_approvals).and_return([preview_call, reply_call], [reply_call])
+      allow(chat).to receive(:approve)
+      allow(chat).to receive(:run_tools) { service.send(:note_tool_halt, halt) }
+    end
+
+    def converse
+      service.send(:converse, chat, "Bitte den Standort wieder entfernen")
+    end
+
+    it "ends the turn on the first one" do
+      expect(converse).to eq(halt)
+    end
+
+    it "runs only the first one" do
+      converse
+
+      expect(chat).to have_received(:approve).with(preview_call).once
+      expect(chat).not_to have_received(:approve).with(reply_call)
+    end
+
+    it "answers the second one without running it" do
+      converse
+
+      expect(chat).to have_received(:add_message).with(
+        role: :tool, content: OpenaiApi::ToolLoop::SKIPPED_OUTPUT, tool_call_id: "call_2"
+      )
+    end
+
+    it "asks the model nothing more in that turn" do
+      converse
+
+      expect(chat).not_to have_received(:complete)
+    end
+  end
 end

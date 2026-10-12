@@ -1,0 +1,29 @@
+<% if @options.any? || @empty_text.present? %>
+  <%= render Shared::SidebarCardComponent.new(title: @title, icon_name: @icon) do %>
+
+    <div class="sidebar-filter-checkbox">
+      <% if @options.any? %>
+        <fieldset aria-describedby="<%= hint_id %>">
+          <legend class="show-for-sr"><%= @title %></legend>
+          <p id="<%= hint_id %>" class="show-for-sr"><%= t("custom.sidebar_filter.checkbox.updates_on_change") %></p>
+
+          <ul data-identifier="<%= @identifier %>">
+            <% @options.each do |option| %>
+              <li class="<%= "selected-option" if checked?(option[1]) %>">
+                <%= label_tag "#{@id_prefix}_#{option[1]}" do %>
+                  <%= check_box_tag "#{@identifier}[]", option[1], checked?(option[1]),
+                        id: "#{@id_prefix}_#{option[1]}", class: "js-sidebar-checkbox-filter" %>
+                  <%= option[0] %>
+                  <span class="checkmark"></span>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </fieldset>
+      <% else %>
+        <p><%= @empty_text %></p>
+      <% end %>
+    </div>
+
+  <% end %>
+<% end %>

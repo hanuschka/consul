@@ -66,6 +66,16 @@ module Whatsapp::AiAssistant::DecisionLog
   # The replayed history keeps a turn's arguments only until it scrolls out of the
   # window, and a reply reported days later has to be traced back to the page it was
   # read off and the numbers it was given.
+  #
+  # `additions_note_missing` is a preview refused because the draft proposes things
+  # the citizen never said and the model wrote no note naming them — the rate of the
+  # draft that would have gone in under their name unexplained.
+  #
+  # `preview_repeated` is a second preview of an unchanged draft or comment under the
+  # same citizen message, held back (Whatsapp::Conversation#claim_preview!), and
+  # `preview_outdated_tap` a publishing pill tapped under a preview of an earlier
+  # version, answered with the current one instead (Whatsapp::PreviewVersion). Both
+  # are the rate of a citizen answering a preview the bot had already replaced.
   EVENTS = %i[
     tool_called
     tool_result
@@ -82,6 +92,9 @@ module Whatsapp::AiAssistant::DecisionLog
     send_refused
     preview_required
     preview_skipped
+    additions_note_missing
+    preview_repeated
+    preview_outdated_tap
   ].freeze
 
   COUNTER_TTL = 40.days

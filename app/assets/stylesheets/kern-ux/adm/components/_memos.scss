@@ -239,37 +239,3 @@
   padding-left: var(--kern-16);
   border-left: 1px solid var(--kern-color-layout-border);
 }
-
-// --- Empty state (hidden as soon as the thread holds a note) ---
-.adm-memos-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--kern-8);
-  padding: var(--kern-24) var(--kern-16);
-  text-align: center;
-}
-
-.adm-memos-timeline:has(.adm-memo) .adm-memos-empty {
-  display: none;
-}
-
-.adm-memos-empty__icon {
-  font-size: 32px !important;
-  color: var(--kern-grey-350);
-}
-
-.adm-memos-empty__title {
-  margin: 0;
-  font-size: var(--kern-font-size-16);
-  font-weight: 600;
-  color: var(--kern-grey-700);
-}
-
-.adm-memos-empty__text {
-  max-width: 34rem;
-  margin: 0;
-  font-size: var(--kern-font-size-14);
-  line-height: 1.5;
-  color: var(--er-text-secondary);
-}

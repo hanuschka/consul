@@ -17,3 +17,9 @@
 <% end %>
 
 <%= render "adm/whatsapp/tabs" %>
+
+<% if @blocking_reasons.any? %>
+  <div class="kern-container mt-3">
+    <%= render "adm/whatsapp/blocking_reasons", reasons: @blocking_reasons %>
+  </div>
+<% end %>

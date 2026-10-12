@@ -10,8 +10,11 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
               "id of its support button and the link to open it — or several candidates when " \
               "more than one matches, so you can ask which they mean rather than guessing. " \
               "Call it before " \
-              "support_proposal, withdraw_support, draft_comment or send_link for a " \
-              "contribution; each of those needs the id this returns. Sends nothing."
+              "support_proposal, withdraw_support, start_comment, draft_comment or send_link for " \
+              "a contribution; each of those needs the id this returns. Sends nothing. When it " \
+              "finds one, the bot puts its support or withdraw button, and its comment button " \
+              "where comments are open, under your reply_with_actions reply itself — answer " \
+              "with that rather than send_link, which cannot carry them."
 
   parameters do
     string :title, description: "What the citizen called the contribution, in their own words"
@@ -38,25 +41,15 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
 
       conversation.store_support_proposal_id!(contribution.id)
       conversation.store_comment_proposal_id!(contribution.id)
+      ::Whatsapp::StatePills.focus_proposal(contribution.id)
     end
 
     # Supporting a budget investment is budget voting rather than a support click, so
     # only proposals report as supportable — the same distinction the two searches
     # behind this used to encode by being two searches.
     def summary_for(contribution)
-      contribution_candidate_summary(contribution).merge(
-        supportable: contribution.is_a?(::Proposal),
-        support_action_id: support_action_id(contribution),
+      ::Whatsapp::ContributionFacts.call(contribution, user: user).merge(
         url: ::Whatsapp::PublishedResourceUrl.call(contribution)
       ).compact
-    end
-
-    # Handed over rather than left for the model to compose, the way draft_proposal
-    # hands over its candidates'. Which way the pill goes is read off the vote when
-    # it is sent, and a proposal that can no longer be supported loses the pill there.
-    def support_action_id(contribution)
-      return if !contribution.is_a?(::Proposal)
-
-      "support_toggle-#{contribution.id}"
     end
 end

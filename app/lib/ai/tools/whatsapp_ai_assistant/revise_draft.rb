@@ -29,10 +29,11 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
       string
     end
     optional :additions_beyond_idea,
-      description: "With a revised text: what it still proposes that the citizen neither said " \
-                   "nor asked for, each as a short phrase — the additions reported so far, less " \
-                   "any they had taken out. Empty when nothing goes beyond their words any " \
-                   "more. Ignored when the text is kept." do
+      description: "With a revised text: what it still proposes or claims that the citizen " \
+                   "neither said nor asked for, each as a short phrase — the additions reported " \
+                   "so far, less any they had taken out. Empty when nothing goes beyond their " \
+                   "words any more, as after a tap on remove_additions; null keeps the " \
+                   "additions reported so far. Ignored when the text is kept." do
       array of: :string
     end
   end
@@ -87,7 +88,7 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
       # under the next preview never names a part the citizen already had removed.
       if text.present?
         conversation.reset_settled_slots!
-        conversation.store_additions_beyond_idea!(additions_beyond_idea)
+        restate_additions(additions_beyond_idea)
       end
 
       {
@@ -97,8 +98,19 @@ class Ai::Tools::WhatsappAiAssistant::ReviseDraft < Ai::Tools::WhatsappAiAssista
         },
         additions_beyond_idea: conversation.additions_beyond_idea.presence,
         hint: "Show them the revised draft with show_draft_for_confirmation and ask whether it " \
-              "can go in now — nothing can be published until they have seen this version."
+              "can go in now — nothing can be published until they have seen this version. " \
+              "While additions_beyond_idea remains, name it again in additions_note."
       }.compact
+    end
+
+    # Kept rather than cleared when the model left the list out. Emptied by
+    # omission, it dropped the note and the button that takes the additions out
+    # while the text still carried them; an empty list is the model saying that
+    # none remain.
+    def restate_additions(additions_beyond_idea)
+      return if additions_beyond_idea.nil?
+
+      conversation.store_additions_beyond_idea!(additions_beyond_idea)
     end
 
     def nothing_to_change_error

@@ -23,6 +23,12 @@ module Whatsapp::ProjektLink
     poll_ballot_url(Polls::PhaseBallotQuery.for(projekt_phase))
   end
 
+  # Where a phase the chat cannot finish is taken part in: the ballot where there is
+  # one, the phase's tab of the projekt page otherwise.
+  def participation_url(projekt_phase)
+    ballot_url(projekt_phase) || phase_url(projekt_phase)
+  end
+
   # The same address for a poll already in hand, which is what a list of them has.
   # Nothing the bot links to is reached through a request, so the host comes from
   # the app's canonical URL options rather than from the caller.

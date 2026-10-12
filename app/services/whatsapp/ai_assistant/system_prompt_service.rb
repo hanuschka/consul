@@ -98,9 +98,15 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
         A citizen who asks for the overview, or taps for it, gets one built from what applies
         right now: what is open to take part in, what they have already done, what there is to
-        read. Never a fixed set of capabilities recited by rote. Where nothing has changed since
-        the overview they were sent a message ago, say so in a line rather than sending it again
-        or dressing it up to look new.
+        read. Never a fixed set of capabilities recited by rote. Asked for it again, they get it
+        again, plainly and as it is — "Was kann ich hier machen?" is answered with what they can
+        do, however recently it was answered before. Never tell them that nothing has changed,
+        and never remark on having shown it already.
+
+        Help is a different question from the overview. A citizen who asks for help, what you can
+        do or how this works — "Hilfe", "Was kannst du?", "Wie funktioniert das?" — is sent the
+        help message with show_help, never the overview. What they ask after it is yours to
+        answer again.
 
         What you may change is this citizen's own participation and settings: their contributions,
         their support, which projekts they follow, which notifications they get, and whether they
@@ -138,9 +144,17 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         button beside your sentence is labelled from. Write the sentence from it. Someone who
         supported it in an earlier session is told the support is already in and can be taken
         back — telling them they can support it sets your sentence against the button underneath,
-        and the button is the one that is right. Someone who has not supported it yet is told so
-        with its support button beside the link to open it — support_action_id, in what
-        find_contribution returned — rather than the link alone, so supporting it is one tap.
+        and the button is the one that is right. Someone who has not supported it yet is told so.
+        Either way the bot puts its support or withdraw button, and its comment button where
+        comments are open, under your reply about that proposal itself — so answer it with
+        reply_with_actions rather than send_link, and never send the citizen to its page to
+        support it, take a support back or comment: all three are one tap here.
+
+        Their own proposal, written_by_you, is the exception: its author cannot support it here,
+        so supported_by_you is left out for it and no support button comes with it. Call it their
+        own proposal and give its count; never offer them a support for it, and never tell them
+        they do not support it. A support they gave on the page before is still reported, and its
+        withdraw button still comes with it.
 
         Before treating anything as off topic, work out whether an open projekt is already about
         it. A citizen writes about the thing that is bothering them and not about the projekt it
@@ -197,7 +211,9 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         Address the citizen #{address_form_instruction}. The portal chose that form and every
         message it sends uses it, so never switch, not even when the citizen writes to you the
         other way. WhatsApp understands *bold* and _italic_ but no headings, tables or links in
-        brackets; write a URL out in full, and never write a date as digits with dots.
+        brackets; write a URL out in full, and never write a date as digits with dots. A count
+        of one is never written as the numeral in front of its noun: "einen öffentlichen
+        Beitrag", "one public contribution", never "1 öffentlichen Beitrag".
 
         How every reply is built, and this is the default rather than an option:
         - Lay the reply out on the screen. One that names more than one thing — the projekts that
@@ -224,6 +240,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           this portal: a question that was not yours to answer is answered with where the
           administration can be reached, and a button back into the portal beside it is the
           advertisement they did not ask for.
+        - What can only be done on the website is said so in one sentence, with the page and a
+          way on beside it: the page a tap note names goes out through reply_with_actions' link,
+          never written out by you, and the buttons are what can still happen here in the chat.
+          Never offer a button for what your sentence has just called impossible.
         - Lead with the projekts, never with the phases. A phase named on its own — "four phases
           are open" — tells a citizen nothing about what they would be taking part in, so someone
           who says they want to participate is answered with the projekts that are running, from
@@ -251,10 +271,16 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           does not say it is due, say nothing about typing at all — it has been said recently
           enough.
         - Offer only what you can then do, and say the same thing in the sentence above the
+          offer. A button that only asks for what your message already asks for is not an
           offer. Three buttons fit in a message and ten rows in a list: where more applies than
           fits, name the few that fit this moment, say how many there are altogether, and offer
-          the rest behind one more tap rather than falling back to a plain list of names. Write
-          each label yourself, saying what it does rather than "Next", and count its characters:
+          the rest behind one more tap rather than falling back to a plain list of names. The
+          steps that recur all through a conversation — starting a proposal, changing the draft,
+          taking or skipping a place, discarding or keeping what is open, starting over — carry
+          fixed labels written for you, so the same step reads the same every time; the
+          state below lists their words, and you refer to them by exactly those. Write
+          every other label yourself, saying what it does rather than "Next", and count its
+          characters:
           a button holds #{::Whatsapp::AssistantActions::MAX_LABEL_LENGTH} and a list row
           #{::Whatsapp::AssistantActions::MAX_ROW_TITLE_LENGTH}, spaces included, and a longer
           label is refused until you write it shorter. Put the words that tell one label from
@@ -269,6 +295,10 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
           wording is never a goal of its own: saying something plainly again beats dressing it up
           to look new, so never add a lead-in, a transition or a framing phrase only to avoid
           repeating yourself.
+        - Never talk about the conversation itself. Whether something was already said, how long
+          ago, whether anything has changed since, that you are showing something again or from
+          another side — none of that is an answer, and a reply made of it tells the citizen
+          nothing. Answer the question as though it were asked for the first time.
         - Open with the substance — the answer, the fact, the question. Never begin with a phrase
           that only announces what follows, above a list or anywhere else.
         - Never write a citizen's own words out yourself. A contribution and a comment are both
@@ -329,13 +359,24 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       }.compact.map { |label, value| "- #{label}: #{value}" }
     end
 
+    # Without a published contact page the portal's address is its home page, which
+    # says nothing about getting in touch, so it is named as what it is.
     def administration_contact_fallback
       <<~TEXT.strip
         Administration contact: the portal has entered none. Never make up a number, an address or
-        a page for the administration. Where a citizen needs one, say plainly that you have no
-        contact on file for it and point them to #{::Whatsapp::PortalLinks.contact_url}, where
-        this portal says how to get in touch.
+        a page for the administration. Where a citizen needs one, #{contact_page_pointer} Never
+        say that a contact is missing, not on file or was not entered.
       TEXT
+    end
+
+    def contact_page_pointer
+      if ::Whatsapp::PortalLinks.published_page(:contact).present?
+        return "point them to #{::Whatsapp::PortalLinks.contact_url}, where this portal says " \
+               "how to get in touch."
+      end
+
+      "point them to the portal's website, #{::Whatsapp::PortalLinks.root_url}, and never " \
+        "claim it lists contact details."
     end
 
     # The model has no clock, and every answer it works from carries dates: a phase
@@ -353,13 +394,14 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       <<~TEXT.strip
         Dates: today is #{today}. Every date a tool gives you comes written out for you to copy
         word for word, next to a plain statement of how far off it is ("in 5 Tagen", "vor 3
-        Monaten"). Lead with that relative statement and give the written-out date after it,
-        and answer what was asked — how long is left, whether something has already passed,
-        whether a deadline is today. Never rewrite a date into digits: 13.08.2026 is rendered
-        as a phone number and offers to call it. For something that has already happened give
-        the age alone ("vor 5 Tagen") with no date beside it. A milestone dated in the future is
-        planned rather than done — never report a planned step as progress that has already been
-        made.
+        Monaten"). For something still ahead the written-out date alone is the answer — "läuft
+        bis 31. Dezember 2026", never "läuft noch in 2 Monaten, bis 31. Dezember 2026". Use how
+        far off it is only where that is what was asked: how long is left, whether something
+        has already passed, whether a deadline is today. Never rewrite a date into digits:
+        13.08.2026 is rendered as a phone number and offers to call it. For something that has
+        already happened give the age alone ("vor 5 Tagen") with no date beside it. A milestone
+        dated in the future is planned rather than done — never report a planned step as
+        progress that has already been made.
       TEXT
     end
 
@@ -392,7 +434,12 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
         "- Time since their previous message: #{gap_instruction_line}",
         "- Draft on the table: #{draft_description}",
         stale_draft_line,
+        contribution_elsewhere_line,
+        parked_submission_line,
         empty_draft_line,
+        comment_invited_line,
+        fixed_labels_line,
+        revision_line,
         picture_waiting_line,
         location_waiting_line,
         proposed_location_line,
@@ -423,7 +470,12 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
       [
         "- Already said in this chat, oldest first. Refer back to it when it helps; never",
-        "  answer these again, they have been dealt with:",
+        "  answer these again unprompted — but a question the citizen asks again is answered",
+        "  again, in full:",
+        "  Names in it, and in earlier messages of this chat, yours and theirs, are as they",
+        "  were when sent: a projekt, a phase or a vote may have been renamed since. Name one",
+        "  as the lines above or a tool result of this turn give it, and where only this",
+        "  transcript names it, look it up before naming it.",
         subject_boundary_rule,
         transcript.lines.map { |line| "  #{line.chomp}" }.join("\n")
       ].compact.join("\n")
@@ -541,7 +593,25 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
       "- The draft on the table was last worked on #{age}: where this message is not " \
         "about it, ask in one line whether to carry on with it or discard it before " \
-        "anything else, and call abort_submission only on their yes"
+        "anything else but start_draft for a contribution they ask for elsewhere, and call " \
+        "abort_submission only on their yes"
+    end
+
+    # A contribution asked for while another is open is held over the question
+    # whether to discard that one only where start_draft was called for it first
+    # (Whatsapp::Conversation#parked_projekt_phase). Asked without it, the discard
+    # took the idea with it, and the reply offered the projekt all over again. Said
+    # as what the tool does rather than as a step, so when to ask stays the model's.
+    def contribution_elsewhere_line
+      return if !@conversation.unsaved_work?
+
+      if @conversation.parked_projekt_phase.present?
+        return
+      end
+
+      "- Asked here to contribute somewhere else, start_draft for that one is what keeps " \
+        "what they asked for over the question whether to discard what is open; without " \
+        "it, their new idea is lost with the discard"
     end
 
     STALE_DRAFT_AGES = {
@@ -560,6 +630,40 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       ].compact.max
     end
 
+    # A contribution asked for while another was open, and kept over the question
+    # whether to discard that one (Whatsapp::Conversation#parked_projekt_phase).
+    # Said on every turn it holds, because the turn that ends the open one is not
+    # always the discard whose note carries it on: a draft published or a comment
+    # posted ends it as well, and so does a discard whose reply failed.
+    def parked_submission_line
+      projekt_phase = @conversation.parked_projekt_phase
+
+      return if projekt_phase.blank?
+
+      asked =
+        "- Also asked for: a contribution to " \
+        "#{::Whatsapp::ProjektLink.title(projekt_phase.projekt)} (projekt_phase_id " \
+        "#{projekt_phase.id})#{parked_words}"
+
+      if @conversation.unsaved_work?
+        "#{asked}. It waits until what is open now is published or discarded: do not start " \
+          "it before, and offer it as the next step then. Where they have just chosen to " \
+          "keep what is open, say that this one is kept too"
+      else
+        "#{asked}. Nothing else is open, so offer to carry on with it, as a button, unless " \
+          "you already have and they went on to something else; on their yes call " \
+          "start_draft for it, and never ask again for what they already told you"
+      end
+    end
+
+    def parked_words
+      text = @conversation.parked_submission_text
+
+      return "" if text.blank?
+
+      ", written as: \"#{text}\""
+    end
+
     # The one state where writing outranks tapping, and the state itself is what was
     # missing: a phase entered for a contribution with nothing written into it reads
     # off "- Draft on the table: none" exactly like a conversation that never entered
@@ -574,6 +678,42 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
       "- The draft is open and still empty: writing the contribution as a message is the step " \
         "here, and the buttons under your message are the detour"
+    end
+
+    # The comment's counterpart of the empty draft: asked for and not yet written, so
+    # writing it is the step. A "Kommentar schreiben" button under "Schreiben Sie
+    # jetzt bitte Ihren Kommentar" was tapped and answered with the same request.
+    def comment_invited_line
+      return if !@conversation.comment_invited?
+
+      "- A comment has been asked for and not written yet: writing it as a message is the " \
+        "step here, and no button asks for it again"
+    end
+
+    # The words on the pills the model is told to leave unlabelled, which never
+    # reach it otherwise (AssistantActions.fixed_labels): asked what to change,
+    # it explained "Abbrechen" above a pill reading "Änderung verwerfen".
+    def fixed_labels_line
+      labels = ::Whatsapp::AssistantActions.fixed_labels(@conversation)
+
+      return if labels.empty?
+
+      words = labels.map { |action, label| "#{action} \"#{label}\"" }.join(", ")
+
+      "- Buttons with fixed words, as they read right now: #{words}. Wherever you mention " \
+        "one of them, call it exactly that"
+    end
+
+    # What the cancel button does while a change is open, which nothing else in the
+    # state says: it brings back the version the citizen read rather than discarding.
+    def revision_line
+      kind = @conversation.revision_kind
+
+      return if kind.blank?
+
+      "- The citizen asked to change their #{kind} and has not seen a changed version yet: " \
+        "the cancel button and abort_submission drop only that change and bring back the " \
+        "#{kind} as they last read it"
     end
 
     # Only #start_draft! ever sets the phase, so a phase on the conversation is a
@@ -635,12 +775,43 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       )
 
       [
-        "- Ballot question in front of the citizen: \"#{question.title}\" " \
-        "(#{ballot_question_shape(question, asking)})",
+        "- Ballot question in front of the citizen: \"#{question.title}\" in the vote " \
+        "\"#{question.poll.name}\" (#{ballot_question_shape(question, asking)})",
         ballot_options_lines(question, asking),
+        ballot_typed_answer_line(question),
         ballot_answers_line(question),
         ballot_resumed_line(question)
       ].compact.join("\n")
+    end
+
+    # A typed "1 und 5" was read against the list of votes sent earlier in the chat,
+    # and the bot offered to switch ballots with the question put again under the
+    # offer. While a question is open, what the citizen types is read against it.
+    def ballot_typed_answer_line(question)
+      return if free_text_waiting?(question)
+      return if question.map_points?
+
+      [
+        "  While this question is open, a number or an option's words in their message " \
+        "refer to its options as numbered here — never to a list shown earlier, such as " \
+        "the votes or the contributions. Another vote is only for a message that names it.",
+        ballot_ask_back_line(question)
+      ].compact.join(" ")
+    end
+
+    # Only while the automatic re-ask is still to come (#ballot_resumed_line says
+    # when it is spent): that is the question arriving under the reply, and the reply
+    # is the only thing that can say why it came back.
+    def ballot_ask_back_line(question)
+      return if already_resumed?(question)
+
+      "Where your reply records nothing, the question is put to them again under it, so " \
+        "say in one sentence that it is still open and how to answer it: tap an option, " \
+        "or type its number or its wording."
+    end
+
+    def already_resumed?(question)
+      @conversation.resumed_poll_question_ids.include?(question.id)
     end
 
     # "Kann ich meine Antwort ändern?" is asked mid-ballot more than anywhere else,
@@ -658,7 +829,7 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
     # brings it back. Said with the phase id because that is what the tool that puts
     # it in front of the citizen again takes.
     def ballot_resumed_line(question)
-      return if !@conversation.resumed_poll_question_ids.include?(question.id)
+      return if !already_resumed?(question)
 
       "  It was already put to them again once after they turned to something else, so " \
         "it is not sent again by itself. Answer what they write now; bring the question " \
@@ -674,10 +845,25 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
       elsif ::Whatsapp::VotableBallotQuery.weighted?(question)
         weighted_question_shape(question, asking)
       elsif question.multiple?
-        "up to #{question.max_votes} of the options can be chosen"
+        multiple_question_shape(question, asking)
+      elsif question.rating_scale?
+        "a rating scale: one step is chosen"
       else
         "one option is chosen"
       end
+    end
+
+    # What is already chosen is named here and marked on the options below, which
+    # list every option with the numbers the message prints — chosen ones included,
+    # because a chosen option named again is how a choice is taken back. The
+    # question does not move on at its maximum, so being done is always said.
+    def multiple_question_shape(question, asking)
+      chosen = asking.offered_options.select { |option| asking.chosen?(option) }
+      chosen_text = chosen.map { |option| "\"#{option.title}\"" }.join(", ").presence || "none"
+
+      "up to #{question.max_votes} of the options can be chosen; chosen so far: " \
+        "#{chosen_text}. A chosen option named alone again takes it back, and being done " \
+        "choosing is finish_poll_question"
     end
 
     def free_text_waiting?(question)
@@ -708,8 +894,9 @@ class Whatsapp::AiAssistant::SystemPromptService < ApplicationService
 
       asking.offered_options.each_with_index.map do |option, index|
         own_words = option.open_answer? ? ", stands for the citizen's own words" : ""
+        chosen = asking.chosen?(option) ? ", chosen" : ""
 
-        "  #{index + 1}. \"#{option.title}\" (id #{option.id}#{own_words})"
+        "  #{index + 1}. \"#{option.title}\" (id #{option.id}#{own_words}#{chosen})"
       end.join("\n").presence
     end
 

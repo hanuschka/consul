@@ -12,9 +12,9 @@ module Whatsapp::DatePhrase
   # guarantee is the format rather than an instruction not to write digits.
   #
   # The assistant is handed both phrasings of the same date: the absolute one to
-  # copy verbatim and the relative one to lead with. It has no clock and no
-  # formatter of its own, so a date it never receives in digits is one it cannot
-  # hand back in digits.
+  # copy verbatim and the relative one for "how long is left". It has no clock
+  # and no formatter of its own, so a date it never receives in digits is one it
+  # cannot hand back in digits.
   def absolute(value)
     date = value&.to_date
 

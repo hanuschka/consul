@@ -1,0 +1,26 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Nord" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[7.199, 50.796], [7.210, 50.796], [7.210, 50.7985], [7.199, 50.7985], [7.199, 50.796]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Süd" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[7.199, 50.793], [7.210, 50.793], [7.210, 50.795], [7.199, 50.795], [7.199, 50.793]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": { "type": "Point", "coordinates": [7.2045, 50.7957] }
+    }
+  ]
+}

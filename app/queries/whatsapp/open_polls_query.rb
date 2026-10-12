@@ -51,8 +51,16 @@ class Whatsapp::OpenPollsQuery < ApplicationQuery
         .merge(Poll.published)
         .reorder(:ends_at)
 
-      return relation if @projekt.blank?
+      relation.where(projekt_phases: { projekt_id: projekt_ids })
+    end
 
-      relation.where(projekt_phases: { projekt_id: @projekt.id })
+    # Across the whole portal, only the projekts the bot lists as running. A vote
+    # in a projekt the overview hides was listed under "eight projekts are
+    # running" without its projekt among them, and the buttons after a finished
+    # ballot led into it. A projekt the citizen named is taken as named.
+    def projekt_ids
+      return @projekt.id if @projekt.present?
+
+      ::Whatsapp::BrowsableProjektsQuery.projekt_ids
     end
 end

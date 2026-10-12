@@ -13,8 +13,8 @@ class Ai::Tools::WhatsappAiAssistant::ListProjektContributions <
               "this citizen's own — that is my_contributions. Sends nothing: name a few of them " \
               "in your reply. Each action_id opens the one contribution it belongs to, so a " \
               "wish to look through them is send_list with one row per contribution, never the " \
-              "same id twice, and a sentence naming how many rows it holds; a single one they " \
-              "have already picked is send_link."
+              "same id twice, and a sentence that never says how many rows it holds — total is " \
+              "the number to give; a single one they have already picked is send_link."
 
   parameters do
     string :projekt_name, description: "The projekt name as the citizen wrote it"

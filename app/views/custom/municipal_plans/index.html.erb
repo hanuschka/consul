@@ -3,6 +3,7 @@
 <% page_title = archive_view ? t("custom.municipal_plans.index.archive_title") : t("custom.municipal_plans.index.title") %>
 <% intro_text = archive_view ? t("custom.municipal_plans.index.archive_intro_text") : t("custom.municipal_plans.index.intro_text") %>
 <% empty_list_text = archive_view ? t("custom.municipal_plans.index.archive_empty_list_text") : t("custom.municipal_plans.index.empty_list_text") %>
+<% count_label = archive_view ? t("custom.municipal_plans.index.archive_count") : t("custom.municipal_plans.index.count") %>
 
 <% provide :title do %><%= page_title %><% end %>
 
@@ -68,7 +69,7 @@
 
         <div class="resources--info-count margin-bottom-half" role="status">
           <span>
-            <%= t("custom.municipal_plans.index.count") %>
+            <%= count_label %>
           </span>
           <span>
             <%= @municipal_plans.to_a.size %>

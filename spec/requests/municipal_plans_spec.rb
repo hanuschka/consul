@@ -21,6 +21,20 @@ describe "Vorhabenliste", type: :request do
     allow(Setting).to receive(:[]).with("process.municipal_plans").and_return(enabled)
   end
 
+  def participation_info(kind, key)
+    I18n.t("custom.municipal_plans.participation_info.#{kind}.#{key}")
+  end
+
+  def expect_participation_info(container, kind)
+    tooltip = container.at_css("rich-tooltip.municipal-plan-participation-info")
+    trigger = tooltip.at_css("> span[role=img][tabindex='0']")
+
+    expect(trigger["aria-label"]).to eq participation_info(kind, :label)
+    expect(trigger.at_css("i.fas.fa-info-circle[aria-hidden=true]")).to be_present
+    expect(tooltip.at_css("> template .rich-tooltip-content--text").text.strip)
+      .to eq participation_info(kind, :text)
+  end
+
   describe "the module setting" do
     it "keeps the overview unreachable when it is off" do
       enable_module(nil)
@@ -572,6 +586,17 @@ describe "Vorhabenliste", type: :request do
       expect(document.css("[role=status]").size).to eq 1
     end
 
+    it "labels the result count in the archive as archived Vorhaben" do
+      plan
+      2.times { create(:municipal_plan, :published, responsible: officer).update!(status: "archived") }
+
+      get archive_municipal_plans_path
+
+      count = document.at_css("#municipal-plans-sidebar .resources--info-count[role=status]")
+      expect(count.css("span").map { |node| node.text.strip })
+        .to eq [I18n.t("custom.municipal_plans.index.archive_count"), "2"]
+    end
+
     it "shows every Ortsteil of a Vorhaben" do
       names = %w[Lobeda Wenigenjena Winzerla Zwätzen]
       plan.district_assignments.destroy_all
@@ -595,6 +620,23 @@ describe "Vorhabenliste", type: :request do
 
       expect(item_titles).to eq ["Weiterentwicklung des Eichplatz-Areals"]
       expect(document.at_css("#filter_district_#{district.id}")["checked"]).to be_present
+    end
+
+    it "explains both kinds of Bürgerbeteiligung next to their filter, outside the label" do
+      plan
+
+      get municipal_plans_path
+
+      MunicipalPlansQuery::PARTICIPATION_KINDS.each do |kind|
+        item = document.at_css("#filter_participation_#{kind}").ancestors("li").first
+
+        expect(item.at_css("label rich-tooltip")).to be_nil
+        expect(item.at_css("> label + rich-tooltip")).to be_present
+        expect_participation_info(item, kind)
+      end
+      other_filters = document.css("ul[data-identifier]:not([data-identifier=participation])")
+      expect(other_filters).not_to be_empty
+      expect(other_filters.css("rich-tooltip")).to be_empty
     end
 
     it "lists the newest update first when sorted by Aktualisierungsdatum" do
@@ -973,7 +1015,25 @@ describe "Vorhabenliste", type: :request do
           .to be_present
         expect(trigger.at_css(".municipal-plans-table--badge-label[aria-hidden=true]").text.strip)
           .to eq badge_label(badge)
-        expect(tooltip.at_css("> template").inner_html.strip).to eq badge_label(badge)
+      end
+      expect(tooltips.first.at_css("> template").inner_html.strip).to eq badge_label(:new)
+    end
+
+    it "explains formelle and informelle Bürgerbeteiligung in their Kennzeichnung tooltip" do
+      plan.update_columns(formal_participation: true, informal_participation: true)
+
+      get municipal_plans_path
+
+      cell = row_for("Weiterentwicklung des Eichplatz-Areals")
+        .at_css("td[data-label='#{I18n.t("custom.municipal_plans.index.table.columns.badges")}']")
+      { formal_participation: :formal, informal_participation: :informal }.each do |badge, kind|
+        trigger = cell.at_css("rich-tooltip > span[aria-label='#{badge_label(badge)}']")
+        template = trigger.parent.at_css("> template")
+
+        expect(template.at_css(".rich-tooltip-content--title").text.strip).to eq badge_label(badge)
+        expect(template.at_css(".rich-tooltip-content--text").text.strip)
+          .to eq participation_info(kind, :text)
+        expect(trigger.at_css(".fa-info-circle")).to be_nil
       end
     end
 
@@ -985,10 +1045,21 @@ describe "Vorhabenliste", type: :request do
       legend = document.at_css(".municipal-plans-table > .municipal-plans-table--legend")
       list = legend.at_css("ul")
       expect(list["aria-label"]).to eq I18n.t("custom.municipal_plans.index.table.legend")
-      expect(list.css("li").map { |item| item.text.strip })
+      expect(list.css("li").map { |item| item.xpath("text()").text.strip })
         .to eq MunicipalPlans::BadgesComponent::ICONS.keys.map { |badge| badge_label(badge) }
-      expect(list.css("i.fas[aria-hidden=true]").size).to eq 4
+      expect(list.css("li > i.fas[aria-hidden=true]").size).to eq 4
       expect(legend.next_element["class"]).to eq "municipal-plans-table--scroll"
+    end
+
+    it "explains formelle and informelle Bürgerbeteiligung in the legend" do
+      plan
+
+      get municipal_plans_path
+
+      items = document.css(".municipal-plans-table--legend li")
+      expect(items.map { |item| item.css("rich-tooltip").size }).to eq [0, 0, 1, 1]
+      expect_participation_info(items[2], :formal)
+      expect_participation_info(items[3], :informal)
     end
 
     def tile_for_plan
@@ -1318,7 +1389,7 @@ describe "Vorhabenliste", type: :request do
       plan.translations.update_all(fields.index_with("<p> </p>"))
     end
 
-    describe "Worum es geht" do
+    describe "Zusammenfassung" do
       it "shows the Kurze Beschreibung under its own heading" do
         plan.update!(short_description: "<p>Neubau einer Brücke</p>")
 
@@ -1328,6 +1399,17 @@ describe "Vorhabenliste", type: :request do
 
         expect(intro.at_css("h2").text.strip).to eq show_key("intro.title")
         expect(intro.text).to include "Neubau einer Brücke"
+      end
+
+      it "renders lines starting with a dash as a list" do
+        plan.update!(short_description: "Geplant sind:\n– Neubau einer Brücke\n– Radweg")
+
+        get municipal_plan_path(plan)
+
+        text = document.at_css(".municipal-plan-intro .municipal-plan-block--text")
+
+        expect(text.at_css("p").text.strip).to eq "Geplant sind:"
+        expect(text.css("ul > li").map { |item| item.text.strip }).to eq ["Neubau einer Brücke", "Radweg"]
       end
 
       it "is left out when the Kurze Beschreibung is empty" do
@@ -1407,18 +1489,29 @@ describe "Vorhabenliste", type: :request do
       end
     end
 
-    describe "Weitere Informationen zum Vorhaben" do
-      it "shows the text with simple_format under the Hintergrund heading" do
+    describe "Hintergrund – Weitere Informationen zum Vorhaben" do
+      it "shows the text with simple_format under its own heading" do
         plan.update!(further_information: "Erster Absatz\n\nZweiter Absatz")
 
         get municipal_plan_path(plan)
 
         block = document.at_css(".municipal-plan-background")
 
-        expect(block.at_css(".municipal-plan-block--eyebrow").text.strip).to eq show_key("background.eyebrow")
         expect(block.at_css("h2").text.strip).to eq show_key("background.title")
         expect(block.css(".municipal-plan-block--text p").map { |p| p.text.strip })
           .to eq ["Erster Absatz", "Zweiter Absatz"]
+        expect(block.css(".municipal-plan-block--text ul")).to be_empty
+      end
+
+      it "renders lines starting with a dash or a bullet as a list" do
+        plan.update!(further_information: "Am Stadtrand.\n\n– Gewerbe ansiedeln\n• Wohnen")
+
+        get municipal_plan_path(plan)
+
+        text = document.at_css(".municipal-plan-background .municipal-plan-block--text")
+
+        expect(text.css("p").map { |p| p.text.strip }).to eq ["Am Stadtrand."]
+        expect(text.css("ul > li").map { |item| item.text.strip }).to eq ["Gewerbe ansiedeln", "Wohnen"]
       end
 
       it "is left out when the field is empty" do
@@ -1458,6 +1551,16 @@ describe "Vorhabenliste", type: :request do
           .to eq [show_key("participation_block.status_yes"), show_key("participation_block.status_no")]
         expect(rows.map { |row| row.at_css(".municipal-plan-participation--reason").text.strip })
           .to eq ["Im Zuge des Planverfahrens", "Keine Gründe erkennbar"]
+      end
+
+      it "explains each kind next to its heading, outside it" do
+        get municipal_plan_path(plan)
+
+        rows.zip(%i[formal informal]).each do |row, kind|
+          expect(row.at_css("h3 rich-tooltip")).to be_nil
+          expect(row.at_css("h3 + rich-tooltip")).to be_present
+          expect_participation_info(row, kind)
+        end
       end
     end
 
@@ -1502,14 +1605,15 @@ describe "Vorhabenliste", type: :request do
     end
 
     it "orders the blocks and leaves the Kosten out of the main column" do
-      plan.update!(further_information: "Hintergrundtext", costs: "ca. 50.000 €")
+      plan.update!(short_description: "<p>Neubau einer Brücke</p>", further_information: "Hintergrundtext",
+                   formal_participation: true, costs: "ca. 50.000 €")
 
       get municipal_plan_path(plan)
 
       headings = document.css(".main-column h2").map { |heading| heading.text.strip }
 
       expect(headings.first(5)).to eq [
-        show_key("intro.title"), show_key("timeline.title"), show_key("background.title"),
+        show_key("intro.title"), show_key("background.title"), show_key("timeline.title"),
         show_key("participation"), show_key("location.title")
       ]
       expect(document.at_css(".main-column").text).not_to include("ca. 50.000 €")
@@ -1543,7 +1647,7 @@ describe "Vorhabenliste", type: :request do
 
     def glance_rows
       card_titled("at_a_glance.title").css(".municipal-plan-glance--row").map do |row|
-        [row.at_css("dt").text.strip, row.at_css("dd").text.strip]
+        [row.at_css("dt").xpath("text()").text.strip, row.at_css("dd").text.strip]
       end
     end
 
@@ -1633,6 +1737,18 @@ describe "Vorhabenliste", type: :request do
         get municipal_plan_path(plan)
 
         expect(glance_rows.map(&:first)).not_to include show_key("at_a_glance.costs")
+      end
+
+      it "explains both participation kinds next to their term" do
+        get municipal_plan_path(plan)
+
+        terms = card_titled("at_a_glance.title").css(".municipal-plan-glance--row dt")
+        %i[formal informal].each do |kind|
+          term = terms.find { |dt| dt.xpath("text()").text.strip == show_key("at_a_glance.#{kind}") }
+
+          expect_participation_info(term, kind)
+        end
+        expect(terms.count { |dt| dt.at_css("rich-tooltip") }).to eq 2
       end
     end
 

@@ -70,6 +70,22 @@ describe MunicipalPlans::LegacyImport do
       end
     end
 
+    it "turns a list into lines the detail page renders as a list again" do
+      import
+      render = lambda do |text|
+        Nokogiri::HTML::DocumentFragment.parse(ApplicationController.helpers.municipal_plan_text(text))
+      end
+
+      imported = render.call(plan("5001").further_information)
+      expect(imported.css("p").map(&:text)).to eq ["Das Plangebiet liegt am Stadtrand."]
+      expect(imported.css("ul > li").map(&:text)).to eq ["Gewerbe ansiedeln"]
+
+      lines = MunicipalPlans::LegacyImport::Html.to_plain_text("<ul><li>Eins</li><li>Zwei</li></ul>")
+      list = render.call(lines)
+      expect(list.css("ul").size).to eq 1
+      expect(list.css("ul > li").map(&:text)).to eq %w[Eins Zwei]
+    end
+
     it "takes the reasons for Bürgerbeteiligung from the section and the flags from the columns" do
       import
       imported = plan("5001")

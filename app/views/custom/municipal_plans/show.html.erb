@@ -36,27 +36,24 @@
           <div class="new-card main-content-card municipal-plan-block municipal-plan-intro">
             <h2 class="municipal-plan-block--eyebrow"><%= t("custom.municipal_plans.show.intro.title") %></h2>
             <div class="municipal-plan-block--text">
-              <%= auto_link_already_sanitized_html simple_format(@municipal_plan.short_description) %>
+              <%= auto_link_already_sanitized_html municipal_plan_text(@municipal_plan.short_description) %>
             </div>
           </div>
         <% end %>
-
-        <%= render MunicipalPlans::StatusTimelineComponent.new(municipal_plan: @municipal_plan) %>
 
         <% if rich_text_present.call(@municipal_plan.further_information) %>
           <div class="new-card main-content-card municipal-plan-block municipal-plan-background">
             <div class="municipal-plan-block--heading">
               <span class="municipal-plan-block--icon" aria-hidden="true"><i class="fas fa-book-open"></i></span>
-              <div>
-                <p class="municipal-plan-block--eyebrow"><%= t("custom.municipal_plans.show.background.eyebrow") %></p>
-                <h2 class="municipal-plan-block--title"><%= t("custom.municipal_plans.show.background.title") %></h2>
-              </div>
+              <h2 class="municipal-plan-block--title"><%= t("custom.municipal_plans.show.background.title") %></h2>
             </div>
             <div class="municipal-plan-block--text">
-              <%= auto_link_already_sanitized_html simple_format(@municipal_plan.further_information) %>
+              <%= auto_link_already_sanitized_html municipal_plan_text(@municipal_plan.further_information) %>
             </div>
           </div>
         <% end %>
+
+        <%= render MunicipalPlans::StatusTimelineComponent.new(municipal_plan: @municipal_plan) %>
 
         <%= render MunicipalPlans::ParticipationComponent.new(municipal_plan: @municipal_plan, projekts: projekts) %>
 
@@ -183,7 +180,10 @@
             <% end %>
             <% { formal: @municipal_plan.formal_participation?, informal: @municipal_plan.informal_participation? }.each do |kind, value| %>
               <div class="municipal-plan-glance--row">
-                <dt><%= t("custom.municipal_plans.show.at_a_glance.#{kind}") %></dt>
+                <dt>
+                  <%= t("custom.municipal_plans.show.at_a_glance.#{kind}") %>
+                  <%= render MunicipalPlans::ParticipationInfoComponent.new(kind: kind) %>
+                </dt>
                 <dd><%= t("custom.municipal_plans.show.participation_block.#{value ? "status_yes" : "status_no"}") %></dd>
               </div>
             <% end %>

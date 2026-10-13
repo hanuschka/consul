@@ -31,7 +31,9 @@
     <div class="main-column">
       <div class="municipal-plans-list">
         <%= render Resources::List::BaseComponent.new(
-          empty_text: @municipal_plans.empty? ? empty_list_text : nil
+          empty_text: @municipal_plans.empty? ? empty_list_text : nil,
+          view_cookie: "municipal_plans_wide",
+          wide_by_default: true
         ) do |c| %>
           <% c.with_toolbar(
             i18n_namespace: "custom.municipal_plans.index",

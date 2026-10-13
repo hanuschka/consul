@@ -612,7 +612,7 @@ describe "Vorhabenliste", type: :request do
   describe "the table view" do
     before do
       enable_module(true)
-      cookies["wide_resources"] = "true"
+      cookies["municipal_plans_wide"] = "true"
     end
 
     def document
@@ -1068,17 +1068,48 @@ describe "Vorhabenliste", type: :request do
         .to eq I18n.t("custom.municipal_plans.index.table.archive_caption")
     end
 
-    it "renders the table without the cookie too, next to the list, for CSS to switch" do
-      cookies.delete("wide_resources")
+    it "opens the table on the first visit, next to the list, for CSS to switch" do
+      cookies.delete("municipal_plans_wide")
+      plan
+
+      get municipal_plans_path
+
+      expect(document.at_css(".resources-list.-wide")).to be_present
+      expect(document.at_css(".resources-list .municipal-plans-table + .resources-list--body")).to be_present
+      expect(row_titles).to eq ["Weiterentwicklung des Eichplatz-Areals"]
+      expect(document.css(".resources-list--inner .resource-item--title").map { |t| t.text.strip })
+        .to eq ["Weiterentwicklung des Eichplatz-Areals"]
+    end
+
+    it "opens the tiles when the visitor chose them" do
+      cookies["municipal_plans_wide"] = "false"
       plan
 
       get municipal_plans_path
 
       expect(document.at_css(".resources-list.-wide")).to be_nil
-      expect(document.at_css(".resources-list .municipal-plans-table + .resources-list--body")).to be_present
-      expect(row_titles).to eq ["Weiterentwicklung des Eichplatz-Areals"]
-      expect(document.css(".resources-list--inner .resource-item--title").map { |t| t.text.strip })
-        .to eq ["Weiterentwicklung des Eichplatz-Areals"]
+      expect(document.at_css(".resources-list")).to be_present
+    end
+
+    it "ignores the view cookie shared by the other lists" do
+      cookies["municipal_plans_wide"] = "false"
+      cookies["wide_resources"] = "true"
+      plan
+
+      get municipal_plans_path
+
+      expect(document.at_css(".resources-list.-wide")).to be_nil
+      expect(document.at_css(".resources-list")["data-view-cookie"]).to eq "municipal_plans_wide"
+    end
+
+    it "offers the switch to the tiles in the table view" do
+      plan
+
+      get municipal_plans_path
+
+      button = document.at_css(".resources-list .js-resource-list-switch-view-button")
+      expect(button["aria-label"]).to eq I18n.t("custom.accessibility.shared.switch-view-button.to-tile")
+      expect(button["title"]).to eq I18n.t("custom.accessibility.shared.switch-view-button.to-tile")
     end
 
     it "renders no table when the list is empty" do

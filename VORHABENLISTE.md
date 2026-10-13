@@ -275,8 +275,8 @@ Vorhaben gelöscht werden.
   Aktualisierungsdatum in den letzten 30 Tagen (`MunicipalPlan::RECENCY_WINDOW`).
   Dazu kommen Kennzeichen für formelle und informelle Beteiligung. Archivierte
   Vorhaben erhalten weder „neu“ noch „aktualisiert“.
-- **Ansicht:** Kacheln oder Tabelle. Die Wahl wird im Cookie
-  `municipal_plans_view` gespeichert.
+- **Ansicht:** Kacheln oder Tabelle. Beim ersten Besuch erscheint die Tabelle.
+  Die Wahl wird im Cookie `municipal_plans_wide` für ein Jahr gespeichert.
 - **Karte:** Die Übersicht zeigt eine Karte mit den Ortsteilflächen und den
   Kartenpositionen der gefilterten Vorhaben. Ein Klick auf einen Ortsteil
   setzt den Ortsteilfilter. Die Flächen stammen aus den Kartenpositionen von

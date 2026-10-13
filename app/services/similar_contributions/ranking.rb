@@ -64,7 +64,7 @@ class SimilarContributions::Ranking < ApplicationService
     # Ranking picks from a list Postgres already narrowed down, so the cheapest
     # tier is enough — see Ai::ModelProfile.ultrafast.
     def request_ranking
-      response =
+      chat =
         Ai::RubyLlmFactory
           .chat_for(
             Ai::ModelProfile.ultrafast,
@@ -73,7 +73,8 @@ class SimilarContributions::Ranking < ApplicationService
           )
           .with_schema(output_schema)
           .with_instructions(system_instructions)
-          .ask(user_prompt)
+
+      response = Ai::RubyLlmFactory.cache_prefix(chat, feature: feature).ask(user_prompt)
 
       Array(::Ai::StructuredOutput.content_of(response)["matches"])
     end

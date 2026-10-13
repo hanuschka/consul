@@ -21,6 +21,10 @@ class Whatsapp::ProcessInboundMessageJob < ApplicationJob
   # The attempt counter is a third positional argument with a default, so the
   # jobs already enqueued when this shipped deserialise and run as attempt zero.
   def perform(whatsapp_message_id, raw_message = {}, contended_attempts = 0)
+    # Before the lock and #answer's rescue, which would turn the missing
+    # credentials into one more send that cannot go out.
+    ::Whatsapp.ensure_credentials_loaded!
+
     whatsapp_message = Whatsapp::Message.find_by(id: whatsapp_message_id)
 
     return if whatsapp_message.blank?

@@ -12,6 +12,8 @@ en:
           similar_contributions_check: Check for similar contributions
           similar_contributions_check_description: "Checks newly submitted contributions in this phase against existing contributions with similar content, and shows administrators matching contributions from the same projekt while they work. In the frontend a notice with up to three similar contributions, which can be supported instead, appears before submitting. Enable this feature to avoid duplicate submissions and to speed up processing through references to contributions that have already been answered."
         form:
+          restrict_map_features_to_marked_areas: Only allow map entries inside marked areas
+          restrict_map_features_to_marked_areas_description: "When enabled, users can only place pins and shapes entirely inside the areas drawn on this phase's Map tab. Entries outside are refused. If no areas are drawn there, the map stays unrestricted."
           allow_attached_image: Cover image
           allow_attached_image_description: Lets users upload a cover image when creating a proposal. This image is prominently displayed in the detail view on the frontend and as a preview image in the list overview. Disable this option if visual content from users is not desired or if moderation should be reduced.
           labels: Labels
@@ -107,6 +109,8 @@ en:
           users_can_create_pins: Place pins
           users_can_create_pins_description: "Allows registered users to place their own pins on the phase's map, thereby submitting location-based notes or suggestions. A Create button is shown on the map view on the frontend. Disable this option when pins should only be placed by the administration and no user input on the map is desired."
         form:
+          restrict_map_features_to_marked_areas: Only allow map entries inside marked areas
+          restrict_map_features_to_marked_areas_description: "When enabled, users can only place pins and shapes entirely inside the areas drawn on this phase's Map tab. Entries outside are refused. If no areas are drawn there, the map stays unrestricted."
           use_masterportal_collections_as_labels: Use masterportal collections instead of categories
           use_masterportal_collections_as_labels_description: "When enabled, users creating a pin choose from this phase's imported masterportal collections instead of the manually created categories."
       option:
@@ -149,6 +153,8 @@ en:
           similar_contributions_check: Check for similar contributions
           similar_contributions_check_description: "Checks newly submitted contributions in this phase against existing contributions with similar content, and shows administrators matching contributions from the same projekt while they work. In the frontend a notice with up to three similar contributions, which can be supported instead, appears before submitting. Enable this feature to avoid duplicate submissions and to speed up processing through references to contributions that have already been answered."
         form:
+          restrict_map_features_to_marked_areas: Only allow map entries inside marked areas
+          restrict_map_features_to_marked_areas_description: "When enabled, users can only place pins and shapes entirely inside the areas drawn on this phase's Map tab. Entries outside are refused. If no areas are drawn there, the map stays unrestricted."
           allow_attached_image: Cover image
           allow_attached_image_description: "Lets users upload a cover image when creating a proposal. The image is prominently displayed in the detail view on the frontend and as a preview image in the list overview. Disable this option if visual content from users is not desired or if the moderation effort for image review should be reduced."
           labels: Labels

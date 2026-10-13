@@ -48,10 +48,6 @@
     text-transform: uppercase;
   }
 
-  .municipal-plan-block--heading .municipal-plan-block--eyebrow {
-    margin-bottom: 2px;
-  }
-
   .municipal-plan-block--text > :last-child {
     margin-bottom: 0;
   }
@@ -159,6 +155,10 @@
     letter-spacing: 0.06em;
   }
 
+  .municipal-plan-timeline--text ul {
+    margin-bottom: $list-margin-bottom;
+  }
+
   .municipal-plan-timeline--text > :last-child {
     margin-bottom: 0;
   }
@@ -190,8 +190,15 @@
     grid-column: 1;
   }
 
+  .municipal-plan-participation--label-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
   .municipal-plan-participation--label {
-    margin: 0 0 4px;
+    margin: 0;
     color: var(--brand-color);
     font-size: 13px;
     font-weight: 700;
@@ -215,7 +222,7 @@
   .municipal-plan-participation--reason {
     margin: 0;
 
-    p:last-child {
+    > :last-child {
       margin-bottom: 0;
     }
 

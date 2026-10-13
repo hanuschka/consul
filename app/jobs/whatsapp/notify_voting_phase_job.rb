@@ -21,6 +21,7 @@ class Whatsapp::NotifyVotingPhaseJob < ApplicationJob
   BATCH_SIZE = 50
 
   def perform
+    ::Whatsapp.ensure_credentials_loaded!
     return if !::Whatsapp.enabled?
 
     notify(phases_starting_on(Date.current), "voting_started")

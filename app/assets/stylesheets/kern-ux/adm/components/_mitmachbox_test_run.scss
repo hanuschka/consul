@@ -1,0 +1,128 @@
+.adm-mitmachbox-box {
+  --adm-mitmachbox-yellow: #f7b500;
+  --adm-mitmachbox-yellow-light: #ffd34d;
+  --adm-mitmachbox-yellow-pressed: #f2c21f;
+  --adm-mitmachbox-yellow-pressed-shade: #e6a800;
+  --adm-mitmachbox-yellow-shade: #b98600;
+  --adm-mitmachbox-yellow-edge: #c99300;
+  --adm-mitmachbox-frame: #3e3e42;
+  --adm-mitmachbox-frame-edge: #1d1d20;
+  --adm-mitmachbox-collar: #2b2b2e;
+  --adm-mitmachbox-collar-edge: #4a4a50;
+  --adm-mitmachbox-paper: #e8e7e1;
+
+  position: relative;
+  width: 100%;
+  max-width: 56rem;
+  aspect-ratio: 244 / 189;
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 22%));
+}
+
+.adm-mitmachbox-box__screen {
+  position: absolute;
+  top: 17.672%;
+  left: 12.295%;
+  width: 66.885%;
+  height: 51.799%;
+  background: var(--adm-mitmachbox-paper);
+}
+
+.adm-mitmachbox-box__shell {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.adm-mitmachbox-box__case {
+  fill: var(--adm-mitmachbox-yellow);
+}
+
+.adm-mitmachbox-box__case-edge {
+  fill: none;
+  stroke: var(--adm-mitmachbox-yellow-edge);
+  stroke-width: 0.6;
+}
+
+.adm-mitmachbox-box__frame {
+  fill: var(--adm-mitmachbox-frame);
+}
+
+.adm-mitmachbox-box__frame-edge {
+  fill: none;
+  stroke: var(--adm-mitmachbox-frame-edge);
+  stroke-width: 0.8;
+}
+
+.adm-mitmachbox-box__collar {
+  fill: var(--adm-mitmachbox-collar);
+  stroke: var(--adm-mitmachbox-collar-edge);
+  stroke-width: 0.4;
+}
+
+.adm-mitmachbox-box__key {
+  position: absolute;
+  width: 5.902%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 50% 38%, var(--adm-mitmachbox-yellow-light) 0, var(--adm-mitmachbox-yellow) 55%, var(--adm-mitmachbox-yellow-shade) 100%);
+  box-shadow: 0 2px 0 var(--adm-mitmachbox-yellow-shade), 0 3px 4px rgb(0 0 0 / 45%);
+  transition: transform 80ms, box-shadow 80ms;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+label.adm-mitmachbox-box__key,
+button.adm-mitmachbox-box__key {
+  cursor: pointer;
+}
+
+label.adm-mitmachbox-box__key:active,
+button.adm-mitmachbox-box__key:active,
+.adm-mitmachbox-box__key.is-down {
+  transform: translate(-50%, -46%);
+  background: radial-gradient(circle at 50% 45%, var(--adm-mitmachbox-yellow-pressed) 0, var(--adm-mitmachbox-yellow-pressed-shade) 70%, var(--adm-mitmachbox-yellow-shade) 100%);
+  box-shadow: 0 0 0 var(--adm-mitmachbox-yellow-shade), 0 1px 2px rgb(0 0 0 / 50%);
+}
+
+.adm-mitmachbox-box__key:focus-visible,
+.adm-mitmachbox-box__key.is-focused {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--kern-color-action-on-default), 0 0 0 4px var(--kern-color-action-focus-border-inside), 0 0 0 6px var(--kern-color-action-focus-border-outside);
+}
+
+.adm-mitmachbox-box__key--1 {
+  top: 80.894%;
+  left: 17.152%;
+}
+
+.adm-mitmachbox-box__key--2 {
+  top: 80.894%;
+  left: 31.496%;
+}
+
+.adm-mitmachbox-box__key--3 {
+  top: 80.894%;
+  left: 45.840%;
+}
+
+.adm-mitmachbox-box__key--4 {
+  top: 80.894%;
+  left: 60.184%;
+}
+
+.adm-mitmachbox-box__key--5 {
+  top: 80.894%;
+  left: 74.529%;
+}
+
+.adm-mitmachbox-box__key--6 {
+  top: 40.873%;
+  left: 87.664%;
+}

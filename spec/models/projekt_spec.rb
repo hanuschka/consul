@@ -209,6 +209,46 @@ describe Projekt do
       expect(relation).to include(visible_projekt)
       expect(relation).not_to include(restricted_projekt)
     end
+
+    context "when a group restricting the projekt is deleted" do
+      let(:group_a) { create(:individual_group, kind: "hard") }
+      let(:group_b) { create(:individual_group, kind: "hard") }
+      let(:value_a) { create(:individual_group_value, individual_group: group_a) }
+      let(:value_b) { create(:individual_group_value, individual_group: group_b) }
+      let(:admin_user) { create(:administrator).user }
+
+      it "keeps the projekt restricted to the remaining group" do
+        projekt = create(:projekt)
+        projekt.individual_group_values << [value_a, value_b]
+        member_b = create(:user_individual_group_value, individual_group_value: value_b).user
+
+        group_a.destroy!
+
+        expect(Projekt.visible_for(nil)).not_to include(projekt)
+        expect(Projekt.visible_for(citizen)).not_to include(projekt)
+        expect(Projekt.visible_for(member_b)).to include(projekt)
+        expect(Projekt.visible_for(admin_user)).to include(projekt)
+      end
+
+      it "lifts the restriction when the deleted group was the only one" do
+        projekt = create(:projekt)
+        projekt.individual_group_values << value_a
+
+        group_a.destroy!
+
+        expect(Projekt.visible_for(nil)).to include(projekt)
+        expect(Projekt.visible_for(citizen)).to include(projekt)
+      end
+
+      it "treats a leftover link to a deleted value as a restriction for every visitor" do
+        projekt = create(:projekt)
+        projekt.individual_group_values << [value_a, value_b]
+        IndividualGroupValue.where(id: value_a.id).delete_all
+
+        expect(Projekt.visible_for(nil)).not_to include(projekt)
+        expect(Projekt.visible_for(citizen)).not_to include(projekt)
+      end
+    end
   end
 
   describe "#assign_author_as_manager" do

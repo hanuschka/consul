@@ -20,6 +20,13 @@ describe MunicipalPlans::WorkingCopyService do
     expect(copy.responsible).to eq(officer)
   end
 
+  it "carries the Verfahrensschritt" do
+    step = create(:municipal_plan_procedure_step)
+    plan.update!(procedure_step: step)
+
+    expect(MunicipalPlans::WorkingCopyService.call(plan).procedure_step).to eq(step)
+  end
+
   it "carries Ortsteile, Themen, Links and the Kartenposition" do
     plan.district_ids = [district.id]
     plan.topic_ids = [topic.id]

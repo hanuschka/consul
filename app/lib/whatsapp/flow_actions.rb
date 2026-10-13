@@ -66,6 +66,8 @@ module Whatsapp::FlowActions
     terms_decline
     draft_publish
     draft_revise
+    draft_continue
+    keep_open
     remove_additions
     submit_final
     submit_anyway
@@ -75,7 +77,10 @@ module Whatsapp::FlowActions
     support_register
     support_withdraw
     comment_prompt
+    comment_start
     comment_post
+    follow_enable
+    follow_disable
     category
     sentiment
     image_upload
@@ -117,7 +122,7 @@ module Whatsapp::FlowActions
     poll_weight poll_done poll_skip
     category sentiment notify_toggle notify_enable notify_disable discover_category support
     support_toggle support_register support_withdraw show_more
-    view_contribution projekt_polls
+    view_contribution projekt_polls comment_start follow_enable follow_disable
   ].freeze
 
   # Ids the bot composes itself and the assistant may never write. Distinct from the
@@ -142,11 +147,20 @@ module Whatsapp::FlowActions
   # choosing the direction, which is the one thing the state has to decide.
   DIRECTED_ACTIONS = %i[support_register support_withdraw notify_enable notify_disable].freeze
 
+  # The pills Whatsapp::StatePills puts under every reply about one proposal or
+  # projekt, read off its state rather than offered by the model. Left to the model,
+  # the same proposal in the same state came with "Zurücknehmen" on one reply and with
+  # only its link on the next, and "Kommentieren" was not offered at all — so the
+  # offer is the platform's, and a model writing one of these would be offering it a
+  # second time.
+  STATE_ACTIONS = %i[comment_start follow_enable follow_disable].freeze
+
   # `projekt_polls` is the projekt card's own last row, and its parameter carries a
   # page offset beside the projekt (#page_param) — a shape the bot writes for the
   # page it has just sent and nothing a model has to compose.
   BOT_ONLY_ACTIONS = [
-    :poll_answer, :poll_weight, :poll_done, :poll_skip, :projekt_polls, *DIRECTED_ACTIONS
+    :poll_answer, :poll_weight, :poll_done, :poll_skip, :projekt_polls, *DIRECTED_ACTIONS,
+    *STATE_ACTIONS
   ].freeze
 
   # Withheld for a reason the set above does not cover. A bot-only id is one whose
@@ -175,8 +189,16 @@ module Whatsapp::FlowActions
   # it carries — a similar proposal, the assessment — so
   # Ai::Tools::WhatsappAiAssistant::ShowDraftForConfirmation adds the pill itself
   # wherever the draft carries them.
+  #
+  # `draft_continue` is the way on from a preview while the draft still has a
+  # question to come — the photo, the place. Left to the model, the first preview
+  # carried no way on at all: "Jetzt einreichen" would have said something that
+  # was not going to happen, so it offered only ways to change the draft, and the
+  # citizen had to type "passt so". Its label names the step, read off the draft,
+  # so the same tool adds it to every preview.
   PLATFORM_WORDED_ACTIONS = [
-    :unlink_confirm, :terms_accept, :remove_additions, *IMAGE_ANSWERS, *UNASKED_IMAGE_ANSWERS
+    :unlink_confirm, :terms_accept, :remove_additions, :draft_continue, *IMAGE_ANSWERS,
+    *UNASKED_IMAGE_ANSWERS
   ].uniq.freeze
 
   # The pills that publish or post, withheld from every message but the preview of

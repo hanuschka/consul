@@ -6,9 +6,12 @@ class Ai::Tools::WhatsappAiAssistant::StartDraft < Ai::Tools::WhatsappAiAssistan
               "of them is not that — at most a reason to ask whether they want to contribute. " \
               "It writes nothing the citizen can see and sends nothing — ask them for their " \
               "idea in your own words afterwards, or call draft_proposal straight away when " \
-              "they have already told you it. It refuses while they are part-way through a " \
-              "contribution: going back to the beginning is start_over, and leaving this one " \
-              "for another is abort_submission first, once they have agreed to lose it."
+              "they have already told you it. While they are part-way through another " \
+              "contribution or a comment, call it all the same for the one they now ask for, " \
+              "before asking anything about the other: it starts nothing then, and keeps what " \
+              "they asked for here so it can be carried on with once the other is discarded " \
+              "or done. Asked about the other without calling it first, their new idea is " \
+              "lost with the discard. Going back to the very beginning is start_over."
 
   parameters do
     integer :projekt_phase_id,
@@ -27,8 +30,17 @@ class Ai::Tools::WhatsappAiAssistant::StartDraft < Ai::Tools::WhatsappAiAssistan
     # Starting a submission replaces the one in progress, and this used to do it
     # without a word: a typed "von vorne" restarted the same contribution in the
     # same projekt, where the citizen had asked to leave it. Losing what they wrote
-    # now takes their yes, through AbortSubmission, which is the one discard.
-    return submission_in_progress_error if conversation.unsaved_submission?
+    # now takes their yes, through AbortSubmission, which is the one discard. A
+    # comment written and not yet posted is lost the same way, so it is asked
+    # about the same way.
+    #
+    # What they asked for is held over the question rather than refused outright:
+    # the idea came with the request, and after the yes it was gone with the draft.
+    if conversation.unsaved_work?
+      conversation.park_submission!(projekt_phase: candidate, text: citizen_words)
+
+      return work_in_progress_error
+    end
 
     conversation.start_draft!(candidate)
 
@@ -60,13 +72,21 @@ class Ai::Tools::WhatsappAiAssistant::StartDraft < Ai::Tools::WhatsappAiAssistan
 
   private
 
-    def submission_in_progress_error
+    def work_in_progress_error
       {
-        error: "The citizen is part-way through a contribution, so nothing was started: a new " \
-               "one would throw away what they have written.",
-        hint: "If they asked to go back to the beginning, call start_over. If they want to " \
-              "leave this contribution for another, say in one line what is unsaved and ask " \
-              "whether to discard it; call abort_submission only on their yes, then this."
+        error: "The citizen is part-way through #{unsaved_work_name}, so nothing was started: a " \
+               "new contribution would throw away what they have written. What they asked for " \
+               "here is kept.",
+        hint: "If they asked to go back to the beginning, call start_over. Otherwise say in one " \
+              "line what is unsaved and ask whether to discard it or keep it, with the cancel " \
+              "and keep_open buttons beside the question. On discard call abort_submission, " \
+              "whose answer carries on with what they asked for here. On keep say that this " \
+              "new one is kept too and that you will come back to it once the other is " \
+              "published or discarded, then go on with the other."
       }
+    end
+
+    def unsaved_work_name
+      conversation.unsaved_submission? ? "a contribution" : "a comment"
     end
 end

@@ -22,6 +22,12 @@ class Image
     attachment_variant(**self.class.styles[style])
   end
 
+  def keep_attachment_metadata?(_name, path)
+    return true if ai_generated_in_app?
+
+    new_record? && path.present? && ::Images::AiMarker.marker_at?(path)
+  end
+
   before_save :clear_generated_flags_on_replaced_attachment
   before_save :confirm_in_app_marking
 

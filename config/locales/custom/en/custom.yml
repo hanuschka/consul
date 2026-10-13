@@ -7,12 +7,18 @@ en:
       municipal_plan/topic:
         one: "Topic"
         other: "Topics"
+      municipal_plan/procedure_step:
+        one: "Procedure step"
+        other: "Procedure steps"
     attributes:
       municipal_plan:
         status: "Status"
         responsible: "Responsible case worker"
         map_location: "Map position"
         districts: "Area / district affected"
+        city_wide: "Entire city"
+        procedure_step: "Procedure step"
+        procedure_step_id: "Procedure step"
         topics: "Main topics affected"
         links: "Links and documents"
         internal_notes: "Internal notes"
@@ -49,6 +55,10 @@ en:
         name: "Name"
       municipal_plan/topic/translation:
         name: "Name"
+      municipal_plan/procedure_step:
+        name: "Name"
+      municipal_plan/procedure_step/translation:
+        name: "Name"
       municipal_plan/officer_group:
         name: "Name"
     errors:
@@ -56,6 +66,7 @@ en:
         municipal_plan:
           districts_required: "Please select at least one district."
           too_many_districts: "Please select at most %{count} districts."
+          city_wide_with_districts: "“Entire city” cannot be combined with individual districts."
           topics_required: "Please select at least one topic."
           release_required: "Please fill in “%{field}” before publishing the plan."
           nested_working_copy: "A working copy cannot carry a working copy of its own."
@@ -108,6 +119,7 @@ en:
         success: Document has been successfully imported
       ai_generate_with_file:
         no_file: No file uploaded
+        unexpected_error: An unexpected error occurred during the import. Please try again.
         user_prompt_placeholder: |
           "Formulate section XY in a more comprehensible way for the public."
           "Additionally create a separate content block in plain language."
@@ -117,6 +129,7 @@ en:
       ai_generate_with_prompt:
         no_prompt: Please enter a prompt
         generation_failed: AI could not create a structure
+        unexpected_error: An unexpected error occurred during generation. Please try again.
       ai_create:
         modal_title: Create content block with AI
         description: "Briefly describe the content block you need. The AI uses existing templates as inspiration and can optionally consider the full projekt context to create a new block."

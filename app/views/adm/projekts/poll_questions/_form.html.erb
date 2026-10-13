@@ -112,10 +112,10 @@
         <% boundary_library = question.map_rendering_library %>
         <% boundary_location = question.map_location || question.build_map_location(rendering_library: boundary_library) %>
         <div data-adm-poll-questions--votation-type-target="boundary"
-             data-controller="adm-poll-questions--boundary-map"
-             data-action="map:ready->adm-poll-questions--boundary-map#configureMap"
-             data-adm-poll-questions--boundary-map-max-file-size-value="<%= MapLayer::GEOJSON_MAX_SIZE %>"
-             data-adm-poll-questions--boundary-map-messages-value="<%= t(".boundary_import.messages").merge(
+             data-controller="adm--geojson-area-import"
+             data-action="map:ready->adm--geojson-area-import#configureMap"
+             data-adm--geojson-area-import-max-file-size-value="<%= MapLayer::GEOJSON_MAX_SIZE %>"
+             data-adm--geojson-area-import-messages-value="<%= t(".boundary_import.messages").merge(
                too_large: t(".boundary_import.messages.too_large", size: MapLayer::GEOJSON_MAX_SIZE / 1.megabyte)
              ).to_json %>"
              style="<%= 'display:none' unless votation_type.vote_type == 'map_points' %>">
@@ -129,12 +129,12 @@
               </label>
               <input type="file" id="poll_question_boundary_file" class="kern-form-input__input"
                      accept=".geojson,application/geo+json,application/json"
-                     data-adm-poll-questions--boundary-map-target="file"
-                     data-action="change->adm-poll-questions--boundary-map#importFile">
+                     data-adm--geojson-area-import-target="file"
+                     data-action="change->adm--geojson-area-import#importFile">
             </div>
 
             <p class="kern-body kern-body--small mt-2" role="status"
-               data-adm-poll-questions--boundary-map-target="status"></p>
+               data-adm--geojson-area-import-target="status"></p>
           </div>
 
           <%= render Kern::FormFieldComponent.new(

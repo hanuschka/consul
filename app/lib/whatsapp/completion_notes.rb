@@ -27,16 +27,104 @@ module Whatsapp::CompletionNotes
   CONTINUATION = "Confirm that in one line of your own and carry the conversation on from " \
                  "it rather than closing it off: #{ONWARD}".freeze
 
+  # A finished ballot is confirmed with what was answered rather than in one line,
+  # because asked a message at a time the answers have never been in front of the
+  # citizen together. The answers keep the poll's wording for the reason the ballot
+  # does: a summary in a paraphrase is a summary of something nobody answered.
+  SUMMARY_CONTINUATION = "Confirm that with a short summary of these answers — each " \
+                         "question cut to a few words, each answer in the poll's own " \
+                         "wording as above — and carry the conversation on from it rather " \
+                         "than closing it off: #{ONWARD}".freeze
+
   module_function
+
+  # The note for however a ballot asked here came to its end — a
+  # Whatsapp::Polls::BallotEndingQuery::Ending. Only a ballot with every question
+  # answered is a finished vote; one that reached its end over skipped questions is
+  # told as what it is, because "every answer of theirs is recorded" over a ballot
+  # with nothing in it was passed on as a vote completed.
+  def ballot_ended(ending)
+    case ending.outcome
+    when ::Whatsapp::Polls::AdvanceBallotService::SKIPPED
+      ballot_skipped(poll: ending.poll)
+    when ::Whatsapp::Polls::AdvanceBallotService::PARTLY_ANSWERED
+      ballot_partly_answered(
+        poll: ending.poll, answers: ending.answers, unanswered_questions: ending.unanswered_questions
+      )
+    else
+      ballot_finished(poll: ending.poll, answers: ending.answers)
+    end
+  end
 
   # The poll is named because the citizen answered questions rather than "a vote", and
   # the phase it belongs to is what the state section of the prompt still points at: the
   # ballot's markers are dropped on completion but the projekt phase is not, so the
   # assistant knows where the citizen is standing.
-  def ballot_finished(poll:)
-    "The citizen has just answered the last question of the vote \"#{poll.name}\" and every " \
-      "answer of theirs is recorded. There is nothing left to ask them in it. They can still " \
-      "change their answers on the ballot page until it closes. #{CONTINUATION}"
+  #
+  # `answers` are Whatsapp::Polls::BallotSummaryQuery entries, listed for the summary
+  # the citizen is confirmed with.
+  def ballot_finished(poll:, answers:)
+    finished = "The citizen has just answered the last question of the vote " \
+               "\"#{poll.name}\" and every answer of theirs is recorded. There is nothing " \
+               "left to ask them in it. They can still change their answers on the ballot " \
+               "page until it closes."
+
+    return "#{finished} #{CONTINUATION}" if answers.empty?
+
+    "#{finished} Their answers, in the order they were asked:\n" \
+      "#{answers.map { |entry| ballot_answer_line(entry) }.join("\n")}\n" \
+      "#{SUMMARY_CONTINUATION}"
+  end
+
+  def ballot_answer_line(entry)
+    answered =
+      if entry.map_points.positive?
+        "#{entry.map_points} place(s) marked on the map"
+      else
+        entry.answers.map { |answer| "\"#{answer}\"" }.join(", ")
+      end
+
+    "- \"#{entry.question.title}\": #{answered}"
+  end
+
+  # A ballot skipped to its end has recorded nothing, so there is no vote to confirm
+  # and nothing to thank them for. What they are owed is that it is still open to
+  # them — the chat asks the questions again once the vote is started again — and
+  # until when, which the change rule carries with the ballot's address.
+  def ballot_skipped(poll:)
+    "The citizen has just reached the end of the vote \"#{poll.name}\" in this chat by " \
+      "skipping every question in it, so not one answer of theirs is recorded and they have " \
+      "not voted in it. Never say that anything was saved, counted or completed, and do not " \
+      "thank them for voting. Tell them it stays open to them: until it closes they can " \
+      "still answer it, here by starting the vote again or on its ballot page. " \
+      "#{::Whatsapp::BallotAnswerRules.change_rule_for_poll(poll)} #{CONTINUATION}"
+  end
+
+  # Some answers are in and the rest were skipped. The answers are confirmed the way a
+  # finished ballot's are, and the skipped questions named, because a summary of half
+  # a ballot with nothing said about the other half reads as the whole of it.
+  def ballot_partly_answered(poll:, answers:, unanswered_questions:)
+    [
+      "The citizen has just reached the end of the vote \"#{poll.name}\" in this chat " \
+      "without answering every question in it. What they answered is recorded, but they " \
+      "have not answered the vote in full: never call it complete or say that all of their " \
+      "answers are saved. Their answers, in the order they were asked:",
+      *answers.map { |entry| ballot_answer_line(entry) },
+      *skipped_question_lines(unanswered_questions),
+      "Until the vote closes they can still answer what they left open, here by starting the " \
+      "vote again or on its ballot page. " \
+      "#{::Whatsapp::BallotAnswerRules.change_rule_for_poll(poll)}",
+      SUMMARY_CONTINUATION
+    ].join("\n")
+  end
+
+  def skipped_question_lines(questions)
+    return [] if questions.empty?
+
+    [
+      "Skipped, with no answer of theirs:",
+      *questions.map { |question| "- \"#{question.title}\"" }
+    ]
   end
 
   # The vote is named the same way and for the same reason, but this is not a completion

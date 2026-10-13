@@ -80,11 +80,14 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
         ::Whatsapp::Subscriptions.unfollow(user: user, projekt: projekt)
       end
 
+      ::Whatsapp::StatePills.focus_projekt(projekt.id)
+
       {
         completed: true,
         projekt: title,
         following: direction == SUBSCRIBE,
-        hint: "Say what changed in one line, and say how they can undo it."
+        hint: "Say what changed in one line, and say how they can undo it: the button that " \
+              "does is put under your reply for you."
       }
     end
 

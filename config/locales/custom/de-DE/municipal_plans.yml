@@ -8,11 +8,12 @@ de:
         archive_title: Archiv der Vorhabenliste
         archive_intro_text: Im Archiv finden Sie Vorhaben, die abgeschlossen sind oder nicht weiterverfolgt werden. Die Einträge bleiben mit allen Angaben erhalten, werden aber nicht mehr aktualisiert.
         archive_empty_list_text: Im Archiv sind zurzeit keine Vorhaben abgelegt.
+        archive_count: Anzahl archivierter Vorhaben
         archive_link: Zum Archiv der Vorhabenliste
         overview_link: Zurück zur Vorhabenliste
         to_municipal_plan: Zum Vorhaben
         updated_on: "Aktualisiert am %{date}"
-        count: Vorhaben
+        count: Anzahl aktueller Vorhaben
         orders:
           relevance: Relevanz
           given_order: Redaktionelle Reihenfolge
@@ -70,6 +71,13 @@ de:
         updated: aktualisierter Eintrag
         formal_participation: formelle Bürgerbeteiligung
         informal_participation: informelle Bürgerbeteiligung
+      participation_info:
+        formal:
+          label: Erklärung zur formellen Bürgerbeteiligung
+          text: Als formelle Bürgerbeteiligung werden alle Möglichkeiten der Partizipation bezeichnet, die auf Gesetzen, Verordnungen und anderen Rechtsvorschriften basieren.
+        informal:
+          label: Erklärung zur informellen Bürgerbeteiligung
+          text: Informelle Bürgerbeteiligung (auch „freiwillige“ Bürgerbeteiligung genannt) ist nicht gesetzlich vorgeschrieben, sondern es wird frei entschieden, wann und wie die Bürgerbeteiligung durchgeführt wird.
       notices:
         create:
           success: Vielen Dank! Ihr Hinweis wurde an die zuständige Stelle weitergeleitet.
@@ -89,13 +97,12 @@ de:
           status_new: neu
           status_updated: aktualisiert
         intro:
-          title: Worum es geht
+          title: Zusammenfassung
         timeline:
           title: Wo steht das Vorhaben?
           now: Jetzt
         background:
-          eyebrow: Hintergrund
-          title: Weitere Informationen zum Vorhaben
+          title: Hintergrund – Weitere Informationen zum Vorhaben
         participation_block:
           formal: Formell
           informal: Informell
@@ -114,6 +121,7 @@ de:
           costs: Kosten
           formal: Formelle Beteiligung
           informal: Informelle Beteiligung
+          procedure_step: Verfahrensschritt
         last_resolution: Letzter Beschluss
         processing_status: Aktueller Bearbeitungsstand
         next_steps: Geplanter Zeitpunkt, nächste Schritte

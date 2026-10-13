@@ -4,15 +4,22 @@ describe MunicipalPlans::LegacyImport do
   let(:file) { Rails.root.join("spec/fixtures/files/municipal_plans_legacy_export.csv").to_s }
   let(:officer_group) { create(:municipal_plan_officer_group) }
   let(:report_dir) { Rails.root.join("tmp/spec_legacy_import_#{SecureRandom.hex(4)}") }
+  let(:procedure_steps) do
+    created = 6.downto(1).map { |number| create(:municipal_plan_procedure_step, name: "Schritt #{number}") }
+    MunicipalPlan::ProcedureStep.order_procedure_steps(created.reverse.map(&:id))
+    created.reverse
+  end
 
   before do
     ["Bauen/Wohnen", "Umwelt / Energie", "Mobilität/Verkehr"].each do |name|
       create(:municipal_plan_topic, name: name)
     end
 
-    ["Jena-Zentrum", "Münchenroda/Remderoda", "Gesamtes Stadtgebiet"].each do |name|
+    ["Jena-Zentrum", "Münchenroda/Remderoda"].each do |name|
       create(:registered_address_district, name: name)
     end
+
+    procedure_steps
   end
 
   after { FileUtils.rm_rf(report_dir) }
@@ -68,6 +75,22 @@ describe MunicipalPlans::LegacyImport do
       fields.each do |value|
         expect(value).not_to match(/<h\d|Bearbeitungsstand|Letzter Beschluss|Betroffenes Gebiet/)
       end
+    end
+
+    it "turns a list into lines the detail page renders as a list again" do
+      import
+      render = lambda do |text|
+        Nokogiri::HTML::DocumentFragment.parse(ApplicationController.helpers.municipal_plan_text(text))
+      end
+
+      imported = render.call(plan("5001").further_information)
+      expect(imported.css("p").map(&:text)).to eq ["Das Plangebiet liegt am Stadtrand."]
+      expect(imported.css("ul > li").map(&:text)).to eq ["Gewerbe ansiedeln"]
+
+      lines = MunicipalPlans::LegacyImport::Html.to_plain_text("<ul><li>Eins</li><li>Zwei</li></ul>")
+      list = render.call(lines)
+      expect(list.css("ul").size).to eq 1
+      expect(list.css("ul > li").map(&:text)).to eq %w[Eins Zwei]
     end
 
     it "takes the reasons for Bürgerbeteiligung from the section and the flags from the columns" do
@@ -168,6 +191,31 @@ describe MunicipalPlans::LegacyImport do
       expect(plan("5001").archive_on).to be_nil
     end
 
+    it "takes the Verfahrensschritt from the major part of the Versionsnummer, counted in the list order" do
+      import
+
+      steps = %w[5001 5002 5003 5004 5008].index_with { |legacy_id| plan(legacy_id).procedure_step_label }
+      expect(steps).to eq("5001" => "Schritt 2", "5002" => "Schritt 1", "5003" => "Schritt 1",
+                          "5004" => "Schritt 3", "5008" => "Schritt 1")
+      expect(plan("5001").procedure_step).to eq(procedure_steps.second)
+      expect(plan("5001").version).to eq("2.1")
+    end
+
+    it "leaves the Verfahrensschritt empty for an unknown or missing Versionsnummer and says so" do
+      result = import
+
+      expect(plan("5006").procedure_step).to be_nil
+      expect(plan("5006").version).to eq("8.0")
+      expect(plan("5007").procedure_step).to be_nil
+      expect(result.problems.select { |problem| problem.legacy_id == "5006" }.map(&:kind))
+        .to include(:unknown_procedure_step)
+      expect(result.problems.select { |problem| problem.legacy_id == "5007" }.map(&:kind))
+        .to include(:missing_procedure_step)
+      expect(problems_for("5006")).to include("Versionsnummer 8.0 matches no Verfahrensschritt, left empty")
+      expect(problems_for("5007")).to include("no Versionsnummer, Verfahrensschritt left empty")
+      expect(result.problems.map(&:kind).grep(/procedure_step/).size).to eq(2)
+    end
+
     it "keeps the Versionsnummer and the dates of the export" do
       import
       imported = plan("5001")
@@ -247,12 +295,21 @@ describe MunicipalPlans::LegacyImport do
     end
 
     it "reports an Ortsteil whose name several districts share" do
-      create(:registered_address_district, name: "Gesamtes Stadtgebiet")
+      create(:registered_address_district, name: "Jena-Zentrum")
 
       import
 
-      expect(problems_for("5002")).to include("Ortsteil ambiguous (2 matches): Gesamtes Stadtgebiet")
-      expect(plan("5002")).to be_draft
+      expect(problems_for("5003")).to include("Ortsteil ambiguous (2 matches): Jena-Zentrum")
+      expect(plan("5003")).to be_draft
+    end
+
+    it "marks a Vorhaben for the whole city instead of looking for an Ortsteil" do
+      import
+
+      expect(plan("5002")).to be_city_wide
+      expect(plan("5002").districts).to be_empty
+      expect(plan("5002")).to be_archived
+      expect(problems_for("5002").grep(/Ortsteil/)).to be_empty
     end
 
     it "creates one titled link per URL in the order of the export" do
@@ -355,6 +412,29 @@ describe MunicipalPlans::LegacyImport do
       expect(result.statuses["published"]).to eq(4)
       expect(report("mapping.csv").map { |row| row["new_id"] }).to all(be_nil)
       expect(report("problems.csv").count).to be_positive
+    end
+  end
+
+  describe "missing Verfahrensschritte" do
+    before { MunicipalPlan::ProcedureStep.delete_all }
+
+    it "aborts before writing anything while the setting is on" do
+      set_setting("municipal_plans.procedure_steps", true)
+
+      expect { import }.to raise_error(MunicipalPlans::LegacyImport::MissingProcedureStepsError,
+                                       /create the Verfahrensschritte first/)
+      expect(MunicipalPlan.count).to eq(0)
+      expect(report_dir).not_to exist
+    end
+
+    it "imports without Verfahrensschritt and without complaint while the setting is off" do
+      set_setting("municipal_plans.procedure_steps", false)
+
+      result = import
+
+      expect(MunicipalPlan.where.not(legacy_id: nil).count).to eq(7)
+      expect(MunicipalPlan.where.not(procedure_step_id: nil)).to be_empty
+      expect(result.problems.map(&:kind).grep(/procedure_step/)).to be_empty
     end
   end
 

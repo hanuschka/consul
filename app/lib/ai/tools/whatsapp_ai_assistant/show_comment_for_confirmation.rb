@@ -55,6 +55,12 @@ class Ai::Tools::WhatsappAiAssistant::ShowCommentForConfirmation <
 
     return nothing_written_error if block.blank?
 
+    repeated = repeated_preview_halt(
+      kind: :comment, digest: ::Whatsapp::CommentPreview.digest(conversation: conversation)
+    )
+
+    return repeated if repeated.present?
+
     send_block(block)
 
     ask(question.strip, offerable)

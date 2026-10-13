@@ -13,6 +13,10 @@ namespace :adm do
       patch :order_topics, on: :collection
     end
 
+    resources :procedure_steps, except: :show do
+      patch :order_procedure_steps, on: :collection
+    end
+
     resource :settings, only: :show, controller: "settings" do
       get :dashboard, on: :member
       get :contact_persons, on: :member

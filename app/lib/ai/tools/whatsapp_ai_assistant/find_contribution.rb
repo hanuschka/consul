@@ -11,7 +11,10 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
               "more than one matches, so you can ask which they mean rather than guessing. " \
               "Call it before " \
               "support_proposal, withdraw_support, start_comment, draft_comment or send_link for " \
-              "a contribution; each of those needs the id this returns. Sends nothing."
+              "a contribution; each of those needs the id this returns. Sends nothing. When it " \
+              "finds one, the bot puts its support or withdraw button, and its comment button " \
+              "where comments are open, under your reply_with_actions reply itself — answer " \
+              "with that rather than send_link, which cannot carry them."
 
   parameters do
     string :title, description: "What the citizen called the contribution, in their own words"
@@ -38,6 +41,7 @@ class Ai::Tools::WhatsappAiAssistant::FindContribution < Ai::Tools::WhatsappAiAs
 
       conversation.store_support_proposal_id!(contribution.id)
       conversation.store_comment_proposal_id!(contribution.id)
+      ::Whatsapp::StatePills.focus_proposal(contribution.id)
     end
 
     # Supporting a budget investment is budget voting rather than a support click, so

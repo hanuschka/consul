@@ -456,6 +456,27 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       preview_required_error(kind)
     end
 
+    # The other half of the same order: one version of a preview per citizen
+    # message. A second preview of an unchanged draft under the same message is a
+    # second set of pills for one question, and the citizen who taps under the
+    # first is answering a message the bot itself has already replaced. Nil when
+    # this preview may go out (Whatsapp::Conversation#claim_preview!).
+    #
+    # A halt rather than a refusal, because the citizen has already been shown
+    # exactly this: handed an error, the model would write a reply on top of it.
+    def repeated_preview_halt(kind:, digest:)
+      return if conversation.claim_preview!(kind: kind, digest: digest)
+
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :preview_repeated, conversation: conversation, tool: name, kind: kind
+      )
+
+      halt(
+        "Nothing was sent: they were already shown this #{kind} exactly as it stands in " \
+        "answer to this message, with its buttons."
+      )
+    end
+
     def preview_required_error(kind)
       ::Whatsapp::AiAssistant::DecisionLog.record(
         event: :preview_required, conversation: conversation, tool: name, kind: kind
@@ -655,10 +676,10 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     end
 
     # ── Typed ballot answers ────────────────────────────────────────────────
-    # What the two tools recording a typed ballot answer hand back. Shared because
-    # the ballot's record services answer both in the same three ways: false where
-    # the answer could not be taken, COMPLETED where it was the last one — said by
-    # this turn, since a completion reached inside one is left to it
+    # What the tools recording a typed ballot answer hand back. Shared because the
+    # ballot's record services answer all of them in the same three ways: false where
+    # the answer could not be taken, one of the ENDINGS where it was the last one —
+    # said by this turn, since a completion reached inside one is left to it
     # (Whatsapp::AiAssistant::ContinueConversationService) — and anything else
     # where the ballot's next message has already gone out.
     #
@@ -668,10 +689,12 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
     def ballot_answer_outcome(outcome, poll:)
       return ballot_answer_refused_error if !outcome
 
-      if outcome == ::Whatsapp::Polls::AdvanceBallotService::COMPLETED
+      if ::Whatsapp::Polls::AdvanceBallotService::ENDINGS.include?(outcome)
         return {
           completed: true,
-          status: ::Whatsapp::CompletionNotes.ballot_finished(poll: poll)
+          status: ::Whatsapp::CompletionNotes.ballot_ended(
+            ::Whatsapp::Polls::BallotEndingQuery.call(poll: poll, user: user)
+          )
         }
       end
 
@@ -679,6 +702,18 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
 
       halt("Handled: the ballot's next message has gone out and says where it stands, so " \
            "nothing further is owed here.")
+    end
+
+    # A typed ballot answer that records nothing ends here, so the question never
+    # comes back without a word about why. The sentence is the model's to write: it
+    # is the one that knows what it could not take from the message.
+    def ballot_ask_back_error(reason)
+      {
+        error: "#{reason} Nothing was recorded.",
+        hint: "Ask them back in one sentence: say what you could not take from their message, " \
+              "that the question is still open, and how to answer it — tap an option in the " \
+              "list, or type its number or its wording."
+      }
     end
 
     def no_ballot_question_error

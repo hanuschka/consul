@@ -73,7 +73,7 @@ class MunicipalPlan::ProjektConversion
     end
 
     def copy_map_location
-      source = municipal_plan.map_location
+      source = municipal_plan.displayed_map_location
       return if source.blank?
 
       target = @projekt.map_location || @projekt.build_map_location

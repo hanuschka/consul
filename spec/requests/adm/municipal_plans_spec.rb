@@ -118,6 +118,117 @@ describe "Vorhaben in /adm", type: :request do
     end
   end
 
+  describe "a Vorhaben for the whole city" do
+    it "is created and released without an Ortsteil and without a map position" do
+      post adm_municipal_plans_municipal_plans_path, params: {
+        responsible: "Officer:#{officer.id}",
+        municipal_plan: { title: "Klimaschutzkonzept", short_description: "Kurz",
+                          processing_status: "Läuft", next_steps: "Beschluss", city_wide: "1",
+                          topic_ids: [topic.id] }
+      }
+      created = MunicipalPlan.last
+
+      patch release_adm_municipal_plans_municipal_plan_path(created)
+
+      expect(created.reload).to be_city_wide
+      expect(created).to be_published
+      expect(created.map_location).to be_nil
+    end
+
+    it "is refused together with an Ortsteil" do
+      patch_plan(city_wide: "1", district_ids: [district.id])
+
+      expect(plan.reload).not_to be_city_wide
+      expect(response.body)
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.city_wide_with_districts"))
+    end
+  end
+
+  describe "the Verfahrensschritt" do
+    let!(:steps) do
+      [create(:municipal_plan_procedure_step, name: "1.0 Einleitungsbeschluss"),
+       create(:municipal_plan_procedure_step, name: "2.0 Frühzeitige Unterrichtung")]
+    end
+
+    def procedure_step_select
+      Nokogiri::HTML(response.body).at_css("select[name='municipal_plan[procedure_step_id]']")
+    end
+
+    def detail_rows
+      Nokogiri::HTML(response.body).css(".adm-detail-table__row").map do |row|
+        [row.at_css(".adm-detail-table__label").text.strip, row.at_css(".adm-detail-table__value").text.strip]
+      end
+    end
+
+    def show_key(key)
+      I18n.t("adm.municipal_plans.municipal_plans.show.#{key}")
+    end
+
+    context "when the setting is on" do
+      before { Setting["municipal_plans.procedure_steps"] = true }
+
+      it "offers the defined steps in their order and an empty choice in the form" do
+        get edit_adm_municipal_plans_municipal_plan_path(plan)
+
+        options = procedure_step_select.css("option").map { |option| [option.text.strip, option["value"]] }
+
+        expect(options).to eq [
+          [I18n.t("adm.municipal_plans.municipal_plans.form_fields.placeholders.procedure_step"), ""],
+          ["1.0 Einleitungsbeschluss", steps.first.id.to_s],
+          ["2.0 Frühzeitige Unterrichtung", steps.second.id.to_s]
+        ]
+      end
+
+      it "saves the chosen step" do
+        patch_plan(procedure_step_id: steps.second.id.to_s)
+
+        expect(plan.reload.procedure_step).to eq steps.second
+      end
+
+      it "refuses a step that does not exist" do
+        patch_plan(procedure_step_id: (steps.second.id + 1).to_s)
+
+        expect(plan.reload.procedure_step).to be_nil
+        expect(procedure_step_select.ancestors(".kern-form-input--error")).to be_present
+      end
+
+      it "shows the step next to the Versionsnummer on the detail page" do
+        plan.update_columns(procedure_step_id: steps.second.id)
+
+        get adm_municipal_plans_municipal_plan_path(plan)
+
+        expect(detail_rows).to include([show_key("version"), plan.version])
+        expect(detail_rows).to include([show_key("procedure_step"), "2.0 Frühzeitige Unterrichtung"])
+      end
+
+      it "shows an empty step as such on the detail page" do
+        get adm_municipal_plans_municipal_plan_path(plan)
+
+        expect(detail_rows).to include([show_key("procedure_step"), show_key("none")])
+      end
+    end
+
+    context "when the setting is off" do
+      before { Setting["municipal_plans.procedure_steps"] = false }
+
+      it "leaves the step out of the form" do
+        get edit_adm_municipal_plans_municipal_plan_path(plan)
+
+        expect(response).to have_http_status(:ok)
+        expect(procedure_step_select).to be_nil
+      end
+
+      it "leaves the step out of the detail page" do
+        plan.update_columns(procedure_step_id: steps.second.id)
+
+        get adm_municipal_plans_municipal_plan_path(plan)
+
+        expect(detail_rows.map(&:first)).to include(show_key("version"))
+        expect(detail_rows.map(&:first)).not_to include(show_key("procedure_step"))
+      end
+    end
+  end
+
   describe "the release process" do
     let(:released) { create(:municipal_plan, :published, responsible: officer, version: "1.0") }
 

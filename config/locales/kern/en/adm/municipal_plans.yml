@@ -17,6 +17,7 @@ en:
           officers: Team
           officer_groups: Officer groups
           topics: Categories
+          procedure_steps: Procedure steps
           settings: Configuration
       settings:
         title: Configuration
@@ -123,6 +124,7 @@ en:
           informal_participation: Informal citizen participation
           content_updated_at: Updated on
           version: Version
+          procedure_step: Procedure step
           no_links: No links or documents added.
           contact_name: Name
           contact_role: Role
@@ -177,10 +179,13 @@ en:
           no_districts_description: Districts are taken from the registered addresses. Without districts a plan cannot be saved.
           no_topics_title: No categories yet
           no_topics_description: Create a category under "Categories" first. Without a category a plan cannot be saved.
+          no_procedure_steps: No procedure steps have been created yet.
+          manage_procedure_steps: Create procedure steps
           labels:
             title: Plan title
             short_description: Short description
             further_information: Further information
+            procedure_step: Procedure step
             last_resolution: Last resolution
             processing_status: Current processing status
             next_steps: Schedule / next steps
@@ -207,6 +212,7 @@ en:
             title: The title names the plan the way citizens see it in the plan list. Use a short, understandable wording without file numbers or abbreviations.
             short_description: The short description is the entry text in the public plan list and should summarise the plan in about 420 characters. Explain in a few sentences what it is about and why the city is pursuing it.
             further_information: Additional background for interested readers, for example planning stages or general conditions. This field is optional and is shown below the short description.
+            procedure_step: The procedure step shows where the plan stands in the formal procedure and appears on the public detail page under “At a glance”. It is optional.
             last_resolution: The latest political resolution on this plan, for example the committee, the date and the content of the decision. Leave empty if no resolution has been passed yet.
             processing_status: The current processing status describes where the plan stands right now. Keep it up to date — it is the most important information for citizens and raises the version number on every change.
             next_steps: The planned next steps with a time frame, as far as foreseeable. Rough statements such as "first half of 2027" are welcome when no exact date is fixed.
@@ -229,6 +235,7 @@ en:
             title: e.g. Redesign of the market square
             short_description: e.g. The market square will be made barrier-free and get more greenery and seating.
             further_information: e.g. Background, goals and planning steps so far
+            procedure_step: No procedure step
             last_resolution: e.g. City council resolution of 12 March 2026 on the preliminary design
             processing_status: e.g. The design is complete, the tender is being prepared.
             next_steps: e.g. Award of construction contracts in spring, start of construction in summer
@@ -346,4 +353,30 @@ en:
           name_label: Name
           name_hint: The name of the category is shown to citizens as a filter in the municipal plans list and appears on every plan it is assigned to. Use a short, generally understandable term such as "Mobility and traffic".
           name_placeholder: e.g. Mobility and traffic
+          submit: Save
+      procedure_steps:
+        index:
+          title: Procedure steps
+          page_hint: "Manage the procedure steps of the municipal plans module. The procedure step shows where a plan stands in the formal procedure and is shown by name on the public detail page, for example “2.0 Early public information”. Use drag and drop to set the order in which the procedure steps are offered in the form. Procedure steps that still have plans assigned to them cannot be deleted."
+          new_procedure_step: New procedure step
+          no_items_title: No procedure steps yet
+          no_items_description: Create a procedure step so it can be assigned to plans.
+          table:
+            order: Order
+            name: Name
+        new:
+          title: New procedure step
+        edit:
+          title: Edit procedure step
+        create:
+          success: The procedure step was created.
+        update:
+          success: The procedure step was updated.
+        destroy:
+          success: The procedure step was deleted.
+          cannot_destroy: The procedure step cannot be deleted because plans are still assigned to it.
+        form:
+          name_label: Name
+          name_hint: The name appears in the selection in a plan's form and on the public detail page under “At a glance”. Put the step number first if your procedure is numbered, for example “2.0 Early public information”.
+          name_placeholder: e.g. 2.0 Early public information
           submit: Save

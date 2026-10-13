@@ -20,6 +20,10 @@ class Sidebar::CheckboxFilterComponent < ApplicationComponent
       selection.include?(value.to_s)
     end
 
+    def option_class(option)
+      class_names("selected-option": checked?(option[1]), "u-flex u-align-center gap-10": option[2])
+    end
+
     def hint_id
       "#{@id_prefix}_hint"
     end

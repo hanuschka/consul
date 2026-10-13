@@ -35,7 +35,27 @@ namespace :municipal_plans do
     puts "problems: #{result.problems.size}"
     result.problems.group_by(&:kind).each { |kind, entries| puts "  #{kind}: #{entries.size}" }
     puts "reports: #{result.report_dir}"
-  rescue MunicipalPlans::LegacyImport::MissingTopicsError => e
+  rescue MunicipalPlans::LegacyImport::MissingTopicsError,
+         MunicipalPlans::LegacyImport::MissingProcedureStepsError => e
+    abort e.message
+  end
+
+  desc "Fills Verfahrensschritt and Gesamtes Stadtgebiet of imported Vorhaben from the legacy export, " \
+       "keeping every value already set: FILE=..."
+  task backfill_legacy_fields: :environment do
+    file = ENV["FILE"].presence || abort("FILE is required")
+
+    result = MunicipalPlans::LegacyBackfill.call(file: file)
+
+    puts "rows read: #{result.rows_read}"
+    result.outcomes.each do |outcome, legacy_ids|
+      line = "#{outcome}: #{legacy_ids.size}"
+      if legacy_ids.any? && MunicipalPlans::LegacyBackfill::LISTED_OUTCOMES.include?(outcome)
+        line += " (#{legacy_ids.join(", ")})"
+      end
+      puts line
+    end
+  rescue MunicipalPlans::LegacyImport::MissingProcedureStepsError => e
     abort e.message
   end
 end

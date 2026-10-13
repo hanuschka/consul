@@ -1,6 +1,7 @@
 class MunicipalPlansQuery < ApplicationQuery
   PARTICIPATION_KINDS = %w[formal informal].freeze
   RECENCY_VALUES = %w[new updated].freeze
+  CITY_WIDE = "city_wide".freeze
 
   def initialize(base_scope, params = {})
     @base_scope = base_scope
@@ -23,10 +24,20 @@ class MunicipalPlansQuery < ApplicationQuery
 
     def apply_districts(scope)
       ids = integer_values(:districts)
-      return scope if ids.empty?
+      city_wide = list_values(:districts).include?(CITY_WIDE)
+      return scope if ids.empty? && !city_wide
 
-      scope.where(id: MunicipalPlan::DistrictAssignment.where(registered_address_district_id: ids)
-                                                       .select(:municipal_plan_id))
+      table = scope.klass.arel_table
+      conditions = []
+      conditions << table[:city_wide].eq(true) if city_wide
+
+      if ids.any?
+        assigned = MunicipalPlan::DistrictAssignment.where(registered_address_district_id: ids)
+                                                    .select(:municipal_plan_id)
+        conditions << table[:id].in(assigned.arel)
+      end
+
+      scope.where(conditions.reduce(:or))
     end
 
     def apply_topics(scope)
@@ -73,8 +84,11 @@ class MunicipalPlansQuery < ApplicationQuery
     end
 
     def integer_values(key)
-      Array(params[key]).flat_map { |value| value.to_s.split(",") }
-                        .map(&:strip).grep(/\A\d+\z/).map(&:to_i).uniq
+      list_values(key).grep(/\A\d+\z/).map(&:to_i).uniq
+    end
+
+    def list_values(key)
+      Array(params[key]).flat_map { |value| value.to_s.split(",") }.map(&:strip)
     end
 
     def parse_date(value)

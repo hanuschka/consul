@@ -103,6 +103,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
 
     success = @investment.update(investment_params)
     @investment.send_feasibility_email if success && investment_params[:feasibility].present?
+    @investment.send_selection_email if success && investment_params.key?(:selected)
 
     # A nested image `_destroy` leaves the destroyed record cached on the
     # association, so the re-rendered show_content would show a broken image

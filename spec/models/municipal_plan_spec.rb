@@ -363,6 +363,73 @@ describe MunicipalPlan do
     end
   end
 
+  describe "Verfahrensschritt" do
+    let(:plan) { build(:municipal_plan, responsible: officer) }
+    let(:step) { create(:municipal_plan_procedure_step, name: "2.0 Frühzeitige Unterrichtung") }
+
+    it "accepts a defined step and no step at all" do
+      [step, nil].each do |procedure_step|
+        plan.procedure_step = procedure_step
+
+        expect(plan).to be_valid
+      end
+    end
+
+    it "rejects a step that does not exist" do
+      plan.procedure_step_id = step.id + 1
+
+      expect(plan).not_to be_valid
+      expect(plan.errors[:procedure_step_id]).to be_present
+    end
+
+    it "shows the step by the name the instance gave it" do
+      plan.procedure_step = step
+
+      expect(plan.procedure_step_label).to eq("2.0 Frühzeitige Unterrichtung")
+    end
+
+    it "shows nothing without a step" do
+      expect(plan.procedure_step_label).to be_nil
+    end
+
+    it "offers the defined steps in their order" do
+      later = create(:municipal_plan_procedure_step, name: "Satzungsbeschluss")
+      earlier = create(:municipal_plan_procedure_step, name: "Einleitungsbeschluss")
+      MunicipalPlan::ProcedureStep.order_procedure_steps([earlier.id, later.id])
+
+      expect(MunicipalPlan.procedure_step_options)
+        .to eq([["Einleitungsbeschluss", earlier.id], ["Satzungsbeschluss", later.id]])
+    end
+
+    it "is not required for publication" do
+      plan.status = "published"
+
+      expect(plan.procedure_step).to be_nil
+      expect(plan).to be_valid
+    end
+
+    it "advances Versionsnummer and Aktualisierungsdatum and is audited like any content field" do
+      plan.save!
+      plan.update!(status: "published")
+      plan.update_columns(content_updated_at: Date.current - 10.days)
+
+      expect { plan.update!(procedure_step: step) }
+        .to change { plan.reload.version }.from("1.0").to("1.1")
+        .and change { plan.audits.count }.by(1)
+
+      expect(plan.content_updated_at).to eq(Date.current)
+      expect(plan.audits.last.audited_changes).to eq("procedure_step_id" => [nil, step.id])
+    end
+
+    it "follows the instance setting" do
+      allow(Setting).to receive(:[]).and_call_original
+      allow(Setting).to receive(:[]).with("municipal_plans.procedure_steps").and_return(nil, "true")
+
+      expect(MunicipalPlan.procedure_steps_enabled?).to be false
+      expect(MunicipalPlan.procedure_steps_enabled?).to be true
+    end
+  end
+
   describe "Kartenposition" do
     it "requires a map location for publication" do
       plan = build(:municipal_plan, :published, responsible: officer)

@@ -4,6 +4,11 @@ describe MunicipalPlans::LegacyImport do
   let(:file) { Rails.root.join("spec/fixtures/files/municipal_plans_legacy_export.csv").to_s }
   let(:officer_group) { create(:municipal_plan_officer_group) }
   let(:report_dir) { Rails.root.join("tmp/spec_legacy_import_#{SecureRandom.hex(4)}") }
+  let(:procedure_steps) do
+    created = 6.downto(1).map { |number| create(:municipal_plan_procedure_step, name: "Schritt #{number}") }
+    MunicipalPlan::ProcedureStep.order_procedure_steps(created.reverse.map(&:id))
+    created.reverse
+  end
 
   before do
     ["Bauen/Wohnen", "Umwelt / Energie", "Mobilität/Verkehr"].each do |name|
@@ -13,6 +18,8 @@ describe MunicipalPlans::LegacyImport do
     ["Jena-Zentrum", "Münchenroda/Remderoda"].each do |name|
       create(:registered_address_district, name: name)
     end
+
+    procedure_steps
   end
 
   after { FileUtils.rm_rf(report_dir) }
@@ -182,6 +189,31 @@ describe MunicipalPlans::LegacyImport do
 
       expect(plan("5001")).to be_published
       expect(plan("5001").archive_on).to be_nil
+    end
+
+    it "takes the Verfahrensschritt from the major part of the Versionsnummer, counted in the list order" do
+      import
+
+      steps = %w[5001 5002 5003 5004 5008].index_with { |legacy_id| plan(legacy_id).procedure_step_label }
+      expect(steps).to eq("5001" => "Schritt 2", "5002" => "Schritt 1", "5003" => "Schritt 1",
+                          "5004" => "Schritt 3", "5008" => "Schritt 1")
+      expect(plan("5001").procedure_step).to eq(procedure_steps.second)
+      expect(plan("5001").version).to eq("2.1")
+    end
+
+    it "leaves the Verfahrensschritt empty for an unknown or missing Versionsnummer and says so" do
+      result = import
+
+      expect(plan("5006").procedure_step).to be_nil
+      expect(plan("5006").version).to eq("8.0")
+      expect(plan("5007").procedure_step).to be_nil
+      expect(result.problems.select { |problem| problem.legacy_id == "5006" }.map(&:kind))
+        .to include(:unknown_procedure_step)
+      expect(result.problems.select { |problem| problem.legacy_id == "5007" }.map(&:kind))
+        .to include(:missing_procedure_step)
+      expect(problems_for("5006")).to include("Versionsnummer 8.0 matches no Verfahrensschritt, left empty")
+      expect(problems_for("5007")).to include("no Versionsnummer, Verfahrensschritt left empty")
+      expect(result.problems.map(&:kind).grep(/procedure_step/).size).to eq(2)
     end
 
     it "keeps the Versionsnummer and the dates of the export" do
@@ -380,6 +412,29 @@ describe MunicipalPlans::LegacyImport do
       expect(result.statuses["published"]).to eq(4)
       expect(report("mapping.csv").map { |row| row["new_id"] }).to all(be_nil)
       expect(report("problems.csv").count).to be_positive
+    end
+  end
+
+  describe "missing Verfahrensschritte" do
+    before { MunicipalPlan::ProcedureStep.delete_all }
+
+    it "aborts before writing anything while the setting is on" do
+      set_setting("municipal_plans.procedure_steps", true)
+
+      expect { import }.to raise_error(MunicipalPlans::LegacyImport::MissingProcedureStepsError,
+                                       /create the Verfahrensschritte first/)
+      expect(MunicipalPlan.count).to eq(0)
+      expect(report_dir).not_to exist
+    end
+
+    it "imports without Verfahrensschritt and without complaint while the setting is off" do
+      set_setting("municipal_plans.procedure_steps", false)
+
+      result = import
+
+      expect(MunicipalPlan.where.not(legacy_id: nil).count).to eq(7)
+      expect(MunicipalPlan.where.not(procedure_step_id: nil)).to be_empty
+      expect(result.problems.map(&:kind).grep(/procedure_step/)).to be_empty
     end
   end
 

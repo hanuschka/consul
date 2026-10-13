@@ -17,6 +17,8 @@ module MunicipalPlans
 
     BOOLEAN_FIELDS = %w[city_wide formal_participation informal_participation].freeze
 
+    NAMED_REFERENCES = { "procedure_step_id" => "procedure_step" }.freeze
+
     def initialize(working_copy)
       @copy = working_copy
     end
@@ -41,12 +43,17 @@ module MunicipalPlans
 
       def attribute_changes
         compared_fields.filter_map do |field|
-          before = released.public_send(field)
-          after = copy.public_send(field)
-          next if before.to_s == after.to_s
+          next if released.public_send(field).to_s == copy.public_send(field).to_s
 
-          change(field, kind_for(field), before, after)
+          change(NAMED_REFERENCES.fetch(field, field), kind_for(field),
+                 value_for(released, field), value_for(copy, field))
         end
+      end
+
+      def value_for(plan, field)
+        return plan.public_send(field) unless NAMED_REFERENCES.key?(field)
+
+        plan.public_send(NAMED_REFERENCES[field])&.name
       end
 
       def responsible_change

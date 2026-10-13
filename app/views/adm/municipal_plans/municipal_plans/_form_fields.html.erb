@@ -53,6 +53,24 @@
 <%= tag.details class: "kern-accordion", name: ("municipal-plan-form" unless open_all), open: open_all do %>
   <summary class="kern-accordion__header"><span class="kern-title"><%= t(".blocks.progress") %></span></summary>
   <section class="kern-accordion__body">
+    <% if MunicipalPlan.procedure_steps_enabled? %>
+      <% procedure_step_options = MunicipalPlan.procedure_step_options %>
+      <% if procedure_step_options.empty? %>
+        <% procedure_step_hint = capture do %>
+          <%= t(".no_procedure_steps") %>
+          <% if Adm::MunicipalPlans::ProcedureStepPolicy.new(current_user, nil).index? %>
+            <%= link_to t(".manage_procedure_steps"), adm_municipal_plans_procedure_steps_path, class: "kern-link" %>
+          <% end %>
+        <% end %>
+      <% end %>
+      <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.procedure_step"),
+                                              hint: t(".hints.procedure_step"), stacked: true) do %>
+        <%= form.select :procedure_step_id, procedure_step_options,
+              { include_blank: t(".placeholders.procedure_step"), hint: procedure_step_hint },
+              { label: false } %>
+      <% end %>
+    <% end %>
+
     <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.last_resolution"),
                                             hint: t(".hints.last_resolution"), stacked: true) do %>
       <%= form.text_area :last_resolution, label: false, rows: 4, class: "mb-2",

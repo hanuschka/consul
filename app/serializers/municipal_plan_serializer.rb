@@ -49,6 +49,8 @@ class MunicipalPlanSerializer < BaseSerializer
       last_public_change_at: municipal_plan.last_public_change_at
     )
 
+    plan_data[:procedure_step] = serialize_procedure_step
+
     plan_data[:districts] = municipal_plan.districts.map do |district|
       { id: district.id, name: district.name_for_display }
     end
@@ -71,6 +73,13 @@ class MunicipalPlanSerializer < BaseSerializer
   end
 
   private
+
+    def serialize_procedure_step
+      step = municipal_plan.procedure_step
+      return if step.blank?
+
+      { id: step.id, name: step.name }
+    end
 
     def serialize_map_location
       map_location = municipal_plan.displayed_map_location

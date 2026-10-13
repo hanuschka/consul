@@ -1372,6 +1372,26 @@ describe "Vorhabenliste", type: :request do
       expect(meta_items).to include I18n.t("custom.municipal_plans.show.updated_on", date: "03.02.2026")
       expect(hero.css(".municipal-plan-hero--meta .fa-hashtag")).to be_empty
     end
+
+    it "leaves out the version and shows no step when Verfahrensschritte are used" do
+      Setting["municipal_plans.procedure_steps"] = true
+      plan.update_columns(version: "1.2", procedure_step_id: create(:municipal_plan_procedure_step).id)
+
+      get municipal_plan_path(plan)
+
+      expect(hero.css(".municipal-plan-hero--meta .fa-hashtag")).to be_empty
+      expect(meta_items.join(" ")).not_to include I18n.t("custom.municipal_plans.show.banner.version")
+      expect(hero.text).not_to include plan.procedure_step_label
+    end
+
+    it "keeps the version when Verfahrensschritte are not used" do
+      Setting["municipal_plans.procedure_steps"] = false
+      plan.update_columns(version: "1.2", procedure_step_id: create(:municipal_plan_procedure_step).id)
+
+      get municipal_plan_path(plan)
+
+      expect(meta_items).to include "#{I18n.t("custom.municipal_plans.show.banner.version")} 1.2"
+    end
   end
 
   describe "the content blocks on the detail page" do
@@ -1729,6 +1749,38 @@ describe "Vorhabenliste", type: :request do
           [show_key("at_a_glance.informal"), show_key("participation_block.status_no")],
           [show_key("banner.version"), plan.version]
         ]
+      end
+
+      it "shows the Verfahrensschritt instead of the Version when Verfahrensschritte are used" do
+        Setting["municipal_plans.procedure_steps"] = true
+        step = create(:municipal_plan_procedure_step, name: "2.0 Frühzeitige Unterrichtung")
+        plan.update_columns(version: "1.2", procedure_step_id: step.id)
+
+        get municipal_plan_path(plan)
+
+        expect(glance_rows.last)
+          .to eq [show_key("at_a_glance.procedure_step"), "2.0 Frühzeitige Unterrichtung"]
+        expect(glance_rows.map(&:first)).not_to include show_key("banner.version")
+      end
+
+      it "shows neither Verfahrensschritt nor Version for an empty step when Verfahrensschritte are used" do
+        Setting["municipal_plans.procedure_steps"] = true
+        plan.update_columns(version: "1.2", procedure_step_id: nil)
+
+        get municipal_plan_path(plan)
+
+        expect(glance_rows.map(&:first)).not_to include show_key("at_a_glance.procedure_step")
+        expect(glance_rows.map(&:first)).not_to include show_key("banner.version")
+      end
+
+      it "keeps the Version and no Verfahrensschritt when Verfahrensschritte are not used" do
+        Setting["municipal_plans.procedure_steps"] = false
+        plan.update_columns(version: "1.2", procedure_step_id: create(:municipal_plan_procedure_step).id)
+
+        get municipal_plan_path(plan)
+
+        expect(glance_rows.last).to eq [show_key("banner.version"), "1.2"]
+        expect(glance_rows.map(&:first)).not_to include show_key("at_a_glance.procedure_step")
       end
 
       it "leaves out the Kosten row when no costs are given" do

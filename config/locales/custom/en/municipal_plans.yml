@@ -121,6 +121,7 @@ en:
           costs: Costs
           formal: Formal participation
           informal: Informal participation
+          procedure_step: Procedure step
         last_resolution: Last resolution
         processing_status: Current processing status
         next_steps: Schedule, next steps

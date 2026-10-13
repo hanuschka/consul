@@ -36,6 +36,10 @@ class MunicipalPlans::HeroComponent < ApplicationComponent
     t("custom.municipal_plans.show.updated_on", date: date)
   end
 
+  def version?
+    municipal_plan.version.present? && !MunicipalPlan.procedure_steps_enabled?
+  end
+
   def chips?
     status_label.present? || sorted_topics.any?
   end

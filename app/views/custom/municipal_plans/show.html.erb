@@ -187,7 +187,14 @@
                 <dd><%= t("custom.municipal_plans.show.participation_block.#{value ? "status_yes" : "status_no"}") %></dd>
               </div>
             <% end %>
-            <% if @municipal_plan.version.present? %>
+            <% if MunicipalPlan.procedure_steps_enabled? %>
+              <% if @municipal_plan.procedure_step_label.present? %>
+                <div class="municipal-plan-glance--row">
+                  <dt><%= t("custom.municipal_plans.show.at_a_glance.procedure_step") %></dt>
+                  <dd><%= @municipal_plan.procedure_step_label %></dd>
+                </div>
+              <% end %>
+            <% elsif @municipal_plan.version.present? %>
               <div class="municipal-plan-glance--row">
                 <dt><%= t("custom.municipal_plans.show.banner.version") %></dt>
                 <dd><%= @municipal_plan.version %></dd>

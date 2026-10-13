@@ -7203,9 +7203,9 @@ paths:
       - name: districts
         in: query
         required: false
-        description: Comma-separated Ortsteil ids; a Vorhaben matches if it lies in
-          any of them. `city_wide` matches the Vorhaben for the whole city (`city_wide:
-          true`)
+        description: 'Comma-separated Ortsteil ids; a Vorhaben matches if it lies
+          in any of them. `city_wide` matches the Vorhaben for the whole city (`city_wide:
+          true`)'
         schema:
           type: string
       - name: topics
@@ -7237,6 +7237,21 @@ paths:
                         type: array
                         items:
                           type: object
+                          properties:
+                            version:
+                              type: string
+                              description: Versionsnummer, set by the system
+                            procedure_step:
+                              type: object
+                              nullable: true
+                              description: Verfahrensschritt from the list the instance
+                                maintains, with its name as entered there, null when
+                                none is set
+                              properties:
+                                id:
+                                  type: integer
+                                name:
+                                  type: string
                     required:
                     - municipal_plans
                   pagination:
@@ -7308,6 +7323,21 @@ paths:
                     properties:
                       municipal_plan:
                         type: object
+                        properties:
+                          version:
+                            type: string
+                            description: Versionsnummer, set by the system
+                          procedure_step:
+                            type: object
+                            nullable: true
+                            description: Verfahrensschritt from the list the instance
+                              maintains, with its name as entered there, null when
+                              none is set
+                            properties:
+                              id:
+                                type: integer
+                              name:
+                                type: string
                     required:
                     - municipal_plan
                 required:

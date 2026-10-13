@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_12_123454) do
+ActiveRecord::Schema.define(version: 2026_10_13_103339) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1956,6 +1956,22 @@ ActiveRecord::Schema.define(version: 2026_10_12_123454) do
     t.index ["user_id"], name: "index_municipal_plan_officers_on_user_id", unique: true
   end
 
+  create_table "municipal_plan_procedure_step_translations", force: :cascade do |t|
+    t.bigint "municipal_plan_procedure_step_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_mp_procedure_step_translations_on_locale"
+    t.index ["municipal_plan_procedure_step_id"], name: "index_mp_procedure_step_translations_on_procedure_step_id"
+  end
+
+  create_table "municipal_plan_procedure_steps", force: :cascade do |t|
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "municipal_plan_topic_assignments", force: :cascade do |t|
     t.bigint "municipal_plan_id", null: false
     t.bigint "municipal_plan_topic_id", null: false
@@ -2023,8 +2039,10 @@ ActiveRecord::Schema.define(version: 2026_10_12_123454) do
     t.datetime "released_at"
     t.string "legacy_id"
     t.boolean "city_wide", default: false, null: false
+    t.bigint "procedure_step_id"
     t.index ["given_order"], name: "index_municipal_plans_on_given_order"
     t.index ["legacy_id"], name: "index_municipal_plans_on_legacy_id", unique: true
+    t.index ["procedure_step_id"], name: "index_municipal_plans_on_procedure_step_id"
     t.index ["released_plan_id"], name: "index_municipal_plans_on_released_plan_id"
     t.index ["responsible_type", "responsible_id"], name: "index_municipal_plans_on_responsible"
     t.index ["status"], name: "index_municipal_plans_on_status"
@@ -4082,6 +4100,7 @@ ActiveRecord::Schema.define(version: 2026_10_12_123454) do
   add_foreign_key "mitmachbox_participations", "users"
   add_foreign_key "moderators", "users"
   add_foreign_key "municipal_plan_notices", "municipal_plans"
+  add_foreign_key "municipal_plans", "municipal_plan_procedure_steps", column: "procedure_step_id"
   add_foreign_key "municipal_plans", "municipal_plans", column: "released_plan_id"
   add_foreign_key "navbar_items", "navbar_items", column: "parent_id"
   add_foreign_key "navbar_items", "projekts"

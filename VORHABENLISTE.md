@@ -49,6 +49,7 @@ einer Arbeitskopie und werden erst mit der Freigabe öffentlich (siehe
 |---|---|
 | `status` | `draft` (Entwurf), `published` (Veröffentlicht) oder `archived` (Archiviert). Standard: `draft`. |
 | `version` | Versionsnummer, z. B. `1.4`. Beginnt bei `0.1` und wird automatisch gesetzt (siehe [Versionsnummer und Aktualisierungsdatum](#versionsnummer-und-aktualisierungsdatum)). |
+| `procedure_step_id` | Verfahrensschritt (`MunicipalPlan::ProcedureStep`, siehe [Zugeordnete Daten](#zugeordnete-daten)) oder leer. Optional, auch für die Freigabe. Nur im Einsatz bei aktiver Einstellung `municipal_plans.procedure_steps` (siehe [Einstellungen](#einstellungen)). |
 | `content_updated_at` | Aktualisierungsdatum: Tag der letzten inhaltlichen Änderung. Wird automatisch gesetzt. |
 | `given_order` | Redaktionelle Reihenfolge in der Liste. Leer bedeutet: ans Ende. |
 | `formal_participation` | Bürgerbeteiligung formell (ja/nein). |
@@ -91,6 +92,7 @@ Diese Felder werden je Sprache gespeichert (Spalte `locale`).
 | `municipal_plan_district_assignments` (`MunicipalPlan::DistrictAssignment`) | Betroffene Ortsteile. Verknüpft ein Vorhaben mit `RegisteredAddress::District`. Höchstens 4 je Vorhaben (`MunicipalPlan::MAX_DISTRICTS`). |
 | `municipal_plan_topic_assignments` (`MunicipalPlan::TopicAssignment`) | Schwerpunktmäßig betroffene Themen. |
 | `municipal_plan_topics` (`MunicipalPlan::Topic`) | Die Themen selbst. Feld `given_order` für die Reihenfolge, übersetzbarer `name` in `municipal_plan_topic_translations`. Ein Thema, das noch einem Vorhaben zugeordnet ist, kann nicht gelöscht werden. |
+| `municipal_plan_procedure_steps` (`MunicipalPlan::ProcedureStep`) | Die Verfahrensschritte. Die Administration pflegt sie im Verwaltungsbereich unter „Verfahrensschritte“, der Menüeintrag erscheint nur bei aktiver Einstellung `municipal_plans.procedure_steps`. Übersetzbarer `name` in `municipal_plan_procedure_step_translations`, so wie er öffentlich erscheint, z. B. „2.0 Frühzeitige Unterrichtung der Öffentlichkeit“. Feld `given_order` für die Reihenfolge, die per Drag & Drop festgelegt wird. Ein Verfahrensschritt, der noch einem Vorhaben zugeordnet ist, kann nicht gelöscht werden. |
 | `municipal_plan_links` (`MunicipalPlan::Link`) | Links und Dokumente: `title`, `url` (beide Pflicht) und `given_order`. |
 | `map_locations` | Kartenposition des Vorhabens, über das gemeinsame `Mappable`-Modul der Plattform. |
 | `municipal_plan_notices` (`MunicipalPlan::Notice`) | Hinweise aus der Öffentlichkeit: `name` (optional, höchstens 100 Zeichen), `email` (Pflicht, höchstens 255 Zeichen), `body` (Pflicht, höchstens 5000 Zeichen). Werden mit dem Vorhaben gelöscht. |
@@ -143,7 +145,7 @@ zuständig eingetragen ist oder Mitglied der zuständigen Bearbeitergruppe ist.
 | Vorhaben löschen | ja | – | – |
 | Redaktionelle Reihenfolge ändern | ja | nur bei `municipal_plans.officers_see_all` | – |
 | In ein Beteiligungsprojekt umwandeln | ja | – | – |
-| Sachbearbeitung, Bearbeitergruppen und Themen verwalten | ja | – | – |
+| Sachbearbeitung, Bearbeitergruppen, Themen und Verfahrensschritte verwalten | ja | – | – |
 | Einstellungen der Vorhabenliste ändern | ja | – | – |
 | Veröffentlichte und archivierte Vorhaben ansehen | ja | ja | ja |
 | Hinweis zu einem veröffentlichten Vorhaben senden | ja | ja | ja |
@@ -232,7 +234,8 @@ derselben Adresse erreichbar.
 - Die Hauptversion wechselt nur einmal, von `0` auf `1`, bei der ersten
   Freigabe.
 - Als inhaltlich gelten alle übersetzbaren Felder, die Beteiligungs- und
-  Kontaktfelder, das Systempostfach sowie Ortsteile, Themen und Links.
+  Kontaktfelder, das Systempostfach, der Verfahrensschritt sowie Ortsteile,
+  Themen und Links.
   Reihenfolge, interne Notizen, Zuständigkeit, Status und Archivdatum ändern
   weder Versionsnummer noch Aktualisierungsdatum.
 - Die redaktionelle Reihenfolge wird direkt geschrieben, ohne Prüfungen und
@@ -284,8 +287,16 @@ Vorhaben gelöscht werden.
   wird keine Karte angezeigt. Die Karte funktioniert mit Leaflet und Mapbox.
 - **Navigation:** Für das Hauptmenü gibt es einen vordefinierten Eintrag
   (`NavbarItem`), der nur bei aktivem Modul erscheint.
+- **Verfahrensschritt:** Bei aktiver Einstellung `municipal_plans.procedure_steps`
+  zeigt die Detailseite unter „Auf einen Blick“ den Verfahrensschritt statt der
+  Versionsnummer, sofern einer gesetzt ist. Die Versionsnummer entfällt dann auch
+  im Kopfbereich und erscheint nur noch im Verwaltungsbereich.
 
-Vorhaben sind nicht Teil der REST-API.
+Die REST-API liefert freigegebene Vorhaben nur lesend unter
+`/api/municipal_plans` und `/api/municipal_plans/:id` (beschrieben in
+`public/api_docs/v1/swagger.yaml`). Neben `version` enthält jedes Vorhaben
+unabhängig von der Einstellung das Feld `procedure_step` mit `id` und `name`
+des Verfahrensschritts, oder `null`, solange keiner gesetzt ist.
 
 ## Umwandlung in ein Beteiligungsprojekt
 
@@ -305,7 +316,7 @@ Zeichen und 5 Zeilen begrenzt.
 
 ## Einstellungen
 
-Das Modul bringt drei Einstellungen mit (`app/models/custom/setting.rb`). Alle
+Das Modul bringt vier Einstellungen mit (`app/models/custom/setting.rb`). Alle
 sind in einer neuen Instanz ausgeschaltet.
 
 | Einstellung | Wirkung |
@@ -313,6 +324,7 @@ sind in einer neuen Instanz ausgeschaltet.
 | `process.municipal_plans` | Schaltet das Modul öffentlich ein. Ist sie aus, antworten alle öffentlichen Seiten und das Hinweisformular mit `403 Forbidden`, und der Menüeintrag und der Rückverweis in Projekten entfallen. Der Verwaltungsbereich bleibt unabhängig davon nutzbar. |
 | `municipal_plans.officers_see_all` | Die Sachbearbeitung sieht im Verwaltungsbereich alle Vorhaben statt nur der ihr zugeordneten und darf die redaktionelle Reihenfolge ändern. Bearbeiten darf sie weiterhin nur zugeordnete Vorhaben. |
 | `municipal_plans.auto_archive` | Vorhaben werden am hinterlegten Archivdatum automatisch archiviert (siehe [Archivieren](#archivieren)). |
+| `municipal_plans.procedure_steps` | „Verfahrensschritte verwenden“: Der Verwaltungsbereich zeigt die Seite „Verfahrensschritte“, das Formular bietet die dort gepflegten Schritte zur Auswahl an, und die öffentliche Detailseite zeigt den gewählten Verfahrensschritt statt der Versionsnummer (siehe [Öffentliche Seiten](#öffentliche-seiten)). Die Versionsnummer wird weiter gepflegt und erscheint nur noch im Verwaltungsbereich. Bereits gesetzte Verfahrensschritte bleiben beim Ausschalten gespeichert. |
 
 Die Administration schaltet sie im Verwaltungsbereich unter „Vorhabenliste →
 Einstellungen“ (`/adm/municipal_plans/settings`). Die Seite ist der
@@ -321,3 +333,28 @@ Administration vorbehalten (`Adm::MunicipalPlans::SettingPolicy`).
 Wie bei allen Einstellungen der Plattform legt die Bereitstellung fehlende
 Einträge mit ihrem Standardwert selbst an. Eine Migration ist dafür nicht
 nötig.
+
+## Übernahme aus einem Altsystem
+
+Die Aufgabe `municipal_plans:legacy_import` übernimmt Vorhaben aus dem
+Export eines Altsystems (`MunicipalPlans::LegacyImport`). Den
+Verfahrensschritt leitet sie aus der Hauptziffer von `txt_versionsnummer` ab:
+Hauptziffer N ergibt den N-ten Verfahrensschritt in der festgelegten
+Reihenfolge, aus `2` oder `2.3` also den zweiten. Die Verfahrensschritte müssen
+deshalb vorher angelegt sein. Ist die Einstellung
+`municipal_plans.procedure_steps` aktiv und noch kein Verfahrensschritt
+angelegt, bricht die Aufgabe mit einer Meldung ab, ohne etwas zu ändern. Ist
+das Feld leer oder gibt es keinen N-ten Schritt, bleibt der Verfahrensschritt
+leer, und der Importbericht (`problems.csv`) nennt das Vorhaben.
+
+Für bereits übernommene Vorhaben ergänzt
+
+```
+bin/rails municipal_plans:backfill_legacy_fields FILE=...
+```
+
+aus demselben Export nur den Verfahrensschritt und „Gesamtes Stadtgebiet“
+(`MunicipalPlans::LegacyBackfill`). Den Verfahrensschritt ordnet sie wie der
+Import zu und bricht ebenso ab, wenn noch keiner angelegt ist. Bereits
+gesetzte Werte bleiben erhalten, und eine offene Arbeitskopie wird ebenfalls
+ergänzt.

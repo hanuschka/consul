@@ -268,6 +268,7 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
       params.require(:municipal_plan).permit(
         :given_order,
         :city_wide,
+        :procedure_step_id,
         :formal_participation, :informal_participation,
         :contact_name, :contact_phone, :contact_email,
         :system_mailbox_email,

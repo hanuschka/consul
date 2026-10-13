@@ -3,6 +3,10 @@ FactoryBot.define do
     sequence(:name) { |n| "Thema #{n}" }
   end
 
+  factory :municipal_plan_procedure_step, class: "MunicipalPlan::ProcedureStep" do
+    sequence(:name) { |n| "Verfahrensschritt #{n}" }
+  end
+
   factory :municipal_plan_officer, class: "MunicipalPlan::Officer" do
     user
   end

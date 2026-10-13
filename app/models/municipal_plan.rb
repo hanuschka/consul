@@ -24,6 +24,7 @@ class MunicipalPlan < ApplicationRecord
 
   CONTENT_ATTRIBUTES = %w[
     city_wide
+    procedure_step_id
     formal_participation
     informal_participation
     contact_name
@@ -66,6 +67,8 @@ class MunicipalPlan < ApplicationRecord
   end
 
   belongs_to :responsible, polymorphic: true, optional: true
+  belongs_to :procedure_step, class_name: "MunicipalPlan::ProcedureStep", optional: true,
+    inverse_of: :municipal_plans
   belongs_to :released_plan, class_name: "MunicipalPlan", optional: true, inverse_of: :working_copy
   has_one :working_copy, class_name: "MunicipalPlan", foreign_key: :released_plan_id,
     dependent: :destroy, inverse_of: :released_plan
@@ -90,6 +93,7 @@ class MunicipalPlan < ApplicationRecord
   validates_translation :title, presence: true
   validate :districts_within_limit
   validate :city_wide_without_districts
+  validate :procedure_step_exists
   validate :release_requirements, unless: :editable_draft?
   validate :released_plan_is_a_released_version
 
@@ -248,6 +252,18 @@ class MunicipalPlan < ApplicationRecord
     map_location unless city_wide?
   end
 
+  def procedure_step_label
+    procedure_step&.name
+  end
+
+  def self.procedure_steps_enabled?
+    Setting["municipal_plans.procedure_steps"].present?
+  end
+
+  def self.procedure_step_options
+    MunicipalPlan::ProcedureStep.includes(:translations).map { |step| [step.name, step.id] }
+  end
+
   def self.sort_names(names)
     names.compact_blank.sort_by { |name| name_sort_key(name) }
   end
@@ -389,6 +405,12 @@ class MunicipalPlan < ApplicationRecord
       return unless city_wide? && district_assignments.reject(&:marked_for_destruction?).any?
 
       errors.add(:base, I18n.t("activerecord.errors.models.municipal_plan.city_wide_with_districts"))
+    end
+
+    def procedure_step_exists
+      return if procedure_step_id.nil? || procedure_step.present?
+
+      errors.add(:procedure_step_id, :inclusion)
     end
 
     def districts_are_present

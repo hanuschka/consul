@@ -146,6 +146,12 @@
         <div class="adm-detail-table__label"><%= t(".version") %></div>
         <div class="adm-detail-table__value"><%= @municipal_plan.version %></div>
       </div>
+      <% if MunicipalPlan.procedure_steps_enabled? %>
+        <div class="adm-detail-table__row">
+          <div class="adm-detail-table__label"><%= t(".procedure_step") %></div>
+          <div class="adm-detail-table__value"><%= @municipal_plan.procedure_step_label || t(".none") %></div>
+        </div>
+      <% end %>
       <div class="adm-detail-table__row">
         <div class="adm-detail-table__label"><%= t(".links") %></div>
         <div class="adm-detail-table__value">

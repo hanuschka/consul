@@ -18,6 +18,9 @@ de:
       municipal_plan/topic:
         one: "Kategorie"
         other: "Kategorien"
+      municipal_plan/procedure_step:
+        one: "Verfahrensschritt"
+        other: "Verfahrensschritte"
       activity:
         one: "Aktivität"
         other: "Aktivitäten"
@@ -160,6 +163,8 @@ de:
         map_location: "Kartenposition"
         districts: "Betroffenes Gebiet / Ortsteil"
         city_wide: "Gesamtes Stadtgebiet"
+        procedure_step: "Verfahrensschritt"
+        procedure_step_id: "Verfahrensschritt"
         topics: "Schwerpunktmäßig betroffene Kategorien"
         links: "Links und Dokumente"
         internal_notes: "Interne Notizen"
@@ -195,6 +200,10 @@ de:
       municipal_plan/topic:
         name: "Name"
       municipal_plan/topic/translation:
+        name: "Name"
+      municipal_plan/procedure_step:
+        name: "Name"
+      municipal_plan/procedure_step/translation:
         name: "Name"
       municipal_plan/officer_group:
         name: "Name"

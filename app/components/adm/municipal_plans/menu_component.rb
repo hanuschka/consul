@@ -4,7 +4,8 @@ class Adm::MunicipalPlans::MenuComponent < Adm::BaseMenuComponent
   end
 
   def menu_items
-    [municipal_plans_item, officers_item, settings_item, officer_groups_item, topics_item].compact
+    [municipal_plans_item, officers_item, settings_item, officer_groups_item, topics_item,
+     procedure_steps_item].compact
   end
 
   private
@@ -47,6 +48,17 @@ class Adm::MunicipalPlans::MenuComponent < Adm::BaseMenuComponent
         label: t("adm.municipal_plans.menu.items.topics"),
         icon: "category",
         path: adm_municipal_plans_topics_path
+      }
+    end
+
+    def procedure_steps_item
+      return unless MunicipalPlan.procedure_steps_enabled?
+      return unless Adm::MunicipalPlans::ProcedureStepPolicy.new(current_user, nil).index?
+
+      {
+        label: t("adm.municipal_plans.menu.items.procedure_steps"),
+        icon: "format_list_numbered",
+        path: adm_municipal_plans_procedure_steps_path
       }
     end
 

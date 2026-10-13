@@ -41,6 +41,33 @@ describe Sidebar::CheckboxFilterComponent, type: :component do
     expect(note.text(:all)).to eq I18n.t("custom.sidebar_filter.checkbox.updates_on_change")
   end
 
+  it "renders nothing after the label of an option without a third element" do
+    fragment = render_filter
+
+    expect(fragment.css("rich-tooltip")).to be_empty
+    expect(fragment.css("li").map { |item| item["class"] }).to eq ["", ""]
+    expect(fragment.css("li").map { |item| item.element_children.map(&:name) }).to eq [["label"], ["label"]]
+  end
+
+  context "with a renderable third element on an option" do
+    let(:info) { MunicipalPlans::ParticipationInfoComponent.new(kind: "formal") }
+    let(:options) { [["formelle Bürgerbeteiligung", "formal", info], ["Bildung", 2]] }
+
+    it "renders it after the label, outside it, and only for that option" do
+      fragment = render_filter
+      item = fragment.at_css("#filter_topic_formal").ancestors("li").first
+      other = fragment.at_css("#filter_topic_2").ancestors("li").first
+
+      expect(item.element_children.map(&:name)).to eq %w[label rich-tooltip]
+      expect(item.at_css("label rich-tooltip")).to be_nil
+      expect(item.at_css("rich-tooltip > span[role=img]")["aria-label"])
+        .to eq I18n.t("custom.municipal_plans.participation_info.formal.label")
+      expect(item["class"].split).to eq %w[u-flex u-align-center gap-10]
+      expect(other.element_children.map(&:name)).to eq ["label"]
+      expect(other["class"]).to eq ""
+    end
+  end
+
   it "shows the empty text when there are no options" do
     render_inline(Sidebar::CheckboxFilterComponent.new(identifier: :topics, options: [], title: "Thema",
                                                        icon: "tags", id_prefix: "filter_topic",

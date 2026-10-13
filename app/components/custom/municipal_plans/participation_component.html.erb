@@ -5,7 +5,10 @@
     <% rows.each do |row| %>
       <div class="municipal-plan-participation--row">
         <div class="municipal-plan-participation--kind">
-          <h3 class="municipal-plan-participation--label"><%= t("custom.municipal_plans.show.participation_block.#{row[:key]}") %></h3>
+          <div class="municipal-plan-participation--label-row">
+            <h3 class="municipal-plan-participation--label"><%= t("custom.municipal_plans.show.participation_block.#{row[:key]}") %></h3>
+            <%= render MunicipalPlans::ParticipationInfoComponent.new(kind: row[:key]) %>
+          </div>
           <p class="municipal-plan-participation--status <%= row[:value] ? "-yes" : "-no" %>">
             <% if row[:value] %>
               <i class="fas fa-check-circle" aria-hidden="true"></i>
@@ -17,7 +20,7 @@
           </p>
         </div>
         <% if row[:reason].present? %>
-          <div class="municipal-plan-participation--reason"><%= helpers.auto_link_already_sanitized_html simple_format(row[:reason]) %></div>
+          <div class="municipal-plan-participation--reason"><%= helpers.auto_link_already_sanitized_html helpers.municipal_plan_text(row[:reason]) %></div>
         <% end %>
       </div>
     <% end %>

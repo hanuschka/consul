@@ -304,6 +304,9 @@ de:
       auto_archive: Vorhaben automatisch archivieren
       auto_archive_description: >
         Archiviert ein Vorhaben selbsttätig, sobald das an ihm hinterlegte Archivdatum erreicht ist. Im Frontend verschwindet es zu diesem Zeitpunkt aus der Übersicht und bleibt im Archivbereich unter derselben Adresse erreichbar. Aktivieren Sie diese Funktion, wenn Ihre Fachbereiche das Ende eines Vorhabens verlässlich im Voraus eintragen und Sie sich das manuelle Archivieren sparen wollen.
+      procedure_steps: Verfahrensschritte verwenden
+      procedure_steps_description: >
+        Bietet im Formular eines Vorhabens die im Verwaltungsbereich gepflegten Verfahrensschritte zur Auswahl an, in der dort festgelegten Reihenfolge. Die öffentliche Detailseite zeigt dann den Verfahrensschritt statt der Versionsnummer; im Verwaltungsbereich bleibt die Versionsnummer sichtbar. Aktivieren Sie diese Funktion, wenn Ihre Vorhaben ein förmliches Verfahren mit festen Schritten durchlaufen, etwa Bauleitplanverfahren nach dem BauGB.
     deficiency_reports:
       feature_name: Bezeichnung des Bereichs
       feature_name_description: >

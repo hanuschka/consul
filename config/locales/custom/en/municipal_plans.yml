@@ -8,11 +8,12 @@ en:
         archive_title: Municipal plans archive
         archive_intro_text: The archive holds plans that have been completed or are no longer being pursued. The entries keep all their information but are no longer updated.
         archive_empty_list_text: There are no plans in the archive at the moment.
+        archive_count: Number of archived plans
         archive_link: Go to the municipal plans archive
         overview_link: Back to the plan list
         to_municipal_plan: View plan
         updated_on: "Updated on %{date}"
-        count: Plans
+        count: Number of current plans
         orders:
           relevance: Relevance
           given_order: Editorial order
@@ -70,6 +71,13 @@ en:
         updated: updated entry
         formal_participation: formal citizen participation
         informal_participation: informal citizen participation
+      participation_info:
+        formal:
+          label: Explanation of formal citizen participation
+          text: Formal citizen participation refers to all forms of participation that are based on laws, ordinances and other legal provisions.
+        informal:
+          label: Explanation of informal citizen participation
+          text: Informal citizen participation (also called "voluntary" citizen participation) is not required by law; instead, it is freely decided when and how citizen participation is carried out.
       notices:
         create:
           success: Thank you! Your notice was forwarded to the responsible department.
@@ -89,13 +97,12 @@ en:
           status_new: new
           status_updated: updated
         intro:
-          title: What it is about
+          title: Summary
         timeline:
           title: Where does the plan stand?
           now: Now
         background:
-          eyebrow: Background
-          title: Further information on the plan
+          title: Background – Further information on the plan
         participation_block:
           formal: Formal
           informal: Informal
@@ -114,6 +121,7 @@ en:
           costs: Costs
           formal: Formal participation
           informal: Informal participation
+          procedure_step: Procedure step
         last_resolution: Last resolution
         processing_status: Current processing status
         next_steps: Schedule, next steps

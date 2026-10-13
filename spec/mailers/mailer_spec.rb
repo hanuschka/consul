@@ -63,4 +63,31 @@ describe Mailer do
       end
     end
   end
+
+  describe "the hidden email" do
+    let(:author) { create(:user, username: "Anna", locale: "de") }
+    let(:proposal) { create(:proposal, author: author, title: "Mehr Bänke im Park") }
+
+    it "uses the customized template" do
+      SiteCustomization::EmailTemplate.create!(
+        mailer_class: "Mailer",
+        mailer_action: "resource_hidden",
+        locale: "de",
+        subject: "Ihr Beitrag wurde ausgeblendet",
+        body: "<p>Guten Tag {{ username }}, {{ resource_text }}</p>"
+      )
+
+      email = Mailer.resource_hidden(proposal)
+
+      expect(email.subject).to eq "Ihr Beitrag wurde ausgeblendet"
+      expect(email.body.encoded).to include("Guten Tag Anna, Mehr Bänke im Park")
+    end
+
+    it "uses the default text otherwise" do
+      email = Mailer.resource_hidden(proposal)
+
+      expect(email.subject).to eq I18n.t("mailers.resource_hidden.subject", locale: :de)
+      expect(email.body.encoded).to include("Hallo Anna,")
+    end
+  end
 end

@@ -118,6 +118,32 @@ describe "Vorhaben in /adm", type: :request do
     end
   end
 
+  describe "a Vorhaben for the whole city" do
+    it "is created and released without an Ortsteil and without a map position" do
+      post adm_municipal_plans_municipal_plans_path, params: {
+        responsible: "Officer:#{officer.id}",
+        municipal_plan: { title: "Klimaschutzkonzept", short_description: "Kurz",
+                          processing_status: "Läuft", next_steps: "Beschluss", city_wide: "1",
+                          topic_ids: [topic.id] }
+      }
+      created = MunicipalPlan.last
+
+      patch release_adm_municipal_plans_municipal_plan_path(created)
+
+      expect(created.reload).to be_city_wide
+      expect(created).to be_published
+      expect(created.map_location).to be_nil
+    end
+
+    it "is refused together with an Ortsteil" do
+      patch_plan(city_wide: "1", district_ids: [district.id])
+
+      expect(plan.reload).not_to be_city_wide
+      expect(response.body)
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.city_wide_with_districts"))
+    end
+  end
+
   describe "the release process" do
     let(:released) { create(:municipal_plan, :published, responsible: officer, version: "1.0") }
 

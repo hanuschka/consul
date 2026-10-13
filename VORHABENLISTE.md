@@ -53,6 +53,7 @@ einer Arbeitskopie und werden erst mit der Freigabe öffentlich (siehe
 | `given_order` | Redaktionelle Reihenfolge in der Liste. Leer bedeutet: ans Ende. |
 | `formal_participation` | Bürgerbeteiligung formell (ja/nein). |
 | `informal_participation` | Bürgerbeteiligung informell (ja/nein). |
+| `city_wide` | „Gesamtes Stadtgebiet“ (ja/nein). Ersetzt die Ortsteile: Ein solches Vorhaben hat keine Ortsteile, braucht keine Kartenposition und erscheint ohne Markierung auf der Karte. |
 | `contact_name` | Name der Ansprechperson. |
 | `contact_phone` | Telefon der Ansprechperson. |
 | `contact_email` | E-Mail der Ansprechperson. |
@@ -165,8 +166,8 @@ vollständig sein. Pflicht sind:
 
 - Kurze Beschreibung, aktueller Bearbeitungsstand, nächste Schritte
 - Zuständige Sachbearbeitung
-- Kartenposition
-- mindestens ein Ortsteil und mindestens ein Thema
+- Kartenposition, außer bei „Gesamtes Stadtgebiet“
+- mindestens ein Ortsteil oder „Gesamtes Stadtgebiet“, und mindestens ein Thema
 
 Die Liste steht in `MunicipalPlan::RELEASE_REQUIRED_FIELDS`. Ein Rich-Text-Feld,
 das nur leeres Markup enthält, gilt als leer. Beim Einreichen erhält jedes
@@ -260,7 +261,8 @@ Vorhaben gelöscht werden.
 | `/municipal_plans/archive` | Übersicht der archivierten Vorhaben, mit denselben Filtern |
 | `/municipal_plans/:id` | Detailseite eines veröffentlichten oder archivierten Vorhabens |
 
-- **Filter** (Parameter): Ortsteile (`districts[]`), Themen (`topics[]`),
+- **Filter** (Parameter): Ortsteile (`districts[]`, der Wert `city_wide` steht
+  für „Gesamtes Stadtgebiet“), Themen (`topics[]`),
   Beteiligung (`participation[]`), neu/aktualisiert (`recency[]`) und ein
   Zeitraum des Aktualisierungsdatums (`updated_from`, `updated_to`).
 - **Suche:** Volltextsuche über `pg_search` mit dieser Gewichtung: Titel vor

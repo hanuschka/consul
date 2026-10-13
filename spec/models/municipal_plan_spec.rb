@@ -329,6 +329,40 @@ describe MunicipalPlan do
     end
   end
 
+  describe "Gesamtes Stadtgebiet" do
+    it "is published without an Ortsteil and without a map location" do
+      plan = build(:municipal_plan, :published, :city_wide, responsible: officer)
+
+      expect(plan.district_assignments).to be_empty
+      expect(plan.map_location).to be_nil
+      expect(plan).to be_valid
+    end
+
+    it "cannot be combined with an Ortsteil" do
+      plan = build(:municipal_plan, :city_wide, responsible: officer)
+      plan.district_assignments.build(district: create(:registered_address_district))
+
+      expect(plan).not_to be_valid
+      expect(plan.errors[:base])
+        .to include(I18n.t("activerecord.errors.models.municipal_plan.city_wide_with_districts"))
+    end
+
+    it "shows as the Ortsteil" do
+      plan = build(:municipal_plan, :city_wide, responsible: officer)
+
+      expect(plan.sorted_district_names).to eq([MunicipalPlan.human_attribute_name(:city_wide)])
+    end
+
+    it "hides a map location left over from before" do
+      plan = create(:municipal_plan, responsible: officer)
+      plan.district_assignments.destroy_all
+      plan.update!(city_wide: true)
+
+      expect(plan.map_location).to be_present
+      expect(plan.displayed_map_location).to be_nil
+    end
+  end
+
   describe "Kartenposition" do
     it "requires a map location for publication" do
       plan = build(:municipal_plan, :published, responsible: officer)

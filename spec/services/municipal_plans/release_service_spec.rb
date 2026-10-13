@@ -67,6 +67,17 @@ describe MunicipalPlans::ReleaseService do
       expect(plan.content_updated_at).to eq(Date.current)
     end
 
+    it "switches the released Vorhaben to the whole city and drops its Ortsteile" do
+      copy.district_ids = []
+      copy.update!(city_wide: true, submitted_at: Time.current)
+
+      MunicipalPlans::ReleaseService.call(copy)
+
+      expect(plan.reload).to be_city_wide
+      expect(plan.district_ids).to be_empty
+      expect(plan).to be_valid
+    end
+
     it "carries Themen, Links and the Kartenposition over" do
       copy.topic_ids = [topic.id]
       copy.links.create!(title: "Rahmenplan", url: "https://example.org", given_order: 1)

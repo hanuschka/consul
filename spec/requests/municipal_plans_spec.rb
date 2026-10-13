@@ -441,6 +441,46 @@ describe "Vorhabenliste", type: :request do
     end
   end
 
+  describe "Gesamtes Stadtgebiet" do
+    before { enable_module(true) }
+
+    let(:city_wide_label) { MunicipalPlan.human_attribute_name(:city_wide) }
+    let!(:city_wide) do
+      create(:municipal_plan, :published, responsible: officer, title: "Klimaschutzkonzept").tap do |created|
+        created.district_assignments.destroy_all
+        created.update!(city_wide: true)
+      end
+    end
+
+    it "offers it as an Ortsteil filter that finds only the Vorhaben for the whole city" do
+      plan
+
+      get municipal_plans_path(districts: [MunicipalPlansQuery::CITY_WIDE])
+
+      document = Nokogiri::HTML(response.body)
+      expect(document.at_css("#filter_district_city_wide")["checked"]).to be_present
+      expect(response.body).to include("Klimaschutzkonzept")
+      expect(response.body).not_to include("Weiterentwicklung des Eichplatz-Areals")
+    end
+
+    it "keeps the Vorhaben for the whole city out of the filter for a single Ortsteil" do
+      get municipal_plans_path(districts: plan.district_ids)
+
+      expect(response.body).to include("Weiterentwicklung des Eichplatz-Areals")
+      expect(response.body).not_to include("Klimaschutzkonzept")
+    end
+
+    it "names it on the detail page and shows no map, even with an old pin" do
+      expect(city_wide.map_location).to be_present
+
+      get municipal_plan_path(city_wide)
+
+      document = Nokogiri::HTML(response.body)
+      expect(document.at_css(".municipal-plan-glance").text).to include(city_wide_label)
+      expect(document.at_css(".municipal-plan-location")).to be_nil
+    end
+  end
+
   describe "the Ortsteil map" do
     before { enable_module(true) }
 

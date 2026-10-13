@@ -12,7 +12,7 @@
 <% end %>
 
 <% rich_text_present = ->(value) { strip_tags(value.to_s).strip.present? } %>
-<% map_location = @municipal_plan.map_location %>
+<% map_location = @municipal_plan.displayed_map_location %>
 <% projekts = @municipal_plan.visible_projekts_for(current_user).select(&:page) %>
 
 <main>

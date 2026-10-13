@@ -26,6 +26,7 @@ class MunicipalPlanSerializer < BaseSerializer
         :status,
         :version,
         :content_updated_at,
+        :city_wide,
         :formal_participation,
         :informal_participation,
         :contact_name,
@@ -72,7 +73,7 @@ class MunicipalPlanSerializer < BaseSerializer
   private
 
     def serialize_map_location
-      map_location = municipal_plan.map_location
+      map_location = municipal_plan.displayed_map_location
       return if map_location.blank?
 
       pin = map_location.pin_coordinates

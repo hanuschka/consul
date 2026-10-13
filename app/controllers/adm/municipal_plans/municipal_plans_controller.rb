@@ -173,7 +173,8 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
     end
 
     def district_filter_options
-      ::RegisteredAddress::District.order(:name).to_h { |d| [d.id.to_s, d.name] }
+      { ::MunicipalPlansQuery::CITY_WIDE => MunicipalPlan.human_attribute_name(:city_wide) }
+        .merge(::RegisteredAddress::District.order(:name).to_h { |d| [d.id.to_s, d.name] })
     end
 
     def topic_filter_options
@@ -266,6 +267,7 @@ class Adm::MunicipalPlans::MunicipalPlansController < Adm::MunicipalPlans::BaseC
     def municipal_plan_params
       params.require(:municipal_plan).permit(
         :given_order,
+        :city_wide,
         :formal_participation, :informal_participation,
         :contact_name, :contact_phone, :contact_email,
         :system_mailbox_email,

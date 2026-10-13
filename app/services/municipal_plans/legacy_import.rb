@@ -13,6 +13,7 @@ module MunicipalPlans
     OPEN_ENDED_YEAR = 2999
     SESSIONNET_HOST = /(\A|\.)sessionnet\.(owl-it|jena)\.de\z/i
     DEFAULT_CONTACT = { name: "Zentrale Stelle – bitte ersetzen", role: nil, phone: nil, email: nil }.freeze
+    CITY_WIDE_NAME = "gesamtes stadtgebiet".freeze
 
     def initialize(file:, officer_group:, dry_run: false, report_dir: nil, base_url: nil, contact: {})
       @file = file
@@ -188,7 +189,18 @@ module MunicipalPlans
       end
 
       def assign_districts(plan, row, districts, legacy_id, title)
-        matched = split_list(row["rel_ortschaften"]).filter_map do |name|
+        city_wide, names = split_list(row["rel_ortschaften"]).partition do |name|
+          normalize_name(name) == CITY_WIDE_NAME
+        end
+        plan.city_wide = city_wide.any?
+
+        if plan.city_wide? && names.any?
+          problem(legacy_id, title, :city_wide_with_districts,
+                  "Gesamtes Stadtgebiet combined with Ortsteile, Ortsteile dropped: #{names.join(", ")}")
+          names = []
+        end
+
+        matched = names.filter_map do |name|
           candidates = districts[normalize_name(name)] || []
           next candidates.first if candidates.size == 1
 

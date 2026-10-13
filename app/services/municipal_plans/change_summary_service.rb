@@ -15,7 +15,7 @@ module MunicipalPlans
       informal_participation_reason
     ].freeze
 
-    BOOLEAN_FIELDS = %w[formal_participation informal_participation].freeze
+    BOOLEAN_FIELDS = %w[city_wide formal_participation informal_participation].freeze
 
     def initialize(working_copy)
       @copy = working_copy

@@ -107,34 +107,44 @@
             placeholder: t(".placeholders.informal_participation_reason") %>
     <% end %>
 
-    <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.districts"),
-                                            hint: t(".hints.districts"),
-                                            required: true, stacked: true) do %>
-      <% districts = RegisteredAddress::District.all.sort_by(&:name_for_display) %>
-      <% if districts.any? %>
-        <div class="mb-2">
-          <%= form.collection_check_boxes :district_ids, districts, :id, :name_for_display %>
-        </div>
-      <% else %>
-        <%= empty_state(title: t(".no_districts_title"), description: t(".no_districts_description"),
-                        icon: "location_off") %>
+    <div data-controller="adm--municipal-plan-city-wide">
+      <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.districts"),
+                                              hint: t(".hints.districts"),
+                                              required: true, stacked: true) do %>
+        <%= form.check_box :city_wide, label: MunicipalPlan.human_attribute_name(:city_wide),
+              data: { "adm--municipal-plan-city-wide-target": "cityWide",
+                      action: "change->adm--municipal-plan-city-wide#cityWideChanged" } %>
+        <% districts = RegisteredAddress::District.all.sort_by(&:name_for_display) %>
+        <% if districts.any? %>
+          <div class="mb-2">
+            <%= form.collection_check_boxes :district_ids, districts, :id, :name_for_display, {},
+                  data: { "adm--municipal-plan-city-wide-target": "district",
+                          action: "change->adm--municipal-plan-city-wide#districtChanged" } %>
+          </div>
+        <% else %>
+          <%= empty_state(title: t(".no_districts_title"), description: t(".no_districts_description"),
+                          icon: "location_off") %>
+        <% end %>
       <% end %>
-    <% end %>
 
-    <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.map_location"),
-                                            hint: t(".hints.map_location"),
-                                            required: true, stacked: true) do %>
-      <%= form.fields_for :map_location do |map_form| %>
-        <%= render Kern::MapComponent.new(
-          map_location: form.object.map_location,
-          form: map_form,
-          editable: true,
-          admin_editor: false,
-          height: 500,
-          error: form.object.errors[:map_location].to_sentence.presence
-        ) %>
+      <%= tag.div hidden: form.object.city_wide?,
+                  data: { "adm--municipal-plan-city-wide-target": "mapField" } do %>
+        <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.map_location"),
+                                                hint: t(".hints.map_location"),
+                                                required: true, stacked: true) do %>
+          <%= form.fields_for :map_location do |map_form| %>
+            <%= render Kern::MapComponent.new(
+              map_location: form.object.map_location,
+              form: map_form,
+              editable: true,
+              admin_editor: false,
+              height: 500,
+              error: form.object.errors[:map_location].to_sentence.presence
+            ) %>
+          <% end %>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
 
     <%= render Kern::FormFieldComponent.new(divider: false, label: t(".labels.links"), hint: t(".hints.links"),
                                             stacked: true) do %>

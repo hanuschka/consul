@@ -7204,7 +7204,8 @@ paths:
         in: query
         required: false
         description: Comma-separated Ortsteil ids; a Vorhaben matches if it lies in
-          any of them
+          any of them. `city_wide` matches the Vorhaben for the whole city (`city_wide:
+          true`)
         schema:
           type: string
       - name: topics

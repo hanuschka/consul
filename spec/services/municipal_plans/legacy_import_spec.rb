@@ -10,7 +10,7 @@ describe MunicipalPlans::LegacyImport do
       create(:municipal_plan_topic, name: name)
     end
 
-    ["Jena-Zentrum", "Münchenroda/Remderoda", "Gesamtes Stadtgebiet"].each do |name|
+    ["Jena-Zentrum", "Münchenroda/Remderoda"].each do |name|
       create(:registered_address_district, name: name)
     end
   end
@@ -247,12 +247,21 @@ describe MunicipalPlans::LegacyImport do
     end
 
     it "reports an Ortsteil whose name several districts share" do
-      create(:registered_address_district, name: "Gesamtes Stadtgebiet")
+      create(:registered_address_district, name: "Jena-Zentrum")
 
       import
 
-      expect(problems_for("5002")).to include("Ortsteil ambiguous (2 matches): Gesamtes Stadtgebiet")
-      expect(plan("5002")).to be_draft
+      expect(problems_for("5003")).to include("Ortsteil ambiguous (2 matches): Jena-Zentrum")
+      expect(plan("5003")).to be_draft
+    end
+
+    it "marks a Vorhaben for the whole city instead of looking for an Ortsteil" do
+      import
+
+      expect(plan("5002")).to be_city_wide
+      expect(plan("5002").districts).to be_empty
+      expect(plan("5002")).to be_archived
+      expect(problems_for("5002").grep(/Ortsteil/)).to be_empty
     end
 
     it "creates one titled link per URL in the order of the export" do

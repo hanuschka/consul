@@ -23,7 +23,8 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
       parameter name: :per_page, in: :query, type: :integer, required: false,
                 description: "Number of Vorhaben per page (**default and maximum:** 500)"
       parameter name: :districts, in: :query, type: :string, required: false,
-                description: "Comma-separated Ortsteil ids; a Vorhaben matches if it lies in any of them"
+                description: "Comma-separated Ortsteil ids; a Vorhaben matches if it lies in any of them. " \
+                             "`city_wide` matches the Vorhaben for the whole city (`city_wide: true`)"
       parameter name: :topics, in: :query, type: :string, required: false,
                 description: "Comma-separated Thema ids; a Vorhaben matches if it carries any of them"
       parameter name: :changed_since, in: :query, type: :string, required: false,
@@ -148,6 +149,19 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
 
       expect(listed_ids(districts: match.district_ids.join(","))).to eq([match.id])
       expect(listed_ids(topics: match.topic_ids.join(","))).to eq([match.id])
+    end
+
+    it "marks a Vorhaben for the whole city, filters by it and gives it no map location" do
+      plan = create(:municipal_plan, :published, :city_wide)
+      create(:municipal_plan, :published)
+
+      get api_municipal_plan_path(plan), headers: headers
+      data = JSON.parse(response.body)["data"]["municipal_plan"]
+
+      expect(data["city_wide"]).to be true
+      expect(data["districts"]).to eq([])
+      expect(data["map_location"]).to be_nil
+      expect(listed_ids(districts: "city_wide")).to eq([plan.id])
     end
 
     describe "changed_since" do

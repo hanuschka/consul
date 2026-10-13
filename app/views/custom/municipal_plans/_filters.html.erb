@@ -1,6 +1,7 @@
 <%= render Sidebar::CheckboxFilterComponent.new(
   identifier: :districts,
-  options: @districts.map { |d| [d.name_for_display, d.id] },
+  options: [[MunicipalPlan.human_attribute_name(:city_wide), MunicipalPlansQuery::CITY_WIDE]] +
+           @districts.map { |d| [d.name_for_display, d.id] },
   title: t("custom.municipal_plans.index.sidebar.districts.title"),
   icon: "map-marker-alt",
   id_prefix: "filter_district",

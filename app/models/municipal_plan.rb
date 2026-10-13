@@ -23,6 +23,7 @@ class MunicipalPlan < ApplicationRecord
   RECENCY_WINDOW = 30.days
 
   CONTENT_ATTRIBUTES = %w[
+    city_wide
     formal_participation
     informal_participation
     contact_name
@@ -88,6 +89,7 @@ class MunicipalPlan < ApplicationRecord
   validates :status, inclusion: { in: STATUSES }
   validates_translation :title, presence: true
   validate :districts_within_limit
+  validate :city_wide_without_districts
   validate :release_requirements, unless: :editable_draft?
   validate :released_plan_is_a_released_version
 
@@ -237,7 +239,13 @@ class MunicipalPlan < ApplicationRecord
   end
 
   def sorted_district_names
+    return [self.class.human_attribute_name(:city_wide)] if city_wide?
+
     self.class.sort_names(districts.map(&:name_for_display))
+  end
+
+  def displayed_map_location
+    map_location unless city_wide?
   end
 
   def self.sort_names(names)
@@ -346,7 +354,7 @@ class MunicipalPlan < ApplicationRecord
 
     def release_requirements
       RELEASE_REQUIRED_FIELDS.each do |field|
-        next if field == :map_location && legacy_record?
+        next if field == :map_location && (legacy_record? || city_wide?)
         next if release_value_present?(public_send(field))
 
         errors.add(:base, I18n.t("activerecord.errors.models.municipal_plan.release_required",
@@ -377,7 +385,14 @@ class MunicipalPlan < ApplicationRecord
                                count: MAX_DISTRICTS))
     end
 
+    def city_wide_without_districts
+      return unless city_wide? && district_assignments.reject(&:marked_for_destruction?).any?
+
+      errors.add(:base, I18n.t("activerecord.errors.models.municipal_plan.city_wide_with_districts"))
+    end
+
     def districts_are_present
+      return if city_wide?
       return if district_assignments.reject(&:marked_for_destruction?).any?
 
       errors.add(:base, I18n.t("activerecord.errors.models.municipal_plan.districts_required"))

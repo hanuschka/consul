@@ -13,6 +13,7 @@ en:
         responsible: "Responsible case worker"
         map_location: "Map position"
         districts: "Area / district affected"
+        city_wide: "Entire city"
         topics: "Main topics affected"
         links: "Links and documents"
         internal_notes: "Internal notes"
@@ -56,6 +57,7 @@ en:
         municipal_plan:
           districts_required: "Please select at least one district."
           too_many_districts: "Please select at most %{count} districts."
+          city_wide_with_districts: "“Entire city” cannot be combined with individual districts."
           topics_required: "Please select at least one topic."
           release_required: "Please fill in “%{field}” before publishing the plan."
           nested_working_copy: "A working copy cannot carry a working copy of its own."

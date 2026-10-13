@@ -105,7 +105,7 @@
       <div class="adm-detail-table__row">
         <div class="adm-detail-table__label"><%= t(".districts") %></div>
         <div class="adm-detail-table__value">
-          <%= @municipal_plan.districts.map(&:name_for_display).join(", ").presence || t(".none") %>
+          <%= @municipal_plan.sorted_district_names.join(", ").presence || t(".none") %>
         </div>
       </div>
       <div class="adm-detail-table__row">
@@ -180,16 +180,16 @@
       </div>
     </div>
 
-    <% if @municipal_plan.map_location.present? %>
+    <% if @municipal_plan.displayed_map_location.present? %>
       <div class="adm-detail-media-grid mt-4">
         <div class="adm-detail-media-card">
           <div class="adm-detail-media-card__label">
             <span class="material-symbols-outlined" aria-hidden="true">map</span>
             <%= t(".map_label") %>
           </div>
-          <% pin = @municipal_plan.map_location.pin_coordinates %>
+          <% pin = @municipal_plan.displayed_map_location.pin_coordinates %>
           <%= render Kern::MapComponent.new(
-            map_location: @municipal_plan.map_location,
+            map_location: @municipal_plan.displayed_map_location,
             gesture_handling: false,
             height: 400,
             latitude: pin&.dig(:latitude),

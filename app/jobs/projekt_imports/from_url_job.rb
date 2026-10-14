@@ -1,5 +1,6 @@
 class ProjektImports::FromUrlJob < ApplicationJob
   queue_as :projekt_imports
+  self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
 
   def perform(projekt_import_id)
     projekt_import = ProjektImport.find(projekt_import_id)

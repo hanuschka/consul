@@ -143,4 +143,65 @@ describe ProjektPhase do
       expect(phase.permission_problem(verified_citizen)).to be_nil
     end
   end
+
+  describe "#map_features_restricted_to_marked_areas?" do
+    let(:phase) { create(:proposal_phase, projekt: projekt) }
+    let(:area) do
+      {
+        "type" => "FeatureCollection",
+        "features" => [{
+          "type" => "Feature",
+          "properties" => {},
+          "geometry" => {
+            "type" => "Polygon",
+            "coordinates" => [[[7.0, 50.8], [7.2, 50.8], [7.2, 51.0], [7.0, 51.0], [7.0, 50.8]]]
+          }
+        }]
+      }
+    end
+
+    def switch_on(phase)
+      phase.settings.find_by!(key: "feature.form.restrict_map_features_to_marked_areas").update!(value: "active")
+    end
+
+    it "is false while the setting is off, even with areas drawn" do
+      phase.reload.map_location.update!(features: area)
+
+      expect(phase.reload.map_features_restricted_to_marked_areas?).to be false
+    end
+
+    it "is false when the setting is on but no areas are drawn" do
+      switch_on(phase)
+
+      expect(phase.reload.map_features_restricted_to_marked_areas?).to be false
+    end
+
+    it "is true when the setting is on and areas are drawn" do
+      switch_on(phase)
+      phase.reload.map_location.update!(features: area)
+
+      expect(phase.reload.map_features_restricted_to_marked_areas?).to be true
+    end
+
+    it "does not take areas from the projekt map" do
+      switch_on(phase)
+      projekt.map_location.update!(features: area)
+
+      expect(phase.reload.map_features_restricted_to_marked_areas?).to be false
+    end
+  end
+
+  describe "#marked_areas_restrictable?" do
+    it "is true for proposal, budget and point-of-interest phases" do
+      %i[proposal_phase budget_phase point_of_interest_phase].each do |factory|
+        expect(create(factory).marked_areas_restrictable?).to be(true), factory.to_s
+      end
+    end
+
+    it "is false for other phase types" do
+      phase = ProjektPhase.find(create(:projekt_phase, type: "ProjektPhase::DebatePhase").id)
+
+      expect(phase.marked_areas_restrictable?).to be false
+    end
+  end
 end

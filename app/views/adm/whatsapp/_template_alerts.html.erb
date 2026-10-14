@@ -1,0 +1,42 @@
+<%# The three ways the plain broadcast slot can be broken, stated above the slot
+    summary because each one means projekt announcements are reaching nobody
+    right now. The summary below shows the same slot as a row; these say what to
+    do about it. %>
+<%
+  configured_template_name = ::Whatsapp.broadcast_template_name
+  configured_template_language = ::Whatsapp.broadcast_template_language
+
+  configured_template =
+    @templates.find do |template|
+      template[:name] == configured_template_name &&
+        template[:language] == configured_template_language
+    end
+%>
+
+<% if configured_template_name.blank? %>
+  <div class="mb-4">
+    <%= kern_alert(title: t("adm.whatsapp.show.template_missing_title"), style: :info) do %>
+      <p class="kern-body"><%= t("adm.whatsapp.show.template_missing_body") %></p>
+    <% end %>
+  </div>
+<% elsif configured_template.blank? %>
+  <div class="mb-4">
+    <%= kern_alert(title: t("adm.whatsapp.show.template_unknown_title"), style: :danger) do %>
+      <p class="kern-body">
+        <%= t("adm.whatsapp.show.template_unknown_body",
+          name: configured_template_name,
+          language: configured_template_language) %>
+      </p>
+    <% end %>
+  </div>
+<% elsif !configured_template[:approved] %>
+  <div class="mb-4">
+    <%= kern_alert(title: t("adm.whatsapp.show.template_pending_title"), style: :warning) do %>
+      <p class="kern-body">
+        <%= t("adm.whatsapp.show.template_pending_body",
+          name: configured_template_name,
+          status: whatsapp_status_label(configured_template[:status])) %>
+      </p>
+    <% end %>
+  </div>
+<% end %>

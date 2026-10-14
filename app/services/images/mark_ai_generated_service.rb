@@ -40,6 +40,13 @@ class Images::MarkAiGeneratedService < ApplicationService
   AI_SYSTEM_TAG = "XMP-iptcExt:AISystemUsed".freeze
   AI_SYSTEM_VERSION_TAG = "XMP-iptcExt:AISystemVersionUsed".freeze
 
+  # The same fact in prose, in the one field every picture viewer shows under
+  # "Description". It documents the file for a person opening its properties;
+  # verification tools key on the source type above, so this line is never what
+  # marking succeeds or fails on. English, because the field has no language.
+  IMAGE_DESCRIPTION_TAG = "EXIF:ImageDescription".freeze
+  AI_DESCRIPTION = "AI-generated image.".freeze
+
   def initialize(image:, data:, filename:, content_type:, ai_system: nil, ai_system_version: nil)
     @image = image
     @data = data
@@ -97,6 +104,11 @@ class Images::MarkAiGeneratedService < ApplicationService
       arguments << "-jumbf:all=" if ::ExiftoolCommand.supports_jumbf_delete?
 
       written_tags.each { |tag, value| arguments << "-#{tag}=#{value}" }
+
+      # Outside written_tags on purpose: the prose line is documentation for a
+      # person opening the file's properties, and no verification tool keys on
+      # it, so it is never what the read-back below fails marking over.
+      arguments << "-#{IMAGE_DESCRIPTION_TAG}=#{AI_DESCRIPTION}"
 
       arguments
     end

@@ -1,6 +1,4 @@
 class ProjektImports::ProcessWithAiService < ApplicationService
-  RETRY_INSTRUCTION = "Your previous response was not valid JSON matching the schema. Please respond again with ONLY a JSON object matching the schema."
-
   MAX_INPUT_CHARS = 200_000
 
   attr_reader :text, :additional_user_instructions, :source_images, :source_label
@@ -32,11 +30,17 @@ class ProjektImports::ProcessWithAiService < ApplicationService
     schema = ProjektImports::OutputSchemaBuilder.build(refs)
     message = build_user_message
 
-    data = call_ai_with_retry(system_prompt: system_prompt, schema: schema, message: message)
+    @ai_request = ::Ai::CorrectiveJsonRequest.new(
+      schema: schema,
+      feature: "projekt_imports.process",
+      source: self.class.name,
+      sentry_context: { stage: "ai_processing", input_text_length: text.to_s.length }
+    )
+    data = @ai_request.call(system_prompt: system_prompt, message: message)
 
     if data.blank? || data["content_blocks"].blank?
       return ServiceResult.failure(
-        error: I18n.t("adm.projekts.imports.errors.ai_malformed"),
+        error: ai_failure_message,
         error_details: malformed_details(data)
       )
     end
@@ -98,58 +102,21 @@ class ProjektImports::ProcessWithAiService < ApplicationService
 
   def analyzed_text
     @analyzed_text ||= begin
-      full = text.to_s
-      @original_text_length = full.length
-      budget = MAX_INPUT_CHARS
-
-      if full.length <= budget
-        @text_truncated = false
-        @analyzed_text_length = full.length
-        full
-      else
-        @text_truncated = true
-        clipped = clip_to_boundary(full, budget)
-        @analyzed_text_length = clipped.length
-        clipped
-      end
+      full_text = text.to_s
+      clipped_text = TextClipper.call(full_text, MAX_INPUT_CHARS)
+      @original_text_length = full_text.length
+      @analyzed_text_length = clipped_text.length
+      @text_truncated = clipped_text.length < full_text.length
+      clipped_text
     end
   end
 
-  def clip_to_boundary(full, budget)
-    clipped = full[0, budget]
-    boundary = clipped.rindex("\n\n") || clipped.rindex("\n") || clipped.rindex(" ")
-
-    return clipped if boundary.nil? || boundary <= budget / 2
-
-    clipped[0, boundary]
-  end
-
-  def call_ai_with_retry(system_prompt:, schema:, message:)
-    response = call_ai(system_prompt: system_prompt, schema: schema, message: message)
-    return response if response.is_a?(Hash) && response.present?
-
-    Rails.logger.warn("[ProjektImports::ProcessWithAiService] first attempt failed, retrying with corrective instruction")
-
-    call_ai(
-      system_prompt: "#{system_prompt}\n\n#{RETRY_INSTRUCTION}",
-      schema: schema,
-      message: message
-    )
-  end
-
-  def call_ai(system_prompt:, schema:, message:)
-    response =
-      Ai::RubyLlmFactory
-        .chat_with_json_output(schema, feature: "projekt_imports.process")
-        .with_instructions(system_prompt)
-        .ask(message)
-
-    response.content
-  rescue StandardError => e
-    @last_ai_error = e
-    Rails.logger.error("[ProjektImports::ProcessWithAiService] AI call error: #{e.class}: #{e.message}")
-    Sentry.capture_exception(e, extra: { stage: "ai_processing", input_text_length: text.to_s.length }) if defined?(Sentry)
-    nil
+  def ai_failure_message
+    if @ai_request.request_failed?
+      I18n.t("adm.projekts.imports.errors.ai_request_failed")
+    else
+      I18n.t("adm.projekts.imports.errors.ai_malformed")
+    end
   end
 
   def malformed_details(data)
@@ -160,8 +127,8 @@ class ProjektImports::ProcessWithAiService < ApplicationService
       "input_text_length" => @original_text_length || text.to_s.length,
       "analyzed_text_length" => @analyzed_text_length,
       "input_truncated" => @text_truncated,
-      "ai_error_class" => @last_ai_error&.class&.name,
-      "ai_error_message" => @last_ai_error&.message,
+      "ai_error_class" => @ai_request.last_error&.class&.name,
+      "ai_error_message" => @ai_request.last_error&.message,
       "returned_keys" => (data.is_a?(Hash) ? data.keys : nil)
     }.compact
   end

@@ -171,13 +171,7 @@
 <% else %>
   <main class="deficiency-report-new">
     <%= back_link_to deficiency_reports_path %>
-    <%= header do %>
-      <% if feature?('help_page') %>
-        <%= link_to help_path(anchor: "deficiency_reports"), title: t("shared.target_blank"), target: "_blank" do %>
-          <%= t("custom.deficiency_reports.new.more_info") %>
-        <% end %>
-      <% end %>
-    <% end %>
+    <%= header %>
 
     <aside class="margin-bottom">
       <%= helpers.render_custom_block "deficiency_reports_creation_recommendations" %>

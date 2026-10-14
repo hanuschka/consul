@@ -1079,7 +1079,15 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .header--responsive-menu-title {
+    display: block;
     color: $responsive-menu-text-color;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: $responsive-menu-text-color;
+      text-decoration: none;
+    }
   }
 
   .header--responsive-menu-sign-auth-button {

@@ -1,7 +1,7 @@
 <tr id="<%= dom_id(budget_investment, :moderation) %>" class="kern-table__row">
   <th scope="row" class="kern-table__header" data-field="title"><%= budget_investment.title %></th>
   <td class="kern-table__cell" data-field="projekt"><%= budget_investment.budget&.projekt&.name %></td>
-  <td class="kern-table__cell" data-field="author"><%= budget_investment.author.username %></td>
+  <td class="kern-table__cell" data-field="author"><%= budget_investment.author&.username %></td>
   <td class="kern-table__cell" data-field="flags_count"><%= budget_investment.flags_count %></td>
   <td class="kern-table__cell" data-field="status">
     <% status_key, badge_variant = moderation_status_badge(budget_investment) %>

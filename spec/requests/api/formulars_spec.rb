@@ -75,7 +75,7 @@ let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_p
       security [bearer_auth: []]
       description "Retrieve all forms configured for a projekt phase. Forms are used to collect structured input from participants with customizable fields and validation rules.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
-      parameter name: :per_page, in: :query, type: :integer, description: 'Number of formulars per page (**default:** 100, max: 500)', required: false
+      parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 100, max: 2000)', required: false
 
       response '200', 'formulars found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }

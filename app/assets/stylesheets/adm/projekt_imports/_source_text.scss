@@ -1,0 +1,64 @@
+// The text the import actually read, shown so an administrator can compare it
+// against what the model concluded. Set in the normal sans face rather than a
+// monospace one: this is prose from a document, not code.
+.projekt-import-source-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kern-metric-space-default);
+  max-width: 70ch;
+}
+
+.projekt-import-source-text--intro {
+  margin: 0;
+}
+
+.projekt-import-source-text--source {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--kern-metric-space-small);
+  padding: var(--kern-metric-space-small);
+  border-radius: var(--kern-8);
+  background-color: var(--kern-grey-050);
+}
+
+.projekt-import-source-text--source-icon {
+  flex: 0 0 auto;
+  color: var(--kern-color-action-default);
+}
+
+.projekt-import-source-text--source-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.projekt-import-source-text--source-label {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--kern-grey-350);
+}
+
+.projekt-import-source-text--source-value {
+  word-break: break-all;
+}
+
+// pre-wrap keeps the paragraph breaks the extractor emitted, which is what
+// makes an out-of-place instruction stand out from the surrounding prose.
+.projekt-import-source-text--body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--kern-grey-700);
+  padding: var(--kern-metric-space-default);
+  border: 1px solid var(--kern-grey-100);
+  border-radius: var(--kern-8);
+  background-color: var(--kern-custom-white);
+}
+
+.projekt-import-source-text--empty {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--kern-grey-350);
+}

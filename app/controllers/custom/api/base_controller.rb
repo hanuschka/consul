@@ -7,6 +7,7 @@ class Api::BaseController < ActionController::API
 
   DEFAULT_PER_PAGE = 500
   COMMENTS_PER_PAGE = 5000
+  MAX_PER_PAGE = 2000
 
   before_action :authenticate_http_basic, if: :require_http_basic_auth?
   before_action :authenticate_api_client!
@@ -103,6 +104,39 @@ class Api::BaseController < ActionController::API
       render json: {
         error: { type: "not_found", messages: ["Not found"] }
       }, status: :not_found
+    end
+
+    def paginate(scope, default_per_page: DEFAULT_PER_PAGE)
+      scope.page(params[:page].to_s).per(requested_per_page(default_per_page))
+    end
+
+    def pagination_meta(collection)
+      {
+        current_page: collection.current_page,
+        total_pages: collection.total_pages,
+        total_count: collection.total_count,
+        per_page: collection.limit_value
+      }
+    end
+
+    def empty_pagination_meta(default_per_page: DEFAULT_PER_PAGE)
+      {
+        current_page: 1,
+        total_pages: 0,
+        total_count: 0,
+        per_page: requested_per_page(default_per_page)
+      }
+    end
+
+    def requested_per_page(default_per_page)
+      cap = [MAX_PER_PAGE, default_per_page].max
+      requested = params[:per_page].to_s.to_i
+
+      if requested < 1
+        default_per_page
+      else
+        [requested, cap].min
+      end
     end
 
     def no_pagination_meta

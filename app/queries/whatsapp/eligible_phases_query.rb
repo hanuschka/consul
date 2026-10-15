@@ -1,0 +1,164 @@
+class Whatsapp::EligiblePhasesQuery < ApplicationQuery
+  # The phase types the bot has a submission flow for. Which flags each of them
+  # reads is the phase's own business — #selectable_by_users? and
+  # #whatsapp_submissions_enabled? — so adding a third type here is the only edit.
+  PHASE_CLASSES = [ProjektPhase::ProposalPhase, ProjektPhase::BudgetPhase].freeze
+
+  # The single-phase question, asked without loading the portal. A phase whose
+  # projekt is deactivated or whose page is unpublished is not reachable on the
+  # website either, so the bot must not take a submission into it.
+  #
+  # Both flags have to be on: the one that lets citizens create the resource at
+  # all, and the phase's own switch for the bot as a submission channel. The
+  # projekt page's AI drafting button has no say here — a phase that openly takes
+  # proposals on the website was invisible to the bot while it did.
+  def self.eligible?(projekt_phase)
+    return false if projekt_phase.blank?
+    return false if !PHASE_CLASSES.include?(projekt_phase.class)
+    return false if !projekt_phase.current?
+    return false if !projekt_visible?(projekt_phase.projekt)
+    return false if !projekt_phase.selectable_by_users?
+    return false if !projekt_phase.whatsapp_submissions_enabled?
+
+    # An investment is built from the budget's heading, so a budget phase
+    # without one set up cannot take a submission yet.
+    return projekt_phase.budget&.heading.present? if projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+
+    true
+  end
+
+  # A phase a citizen may be pointed at, which is a wider set than one the bot may
+  # take a submission into: a vote, a form, a point of interest and a milestone are
+  # all reachable and none of them has a drafting flow. Only what makes a phase
+  # unreachable is checked — gone, over, or belonging to a projekt that is not
+  # published — because what may then be done inside it is the phase's own rule and
+  # is asked where it is acted on.
+  #
+  # The id is resolved here rather than by each caller so a pill tapped a week later
+  # and an id the assistant passed are checked by the same three rules.
+  def self.reachable(projekt_phase_id)
+    return if projekt_phase_id.blank?
+
+    projekt_phase = ::ProjektPhase.find_by(id: projekt_phase_id.to_i)
+
+    return if projekt_phase.blank?
+    return if !projekt_phase.current?
+    return if !projekt_visible?(projekt_phase.projekt)
+
+    projekt_phase
+  end
+
+  # Read off the already-loaded projekt rather than asked of the database: the
+  # collection path eager-loads it, and both stores behind Projekt.activated are
+  # kept in sync, so the column is current whichever one the scope reads.
+  def self.projekt_visible?(projekt)
+    return false if projekt.blank?
+    return false if projekt.page&.status != "published"
+
+    projekt.activated?
+  end
+
+  # The subset an unlinked number may submit to. Narrowed in the query rather
+  # than filtered afterwards: the row cap in #call is applied before any Ruby
+  # filter would run, so selecting in memory could return nothing while guest
+  # phases were open just past the tenth row.
+  def self.guest_open(projekt: nil)
+    new(projekt: projekt, user_status: :guest).call
+  end
+
+  # For callers that only need to know whether to offer the option at all.
+  def self.guest_open?(projekt: nil)
+    new(projekt: projekt, user_status: :guest).exists?
+  end
+
+  # Everything open, for callers that resolve a projekt a citizen named or count
+  # what is running rather than filling a list. Costs nothing over #call, which
+  # is this set with the display cap applied to it.
+  def self.uncapped(projekt: nil)
+    new(projekt: projekt).uncapped
+  end
+
+  def initialize(projekt: nil, user_status: nil, from: 0)
+    @projekt = projekt
+    @user_status = user_status
+    @from = from
+  end
+
+  # A display cap, not an eligibility rule: #call is what fills a ten-row
+  # WhatsApp list. Whether one particular phase may be submitted to is
+  # .eligible?, which is uncapped — otherwise the eleventh open phase would be
+  # offered in a menu and then refused when tapped.
+  #
+  # `from` is which page of that list, so the eleventh open phase is one tap away
+  # rather than absent. Paged in Ruby because eligibility is decided in Ruby: the
+  # rows before the window have to be tested to be skipped.
+  def call
+    ::Whatsapp::ListWindow.page(uncapped, from: @from)
+  end
+
+  # How many are open altogether, so a capped page can say what it left out.
+  def total
+    uncapped.size
+  end
+
+  # The same set without the display cap. Past the tenth row a list stops being
+  # an offer and becomes a truncation the citizen cannot page past, so anything
+  # that resolves a named projekt or reports how much is running reads this
+  # instead — the cap is about what fits in one message, not about what is open.
+  # Memoised because #call and #total both read it, and it is the most expensive
+  # question the bot asks: every candidate phase materialised with its settings and
+  # its page before eligible? can decide. One instance answering both is one pass.
+  def uncapped
+    @uncapped ||= candidates.select { |projekt_phase| self.class.eligible?(projekt_phase) }
+  end
+
+  # Stops at the first eligible phase. The menus ask only whether anything is
+  # open at all, and answering that by materialising ten phases with their
+  # settings and pages is the most expensive question the bot asks.
+  def exists?
+    candidates.lazy.any? { |projekt_phase| self.class.eligible?(projekt_phase) }
+  end
+
+  private
+
+    def candidates
+      PHASE_CLASSES.flat_map { |phase_class| phases_of(phase_class) }
+    end
+
+    # The date and flag half of ProjektPhase#current?, plus the projekt's own
+    # visibility and the two feature switches, are plain columns, so they are
+    # asked of the database rather than of every phase the portal has ever had.
+    # eligible? still re-checks in Ruby: this only decides what is worth
+    # loading, never what is eligible — :with_present_feature is written to
+    # mirror #feature? exactly so the narrowing can never drop a phase the Ruby
+    # check would keep.
+    def phases_of(phase_class)
+      scope =
+        phase_class
+          .current
+          .where(hidden_at: nil)
+          .of_publicly_visible_projekt
+          .with_present_feature(::ProjektPhase::WHATSAPP_SUBMISSIONS_FEATURE_KEY)
+          .with_present_feature(phase_class.selectable_by_users_feature_key)
+          .includes(preloads_for(phase_class))
+
+      scope = scope.where(projekt_id: @projekt.id) if @projekt.present?
+      scope = scope.where(user_status: @user_status) if @user_status.present?
+
+      scope.to_a
+    end
+
+    # eligible? asks a budget phase for its heading, which is two more queries
+    # per phase unless the chain comes along with the rest.
+    #
+    # Translations because every caller that lists these phases names them, and
+    # ProjektPhase#title reads the translated phase_tab_name — one query per row
+    # of a list that holds up to Whatsapp::MAX_OFFERED_LIST_ROWS.
+    def preloads_for(phase_class)
+      preloads = [:settings, :translations, { projekt: { page: :translations } }]
+
+      return preloads if phase_class != ProjektPhase::BudgetPhase
+
+      preloads + [{ budget: :heading }]
+    end
+end

@@ -3,6 +3,7 @@ class DeficiencyReport::Category < ApplicationRecord
 
   translates :name, touch: true
   include Globalizable
+  include MachineTranslatable
 
   attr_accessor :default_officer_id, :default_officer_group_id
 

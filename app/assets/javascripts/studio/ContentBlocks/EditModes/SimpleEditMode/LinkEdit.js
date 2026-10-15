@@ -366,7 +366,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
           App.Studio.utils.sanitizeHtml(
           textInput.value,
           {
-            allowedTags: ['b','strong','i','span', "u"],
+            allowedTags: ['b','strong','i','em','span', "u"],
             allowedAttributes: ["class", "style"]
           }
         )

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_13_103339) do
+ActiveRecord::Schema.define(version: 2026_10_15_080832) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2535,6 +2535,7 @@ ActiveRecord::Schema.define(version: 2026_10_13_103339) do
     t.text "confirmation_email_text"
     t.text "waitlist_email_text"
     t.text "admin_emails"
+    t.boolean "registration_enabled", default: false, null: false
     t.index ["projekt_phase_id"], name: "index_projekt_events_on_projekt_phase_id"
   end
 

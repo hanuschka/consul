@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class BlobsController < ApplicationController
-  skip_authorization_check only: [:show, :variant]
-
+class BlobsController < ActionController::Base
   def show
     blob = ActiveStorage::Blob.find_by!(key: params[:key])
 
@@ -32,8 +30,8 @@ class BlobsController < ApplicationController
       raise ActiveRecord::RecordNotFound
     end
 
-    width = (params[:w] || 1500).to_i
-    height = (params[:h] || 2000).to_i
+    width = Integer(params[:w].presence || 1500, exception: false)
+    height = Integer(params[:h].presence || 2000, exception: false)
 
     unless ALLOWED_VARIANT_SIZES.include?([width, height])
       raise ActiveRecord::RecordNotFound

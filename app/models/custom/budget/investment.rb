@@ -7,6 +7,8 @@ class Budget
     include Sentimentable
     include Memoable
     include ConditionallyVotable
+    include SimilarContributionsCheckable
+    include MarkedAreasValidation
 
     default_scope { where(draft: false) }
 
@@ -95,6 +97,36 @@ to: :budget
 
     def final_winner?
       selected? && !incompatible? && winner?
+    end
+
+    def feasibility_email_due?
+      (feasible? || unfeasible?) && valuation_finished? && email_on_feasibility_pending?
+    end
+
+    def send_feasibility_email
+      return unless feasibility_email_due?
+
+      if unfeasible?
+        Mailer.budget_investment_unfeasible(self).deliver_later
+      else
+        Mailer.budget_investment_feasible(self).deliver_later
+      end
+      update_column(:email_on_feasibility_sent_at, Time.zone.now)
+    end
+
+    def selection_email_due?
+      feasible? && email_on_selected_pending? && !budget.reviewing_ballots? && !budget.finished?
+    end
+
+    def send_selection_email
+      return unless selection_email_due?
+
+      if selected?
+        Mailer.budget_investment_selected(self).deliver_later
+      else
+        Mailer.budget_investment_unselected(self).deliver_later
+      end
+      update_column(:email_on_selected_sent_at, Time.zone.now)
     end
 
     def should_show_feasibility_explanation?

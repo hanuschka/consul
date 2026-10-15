@@ -94,8 +94,6 @@ class PagesController < ApplicationController
       @cards = @custom_page.cards
       render action: custom_page_name
 
-    elsif params[:id].to_s.match?(%r{\A[a-z0-9]+(?:[_\-/][a-z0-9]+)*\z}i)
-      render action: params[:id]
     else
       head :not_found, content_type: "text/html"
     end
@@ -106,6 +104,8 @@ class PagesController < ApplicationController
   def projekt_phase_footer_tab
     @projekt_phase = ProjektPhase.find(params[:projekt_phase_id])
     @projekt = @projekt_phase.projekt
+
+    head :not_found and return unless footer_tab_visible?
 
     params[:projekt_phase_id] = @projekt_phase.id
     params[:projekt_id] ||= @projekt.id
@@ -493,6 +493,11 @@ class PagesController < ApplicationController
     end
 
     def set_mitmachbox_phase_footer_tab_variables
+      @mitmachbox_survey = Mitmachbox::PublicSurveyService.call(@projekt_phase)
+      return if @mitmachbox_survey.blank?
+
+      @mitmachbox_already_answered =
+        @projekt_phase.answered_by?(current_user, @mitmachbox_survey["version_id"])
     end
 
     def set_iframe_phase_footer_tab_variables
@@ -523,6 +528,13 @@ class PagesController < ApplicationController
         @formular_answer = @formular.formular_answers.new
         @formular_answer.answer_errors ||= {}
       end
+    end
+
+    def footer_tab_visible?
+      return true if helpers.show_admin_controls_for_projekt?(@projekt)
+
+      @projekt.visible_for?(current_user) &&
+        @projekt.projekt_phases.active.frontend_visible.exists?(@projekt_phase.id)
     end
 
     def get_default_projekt_phase(default_phase_id = nil)

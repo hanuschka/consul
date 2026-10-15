@@ -1,0 +1,18 @@
+<%= content_for :title, t("adm.municipal_plans.settings.title") %>
+
+<%= render Adm::HeaderComponent.new(
+  title: t("adm.municipal_plans.settings.title"),
+  breadcrumbs: @breadcrumbs
+) %>
+
+<%= render "tabs", current: :dashboard %>
+
+<div class="kern-container my-5">
+  <p class="adm-hint__text mb-3">
+    <%= t("adm.municipal_plans.settings.dashboard.intro") %>
+  </p>
+
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.municipal_plans.intro_text"), :value, :text) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.municipal_plans.notice_message"), :value, :text) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "adm.municipal_plans.notice_active"), :value, :boolean) %>
+</div>

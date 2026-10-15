@@ -17,7 +17,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
         :heading,
         :map_location,
         budget: {
-          projekt_phase: :projekt,
+          projekt_phase: [:settings, :projekt],
           group: :heading
         }
       )
@@ -27,17 +27,13 @@ class Api::Budgets::InvestmentsController < Api::BaseController
         :heading,
         :map_location,
         budget: {
-          projekt_phase: :projekt,
+          projekt_phase: [:settings, :projekt],
           group: :heading
         }
       )
     end
 
-    budget_investments =
-      budget_investments
-        .order(created_at: :asc)
-        .page(params[:page])
-        .per(params[:per_page] || DEFAULT_PER_PAGE)
+    budget_investments = paginate(budget_investments.order(created_at: :asc))
 
     budget_investments = apply_filters(budget_investments)
     budget_investments = apply_sorting(budget_investments)
@@ -80,6 +76,11 @@ class Api::Budgets::InvestmentsController < Api::BaseController
 
     if @budget_investment.save
       process_image_with_base64(@budget_investment, params[:budget_investment][:image_attributes])
+
+      if feasibility_assessment_submitted?
+        @budget_investment.send_feasibility_email
+      end
+
       serialized_budget_investment = BudgetInvestmentSerializer.new(@budget_investment).serialize
 
       render json: { data: { budget_investment: serialized_budget_investment } }
@@ -109,6 +110,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
       :resource_terms,
       :price,
       :feasibility,
+      :valuator_explanation,
       :valuation_finished,
       :selected,
       :visible_to_valuators,
@@ -116,6 +118,11 @@ class Api::Budgets::InvestmentsController < Api::BaseController
       documents_attributes: document_attributes,
       tag_list: []
     )
+  end
+
+  def feasibility_assessment_submitted?
+    budget_investment_params.key?(:feasibility) ||
+      budget_investment_params.key?(:valuation_finished)
   end
 
   def find_budget
@@ -174,14 +181,5 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     else
       budget_investments.sort_by_id
     end
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end

@@ -85,8 +85,6 @@ namespace :projekt_management do
     end
     resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
     resources :projekt_point_of_interest_categories, only: [:new, :create, :edit, :update, :destroy]
-
-    resources :saved_content_blocks, only: [:create, :update, :destroy]
   end
   resources :projekt_phase_settings, only: [:update]
 

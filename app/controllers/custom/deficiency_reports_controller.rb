@@ -76,6 +76,8 @@ class DeficiencyReportsController < ApplicationController
       end
 
       format.csv do
+        redirect_to deficiency_reports_path and return unless current_user&.administrator?
+
         formated_time = Time.current.strftime("%d-%m-%Y-%H-%M-%S")
         send_data CsvServices::DeficiencyReportsExporter.call(@deficiency_reports),
           filename: "deficiency_reports-#{formated_time}.csv"
@@ -147,7 +149,7 @@ class DeficiencyReportsController < ApplicationController
   end
 
   def notify_officer_about_new_comments
-    return unless @deficiency_report.officer.present?
+    return unless @deficiency_report.responsible.present?
 
     enable = ["1", "true"].include?(deficiency_report_params[:notify_officer_about_new_comments])
     datetime = enable ? Time.current : nil
@@ -161,11 +163,9 @@ class DeficiencyReportsController < ApplicationController
       new_comments = @deficiency_report.comments.created_after_date(last_comment_date_expanded)
 
       if new_comments.any?
-        NotificationServiceMailer.new_comments_for_deficiency_report(
-          @deficiency_report,
-          last_comment_date_expanded,
-          initial: true
-        ).deliver_now
+        NotificationServices::NewCommentsDeficiencyReportsNotification.deliver(
+          @deficiency_report, last_comment_date_expanded, initial: true
+        )
       end
     end
 

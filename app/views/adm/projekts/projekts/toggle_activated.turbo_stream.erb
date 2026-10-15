@@ -1,3 +1,11 @@
 <%= turbo_stream.replace dom_id(@projekt) do %>
   <%= render "projekt", projekt: @projekt.reload %>
 <% end %>
+
+<%= turbo_stream.update dom_id(@projekt, :activated) do %>
+  <%= render Adm::AttributeEditors::BooleanComponent.new(
+    @projekt,
+    :activated?,
+    path: toggle_activated_adm_projekts_projekt_path(@projekt)
+  ) %>
+<% end %>

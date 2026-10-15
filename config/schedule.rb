@@ -37,6 +37,10 @@ every 1.day, at: "5:00 am" do
   rake "-s sitemap:refresh"
 end
 
+every 1.day, at: "3:30 am", roles: [:cron] do
+  rake "-s municipal_plans:apply_due_archiving"
+end
+
 every 2.hours do
   rake "-s stats:generate"
 end
@@ -47,6 +51,14 @@ end
 
 every 6.hours, roles: [:cron] do
   runner "AiUsageRecords::PushCurrentMonths.call", job_template: staggered_job_template
+end
+
+every 5.hours, roles: [:cron] do
+  rake "-s ai_models:refresh", job_template: staggered_job_template
+end
+
+every 1.day, at: "3:30 am", roles: [:cron] do
+  rake "-s similar_contributions:prune_abandoned_drafts"
 end
 
 # Temporally not send dashboard's notifications
@@ -100,7 +112,28 @@ every 1.day, at: "4:30 am", roles: [:cron] do
   rake "api_request_logs:cleanup"
 end
 
+every 1.day, at: "4:45 am", roles: [:cron] do
+  rake "machine_translation:setting_cleanup"
+end
+
 every 1.day, at: "3:00 am", roles: [:cron] do
   runner "ProjektImports::PurgeOldImportsJob.perform_later"
+end
+
+every 1.day, at: "3:15 am", roles: [:cron] do
+  runner "Whatsapp::PurgeOldMessagesJob.perform_later"
+end
+
+# Late enough in the morning to be a reasonable hour to receive a push, which
+# the 3am maintenance slot is not.
+every 1.day, at: "9:00 am", roles: [:cron] do
+  runner "Whatsapp::NotifyPhaseDeadlineJob.perform_later"
+end
+
+# Afternoon rather than beside the morning deadline pushes, which also keeps two
+# jobs off the same subscriber list: a projekt whose proposal phase closes on the
+# day its vote opens would otherwise have both walking it at once.
+every 1.day, at: "4:15 pm", roles: [:cron] do
+  runner "Whatsapp::NotifyVotingPhaseJob.perform_later"
 end
 

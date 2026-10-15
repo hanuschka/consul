@@ -206,8 +206,8 @@ Dieses Logo sollte gut auf hellem und dunklem Hintergrund lesbar sein, da es üb
         max_number_of_winners_description: "Begrenzt die Anzahl der Vorschläge, die am Ende der Abstimmung als Gewinner ermittelt werden können. Nur die bestbewerteten Vorschläge innerhalb des verfügbaren Budgets werden berücksichtigt. Lassen Sie das Feld leer, wenn alle Vorschläge gewinnen können, die das Budget nicht überschreiten."
         results_enabled_label: Ergebnisse
         results_enabled_description: "Steuert, ob die Ergebnisse des Bürgerhaushalts nach Abschluss der Abstimmung öffentlich einsehbar sind. Wenn aktiviert, werden die Gewinner und die Stimmverteilung auf der Ergebnisseite angezeigt. Deaktivieren Sie diese Option, wenn die Ergebnisse zunächst intern ausgewertet werden sollen."
-        show_results_after_first_vote_label: Ergebnisse nach erster Stimme anzeigen
-        show_results_after_first_vote_description: "Zeigt Zwischenergebnisse bereits an, sobald die erste Stimme abgegeben wurde. Nutzer können so den aktuellen Stand der Abstimmung in Echtzeit verfolgen. Deaktivieren Sie diese Option, wenn Zwischenergebnisse die Abstimmung beeinflussen könnten und erst nach Abschluss sichtbar sein sollen."
+        show_results_after_first_vote_label: In der Preisphase nur zugelassene Vorschläge zeigen
+        show_results_after_first_vote_description: "Zeigt in der Phase „Veröffentlichung der Preise“ ausschließlich die Vorschläge an, die zur Abstimmung zugelassen wurden. Im Frontend entfällt in dieser Phase die Filterleiste, Besucher sehen direkt die Vorschläge, über die anschließend abgestimmt wird. Aktivieren Sie diese Funktion, wenn die Zulassung vor Beginn der Preisphase abgeschlossen ist."
         show_percentage_values_only_label: Prozentuale Werte
         show_percentage_values_only_description: "Zeigt in den Abstimmungsergebnissen ausschließlich prozentuale Werte statt absoluter Stimmzahlen an. Dies kann sinnvoll sein, wenn die Gesamtzahl der Stimmen nicht öffentlich kommuniziert werden soll oder wenn relative Verhältnisse aussagekräftiger sind als absolute Zahlen."
         stats_enabled_label: Statistiken

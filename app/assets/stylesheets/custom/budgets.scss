@@ -45,11 +45,11 @@
 
   .sticky-ballot-progress-bar {
     position: sticky;
-    top: 90px;
+    top: $topbar-height;
     z-index: 500;
 
     @media screen and (max-width: $small-tablet-viewport-start) {
-      top: 109px;
+      top: $topbar-height-mobile;
       padding: 20px !important;
       border-top: 0 !important;
 
@@ -57,6 +57,18 @@
         display: none;
       }
     }
+
+    body:has(.studio-admin-topbar) & {
+      top: calc(#{$topbar-height} + var(--admin-topbar-height));
+
+      @media screen and (max-width: $small-tablet-viewport-start) {
+        top: $topbar-height-mobile;
+      }
+    }
+  }
+
+  &:has(.sticky-ballot-progress-bar) .custom-content-block--toolbar-zone {
+    z-index: 501;
   }
 
   .expanded.jumbo-budget.budget-heading {
@@ -168,4 +180,8 @@
   .budget-heading {
     @include full-width-background;
   }
+}
+
+.supports.ballot .callout.alert a {
+  color: inherit;
 }

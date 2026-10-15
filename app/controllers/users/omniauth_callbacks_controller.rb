@@ -1,49 +1,62 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   skip_before_action :verify_authenticity_token, only: %i[process_bund_id_response]
 
+  BUND_ID_COOKIE = :bund_id_relay_state
+  VERIFYING_STORK_LEVELS = %w[STORK-QAA-Level-3 STORK-QAA-Level-4].freeze
+
   def send_bund_id_request
-    saml_redirect_request_url = BundIdServices::RedirectRequestMaker.call(user_id: current_user&.id, purpose: params[:purpose])
+    verification = current_user.present? && params[:purpose] == "verification"
+    raise ActionController::RoutingError, "Not Found" unless bund_id_feature_enabled?(verification)
+
+    bund_id_request = BundIdServices::RedirectRequestMaker.call(
+      user_id: current_user&.id, purpose: params[:purpose]
+    )
     request.session_options[:skip] = true
 
-    redirect_to(saml_redirect_request_url, allow_other_host: true)
+    cookies.encrypted[BUND_ID_COOKIE] = {
+      value: bund_id_request.relay_state,
+      expires: RelayState::LIFETIME.from_now,
+      httponly: true,
+      secure: true,
+      same_site: :none
+    }
+
+    redirect_to(bund_id_request.url, allow_other_host: true)
   end
 
   def process_bund_id_response
-    auth_data = BundIdServices::ResponseProcessor.call(params[:SAMLResponse])
-
-    if params["RelayState"].present?
-      relay_state = RelayState.where("created_at > ?", 1.hour.ago).find_by(token: params["RelayState"])
-
-      if relay_state.present?
-        user_id = relay_state.data["user_id"]
-        purpose = relay_state.data["purpose"]
-        request_time = relay_state.created_at.to_i
-        relay_state.destroy!
-      end
+    relay_state = take_bund_id_relay_state
+    if relay_state.nil?
+      raise BundIdServices::ResponseProcessor::InvalidResponse, "No open BundID request in this browser"
     end
 
+    auth_data = BundIdServices::ResponseProcessor.call(
+      params[:SAMLResponse], request_id: relay_state.data["request_id"]
+    )
+    Rails.logger.debug("BundID response: #{auth_data.to_h}") if Rails.env.development?
+    user_id = relay_state.data["user_id"]
+    purpose = relay_state.data["purpose"]
+    request_time = relay_state.created_at.to_i
+
     if user_id.present? && purpose == "verification"
+      raise ActionController::RoutingError, "Not Found" unless bund_id_feature_enabled?(true)
+
       if Time.zone.at(request_time) < 15.minutes.ago
         flash[:error] = t("custom.users.omniauth.bund_id.verification_request_expired")
         redirect_to root_path
       else
         user = User.find(user_id)
-        user.update_columns(user_attributes_from(auth_data))
-        user.reload
-        user.verify! if user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
+        verify_with_bund_id(user, auth_data)
         sign_in user
-
-        if user.verified?
-          flash[:notice] = t("custom.users.omniauth.bund_id.verification_successfull")
-        else
-          flash[:alert] = t("custom.users.omniauth.bund_id.verification_failed")
-        end
 
         redirect_to account_path
       end
     else
       sign_in_with :bund_id_login, :bund_id, auth_data
     end
+  rescue BundIdServices::ResponseProcessor::InvalidResponse => e
+    Rails.logger.warn("BundID response rejected: #{e.message}")
+    redirect_to new_user_session_path, alert: t("custom.users.omniauth.bund_id.login_failed")
   end
 
   def twitter
@@ -80,17 +93,96 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
 
+    def bund_id_feature_enabled?(verification)
+      Setting[verification ? "feature.bund_id_verification" : "feature.bund_id_login"]
+    end
+
+    def verify_with_bund_id(user, auth_data)
+      identity = Identity.find_or_initialize_by(provider: "bund_id", uid: auth_data.uid)
+
+      if identity.user_id.present? && identity.user_id != user.id
+        Rails.logger.warn(
+          "BundID verification refused for user #{user.id}: identity belongs to user #{identity.user_id}"
+        )
+        flash[:alert] = t("custom.users.omniauth.identity_taken")
+        return
+      end
+
+      assign_bund_id_attributes(user, auth_data)
+      user.update_columns(user.changes_to_save.transform_values(&:last)) if user.has_changes_to_save?
+      user.verify! if !user.verified? && user.last_stork_level.in?(VERIFYING_STORK_LEVELS)
+
+      if user.verified? && user.last_stork_level.in?(VERIFYING_STORK_LEVELS)
+        identity.update!(user: user, auth_data: bund_id_auth_summary(auth_data))
+        flash[:notice] = t("custom.users.omniauth.bund_id.verification_successfull")
+      else
+        reason =
+          if user.last_stork_level.in?(VERIFYING_STORK_LEVELS)
+            "data incomplete or taken"
+          else
+            "login level #{user.last_stork_level}"
+          end
+        Rails.logger.warn("BundID verification failed for user #{user.id}: #{reason}")
+        flash[:alert] = t("custom.users.omniauth.bund_id.verification_failed")
+      end
+    end
+
+    def bund_id_auth_summary(auth)
+      raw_info = auth.extra.raw_info.to_h
+
+      {
+        verification_level: raw_info["verification_level"],
+        auth_method: raw_info["auth_method"],
+        attributes: raw_info.reject { |_, value| value.blank? }.keys.sort,
+        received_at: Time.current.iso8601
+      }
+    end
+
+    def assign_bund_id_attributes(user, auth)
+      attributes = user_attributes_from(auth)
+      return user.assign_attributes(attributes) unless user.verified?
+
+      user.last_stork_level = attributes[:last_stork_level]
+      return unless user.last_stork_level.in?(VERIFYING_STORK_LEVELS)
+
+      user.assign_attributes(attributes)
+      user.registered_address_id = attributes[:registered_address_id]
+      unique_stamp = user.prepare_unique_stamp
+
+      if unique_stamp.present? && user.stamp_unique?
+        user.unique_stamp = unique_stamp
+        user.geozone_id = Geozone.find_with_plz(user.plz)&.id
+      else
+        Rails.logger.warn("BundID data for verified user #{user.id} kept: new data incomplete or taken")
+        user.restore_attributes(user.changed - ["last_stork_level"])
+      end
+    end
+
+    def take_bund_id_relay_state
+      token = params[:RelayState].to_s
+      browser_token = cookies.encrypted[BUND_ID_COOKIE].to_s
+      cookies.delete(BUND_ID_COOKIE, secure: true, same_site: :none)
+      return if token.blank? || !ActiveSupport::SecurityUtils.secure_compare(token, browser_token)
+
+      relay_state = RelayState.active.find_by(token: token)
+      relay_state if relay_state && RelayState.where(id: relay_state.id).delete_all == 1
+    end
+
     def sign_in_with(feature, provider, auth_data = nil)
       raise ActionController::RoutingError, "Not Found" unless Setting["feature.#{feature}"]
 
       auth = auth_data || request.env["omniauth.auth"]
 
       identity = Identity.first_or_create_from_oauth(auth)
-      identity.update!(auth_data: auth)
+      identity.update!(auth_data: provider == :bund_id ? bund_id_auth_summary(auth) : auth)
 
       @user = identity.user || User.first_or_initialize_for_oauth(auth)
 
-      @user.assign_attributes(user_attributes_from(auth))
+      if provider == :bund_id
+        assign_bund_id_attributes(@user, auth)
+      else
+        @user.assign_attributes(user_attributes_from(auth))
+      end
 
       if save_user
         identity.update!(user: @user)
@@ -100,7 +192,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         flash[:notice] = t("custom.users.omniauth.verification_successfull") if @user.level_three_verified?
         sign_in_and_redirect @user, event: :authentication
       else
-        session["devise.#{provider}_data"] = auth
+        session["devise.#{provider}_data"] = auth unless provider == :bund_id
         redirect_to new_user_registration_path
       end
     end

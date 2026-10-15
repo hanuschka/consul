@@ -8,6 +8,7 @@ class MunicipalPlans::TableComponent < ApplicationComponent
     topics: { ascending: "topics", descending: "topics_desc", first: :ascending },
     districts: { ascending: "districts", descending: "districts_desc", first: :ascending }
   }.freeze
+  PARTICIPATION_BADGES = { formal_participation: :formal, informal_participation: :informal }.freeze
 
   attr_reader :municipal_plans, :caption, :current_order
 
@@ -35,6 +36,14 @@ class MunicipalPlans::TableComponent < ApplicationComponent
 
   def badge_icon(badge)
     MunicipalPlans::BadgesComponent::ICONS.fetch(badge, "circle")
+  end
+
+  def participation_kind(badge)
+    PARTICIPATION_BADGES[badge]
+  end
+
+  def participation_text(badge)
+    t("custom.municipal_plans.participation_info.#{participation_kind(badge)}.text")
   end
 
   def region_label

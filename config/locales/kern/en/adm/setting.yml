@@ -301,6 +301,9 @@ en:
       auto_archive: Archive plans automatically
       auto_archive_description: >
         Archives a plan by itself as soon as the archive date entered on it is reached. At that point it disappears from the public overview and stays reachable in the archive under the same address. Enable this when your departments reliably enter the end of a plan in advance and you want to save the manual archiving step.
+      procedure_steps: Use procedure steps
+      procedure_steps_description: >
+        Offers the procedure steps maintained in the administration area for selection in the plan form, in the order set there. The public detail page then shows the procedure step instead of the version number; the administration area keeps showing the version number. Enable this when your plans go through a formal procedure with fixed steps, such as land-use planning procedures under the BauGB.
     deficiency_reports:
       feature_name: Feature name
       feature_name_description: >

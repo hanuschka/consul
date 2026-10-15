@@ -114,6 +114,21 @@ to: :budget
       update_column(:email_on_feasibility_sent_at, Time.zone.now)
     end
 
+    def selection_email_due?
+      feasible? && email_on_selected_pending? && !budget.reviewing_ballots? && !budget.finished?
+    end
+
+    def send_selection_email
+      return unless selection_email_due?
+
+      if selected?
+        Mailer.budget_investment_selected(self).deliver_later
+      else
+        Mailer.budget_investment_unselected(self).deliver_later
+      end
+      update_column(:email_on_selected_sent_at, Time.zone.now)
+    end
+
     def should_show_feasibility_explanation?
       feasible? &&
         selected? &&

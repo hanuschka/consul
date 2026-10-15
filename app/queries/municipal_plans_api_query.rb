@@ -3,7 +3,7 @@ class MunicipalPlansApiQuery < ApplicationQuery
 
   PRELOADS = [
     :translations, :links, :districts, :map_location,
-    { topics: :translations }
+    { topics: :translations }, { procedure_step: :translations }
   ].freeze
 
   def initialize(params = {})

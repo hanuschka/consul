@@ -6,6 +6,19 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
 
   before { Setting["process.municipal_plans"] = true }
 
+  municipal_plan_schema = {
+    type: :object,
+    properties: {
+      version: { type: :string, description: "Versionsnummer, set by the system" },
+      procedure_step: {
+        type: :object, nullable: true,
+        description: "Verfahrensschritt from the list the instance maintains, with its name as entered " \
+                     "there, null when none is set",
+        properties: { id: { type: :integer }, name: { type: :string }}
+      }
+    }
+  }
+
   path "/api/municipal_plans" do
     get "List municipal plans" do
       tags "Municipal Plans"
@@ -23,7 +36,8 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
       parameter name: :per_page, in: :query, type: :integer, required: false,
                 description: "Number of Vorhaben per page (**default and maximum:** 500)"
       parameter name: :districts, in: :query, type: :string, required: false,
-                description: "Comma-separated Ortsteil ids; a Vorhaben matches if it lies in any of them"
+                description: "Comma-separated Ortsteil ids; a Vorhaben matches if it lies in any of them. " \
+                             "`city_wide` matches the Vorhaben for the whole city (`city_wide: true`)"
       parameter name: :topics, in: :query, type: :string, required: false,
                 description: "Comma-separated Thema ids; a Vorhaben matches if it carries any of them"
       parameter name: :changed_since, in: :query, type: :string, required: false,
@@ -37,7 +51,7 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
                properties: {
                  data: {
                    type: :object,
-                   properties: { municipal_plans: { type: :array, items: { type: :object }}},
+                   properties: { municipal_plans: { type: :array, items: municipal_plan_schema }},
                    required: ["municipal_plans"]
                  },
                  pagination: { type: :object }
@@ -75,7 +89,7 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
                properties: {
                  data: {
                    type: :object,
-                   properties: { municipal_plan: { type: :object }},
+                   properties: { municipal_plan: municipal_plan_schema },
                    required: ["municipal_plan"]
                  }
                },
@@ -142,12 +156,44 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
       expect(body).not_to include("Interner Vermerk", "postfach@jena.example", officer.name)
     end
 
+    it "shows the Verfahrensschritt next to the Versionsnummer" do
+      step = create(:municipal_plan_procedure_step, name: "2.0 Frühzeitige Unterrichtung")
+      plan = create(:municipal_plan, :published, procedure_step: step)
+      plain = create(:municipal_plan, :published)
+
+      get api_municipal_plan_path(plan), headers: headers
+      data = JSON.parse(response.body)["data"]["municipal_plan"]
+
+      expect(data["version"]).to eq("1.0")
+      expect(data["procedure_step"]).to eq("id" => step.id, "name" => "2.0 Frühzeitige Unterrichtung")
+      expect(data.keys).not_to include("procedure_step_label", "procedure_step_id")
+
+      get api_municipal_plan_path(plain), headers: headers
+      data = JSON.parse(response.body)["data"]["municipal_plan"]
+
+      expect(data["version"]).to eq("1.0")
+      expect(data).to include("procedure_step" => nil)
+    end
+
     it "filters by Ortsteil and Thema" do
       match = create(:municipal_plan, :published)
       create(:municipal_plan, :published)
 
       expect(listed_ids(districts: match.district_ids.join(","))).to eq([match.id])
       expect(listed_ids(topics: match.topic_ids.join(","))).to eq([match.id])
+    end
+
+    it "marks a Vorhaben for the whole city, filters by it and gives it no map location" do
+      plan = create(:municipal_plan, :published, :city_wide)
+      create(:municipal_plan, :published)
+
+      get api_municipal_plan_path(plan), headers: headers
+      data = JSON.parse(response.body)["data"]["municipal_plan"]
+
+      expect(data["city_wide"]).to be true
+      expect(data["districts"]).to eq([])
+      expect(data["map_location"]).to be_nil
+      expect(listed_ids(districts: "city_wide")).to eq([plan.id])
     end
 
     describe "changed_since" do

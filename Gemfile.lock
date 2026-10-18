@@ -665,7 +665,7 @@ GEM
       rubocop-factory_bot (~> 2.22)
     ruby-progressbar (1.13.0)
     ruby-rc4 (0.1.5)
-    ruby-saml (1.16.0)
+    ruby-saml (1.18.1)
       nokogiri (>= 1.13.10)
       rexml
     ruby-vips (2.2.0)
@@ -956,7 +956,7 @@ DEPENDENCIES
   rubocop-performance (~> 1.19.1)
   rubocop-rails (~> 2.21.2)
   rubocop-rspec (~> 2.24.1)
-  ruby-saml (~> 1.16)
+  ruby-saml (~> 1.18, >= 1.18.1)
   ruby_llm (= 2.0.0)
   rubyzip (= 2.3.2)
   rvm1-capistrano3 (~> 1.4.0)

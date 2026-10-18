@@ -41,18 +41,19 @@ class NotificationServiceMailer < ApplicationMailer
     end
   end
 
-  def new_comments_for_deficiency_report(deficiency_report, last_notified_time, initial: false)
+  def new_comments_for_deficiency_report(deficiency_report, last_notified_time, officer: nil, initial: false)
     @deficiency_report = deficiency_report
-    @officer = @deficiency_report.officer
     @new_comments = @deficiency_report.comments.where("created_at > ?", last_notified_time)
     @initial = initial
+    email_to = officer ? officer.email : deficiency_report.responsible.default_email
+    return if email_to.blank?
 
-    with_user(@officer.user) do
+    I18n.with_locale(officer ? officer.user.locale : :de) do
       mail_with_custom_template(nil, {
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
         "comment_count" => @new_comments.count
-      }, to: @officer.email,
+      }, to: email_to,
         default_subject: t(
           "custom.notification_service_mailers.new_comments_for_deficiency_report.subject",
           deficiency_report_title: @deficiency_report.title.truncate(30)

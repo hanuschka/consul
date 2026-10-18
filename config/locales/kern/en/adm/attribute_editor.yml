@@ -190,8 +190,8 @@ This logo should be readable on both light and dark backgrounds, since it appear
         max_number_of_winners_description: "Limits the number of proposals that can be determined as winners at the end of voting. Only the top-rated proposals within the available budget are considered. Leave the field empty if all proposals within the budget can win."
         results_enabled_label: Results
         results_enabled_description: "Controls whether the results of the participatory budget are publicly viewable after voting closes. When enabled, winners and vote distribution are shown on the results page. Disable this option if results should first be evaluated internally."
-        show_results_after_first_vote_label: Show results after first vote
-        show_results_after_first_vote_description: "Shows intermediate results as soon as the first vote has been cast. Users can follow the current state of voting in real time. Disable this option if intermediate results might influence voting and should only be visible after closing."
+        show_results_after_first_vote_label: Only show admitted proposals in the price phase
+        show_results_after_first_vote_description: "In the \"Publishing prices\" phase, shows only the proposals admitted to the vote. The filter bar is hidden in this phase, so visitors see straight away the proposals that will be voted on. Enable this option when admission is completed before the price phase starts."
         show_percentage_values_only_label: Percentage values only
         show_percentage_values_only_description: "Shows voting results only as percentage values instead of absolute vote counts. This can make sense if the total number of votes shouldn't be publicly communicated, or if relative ratios are more meaningful than absolute numbers."
         stats_enabled_label: Statistics

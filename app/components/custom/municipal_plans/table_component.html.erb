@@ -5,6 +5,9 @@
         <li>
           <i class="fas fa-<%= badge_icon(badge) %>" aria-hidden="true"></i>
           <%= badge_label(badge) %>
+          <% if participation_kind(badge) %>
+            <%= render MunicipalPlans::ParticipationInfoComponent.new(kind: participation_kind(badge)) %>
+          <% end %>
         </li>
       <% end %>
     </ul>
@@ -46,7 +49,16 @@
                         <i class="fas fa-<%= badge_icon(badge) %>" aria-hidden="true"></i>
                         <span class="municipal-plans-table--badge-label" aria-hidden="true"><%= badge_label(badge) %></span>
                       </span>
-                      <template><%= badge_label(badge) %></template>
+                      <% if participation_kind(badge) %>
+                        <template>
+                          <span class="rich-tooltip-content">
+                            <span class="rich-tooltip-content--title"><%= badge_label(badge) %></span>
+                            <span class="rich-tooltip-content--text"><%= participation_text(badge) %></span>
+                          </span>
+                        </template>
+                      <% else %>
+                        <template><%= badge_label(badge) %></template>
+                      <% end %>
                     </rich-tooltip>
                   </li>
                 <% end %>

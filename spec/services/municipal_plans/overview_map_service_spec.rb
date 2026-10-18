@@ -190,6 +190,15 @@ describe MunicipalPlans::OverviewMapService do
       expect(marker_titles(service_for(districts: [district.id.to_s]))).to be_empty
     end
 
+    it "shows no marker for a Vorhaben for the whole city, even with an old pin" do
+      plan = plan_in([district_with_area("Lobeda")], title: "Ganze Stadt")
+      plan.district_assignments.destroy_all
+      plan.update!(city_wide: true)
+
+      expect(marker_titles(service_for({}))).to be_empty
+      expect(marker_titles(service_for(districts: [MunicipalPlansQuery::CITY_WIDE]))).to be_empty
+    end
+
     it "only shows markers of Vorhaben matching the filter" do
       lobeda = district_with_area("Lobeda")
       wenigenjena = district_with_area("Wenigenjena")

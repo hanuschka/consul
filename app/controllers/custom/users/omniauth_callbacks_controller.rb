@@ -54,7 +54,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       if user = User.find_by(email: email) #keycloak email already taken by other user
         redirect_to new_user_session_url(reason: "ee") and return
       else
-        password = SecureRandom.base64(15)
+        password = "#{SecureRandom.alphanumeric(20)}aA1!"
         user = User.create!({
           email: email,
           username: username,

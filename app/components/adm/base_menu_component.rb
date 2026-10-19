@@ -70,7 +70,12 @@ class Adm::BaseMenuComponent < ApplicationComponent
     def help_item
       return unless Adm::Handbook.configured?
 
-      { label: t("adm.menu.items.help"), icon: "help", path: adm_help_path(adm_section: help_section) }
+      community = help_section.nil?
+      {
+        label: t(community ? "adm.menu.items.community" : "adm.menu.items.handbook"),
+        icon: community ? "groups" : "menu_book",
+        path: adm_help_path(adm_section: help_section)
+      }
     end
 
     def help_section

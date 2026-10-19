@@ -37,3 +37,4 @@
 //= link mapbox_vendor.css
 //= link plyr_vendor.css
 //= link font_awesome.css
+//= link mitmachbox/u8g2_fonts.json

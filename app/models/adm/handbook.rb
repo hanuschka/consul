@@ -20,6 +20,13 @@ module Adm
       Setting["handbook.url"].to_s.strip.chomp("/")
     end
 
+    def self.origin
+      uri = URI.parse(base_url)
+      uri.port == uri.default_port ? "#{uri.scheme}://#{uri.host}" : "#{uri.scheme}://#{uri.host}:#{uri.port}"
+    rescue URI::Error
+      nil
+    end
+
     def self.section_url(section_key)
       "#{base_url}/#{SECTION_PATHS.fetch(section_key)}/"
     end

@@ -11,3 +11,14 @@
   min-height: 70vh;
   border: 0;
 }
+
+.adm-embed--full {
+  display: block;
+  min-height: 0;
+
+  .adm-embed__iframe {
+    display: block;
+    height: calc(100vh - var(--kern-adm-header-height));
+    min-height: 0;
+  }
+}

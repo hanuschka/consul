@@ -3,6 +3,10 @@ FactoryBot.define do
     sequence(:name) { |n| "Thema #{n}" }
   end
 
+  factory :municipal_plan_procedure_step, class: "MunicipalPlan::ProcedureStep" do
+    sequence(:name) { |n| "Verfahrensschritt #{n}" }
+  end
+
   factory :municipal_plan_officer, class: "MunicipalPlan::Officer" do
     user
   end
@@ -24,9 +28,9 @@ FactoryBot.define do
     association :responsible, factory: :municipal_plan_officer
 
     after(:build) do |plan|
-      plan.map_location ||= build(:map_location, mappable: plan)
+      plan.map_location ||= build(:map_location, mappable: plan) unless plan.city_wide?
 
-      if plan.district_assignments.empty?
+      if plan.district_assignments.empty? && !plan.city_wide?
         plan.district_assignments.build(district: create(:registered_address_district))
       end
 
@@ -37,6 +41,10 @@ FactoryBot.define do
 
     trait :published do
       status { "published" }
+    end
+
+    trait :city_wide do
+      city_wide { true }
     end
   end
 end

@@ -44,7 +44,8 @@ class Ai::Tools::WhatsappAiAssistant::RemoveDraftLocation <
       {
         removed: true,
         hint: "Tell them the contribution has no place on the map now. Ask for the right place " \
-              "only if they want to give one."
+              "only if they want to give one; where they would rather go without, pass " \
+              "location_declined when you show them the contribution again."
       }
     end
 

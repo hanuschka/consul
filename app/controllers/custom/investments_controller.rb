@@ -44,8 +44,16 @@ class InvestmentsController < ApplicationController
     end
 
     def filter_by_status
-      @investments = @investments.selected if params[:status] == "selected"
+      @investments = publicly_selected(@investments) if params[:status] == "selected"
       @investments = @investments.unfeasible if params[:status] == "unfeasible"
+    end
+
+    def publicly_selected(investments)
+      investments.selected.where(budget_id: public_selection_budget_ids)
+    end
+
+    def public_selection_budget_ids
+      @public_selection_budget_ids ||= @budgets.selection_public_ids
     end
 
     def filter_by_searched
@@ -55,7 +63,9 @@ class InvestmentsController < ApplicationController
     def set_status_filter_options
       @status_filter_options = []
 
-      @status_filter_options << [t("budgets.investments.index.filters.selected"), "selected"] if @investments.selected.any?
+      if publicly_selected(@investments).any?
+        @status_filter_options << [t("budgets.investments.index.filters.selected"), "selected"]
+      end
       @status_filter_options << [t("budgets.investments.index.filters.unfeasible"), "unfeasible"] if @investments.unfeasible.any?
     end
 

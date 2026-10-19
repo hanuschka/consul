@@ -19,7 +19,9 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
               "the request. Use it whenever you ask for a photo — never write the request " \
               "yourself, because the notices would be missing. draft_status says whether this " \
               "phase takes pictures at all and whether the citizen has already declined one; do " \
-              "not ask again if they have. Whether the draft already carries a picture is on " \
+              "not ask again if they have. Never ask twice: once the notices have gone out for " \
+              "this draft, a second call is refused, and a photo they send is simply attached. " \
+              "Whether the draft already carries a picture is on " \
               "the draft line of the state: where it has none, a request to replace one is a " \
               "first photo, so ask for it as that and never talk about a picture that is not " \
               "there. A photo is always optional, and all three answers — " \
@@ -43,6 +45,7 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
     return refusal if refusal.present?
     return no_draft_error if draft_resource.blank?
     return not_collected_error if !conversation.image_question_available?
+    return already_asked_error if conversation.image_notices_shown?
     return blank_body_error if body.to_s.strip.blank?
 
     # Three answers, and the phase either collects pictures or this tool has
@@ -61,6 +64,19 @@ class Ai::Tools::WhatsappAiAssistant::RequestPhoto < Ai::Tools::WhatsappAiAssist
     def not_collected_error
       { error: "This phase does not take pictures, so there is nothing to ask for. Tell the " \
                "citizen the contribution goes in without one." }
+    end
+
+    # Asked once per draft, like the pin. The notices and the three answers went out
+    # with the first ask, and a continue pill tapped under an older preview — one
+    # that still named the photo as the next step — would otherwise send them all
+    # again. Everything the answers lead to still works without a second ask: a
+    # photo they send is attached, a picture they ask for is generated.
+    def already_asked_error
+      { error: "The photo for this draft has already been asked for, with both notices, so " \
+               "nothing was sent. Do not ask again: attach a photo they send with " \
+               "attach_draft_image, generate one with generate_draft_image if they ask for " \
+               "that, and otherwise go on without — show_draft_for_confirmation offers the " \
+               "next step." }
     end
 
     def blank_body_error

@@ -2,5 +2,6 @@ de:
   adm:
     help:
       show:
-        title: Hilfe
+        title_handbook: Handbuch
+        title_community: Community
         iframe_title: Nutzerhandbuch

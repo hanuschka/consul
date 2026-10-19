@@ -21,6 +21,21 @@ class DeficiencyReportMailer < ApplicationMailer
     end
   end
 
+  def notify_author_about_official_answer(deficiency_report)
+    @deficiency_report = deficiency_report
+    @email_to = @deficiency_report.author.email
+
+    with_user(@deficiency_report.author) do
+      mail_with_custom_template(nil, {
+        "username" => @deficiency_report.author.username,
+        "deficiency_report_title" => @deficiency_report.title,
+        "deficiency_report_url" => deficiency_report_url(@deficiency_report),
+        "official_answer" => @deficiency_report.official_answer
+      }, to: @email_to,
+        default_subject: t("custom.deficiency_reports.mailers.notify_author_about_official_answer.subject"))
+    end
+  end
+
   def notify_officer(deficiency_report, officer)
     @deficiency_report = deficiency_report
     @deficiency_report_officer = officer

@@ -168,39 +168,44 @@
           <dl class="municipal-plan-glance">
             <% if district_names.any? %>
               <div class="municipal-plan-glance--row">
-                <dt><%= t("custom.municipal_plans.show.at_a_glance.area") %></dt>
+                <dt><%= t("custom.municipal_plans.show.at_a_glance.area") %>:</dt>
                 <dd><%= district_names.join(", ") %></dd>
               </div>
             <% end %>
             <% if @municipal_plan.costs.present? %>
               <div class="municipal-plan-glance--row">
-                <dt><%= t("custom.municipal_plans.show.at_a_glance.costs") %></dt>
+                <dt><%= t("custom.municipal_plans.show.at_a_glance.costs") %>:</dt>
                 <dd><%= @municipal_plan.costs %></dd>
               </div>
             <% end %>
             <% { formal: @municipal_plan.formal_participation?, informal: @municipal_plan.informal_participation? }.each do |kind, value| %>
               <div class="municipal-plan-glance--row">
-                <dt>
-                  <%= t("custom.municipal_plans.show.at_a_glance.#{kind}") %>
+                <dt><%= t("custom.municipal_plans.show.at_a_glance.#{kind}") %>:</dt>
+                <dd>
+                  <%= t("custom.municipal_plans.show.participation_block.#{value ? "status_yes" : "status_no"}") %>
                   <%= render MunicipalPlans::ParticipationInfoComponent.new(kind: kind) %>
-                </dt>
-                <dd><%= t("custom.municipal_plans.show.participation_block.#{value ? "status_yes" : "status_no"}") %></dd>
+                </dd>
               </div>
             <% end %>
-            <% if MunicipalPlan.procedure_steps_enabled? %>
-              <% if @municipal_plan.procedure_step_label.present? %>
-                <div class="municipal-plan-glance--row">
-                  <dt><%= t("custom.municipal_plans.show.at_a_glance.procedure_step") %></dt>
-                  <dd><%= @municipal_plan.procedure_step_label %></dd>
-                </div>
-              <% end %>
-            <% elsif @municipal_plan.version.present? %>
+            <% if !MunicipalPlan.procedure_steps_enabled? && @municipal_plan.version.present? %>
               <div class="municipal-plan-glance--row">
-                <dt><%= t("custom.municipal_plans.show.banner.version") %></dt>
+                <dt><%= t("custom.municipal_plans.show.banner.version") %>:</dt>
                 <dd><%= @municipal_plan.version %></dd>
               </div>
             <% end %>
           </dl>
+        <% end %>
+
+        <% if MunicipalPlan.procedure_steps_enabled? && @municipal_plan.procedure_step.present? %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.municipal_plans.show.procedure_steps_legend.title"), icon_name: "list-ol")) do %>
+            <ol class="municipal-plan-procedure-steps">
+              <% MunicipalPlan::ProcedureStep.includes(:translations).each do |step| %>
+                <% current = step.id == @municipal_plan.procedure_step_id %>
+                <%= tag.li step.name, class: ["municipal-plan-procedure-steps--step", ("-current" if current)],
+                                      aria: { current: ("step" if current) } %>
+              <% end %>
+            </ol>
+          <% end %>
         <% end %>
 
         <% if @municipal_plan.links.any? %>

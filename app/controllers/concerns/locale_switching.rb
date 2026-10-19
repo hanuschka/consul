@@ -35,6 +35,11 @@ module LocaleSwitching
       locale if I18n.available_locales.include?(locale)
     end
 
+    def language_switcher_enabled?
+      Setting["extended_feature.general.language_switcher_in_menu"].present? &&
+        Setting["extended_feature.general.enable_google_translate"].blank?
+    end
+
     def persist_user_locale(locale)
       return unless current_user&.persisted?
       return if current_user.locale == locale.to_s
@@ -45,6 +50,8 @@ module LocaleSwitching
     # "de-DE,de;q=0.9,en-US;q=0.8" -> the highest-weighted available locale.
     # Region variants fall back to their base language, so pt-BR selects :pt.
     def browser_locale
+      return unless language_switcher_enabled?
+
       header = request.headers["Accept-Language"]
       return if header.blank?
 

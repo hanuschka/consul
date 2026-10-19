@@ -357,7 +357,7 @@ class Projekt < ApplicationRecord
 
   scope :visible_for, ->(user) {
     return regular if user&.administrator?
-    return regular.activated.where.missing(:individual_group_values) if user.blank?
+    return regular.activated.where(group_restricted_predicate.not) if user.blank?
 
     projekt_manager = user.projekt_manager
 

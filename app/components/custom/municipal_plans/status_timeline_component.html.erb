@@ -21,7 +21,7 @@
             <% end %>
           </h3>
           <div class="municipal-plan-timeline--text">
-            <%= helpers.auto_link_already_sanitized_html simple_format(station[:value]) %>
+            <%= helpers.auto_link_already_sanitized_html helpers.municipal_plan_text(station[:value]) %>
           </div>
         </div>
       </li>

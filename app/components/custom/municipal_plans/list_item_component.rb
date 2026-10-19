@@ -26,7 +26,7 @@ class MunicipalPlans::ListItemComponent < ApplicationComponent
   end
 
   def district_names
-    municipal_plan.districts.map(&:name_for_display)
+    municipal_plan.sorted_district_names
   end
 
   def header_label

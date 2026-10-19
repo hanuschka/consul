@@ -27,7 +27,14 @@ describe Mitmachbox::TestRun do
     test_run = run
 
     expect(test_run.current_question["id"]).to eq 1
-    expect([test_run.step, test_run.total]).to eq [1, 4]
+    expect([test_run.step, test_run.total]).to eq [1, nil]
+  end
+
+  it "counts the questions shown in this run, as the box does" do
+    test_run = run({ 1 => [11] }, answered: "1")
+
+    expect(test_run.current_question["id"]).to eq 3
+    expect([test_run.step, test_run.total]).to eq [2, 3]
   end
 
   it "follows a jump to its target" do

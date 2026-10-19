@@ -129,6 +129,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     disclose_ai
 
     track_submission_wish
+    park_tapped_submission
 
     return if handle_cancel_tap
     return if handle_help_request
@@ -364,6 +365,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Never without a word either. The assistant's reply is what says why the question
     # comes again (SystemPromptService#ballot_line asks it to); a turn that failed
     # wrote none, so a fixed line says it instead of the question arriving alone.
+    #
+    # Whatsapp::BallotResume reads the same conditions during the turn to send the
+    # reply in words alone, so a condition changed here changes there too.
     def resume_ballot(poll_id)
       return if poll_id.blank?
       return if @opt_out_deferred
@@ -1108,6 +1112,36 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       conversation.record_submission_wish!
     end
 
+    # The same for a phase picked from a card or a list while a draft or a comment
+    # is still open: the pick is held over the question whether to discard that one
+    # (Whatsapp::Conversation#parked_projekt_phase). Left to the assistant, it was
+    # held only where start_draft was called for the pick before the question was
+    # asked, and the reply to the discard offered the projekt all over again.
+    #
+    # Not the phase of the draft that is open: tapped there, the card is as likely
+    # the way back to that draft as a wish for another one.
+    def park_tapped_submission
+      flow_action = ::Whatsapp::FlowActions.parse(reading.tapped_reply_id)
+
+      if flow_action&.fetch(:action) != :idea_start
+        return
+      end
+
+      return if !conversation.unsaved_work?
+
+      projekt_phase = ::ProjektPhase.find_by(id: flow_action[:param].to_i)
+
+      if !::Whatsapp::EligiblePhasesQuery.eligible?(projekt_phase)
+        return
+      end
+
+      if conversation.unsaved_submission? && projekt_phase.id == conversation.projekt_phase_id
+        return
+      end
+
+      conversation.park_submission!(projekt_phase: projekt_phase, text: nil)
+    end
+
     # The projekt card's last row, which opens every vote of its projekt. Answered
     # here for the reason the phase pills are: handed to the assistant, the tap was a
     # model choosing a tool, and twice it chose one of the ballots over the list.
@@ -1728,7 +1762,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # is why it is here rather than behind a tool of its own.
     SETTLED_BY_TAP = {
       image_skip: "photo_declined",
-      location_skip: "location_stated"
+      location_skip: "location_declined"
     }.freeze
 
     def settle_slot_for(action)

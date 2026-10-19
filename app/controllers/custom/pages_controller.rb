@@ -105,6 +105,8 @@ class PagesController < ApplicationController
     @projekt_phase = ProjektPhase.find(params[:projekt_phase_id])
     @projekt = @projekt_phase.projekt
 
+    head :not_found and return unless footer_tab_visible?
+
     params[:projekt_phase_id] = @projekt_phase.id
     params[:projekt_id] ||= @projekt.id
 
@@ -377,7 +379,9 @@ class PagesController < ApplicationController
         end
       end
 
-      params[:section] ||= "results" if @budget.current_phase.kind == "finished"
+      if @budget.current_phase.kind == "finished" && can?(:read_results, @budget)
+        params[:section] ||= "results"
+      end
 
       # con-1036
       if @budget.current_phase.kind == "publishing_prices" && @budget.show_results_after_first_vote?
@@ -526,6 +530,13 @@ class PagesController < ApplicationController
         @formular_answer = @formular.formular_answers.new
         @formular_answer.answer_errors ||= {}
       end
+    end
+
+    def footer_tab_visible?
+      return true if helpers.show_admin_controls_for_projekt?(@projekt)
+
+      @projekt.visible_for?(current_user) &&
+        @projekt.projekt_phases.active.frontend_visible.exists?(@projekt_phase.id)
     end
 
     def get_default_projekt_phase(default_phase_id = nil)

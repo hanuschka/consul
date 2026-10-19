@@ -1,84 +1,129 @@
-<hr class="kern-divider my-5" aria-hidden="true">
+<% state = @survey["state"].to_s %>
+<% current_version = @survey["current_version"] %>
+<% draft_version = @survey["draft_version"] %>
+<% current_questions = Array(@current_detail&.dig("questions")) %>
+<% draft_questions = Array(@draft_detail&.dig("questions")) %>
+<% max_questions = Adm::Projekts::MitmachboxQuestionsController::MAX_QUESTIONS_PER_VERSION %>
 
-<% questions = @version_detail.present? ? (@version_detail["questions"] || []) : [] %>
+<% if current_version.present? %>
+  <section class="mt-5">
+    <%= render "adm/projekts/phases/mitmachbox_survey/section_header",
+          title: t("adm.projekts.phases.mitmachbox_survey.current_section_title", number: current_version["version_number"]),
+          pill_text: t("adm.projekts.phases.mitmachbox_survey.current_scope_pill"),
+          pill_icon: "devices",
+          pill_variant: "kern-badge--success" %>
 
-<% if @survey["draft_version"].present? %>
-  <h3 class="kern-title kern-title--small mb-3">
-    <%= t("adm.projekts.phases.mitmachbox_survey.draft_section_title",
-          number: @survey["draft_version"]["version_number"]) %>
-  </h3>
+    <%= render layout: "adm/projekts/phases/mitmachbox_survey/setting_row",
+          locals: { title: t("adm.projekts.phases.mitmachbox_survey.current_row_title"),
+                    text: t("adm.projekts.phases.mitmachbox_survey.current_row_text") } do %>
+      <div class="d-flex flex-wrap gap-2">
+        <% if current_questions.any? %>
+          <%= kern_link_button mitmachbox_test_run_adm_projekts_phase_path(@projekt_phase, version: "current"),
+                text: t("adm.projekts.phases.mitmachbox_survey.test_run_button"),
+                icon: "visibility",
+                style: :secondary %>
+        <% end %>
 
-  <div class="d-flex flex-wrap justify-content-start gap-2 mb-4">
-    <% if questions.size < Adm::Projekts::MitmachboxQuestionsController::MAX_QUESTIONS_PER_VERSION %>
-      <%= kern_link_button new_adm_projekts_phase_mitmachbox_question_path(@projekt_phase),
-            text: t("adm.projekts.phases.mitmachbox_survey.add_question_button"),
-            icon: "add",
-            style: :secondary %>
+        <% if draft_version.blank? %>
+          <%= form_with url: mitmachbox_create_draft_adm_projekts_phase_path(@projekt_phase),
+                data: { turbo_confirm: t("adm.projekts.phases.mitmachbox_survey.new_draft_confirm") } do %>
+            <%= kern_button type: :submit,
+                  text: t("adm.projekts.phases.mitmachbox_survey.new_draft_button"),
+                  icon: "edit_note",
+                  style: :secondary %>
+          <% end %>
+        <% end %>
+      </div>
     <% end %>
 
-    <% if questions.any? %>
-      <%= kern_link_button mitmachbox_test_run_adm_projekts_phase_path(@projekt_phase, version: "draft"),
-            text: t("adm.projekts.phases.mitmachbox_survey.test_run_button"),
-            icon: "play_arrow",
-            style: :secondary %>
+    <% if current_questions.any? %>
+      <details>
+        <summary class="adm-admin-hint__toggle">
+          <span class="material-symbols-outlined fs-3" aria-hidden="true">expand_more</span>
+          <%= t("adm.projekts.phases.mitmachbox_survey.current_questions_toggle", count: current_questions.size) %>
+        </summary>
+        <div class="mt-3">
+          <%= render "adm/projekts/phases/mitmachbox_survey/questions_table", questions: current_questions, editable: false %>
+        </div>
+      </details>
+    <% else %>
+      <%= empty_state(title: t("adm.projekts.phases.mitmachbox_survey.no_questions"), icon: "quiz") %>
+    <% end %>
+  </section>
+<% end %>
+
+<% if draft_version.present? %>
+  <% draft_number = draft_version["version_number"] %>
+  <% publish_confirm = [
+       if current_version.present?
+         t("adm.projekts.phases.mitmachbox_survey.publish_confirm_replace", draft: draft_number, current: current_version["version_number"])
+       else
+         t("adm.projekts.phases.mitmachbox_survey.publish_confirm_first", draft: draft_number)
+       end,
+       (t("adm.projekts.phases.mitmachbox_survey.publish_confirm_while_open") if state == "open"),
+       t("adm.projekts.phases.mitmachbox_survey.publish_confirm_locked", draft: draft_number)
+     ].compact.join(" ") %>
+
+  <section class="mt-5">
+    <%= render "adm/projekts/phases/mitmachbox_survey/section_header",
+          title: t("adm.projekts.phases.mitmachbox_survey.draft_section_title", number: draft_number),
+          pill_text: t("adm.projekts.phases.mitmachbox_survey.draft_scope_pill"),
+          pill_icon: "lock",
+          pill_variant: "kern-badge--info" %>
+
+    <%= render layout: "adm/projekts/phases/mitmachbox_survey/setting_row",
+          locals: { title: t("adm.projekts.phases.mitmachbox_survey.draft_row_title"),
+                    text: t("adm.projekts.phases.mitmachbox_survey.draft_row_text") } do %>
+      <div class="d-flex flex-column align-items-start gap-2">
+        <div class="d-flex flex-wrap gap-2">
+          <% if draft_questions.size < max_questions %>
+            <%= kern_link_button new_adm_projekts_phase_mitmachbox_question_path(@projekt_phase),
+                  text: t("adm.projekts.phases.mitmachbox_survey.add_question_button"),
+                  icon: "add",
+                  style: :secondary %>
+          <% end %>
+
+          <% if draft_questions.any? %>
+            <%= kern_link_button mitmachbox_test_run_adm_projekts_phase_path(@projekt_phase, version: "draft"),
+                  text: t("adm.projekts.phases.mitmachbox_survey.test_run_button"),
+                  icon: "visibility",
+                  style: :secondary %>
+          <% end %>
+        </div>
+
+        <% if draft_questions.size >= max_questions %>
+          <p class="kern-body kern-body--small mb-0">
+            <%= t("adm.projekts.phases.mitmachbox_survey.max_questions_hint") %>
+          </p>
+        <% end %>
+      </div>
     <% end %>
 
-    <%= form_with url: mitmachbox_publish_draft_adm_projekts_phase_path(@projekt_phase),
-          data: { turbo_confirm: t("adm.projekts.phases.mitmachbox_survey.publish_confirm") } do %>
-      <%= kern_button type: :submit,
-            text: t("adm.projekts.phases.mitmachbox_survey.publish_button"),
-            icon: "publish" %>
+    <% if draft_questions.any? %>
+      <%= render "adm/projekts/phases/mitmachbox_survey/questions_table", questions: draft_questions, editable: true %>
+    <% else %>
+      <%= empty_state(title: t("adm.projekts.phases.mitmachbox_survey.no_questions"), icon: "quiz") %>
     <% end %>
+
+    <% if draft_questions.any? %>
+      <%= render layout: "adm/projekts/phases/mitmachbox_survey/setting_row",
+            locals: { title: t("adm.projekts.phases.mitmachbox_survey.publish_row_title"),
+                      text: t("adm.projekts.phases.mitmachbox_survey.publish_row_text") } do %>
+        <%= form_with url: mitmachbox_publish_draft_adm_projekts_phase_path(@projekt_phase),
+              data: { turbo_confirm: publish_confirm } do %>
+          <%= kern_button type: :submit,
+                text: t("adm.projekts.phases.mitmachbox_survey.publish_button"),
+                icon: "publish" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </section>
+<% end %>
+
+<% if current_version.blank? && draft_version.blank? %>
+  <div class="mt-5">
+    <%= empty_state(title: t("adm.projekts.phases.mitmachbox_survey.no_questions"),
+                    description: t("adm.projekts.phases.mitmachbox_survey.no_published_version"),
+                    icon: "quiz") %>
   </div>
-
-  <% if questions.size >= Adm::Projekts::MitmachboxQuestionsController::MAX_QUESTIONS_PER_VERSION %>
-    <p class="kern-body kern-body--small mb-4">
-      <%= t("adm.projekts.phases.mitmachbox_survey.max_questions_hint") %>
-    </p>
-  <% end %>
-
-  <% if questions.any? %>
-    <%= render "adm/projekts/phases/mitmachbox_survey/questions_table", questions: questions, editable: true %>
-  <% else %>
-    <%= empty_state(title: t("adm.projekts.phases.mitmachbox_survey.no_questions"), icon: "quiz") %>
-  <% end %>
-<% elsif @survey["current_version"].present? %>
-  <h3 class="kern-title kern-title--small mb-3">
-    <%= t("adm.projekts.phases.mitmachbox_survey.published_section_title",
-          number: @survey["current_version"]["version_number"]) %>
-  </h3>
-
-  <p class="kern-body kern-body--small mb-4">
-    <%= t("adm.projekts.phases.mitmachbox_survey.read_only_hint") %>
-  </p>
-
-  <% if questions.any? %>
-    <%= render "adm/projekts/phases/mitmachbox_survey/questions_table", questions: questions, editable: false %>
-  <% else %>
-    <%= empty_state(title: t("adm.projekts.phases.mitmachbox_survey.no_questions"), icon: "quiz") %>
-  <% end %>
-
-  <div class="d-flex flex-wrap justify-content-start gap-2 mt-4 mb-2">
-    <%= form_with url: mitmachbox_create_draft_adm_projekts_phase_path(@projekt_phase) do %>
-      <%= kern_button type: :submit,
-            text: t("adm.projekts.phases.mitmachbox_survey.new_draft_button"),
-            icon: "edit_note",
-            style: :secondary %>
-    <% end %>
-
-    <% if questions.any? %>
-      <%= kern_link_button mitmachbox_test_run_adm_projekts_phase_path(@projekt_phase, version: "current"),
-            text: t("adm.projekts.phases.mitmachbox_survey.test_run_button"),
-            icon: "play_arrow",
-            style: :secondary %>
-    <% end %>
-  </div>
-
-  <p class="kern-body kern-body--small">
-    <%= t("adm.projekts.phases.mitmachbox_survey.new_draft_hint") %>
-  </p>
-<% else %>
-  <%= empty_state(title: t("adm.projekts.phases.mitmachbox_survey.no_questions"),
-                  description: t("adm.projekts.phases.mitmachbox_survey.no_published_version"),
-                  icon: "quiz") %>
 <% end %>

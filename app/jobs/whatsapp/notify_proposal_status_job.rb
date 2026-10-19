@@ -13,6 +13,7 @@ class Whatsapp::NotifyProposalStatusJob < ApplicationJob
   NOTIFICATION_TYPES = %i[new_supports new_comments moderation_decision].freeze
 
   def perform(proposal_id, notification_type)
+    ::Whatsapp.ensure_credentials_loaded!
     return if !::Whatsapp.enabled?
 
     type = notification_type.to_sym

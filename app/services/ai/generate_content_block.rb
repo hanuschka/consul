@@ -42,11 +42,7 @@ class Ai::GenerateContentBlock < ApplicationService
 
     # An anchor template arrives with its full HTML inlined below, so there is
     # nothing left for the tool to fetch and no reason to pay a tool round.
-    # Reasoning is switched off for both branches: attaching tools used to be
-    # what did it, and adapting a given template does not need it either.
-    if anchor_template.present?
-      Ai::RubyLlmFactory.disable_reasoning(chat, Ai::ModelProfile.default)
-    elsif filtered_templates.any?
+    if anchor_template.blank? && filtered_templates.any?
       tool = Ai::Tools::FetchContentBlockTemplates.new(
         templates_by_category: filtered_templates
       )

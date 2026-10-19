@@ -56,7 +56,9 @@ describe Whatsapp::Conversation do
 
     # Picked from a list, the projekt comes without any words.
     context "without words" do
-      before { conversation.park_submission!(projekt_phase: other_phase, text: "  ") }
+      let(:listed_phase) { double(:projekt_phase, id: 3) }
+
+      before { conversation.park_submission!(projekt_phase: listed_phase, text: "  ") }
 
       it "holds no text" do
         expect(conversation.parked_submission_text).to be_nil

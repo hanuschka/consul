@@ -1,6 +1,7 @@
 <%= render Sidebar::CheckboxFilterComponent.new(
   identifier: :districts,
-  options: @districts.map { |d| [d.name_for_display, d.id] },
+  options: [[MunicipalPlan.human_attribute_name(:city_wide), MunicipalPlansQuery::CITY_WIDE]] +
+           @districts.map { |d| [d.name_for_display, d.id] },
   title: t("custom.municipal_plans.index.sidebar.districts.title"),
   icon: "map-marker-alt",
   id_prefix: "filter_district",
@@ -18,7 +19,10 @@
 
 <%= render Sidebar::CheckboxFilterComponent.new(
   identifier: :participation,
-  options: MunicipalPlansQuery::PARTICIPATION_KINDS.map { |k| [t("custom.municipal_plans.index.sidebar.participation.options.#{k}"), k] },
+  options: MunicipalPlansQuery::PARTICIPATION_KINDS.map do |k|
+    [t("custom.municipal_plans.index.sidebar.participation.options.#{k}"), k,
+     MunicipalPlans::ParticipationInfoComponent.new(kind: k)]
+  end,
   title: t("custom.municipal_plans.index.sidebar.participation.title"),
   icon: "hands-helping",
   id_prefix: "filter_participation"

@@ -17,6 +17,34 @@ module Adm
 
     UNKNOWN_BADGE_STYLE = :info
 
+    BOT_SWITCH_ANCHOR = "whatsapp-bot-switch".freeze
+
+    # Names the missing secrets but never a value: the alert is shown to every
+    # admin who can open the page.
+    def whatsapp_blocking_reason_body(reason)
+      t("adm.whatsapp.blocking_reasons.#{reason}.body", **whatsapp_blocking_reason_details(reason))
+    end
+
+    # Only where the page's own admin can fix it: the credentials and the AI
+    # switch live in the server secrets, the provider key behind a policy
+    # stricter than this page's.
+    def whatsapp_blocking_reason_link(reason)
+      case reason
+      when :switched_off
+        whatsapp_forward_link(
+          t("adm.whatsapp.blocking_reasons.switched_off.link"),
+          connection_adm_whatsapp_path(anchor: BOT_SWITCH_ANCHOR)
+        )
+      when :ai_provider_unavailable
+        return if !Adm::AiSettingPolicy.new(current_user, Setting).index?
+
+        whatsapp_forward_link(
+          t("adm.whatsapp.blocking_reasons.ai_provider_unavailable.link"),
+          adm_ai_settings_path
+        )
+      end
+    end
+
     # The one representation of a template's status on the page. It exists
     # because the two tables used to disagree: an approved template got a badge
     # and an unsubmitted one got wrapping body text, so the same fact looked like
@@ -66,6 +94,28 @@ module Adm
     end
 
     private
+
+      def whatsapp_blocking_reason_details(reason)
+        case reason
+        when :missing_credentials
+          keys = ::Whatsapp.missing_required_credential_keys.map { |key| "whatsapp.#{key}" }
+
+          { keys: keys.join(", ") }
+        when :ai_provider_unavailable
+          { provider: ::Ai::Settings.current_llm_provider }
+        else
+          {}
+        end
+      end
+
+      def whatsapp_forward_link(text, path)
+        link_to(path, class: "kern-link") do
+          safe_join([
+            content_tag(:span, nil, class: "kern-icon kern-icon--arrow-forward", "aria-hidden": "true"),
+            text
+          ])
+        end
+      end
 
       def whatsapp_status_badge(style, label)
         content_tag(:span, class: "kern-badge kern-badge--#{style}") do

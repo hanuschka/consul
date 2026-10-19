@@ -1,6 +1,7 @@
 class AiUsageRecords::Upsert < ApplicationService
+  UNIQUE_KEY_COLUMNS = %w[period_month feature provider model].freeze
   RETURNED_COLUMNS = (
-    %w[period_month feature provider model version] + AiUsageRecord::COUNTER_COLUMNS.map(&:to_s)
+    UNIQUE_KEY_COLUMNS + %w[version] + AiUsageRecord::COUNTER_COLUMNS.map(&:to_s)
   ).freeze
 
   def initialize(period_month:, feature:, provider:, model:, counters:)
@@ -20,29 +21,64 @@ class AiUsageRecords::Upsert < ApplicationService
   private
 
     def upsert_sql
-      columns = @counters.keys
-      now = Time.current
-      values = [@period_month, @feature, @provider, @model, *@counters.values, 1, now, now]
-      placeholders = Array.new(values.size, "?").join(", ")
+      row = inserted_row
+      placeholders = Array.new(row.size, "?").join(", ")
 
-      increments = columns.map do |column|
-        "#{column} = ai_usage_records.#{column} + EXCLUDED.#{column}"
-      end
-
-      ActiveRecord::Base.sanitize_sql_array(
+      AiUsageRecord.sanitize_sql_array(
         [
           <<~SQL.squish,
-            INSERT INTO ai_usage_records
-              (period_month, feature, provider, model, #{columns.join(", ")}, version, created_at, updated_at)
+            INSERT INTO #{table_name} (#{column_list(row.keys)})
             VALUES (#{placeholders})
-            ON CONFLICT (period_month, feature, provider, model)
-            DO UPDATE SET #{increments.join(", ")},
-              version = ai_usage_records.version + 1,
-              updated_at = EXCLUDED.updated_at
-            RETURNING #{RETURNED_COLUMNS.join(", ")}
+            ON CONFLICT (#{column_list(UNIQUE_KEY_COLUMNS)})
+            DO UPDATE SET #{conflict_assignments.join(", ")}
+            RETURNING #{column_list(RETURNED_COLUMNS)}
           SQL
-          *values
+          *row.values
         ]
       )
+    end
+
+    def inserted_row
+      now = Time.current
+
+      {
+        period_month: @period_month,
+        feature: @feature,
+        provider: @provider,
+        model: @model,
+        **@counters,
+        version: 1,
+        created_at: now,
+        updated_at: now
+      }
+    end
+
+    def conflict_assignments
+      increments = @counters.keys.map do |column|
+        counter = quoted(column)
+
+        "#{counter} = #{table_name}.#{counter} + EXCLUDED.#{counter}"
+      end
+
+      version = quoted(:version)
+      updated_at = quoted(:updated_at)
+
+      [
+        *increments,
+        "#{version} = #{table_name}.#{version} + 1",
+        "#{updated_at} = EXCLUDED.#{updated_at}"
+      ]
+    end
+
+    def column_list(columns)
+      columns.map { |column| quoted(column) }.join(", ")
+    end
+
+    def quoted(column)
+      AiUsageRecord.connection.quote_column_name(column)
+    end
+
+    def table_name
+      AiUsageRecord.quoted_table_name
     end
 end

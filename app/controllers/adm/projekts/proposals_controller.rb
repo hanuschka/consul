@@ -1,4 +1,6 @@
 class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
+  include Adm::HidesContributions
+
   before_action :find_projekt_phase
   before_action :find_proposal
 
@@ -50,8 +52,7 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
   def hide
     authorize [:adm, @proposal], :hide?
 
-    @proposal.hide
-    Activity.log(current_user, :hide, @proposal)
+    hide_and_notify_author(@proposal)
     @proposal.reload
   end
 

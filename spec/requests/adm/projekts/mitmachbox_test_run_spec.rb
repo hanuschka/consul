@@ -46,9 +46,25 @@ describe "Adm Mitmachbox test run", type: :request do
     I18n.t("adm.projekts.phases.mitmachbox_test_run.#{key}")
   end
 
+  it "opens on the box's welcome screen and starts with the first question" do
+    welcome = Capybara.string(test_run)
+
+    expect(welcome).to have_button(t_run(:start))
+    expect(welcome).to have_field("started", type: :hidden, with: "1")
+    expect(welcome).not_to have_text("Nutzen Sie die Bibliothek?")
+    expect(test_run(started: 1)).to include("Nutzen Sie die Bibliothek?")
+  end
+
   it "runs a draft that has never been published" do
-    expect(test_run).to include("Nutzen Sie die Bibliothek?")
-    expect(versions).to have_received(:find).with(7, 30)
+    expect(test_run(started: 1)).to include("Nutzen Sie die Bibliothek?")
+    expect(versions).to have_received(:find).with(7, 30).at_least(:once)
+  end
+
+  it "counts the questions as the box does and leaves the total open while paths differ" do
+    expect(test_run(started: 1)).to include(I18n.t("adm.projekts.phases.mitmachbox_test_run.step_open",
+current: 1))
+    expect(test_run(answered: 1, answers: { "1" => ["11"] }))
+      .to include(I18n.t("adm.projekts.phases.mitmachbox_test_run.step", current: 2, total: 2))
   end
 
   it "follows a jump to its target" do
@@ -81,7 +97,7 @@ describe "Adm Mitmachbox test run", type: :request do
   it "runs the published version on request" do
     survey.merge!("draft_version" => nil, "current_version" => { "id" => 29, "version_number" => 1 })
 
-    get mitmachbox_test_run_adm_projekts_phase_path(projekt_phase, version: "current")
+    get mitmachbox_test_run_adm_projekts_phase_path(projekt_phase, version: "current", started: 1)
 
     expect(versions).to have_received(:find).with(7, 29)
     expect(response.body).to include("Nutzen Sie die Bibliothek?")

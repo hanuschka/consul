@@ -1,4 +1,9 @@
 class Whatsapp::Platform::WebhookStatusService < ApplicationService
+  # Where Adm::WhatsappController#cached_integration_state keeps this answer for
+  # a minute. Named here so a registration can drop it, or the page goes on
+  # describing the registration it just replaced.
+  CACHE_KEY = "whatsapp/integration_state/webhook_status".freeze
+
   # Reads the registration back from 360dialog. The header value is compared in
   # memory and only its length is exposed, so the secret never reaches a view.
   def initialize(expected_base_url: nil)

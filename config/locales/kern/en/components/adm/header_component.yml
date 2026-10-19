@@ -9,5 +9,6 @@ en:
           landing_page: "Go to topic page"
           deficiency_reports: "Go to deficiency reports"
           ideas: "Go to ideas management"
+          municipal_plans: "Go to plan list"
           feature: "Go to %{feature}"
           default: "Go to website"

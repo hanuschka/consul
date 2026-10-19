@@ -79,7 +79,7 @@
     toggleEmptyContentBlocks(previewModeEnabled) {
       if (previewModeEnabled) {
         const contentBlocks = document.querySelectorAll(".js-content-block");
-        contentBlocks.forEach((block) => this.hideEmptyContentBlock(block));
+        contentBlocks.forEach((block) => this.hideContentBlockVisitorsDontSee(block));
       } else {
         document.querySelectorAll(".-hidden-by-preview").forEach((element) => {
           element.classList.remove("-hidden-by-preview");
@@ -88,17 +88,27 @@
       }
     },
 
-    hideEmptyContentBlock(block) {
+    // Empty blocks and blocks switched off via the eye or outside their period
+    // are both missing for citizens, so a sidebar card holding one goes too.
+    hideContentBlockVisitorsDontSee(block) {
       const hasContent = block.textContent.trim().length > 0 ||
         block.querySelector("img, iframe, video, embed, svg, canvas");
 
-      if (hasContent) return;
+      if (hasContent && !this.isHiddenFromVisitors(block)) return;
 
       const sidebarCard = block.closest(".js-sidebar-card");
       const targetElement = sidebarCard || block;
 
       targetElement.classList.add("-hidden-by-preview");
       $(targetElement).hide();
+    },
+
+    isHiddenFromVisitors(block) {
+      const wrapper = block.closest(".js-content-block-wrapper");
+
+      if (!wrapper || !wrapper.dataset.visibilityStatus) return false
+
+      return wrapper.dataset.visibilityStatus !== "visible";
     },
   };
 

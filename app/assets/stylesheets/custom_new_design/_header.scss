@@ -531,11 +531,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
         color: white;
       }
 
-      .locale .locale-form select {
-        background: white !important;
-        color: black !important;
-      }
-
       .main-navigation-item--account--image-wrapper {
         background: var(--brand-color) !important;
         color: white !important;
@@ -702,9 +697,9 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     color: black;
   }
 
-  // Werthaltigere Top-Nav-Links: eine animierte Akzent-Linie in Markenfarbe
-  // (das horizontale Pendant zum vertikalen Marken-Streifen an Titelkarte,
-  // Suchfeld und CTA) plus weicher Farb-Hover. Rein optisch.
+  // Werthaltigere Top-Nav-Links: eine animierte Akzent-Linie in der Farbe des
+  // Menuepunkts (das horizontale Pendant zum vertikalen Marken-Streifen an
+  // Titelkarte, Suchfeld und CTA) plus weicher Farb-Hover. Rein optisch.
   //
   // WICHTIG: Die Linie liegt auf ::before. Das ::after ist auf genau diesen
   // Links bereits vom Dropdown-Chevron belegt (custom/menu.scss: content
@@ -729,7 +724,7 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
         bottom: -3px;
         height: 2px;
         border-radius: 2px;
-        background: var(--brand-color);
+        background: currentColor;
         transform: scaleX(0);
         transform-origin: left center;
         transition: transform 220ms ease;
@@ -1079,7 +1074,15 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
   }
 
   .header--responsive-menu-title {
+    display: block;
     color: $responsive-menu-text-color;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      color: $responsive-menu-text-color;
+      text-decoration: none;
+    }
   }
 
   .header--responsive-menu-sign-auth-button {
@@ -1203,12 +1206,14 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .homepage-image-header--title-wrapper {
       padding-top: 180px;
       // Etwas engerer gap auf Mobile, da Titel und Suchfeld hier kompakter
-      // sind und der Hero nur 450px hoch ist.
+      // sind und der Hero nur 525px hoch ist.
       gap: 12px;
     }
 
     .homepage-image-header {
-      min-height: 450px;
+      height: auto;
+      min-height: 525px;
+      padding-bottom: 60px;
       margin-bottom: 5px;
     }
 

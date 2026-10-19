@@ -10,5 +10,12 @@ App.PollsCustom.formatVisibleRatingScalesAfterRepaint();
 <% else %>
   <% if @question.poll.in_wizard_mode? %>
       App.QuestionWizard.mandatoryQuestionActions();
+      <%# Whether a question follows this one can change with the answer just given —
+          a branch past the rest, or a question contextualised by the option chosen —
+          and the server is what knows. Absent for a nested sub-question, which is not
+          a step of its own. %>
+      <% if !@wizard_has_next.nil? %>
+        App.QuestionWizard.setHasNext(<%= @question.id %>, <%= @wizard_has_next %>);
+      <% end %>
   <% end %>
 <% end %>

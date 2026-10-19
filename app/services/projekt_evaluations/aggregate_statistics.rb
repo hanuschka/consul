@@ -243,7 +243,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       }
 
       if answer.open_answer?
-        data[:open_texts] = open_answer_texts[[question.id, answer.title]] || []
+        data[:open_texts] = open_answer_texts[[question.id, answer.id]] || []
       end
 
       data
@@ -286,7 +286,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
       scope = scope.includes(:author)
     end
 
-    scope.group_by { |answer| [answer.question_id, answer.answer] }
+    scope.group_by { |answer| [answer.question_id, answer.question_answer_id] }
       .transform_values do |records|
         records
           .reject { |record| record.open_answer_text.to_s.strip.blank? }
@@ -306,21 +306,21 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
     {
       weighted: Poll::Answer
         .where(question_id: question_ids)
-        .where.not(answer: nil)
-        .group(:question_id, :answer)
+        .where.not(question_answer_id: nil)
+        .group(:question_id, :question_answer_id)
         .sum(:answer_weight),
       open_counts: Poll::Answer
         .where(question_id: question_ids)
         .where.not(open_answer_text: [nil, ""])
-        .group(:question_id, :answer)
+        .group(:question_id, :question_answer_id)
         .count,
       partial_amount: ::Poll::PartialResult
         .where(question_id: question_ids)
-        .group(:question_id, :answer)
+        .group(:question_id, :question_answer_id)
         .sum(:amount),
       partial_counts: ::Poll::PartialResult
         .where(question_id: question_ids)
-        .group(:question_id, :answer)
+        .group(:question_id, :question_answer_id)
         .count
     }
   end
@@ -330,7 +330,7 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
   end
 
   def answer_total_votes(answer, vote_totals)
-    key = [answer.question_id, answer.title]
+    key = [answer.question_id, answer.id]
 
     if answer.open_answer?
       (vote_totals[:open_counts][key] || 0) + (vote_totals[:partial_counts][key] || 0)

@@ -1,0 +1,17 @@
+<%= render Adm::TabsComponent.new(tabs: [
+  {
+    label: t("adm.municipal_plans.settings.tabs.features"),
+    url: adm_municipal_plans_settings_path,
+    current: current == :features
+  },
+  {
+    label: t("adm.municipal_plans.settings.tabs.dashboard"),
+    url: dashboard_adm_municipal_plans_settings_path,
+    current: current == :dashboard
+  },
+  {
+    label: t("adm.municipal_plans.settings.tabs.contact_persons"),
+    url: contact_persons_adm_municipal_plans_settings_path,
+    current: current == :contact_persons
+  }
+]) %>

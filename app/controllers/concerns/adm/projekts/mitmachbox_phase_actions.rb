@@ -13,8 +13,8 @@ module Adm::Projekts::MitmachboxPhaseActions
 
     begin
       @survey = mitmachbox_client.surveys.find(@projekt_phase.mitmachbox_survey_id)
-      version_ref = @survey["draft_version"] || @survey["current_version"]
-      @version_detail = version_ref && mitmachbox_client.versions.find(@survey["id"], version_ref["id"])
+      @draft_detail = find_version_detail(@survey["draft_version"])
+      @current_detail = find_version_detail(@survey["current_version"])
     rescue Mitmachbox::NotFoundError
       @survey_lost = true
     rescue Mitmachbox::Error => e
@@ -41,6 +41,7 @@ module Adm::Projekts::MitmachboxPhaseActions
     end
 
     mitmachbox_client.surveys.update_state(@projekt_phase.mitmachbox_survey_id, state)
+    Mitmachbox::PublicSurveyService.expire!(@projekt_phase.mitmachbox_survey_id)
 
     redirect_to mitmachbox_survey_adm_projekts_phase_path(@projekt_phase),
       notice: t("adm.projekts.mitmachbox.survey.state_changed", state: t("adm.projekts.mitmachbox.survey.states.#{state}"))
@@ -65,9 +66,36 @@ module Adm::Projekts::MitmachboxPhaseActions
     end
 
     mitmachbox_client.versions.publish(survey["id"], draft["id"])
+    Mitmachbox::PublicSurveyService.expire!(@projekt_phase.mitmachbox_survey_id)
 
     redirect_to mitmachbox_survey_adm_projekts_phase_path(@projekt_phase),
       notice: t("adm.projekts.mitmachbox.survey.published")
+  end
+
+  def mitmachbox_test_run
+    authorize_phase(:update?)
+    survey_tab_path = mitmachbox_survey_adm_projekts_phase_path(@projekt_phase)
+
+    unless Mitmachbox.configured? && @projekt_phase.remote_survey_created?
+      redirect_to survey_tab_path and return
+    end
+
+    survey = mitmachbox_client.surveys.find(@projekt_phase.mitmachbox_survey_id)
+    @test_run_version = params[:version] == "current" ? "current" : "draft"
+    @test_run_version_ref = survey["#{@test_run_version}_version"]
+
+    if @test_run_version_ref.blank?
+      redirect_to survey_tab_path, alert: t("adm.projekts.mitmachbox.errors.not_found") and return
+    end
+
+    version = mitmachbox_client.versions.find(survey["id"], @test_run_version_ref["id"])
+    @test_run = Mitmachbox::TestRun.new(version["questions"],
+                                        answers: test_run_answers,
+                                        answered_question_id: params[:answered])
+
+    @back_button_url = survey_tab_path
+    survey_crumb = { name: t("adm.projekts.phases.mitmachbox_survey.title"), url: survey_tab_path }
+    @breadcrumbs = mitmachbox_breadcrumbs(t(".title")).insert(2, survey_crumb)
   end
 
   def mitmachbox_deployments
@@ -114,6 +142,17 @@ module Adm::Projekts::MitmachboxPhaseActions
   end
 
   private
+
+    def find_version_detail(version_ref)
+      version_ref && mitmachbox_client.versions.find(@survey["id"], version_ref["id"])
+    end
+
+    def test_run_answers
+      answers = params[:answers]
+      return {} unless answers.respond_to?(:to_unsafe_h)
+
+      answers.to_unsafe_h.to_h { |question_id, option_ids| [question_id.to_i, Array(option_ids).map(&:to_i)] }
+    end
 
     def mitmachbox_breadcrumbs(action_title)
       [

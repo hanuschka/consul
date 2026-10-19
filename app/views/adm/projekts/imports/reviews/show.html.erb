@@ -1,0 +1,122 @@
+<%= content_for :title, t("adm.projekts.imports.reviews.show.title") %>
+
+<%= render Adm::HeaderComponent.new(
+      title: t("adm.projekts.imports.reviews.show.title"),
+      breadcrumbs: @breadcrumbs,
+      back_button_url: adm_projekts_imports_path,
+      compact: true
+    ) %>
+
+<div class="kern-container my-3">
+  <div class="projekt-import-review">
+    <p class="kern-body projekt-import-review--intro">
+      <%= t("adm.projekts.imports.reviews.show.intro") %>
+    </p>
+
+    <div class="projekt-import-review--source">
+      <span class="material-symbols-outlined projekt-import-review--source-icon" aria-hidden="true">link</span>
+      <span class="projekt-import-review--source-text">
+        <span class="projekt-import-review--source-label">
+          <%= t("adm.projekts.imports.reviews.show.source_label") %>
+        </span>
+        <span class="projekt-import-review--source-url"><%= @projekt_import.source_url %></span>
+      </span>
+    </div>
+
+    <%= form_with(url: @execute_url, method: :post, data: {
+          controller: "adm-projekts--import-review-autosave",
+          "adm-projekts--import-review-autosave-url-value": @autosave_url,
+          "adm-projekts--import-review-autosave-saving-text-value": t("adm.projekts.imports.reviews.show.autosave_saving"),
+          "adm-projekts--import-review-autosave-saved-text-value": t("adm.projekts.imports.reviews.saved"),
+          "adm-projekts--import-review-autosave-error-text-value": t("adm.projekts.imports.reviews.show.autosave_error"),
+          action: "change->adm-projekts--import-review-autosave#save"
+        }) do |f| %>
+      <section class="projekt-import-review--group" aria-labelledby="projekt-import-review-projekt-title">
+        <h2 class="kern-title kern-title--small projekt-import-review--group-title" id="projekt-import-review-projekt-title">
+          <%= t("adm.projekts.imports.reviews.show.projekt_title") %>
+        </h2>
+
+        <%= f.text_field :name,
+              value: @overlay["name"],
+              label: t("adm.projekts.imports.reviews.show.name_label") %>
+
+        <div class="projekt-import-review--dates">
+          <%= f.date_field :starts_at,
+                value: @overlay["starts_at"],
+                label: t("adm.projekts.imports.reviews.show.starts_at_label") %>
+          <%= f.date_field :ends_at,
+                value: @overlay["ends_at"],
+                label: t("adm.projekts.imports.reviews.show.ends_at_label") %>
+        </div>
+      </section>
+
+      <% phases = @overlay["phase_names"].to_a %>
+      <section class="projekt-import-review--group" aria-labelledby="projekt-import-review-phases-title">
+        <div class="projekt-import-review--group-head">
+          <h2 class="kern-title kern-title--small projekt-import-review--group-title" id="projekt-import-review-phases-title">
+            <%= t("adm.projekts.imports.reviews.show.phases_title") %>
+          </h2>
+
+          <% if phases.any? %>
+            <span class="projekt-import-review--group-count">
+              <%= t("adm.projekts.imports.reviews.show.phases_count", count: phases.size) %>
+            </span>
+          <% end %>
+        </div>
+
+        <% if phases.any? %>
+          <ol class="projekt-import-review--phases">
+            <% phases.each_with_index do |phase, index| %>
+              <% field_id = "projekt-import-phase-#{phase['source_id']}" %>
+              <% hint = import_review_phase_hint(phase) %>
+              <% hint_id = "#{field_id}-hint" if hint %>
+              <li class="projekt-import-review--phase">
+                <span class="projekt-import-review--phase-marker" aria-hidden="true">
+                  <span class="material-symbols-outlined"><%= ProjektPhase.material_icon_for(phase["type"]) %></span>
+                </span>
+
+                <div class="kern-form-input projekt-import-review--phase-field">
+                  <label class="kern-label" for="<%= field_id %>">
+                    <%= import_review_phase_label(phase, index + 1) %>
+                  </label>
+                  <% if hint %>
+                    <div class="kern-hint" id="<%= hint_id %>"><%= hint %></div>
+                  <% end %>
+                  <%= text_field_tag "phase_names[#{phase['source_id']}]",
+                        phase["name"],
+                        id: field_id,
+                        class: "kern-form-input__input",
+                        aria: { describedby: hint_id } %>
+                </div>
+              </li>
+            <% end %>
+          </ol>
+        <% else %>
+          <p class="projekt-import-review--empty">
+            <%= t("adm.projekts.imports.reviews.show.no_phases") %>
+          </p>
+        <% end %>
+      </section>
+
+      <hr class="kern-divider projekt-import-review--divider" aria-hidden="true" />
+
+      <div class="projekt-import-review--actions">
+        <%= kern_button(
+              text: t("adm.projekts.imports.reviews.show.execute"),
+              icon: "move_down",
+              type: :submit
+            ) %>
+
+        <%= kern_link_button reset_adm_projekts_import_path(@projekt_import),
+              text: t("adm.projekts.imports.reviews.show.start_over"),
+              style: :tertiary,
+              data: { turbo_method: :post } %>
+
+        <span class="adm-name-autosave-status projekt-import-review--autosave-status"
+              role="status"
+              aria-live="polite"
+              data-adm-projekts--import-review-autosave-target="status"></span>
+      </div>
+    <% end %>
+  </div>
+</div>

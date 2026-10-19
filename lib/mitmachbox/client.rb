@@ -18,8 +18,9 @@ class Mitmachbox::Client
     OpenSSL::SSL::SSLError
   ].freeze
 
-  def initialize(acting_user: nil)
+  def initialize(acting_user: nil, anonymous: false)
     @acting_user = acting_user
+    @anonymous = anonymous
   end
 
   def surveys
@@ -44,6 +45,10 @@ class Mitmachbox::Client
 
   def deployments
     @deployments ||= Mitmachbox::Resources::Deployments.new(self)
+  end
+
+  def responses
+    @responses ||= Mitmachbox::Resources::Responses.new(self)
   end
 
   def results
@@ -123,6 +128,8 @@ class Mitmachbox::Client
 
       if mutating?(verb)
         headers["Content-Type"] = "application/json"
+        return headers if @anonymous
+
         headers["X-Acting-External-Id"] = @acting_user.id.to_s
         headers["X-Acting-External-Name"] = @acting_user.name if @acting_user.name.present?
         headers["X-Acting-External-Email"] = @acting_user.email if @acting_user.email.present?
@@ -137,6 +144,7 @@ class Mitmachbox::Client
 
     def ensure_acting_user!(verb, path)
       return unless mutating?(verb)
+      return if @anonymous
       return if @acting_user.present?
 
       raise Mitmachbox::Error, "acting_user is required for mutating requests (#{verb.to_s.upcase} #{path})"

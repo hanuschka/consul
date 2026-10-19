@@ -1,0 +1,53 @@
+<!-- BlockID: B03 Split Image Right – Hero mit Split-Layout, Text links, Bild rechts -->
+<!-- Geeignet für: Projektseiten, Info-Einleitungen mit visuellem Bezug -->
+<!-- ANPASSEN: src-Attribut im img-Tag ersetzen -->
+
+<div style="position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+
+  <div class="row" style="min-height: 420px;">
+
+    <!-- Linke Spalte: Text + CTAs -->
+    <div class="column small-12 medium-7">
+      <div style="position: relative; padding: 52px 44px; background: linear-gradient(160deg, #f8f9fb 0%, #eef2f7 100%); height: 100%;">
+
+        <!-- Vertikale Akzentlinie links -->
+        <div style="position: absolute; left: 0; top: 40px; bottom: 40px; width: 3px; background: linear-gradient(180deg, var(--brand-color, #1779ba), rgba(23,121,186,0.15)); border-radius: 2px;"></div>
+
+        <!-- Badge-Zeile -->
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; position: relative; z-index: 1;">
+          <div style="background: rgba(23,121,186,0.07); border: 1px solid rgba(23,121,186,0.15); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: var(--brand-color, #1779ba); font-weight: 600; letter-spacing: 0.04em;">Mobilität &amp; Verkehr</div>
+          <div style="background: rgba(5,150,105,0.07); border: 1px solid rgba(5,150,105,0.15); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #065f46; font-weight: 600; letter-spacing: 0.04em;">Läuft bis 31.07.2025</div>
+        </div>
+
+        <h3 style="font-size: 30px; font-weight: 800; color: #1a202c; margin-bottom: 16px; margin-top: 0; line-height: 1.2; letter-spacing: -0.4px; position: relative; z-index: 1;">Fahrradwege der Zukunft –<br>Ihre Stimme zählt</h3>
+
+        <p style="font-size: 16px; color: #4b5563; line-height: 1.7; margin-bottom: 28px; margin-top: 0; max-width: 460px; position: relative; z-index: 1;">
+          Die Stadt plant in den nächsten Jahren den Ausbau des Radwegenetzes. Wo sind die gefährlichsten Stellen? Was fehlt Ihnen? Teilen Sie Ihre Erfahrungen und helfen Sie uns, sicherer zu planen.
+        </p>
+
+        <!-- CTAs -->
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; position: relative; z-index: 1;">
+          <a href="#" class="button"
+             style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 700; height: 48px; box-sizing: border-box; border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+             onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'"
+             onmouseout="this.style.transform='none';this.style.boxShadow='none'">Jetzt Feedback geben</a>
+          <a href="#" class="button hollow"
+             style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 600; height: 48px; box-sizing: border-box; border-radius: 8px; transition: transform 0.2s ease, background 0.2s ease;"
+             onmouseover="this.style.transform='translateY(-2px)';this.style.background='rgba(23,121,186,0.05)'"
+             onmouseout="this.style.transform='none';this.style.background='transparent'">Projekt-Details</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Rechte Spalte: Bild (randlos) -->
+    <div class="column small-12 medium-5">
+      <div style="position: relative; min-height: 420px; height: 100%; overflow: hidden;">
+        <img src="https://placehold.co/600x400/1779ba/ffffff?text=Projektbild" alt="Projektbild" style=" width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <!-- Subtiler Gradient-Übergang zum Textbereich -->
+        <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(238,242,247,0.4) 0%, transparent 30%); pointer-events: none;"></div>
+      </div>
+    </div>
+
+  </div>
+</div>

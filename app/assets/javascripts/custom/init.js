@@ -52,6 +52,8 @@
       App.NotifyReviewers.initialize();
       App.LoaderSpinner.initialize();
       App.AccountUsernameEditComponent.initialize();
+      App.SimilarContributionsCheck.initialize();
+      App.MitmachboxSurvey.initialize();
     }
   };
 }).call(this);

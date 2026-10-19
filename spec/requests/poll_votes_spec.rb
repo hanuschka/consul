@@ -69,6 +69,30 @@ describe "Poll votes", type: :request do
     end
   end
 
+  describe "a guest in a guest phase" do
+    let(:participant) { create(:user, guest: true) }
+
+    before { poll.projekt_phase.update!(user_status: "guest", active: true) }
+
+    it "cannot vote while the poll is in test mode" do
+      poll.update!(live: false)
+
+      vote("Source title")
+
+      expect(question.answers.count).to eq 0
+    end
+
+    it "can vote once the poll is released" do
+      poll.update!(live: false)
+      poll.update!(live: true)
+
+      vote("Source title")
+
+      expect(response).to have_http_status(:ok)
+      expect(question.answers.count).to eq 1
+    end
+  end
+
   describe "open answers" do
     let!(:open_answer) do
       Globalize.with_locale(I18n.default_locale) do

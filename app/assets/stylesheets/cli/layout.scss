@@ -35,10 +35,23 @@
 .button-keycloak_google:hover {
   color: transparent;
   background-position: center;
-  background-size: contain;
+  background-size: auto 24px;
   background-repeat: no-repeat;
   background-color: white;
   background-color: #F4F4F4 !important;
+}
+
+.oauth-logins--grid .button.button-bayern_id,
+.oauth-logins--grid .button.button-m_login,
+.oauth-logins--grid .button.button-keycloak_google {
+  display: flex;
+  width: 100%;
+  margin: 0;
+
+  &::before {
+    content: "";
+    height: 24px;
+  }
 }
 
 .button-bayern_id {

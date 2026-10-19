@@ -212,7 +212,7 @@ de:
             title: Der Titel benennt das Vorhaben so, wie es Bürgerinnen und Bürger in der Vorhabenliste sehen. Wählen Sie eine kurze, verständliche Bezeichnung ohne Aktenzeichen und Abkürzungen.
             short_description: Die Kurzbeschreibung ist der Einstiegstext in der öffentlichen Vorhabenliste und soll das Vorhaben in etwa 420 Zeichen zusammenfassen. Beschreiben Sie in wenigen Sätzen, worum es geht und warum die Stadt das Vorhaben verfolgt.
             further_information: Ergänzende Erläuterungen für Interessierte, zum Beispiel Hintergründe, Planungsstände oder Rahmenbedingungen. Dieses Feld ist optional und wird unterhalb der Kurzbeschreibung angezeigt.
-            procedure_step: Der Verfahrensschritt zeigt, wo das Vorhaben im förmlichen Verfahren steht, und erscheint auf der öffentlichen Detailseite unter „Auf einen Blick“. Die Angabe ist freiwillig.
+            procedure_step: Der Verfahrensschritt zeigt, wo das Vorhaben im förmlichen Verfahren steht, und erscheint auf der öffentlichen Detailseite in der Box „Legende Verfahrensschritte“. Die Angabe ist freiwillig.
             last_resolution: Der letzte politische Beschluss zu diesem Vorhaben, zum Beispiel Gremium, Datum und Inhalt des Beschlusses. Lassen Sie das Feld leer, wenn noch kein Beschluss vorliegt.
             processing_status: Der aktuelle Bearbeitungsstand beschreibt, wo das Vorhaben gerade steht. Halten Sie ihn aktuell – er ist für Bürgerinnen und Bürger die wichtigste Information und erhöht bei jeder Änderung die Versionsnummer.
             next_steps: Die geplanten nächsten Schritte mit Zeitangabe, soweit absehbar. Grobe Angaben wie „1. Halbjahr 2027" sind ausdrücklich erwünscht, wenn noch kein genaues Datum feststeht.

@@ -446,6 +446,24 @@
   }
 }
 
+.municipal-plan-procedure-steps {
+  margin: 0 0 0 20px;
+
+  .municipal-plan-procedure-steps--step {
+    padding-left: 4px;
+    overflow-wrap: anywhere;
+
+    + .municipal-plan-procedure-steps--step {
+      margin-top: 6px;
+    }
+
+    &.-current {
+      color: var(--brand-color);
+      font-weight: 700;
+    }
+  }
+}
+
 .municipal-plan-sidebar--button {
   font-weight: 700;
 }

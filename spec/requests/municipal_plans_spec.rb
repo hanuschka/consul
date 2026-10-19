@@ -1751,7 +1751,7 @@ describe "Vorhabenliste", type: :request do
         ]
       end
 
-      it "shows the Verfahrensschritt instead of the Version when Verfahrensschritte are used" do
+      it "shows no Verfahrensschritt and no Version when Verfahrensschritte are used" do
         Setting["municipal_plans.procedure_steps"] = true
         step = create(:municipal_plan_procedure_step, name: "2.0 Frühzeitige Unterrichtung")
         plan.update_columns(version: "1.2", procedure_step_id: step.id)
@@ -1759,28 +1759,18 @@ describe "Vorhabenliste", type: :request do
         get municipal_plan_path(plan)
 
         expect(glance_rows.last)
-          .to eq [show_key("at_a_glance.procedure_step"), "2.0 Frühzeitige Unterrichtung"]
+          .to eq [show_key("at_a_glance.informal"), show_key("participation_block.status_no")]
         expect(glance_rows.map(&:first)).not_to include show_key("banner.version")
+        expect(card_titled("at_a_glance.title").text).not_to include "2.0 Frühzeitige Unterrichtung"
       end
 
-      it "shows neither Verfahrensschritt nor Version for an empty step when Verfahrensschritte are used" do
-        Setting["municipal_plans.procedure_steps"] = true
-        plan.update_columns(version: "1.2", procedure_step_id: nil)
-
-        get municipal_plan_path(plan)
-
-        expect(glance_rows.map(&:first)).not_to include show_key("at_a_glance.procedure_step")
-        expect(glance_rows.map(&:first)).not_to include show_key("banner.version")
-      end
-
-      it "keeps the Version and no Verfahrensschritt when Verfahrensschritte are not used" do
+      it "keeps the Version when Verfahrensschritte are not used" do
         Setting["municipal_plans.procedure_steps"] = false
         plan.update_columns(version: "1.2", procedure_step_id: create(:municipal_plan_procedure_step).id)
 
         get municipal_plan_path(plan)
 
         expect(glance_rows.last).to eq [show_key("banner.version"), "1.2"]
-        expect(glance_rows.map(&:first)).not_to include show_key("at_a_glance.procedure_step")
       end
 
       it "leaves out the Kosten row when no costs are given" do
@@ -1801,6 +1791,82 @@ describe "Vorhabenliste", type: :request do
           expect_participation_info(term, kind)
         end
         expect(terms.count { |dt| dt.at_css("rich-tooltip") }).to eq 2
+      end
+    end
+
+    describe "Legende Verfahrensschritte" do
+      let!(:steps) do
+        (1..6).map { |n| create(:municipal_plan_procedure_step, name: "#{n}.0 Schritt #{n}", given_order: n) }
+      end
+
+      def legend_card
+        card_titled("procedure_steps_legend.title")
+      end
+
+      def legend_items
+        legend_card.css("ol li")
+      end
+
+      it "lists every step in order right below Auf einen Blick and marks only the current one" do
+        Setting["municipal_plans.procedure_steps"] = true
+        plan.update_columns(procedure_step_id: steps[2].id)
+
+        get municipal_plan_path(plan)
+
+        expect(legend_items.map { |item| item.text.strip }).to eq steps.map(&:name)
+        expect(legend_items.map { |item| item["aria-current"] }).to eq [nil, nil, "step", nil, nil, nil]
+        expect(legend_items[2]["class"]).to include "-current"
+
+        titles = document.css(".sidebar .sidebar-card--title-text").map { |title| title.text.strip }
+        expect(titles[titles.index(show_key("at_a_glance.title")) + 1])
+          .to eq show_key("procedure_steps_legend.title")
+      end
+
+      it "leaves the card out when the plan has no step" do
+        Setting["municipal_plans.procedure_steps"] = true
+        plan.update_columns(procedure_step_id: nil)
+
+        get municipal_plan_path(plan)
+
+        expect(legend_card).to be_nil
+        expect(response.body).not_to include show_key("procedure_steps_legend.title")
+      end
+
+      it "leaves the card out when Verfahrensschritte are not used" do
+        Setting["municipal_plans.procedure_steps"] = false
+        plan.update_columns(procedure_step_id: steps[2].id)
+
+        get municipal_plan_path(plan)
+
+        expect(legend_card).to be_nil
+        expect(response.body).not_to include show_key("procedure_steps_legend.title")
+      end
+
+      it "shows renamed and reordered steps on the next request" do
+        Setting["municipal_plans.procedure_steps"] = true
+        plan.update_columns(procedure_step_id: steps[2].id)
+
+        get municipal_plan_path(plan)
+
+        steps[0].update!(name: "1.0 Aufstellungsbeschluss")
+        MunicipalPlan::ProcedureStep.order_procedure_steps(steps.map(&:id).reverse)
+
+        get municipal_plan_path(plan)
+
+        expect(legend_items.map { |item| item.text.strip }).to eq [
+          "6.0 Schritt 6", "5.0 Schritt 5", "4.0 Schritt 4", "3.0 Schritt 3", "2.0 Schritt 2",
+          "1.0 Aufstellungsbeschluss"
+        ]
+        expect(legend_items.map { |item| item["aria-current"] }).to eq [nil, nil, nil, "step", nil, nil]
+      end
+
+      it "shows no Version anywhere in the sidebar when Verfahrensschritte are used" do
+        Setting["municipal_plans.procedure_steps"] = true
+        plan.update_columns(version: "1.2", procedure_step_id: steps[2].id)
+
+        get municipal_plan_path(plan)
+
+        expect(document.at_css(".sidebar").text).not_to include show_key("banner.version")
       end
     end
 

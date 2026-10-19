@@ -212,7 +212,7 @@ en:
             title: The title names the plan the way citizens see it in the plan list. Use a short, understandable wording without file numbers or abbreviations.
             short_description: The short description is the entry text in the public plan list and should summarise the plan in about 420 characters. Explain in a few sentences what it is about and why the city is pursuing it.
             further_information: Additional background for interested readers, for example planning stages or general conditions. This field is optional and is shown below the short description.
-            procedure_step: The procedure step shows where the plan stands in the formal procedure and appears on the public detail page under “At a glance”. It is optional.
+            procedure_step: The procedure step shows where the plan stands in the formal procedure and appears on the public detail page in the “Procedure steps legend” box. It is optional.
             last_resolution: The latest political resolution on this plan, for example the committee, the date and the content of the decision. Leave empty if no resolution has been passed yet.
             processing_status: The current processing status describes where the plan stands right now. Keep it up to date — it is the most important information for citizens and raises the version number on every change.
             next_steps: The planned next steps with a time frame, as far as foreseeable. Rough statements such as "first half of 2027" are welcome when no exact date is fixed.

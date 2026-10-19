@@ -395,10 +395,6 @@
   margin: 0;
 
   .municipal-plan-glance--row {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-
     + .municipal-plan-glance--row {
       margin-top: 4px;
     }
@@ -406,6 +402,7 @@
 
   dt,
   dd {
+    display: inline;
     margin: 0;
   }
 
@@ -415,7 +412,6 @@
 
   dd {
     font-weight: 700;
-    text-align: right;
     overflow-wrap: anywhere;
   }
 }

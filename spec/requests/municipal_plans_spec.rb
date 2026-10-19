@@ -1667,7 +1667,7 @@ describe "Vorhabenliste", type: :request do
 
     def glance_rows
       card_titled("at_a_glance.title").css(".municipal-plan-glance--row").map do |row|
-        [row.at_css("dt").xpath("text()").text.strip, row.at_css("dd").text.strip]
+        "#{row.at_css("dt").text.strip} #{row.at_css("dd").xpath("text()").text.strip}"
       end
     end
 
@@ -1743,11 +1743,11 @@ describe "Vorhabenliste", type: :request do
         get municipal_plan_path(plan.reload)
 
         expect(glance_rows).to eq [
-          [show_key("at_a_glance.area"), "Lobeda, Zwätzen"],
-          [show_key("at_a_glance.costs"), "ca. 50.000 €"],
-          [show_key("at_a_glance.formal"), show_key("participation_block.status_yes")],
-          [show_key("at_a_glance.informal"), show_key("participation_block.status_no")],
-          [show_key("banner.version"), plan.version]
+          "#{show_key("at_a_glance.area")}: Lobeda, Zwätzen",
+          "#{show_key("at_a_glance.costs")}: ca. 50.000 €",
+          "#{show_key("at_a_glance.formal")}: #{show_key("participation_block.status_yes")}",
+          "#{show_key("at_a_glance.informal")}: #{show_key("participation_block.status_no")}",
+          "#{show_key("banner.version")}: #{plan.version}"
         ]
       end
 
@@ -1759,8 +1759,8 @@ describe "Vorhabenliste", type: :request do
         get municipal_plan_path(plan)
 
         expect(glance_rows.last)
-          .to eq [show_key("at_a_glance.informal"), show_key("participation_block.status_no")]
-        expect(glance_rows.map(&:first)).not_to include show_key("banner.version")
+          .to eq "#{show_key("at_a_glance.informal")}: #{show_key("participation_block.status_no")}"
+        expect(glance_rows).not_to include a_string_starting_with("#{show_key("banner.version")}:")
         expect(card_titled("at_a_glance.title").text).not_to include "2.0 Frühzeitige Unterrichtung"
       end
 
@@ -1770,7 +1770,7 @@ describe "Vorhabenliste", type: :request do
 
         get municipal_plan_path(plan)
 
-        expect(glance_rows.last).to eq [show_key("banner.version"), "1.2"]
+        expect(glance_rows.last).to eq "#{show_key("banner.version")}: 1.2"
       end
 
       it "leaves out the Kosten row when no costs are given" do
@@ -1778,19 +1778,25 @@ describe "Vorhabenliste", type: :request do
 
         get municipal_plan_path(plan)
 
-        expect(glance_rows.map(&:first)).not_to include show_key("at_a_glance.costs")
+        expect(glance_rows).not_to include a_string_starting_with("#{show_key("at_a_glance.costs")}:")
       end
 
-      it "explains both participation kinds next to their term" do
+      it "explains both participation kinds after their value" do
+        plan.update!(formal_participation: true, informal_participation: false)
+
         get municipal_plan_path(plan)
 
-        terms = card_titled("at_a_glance.title").css(".municipal-plan-glance--row dt")
-        %i[formal informal].each do |kind|
-          term = terms.find { |dt| dt.xpath("text()").text.strip == show_key("at_a_glance.#{kind}") }
+        rows = card_titled("at_a_glance.title").css(".municipal-plan-glance--row")
+        { formal: "status_yes", informal: "status_no" }.each do |kind, status|
+          row = rows.find { |r| r.at_css("dt").text.strip == "#{show_key("at_a_glance.#{kind}")}:" }
+          value = row.at_css("dd").children.reject { |node| node.text? && node.text.strip.empty? }
 
-          expect_participation_info(term, kind)
+          expect(row.at_css("dt rich-tooltip")).to be_nil
+          expect(value.first.text.strip).to eq show_key("participation_block.#{status}")
+          expect(value.last.name).to eq "rich-tooltip"
+          expect_participation_info(row.at_css("dd"), kind)
         end
-        expect(terms.count { |dt| dt.at_css("rich-tooltip") }).to eq 2
+        expect(rows.count { |row| row.at_css("rich-tooltip") }).to eq 2
       end
     end
 

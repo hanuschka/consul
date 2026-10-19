@@ -1,6 +1,5 @@
 require_dependency Rails.root.join("app", "models", "proposal").to_s
 class Proposal < ApplicationRecord
-  include Search::Generic
   include Labelable
   include Sentimentable
   include ResourceBelongsToProjekt
@@ -168,10 +167,6 @@ class Proposal < ApplicationRecord
       .pluck(:id)
 
     Proposal.where(id: ids)
-  end
-
-  def elastic_searchable?
-    hidden_at.nil? && published?
   end
 
   def custom_votes_needed_for_success

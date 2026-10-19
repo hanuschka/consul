@@ -1,7 +1,6 @@
 require_dependency Rails.root.join("app", "models", "site_customization", "page").to_s
 
 class SiteCustomization::Page < ApplicationRecord
-  include Search::Generic
   include ActionView::Helpers::SanitizeHelper
 
   self.inheritance_column = nil
@@ -89,10 +88,6 @@ class SiteCustomization::Page < ApplicationRecord
 
   def comments_count
     comments.count
-  end
-
-  def elastic_searchable?
-    published?
   end
 
   def full_url

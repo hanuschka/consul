@@ -91,7 +91,6 @@ en:
     links:
       menu:
         home_icon: Homepage link
-        search_icon: Search
         konto_icon:
           zero: "'My account'-Link"
           one: "'My account'-Link. There's one new notification."

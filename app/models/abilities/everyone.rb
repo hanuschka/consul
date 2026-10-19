@@ -47,10 +47,6 @@ module Abilities
       can [:read, :map, :share], Legislation::Proposal
       can [:search, :comments, :read, :create, :new_comment], Legislation::Annotation
 
-      if Setting['extended_feature.general.elasticsearch']
-        can [:read], Search
-      end
-
       can [:read], ProjektQuestion
       can [:read, :create], ProjektQuestionAnswer
 

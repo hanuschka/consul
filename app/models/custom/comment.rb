@@ -1,8 +1,6 @@
 require_dependency Rails.root.join("app", "models", "comment").to_s
 
 class Comment < ApplicationRecord
-  include Search::Generic
-
   scope :seen, -> { where.not(ignored_flag_at: nil) }
   scope :unseen, -> { where(ignored_flag_at: nil) }
   scope :created_after_date, ->(datetime) {
@@ -12,10 +10,6 @@ class Comment < ApplicationRecord
   }
 
   delegate :comments_allowed?, to: :projekt, allow_nil: true
-
-  def elastic_searchable?
-    hidden_at.nil?
-  end
 
   def next_comments
     self.class

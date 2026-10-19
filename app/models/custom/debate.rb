@@ -2,7 +2,6 @@ require_dependency Rails.root.join("app", "models", "debate").to_s
 
 class Debate
   include Imageable
-  include Search::Generic
   include Documentable
   include Labelable
   include Sentimentable
@@ -58,10 +57,6 @@ class Debate
       .merge(
         ProjektPhase::DebatePhase.current.or(ProjektPhase::DebatePhase.has_resources)
       ).select(:id)
-  end
-
-  def elastic_searchable?
-    hidden_at.nil?
   end
 
   def register_vote(user, vote_value)

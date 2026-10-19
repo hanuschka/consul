@@ -261,7 +261,7 @@ class Setting < ApplicationRecord
         "ideas.document_upload": true,
         "ideas.external_video": true,
 
-        "extended_feature.general.elasticsearch": false,
+        # "extended_feature.general.elasticsearch": false,
 
         "extended_feature.general.extended_editor_for_admins": true,
         "extended_feature.general.extended_editor_for_users": true,

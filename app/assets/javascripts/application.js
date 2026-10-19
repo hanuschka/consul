@@ -199,7 +199,6 @@ var initialize_modules = function() {
   App.BudgetEditAssociations.initialize();
   App.BudgetHideMoney.initialize();
   App.Datepicker.initialize();
-  App.ElasticSearchModal.initialize();
   App.DeficiencyReportSubcategories.initialize();
   App.SDGRelatedListSelector.initialize();
   App.SDGManagementRelationSearch.initialize();

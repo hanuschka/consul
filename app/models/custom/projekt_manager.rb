@@ -7,9 +7,6 @@ class ProjektManager < ApplicationRecord
 
   validates :user_id, presence: true, uniqueness: true
 
-  after_create :sync_user
-  after_destroy :sync_user
-
   def allowed_to?(permission, projekt)
     return true if manage_all_projekts?
 
@@ -20,10 +17,6 @@ class ProjektManager < ApplicationRecord
     return false if assignment.nil?
 
     assignment.permissions.include?(permission.to_s)
-  end
-
-  def sync_user
-    user.sync_user_on_dt
   end
 
   private

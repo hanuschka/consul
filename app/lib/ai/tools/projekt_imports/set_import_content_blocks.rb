@@ -6,7 +6,7 @@ class Ai::Tools::ProjektImports::SetImportContentBlocks < Ai::Tools::ProjektImpo
               "sees the proposal under your message and applies or discards it with a " \
               "button. Call it once per requested change."
 
-  params Ai::Tools::ProjektImports::ContentBlocksParamSchema.new
+  parameters Ai::Tools::ProjektImports::ContentBlocksParamSchema.new
 
   def execute(content_blocks:)
     proposal = editor.propose_content_blocks(content_blocks.map(&:deep_stringify_keys))

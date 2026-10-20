@@ -51,8 +51,11 @@ class ProjektPhase::VotingPhase < ProjektPhase
   private
 
     def phase_specific_permission_problems(user, location)
-      return :organization if user.organization?
-      return :poll_not_live if !poll&.live? && location != :officing
+      :organization if user.organization?
+    end
+
+    def phase_state_permission_problem(location)
+      :poll_not_live if !poll&.live? && location != :officing
     end
 
     def create_poll

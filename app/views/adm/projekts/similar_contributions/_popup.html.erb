@@ -1,0 +1,22 @@
+<% if matches.empty? %>
+  <p class="similar-contributions-popup--empty">
+    <%= t("adm.projekts.similar_contributions.popup.empty") %>
+  </p>
+<% else %>
+  <ul class="similar-contributions-matches">
+    <% matches.each do |match| %>
+      <% projekt_name = similar_contributions_projekt_name_for(match.resource, resource) %>
+      <%= render SimilarContributions::MatchItemComponent.new(match.resource, variant: :popup) do |item| %>
+        <% item.with_meta do %>
+          <p class="similar-contributions-match--meta">
+            <% if projekt_name.present? %>
+              <span class="similar-contributions-match--projekt"><%= projekt_name %></span>
+              &middot;
+            <% end %>
+            <%= match.resource.projekt_phase&.title %>
+          </p>
+        <% end %>
+      <% end %>
+    <% end %>
+  </ul>
+<% end %>

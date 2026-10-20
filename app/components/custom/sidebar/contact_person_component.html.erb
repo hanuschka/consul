@@ -1,0 +1,60 @@
+<section class="sidebar-card sidebar-contact-person" aria-labelledby="<%= heading_id %>">
+  <h2 id="<%= heading_id %>" class="show-for-sr"><%= t(".title") %></h2>
+
+  <div class="sidebar-contact-person--band" aria-hidden="true"></div>
+
+  <div class="sidebar-contact-person--info">
+    <div class="sidebar-contact-person--avatar" aria-hidden="true">
+      <div class="sidebar-contact-person--initials">
+        <% if initials.present? %>
+          <%= initials %>
+        <% else %>
+          <i class="fas fa-user"></i>
+        <% end %>
+      </div>
+    </div>
+
+    <% if name.present? %>
+      <p class="sidebar-contact-person--name"><%= name %></p>
+    <% end %>
+
+    <% if role.present? %>
+      <p class="sidebar-contact-person--role"><%= role %></p>
+    <% end %>
+
+    <% if phone.present? || email.present? %>
+      <dl class="sidebar-contact-person--rows">
+        <% if phone.present? %>
+          <div class="sidebar-contact-person--row">
+            <dt>
+              <i class="fas fa-phone" aria-hidden="true"></i>
+              <%= t(".phone") %>
+            </dt>
+            <dd>
+              <% if phone_linkable? %>
+                <%= link_to phone, phone_href %>
+              <% else %>
+                <%= phone %>
+              <% end %>
+            </dd>
+          </div>
+        <% end %>
+
+        <% if email.present? %>
+          <div class="sidebar-contact-person--row">
+            <dt>
+              <i class="fas fa-envelope" aria-hidden="true"></i>
+              <%= t(".email") %>
+            </dt>
+            <dd>
+              <%= mail_to email do %>
+                <span class="show-for-sr"><%= email_link_label %></span>
+                <%= t(".write") %>
+              <% end %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+    <% end %>
+  </div>
+</section>

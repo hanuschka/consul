@@ -1,8 +1,9 @@
 class Mitmachbox::Resources::Questions < Mitmachbox::Resources::Base
-  def create(survey_id, version_id, prompt:, question_type:, required:, position: nil)
+  def create(survey_id, version_id, prompt:, question_type:, required:,
+             position: nil, condition_option_ids: nil)
     client.post(
       base_path(survey_id, version_id),
-      body: { prompt:, question_type:, required:, position: }.compact
+      body: { prompt:, question_type:, required:, position:, condition_option_ids: }.compact
     )
   end
 

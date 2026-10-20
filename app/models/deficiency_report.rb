@@ -208,6 +208,12 @@ class DeficiencyReport < ApplicationRecord
     recorded_by.present? && recorded_by_id != author_id
   end
 
+  def reporter_mailable?
+    return false if author&.email.blank?
+
+    recorded_by_id.nil? || recorded_by_id != author_id
+  end
+
   def publicly_visible?
     return false if hidden?
 

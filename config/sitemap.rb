@@ -13,10 +13,6 @@ SitemapGenerator::Sitemap.default_host = Setting["url"]
 
 # sitemap generator
 SitemapGenerator::Sitemap.create do
-  add help_path
-  add how_to_use_path
-  add faq_path
-
   if Setting["process.debates"]
     add debates_path, priority: 0.7, changefreq: "daily"
     Debate.find_each do |debate|

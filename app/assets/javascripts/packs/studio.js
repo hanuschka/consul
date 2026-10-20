@@ -53,6 +53,7 @@
 //= require ../studio/ContentBlocks/CopyFeedback
 //= require ../studio/ContentBlocks/Copy
 //= require ../studio/ContentBlocks/EmptyHintToggle
+//= require ../studio/ContentBlocks/Visibility
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/EditPopup
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/TextFormat

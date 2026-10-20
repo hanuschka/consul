@@ -11,10 +11,14 @@
         <% if content_blocks.any? %>
           <% content_blocks.each do |content_block| %>
             <% next if !show_admin_controls && content_block_body_blank?(content_block.body) %>
+            <% next if !show_admin_controls && !content_block.publicly_visible? %>
             <div
               class="custom-content-block js-content-block"
               data-id="<%= content_block.id %>"
               data-turbolinks="false"
+              <% if show_admin_controls %>
+                <%= content_block_visibility_data_attributes(content_block) %>
+              <% end %>
               <% effective_margin = content_block.margin_bottom || SiteCustomization::ContentBlock::DEFAULT_MARGIN_BOTTOM %>
               <% if effective_margin > 0 %>
                 style="margin-bottom: <%= effective_margin %>px;"

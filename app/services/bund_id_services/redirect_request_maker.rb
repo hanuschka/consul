@@ -1,31 +1,32 @@
 module BundIdServices
   class RedirectRequestMaker < ApplicationService
+    Result = Struct.new(:url, :relay_state, keyword_init: true)
+
     def initialize(user_id: nil, purpose: nil)
       @user_id = user_id
       @purpose = purpose
+      @request_id = "_#{SecureRandom.uuid}"
     end
 
     def call
-      "#{Rails.application.secrets.bund_id[:idp_destination]}?#{request_params}"
+      RelayState.expired.delete_all
+      relay_state = RelayState.create!(
+        token: SecureRandom.hex(16),
+        data: { request_id: @request_id, user_id: @user_id, purpose: @purpose }
+      )
+
+      Result.new(
+        url: "#{Rails.application.secrets.bund_id[:idp_destination]}?#{request_params(relay_state.token)}",
+        relay_state: relay_state.token
+      )
     end
 
     private
 
-      def request_params
+      def request_params(relay_state)
         saml_request = CGI.escape(encode(deflate(signed_xml_document.to_s)))
 
-        if @purpose.present?
-          state = SecureRandom.hex(16)
-          RelayState.create!(
-            token: state,
-            data: { user_id: @user_id, purpose: @purpose }
-          )
-          relay_state = CGI.escape(state)
-
-          "SAMLRequest=#{saml_request}&RelayState=#{relay_state}"
-        else
-          "SAMLRequest=#{saml_request}"
-        end
+        "SAMLRequest=#{saml_request}&RelayState=#{CGI.escape(relay_state)}"
       end
 
       def signed_xml_document
@@ -43,7 +44,7 @@ module BundIdServices
           "AssertionConsumerServiceURL" => settings[:assertion_consumer_service_url],
           "Destination" => settings[:idp_destination],
           "ForceAuthn" => "true",
-          "ID" => "_#{SecureRandom.uuid}",
+          "ID" => @request_id,
           "IsPassive" => "false",
           "IssueInstant" => Time.now.utc.iso8601,
           "ProtocolBinding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
@@ -72,7 +73,6 @@ module BundIdServices
         akdb_allowed_method4.text = "FINK"
 
         akdb_requested_attributes = akdb_authentication_request.add_element "akdb:RequestedAttributes"
-        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:2.5.4.18" }
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.3.6.1.4.1.25484.494450.3" }
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.3.6.1.4.1.25484.494450.2" }
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:0.9.2342.19200300.100.1.3" }
@@ -82,9 +82,7 @@ module BundIdServices
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.3.6.1.4.1.33592.1.3.5" }
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:2.5.4.16" }
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:2.5.4.7" }
-        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.2.40.0.10.2.1.1.225599" }
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:2.5.4.17" }
-        akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.3.6.1.5.5.7.9.2" }
         akdb_requested_attributes.add_element "akdb:RequestedAttribute", { "Name" => "urn:oid:1.2.40.0.10.2.1.1.261.94" }
 
         akdb_display_information = akdb_authentication_request.add_element "akdb:DisplayInformation"
@@ -104,7 +102,7 @@ module BundIdServices
 
         requested_authn_context = root.add_element "saml2p:RequestedAuthnContext", { "Comparison" => "minimum" }
         authn_context_class_ref = requested_authn_context.add_element "saml2:AuthnContextClassRef", { "xmlns:saml2" => "urn:oasis:names:tc:SAML:2.0:assertion" }
-        authn_context_class_ref.text = "STORK-QAA-Level-1"
+        authn_context_class_ref.text = @purpose == "verification" ? "STORK-QAA-Level-3" : "STORK-QAA-Level-1"
 
         request_doc
       end

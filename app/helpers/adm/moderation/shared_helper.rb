@@ -11,6 +11,8 @@ module Adm::Moderation::SharedHelper
 
   def moderation_resource_reachable?(record)
     record.projekt.present?
+  rescue Module::DelegationError
+    false
   end
 
   def moderation_comment_resource_reachable?(comment)

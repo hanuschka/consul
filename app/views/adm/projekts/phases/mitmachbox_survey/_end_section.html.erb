@@ -1,0 +1,25 @@
+<% unless @survey["state"].to_s == "archived" %>
+  <section class="mt-5">
+    <%= render "adm/projekts/phases/mitmachbox_survey/section_header",
+          title: t("adm.projekts.phases.mitmachbox_survey.end_section_title"),
+          pill_text: t("adm.projekts.phases.mitmachbox_survey.end_scope_pill"),
+          pill_icon: "warning",
+          pill_variant: "kern-badge--danger" %>
+
+    <div class="kern-card kern-card--hug d-flex align-items-stretch pt-4 px-4 pb-0">
+      <%= render layout: "adm/projekts/phases/mitmachbox_survey/setting_row",
+          locals: { title: t("adm.projekts.phases.mitmachbox_survey.archive_row_title"),
+                    text: t("adm.projekts.phases.mitmachbox_survey.archive_row_text") } do %>
+        <%= form_with url: mitmachbox_survey_state_adm_projekts_phase_path(@projekt_phase, state: "archived"),
+              method: :patch,
+              data: { turbo_confirm: t("adm.projekts.phases.mitmachbox_survey.archive_confirm") } do %>
+          <%= kern_button type: :submit,
+                text: t("adm.projekts.phases.mitmachbox_survey.archive_button"),
+                icon: "archive",
+                style: :danger,
+                class: "kern-btn--secondary" %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+<% end %>

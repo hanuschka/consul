@@ -8,7 +8,7 @@
       ) %>
     <% end %>
 
-    <%= translatable_form_for(investment, url: url, html: { class: "budget-investment-form", id: dom_id(investment, :form) }) do |f| %>
+    <%= translatable_form_for(investment, url: url, html: { class: form_css_class, id: dom_id(investment, :form) }) do |f| %>
       <%= resources_back_link(fallback_path: url_to_footer_tab) %>
 
       <div class="flex-layout">
@@ -16,7 +16,9 @@
           <h1 class="user-resources-form--title"><%= form_title %></h1>
           <div class="user-resources-form--description"><%= AdminWYSIWYGSanitizer.new.sanitize(form_description) %></div>
 
-          <%= render "shared/errors", resource: investment %>
+          <div class="js-user-resource-form-errors">
+            <%= render "shared/errors", resource: investment %>
+          </div>
         </div>
       </div>
 
@@ -201,9 +203,26 @@
         </div>
       <% end %>
 
-        <%= f.submit t("custom.user_resources.form.submit_button"), class: "button" %>
+        <% if !similar_contributions_check_running? %>
+          <%= f.submit t("custom.user_resources.form.submit_button"),
+                       class: "button js-user-resource-submit" %>
+        <% end %>
+
+        <%= render ::SimilarContributions::ProgressComponent.new(investment) %>
       </div>
       <% end %>
+    <% end %>
+
+    <%# Outside the form on purpose: the decision block offers the matches with
+        their own support buttons, and button_to inside a form is dropped by the
+        HTML parser. The layout wrapper is the form's own, so the block keeps the
+        width and the left edge of the fields above it. %>
+    <% if !@embbeded_in_ai_flow %>
+      <div class="flex-layout">
+        <div class="main-column">
+          <%= render ::SimilarContributions::DecisionComponent.new(investment) %>
+        </div>
+      </div>
     <% end %>
   </main>
 

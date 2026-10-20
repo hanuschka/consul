@@ -83,7 +83,7 @@ en:
         administer:
           title: Administer
           phase_2_3_title: "Phase 2 & 3: Criteria review"
-          phase_2_3_hint: "Check whether the proposal meets the criteria. In phase 4 (support phase) and phase 7 (voting phase), only proposals that meet the criteria and have a completed valuation are put up for voting. Only after the valuation is completed are proposals released for voting and the explanation published on the frontend. In addition, a proposal can no longer be edited by the author after valuation is completed."
+          phase_2_3_hint: "Check whether the proposal meets the criteria. Once a result is saved, the author can no longer edit the proposal. Proposals that do not meet the criteria cannot be supported in the support phase. When you tick \"Valuation finished\", the result and your explanation are published on the frontend, the author receives a one-time email about it, and valuators can no longer change the valuation. For proposals that do not meet the criteria, an explanation is then required and comments are closed. Proposals are admitted to voting only through the selection in phase 6."
           phase_5_title: "Phase 5: Pricing"
           phase_5_hint: "Define the price that will be publicly displayed on the frontend from phase 6 onward. Additionally, ongoing costs and the timeframe can be defined, which are intended for internal information only. Note: pricing can also be done before phase 5 if the proposal has passed the criteria review."
           phase_5_early_access: Available early (meets criteria)

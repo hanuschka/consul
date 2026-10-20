@@ -27,6 +27,10 @@ class Adm::MemoPolicy < ApplicationPolicy
         Adm::Ideas::IdeaPolicy.new(@user, memoable)
       when Budget::Investment
         Adm::Projekts::BudgetPolicy.new(@user, memoable)
+      when Proposal
+        Adm::ProposalPolicy.new(@user, memoable)
+      when MunicipalPlan
+        Adm::MunicipalPlans::MunicipalPlanPolicy.new(@user, memoable)
       else
         OpenStruct.new(add_memo?: false)
       end

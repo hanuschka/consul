@@ -27,13 +27,20 @@ ActiveJob::QueueAdapters::DelayedJobAdapter::JobWrapper.class_eval do
   end
 end
 
-if Rails.env.development?
-  Delayed::Worker.class_eval do
-    def reload!
-      return if !self.class.reload_app?
-      return if !Rails.application.reloader.check!
-
-      Rails.application.reloader.reload!
+# Delayed::Job only calls its own #reload! from the idle branch of the work
+# loop -- between polls, and never around the job it is about to run. A worker
+# that keeps finding work therefore executes whatever the files held when it
+# booted, for the life of the process, and reloading outside the executor
+# leaves half-unloaded constants behind when it does happen.
+#
+# Wrapping every job in the reloader is what a request already does: check for
+# changed files, reload if there are any, run the job against the code on disk.
+class DelayedJobReloaderPlugin < Delayed::Plugin
+  callbacks do |lifecycle|
+    lifecycle.around(:perform) do |worker, job, *args, &block|
+      Rails.application.reloader.wrap { block.call(worker, job, *args) }
     end
   end
 end
+
+Delayed::Worker.plugins << DelayedJobReloaderPlugin if Rails.env.development?

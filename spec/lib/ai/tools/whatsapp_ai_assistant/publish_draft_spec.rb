@@ -20,12 +20,13 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       projekt_phase_id: projekt_phase.id,
       draft_resource: resource,
       draft_preview_digest: nil,
-      image_question_pending?: false,
-      image_notices_shown?: false,
-      draft_picture_attached?: false,
+      image_question_settled?: true,
+      location_question_settled?: true,
       step: "idle"
     )
   end
+
+  after { Current.reset }
 
   before do
     allow(Whatsapp::Drafting::ResourceCreationValidationService).to receive(:call).and_return(nil)
@@ -39,7 +40,7 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
   # that takes pictures has to have asked for one first.
   describe "the picture question gate" do
     before do
-      allow(conversation).to receive(:image_question_pending?).and_return(true)
+      allow(conversation).to receive(:image_question_settled?).and_return(false)
       allow(conversation).to receive(:confirmation_offered?).and_return(true)
       allow(conversation).to receive(:draft_preview_digest).and_return("current-digest")
     end
@@ -57,8 +58,8 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       tool.execute
     end
 
-    it "lets a picture already attached answer it" do
-      allow(conversation).to receive(:draft_picture_attached?).and_return(true)
+    it "lets an answered picture question through" do
+      allow(conversation).to receive(:image_question_settled?).and_return(true)
 
       expect(Whatsapp::Drafting::CompleteDraftService)
         .to receive(:call)
@@ -151,13 +152,12 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       tool.execute
     end
 
-    # The reply after it carries the new proposal's state pills (Whatsapp::StatePills).
-    it "keeps the published proposal in focus for the reply" do
+    # The reply after it carries the next steps after a submission
+    # (Whatsapp::StatePills).
+    it "puts the completed submission in focus for the reply" do
       tool.execute
 
-      expect(Current.whatsapp_pill_focus).to eq(proposal_id: 77)
-    ensure
-      Current.reset
+      expect(Current.whatsapp_pill_focus).to eq(submission_completed: true, projekt_phase_id: 7)
     end
 
     context "when the phase holds contributions for review" do

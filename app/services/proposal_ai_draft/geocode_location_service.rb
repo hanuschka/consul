@@ -18,6 +18,7 @@ class ProposalAiDraft::GeocodeLocationService < ApplicationService
     )
 
     return if place.blank?
+    return if outside_marked_areas?(place)
 
     MapLocation.create_pin!(
       mappable: @mappable, latitude: place["latitude"], longitude: place["longitude"]
@@ -25,4 +26,15 @@ class ProposalAiDraft::GeocodeLocationService < ApplicationService
   rescue StandardError => e
     Rails.logger.error("[ProposalAiDraft] GeocodeLocationService failed: #{e.message}")
   end
+
+  private
+
+    def outside_marked_areas?(place)
+      phase = @mappable.projekt_phase
+      return false if phase.blank? || !phase.map_features_restricted_to_marked_areas?
+
+      boundary = phase.map_boundary
+
+      boundary.usable? && !boundary.contains?(place["latitude"], place["longitude"])
+    end
 end

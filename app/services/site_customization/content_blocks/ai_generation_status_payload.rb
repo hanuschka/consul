@@ -21,7 +21,7 @@ class SiteCustomization::ContentBlocks::AiGenerationStatusPayload < ApplicationS
     }
 
     payload[:body_html] = @content_block.body.to_s if status == "completed"
-    payload[:error] = @data["error"] if status == "failed"
+    payload[:error] = { message: I18n.t("ai.errors.generation_failed") } if status == "failed"
     payload[:content_block_html] = take_change_result if change_result?
 
     payload

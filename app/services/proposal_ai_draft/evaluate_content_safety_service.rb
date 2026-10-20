@@ -41,6 +41,8 @@ class ProposalAiDraft::EvaluateContentSafetyService < ApplicationService
   # to the topic.
   MAX_SEARCH_TERMS = 8
 
+  FEATURE = "proposal_ai_draft.content_safety".freeze
+
   # The WhatsApp entry point. The words a duplicate of this request might be
   # filed under ride the screening call: both questions read the same raw text
   # before anything else runs, so asking them together costs one completion
@@ -82,7 +84,7 @@ class ProposalAiDraft::EvaluateContentSafetyService < ApplicationService
     def response_content
       response =
         Ai::RubyLlmFactory
-          .chat_with_json_output(output_schema)
+          .chat_with_json_output(output_schema, feature: FEATURE)
           .with_instructions(instructions)
           .ask(user_prompt)
 

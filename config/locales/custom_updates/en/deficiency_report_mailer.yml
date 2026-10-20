@@ -22,6 +22,10 @@ en:
           subject: Status change of your deficiency report
           hi: Hi
           p1: Status of your a deficiency report you submitted earlier, was changed.
+        notify_author_about_official_answer:
+          subject: Official answer to your report
+          hi: "Hello %{username},"
+          p1: "there is an official answer to your report:"
         notify_officer:
           subject: New deficiency report %{identifier}
           hi: Dear Officer,

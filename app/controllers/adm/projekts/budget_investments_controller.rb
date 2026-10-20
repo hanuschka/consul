@@ -2,6 +2,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
   include ImageAttributes
   include MapLocationAttributes
   include DocumentAttributes
+  include Adm::HidesContributions
 
   before_action :set_projekt_phase
   before_action :set_investment, only: %i[show similar_contributions exclude_similar_contribution administer people edit update frame_update destroy milestones progress_bars audits toggle_image_concealed]
@@ -103,6 +104,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
 
     success = @investment.update(investment_params)
     @investment.send_feasibility_email if success && investment_params[:feasibility].present?
+    @investment.send_selection_email if success && investment_params.key?(:selected)
 
     # A nested image `_destroy` leaves the destroyed record cached on the
     # association, so the re-rendered show_content would show a broken image
@@ -177,8 +179,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
     @investment = @projekt_phase.budget.investments.find(params[:id])
     authorize [:adm, :projekts, @investment], :hide?, policy_class: Adm::Projekts::BudgetPolicy
 
-    @investment.hide
-    Activity.log(current_user, :hide, @investment)
+    hide_and_notify_author(@investment)
     @investment.reload
   end
 
@@ -222,6 +223,7 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
 
     def set_investment
       @investment = @projekt_phase.budget.investments.with_hidden.find(params[:id])
+      @investment.skip_marked_areas_check = true
     end
 
     def investment_params

@@ -44,7 +44,7 @@ class OpenaiApi::ToolLoop
   def initialize(
     tools:, tool_definitions:, model:, instructions:, input:, feature:,
     timeout_seconds:, previous_response_id: nil, reasoning_effort: nil,
-    &on_tool_call
+    safety_identifier: nil, &on_tool_call
   )
     @tools_by_name = tools.index_by(&:name)
     @tool_definitions = tool_definitions
@@ -55,6 +55,7 @@ class OpenaiApi::ToolLoop
     @timeout_seconds = timeout_seconds
     @previous_response_id = previous_response_id
     @reasoning_effort = reasoning_effort
+    @safety_identifier = safety_identifier
     @on_tool_call = on_tool_call
     @halt = nil
   end
@@ -103,7 +104,8 @@ class OpenaiApi::ToolLoop
         tools: @tool_definitions,
         previous_response_id: @previous_response_id,
         store: true,
-        reasoning: reasoning
+        reasoning: reasoning,
+        safety_identifier: @safety_identifier
       )
     end
 

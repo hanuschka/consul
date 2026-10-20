@@ -24,6 +24,14 @@ module Whatsapp::DiscardNotes
   NOTHING = "Nothing was in progress, so nothing was discarded: do not say anything was. " \
             "Answer with the way on from here.".freeze
 
+  # Where the discard was the citizen's yes to leaving it for a contribution they
+  # had already asked for (Whatsapp::Conversation#parked_projekt_phase), the way
+  # on is that contribution, not a choice of ways.
+  PARKED_REPLY = "Say in a few words what was discarded, then carry on with that " \
+                 "contribution in the same reply: never ask again for the projekt or for " \
+                 "anything they already told you. It is not the end of the " \
+                 "conversation.".freeze
+
   module_function
 
   def for(conversation)
@@ -31,7 +39,33 @@ module Whatsapp::DiscardNotes
 
     return NOTHING if discarded.blank?
 
+    parked = parked_line(conversation)
+
+    if parked.present?
+      return "#{discarded} #{parked} #{PARKED_REPLY}"
+    end
+
     "#{discarded} #{REPLY}"
+  end
+
+  # Their words go in whole, because the transcript draws its subject line at the
+  # discard and the message that asked is above it.
+  def parked_line(conversation)
+    projekt_phase = conversation.parked_projekt_phase
+
+    return if projekt_phase.blank?
+
+    asked =
+      "They had asked to contribute to #{::Whatsapp::ProjektLink.title(projekt_phase.projekt)} " \
+      "instead (start_draft with projekt_phase_id #{projekt_phase.id})"
+    text = conversation.parked_submission_text
+
+    if text.blank?
+      return "#{asked}, without saying what yet: start it and ask for their idea."
+    end
+
+    "#{asked}, writing: \"#{text}\". Start it, and where those words already hold their " \
+      "idea, draft it from them as they stand; otherwise ask for it."
   end
 
   # The draft first, as the larger loss; a vote is left rather than thrown away,

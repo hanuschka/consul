@@ -1,4 +1,6 @@
 class Whatsapp::Inbound::TranscribeVoiceService < ApplicationService
+  FEATURE = "whatsapp.voice_transcription".freeze
+
   def initialize(media_id:)
     @media_id = media_id
   end
@@ -43,10 +45,21 @@ class Whatsapp::Inbound::TranscribeVoiceService < ApplicationService
         language: I18n.locale.to_s.first(2),
         provider: :openai,
         assume_model_exists: true,
-        context: ::Ai::RubyLlmFactory.openai_context
+        context: transcription_context
       )
 
       transcription.text.presence
+    end
+
+    # Transcription stays on OpenAI whichever chat provider is configured, so
+    # the usage it books names OpenAI rather than the configured provider.
+    def transcription_context
+      ::Ai::RubyLlmFactory.attribute_usage(
+        ::Ai::RubyLlmFactory.openai_context,
+        feature: FEATURE,
+        provider: "openai",
+        requested_model: ::Whatsapp.transcription_model
+      )
     end
 
     # Handed a Pathname rather than the open Tempfile: the client reads the file

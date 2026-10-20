@@ -39,8 +39,12 @@ class ProjektPhase::MitmachboxPhase < ProjektPhase
     feature?("general.answer_survey_online")
   end
 
-  def online_answering_open?
-    online_answering_enabled? && current?
+  def online_answering_open_for?(user)
+    online_answering_enabled? && (current? || managed_by?(user))
+  end
+
+  def managed_by?(user)
+    user.present? && user.has_pm_permission_to?("manage", projekt)
   end
 
   def answered_by?(user, survey_version_id)

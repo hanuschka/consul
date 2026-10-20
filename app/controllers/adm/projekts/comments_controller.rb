@@ -1,12 +1,13 @@
 class Adm::Projekts::CommentsController < Adm::Projekts::BaseController
+  include Adm::HidesContributions
+
   before_action :find_projekt_phase
   before_action :find_comment
 
   def hide
     authorize [:adm, @comment], :hide?
 
-    @comment.hide
-    Activity.log(current_user, :hide, @comment)
+    hide_and_notify_author(@comment)
     @comment.reload
   end
 

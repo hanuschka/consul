@@ -33,7 +33,7 @@
 
       <%# Rechts daneben: Header + Sidebar + Content %>
       <div class="flex-grow-1 d-flex flex-column" style="min-width: 0;">
-        <header class="header d-flex align-items-center justify-content-between">
+        <header class="adm-header d-flex align-items-center justify-content-between">
           <div class="header__decorations">
             <div style=" position:absolute; right:-60px; top:-40px; width:160px; height:160px; background-color:rgba(255,255,255,0.14); border-radius:999px; "></div>
             <div style=" position:absolute; left:10%; bottom:-60px; width:140px; height:140px; background-color:rgba(27,95,214,0.28); border-radius:999px; "></div>
@@ -54,7 +54,7 @@
         </header>
 
         <div class="d-flex adm-layout">
-          <aside id="adm-sidebar" class="d-none d-lg-flex position-lg-static" data-adm-sidebar-target="sidebar">
+          <aside id="adm-sidebar" class="d-none d-lg-flex position-lg-sticky" data-adm-sidebar-target="sidebar">
             <%= render adm_menu_component %>
 
             <div class="adm-sidebar-footer">

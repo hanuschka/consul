@@ -456,6 +456,27 @@ class Ai::Tools::WhatsappAiAssistant::BaseTool < RubyLLM::Tool
       preview_required_error(kind)
     end
 
+    # The other half of the same order: one version of a preview per citizen
+    # message. A second preview of an unchanged draft under the same message is a
+    # second set of pills for one question, and the citizen who taps under the
+    # first is answering a message the bot itself has already replaced. Nil when
+    # this preview may go out (Whatsapp::Conversation#claim_preview!).
+    #
+    # A halt rather than a refusal, because the citizen has already been shown
+    # exactly this: handed an error, the model would write a reply on top of it.
+    def repeated_preview_halt(kind:, digest:)
+      return if conversation.claim_preview!(kind: kind, digest: digest)
+
+      ::Whatsapp::AiAssistant::DecisionLog.record(
+        event: :preview_repeated, conversation: conversation, tool: name, kind: kind
+      )
+
+      halt(
+        "Nothing was sent: they were already shown this #{kind} exactly as it stands in " \
+        "answer to this message, with its buttons."
+      )
+    end
+
     def preview_required_error(kind)
       ::Whatsapp::AiAssistant::DecisionLog.record(
         event: :preview_required, conversation: conversation, tool: name, kind: kind

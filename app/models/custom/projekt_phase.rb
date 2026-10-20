@@ -645,6 +645,18 @@ class ProjektPhase < ApplicationRecord
     map_location.show_admin_shape? ? map_location : nil
   end
 
+  def map_boundary
+    MapBoundary.new(map_location&.to_geo_json)
+  end
+
+  def map_features_restricted_to_marked_areas?
+    feature?("form.restrict_map_features_to_marked_areas") && map_boundary.restricted?
+  end
+
+  def marked_areas_restrictable?
+    ProjektPhaseSetting.defaults[self.class.name].to_h.key?(:"feature.form.restrict_map_features_to_marked_areas")
+  end
+
   def subscribable?
     true
   end
@@ -765,6 +777,9 @@ class ProjektPhase < ApplicationRecord
         return :phase_not_current if not_current?
       end
 
+      phase_state_problem = phase_state_permission_problem(location)
+      return phase_state_problem if phase_state_problem.present?
+
       return :guest_not_logged_in if guest_participation? && !user
       return if guest_participation? && !GUEST_WAIVER_EXEMPT_LOCATIONS.include?(location)
       return :not_logged_in if user.blank? || (user.guest? && !guest_participation?)
@@ -791,6 +806,10 @@ class ProjektPhase < ApplicationRecord
     end
 
     def phase_specific_permission_problems(user, location)
+      nil
+    end
+
+    def phase_state_permission_problem(location)
       nil
     end
 

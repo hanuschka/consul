@@ -77,7 +77,7 @@ module Whatsapp::AssistantActions
   # time reads as a different button. Fixed so the same step always reads alike.
   FORCED_LABEL_ACTIONS = %i[
     support_toggle support_register support_withdraw comment_post draft_publish submit_final
-    submit_proposal draft_revise submit_anyway location_share location_skip main_menu
+    submit_proposal draft_revise keep_open submit_anyway location_share location_skip main_menu
   ].freeze
 
   # The fixed labels that have no record behind them to be read off. `submit_final` is
@@ -93,6 +93,8 @@ module Whatsapp::AssistantActions
     draft_publish: "whatsapp.bot.buttons.draft_publish",
     submit_final: "whatsapp.bot.buttons.draft_publish",
     submit_proposal: "whatsapp.bot.buttons.submit_proposal",
+    my_contributions: "whatsapp.bot.buttons.my_contributions",
+    discover: "whatsapp.bot.buttons.discover",
     draft_revise: "whatsapp.bot.buttons.draft_revise",
     submit_anyway: "whatsapp.bot.buttons.submit_anyway",
     location_share: "whatsapp.bot.buttons.location_share",
@@ -108,6 +110,15 @@ module Whatsapp::AssistantActions
     draft: "whatsapp.bot.buttons.cancel_draft",
     comment: "whatsapp.bot.buttons.cancel_comment",
     step: "whatsapp.bot.buttons.cancel"
+  }.freeze
+
+  # Its counterpart under the question whether to discard what is open for a new
+  # contribution: keeping it. Offered with nothing else to say it, the keeping was
+  # "Entwurf ändern" — the pill that opens a change to the draft, and a citizen who
+  # tapped it to keep their draft was asked what to change in it.
+  KEEP_LABEL_KEYS = {
+    draft: "whatsapp.bot.buttons.keep_draft",
+    comment: "whatsapp.bot.buttons.keep_comment"
   }.freeze
 
   # What opens a list, by what its rows are. The model used to word it, and one
@@ -154,6 +165,33 @@ module Whatsapp::AssistantActions
         [:idea_start] +
         ::Whatsapp::Send::RECOVERY_ACTION_IDS.keys
     ).map(&:to_s)
+  end
+
+  # The words those pills carry this turn, by id, for the prompt that tells the
+  # model to leave them empty: without them its sentence named a button by words
+  # no pill showed. Only the ones whose words do not hang on a record, and only
+  # the recovery pills that can be offered now.
+  def fixed_labels(conversation)
+    unavailable = unavailable_recovery_actions(conversation)
+
+    fixed_label_action_names.each_with_object({}) do |name, labels|
+      next if unavailable.include?(name)
+
+      label = fixed_label(name.to_sym, conversation)
+
+      next if label.blank?
+
+      labels[name] = label
+    end
+  end
+
+  # Nil for a pill named after its record, since without a param there is none.
+  def fixed_label(action, conversation)
+    if ::Whatsapp::Send::RECOVERY_ACTION_IDS.key?(action)
+      recovery_label(action, conversation)
+    else
+      forced_label(action: action, param: nil, conversation: conversation)
+    end
   end
 
   # The one entry point the tools build a model-written pill through. Which of the
@@ -231,12 +269,12 @@ module Whatsapp::AssistantActions
   # The title is composed by the caller rather than looked up here, because it comes
   # out of the same translation batch as the block it is sent with: asking for it
   # again would put a label from one cache state under a sentence from another.
-  def platform_button(action:, title:, conversation:)
+  def platform_button(action:, title:, conversation:, param: nil)
     return if title.blank?
 
     record_irreversible_offer(action, conversation)
 
-    { id: ::Whatsapp::FlowActions.id_for(action: action), title: title }
+    { id: ::Whatsapp::FlowActions.id_for(action: action, param: param), title: title }
   end
 
   # The pill a preview tool builds, which is every pill #offered_button builds plus
@@ -246,6 +284,8 @@ module Whatsapp::AssistantActions
   # the reverse.
   #
   # The label is the fixed one whatever the model wrote, as it always was for these.
+  # The id carries the version of what the preview shows (Whatsapp::PreviewVersion),
+  # whatever parameter the model wrote, so a tap can tell which version it answers.
   def confirmation_button(spec:, label:, conversation:, confirms:)
     action, param = parse(spec)
 
@@ -260,7 +300,8 @@ module Whatsapp::AssistantActions
     platform_button(
       action: action,
       title: truncated(forced_label(action: action, param: param, conversation: conversation)),
-      conversation: conversation
+      conversation: conversation,
+      param: ::Whatsapp::PreviewVersion.tag(action: action, conversation: conversation)
     )
   end
 
@@ -306,6 +347,10 @@ module Whatsapp::AssistantActions
 
     if restates_request?(action, conversation)
       return dropped(spec, conversation, :restates_request)
+    end
+
+    if keeps_nothing?(action, conversation)
+      return dropped(spec, conversation, :nothing_to_keep)
     end
 
     sent_action = directed_action(action, param, conversation)
@@ -440,6 +485,21 @@ module Whatsapp::AssistantActions
   # this asks the state rather than withholding the id.
   def restates_request?(action, conversation)
     action == :comment_prompt && conversation.comment_invited?
+  end
+
+  # The sixth: a keep pill with nothing open to keep would answer a question
+  # nobody is being asked.
+  def keeps_nothing?(action, conversation)
+    action == :keep_open && kept_work(conversation).blank?
+  end
+
+  # What a keep tap leaves standing, by the order the cancel pill names it in.
+  def kept_work(conversation)
+    if conversation.unsaved_submission?
+      :draft
+    elsif conversation.pending_comment.present?
+      :comment
+    end
   end
 
   # The records one message's pills point at, read at once. A list of ten
@@ -736,11 +796,23 @@ module Whatsapp::AssistantActions
   # record at all — #record_label's own first guard would answer nil for them, and a
   # blank title is the one value WhatsApp refuses the whole message over.
   def forced_label(action:, param:, conversation:)
+    if action == :keep_open
+      return keep_label(conversation)
+    end
+
     key = FORCED_LABEL_COPY_KEYS[action]
 
     return ::Whatsapp.copy(key) if key.present?
 
     record_label(action: action, param: param, conversation: conversation)
+  end
+
+  def keep_label(conversation)
+    key = KEEP_LABEL_KEYS[kept_work(conversation)]
+
+    return if key.blank?
+
+    ::Whatsapp.copy(key)
   end
 
   # The label read off the thing the pill points at. A projekt that does not
@@ -894,10 +966,15 @@ module Whatsapp::AssistantActions
   # The same reading for a caller that has the proposal in hand already
   # (Whatsapp::StatePills), so the vote is read one way wherever a support pill is
   # composed.
+  #
+  # No "Unterstützen" on the citizen's own proposal: the bot does not take an
+  # author's support for what they wrote. One they gave on the page before keeps
+  # its withdraw pill, which is why the author is asked after the vote.
   def support_direction(proposal, conversation)
     user = conversation.user
 
     return :support_withdraw if user.present? && proposal.voted_up_by?(user)
+    return if ::Whatsapp::ContributionFacts.written_by?(proposal, user)
     return if !supportable?(proposal)
 
     :support_register

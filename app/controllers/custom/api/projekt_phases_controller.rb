@@ -14,6 +14,8 @@ class Api::ProjektPhasesController < Api::BaseController
       )
 
     if current_client.public_data?
+      return render_access_denied unless @projekt.visible_for?(nil)
+
       projekt_phases = projekt_phases.frontend_visible.active
     end
 
@@ -33,11 +35,7 @@ class Api::ProjektPhasesController < Api::BaseController
   def show
     check_read_access!
 
-    if current_client.public_data?
-      unless @projekt_phase.frontend_visibility && @projekt_phase.active?
-        return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
-      end
-    end
+    return render_access_denied if current_client.public_data? && !public_phase?(@projekt_phase)
 
     serialized_projekt_phase = ProjektPhaseSerializer.new(
       @projekt_phase,
@@ -156,6 +154,14 @@ class Api::ProjektPhasesController < Api::BaseController
     ProjektPhase::ALL_PHASE_TYPES.each_with_object({}) do |name, map|
       map[name] = name.safe_constantize
     end
+  end
+
+  def public_phase?(projekt_phase)
+    projekt_phase.frontend_visibility && projekt_phase.active? && projekt_phase.projekt.visible_for?(nil)
+  end
+
+  def render_access_denied
+    render json: { error: { type: "forbidden", messages: ["Access denied"] }}, status: :forbidden
   end
 
   def find_projekt

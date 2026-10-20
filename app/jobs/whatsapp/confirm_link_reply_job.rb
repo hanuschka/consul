@@ -14,6 +14,7 @@ class Whatsapp::ConfirmLinkReplyJob < ApplicationJob
     account = Whatsapp::Account.find_by(id: whatsapp_account_id)
 
     return if account.blank?
+    ::Whatsapp.ensure_credentials_loaded!
     return if !::Whatsapp.enabled?
 
     I18n.with_locale(::Whatsapp.locale_for(account)) do

@@ -101,7 +101,7 @@ en:
           Privacy: %{privacy_url}
         contact: "Questions for the administration: %{contact}"
       compliance:
-        disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here directly.
+        disclosure: 👋 I'm an AI bot for %{portal_name} — no human answers you here.
         opted_out: >-
           Understood, you won't receive any more messages from us. Write %{keyword} if
           you would like to receive messages again.
@@ -140,6 +140,11 @@ en:
         awaiting_review: >-
           Your comment has arrived and is still being reviewed. It will appear on the page once it
           has been approved — which is why there is no link to it yet.
+        # The question under the comment shown again after a tap on the posting pill
+        # under an older preview (Whatsapp::PreviewVersion).
+        outdated_question: >-
+          Your comment has changed since that preview. Above is how it would be posted now.
+          Should it go on the page like this?
       # The block Whatsapp::SupportRecap sends once a support has been registered.
       support:
         registered: Supported
@@ -156,11 +161,22 @@ en:
         phase: Participation
         attachments: Attached
         photo: Photo
+        ai_image: AI image
         location: Location
         online: "Your contribution is now online:"
         awaiting_review: >-
           Your contribution has arrived and is now with the municipality for review. It will appear
           on the page once it has been approved — which is why there is no link to it yet.
+        # The question under the draft shown again after a tap on the publishing pill
+        # under an older preview (Whatsapp::PreviewVersion), and the note on what the
+        # draft adds beyond the citizen's own words. The question says nothing about
+        # publishing: the first button under it can still lead to the photo or the
+        # place.
+        outdated_question: >-
+          Your contribution has changed since that preview. Above is how it looks now. Is it
+          right like this?
+        outdated_additions_note: >-
+          It also contains something you did not say: %{additions}. I can take that out again.
       proposal:
         # A legal notice rather than the bot's voice, which is why it survived the copy
         # that did not: Ai::Tools::WhatsappAiAssistant::RequestPhoto appends it to every
@@ -310,12 +326,17 @@ en:
         # The cancel pill, named after what it discards.
         cancel_draft: Discard draft
         cancel_comment: Discard comment
+        # Under the comment shown again: opens a change to its words.
+        comment_revise: Edit comment
         # Under a request for a change: takes back only the change.
         cancel_change: Discard change
         # Fixed labels for steps that recur throughout a conversation: worded by the
         # model, the same step read six different ways in one session.
         submit_proposal: Submit an idea
         draft_revise: Edit draft
+        # Under the question whether to discard what is open for a new contribution.
+        keep_draft: Keep draft
+        keep_comment: Keep comment
         submit_anyway: Keep as it is
         location_share: Use this place
         choose_projekt: Choose project
@@ -389,6 +410,11 @@ en:
         # words. Set by the tool rather than by the model, so it is there wherever
         # there are additions.
         remove_additions: Remove additions
+        # The way on from a preview while the draft still has a question to come,
+        # named by that question. Never "submit": nothing goes in on this tap.
+        draft_continue:
+          photo: Continue to photo
+          location: Continue to location
       notifications:
         follow_up:
           deadline_approaching: You can still take part here until the deadline passes.

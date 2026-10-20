@@ -1,4 +1,7 @@
 Grover.configure do |config|
+  # Puma preloads jemalloc; Chrome segfaults on launch if it inherits it
+  config.node_env_vars = { "LD_PRELOAD" => nil }
+
   config.options = {
     format: "A4",
     print_background: true,

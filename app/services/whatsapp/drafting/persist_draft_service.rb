@@ -16,6 +16,7 @@ class Whatsapp::Drafting::PersistDraftService < ApplicationService
     resource = @conversation.draft_resource || build_resource
 
     assign_content(resource)
+    resource.skip_marked_areas_check = true
     resource.save!
 
     propose_location(resource)

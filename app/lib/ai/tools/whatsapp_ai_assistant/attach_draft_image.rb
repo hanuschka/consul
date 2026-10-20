@@ -82,7 +82,9 @@ class Ai::Tools::WhatsappAiAssistant::AttachDraftImage < Ai::Tools::WhatsappAiAs
       {
         attached: true,
         hint: "Show them the contribution with the picture using show_draft_for_confirmation, " \
-              "and ask whether it can go in."
+              "and ask whether it is right with it. The place may still be to come: the " \
+              "preview's first button names what follows, so do not ask about publishing " \
+              "before it does."
       }
     end
 

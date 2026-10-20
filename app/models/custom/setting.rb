@@ -187,6 +187,7 @@ class Setting < ApplicationRecord
         # metadata
         "org_name": "CONSUL", # !!!!!!!!!!!!!!!!
         "url": "https://deine-stadt.de", # Public-facing URL of the app.
+        "handbook.url": "https://handbuch.demokratie.today",
         "mailer_from_address": "noreply@consul.dev",
         "mailer_from_name": "CONSUL",
         "meta_title": nil,
@@ -267,6 +268,7 @@ class Setting < ApplicationRecord
         "process.municipal_plans": false,
         "municipal_plans.officers_see_all": false,
         "municipal_plans.auto_archive": false,
+        "municipal_plans.procedure_steps": false,
         "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,

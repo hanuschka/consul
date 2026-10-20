@@ -5,7 +5,8 @@ class Ai::Tools::WhatsappAiAssistant::AbortSubmission < Ai::Tools::WhatsappAiAss
               "\"lass mal\", \"vergiss es\", \"ach doch nicht\". Declining one optional part is " \
               "not abandoning: no photo and no pin are answers to be gone on from, not reasons " \
               "to discard. Asking to go back to the very beginning is start_over, which asks " \
-              "about the draft first. Asking for no more messages at all is stop_messages. While " \
+              "about the draft or the comment first. Asking for no more messages at all is " \
+              "stop_messages. While " \
               "they are changing a comment or a draft they had already seen, it drops only that " \
               "change and brings back the version they read; called again, it discards the " \
               "rest. A wrong call here throws away everything they wrote and it cannot be " \
@@ -23,7 +24,7 @@ class Ai::Tools::WhatsappAiAssistant::AbortSubmission < Ai::Tools::WhatsappAiAss
   # takes back the change, as the tap does, rather than the whole comment.
   #
   # Not while a start-over waits on this call, though: the yes it answers was to
-  # losing the whole draft on the way back to the beginning.
+  # losing the whole draft or comment on the way back to the beginning.
   def execute
     return nothing_open_answer if !conversation.step_in_progress?
 

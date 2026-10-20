@@ -195,7 +195,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         @moderation_header_options = { filter_options: moderation_filter_options }
 
         @breadcrumbs = [
-          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.projekt.page.title, url: projekt_breadcrumb_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
           { name: t(".title") }
         ]
@@ -223,7 +223,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         @moderation_header_options = { filter_options: moderation_filter_options }
 
         @breadcrumbs = [
-          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.projekt.page.title, url: projekt_breadcrumb_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
           { name: t(".title") }
         ]
@@ -374,7 +374,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
         }
 
         @breadcrumbs = [
-          { name: @projekt_phase.projekt.page.title, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.projekt.page.title, url: projekt_breadcrumb_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title },
           { name: t(".title") }
         ]
@@ -1085,6 +1085,10 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
     def set_back_button_url
       @back_button_url = phases_adm_projekts_projekt_path(@projekt_phase.projekt)
+    end
+
+    def projekt_breadcrumb_path(projekt)
+      phases_adm_projekts_projekt_path(projekt) if policy([:adm, :projekts, projekt]).show?
     end
 
     def filter_empty_registered_address_grouping_restrictions

@@ -1,4 +1,6 @@
 class Adm::Moderation::CommentsController < Adm::Moderation::BaseController
+  include Adm::HidesContributions
+
   FILTERS = %w[pending_flag_review with_ignored_flag hidden all].freeze
 
   def index
@@ -21,8 +23,7 @@ class Adm::Moderation::CommentsController < Adm::Moderation::BaseController
     @comment = Comment.find(params[:id])
     authorize @comment, :hide?, policy_class: Adm::Moderation::CommentPolicy
 
-    @comment.hide
-    Activity.log(current_user, :hide, @comment)
+    hide_and_notify_author(@comment)
     @comment.reload
   end
 

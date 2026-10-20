@@ -34,7 +34,7 @@
       <i class="fas fa-calendar" aria-hidden="true"></i>
       <%= updated_on_label %>
     </li>
-    <% if municipal_plan.version.present? %>
+    <% if version? %>
       <li>
         <i class="fas fa-hashtag" aria-hidden="true"></i>
         <%= t("custom.municipal_plans.show.banner.version") %> <%= municipal_plan.version %>

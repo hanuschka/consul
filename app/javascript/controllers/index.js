@@ -300,3 +300,6 @@ application.register("adm--mitmachbox-check", AdmMitmachboxCheckController)
 
 import AdmHandbookEmbedController from "./adm/handbook_embed_controller"
 application.register("adm--handbook-embed", AdmHandbookEmbedController)
+
+import AdmMunicipalPlanCityWideController from "./adm/municipal_plan_city_wide_controller"
+application.register("adm--municipal-plan-city-wide", AdmMunicipalPlanCityWideController)

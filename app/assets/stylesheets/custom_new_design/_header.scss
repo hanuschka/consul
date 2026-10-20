@@ -531,11 +531,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
         color: white;
       }
 
-      .locale .locale-form select {
-        background: white !important;
-        color: black !important;
-      }
-
       .main-navigation-item--account--image-wrapper {
         background: var(--brand-color) !important;
         color: white !important;
@@ -1211,12 +1206,14 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .homepage-image-header--title-wrapper {
       padding-top: 180px;
       // Etwas engerer gap auf Mobile, da Titel und Suchfeld hier kompakter
-      // sind und der Hero nur 450px hoch ist.
+      // sind und der Hero nur 525px hoch ist.
       gap: 12px;
     }
 
     .homepage-image-header {
-      min-height: 450px;
+      height: auto;
+      min-height: 525px;
+      padding-bottom: 60px;
       margin-bottom: 5px;
     }
 

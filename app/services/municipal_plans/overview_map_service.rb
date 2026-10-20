@@ -78,7 +78,7 @@ class MunicipalPlans::OverviewMapService
     end
 
     def pinned_plans
-      MunicipalPlan.where(id: @filtered_scope.unscope(:select, :order).select(:id))
+      MunicipalPlan.where(id: @filtered_scope.unscope(:select, :order).select(:id), city_wide: false)
                    .joins(:map_location)
                    .includes(:map_location, :translations)
     end

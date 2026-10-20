@@ -114,7 +114,7 @@ class ProjektSerializer < BaseSerializer
   end
 
   def content_blocks
-    ContentBlockSerializer.serialize_collection(@projekt.content_blocks.order(:position))
+    ContentBlockSerializer.serialize_collection(@projekt.publicly_visible_content_blocks)
   end
 
   def self.serialize_collection(projekts, options = {})

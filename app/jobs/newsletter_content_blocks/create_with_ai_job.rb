@@ -1,5 +1,6 @@
 class NewsletterContentBlocks::CreateWithAiJob < ApplicationJob
   queue_as :default
+  self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
 
   def perform(content_block_id, mode)
     content_block = SiteCustomization::ContentBlock.unscoped.find_by(id: content_block_id)
@@ -11,7 +12,7 @@ class NewsletterContentBlocks::CreateWithAiJob < ApplicationJob
     data = content_block.ai_generation_data || {}
     options = data["options"] || {}
 
-    Ai::GenerateContentBlock.call(
+    result = Ai::GenerateContentBlock.call(
       content_block: content_block,
       projekt: nil,
       newsletter: newsletter,
@@ -21,6 +22,8 @@ class NewsletterContentBlocks::CreateWithAiJob < ApplicationJob
       anchor_template_id: options["anchor_template_id"],
       text_locale: options["text_locale"]
     )
+
+    handle_failure(content_block, mode, result.error) if !result.success?
   rescue Ai::GenerateContentBlock::AiCancelledError
     handle_cancellation(content_block, mode)
   rescue => e

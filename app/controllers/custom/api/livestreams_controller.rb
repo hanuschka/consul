@@ -14,11 +14,7 @@ class Api::LivestreamsController < Api::BaseController
         ProjektLivestream.includes(:projekt_phase)
       end
 
-    livestreams =
-      livestreams
-        .order(created_at: :asc)
-        .page(params[:page])
-        .per(params[:per_page] || DEFAULT_PER_PAGE)
+    livestreams = paginate(livestreams.order(created_at: :asc))
 
     serialized_livestreams = LivestreamSerializer.serialize_collection(livestreams)
 
@@ -89,15 +85,6 @@ class Api::LivestreamsController < Api::BaseController
 
   def find_projekt_livestream
     @projekt_livestream = ProjektLivestream.find(params[:id])
-  end
-
-  def pagination_meta(collection)
-    {
-      current_page: collection.current_page,
-      total_pages: collection.total_pages,
-      total_count: collection.total_count,
-      per_page: collection.limit_value
-    }
   end
 end
 

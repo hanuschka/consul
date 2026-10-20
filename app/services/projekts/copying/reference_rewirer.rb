@@ -106,10 +106,12 @@ class Projekts::Copying::ReferenceRewirer < ApplicationService
 
     def rewire_content_blocks
       SiteCustomization::ContentBlock.where(projekt_id: copy.id).find_each do |content_block|
-        rewritten = rewrite_html(content_block.body)
-        next if rewritten == content_block.body
+        content_block.translations.each do |translation|
+          rewritten = rewrite_html(translation.body)
+          next if rewritten == translation.body
 
-        content_block.update_column(:body, rewritten)
+          translation.update_column(:body, rewritten)
+        end
       end
     end
 

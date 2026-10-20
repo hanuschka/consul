@@ -2,6 +2,8 @@ class IndividualGroupValue < ApplicationRecord
   belongs_to :individual_group
   has_many :user_individual_group_values, dependent: :destroy
   has_many :users, through: :user_individual_group_values
+  has_and_belongs_to_many :projekts
+  has_and_belongs_to_many :projekt_phases
 
   validates :name, presence: true
 

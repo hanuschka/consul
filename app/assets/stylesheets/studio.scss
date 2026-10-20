@@ -1,5 +1,6 @@
 @import "custom/1_colors";
 @import "custom/1_variables";
+@import "custom/components/ai_disabled";
 
 
 @import "studio/standalone_base";
@@ -19,6 +20,7 @@
 @import "studio/add_content_block";
 @import "studio/saved_content_blocks";
 @import "studio/edit_popup";
+@import "studio/content_block_visibility";
 @import "studio/image_controls";
 @import "studio/map_controls";
 @import "studio/link_editing";

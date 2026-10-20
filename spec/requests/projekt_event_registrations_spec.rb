@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe "Projekt event registrations", type: :request do
-  let(:projekt_event) { create(:projekt_event, max_attendees: 10) }
+  let(:projekt_event) { create(:projekt_event, registration_enabled: true, max_attendees: 10) }
 
   def register(extra = {})
     post projekt_event_projekt_event_registrations_path(projekt_event),
@@ -36,7 +36,7 @@ describe "Projekt event registrations", type: :request do
 
   it "keeps accepting a second registration in the same session" do
     register
-    other_event = create(:projekt_event, max_attendees: 10)
+    other_event = create(:projekt_event, registration_enabled: true, max_attendees: 10)
 
     expect {
       post projekt_event_projekt_event_registrations_path(other_event),
@@ -44,5 +44,40 @@ describe "Projekt event registrations", type: :request do
              first_name: "Bo", last_name: "Beispiel", email: "bo@example.org"
            } }
     }.to change { ProjektEventRegistration.count }.by(1)
+  end
+
+  context "registration without an attendee limit" do
+    let(:projekt_event) { create(:projekt_event, registration_enabled: true, max_attendees: nil) }
+
+    it "confirms the registrant and shows the form without capacity" do
+      login_as(create(:user, email: "anna@example.org"))
+
+      post projekt_event_projekt_event_registrations_path(projekt_event),
+           params: {
+             projekt_event_registration: {
+               first_name: "Anna", last_name: "Beispiel", email: "anna@example.org"
+             }
+           },
+           xhr: true
+
+      expect(projekt_event.projekt_event_registrations.last.status).to eq "confirmed"
+      expect(response.body).to include "registration-form-#{projekt_event.id}"
+      expect(response.body).not_to include "fa-users"
+    end
+  end
+
+  context "registration with an attendee limit" do
+    it "shows the remaining places" do
+      post projekt_event_projekt_event_registrations_path(projekt_event),
+           params: {
+             projekt_event_registration: {
+               first_name: "Anna", last_name: "Beispiel", email: "anna@example.org"
+             }
+           },
+           xhr: true
+
+      expect(response.body).to include "fa-users"
+      expect(response.body).to include "registration-form-#{projekt_event.id}"
+    end
   end
 end

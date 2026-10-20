@@ -92,7 +92,7 @@ Diese Felder werden je Sprache gespeichert (Spalte `locale`).
 | `municipal_plan_district_assignments` (`MunicipalPlan::DistrictAssignment`) | Betroffene Ortsteile. Verknüpft ein Vorhaben mit `RegisteredAddress::District`. Höchstens 4 je Vorhaben (`MunicipalPlan::MAX_DISTRICTS`). |
 | `municipal_plan_topic_assignments` (`MunicipalPlan::TopicAssignment`) | Schwerpunktmäßig betroffene Themen. |
 | `municipal_plan_topics` (`MunicipalPlan::Topic`) | Die Themen selbst. Feld `given_order` für die Reihenfolge, übersetzbarer `name` in `municipal_plan_topic_translations`. Ein Thema, das noch einem Vorhaben zugeordnet ist, kann nicht gelöscht werden. |
-| `municipal_plan_procedure_steps` (`MunicipalPlan::ProcedureStep`) | Die Verfahrensschritte. Die Administration pflegt sie im Verwaltungsbereich unter „Verfahrensschritte“, der Menüeintrag erscheint nur bei aktiver Einstellung `municipal_plans.procedure_steps`. Übersetzbarer `name` in `municipal_plan_procedure_step_translations`, so wie er öffentlich erscheint, z. B. „2.0 Frühzeitige Unterrichtung der Öffentlichkeit“. Feld `given_order` für die Reihenfolge, die per Drag & Drop festgelegt wird. Ein Verfahrensschritt, der noch einem Vorhaben zugeordnet ist, kann nicht gelöscht werden. |
+| `municipal_plan_procedure_steps` (`MunicipalPlan::ProcedureStep`) | Die Verfahrensschritte. Die Administration pflegt sie im Verwaltungsbereich unter „Verfahrensschritte“, der Menüeintrag erscheint nur bei aktiver Einstellung `municipal_plans.procedure_steps`. Übersetzbarer `name` in `municipal_plan_procedure_step_translations`, so wie er öffentlich erscheint, z. B. „2.0 Frühzeitige Unterrichtung der Öffentlichkeit“. Feld `given_order` für die Reihenfolge, die per Drag & Drop festgelegt wird. Ein Verfahrensschritt, der noch einem Vorhaben zugeordnet ist, kann nicht gelöscht werden. Eine Migration legt bei der Bereitstellung die sechs Verfahrensschritte nach Baugesetzbuch an (1.0 Einleitungsbeschluss bis 6.0 Rechtskraft), aber nur, wenn noch keiner existiert. Sie lassen sich danach wie alle anderen umbenennen, umsortieren oder löschen. |
 | `municipal_plan_links` (`MunicipalPlan::Link`) | Links und Dokumente: `title`, `url` (beide Pflicht) und `given_order`. |
 | `map_locations` | Kartenposition des Vorhabens, über das gemeinsame `Mappable`-Modul der Plattform. |
 | `municipal_plan_notices` (`MunicipalPlan::Notice`) | Hinweise aus der Öffentlichkeit: `name` (optional, höchstens 100 Zeichen), `email` (Pflicht, höchstens 255 Zeichen), `body` (Pflicht, höchstens 5000 Zeichen). Werden mit dem Vorhaben gelöscht. |
@@ -288,9 +288,11 @@ Vorhaben gelöscht werden.
 - **Navigation:** Für das Hauptmenü gibt es einen vordefinierten Eintrag
   (`NavbarItem`), der nur bei aktivem Modul erscheint.
 - **Verfahrensschritt:** Bei aktiver Einstellung `municipal_plans.procedure_steps`
-  zeigt die Detailseite unter „Auf einen Blick“ den Verfahrensschritt statt der
-  Versionsnummer, sofern einer gesetzt ist. Die Versionsnummer entfällt dann auch
-  im Kopfbereich und erscheint nur noch im Verwaltungsbereich.
+  zeigt die Detailseite unter „Auf einen Blick“ die Box „Legende
+  Verfahrensschritte“. Sie listet alle Verfahrensschritte in der festgelegten
+  Reihenfolge und hebt den aktuellen hervor. Ist kein Verfahrensschritt gesetzt,
+  entfällt die Box. Die Versionsnummer entfällt dann in „Auf einen Blick“ und im
+  Kopfbereich und erscheint nur noch im Verwaltungsbereich.
 
 Die REST-API liefert freigegebene Vorhaben nur lesend unter
 `/api/municipal_plans` und `/api/municipal_plans/:id` (beschrieben in
@@ -324,7 +326,7 @@ sind in einer neuen Instanz ausgeschaltet.
 | `process.municipal_plans` | Schaltet das Modul öffentlich ein. Ist sie aus, antworten alle öffentlichen Seiten und das Hinweisformular mit `403 Forbidden`, und der Menüeintrag und der Rückverweis in Projekten entfallen. Der Verwaltungsbereich bleibt unabhängig davon nutzbar. |
 | `municipal_plans.officers_see_all` | Die Sachbearbeitung sieht im Verwaltungsbereich alle Vorhaben statt nur der ihr zugeordneten und darf die redaktionelle Reihenfolge ändern. Bearbeiten darf sie weiterhin nur zugeordnete Vorhaben. |
 | `municipal_plans.auto_archive` | Vorhaben werden am hinterlegten Archivdatum automatisch archiviert (siehe [Archivieren](#archivieren)). |
-| `municipal_plans.procedure_steps` | „Verfahrensschritte verwenden“: Der Verwaltungsbereich zeigt die Seite „Verfahrensschritte“, das Formular bietet die dort gepflegten Schritte zur Auswahl an, und die öffentliche Detailseite zeigt den gewählten Verfahrensschritt statt der Versionsnummer (siehe [Öffentliche Seiten](#öffentliche-seiten)). Die Versionsnummer wird weiter gepflegt und erscheint nur noch im Verwaltungsbereich. Bereits gesetzte Verfahrensschritte bleiben beim Ausschalten gespeichert. |
+| `municipal_plans.procedure_steps` | „Verfahrensschritte verwenden“: Der Verwaltungsbereich zeigt die Seite „Verfahrensschritte“, das Formular bietet die dort gepflegten Schritte zur Auswahl an, und die öffentliche Detailseite zeigt die Box „Legende Verfahrensschritte“ statt der Versionsnummer (siehe [Öffentliche Seiten](#öffentliche-seiten)). Die Versionsnummer wird weiter gepflegt und erscheint nur noch im Verwaltungsbereich. Bereits gesetzte Verfahrensschritte bleiben beim Ausschalten gespeichert. |
 
 Die Administration schaltet sie im Verwaltungsbereich unter „Vorhabenliste →
 Einstellungen“ (`/adm/municipal_plans/settings`). Die Seite ist der
@@ -341,7 +343,8 @@ Export eines Altsystems (`MunicipalPlans::LegacyImport`). Den
 Verfahrensschritt leitet sie aus der Hauptziffer von `txt_versionsnummer` ab:
 Hauptziffer N ergibt den N-ten Verfahrensschritt in der festgelegten
 Reihenfolge, aus `2` oder `2.3` also den zweiten. Die Verfahrensschritte müssen
-deshalb vorher angelegt sein. Ist die Einstellung
+deshalb vorher angelegt sein. Die sechs Schritte nach Baugesetzbuch legt die
+Bereitstellung selbst an (siehe [Zugeordnete Daten](#zugeordnete-daten)). Ist die Einstellung
 `municipal_plans.procedure_steps` aktiv und noch kein Verfahrensschritt
 angelegt, bricht die Aufgabe mit einer Meldung ab, ohne etwas zu ändern. Ist
 das Feld leer oder gibt es keinen N-ten Schritt, bleibt der Verfahrensschritt

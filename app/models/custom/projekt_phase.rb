@@ -777,6 +777,9 @@ class ProjektPhase < ApplicationRecord
         return :phase_not_current if not_current?
       end
 
+      phase_state_problem = phase_state_permission_problem(location)
+      return phase_state_problem if phase_state_problem.present?
+
       return :guest_not_logged_in if guest_participation? && !user
       return if guest_participation? && !GUEST_WAIVER_EXEMPT_LOCATIONS.include?(location)
       return :not_logged_in if user.blank? || (user.guest? && !guest_participation?)
@@ -803,6 +806,10 @@ class ProjektPhase < ApplicationRecord
     end
 
     def phase_specific_permission_problems(user, location)
+      nil
+    end
+
+    def phase_state_permission_problem(location)
       nil
     end
 

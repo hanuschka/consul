@@ -128,9 +128,7 @@ class DeficiencyReportsController < ApplicationController
 
     if @deficiency_report.valid? && @deficiency_report.save
       @deficiency_report.assign_default_responsible
-      NotificationServices::NewDeficiencyReportNotifier.new(@deficiency_report.id).call
-      notify_responsible(@deficiency_report)
-      DeficiencyReportMailer.notify_author_about_submission(@deficiency_report).deliver_later
+      DeficiencyReports::SubmissionNotificationService.call(@deficiency_report)
       redirect_to deficiency_report_path(@deficiency_report), notice: t("custom.deficiency_reports.create.flash_success")
     else
       render :new
@@ -262,20 +260,5 @@ class DeficiencyReportsController < ApplicationController
 
   def resource_model
     DeficiencyReport
-  end
-
-  def notify_responsible(dr)
-    if dr.responsible.is_a?(DeficiencyReport::OfficerGroup) && dr.responsible.default_email.present?
-      DeficiencyReportMailer.notify_default_officer_group_email(dr).deliver_later
-    end
-
-    dr.responsible_officers.each do |officer|
-      if dr.email_officers_individually?
-        DeficiencyReportMailer.notify_officer(dr, officer).deliver_later
-        Activity.log(officer.user, "email", dr)
-      end
-
-      Notification.add(officer.user, dr)
-    end
   end
 end

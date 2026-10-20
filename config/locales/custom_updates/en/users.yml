@@ -20,6 +20,7 @@ en:
         verification_successfull: You were successfully verified with BundID.
         bund_id:
           verification_request_expired: Verification request expired. Please try again.
+          login_failed: Signing in with BundID failed. Please try again.
     user_page:
       filters:
         proposals: Proposals

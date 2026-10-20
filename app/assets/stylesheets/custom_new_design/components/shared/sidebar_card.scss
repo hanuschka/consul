@@ -437,6 +437,10 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 
   &:hover,
   &:focus-within {
+    .custom-content-block--toolbar-row {
+      display: flex;
+    }
+
     .custom-content-block--toolbar {
       // `display: flex` here, not only via `.custom-content-block-wrapper--inner:hover`
       // (_content_block_toolbar.scss): when the block is empty the body collapses
@@ -461,6 +465,10 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 
   // Im aktiven Edit-Mode immer sichtbar
   .custom-content-block-wrapper.-in-edit-mode {
+    .custom-content-block--toolbar-row {
+      display: flex;
+    }
+
     .custom-content-block--toolbar,
     .custom-content-block--toolbar-border {
       max-height: none;

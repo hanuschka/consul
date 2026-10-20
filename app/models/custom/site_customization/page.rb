@@ -1,6 +1,7 @@
 require_dependency Rails.root.join("app", "models", "site_customization", "page").to_s
 
 class SiteCustomization::Page < ApplicationRecord
+include MachineTranslatable
   include ActionView::Helpers::SanitizeHelper
 
   self.inheritance_column = nil
@@ -13,7 +14,7 @@ class SiteCustomization::Page < ApplicationRecord
 
   has_many :comments, through: :projekt
 
-  has_many :landing_projekts, class_name: 'Projekt', foreign_key: :landing_page_id, dependent: :nullify
+  has_many :landing_projekts, class_name: 'Projekt', foreign_key: :landing_page_id
   has_many :landing_page_manager_assignments, foreign_key: :page_id, dependent: :destroy
   has_many :landing_page_managers, through: :landing_page_manager_assignments
   has_many :navbar_items, foreign_key: :landing_page_id, dependent: :destroy
@@ -62,9 +63,11 @@ class SiteCustomization::Page < ApplicationRecord
   before_validation :normalize_subtitle
   validate :subtitle_within_limits
   before_save :capture_old_title
+  before_validation :force_published_for_projekt_page
   before_save :set_published_at
   after_update :sync_projekt_name
   after_update :sync_projekt_for_global_overview
+  before_destroy :release_landing_projekts
 
   scope :regular, -> {
     where(landing: false)
@@ -84,6 +87,13 @@ class SiteCustomization::Page < ApplicationRecord
 
   def published?
     status == 'published'
+  end
+
+  # A projekt's own page, as opposed to a landing page or a footer page. Its
+  # publish state is not an admin decision: see
+  # #force_published_for_projekt_page.
+  def projekt_page?
+    projekt_id.present? && !landing?
   end
 
   def comments_count
@@ -135,6 +145,17 @@ class SiteCustomization::Page < ApplicationRecord
     end
   end
 
+  # A projekt page is never a draft: whether the projekt is visible is decided
+  # by its own activation and visibility switches. An unpublished projekt page
+  # hides the projekt everywhere while every visible setting says it is public,
+  # so no path may leave one behind. Landing and footer pages keep their own
+  # draft/published state.
+  def force_published_for_projekt_page
+    return unless projekt_page?
+
+    self.status = "published"
+  end
+
   def set_published_at
     if status_changed? && status == 'published'
       self.published_at = Time.current
@@ -172,5 +193,9 @@ class SiteCustomization::Page < ApplicationRecord
 
   def sync_projekt_for_global_overview
     projekt&.sync_for_global_overview_from_page_changes(saved_changes)
+  end
+
+  def release_landing_projekts
+    Projekt.with_hidden.where(landing_page_id: id).update_all(landing_page_id: nil)
   end
 end

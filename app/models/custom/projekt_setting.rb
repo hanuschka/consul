@@ -99,8 +99,11 @@ class ProjektSetting < ApplicationRecord
     value.present?
   end
 
+  # Nil rather than "translation missing", for the same reason as
+  # ProjektPhaseSetting#translated_name: a caller that reads a label to answer a
+  # question needs to know the label is absent.
   def short_name
-    I18n.t("custom.settings.#{self.key}")
+    I18n.t("custom.settings.#{key}", default: nil)
   end
 
   def touch_projekt_content_updated_at

@@ -12,20 +12,25 @@ module Questionable
     votation_type.nil? || votation_type.unique?
   end
 
-  def find_or_initialize_user_answer(user, title)
-    answer = answers.find_or_initialize_by(find_by_attributes(user, title))
-    answer.answer = title
+  def find_or_initialize_user_answer(user, question_answer)
+    answer = answers.find_or_initialize_by(find_by_attributes(user, question_answer))
+
+    if answer.question_answer_id != question_answer&.id
+      answer.question_answer = question_answer
+      answer.answer = question_answer&.title
+    end
+
     answer
   end
 
   private
 
-    def find_by_attributes(user, title)
+    def find_by_attributes(user, question_answer)
       case vote_type
       when "unique", nil
         { author: user }
       when "multiple"
-        { author: user, answer: title }
+        { author: user, question_answer_id: question_answer&.id }
       end
     end
 end

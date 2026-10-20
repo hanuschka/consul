@@ -4,8 +4,18 @@ module Budgets
   class InvestmentsController < ApplicationController
     include GuestUsers
     include OnBehalfOfAccountLinking
+    include ::SimilarContributionsCheck
 
     respond_to :js, only: [:stats]
+
+    # The core controller names this resource, so a nameless skip never matches
+    # it and CanCan keeps loading the investment through the default scope --
+    # which hides the citizen's own draft and turns both actions into a 404.
+    skip_load_and_authorize_resource :investment,
+                                     only: [:similar_contributions_status, :publish_draft]
+    skip_authorization_check only: [:similar_contributions_status, :publish_draft]
+    before_action :load_own_similarity_draft,
+                  only: [:similar_contributions_status, :publish_draft]
 
     def new
       if @budget.projekt_phase.permission_problem(current_user, location: :new_button_component)
@@ -23,18 +33,31 @@ module Budgets
       @investment.author = current_user
       @investment.heading = @budget.heading
 
-      if @investment.valid? && link_on_behalf_of_account(@investment) && @investment.save
-        Mailer.budget_investment_created(@investment).deliver_later
-        NotificationServices::NewBudgetInvestmentNotifier.call(@investment.id) #custom
-        redirect_to budget_investment_path(@budget, @investment),
-                    notice: t("flash.actions.create.budget_investment")
-      else
-        if @budget.projekt.present?
-          resolve_landing_page_for_projekt(@budget.projekt)
-        end
-
-        render :new
+      if @investment.invalid? || !link_on_behalf_of_account(@investment)
+        return respond_with_invalid_investment
       end
+
+      if similar_contributions_check_requested?(@budget.projekt_phase)
+        return respond_with_invalid_investment if !start_similar_contributions_check(@investment)
+
+        return respond_with_started_check
+      end
+
+      return respond_with_invalid_investment if !@investment.save
+
+      publish_checked_investment
+
+      respond_with_published_investment
+    end
+
+    def similar_contributions_status
+      render json: similar_contributions_status_payload(@investment)
+    end
+
+    def publish_draft
+      publish_checked_investment
+
+      respond_with_published_investment
     end
 
     def update
@@ -68,6 +91,67 @@ module Budgets
     end
 
     private
+
+      # The draft default scope hides unpublished contributions, so the citizen's
+      # own in-flight draft has to be looked up past it.
+      def load_own_similarity_draft
+        @investment = @budget.investments
+          .unscope(where: :draft)
+          .where(author: current_user)
+          .find(params[:id])
+      end
+
+      def publish_checked_investment
+        ::UserResources::PublishService.call(@investment)
+      end
+
+      def respond_with_invalid_investment
+        respond_to do |format|
+          format.html { render_new_form }
+          format.json do
+            render json: similar_contributions_invalid_payload(@investment),
+                   status: :unprocessable_entity
+          end
+        end
+      end
+
+      def respond_with_started_check
+        respond_to do |format|
+          format.html { render_new_form }
+          format.json do
+            render json: similar_contributions_check_started_payload(
+              @investment,
+              publish_url: publish_draft_budget_investment_path(@budget, @investment)
+            )
+          end
+        end
+      end
+
+      def respond_with_published_investment
+        respond_to do |format|
+          format.html do
+            redirect_to budget_investment_path(@budget, @investment),
+                        notice: t("flash.actions.create.budget_investment")
+          end
+
+          format.json do
+            flash[:notice] = t("flash.actions.create.budget_investment")
+
+            render json: {
+              status: "published",
+              redirect_url: budget_investment_path(@budget, @investment)
+            }
+          end
+        end
+      end
+
+      def render_new_form
+        if @budget.projekt.present?
+          resolve_landing_page_for_projekt(@budget.projekt)
+        end
+
+        render :new
+      end
 
       def investment_params
         attributes = [:heading_id, :tag_list, :organization_name, :location, :on_behalf_of,

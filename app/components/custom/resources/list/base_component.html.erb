@@ -1,4 +1,4 @@
-<div class="resources-list js-resources-list <%= class_names %>">
+<div class="resources-list js-resources-list <%= class_names %>"<% if page_specific_view_cookie? %> data-view-cookie="<%= @view_cookie %>"<% end %>>
   <% if @title.present? %>
     <h2 class="resources-list--title">
       <%= @title %>

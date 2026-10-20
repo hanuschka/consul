@@ -41,6 +41,28 @@ describe MunicipalPlans::ChangeSummaryService do
     expect(change_for("contact_name").after).to eq("Lena Wolf")
   end
 
+  it "reports a changed Verfahrensschritt by its names" do
+    first_step = create(:municipal_plan_procedure_step, name: "1.0 Einleitungsbeschluss")
+    second_step = create(:municipal_plan_procedure_step, name: "2.0 Frühzeitige Unterrichtung")
+    plan.update!(procedure_step: first_step)
+    copy.update!(procedure_step: second_step)
+
+    change = change_for("procedure_step")
+
+    expect(change.kind).to eq(:text)
+    expect(change.before).to eq("1.0 Einleitungsbeschluss")
+    expect(change.after).to eq("2.0 Frühzeitige Unterrichtung")
+    expect(change.label).to eq(MunicipalPlan.human_attribute_name(:procedure_step))
+  end
+
+  it "reports a removed Verfahrensschritt" do
+    plan.update!(procedure_step: create(:municipal_plan_procedure_step, name: "1.0 Einleitungsbeschluss"))
+    copy.update!(procedure_step: nil)
+
+    expect(change_for("procedure_step").before).to eq("1.0 Einleitungsbeschluss")
+    expect(change_for("procedure_step").after).to be_nil
+  end
+
   it "reports a Beteiligung flag as a boolean" do
     copy.update!(formal_participation: !plan.formal_participation)
 

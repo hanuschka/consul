@@ -365,6 +365,9 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     # Never without a word either. The assistant's reply is what says why the question
     # comes again (SystemPromptService#ballot_line asks it to); a turn that failed
     # wrote none, so a fixed line says it instead of the question arriving alone.
+    #
+    # Whatsapp::BallotResume reads the same conditions during the turn to send the
+    # reply in words alone, so a condition changed here changes there too.
     def resume_ballot(poll_id)
       return if poll_id.blank?
       return if @opt_out_deferred

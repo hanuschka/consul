@@ -148,8 +148,8 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     # The phase is kept so the citizen's next idea goes to the same one; everything
     # about the draft is dropped, because it is a published record now and nothing
     # about it is still a draft.
-    # The phase id is reported so that another idea, once asked for, can be offered
-    # in the same phase again. So it is read before complete_draft! drops it.
+    # The phase id is read before complete_draft! drops it, for the pill under the
+    # reply that offers another idea in the same phase (Whatsapp::StatePills).
     def published_answer(resource)
       url = ::Whatsapp::PublishedResourceUrl.call(resource)
       awaiting_review = resource.is_a?(::Proposal) && !resource.admin_accepted?
@@ -160,7 +160,7 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
       conversation.complete_draft!
       conversation.note_submission_completed!
 
-      ::Whatsapp::StatePills.focus_submission_completed
+      ::Whatsapp::StatePills.focus_submission_completed(projekt_phase_id)
 
       {
         completed: true,
@@ -196,8 +196,9 @@ class Ai::Tools::WhatsappAiAssistant::PublishDraft < Ai::Tools::WhatsappAiAssist
     # The buttons are Whatsapp::StatePills' rather than the model's, so the sentence
     # is told which three they are: it offered another idea in words while the slots
     # under it carried something else.
-    NEXT_STEPS = "Three buttons are put under your reply for you: submitting another idea, their " \
-                 "own contributions, and the projekts. Offer exactly those in a short line, add " \
+    NEXT_STEPS = "Three buttons are put under your reply for you: submitting another idea, in " \
+                 "the same phase where it takes one, the projekts, and their own " \
+                 "contributions. Offer exactly those in a short line, add " \
                  "no buttons of your own, and do not invite them to support or comment on the " \
                  "contribution they just submitted.".freeze
 

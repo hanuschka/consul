@@ -20,7 +20,7 @@ module Whatsapp::ContributionFacts
     projekt = contribution.projekt_phase&.projekt
     written_by_you = written_by?(contribution, user)
     supported_by_you = supported_by?(contribution, user)
-    own_unsupported_proposal = written_by_you && supported_by_you == false
+    own_unsupported_proposal = own_unsupported_proposal?(contribution, user)
 
     {
       contribution_id: contribution.id,
@@ -54,6 +54,19 @@ module Whatsapp::ContributionFacts
     return if !contribution.is_a?(::Proposal) || user.blank?
 
     contribution.voted_up_by?(user)
+  end
+
+  # The rule #call reports by, for draft_proposal's similar contributions, so the
+  # same proposal offers the same pill whichever tool named it.
+  def offered_support_action_id(contribution, user)
+    return if own_unsupported_proposal?(contribution, user)
+
+    support_action_id(contribution)
+  end
+
+  # Authorship first, which reads no vote: only the citizen's own proposal asks.
+  def own_unsupported_proposal?(contribution, user)
+    written_by?(contribution, user) == true && supported_by?(contribution, user) == false
   end
 
   # Handed over rather than left for the model to compose, the way draft_proposal

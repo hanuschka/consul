@@ -53,6 +53,25 @@ describe MunicipalPlansQuery do
     end
   end
 
+  describe "Gesamtes Stadtgebiet" do
+    let!(:in_zentrum) { plan_with(districts: [zentrum], topics: [bauen]) }
+    let!(:city_wide) { create(:municipal_plan, :published, :city_wide, responsible: officer) }
+
+    it "finds only the Vorhaben for the whole city under its own filter" do
+      expect(resolve(districts: [described_class::CITY_WIDE])).to eq([city_wide])
+    end
+
+    it "leaves them out of the filter for a single Ortsteil" do
+      expect(resolve(districts: [zentrum.id])).to eq([in_zentrum])
+    end
+
+    it "combines with an Ortsteil like any other Ortsteil" do
+      result = resolve(districts: [zentrum.id, described_class::CITY_WIDE])
+
+      expect(result).to match_array([in_zentrum, city_wide])
+    end
+  end
+
   describe "participation" do
     let!(:formal_only) { plan_with(districts: [zentrum], topics: [bauen], formal: true) }
     let!(:informal_only) { plan_with(districts: [zentrum], topics: [bauen], informal: true) }

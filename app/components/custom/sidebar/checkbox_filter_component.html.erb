@@ -9,13 +9,14 @@
 
           <ul data-identifier="<%= @identifier %>">
             <% @options.each do |option| %>
-              <li class="<%= "selected-option" if checked?(option[1]) %>">
+              <li class="<%= option_class(option) %>">
                 <%= label_tag "#{@id_prefix}_#{option[1]}" do %>
                   <%= check_box_tag "#{@identifier}[]", option[1], checked?(option[1]),
                         id: "#{@id_prefix}_#{option[1]}", class: "js-sidebar-checkbox-filter" %>
                   <%= option[0] %>
                   <span class="checkmark"></span>
                 <% end %>
+                <%= render option[2] if option[2] %>
               </li>
             <% end %>
           </ul>

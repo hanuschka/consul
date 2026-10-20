@@ -84,6 +84,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
 
     if @deficiency_report.valid? && link_on_behalf_of_account(@deficiency_report) && @deficiency_report.save
       @deficiency_report.assign_default_responsible
+      DeficiencyReports::SubmissionNotificationService.call(@deficiency_report)
       redirect_to adm_deficiency_reports_deficiency_report_path(@deficiency_report),
         notice: create_notice(ai_result)
     else
@@ -314,7 +315,10 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     if @deficiency_report.update(params.require(:deficiency_report).permit(:official_answer))
       answer_now = @deficiency_report.official_answer.presence
 
-      notify_watchers_about_change(@deficiency_report) if answer_now != answer_was
+      if answer_now != answer_was
+        notify_watchers_about_change(@deficiency_report)
+        notify_reporter_about_official_answer(@deficiency_report) if answer_now.present?
+      end
 
       if documents.any? && !@deficiency_report.official_answer_documents.attach(documents)
         flash.now[:attachment_alert] = @deficiency_report.errors.full_messages.first
@@ -445,6 +449,12 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
       %w[visible hidden].map do |state|
         [state, t("adm.deficiency_reports.deficiency_reports.index.hidden_state.#{state}")]
       end
+    end
+
+    def notify_reporter_about_official_answer(dr)
+      return unless dr.reporter_mailable?
+
+      DeficiencyReportMailer.notify_author_about_official_answer(dr).deliver_later
     end
 
     def notify_new_officer(dr)

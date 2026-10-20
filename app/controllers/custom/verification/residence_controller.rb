@@ -21,23 +21,10 @@ class Verification::ResidenceController < ApplicationController
     )
     process_temp_attributes_for(@residence)
 
-    last_budget = Budget.joins(projekt_phase: { projekt: :page })
-      .where(budgets: { projekt_phases: { projekts: { site_customization_pages: { status: "published" }}}}).last
-    last_budget_link = nil
-
-    if last_budget.present?
-      last_budget_link = page_path(last_budget.projekt.page.slug,
-                                   selected_phase_id: last_budget.projekt_phase.id,
-                                   anchor: "filter-subnav")
-    end
-
     if @residence.save
       NotificationServices::NewManualVerificationRequestNotifier.call(current_user.id) if Setting["feature.melderegister"].blank?
-      if last_budget_link.present?
-        redirect_to last_budget_link, notice: t("verification.residence.create.flash.success")
-      else
-        redirect_to account_path, notice: t("custom.verification.residence.create.flash.success_manual")
-      end
+      redirect_to session.delete(:verification_return_path).presence || account_path,
+                  notice: t("custom.verification.residence.create.flash.success_manual")
     else
       if Setting["feature.melderegister"].present? && @residence.user.verified?
         NotificationServices::UserReverificationFailedNotifier.call(@residence.user.id)

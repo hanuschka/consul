@@ -11,9 +11,12 @@ class Poll::Question::Answer::Stats < Poll::Stats
 
     def participant_user_ids
       if question_answer.open_answer?
-        question_answer.question.answers.where(answer: question_answer.title).where.not(open_answer_text: ["", nil]).pluck(:author_id)
+        question_answer.question.answers
+          .where(question_answer_id: question_answer.id)
+          .where.not(open_answer_text: ["", nil])
+          .pluck(:author_id)
       else
-        question_answer.question.answers.where(answer: question_answer.title).pluck(:author_id)
+        question_answer.question.answers.where(question_answer_id: question_answer.id).pluck(:author_id)
       end
     end
 

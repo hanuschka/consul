@@ -13,7 +13,7 @@
       <div class="flex-layout">
         <div class="main-column">
           <h1 class="user-resources-form--title">
-            <%= Setting["deficiency_reports.new_form_title"].presence || t("custom.deficiency_reports.new.start_new") %>
+            <%= setting_text("deficiency_reports.new_form_title").presence || t("custom.deficiency_reports.new.start_new") %>
           </h1>
 
           <div class="hide-on-mobile">
@@ -34,7 +34,7 @@
                 <%= translations_form.text_area :title,
                   label: false,
                   class: "user-resources-form--banner-editor-title js-user-resource-form-title",
-                  placeholder: Setting["deficiency_reports.new_form_title_placeholder"].presence || t("custom.deficiency_reports.form.title_placeholder"),
+                  placeholder: setting_text("deficiency_reports.new_form_title_placeholder").presence || t("custom.deficiency_reports.form.title_placeholder"),
                   autocomplete: "off" %>
               </div>
 
@@ -125,16 +125,6 @@
             <% end %>
           <% end %>
 
-          <% if translations_interface_enabled? %>
-            <%= render Shared::SidebarCardComponent.new(
-                          title: t("custom.deficiency_reports.form.languages.title"),
-                          description: t("custom.deficiency_reports.form.languages.description"),
-                          icon_name: "language"
-                       ) do |c| %>
-                <%= render "shared/globalize_locales", resource: deficiency_report %>
-            <% end %>
-          <% end %>
-
           <%= f.invisible_captcha :subtitle %>
         </aside>
       </div>
@@ -181,13 +171,7 @@
 <% else %>
   <main class="deficiency-report-new">
     <%= back_link_to deficiency_reports_path %>
-    <%= header do %>
-      <% if feature?('help_page') %>
-        <%= link_to help_path(anchor: "deficiency_reports"), title: t("shared.target_blank"), target: "_blank" do %>
-          <%= t("custom.deficiency_reports.new.more_info") %>
-        <% end %>
-      <% end %>
-    <% end %>
+    <%= header %>
 
     <aside class="margin-bottom">
       <%= helpers.render_custom_block "deficiency_reports_creation_recommendations" %>

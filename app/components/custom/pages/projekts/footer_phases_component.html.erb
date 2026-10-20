@@ -17,8 +17,8 @@
       <div class='footer-phases-filter-subnav'>
         <% if helpers.show_admin_controls_for_projekt?(@projekt) %>
           <%= studio_rich_tooltip(
-            title: "Phase hinzufügen",
-            text: "Öffnet die Phasenverwaltung in einem neuen Tab, um diesem Projekt eine weitere Phase hinzuzufügen.",
+            title: t("custom.studio.add_phase.title"),
+            text: t("custom.studio.add_phase.text"),
             delay: 1200
           ) do %>
             <%= link_to(phases_adm_projekts_projekt_path(@projekt), class: "page-subnav-tab projekt-footer-phase-tab projekt-footer-phase-tab--add-new js-projekt-footer-phase-tab--add-new", target: "_blank", tabindex: "-1") do %>

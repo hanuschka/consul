@@ -1,5 +1,9 @@
 @use "chat";
 @use "list";
+@use "review";
+@use "source_form";
+@use "source_picker";
+@use "source_text";
 
 .adm-page-title-row--import {
   margin: 0.8rem 0 0.5rem;

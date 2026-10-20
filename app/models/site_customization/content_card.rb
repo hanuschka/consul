@@ -31,6 +31,7 @@ class SiteCustomization::ContentCard < ApplicationRecord
 
   translates :title, touch: true
   include Globalizable
+  include MachineTranslatable
 
   scope :active, -> { where(active: true).includes(:translations) }
   scope :homepage, -> { where(landing_page_id: nil) }

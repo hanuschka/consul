@@ -1,6 +1,7 @@
 module Adm
   class FeaturesController < Adm::BaseController
     GENERAL_SETTING_KEYS = %w[
+      extended_feature.general.language_switcher_in_menu
       extended_feature.general.enable_google_translate
       extended_feature.general.show_guest_login_links
     ].freeze
@@ -41,7 +42,8 @@ module Adm
     private
 
       def displayed_setting_keys
-        GENERAL_SETTING_KEYS + GENERAL_TEXT_SETTING_KEYS + OAUTH_LOGIN_SETTING_KEYS + KOBIL_SETTING_KEYS
+        GENERAL_SETTING_KEYS + GENERAL_TEXT_SETTING_KEYS + OAUTH_LOGIN_SETTING_KEYS +
+          KOBIL_SETTING_KEYS
       end
   end
 end

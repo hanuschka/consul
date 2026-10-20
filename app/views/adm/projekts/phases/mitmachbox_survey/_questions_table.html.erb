@@ -1,9 +1,15 @@
 <% sorted_questions = questions.sort_by { |question| question["position"].to_i } %>
+<% questions_by_id = questions.index_by { |question| question["id"] } %>
 
 <div class="kern-table-responsive mb-5" tabindex="0">
   <table class="kern-table">
     <thead class="kern-table__head">
       <tr class="kern-table__row">
+        <% if editable %>
+          <th scope="col" class="kern-table__header">
+            <span class="kern-sr-only"><%= t("adm.projekts.phases.mitmachbox_survey.table.order") %></span>
+          </th>
+        <% end %>
         <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.prompt") %></th>
         <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.question_type") %></th>
         <th scope="col" class="kern-table__header"><%= t("adm.projekts.phases.mitmachbox_survey.table.required") %></th>
@@ -14,10 +20,28 @@
       </tr>
     </thead>
 
-    <tbody class="kern-table__body">
+    <tbody class="kern-table__body"<% if editable %> data-controller="sortable" data-sortable-url-value="<%= reorder_adm_projekts_phase_mitmachbox_questions_path(@projekt_phase) %>"<% end %>>
       <% sorted_questions.each_with_index do |question, index| %>
-        <tr class="kern-table__row">
-          <th scope="row" class="kern-table__header"><%= question["prompt"] %></th>
+        <tr class="kern-table__row"<% if editable %> data-sortable-id="<%= question["id"] %>"<% end %>>
+          <% if editable %>
+            <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+              <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+            </td>
+          <% end %>
+          <% condition_source = questions_by_id[question.dig("condition", "question_id")] %>
+          <% condition_labels = (condition_source&.dig("options") || [])
+                                  .select { |option| Array(question.dig("condition", "option_ids")).include?(option["id"]) }
+                                  .map { |option| option["label"] } %>
+          <th scope="row" class="kern-table__header">
+            <%= question["prompt"] %>
+            <% if condition_labels.any? %>
+              <span class="d-block kern-body kern-body--small">
+                <%= t("adm.projekts.phases.mitmachbox_survey.table.condition_summary",
+                      question: condition_source["prompt"],
+                      options: condition_labels.join(t("adm.projekts.phases.mitmachbox_survey.table.condition_options_connector"))) %>
+              </span>
+            <% end %>
+          </th>
           <td class="kern-table__cell">
             <%= t("adm.projekts.mitmachbox.questions.question_types.#{question["question_type"]}") %>
           </td>

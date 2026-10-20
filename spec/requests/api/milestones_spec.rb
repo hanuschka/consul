@@ -36,7 +36,7 @@ let(:existing_milestone_phase) { create_projekt_phase('ProjektPhase::MilestonePh
       security [bearer_auth: []]
       description "Retrieve all milestones for a projekt phase. Milestones track project progress over time and include status updates.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of milestones per page (**default:** 100, max: 500)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
 
       response '200', 'milestones found and returned' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }

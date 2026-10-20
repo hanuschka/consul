@@ -1,6 +1,8 @@
 en:
   activerecord:
     errors:
+      messages:
+        map_features_outside_marked_areas: This entry does not lie entirely inside the permitted area.
       models:
         map_layer:
           attributes:

@@ -155,6 +155,10 @@ de:
       title: Statusänderung einer Mangelmeldung
       description: Wird an den Verfasser gesendet, sobald ein Administrator oder Sachbearbeiter den Status seiner Mangelmeldung ändert.
       recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.
+    notify_author_about_official_answer:
+      title: Offizielle Antwort auf ein Anliegen
+      description: Wird an die meldende Person gesendet, sobald die offizielle Antwort auf ihr Anliegen hinzugefügt oder geändert wird.
+      recipient: Die Person, die das Anliegen gemeldet hat.
     notify_officer:
       title: Mangelmeldung einem Sachbearbeiter zugewiesen
       description: Wird an einen Sachbearbeiter gesendet, sobald ihm eine Mangelmeldung zugewiesen wird – automatisch bei der Einreichung oder durch manuelle (Neu-)Zuweisung im Backend.

@@ -1,6 +1,6 @@
 <%# Always emits data-adm-column-selector-target="table". %>
 <%# Without the wrapping controller this attribute is inert, which keeps the template branch-free. %>
-<%= turbo_frame_tag turbo_frame_id do %>
+<%= turbo_frame_tag turbo_frame_id, data: { controller: "adm-list-state", action: "turbo:frame-load->adm-list-state#remember turbo:before-frame-render->adm-list-state#beforeRender turbo:fetch-request-error->adm-list-state#reveal turbo:frame-missing->adm-list-state#reveal turbo:submit-start@document->adm-list-state#submitStarted turbo:submit-end@document->adm-list-state#submitEnded turbo:before-render@document->adm-list-state#carryOver" } do %>
   <% if column_selector? %>
     <div data-controller="adm-column-selector"
          data-adm-column-selector-storage-key-value="<%= column_selector[:storage_key] %>"

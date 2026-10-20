@@ -4,7 +4,7 @@
     padding-top: 30px;
 
     @media screen and (max-width: $big-tablet-viewport-start) {
-      padding: 0 $mobile-side-padding;
+      padding: 20px $mobile-side-padding 0;
     }
   }
 

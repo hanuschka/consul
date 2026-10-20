@@ -22,6 +22,10 @@ de:
           subject: Statusänderung Ihres Mangels
           hi: Hallo
           p1: der Status des von Ihnen eingereichten Mangels wurde geändert.
+        notify_author_about_official_answer:
+          subject: Offizielle Antwort auf Ihr Anliegen
+          hi: "Hallo %{username},"
+          p1: "auf Ihr Anliegen gibt es eine offizielle Antwort:"
         notify_officer:
           subject: Neue Meldung %{identifier}
           hi: Liebe/r Sachbearbeiter*in,

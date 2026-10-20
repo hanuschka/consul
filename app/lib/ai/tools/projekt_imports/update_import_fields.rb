@@ -4,7 +4,7 @@ class Ai::Tools::ProjektImports::UpdateImportFields < Ai::Tools::ProjektImports:
               "it keeps its stored value. To clear a text field send an empty string, " \
               "not null. To clear a list send an empty array."
 
-  params Ai::Tools::ProjektImports::EditableFieldsParamSchema.new
+  parameters Ai::Tools::ProjektImports::EditableFieldsParamSchema.new
 
   AVAILABLE_VALUES_LIMIT = 100
 

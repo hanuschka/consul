@@ -68,7 +68,8 @@
 
     <% c.with_body do %>
       <% @proposals.each do |proposal| %>
-        <%= render "adm/projekts/phases/proposals/proposal", proposal: proposal, projekt_phase: @projekt_phase %>
+        <%= render "adm/projekts/phases/proposals/proposal", proposal: proposal, projekt_phase: @projekt_phase,
+              similar_contributions_counts: @similar_contributions_counts %>
       <% end %>
     <% end %>
   <% end %>

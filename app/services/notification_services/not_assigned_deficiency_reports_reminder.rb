@@ -9,7 +9,6 @@ module NotificationServices
 
       users_to_notify.each do |user|
         NotificationServiceMailer.not_assigned_deficiency_reports(user.id, reports_with_overdue_assignment_ids).deliver_later
-        Activity.log(user, "email", @deficiency_report)
       end
     end
 
@@ -29,8 +28,9 @@ module NotificationServices
       end
 
       def reports_with_overdue_assignment_ids
-        DeficiencyReport.not_assigned
-          .where(assigned_at: @threshold_date.midnight..@threshold_date.end_of_day)
+        @reports_with_overdue_assignment_ids ||= DeficiencyReport.not_assigned
+          .where("COALESCE(deficiency_reports.assigned_at, deficiency_reports.created_at) BETWEEN ? AND ?",
+                 @threshold_date.beginning_of_day, @threshold_date.end_of_day)
           .ids
       end
   end

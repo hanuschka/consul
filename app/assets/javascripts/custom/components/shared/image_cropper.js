@@ -8,6 +8,8 @@
 
     initialize: function() {
       this.boundModalClose = this.handleModalClose.bind(this);
+      this.boundSelectionChange = this.handleSelectionChange.bind(this);
+      this.boundImageTransform = this.handleImageTransform.bind(this);
       this.reset();
       this.bindEvents();
     },
@@ -33,36 +35,152 @@
     },
 
     loadImageIntoModal: function(file) {
-      const image = this.getImageElement();
-
       this.revokeObjectUrl();
       this.objectUrl = URL.createObjectURL(file);
-      image.src = this.objectUrl;
 
       this.bindModalCloseHandler();
       App.SharedModal.open(this.MODAL_ID);
-      this.initCropper(image);
+      this.startCropper();
     },
 
-    // Cropper.js must initialize after the dialog is visible, otherwise it
-    // measures a zero-sized container and the crop box never appears.
-    initCropper: function(image) {
-      this.destroyCropper();
-      this.cropper = new Cropper(image, {
-        aspectRatio: this.aspectRatio,
-        viewMode: 1,
-        autoCropArea: 1,
-        background: false,
-        responsive: true
-      });
+    // The <cropper-*> elements measure themselves against their container, so
+    // the source is only assigned after the dialog is visible — otherwise the
+    // image is laid out inside a zero-sized canvas.
+    startCropper: function() {
+      const elements = this.getCropperElements();
+      const selection = elements.selection;
+
+      selection.aspectRatio = this.aspectRatio;
+      elements.image.src = this.objectUrl;
+
+      elements.image.$ready().then(function(source) {
+        if (this.settled) return;
+
+        this.matchCanvasToImage(elements.canvas, source);
+        elements.image.$center("contain");
+        this.selectWholeImage(elements);
+        this.bindCropperHandlers(elements);
+      }.bind(this)).catch(function() {
+        this.dismiss();
+      }.bind(this));
+    },
+
+    // Without this the canvas keeps its declared ratio and `contain` letterboxes
+    // the image, which the shade then paints as grey bars along two edges.
+    matchCanvasToImage: function(canvas, source) {
+      canvas.style.setProperty(
+        "--image-cropper-canvas-ratio",
+        source.naturalWidth / source.naturalHeight
+      );
+    },
+
+    bindCropperHandlers: function(elements) {
+      elements.selection.addEventListener("change", this.boundSelectionChange);
+      elements.image.addEventListener("transform", this.boundImageTransform);
+    },
+
+    unbindCropperHandlers: function() {
+      const elements = this.getCropperElements();
+
+      elements.selection.removeEventListener("change", this.boundSelectionChange);
+      elements.image.removeEventListener("transform", this.boundImageTransform);
+    },
+
+    // Replaces v1's `viewMode: 1`: v2 lets the selection roam the whole canvas,
+    // so a crop dragged past the image would bake transparent padding into the
+    // output file. A 1px tolerance absorbs the rounding $change applies.
+    handleSelectionChange: function(event) {
+      const bounds = this.imageBounds();
+      const detail = event.detail;
+
+      if (!bounds) return;
+
+      if (detail.x < bounds.left - 1 ||
+          detail.y < bounds.top - 1 ||
+          detail.x + detail.width > bounds.left + bounds.width + 1 ||
+          detail.y + detail.height > bounds.top + bounds.height + 1) {
+        event.preventDefault();
+      }
+    },
+
+    // Panning or zooming moves the image out from under the selection, which
+    // the change guard above cannot see. Re-fit once the new transform has
+    // been applied.
+    handleImageTransform: function() {
+      window.requestAnimationFrame(function() {
+        if (this.settled) return;
+
+        this.shrinkSelectionIntoImage(this.getCropperElements());
+      }.bind(this));
+    },
+
+    selectWholeImage: function(elements) {
+      const bounds = this.imageBounds();
+
+      if (!bounds) return;
+
+      const size = this.fitToAspectRatio(bounds.width, bounds.height);
+      const x = bounds.left + ((bounds.width - size.width) / 2);
+      const y = bounds.top + ((bounds.height - size.height) / 2);
+
+      elements.selection.$change(x, y, size.width, size.height);
+    },
+
+    shrinkSelectionIntoImage: function(elements) {
+      const bounds = this.imageBounds();
+      const selection = elements.selection;
+
+      if (!bounds) return;
+
+      const size = this.fitToAspectRatio(
+        Math.min(selection.width, bounds.width),
+        Math.min(selection.height, bounds.height)
+      );
+      const x = this.clamp(selection.x, bounds.left, bounds.left + bounds.width - size.width);
+      const y = this.clamp(selection.y, bounds.top, bounds.top + bounds.height - size.height);
+
+      selection.$change(x, y, size.width, size.height);
+    },
+
+    fitToAspectRatio: function(width, height) {
+      if (!this.aspectRatio || !isFinite(this.aspectRatio)) return { width: width, height: height };
+
+      if (height * this.aspectRatio > width) return { width: width, height: width / this.aspectRatio };
+
+      return { width: height * this.aspectRatio, height: height };
+    },
+
+    // The image rect in canvas coordinates — the coordinate space the
+    // selection's x/y/width/height live in.
+    imageBounds: function() {
+      const elements = this.getCropperElements();
+      const canvasRect = elements.canvas.getBoundingClientRect();
+      const imageRect = elements.image.getBoundingClientRect();
+
+      if (!imageRect.width || !imageRect.height) return null;
+
+      return {
+        left: imageRect.left - canvasRect.left,
+        top: imageRect.top - canvasRect.top,
+        width: imageRect.width,
+        height: imageRect.height
+      };
     },
 
     handleConfirm: function() {
       if (this.settled) return;
-      if (!this.cropper) return;
 
-      const canvas = this.cropper.getCroppedCanvas(this.canvasOptions());
-      canvas.toBlob(this.handleCroppedBlob.bind(this), this.outputType(), this.JPEG_QUALITY);
+      const selection = this.getCropperElements().selection;
+
+      if (!selection.width || !selection.height) return;
+
+      selection.$toCanvas(this.canvasOptions(selection))
+        .then(function(canvas) {
+          canvas.toBlob(this.handleCroppedBlob.bind(this), this.outputType(), this.JPEG_QUALITY);
+        }.bind(this))
+        .catch(function() {
+          this.dismiss();
+        }.bind(this));
     },
 
     // Fires onConfirm directly from the confirm-button chain — NOT via the
@@ -103,7 +221,7 @@
     settle: function() {
       this.settled = true;
 
-      this.destroyCropper();
+      this.teardownCropper();
       this.revokeObjectUrl();
       this.closeModal();
 
@@ -128,25 +246,39 @@
       modal.addEventListener("close", this.boundModalClose);
     },
 
-    canvasOptions: function() {
+    // $toCanvas sizes the output from the selection's on-screen size, so the
+    // displayed scale has to be divided out to get back to source pixels.
+    // Only the cap is passed on, since $toCanvas has no max-size mode and
+    // would otherwise upscale a small crop.
+    canvasOptions: function(selection) {
+      const transform = this.getCropperElements().image.$getTransform();
+      const scale = Math.sqrt((transform[0] * transform[0]) + (transform[1] * transform[1])) || 1;
+      const sourceWidth = selection.width / scale;
+      const sourceHeight = selection.height / scale;
+      const cap = Math.min(1, this.OUTPUT_MAX_DIMENSION / Math.max(sourceWidth, sourceHeight));
+
       return {
-        maxWidth: this.OUTPUT_MAX_DIMENSION,
-        maxHeight: this.OUTPUT_MAX_DIMENSION,
-        imageSmoothingQuality: "high"
+        width: sourceWidth * cap,
+        beforeDraw: function(context) {
+          context.imageSmoothingQuality = "high";
+        }
       };
     },
 
     outputType: function() {
       if (this.fileType === "image/jpeg") return "image/jpeg";
+      if (this.fileType === "image/webp") return "image/webp";
 
       return "image/png";
     },
 
-    destroyCropper: function() {
-      if (!this.cropper) return;
+    teardownCropper: function() {
+      const elements = this.getCropperElements();
 
-      this.cropper.destroy();
-      this.cropper = null;
+      this.unbindCropperHandlers();
+      elements.selection.$clear();
+      elements.image.removeAttribute("src");
+      elements.canvas.style.removeProperty("--image-cropper-canvas-ratio");
     },
 
     revokeObjectUrl: function() {
@@ -165,6 +297,10 @@
       this.settled = false;
     },
 
+    clamp: function(value, min, max) {
+      return Math.min(Math.max(value, min), Math.max(min, max));
+    },
+
     isCroppableImage: function(file) {
       return /^image\/(jpeg|png|webp)$/.test(file.type);
     },
@@ -173,8 +309,14 @@
       return document.getElementById(this.MODAL_ID);
     },
 
-    getImageElement: function() {
-      return this.getModal().querySelector(".js-image-cropper--image");
+    getCropperElements: function() {
+      const modal = this.getModal();
+
+      return {
+        canvas: modal.querySelector("cropper-canvas"),
+        image: modal.querySelector("cropper-image"),
+        selection: modal.querySelector("cropper-selection")
+      };
     }
   };
 }).call(this);

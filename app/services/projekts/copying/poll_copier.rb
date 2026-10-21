@@ -1,12 +1,13 @@
 class Projekts::Copying::PollCopier < ApplicationService
   # projekt_id and projekt_phase_id are re-pointed at the copy, and budget_id is
-  # unique per poll -- it travels as a reference and the rewiring pass resolves
-  # it. slug and the ai_stats columns never left the serializer.
+  # unique per poll -- the serializer withholds it and the rewiring pass
+  # resolves it. slug and the ai_stats columns never left the serializer.
   EXCLUDED_POLL_COLUMNS = %w[projekt_id projekt_phase_id].freeze
 
+  # poll_id is re-pointed at the copy's poll. The five self-referencing question
+  # columns are withheld by the serializer and written by the rewiring pass:
   # Poll::Question#validate_parent_question_id rejects a parent from another
-  # poll, so these cannot be carried over and fixed later -- they are left null
-  # and resolved by the rewiring pass.
+  # poll, and the source's parent is all a half-built graph has to offer.
   EXCLUDED_QUESTION_COLUMNS = %w[poll_id].freeze
 
   EXCLUDED_ANSWER_COLUMNS = %w[question_id].freeze

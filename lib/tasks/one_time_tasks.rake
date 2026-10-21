@@ -58,4 +58,23 @@ namespace :one_time_tasks do
       projekt.save!
     end
   end
+
+  # A task rather than a migration: the marking shells out to exiftool, which a
+  # deploy cannot assume is installed on a given tenant's box, and it rewrites
+  # attachment bytes. Both are reasons to run it deliberately and read what it
+  # reports rather than have it decide a deploy's outcome. Safe to re-run — a
+  # picture already carrying the marker is counted and left alone.
+  desc "Write the IPTC AI marker into generated pictures that were attached unmarked"
+  task backfill_ai_image_marking: :environment do
+    if !ExiftoolCommand.available?
+      abort("exiftool is not available (#{ExiftoolCommand.runtime_status}) — nothing was changed")
+    end
+
+    report = Images::BackfillAiMarkingService.call
+
+    puts "marked: #{report.marked}"
+    puts "already marked: #{report.already_marked}"
+    puts "failed: #{report.failed}"
+    puts "skipped (no attachment): #{report.skipped}"
+  end
 end

@@ -1,0 +1,49 @@
+<%# The submission form, in a frame of its own. It used to sit flush under the
+    table it feeds, so it read as another part of that table rather than as a
+    separate thing you do. %>
+<section class="mt-5">
+  <div class="adm-whatsapp-page--form-panel">
+    <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.template_form_title") %></h2>
+
+    <p class="kern-body adm-whatsapp-page--explanation mb-4">
+      <%= t("adm.whatsapp.show.templates_intro") %>
+    </p>
+
+    <% if @template_form.errors[:base].any? %>
+      <div class="mb-4">
+        <%= kern_alert(title: t("adm.whatsapp.show.template_failed_title"), style: :danger) do %>
+          <% @template_form.errors[:base].each do |message| %>
+            <p class="kern-body"><%= message %></p>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="adm-whatsapp-page--form">
+      <%= form_with model: @template_form, url: create_template_adm_whatsapp_path,
+        scope: :template, method: :post, data: { turbo: false } do |f| %>
+        <%= f.text_field :name,
+          label: t("adm.whatsapp.show.template_name_label"),
+          hint: t("adm.whatsapp.show.template_name_hint") %>
+
+        <%= f.text_field :language,
+          label: t("adm.whatsapp.show.template_language_label"),
+          hint: t("adm.whatsapp.show.template_language_hint") %>
+
+        <%= f.text_area :body,
+          label: t("adm.whatsapp.show.template_body_label"),
+          hint: t("adm.whatsapp.show.template_body_hint"),
+          rows: 4 %>
+
+        <%# The wait is named at the button rather than in the intro: it is what
+            happens when you press this, and an admin who pressed it and saw no
+            new row had no way of knowing whether it had worked. %>
+        <p class="kern-body kern-body--small kern-body--muted adm-whatsapp-page--submit-hint">
+          <%= t("adm.whatsapp.show.template_submit_hint") %>
+        </p>
+
+        <%= form_submit_button(text: t("adm.whatsapp.show.template_submit")) %>
+      <% end %>
+    </div>
+  </div>
+</section>

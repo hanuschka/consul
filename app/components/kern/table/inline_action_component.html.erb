@@ -1,0 +1,6 @@
+<rich-tooltip delay="350" hide-delay="80" trigger-only>
+  <%= link_to @url, class: css_classes, "aria-label": @label, **@options do %>
+    <span class="material-symbols-outlined" aria-hidden="true"><%= @icon %></span>
+  <% end %>
+  <template><%= @label %></template>
+</rich-tooltip>

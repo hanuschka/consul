@@ -1,4 +1,6 @@
 class Adm::Moderation::ProposalsController < Adm::Moderation::BaseController
+  include Adm::HidesContributions
+
   FILTERS = %w[pending_flag_review with_ignored_flag hidden all].freeze
 
   def index
@@ -21,8 +23,7 @@ class Adm::Moderation::ProposalsController < Adm::Moderation::BaseController
     @proposal = Proposal.find(params[:id])
     authorize [:adm, :moderation, @proposal], :hide?
 
-    @proposal.hide
-    Activity.log(current_user, :hide, @proposal)
+    hide_and_notify_author(@proposal)
     @proposal.reload
   end
 

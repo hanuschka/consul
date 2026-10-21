@@ -1,9 +1,6 @@
 App.Studio.ContentBlocks.SavedContentBlocks = {
   initialize() {
     this.initEventListeners()
-
-    // Access the session's worker
-    ace.config.set("workerPath", "https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12");
   },
 
   aceInstances: {},

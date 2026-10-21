@@ -1,6 +1,48 @@
 require_dependency Rails.root.join("app", "models", "map_location").to_s
 
 class MapLocation < ApplicationRecord
+  # What a single dropped pin zooms to when the phase carries no map of its own
+  # to take the scale from.
+  DEFAULT_PIN_ZOOM = 15
+
+  # The one pin a drafting flow puts on a resource: geocoded from the citizen's
+  # own wording, or shared through WhatsApp's picker. Both used to assemble it
+  # themselves, which made the coordinate order, the zoom fallback and the
+  # replace-or-add question three things to keep in step across two namespaces.
+  #
+  # Updated in place rather than destroyed and re-created, because `mappable` is
+  # `touch: true` and audited: replacing the row would stamp the resource twice
+  # and file the citizen's correction as a deletion.
+  def self.create_pin!(mappable:, latitude:, longitude:)
+    pin = mappable.map_location || new(mappable: mappable)
+
+    pin.update!(
+      latitude: latitude,
+      longitude: longitude,
+      zoom: mappable.projekt_phase&.map_location&.zoom || DEFAULT_PIN_ZOOM,
+      features: point_feature_collection(latitude: latitude, longitude: longitude)
+    )
+
+    pin
+  end
+
+  # One pin as the GeoJSON the map renderers read. Written here rather than in
+  # each producer: two copies of a coordinate order are two chances to write it
+  # the wrong way round.
+  def self.point_feature_collection(latitude:, longitude:)
+    {
+      "type" => "FeatureCollection",
+      "features" => [{
+        "type" => "Feature",
+        "geometry" => {
+          "type" => "Point",
+          "coordinates" => [longitude.to_f, latitude.to_f]
+        },
+        "properties" => {}
+      }]
+    }
+  end
+
   def self.proposal_features(proposal_ids)
     return [] if proposal_ids.blank?
 
@@ -64,13 +106,63 @@ class MapLocation < ApplicationRecord
     end
   end
 
+  # Pluck-based on purpose: the proposals index map builds features for every
+  # matching proposal at once, and instantiating the AR graph (MapLocation +
+  # Proposal + labels + collections + sentiment) held the whole tree in worker
+  # memory. Mirrors the deficiency_report_features pattern above.
   def self.regular_proposal_features(map_location_ids)
     return {} if map_location_ids.blank?
 
-    where(id: map_location_ids)
-      .includes(mappable: [{ projekt_labels: :masterportal_collection }, :sentiment, :masterportal_pin])
+    rows = where(id: map_location_ids, mappable_type: "Proposal")
+      .joins("INNER JOIN proposals ON proposals.id = map_locations.mappable_id")
+      .joins("LEFT JOIN sentiments ON sentiments.id = proposals.sentiment_id")
+      .pluck("map_locations.id", "map_locations.mappable_id", "map_locations.features", "sentiments.color")
+
+    proposal_ids = rows.map { |_map_location_id, proposal_id, _features, _color| proposal_id }
+    label_ids_by_proposal_id = ProjektLabeling
+      .joins(:projekt_label)
+      .where(labelable_type: "Proposal", labelable_id: proposal_ids)
+      .pluck(:labelable_id, :projekt_label_id)
+      .group_by(&:first)
+      .transform_values { |labeling_pairs| labeling_pairs.map(&:last) }
+
+    single_label_ids = label_ids_by_proposal_id.values.select { |ids| ids.size == 1 }.flatten
+    labels_by_id = ProjektLabel
+      .where(id: single_label_ids)
+      .includes(:masterportal_collection)
       .index_by(&:id)
-      .transform_values(&:features_json_data)
+
+    unicode_cache = awesome_icon_unicode_cache
+
+    rows.to_h do |map_location_id, proposal_id, features, sentiment_color|
+      label_ids = label_ids_by_proposal_id[proposal_id] || []
+      single_label = label_ids.size == 1 ? labels_by_id[label_ids.first] : nil
+
+      icon_name =
+        if single_label.present?
+          single_label.icon
+        elsif label_ids.size > 1
+          "tags"
+        end
+
+      extra_properties = {
+        "resource_type" => RESOURCE_TYPE_MAPPING[:Proposal],
+        "id" => proposal_id,
+        "feature_color" => sentiment_color,
+        "feature_icon_name" => icon_name,
+        "feature_icon_unicode" => icon_name.present? ? unicode_cache[icon_name] : nil,
+        "feature_icon_url" => single_label&.image_icon_url
+      }.reject { |_key, value| value.in?([nil, ""]) }
+
+      feature_collection = normalize_feature_collection(features)
+
+      feature_collection["features"].each do |feature|
+        feature["properties"] ||= {}
+        feature["properties"].merge!(extra_properties)
+      end
+
+      [map_location_id, feature_collection]
+    end
   end
 
   def self.masterportal_pin_feature_collection(features, masterportal_pin_id, pin_properties)

@@ -58,7 +58,7 @@
           <div class="callout success">
             <strong><%= t("budgets.investments.show.project_winner") %></strong>
           </div>
-        <% elsif @investment.selected? %>
+        <% elsif @investment.publicly_selected? %>
           <div class="callout success">
             <%= sanitize(t("budgets.investments.show.project_selected")) %>
           </div>

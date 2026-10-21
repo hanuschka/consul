@@ -1,0 +1,108 @@
+<% if extended_feature?("general.enable_google_translate") && google_translate_accepted? %>
+  <% unless current_user&.administrator? || current_user&.projekt_manager? %>
+    <script>
+      window.NoTranslateContactData = {
+        emailPattern: /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g,
+        mailtoSelector: 'a[href^="mailto:" i]',
+        skipSelector: "script, style, noscript, textarea, [contenteditable], .notranslate, [translate='no']",
+        observer: null,
+
+        start: function() {
+          this.mark(document.body);
+
+          if (this.observer) { this.observer.disconnect(); }
+
+          this.observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+              mutation.addedNodes.forEach(function(node) { NoTranslateContactData.mark(node); });
+            });
+          });
+
+          this.observer.observe(document.body, { childList: true, subtree: true });
+        },
+
+        mark: function(root) {
+          if (root.nodeType === Node.TEXT_NODE) {
+            this.wrapEmails(root);
+            return;
+          }
+
+          if (root.nodeType !== Node.ELEMENT_NODE) { return; }
+
+          if (root.matches(this.mailtoSelector)) { this.protect(root); }
+          root.querySelectorAll(this.mailtoSelector).forEach(this.protect);
+
+          var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+          var textNodes = [];
+
+          while (walker.nextNode()) {
+            if (walker.currentNode.nodeValue.indexOf("@") !== -1) { textNodes.push(walker.currentNode); }
+          }
+
+          textNodes.forEach(this.wrapEmails, this);
+        },
+
+        protect: function(element) {
+          element.classList.add("notranslate");
+          element.setAttribute("translate", "no");
+        },
+
+        wrapEmails: function(textNode) {
+          var parent = textNode.parentElement;
+          if (!parent || parent.closest(this.skipSelector)) { return; }
+
+          var text = textNode.nodeValue;
+          var pattern = new RegExp(this.emailPattern.source, "g");
+          var fragment = document.createDocumentFragment();
+          var lastIndex = 0;
+          var match;
+
+          while ((match = pattern.exec(text)) !== null) {
+            fragment.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+
+            var span = document.createElement("span");
+            this.protect(span);
+            span.textContent = match[0];
+            fragment.appendChild(span);
+
+            lastIndex = pattern.lastIndex;
+          }
+
+          if (lastIndex === 0) { return; }
+
+          fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+          parent.replaceChild(fragment, textNode);
+        }
+      };
+
+      $(document).on("turbolinks:load", function() {
+        NoTranslateContactData.start();
+      });
+    </script>
+  <% end %>
+
+  <script>
+    function loadGoogleTranslateScript() {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      document.head.appendChild(script);
+    }
+
+    function googleTranslateElementInit() {
+      if ( $(".hamburger-menu:visible").length ) {
+        new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element_mobile');
+      } else {
+        new google.translate.TranslateElement({pageLanguage: 'de'}, 'google_translate_element_desktop');
+      }
+    }
+
+    $(document).on('turbolinks:load', function() {
+      if (typeof google === 'undefined' || typeof google.translate === 'undefined') {
+				loadGoogleTranslateScript();
+      } else {
+				googleTranslateElementInit();
+      }
+    });
+  </script>
+<% end %>

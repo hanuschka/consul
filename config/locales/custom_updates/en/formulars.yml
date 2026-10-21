@@ -1,5 +1,7 @@
 en:
   custom:
+    formular_phase:
+      to_answers: To the answers
     formular_answer:
       form:
         select_prompt: click to select

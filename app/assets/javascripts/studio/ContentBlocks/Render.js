@@ -25,7 +25,8 @@ App.Studio.ContentBlocks.Render = {
       contentBlock.innerHTML,
       {
         projektId,
-        contentBlockId: contentBlock.dataset.id
+        contentBlockId: contentBlock.dataset.id,
+        visibility: App.Studio.ContentBlocks.Visibility.readFromElement(contentBlock)
       }
     );
   },

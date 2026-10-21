@@ -1,0 +1,24 @@
+// Fingerprinted URLs of the vendor packs that are injected at runtime rather
+// than bundled: the map libraries (maps/mapbox.js in the main app,
+// lib/map_vendor_assets.js in the /adm pack) and Plyr, which GLightbox pulls
+// in on the first video slide.
+//
+// They stay out of the bundles so that a page without a map or a video never
+// downloads them, and they must come from our own host so that opening one
+// never sends the visitor's IP to a public CDN before consent. Neither pack
+// can call asset_path itself, hence this file.
+//
+// Leaflet's CSS is listed even though the main app has no use for it —
+// application.scss imports the same files eagerly — because the /adm pack
+// needs it and one list is cheaper than two.
+
+window.VendorAssetUrls = {
+  leafletJs: "<%= asset_path("packs/leaflet_vendor.js") %>",
+  leafletCss: "<%= asset_path("leaflet_vendor.css") %>",
+  mapboxJs: "<%= asset_path("packs/mapbox_vendor.js") %>",
+  mapboxCss: "<%= asset_path("mapbox_vendor.css") %>",
+  plyrJs: "<%= asset_path("packs/plyr_vendor.js") %>",
+  plyrCss: "<%= asset_path("plyr_vendor.css") %>",
+  plyrIconSprite: "<%= asset_path("plyr/dist/plyr.svg") %>",
+  plyrBlankVideo: "<%= asset_path("plyr_blank.mp4") %>"
+};

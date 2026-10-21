@@ -15,7 +15,7 @@
 //
 //= require ace-builds/src-min/ace
 //= require ace-builds/src-noconflict/mode-html
-//= require ace-builds/src-noconflict/worker-html
+//= require ../ace_worker_urls
 //
 // require idiomorph/dist/idiomorph.js
 //
@@ -45,6 +45,7 @@
 //= require ../studio/ContentBlocks/TemplateSelector
 //= require ../studio/ContentBlocks/Crud
 //= require ../studio/ContentBlocks/MapEmbed
+//= require ../studio/ContentBlocks/AiGenerationPoller
 //= require ../studio/ContentBlocks/EditModes/AiEditMode
 //= require ../studio/ContentBlocks/EditModes/CodeEditMode
 //= require ../studio/ContentBlocks/EditModes/EditModeSwitcher
@@ -52,6 +53,7 @@
 //= require ../studio/ContentBlocks/CopyFeedback
 //= require ../studio/ContentBlocks/Copy
 //= require ../studio/ContentBlocks/EmptyHintToggle
+//= require ../studio/ContentBlocks/Visibility
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/EditPopup
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/TextFormat

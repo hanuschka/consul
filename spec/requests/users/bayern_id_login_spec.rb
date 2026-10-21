@@ -37,4 +37,25 @@ describe "BayernID first login", type: :request do
     expect(user).to have_attributes(keycloak_link: "lenavogt", first_name: "Lena", last_name: "Vogt")
     expect(response).to have_http_status(:redirect)
   end
+
+  describe "a returning user" do
+    it "stores the ID token of the new login for the logout hint" do
+      user = create(:user, email: "lena.vogt@example.org", keycloak_link: "lenavogt",
+                           keycloak_id_token: "old-token", terms_older_than_14: true)
+
+      get user_bayern_id_omniauth_callback_path
+
+      expect(user.reload.keycloak_id_token).to eq "token"
+    end
+
+    it "stores the ID token when the registration was not finished" do
+      user = create(:user, email: "lena.vogt@example.org", username: "Lena Vogt", keycloak_link: "lenavogt",
+                           registering_with_oauth: true, keycloak_id_token: "old-token",
+                           terms_older_than_14: true)
+
+      get user_bayern_id_omniauth_callback_path
+
+      expect(user.reload.keycloak_id_token).to eq "token"
+    end
+  end
 end

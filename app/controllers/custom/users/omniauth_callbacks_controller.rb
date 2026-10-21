@@ -26,6 +26,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
 
     if user = User.find_by(keycloak_link: keycloak_link, username: username, registering_with_oauth: true) #keycloak user logged in in the past but didn't finish registration
+      user.update_column(:keycloak_id_token, keycloak_id_token)
       sign_in user
       redirect_to finish_signup_path
       return
@@ -34,6 +35,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       backfill_registered_address(user, extra)
 
       if user.email == email #keycloak user didn't change his email in keycloak
+        user.update_column(:keycloak_id_token, keycloak_id_token)
         sign_in user
 
       else #email changed in keycloak after logging in with old email

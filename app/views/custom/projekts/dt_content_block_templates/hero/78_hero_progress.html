@@ -1,0 +1,96 @@
+<!-- BlockID: B05 Hero Progress – Hero mit integriertem Projektfortschritt (Timeline) -->
+<!-- Geeignet für: Projektseiten mit laufenden Phasen, Beteiligungsseiten, Kampagnen-Einstieg -->
+
+<div style="position: relative; overflow: hidden; background: linear-gradient(160deg, #f8f9fb 0%, #eef2f7 100%); border-radius: 16px; padding: 48px 44px 36px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+
+  <!-- Badge-Zeile -->
+  <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; position: relative; z-index: 1;">
+    <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.9); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: var(--brand-color, #1779ba); font-weight: 600; letter-spacing: 0.04em;">Stadtentwicklung 2025</div>
+    <div style="background: rgba(5,150,105,0.08); border: 1px solid rgba(5,150,105,0.15); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #065f46; font-weight: 600; letter-spacing: 0.04em;">Beteiligung läuft</div>
+  </div>
+
+  <!-- Headline -->
+  <h3 style="font-size: 30px; font-weight: 800; color: #1a202c; margin-bottom: 14px; margin-top: 0; line-height: 1.2; letter-spacing: -0.4px; max-width: 640px; position: relative; z-index: 1;">Gemeinsam gestalten wir die Innenstadt von morgen</h3>
+
+  <!-- Lead-Text -->
+  <p style="font-size: 16px; color: #4b5563; line-height: 1.7; margin-bottom: 28px; margin-top: 0; max-width: 560px; position: relative; z-index: 1;">
+    Ihre Ideen machen den Unterschied. Beteiligen Sie sich jetzt an der Planung der Grünflächen, Verkehrswege und Aufenthaltsbereiche in Ihrer Stadt.
+  </p>
+
+  <!-- CTA-Buttons -->
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-bottom: 36px; position: relative; z-index: 1;">
+    <a href="#" class="button"
+       style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 700; height: 48px; box-sizing: border-box; border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+       onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'"
+       onmouseout="this.style.transform='none';this.style.boxShadow='none'">Jetzt beteiligen</a>
+    <a href="#" style="display: inline-flex; align-items: center; height: 48px; color: var(--brand-color, #1779ba); font-size: 15px; font-weight: 600; text-decoration: none; transition: opacity 0.2s ease;"
+       onmouseover="this.style.opacity='0.7'"
+       onmouseout="this.style.opacity='1'">Zeitplan ansehen &darr;</a>
+  </div>
+
+  <!-- Trennlinie -->
+  <div style="border-top: 1px solid rgba(0,0,0,0.08); margin-bottom: 20px; position: relative; z-index: 1;"></div>
+
+  <!-- Label + Fortschrittsbalken -->
+  <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; position: relative; z-index: 1;">
+    <div style="font-size: 11px; font-weight: 600; color: #9ca3af; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap;">Projektfortschritt</div>
+    <div style="flex: 1; height: 3px; background: rgba(0,0,0,0.06); border-radius: 2px; overflow: hidden;">
+      <div style="height: 100%; width: 37%; background: linear-gradient(to right, #059669, var(--brand-color, #1779ba)); border-radius: 2px;"></div>
+    </div>
+    <div style="font-size: 12px; font-weight: 700; color: #059669;">37%</div>
+  </div>
+
+  <!-- Timeline-Karten -->
+  <div style="display: flex; flex-wrap: wrap; gap: 10px; position: relative; z-index: 1;">
+
+    <!-- Schritt 1: Abgeschlossen -->
+    <div style="background: rgba(240,253,244,0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 10px; padding: 14px 16px; flex: 1 1 140px; border: 1px solid rgba(5,150,105,0.1); min-width: 130px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'"
+         onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+        <div style="width: 26px; height: 26px; border-radius: 7px; background: #059669; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; color: #fff; font-weight: 700;">&#10003;</div>
+        <div style="background: rgba(5,150,105,0.08); border: 1px solid rgba(5,150,105,0.15); border-radius: 4px; padding: 2px 8px; font-size: 10px; color: #065f46; font-weight: 600;">Abgeschlossen</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 3px;">Bestandsaufnahme</div>
+      <div style="font-size: 11px; color: #9ca3af;">Jan – Feb 2025</div>
+    </div>
+
+    <!-- Schritt 2: Aktiv -->
+    <div style="background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 10px; padding: 14px 16px; flex: 1 1 140px; border: 1px solid rgba(255,255,255,0.9); border-left: 3px solid var(--brand-color, #1779ba); min-width: 130px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'"
+         onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+        <div style="width: 26px; height: 26px; border-radius: 7px; background: var(--brand-color, #1779ba); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; color: #fff; font-weight: 700;">2</div>
+        <div style="background: rgba(23,121,186,0.08); border: 1px solid rgba(23,121,186,0.15); border-radius: 4px; padding: 2px 8px; font-size: 10px; color: var(--brand-color, #1779ba); font-weight: 600;">Jetzt aktiv</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 700; color: #1a202c; margin-bottom: 3px;">Online-Beteiligung</div>
+      <div style="font-size: 11px; color: #9ca3af;">Mär – Sep 2025</div>
+    </div>
+
+    <!-- Schritt 3: Geplant -->
+    <div style="background: rgba(255,255,255,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 10px; padding: 14px 16px; flex: 1 1 140px; border: 1px solid rgba(255,255,255,0.7); min-width: 130px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.06)'"
+         onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+        <div style="width: 26px; height: 26px; border-radius: 7px; background: rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; color: #94a3b8; font-weight: 700;">3</div>
+        <div style="background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.08); border-radius: 4px; padding: 2px 8px; font-size: 10px; color: #64748b; font-weight: 600;">Geplant</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 700; color: #64748b; margin-bottom: 3px;">Auswertung</div>
+      <div style="font-size: 11px; color: #9ca3af;">Okt – Nov 2025</div>
+    </div>
+
+    <!-- Schritt 4: Geplant -->
+    <div style="background: rgba(255,255,255,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 10px; padding: 14px 16px; flex: 1 1 140px; border: 1px solid rgba(255,255,255,0.7); min-width: 130px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
+         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.06)'"
+         onmouseout="this.style.transform='none';this.style.boxShadow='none'">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+        <div style="width: 26px; height: 26px; border-radius: 7px; background: rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; color: #94a3b8; font-weight: 700;">4</div>
+        <div style="background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.08); border-radius: 4px; padding: 2px 8px; font-size: 10px; color: #64748b; font-weight: 600;">Ab 2026</div>
+      </div>
+      <div style="font-size: 13px; font-weight: 700; color: #64748b; margin-bottom: 3px;">Umsetzung</div>
+      <div style="font-size: 11px; color: #9ca3af;">Ab Frühjahr 2026</div>
+    </div>
+
+  </div>
+
+</div>

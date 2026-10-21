@@ -40,7 +40,9 @@ de:
             Aktiviert den Versand einer automatischen Bestätigungsmail an die im Formular eingegebene
             E-Mail-Adresse. Nutzer erhalten nach dem Absenden eine Bestätigung mit dem von Ihnen definierten
             Betreff und Text. Geeignet für Formulare, bei denen eine Eingangsbestätigung oder Empfangsquittung
-            gewünscht ist.
+            gewünscht ist. Entspricht die eingegebene Adresse der E-Mail-Adresse des angemeldeten Kontos, wird
+            nur diese Bestätigungsmail verschickt – die allgemeine Eingangsbestätigung aus dem Reiter
+            „System-E-Mails“ entfällt dann.
           email_for_confirmation_subject_label: Betreff der Bestätigungsmail
           email_for_confirmation_subject_hint: >
             Geben Sie den Betreff der automatischen Bestätigungsmail ein, die nach dem Absenden des Formulars

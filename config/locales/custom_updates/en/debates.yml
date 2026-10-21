@@ -50,4 +50,5 @@ en:
           votes_up: Highest voted
           votes_up_title: Highest voted
       show:
+        title: "%{author_name} starts a discussion"
         welcome_default_text: "started a discussion about a project. You can support the discussion on the right sidebar by giving it a thumbs up. But you can also express your disapproval by clicking thumbs down. You also have the opportunity to join the discussion yourself using the comment function at the bottom."

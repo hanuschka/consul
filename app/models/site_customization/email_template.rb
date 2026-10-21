@@ -6,10 +6,10 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       variables: %w[username investment_title projekt_title investment_url]
     },
     "Mailer#budget_investment_feasible" => {
-      variables: %w[username investment_title projekt_title]
+      variables: %w[username investment_title projekt_title feasibility_explanation investment_url]
     },
     "Mailer#budget_investment_unfeasible" => {
-      variables: %w[username investment_title projekt_title unfeasibility_explanation]
+      variables: %w[username investment_title projekt_title unfeasibility_explanation investment_url]
     },
     "Mailer#budget_investment_selected" => {
       variables: %w[username investment_title investment_url]
@@ -116,6 +116,9 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     "DeficiencyReportMailer#notify_author_about_status_change" => {
       variables: %w[username deficiency_report_title deficiency_report_url status_name status_notice_text]
     },
+    "DeficiencyReportMailer#notify_author_about_official_answer" => {
+      variables: %w[username deficiency_report_title deficiency_report_url official_answer]
+    },
     "DeficiencyReportMailer#notify_officer" => {
       variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url]
     },
@@ -186,6 +189,7 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     external: [
       ["DeficiencyReportMailer", "notify_author_about_submission"],
       ["DeficiencyReportMailer", "notify_author_about_status_change"],
+      ["DeficiencyReportMailer", "notify_author_about_official_answer"],
       ["DeficiencyReportMailer", "send_feedback_form_link"]
     ],
     internal: [

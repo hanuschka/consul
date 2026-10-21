@@ -1,17 +1,19 @@
 <div id="projekt-event-registration-<%= projekt_event.id %>" style="width: 100%;">
   <% if projekt_event.registration_enabled? %>
-    <div class="projekt-event-item-new-body--details-row">
-      <i class="fa fa-users"></i>
-      <span>
-        <% if projekt_event.fully_booked? %>
-          <%= t("custom.projekt_events.registration.fully_booked") %>
-        <% else %>
-          <%= t("custom.projekt_events.registration.spots_available",
-                available: projekt_event.spots_available,
-                total: projekt_event.max_attendees) %>
-        <% end %>
-      </span>
-    </div>
+    <% if projekt_event.attendee_limit? %>
+      <div class="projekt-event-item-new-body--details-row">
+        <i class="fa fa-users"></i>
+        <span>
+          <% if projekt_event.fully_booked? %>
+            <%= t("custom.projekt_events.registration.fully_booked") %>
+          <% else %>
+            <%= t("custom.projekt_events.registration.spots_available",
+                  available: projekt_event.spots_available,
+                  total: projekt_event.max_attendees) %>
+          <% end %>
+        </span>
+      </div>
+    <% end %>
 
     <% if local_assigns[:registration_alert].present? %>
       <div class="callout alert"><%= registration_alert %></div>

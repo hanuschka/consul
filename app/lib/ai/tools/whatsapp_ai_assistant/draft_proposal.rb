@@ -134,7 +134,8 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
                       "assessment or a place belongs in its question and its buttons, not in " \
                       "a message before it. A similar contribution whose written_by_you is " \
                       "true is the citizen's own earlier one: say they already submitted " \
-                      "something like it, and offer no support for it. Where " \
+                      "something like it, and offer no support for it — an action_id on it " \
+                      "only takes back a support they gave before. Where " \
                       "additions_beyond_idea is present, the draft " \
                       "proposes things the citizen did not say: name them in one short " \
                       "sentence of your own in additions_note — the button that takes them " \
@@ -180,7 +181,8 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
     #
     # The citizen's own earlier proposal is marked rather than offered for support:
     # the bot takes no support from its author, and that they already submitted the
-    # same idea is the more useful thing to hear about it.
+    # same idea is the more useful thing to hear about it. A support they gave on
+    # the page before keeps its withdraw pill (Whatsapp::ContributionFacts).
     def similar_contributions(search_terms)
       candidates = ::Whatsapp::SimilarProposalsQuery.call(
         projekt_phase: projekt_phase,
@@ -191,15 +193,13 @@ class Ai::Tools::WhatsappAiAssistant::DraftProposal < Ai::Tools::WhatsappAiAssis
       return if candidates.blank?
 
       candidates.map do |proposal|
-        written_by_you = ::Whatsapp::ContributionFacts.written_by?(proposal, user)
-
         {
           contribution_id: proposal.id,
           title: proposal.title,
-          written_by_you: written_by_you,
+          written_by_you: ::Whatsapp::ContributionFacts.written_by?(proposal, user),
           supports: proposal.cached_votes_up,
           url: ::Whatsapp::PublishedResourceUrl.call(proposal),
-          action_id: written_by_you ? nil : "support_toggle-#{proposal.id}"
+          action_id: ::Whatsapp::ContributionFacts.offered_support_action_id(proposal, user)
         }.compact
       end
     end

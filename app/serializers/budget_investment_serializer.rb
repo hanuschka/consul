@@ -3,9 +3,10 @@
 class BudgetInvestmentSerializer < BaseSerializer
   attr_reader :budget_investment
 
-  def initialize(budget_investment, similar_contributions_count: nil)
+  def initialize(budget_investment, similar_contributions_count: nil, hide_unpublished_selection: false)
     @budget_investment = budget_investment
     @similar_contributions_count = similar_contributions_count
+    @hide_unpublished_selection = hide_unpublished_selection
   end
 
   def serialize
@@ -39,6 +40,7 @@ class BudgetInvestmentSerializer < BaseSerializer
     )
 
     investment_data[:similar_contributions_count] = similar_contributions_count
+    investment_data["selected"] = budget_investment.publicly_selected? if @hide_unpublished_selection
 
     # Add translated attributes
     investment_data.merge!(
@@ -201,12 +203,13 @@ class BudgetInvestmentSerializer < BaseSerializer
     investment_data
   end
 
-  def self.serialize_collection(budget_investments)
+  def self.serialize_collection(budget_investments, hide_unpublished_selection: false)
     counts = SimilarContributions::StoredCounts.call(budget_investments)
 
     budget_investments.map do |budget_investment|
       new(budget_investment,
-          similar_contributions_count: counts.fetch(budget_investment.id, 0)).serialize
+          similar_contributions_count: counts.fetch(budget_investment.id, 0),
+          hide_unpublished_selection: hide_unpublished_selection).serialize
     end
   end
 

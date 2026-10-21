@@ -26,6 +26,8 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
     )
   end
 
+  after { Current.reset }
+
   before do
     allow(Whatsapp::Drafting::ResourceCreationValidationService).to receive(:call).and_return(nil)
     allow(Whatsapp::Drafting::SubmissionAuthorService).to receive(:call).and_return(user)
@@ -155,9 +157,7 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
     it "puts the completed submission in focus for the reply" do
       tool.execute
 
-      expect(Current.whatsapp_pill_focus).to eq(submission_completed: true)
-    ensure
-      Current.reset
+      expect(Current.whatsapp_pill_focus).to eq(submission_completed: true, projekt_phase_id: 7)
     end
 
     context "when the phase holds contributions for review" do

@@ -43,6 +43,7 @@ de:
         success: Dokument wurde erfolgreich importiert
       ai_generate_with_file:
         no_file: Keine Datei hochgeladen
+        unexpected_error: Beim Import ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.
         user_prompt_placeholder: |
           „Formuliere die Sektion XY verständlicher für die Öffentlichkeit."
           „Erstelle zusätzlich einen eigenen Inhaltsblock in leichter Sprache."
@@ -52,6 +53,7 @@ de:
       ai_generate_with_prompt:
         no_prompt: Bitte geben Sie einen Prompt ein
         generation_failed: KI konnte keine Struktur erstellen
+        unexpected_error: Beim Generieren ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.
       ai_create:
         modal_title: Inhaltsblock mit KI erstellen
         description: "Beschreiben Sie kurz, welchen Inhaltsblock Sie benötigen. Die KI nutzt vorhandene Vorlagen als Inspiration und kann optional den vollständigen Projektkontext einbeziehen, um einen neuen Block zu erstellen."

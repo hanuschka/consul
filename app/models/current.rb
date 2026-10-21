@@ -39,6 +39,12 @@ class Current < ActiveSupport::CurrentAttributes
   # that builds pills, and none of those calls has any other use for it.
   attribute :whatsapp_pill_records
 
+  # A poll's root questions with everything a ballot walk reads from them, by poll
+  # id — loaded once per request or job by
+  # Polls::BallotTraversalQuery.cached_root_questions, because one WhatsApp turn
+  # walks the same ballot several times and each walk loaded them again.
+  attribute :ballot_root_questions
+
   # The one proposal or projekt the running WhatsApp turn is about — found by name,
   # opened from a row, supported, published, followed — set by the tools and taps
   # that surface it and read by Whatsapp::StatePills when the reply goes out. Here

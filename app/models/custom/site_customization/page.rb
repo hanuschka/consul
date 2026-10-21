@@ -14,7 +14,7 @@ include MachineTranslatable
 
   has_many :comments, through: :projekt
 
-  has_many :landing_projekts, class_name: 'Projekt', foreign_key: :landing_page_id, dependent: :nullify
+  has_many :landing_projekts, class_name: 'Projekt', foreign_key: :landing_page_id
   has_many :landing_page_manager_assignments, foreign_key: :page_id, dependent: :destroy
   has_many :landing_page_managers, through: :landing_page_manager_assignments
   has_many :navbar_items, foreign_key: :landing_page_id, dependent: :destroy
@@ -67,6 +67,7 @@ include MachineTranslatable
   before_save :set_published_at
   after_update :sync_projekt_name
   after_update :sync_projekt_for_global_overview
+  before_destroy :release_landing_projekts
 
   scope :regular, -> {
     where(landing: false)
@@ -192,5 +193,9 @@ include MachineTranslatable
 
   def sync_projekt_for_global_overview
     projekt&.sync_for_global_overview_from_page_changes(saved_changes)
+  end
+
+  def release_landing_projekts
+    Projekt.with_hidden.where(landing_page_id: id).update_all(landing_page_id: nil)
   end
 end

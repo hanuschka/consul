@@ -297,8 +297,10 @@ class Mailer < ApplicationMailer
     @author = User.find_by(id: formular_answer.submitter_id)
     return if @author.blank?
 
-    @email_to = @author.email
     @projekt_phase = formular_answer.formular.projekt_phase
+    return if formular_answer.email_address.to_s.strip.casecmp?(@author.email.to_s)
+
+    @email_to = @author.email
 
     with_user(@author) do
       mail_with_custom_template(@projekt_phase, {

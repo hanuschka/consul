@@ -5,6 +5,7 @@ module MunicipalPlans
   # so a second run overwrites the first instead of adding to it.
   class LegacyImport < ApplicationService
     class MissingTopicsError < StandardError; end
+    class MissingProcedureStepsError < StandardError; end
 
     Problem = Struct.new(:legacy_id, :title, :kind, :message, keyword_init: true)
     Result = Struct.new(:rows_read, :statuses, :skipped, :problems, :conflicts, :mapping, :report_dir,
@@ -13,6 +14,55 @@ module MunicipalPlans
     OPEN_ENDED_YEAR = 2999
     SESSIONNET_HOST = /(\A|\.)sessionnet\.(owl-it|jena)\.de\z/i
     DEFAULT_CONTACT = { name: "Zentrale Stelle – bitte ersetzen", role: nil, phone: nil, email: nil }.freeze
+    CITY_WIDE_NAME = "gesamtes stadtgebiet".freeze
+    VERSION_NUMBER = /\A(\d+)(?:\.\d+)?\z/
+
+    def self.read(file)
+      CSV.read(file, col_sep: "\t", quote_char: "'", headers: true, encoding: "bom|utf-8")
+    end
+
+    def self.legacy_id(row)
+      row["id"].to_s.strip
+    end
+
+    def self.title(row)
+      MunicipalPlans::LegacyImport::Html.single_line(row["title"])
+    end
+
+    def self.procedure_step_number(row)
+      row["txt_versionsnummer"].to_s.strip[VERSION_NUMBER, 1]&.to_i
+    end
+
+    def self.procedure_step(row, procedure_steps)
+      number = procedure_step_number(row)
+      procedure_steps[number - 1] if number&.positive?
+    end
+
+    def self.procedure_steps(rows)
+      procedure_steps = MunicipalPlan::ProcedureStep.all.to_a
+      return procedure_steps if procedure_steps.any? || !MunicipalPlan.procedure_steps_enabled?
+      return procedure_steps if rows.none? { |row| procedure_step_number(row)&.positive? }
+
+      raise MissingProcedureStepsError,
+            "No Verfahrensschritte defined, nothing changed: the setting municipal_plans.procedure_steps " \
+            "is on and the export carries Versionsnummern, create the Verfahrensschritte first"
+    end
+
+    def self.split_districts(row)
+      city_wide, names = split_list(row["rel_ortschaften"]).partition do |name|
+        normalize_name(name) == CITY_WIDE_NAME
+      end
+
+      [city_wide.any?, names]
+    end
+
+    def self.split_list(value)
+      value.to_s.split(",").map(&:squish).compact_blank
+    end
+
+    def self.normalize_name(name)
+      name.to_s.squish.gsub(%r{\s*/\s*}, "/").downcase
+    end
 
     def initialize(file:, officer_group:, dry_run: false, report_dir: nil, base_url: nil, contact: {})
       @file = file
@@ -29,8 +79,9 @@ module MunicipalPlans
     end
 
     def call
-      rows = CSV.read(file, col_sep: "\t", quote_char: "'", headers: true, encoding: "bom|utf-8")
+      rows = self.class.read(file)
       topics = resolve_topics(rows)
+      @procedure_steps = self.class.procedure_steps(rows)
       districts = district_index
       report_duplicates(rows)
 
@@ -54,11 +105,13 @@ module MunicipalPlans
     private
 
       attr_reader :file, :officer_group, :dry_run, :report_dir, :base_url, :contact,
-                  :problems, :conflicts, :mapping, :statuses, :skipped
+                  :problems, :conflicts, :mapping, :statuses, :skipped, :procedure_steps
+
+      delegate :split_list, :normalize_name, to: :class, private: true
 
       def import(row, topics, districts)
-        legacy_id = row["id"].to_s.strip
-        title = MunicipalPlans::LegacyImport::Html.single_line(row["title"])
+        legacy_id = self.class.legacy_id(row)
+        title = self.class.title(row)
 
         if title.blank?
           @skipped += 1
@@ -83,6 +136,7 @@ module MunicipalPlans
           Globalize.with_locale(I18n.default_locale) do
             plan.assign_attributes(plan_attributes(row, title, block, archive_on))
           end
+          assign_procedure_step(plan, row, legacy_id, title)
           assign_topics(plan, row, topics)
           assign_districts(plan, row, districts, legacy_id, title)
           assign_links(plan, row, legacy_id, title)
@@ -187,8 +241,34 @@ module MunicipalPlans
         end
       end
 
+      def assign_procedure_step(plan, row, legacy_id, title)
+        return if procedure_steps.empty?
+
+        plan.procedure_step = self.class.procedure_step(row, procedure_steps)
+        return if plan.procedure_step.present?
+
+        value = row["txt_versionsnummer"].to_s.strip
+
+        if value.blank?
+          problem(legacy_id, title, :missing_procedure_step,
+                  "no Versionsnummer, Verfahrensschritt left empty")
+        else
+          problem(legacy_id, title, :unknown_procedure_step,
+                  "Versionsnummer #{value} matches no Verfahrensschritt, left empty")
+        end
+      end
+
       def assign_districts(plan, row, districts, legacy_id, title)
-        matched = split_list(row["rel_ortschaften"]).filter_map do |name|
+        city_wide, names = self.class.split_districts(row)
+        plan.city_wide = city_wide
+
+        if plan.city_wide? && names.any?
+          problem(legacy_id, title, :city_wide_with_districts,
+                  "Gesamtes Stadtgebiet combined with Ortsteile, Ortsteile dropped: #{names.join(", ")}")
+          names = []
+        end
+
+        matched = names.filter_map do |name|
           candidates = districts[normalize_name(name)] || []
           next candidates.first if candidates.size == 1
 
@@ -357,14 +437,6 @@ module MunicipalPlans
 
       def problem(legacy_id, title, kind, message)
         problems << Problem.new(legacy_id: legacy_id, title: title, kind: kind, message: message)
-      end
-
-      def split_list(value)
-        value.to_s.split(",").map(&:squish).compact_blank
-      end
-
-      def normalize_name(name)
-        name.to_s.squish.gsub(%r{\s*/\s*}, "/").downcase
       end
 
       def on?(value)

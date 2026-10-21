@@ -57,13 +57,6 @@ module Ai::RubyLlmFactory
 
     chat.with_tools(*tools)
 
-    disable_reasoning(chat, profile)
-  end
-
-  # The same effort attach_tools names, for a call that attaches no tools and
-  # still has no reasoning to pay for. Reading it off the profile rather than a
-  # constant is what keeps the two from drifting apart.
-  def self.disable_reasoning(chat, profile)
     return chat if profile.reasoning_effort.blank?
 
     chat.with_thinking(effort: profile.reasoning_effort)
@@ -276,8 +269,8 @@ module Ai::RubyLlmFactory
         config.http_proxy = proxy_uri
       end
 
-      if Setting["ai.llm_api_endpoint"].present?
-        config.openai_api_base = Setting["ai.llm_api_endpoint"]
+      if api_base.present?
+        config.openai_api_base = api_base
       end
     end
   end
@@ -300,8 +293,8 @@ module Ai::RubyLlmFactory
         config.http_proxy = proxy_uri
       end
 
-      if Setting["ai.llm_api_endpoint"].present?
-        config.gemini_api_base = Setting["ai.llm_api_endpoint"]
+      if api_base.present?
+        config.gemini_api_base = api_base
       end
     end
   end
@@ -354,8 +347,8 @@ module Ai::RubyLlmFactory
         config.http_proxy = proxy_uri
       end
 
-      if Setting["ai.llm_api_endpoint"].present?
-        config.gpustack_api_base = Setting["ai.llm_api_endpoint"]
+      if api_base.present?
+        config.gpustack_api_base = api_base
       end
     end
   end
@@ -392,12 +385,19 @@ module Ai::RubyLlmFactory
 
   def self.ollama_context
     RubyLLM.context do |config|
-      config.ollama_api_base = Setting["ai.llm_api_endpoint"].presence || "http://127.0.0.1:11434/v1"
+      config.ollama_api_base = api_base.presence || "http://127.0.0.1:11434/v1"
 
       if proxy_uri.present?
         config.http_proxy = proxy_uri
       end
     end
+  end
+
+  # Normalized on every read, not only when the setting is saved: a request
+  # URL stored before the admin form trimmed it would otherwise keep every call
+  # on that instance answering 404 until someone saved the setting again.
+  def self.api_base
+    Ai::EndpointUrl.normalize(Setting["ai.llm_api_endpoint"])
   end
 
   def self.proxy_uri

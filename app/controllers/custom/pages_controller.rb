@@ -379,7 +379,9 @@ class PagesController < ApplicationController
         end
       end
 
-      params[:section] ||= "results" if @budget.current_phase.kind == "finished"
+      if @budget.current_phase.kind == "finished" && can?(:read_results, @budget)
+        params[:section] ||= "results"
+      end
 
       # con-1036
       if @budget.current_phase.kind == "publishing_prices" && @budget.show_results_after_first_vote?

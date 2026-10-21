@@ -6,10 +6,24 @@ class VerificationController < ApplicationController
 
   def show
     # redirect_to next_step_path[:path], notice: next_step_path[:notice]
+    session[:verification_return_path] = referer_path
     redirect_to new_residence_path
   end
 
   private
+
+    def referer_path
+      uri = URI.parse(request.referer.to_s)
+      return unless uri.host == request.host
+
+      path = SessionUrlTruncator.truncate([uri.path, uri.query].compact.join("?"))
+      return unless path.start_with?("/")
+      return path unless path.include?("?") && Rack::Utils.parse_query(uri.query).key?("projekt_phase_id")
+
+      "#{path}#projekt-footer"
+    rescue URI::InvalidURIError
+      nil
+    end
 
     def next_step_path(user = current_user)
       if user.organization?

@@ -237,6 +237,18 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
                 ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
                   <button
                     type="button"
+                    tabindex="-1"
+                    class="studio-icon-button js-content-block-toggle-italic"
+                  >
+                    <i class="fas fa-italic"></i>
+                  </button>
+                `, {
+                  title: "Kursiv",
+                  text: "Formatiert den markierten Text kursiv oder hebt die Kursivformatierung wieder auf."
+                })}
+                ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
+                  <button
+                    type="button"
                     disabled
                     tabindex="-1"
                     class="studio-icon-button js-content-block-add-link"

@@ -1,12 +1,12 @@
 module Ai::Settings
-  DEFAULT_GPT_MODEL = "gpt-5.6-sol"
+  DEFAULT_GPT_MODEL = "gpt-6.1-sol".freeze
 
-  # Cheaper tiers of the same generation, for calls that classify pre-filtered
-  # candidates rather than generate prose. Read them through fast_model and
+  # The tiers below it, for calls that classify pre-filtered candidates rather
+  # than generate prose. Read them through fast_model and
   # ultrafast_model, never directly: the names exist only on OpenAI itself, as
   # does DEFAULT_GPT_MODEL read through big_model.
-  FAST_MODEL = "gpt-5.6-terra".freeze
-  ULTRAFAST_MODEL = "gpt-5.6-luna".freeze
+  FAST_MODEL = "gpt-6-sol".freeze
+  ULTRAFAST_MODEL = "gpt-6-luna".freeze
   private_constant :FAST_MODEL, :ULTRAFAST_MODEL
 
   # A temporary control for comparing the three tiers against each other on the

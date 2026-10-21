@@ -115,13 +115,13 @@ en:
         content_types_description: "Determines which file formats are allowed when uploading documents. Enable only the formats you actually want to permit, e.g. PDF for fixed-layout documents."
     welcomepage:
       usage_stats: User overview
-      usage_stats_description: "When enabled, the total number of registered users is shown on the homepage. A public link to the user overview page also appears. This feature is suitable for transparently showing the platform's reach. Disable if not desired."
+      usage_stats_description: "When enabled, the homepage shows a card with the most recently registered users. The total number and the link to the user overview only appear when the user overview page is enabled as well. Visitors who are not signed in also see a sign-in button. Enable this to make the reach of the platform visible."
       newsletter_subscription: Newsletter signup
       newsletter_subscription_description: "When enabled, a clearly visible newsletter-signup element is shown on the homepage. Logged-in users can sign up directly; non-logged-in users via a separate registration form. A separately configured newsletter service is required for actual sending."
       platform_activity: Platform statistics
-      platform_activity_description: "When enabled, key platform metrics are shown on the homepage — including the number of projects, proposals, votes, and comments. The values update automatically and give visitors a quick overview of platform activity."
+      platform_activity_description: "When enabled, the homepage shows key figures: projects, proposals, debates, polls and comments. Figures with the value 0 are hidden; the others are recalculated on every page view. Enable this to give visitors a quick overview of activity on the platform."
       projekt_search: Project search
-      projekt_search_description: "When enabled, a search bar appears on the homepage, letting users search specifically for projects. This option and the homepage button are mutually exclusive. Project search is especially suitable for platforms with many ongoing or planned projects."
+      projekt_search_description: "When enabled, a search bar appears on the homepage that lets users search specifically for projects. It is shown in addition to the homepage button when both are set up. Project search is especially useful for platforms with many ongoing or planned projects."
     extended_feature:
       projekts_overview_page_navigation:
         show_index_order_all: All projects
@@ -220,17 +220,17 @@ en:
     extended_option:
       general:
         city_name: Name of the city/municipality
-        city_name_description: "The name of the city or municipality entered here is used during BundID verification to match against the user's registered place of residence. This ensures that only people who are officially registered as residents of your municipality can take part in participation procedures. Please enter the official name exactly as it appears in the population register."
+        city_name_description: "The name entered here appears on the residence verification page, for example in “Verification for citizens of …”. It is inserted into the instructions shown to users there. Enter the name the way citizens should see it."
         title: Application title
         title_description: "This title is shown in large format inside the background image at the top of the homepage. It serves as the first content anchor for visitors. The text should be short and punchy — ideally one to five words. If the field is empty, no title is shown."
         subtitle: Application subtitle
-        subtitle_description: "The subtitle appears directly below the main title in the background image on the homepage. It allows a short supplementary piece of information or description of the participation offering. Write it as a concise sentence that captures the platform's context. If the field is empty, no subtitle is shown."
+        subtitle_description: "The subtitle appears directly below the main title in the background image of the homepage. It is only shown when a title is entered as well. Write it as a concise sentence that sums up what the platform is about."
         homepage_button_text: Homepage button text
         homepage_button_text_description: "Text shown on the button in the hero area of the homepage. The button serves as the central call-to-action for visitors. Choose a short, action-oriented label (e.g. 'Get involved now' or 'Discover projects'). If the field is empty, no button is shown."
         homepage_button_link: Homepage button link
-        homepage_button_link_description: "Target URL opened when the homepage button is clicked. You can enter an internal path (e.g. /projekts) or a full external URL (e.g. https://example.com). The link only takes effect if a button text is also entered. Without button text, the link remains invisible."
+        homepage_button_link_description: "Target URL opened when the homepage button is clicked. Allowed are internal paths starting with / (e.g. /projekts) and full addresses with http:// or https://, which open in a new tab. With any other value the button is not shown; if the field is empty, the button leads nowhere. The link only takes effect when a button text is entered as well."
         homepage_navigation_link_color: Top navigation link color
-        homepage_navigation_link_color_description: "Sets the text color of the links in the top navigation bar of the homepage. This matters because the header background image can be dark and readability must be ensured."
+        homepage_navigation_link_color_description: "Sets the text colour of the links in the top navigation bar of the homepage while it sits over the header image. After scrolling, the links turn black. On smartphones only the menu icon is coloured, and landing pages have their own setting. Choose a colour that stands out well against the header image."
       gdpr:
         devise_timeout_min: "Duration of user sessions in minutes"
         devise_timeout_min_description: >

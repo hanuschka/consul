@@ -61,15 +61,15 @@ class NotificationServiceMailer < ApplicationMailer
     end
   end
 
-  def not_assigned_deficiency_reports(admin_id, not_assigned_reports_ids)
-    @admin = Administrator.find(admin_id)
+  def not_assigned_deficiency_reports(user_id, not_assigned_reports_ids)
+    @user = User.find(user_id)
     @not_assigned_reports = DeficiencyReport.where(id: not_assigned_reports_ids)
 
-    with_user(@admin.user) do
+    with_user(@user) do
       mail_with_custom_template(nil, {
-        "admin_name" => @admin.name,
+        "admin_name" => @user.name,
         "not_assigned_count" => @not_assigned_reports.count
-      }, to: @admin.email,
+      }, to: @user.email,
         default_subject: t("custom.notification_service_mailers.not_assigned_deficiency_reports.subject"))
     end
   end

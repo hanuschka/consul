@@ -1,4 +1,5 @@
 class Adm::Officing::SettingsController < Adm::Officing::BaseController
+  skip_before_action :require_officing_manager
   before_action :authorize_settings, :load_breadcrumbs
 
   def show

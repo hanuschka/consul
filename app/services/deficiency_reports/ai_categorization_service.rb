@@ -48,7 +48,7 @@ module DeficiencyReports
           chat.ask(user_prompt, with: image_attachment)
         end
 
-        build_result(response.content)
+        build_result(::Ai::StructuredOutput.content_of(response))
       end
 
       def chat

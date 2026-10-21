@@ -3,6 +3,9 @@ class ProjektEvent < ApplicationRecord
   include Imageable
   include ResourceBelongsToProjekt
 
+  translates :title, :description, :location, touch: true
+  include MachineTranslatable
+
   belongs_to :old_projekt, class_name: "Projekt", foreign_key: "projekt_id" # TODO: remove column after data migration con1538
 
   delegate :projekt, to: :projekt_phase
@@ -15,6 +18,7 @@ class ProjektEvent < ApplicationRecord
   validates :max_attendees, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
 
   before_validation :nullify_zero_max_attendees
+  before_validation :clear_max_attendees_without_registration
 
   default_scope { order(datetime: :asc) }
 
@@ -34,12 +38,12 @@ class ProjektEvent < ApplicationRecord
     joins(projekt_phase: :projekt).merge(Projekt.activated).merge(ProjektPhase.active)
   }
 
-  def registration_enabled?
-    max_attendees.present?
-  end
-
   def started?
     datetime.present? && datetime <= Time.zone.now
+  end
+
+  def attendee_limit?
+    max_attendees.present?
   end
 
   def spots_available
@@ -47,7 +51,7 @@ class ProjektEvent < ApplicationRecord
   end
 
   def fully_booked?
-    registration_enabled? && spots_available <= 0
+    attendee_limit? && spots_available <= 0
   end
 
   def registrations_by(user)
@@ -66,5 +70,9 @@ class ProjektEvent < ApplicationRecord
 
     def nullify_zero_max_attendees
       self.max_attendees = nil if max_attendees == 0
+    end
+
+    def clear_max_attendees_without_registration
+      self.max_attendees = nil unless registration_enabled?
     end
 end

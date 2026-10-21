@@ -58,7 +58,19 @@
     }
 
     .sticky-ballot-progress-bar {
-      top: 148px !important;
+      top: $topbar-height + 39px !important;
+
+      @media screen and (max-width: $small-tablet-viewport-start) {
+        top: $topbar-height-mobile + 39px !important;
+      }
+    }
+  }
+
+  &:has(.studio-admin-topbar) .skiptranslate ~ .wrapper .sticky-ballot-progress-bar {
+    top: calc(#{$topbar-height} + var(--admin-topbar-height) + 39px) !important;
+
+    @media screen and (max-width: $small-tablet-viewport-start) {
+      top: $topbar-height-mobile + 39px !important;
     }
   }
 

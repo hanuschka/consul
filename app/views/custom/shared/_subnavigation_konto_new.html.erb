@@ -31,7 +31,5 @@
 <% end %>
 
 <% if placement == 'mobile' %>
-  <%= render partial: 'shared/subnavigation_locale_new', locals: { placement: placement } if extended_feature?("general.language_switcher_in_menu") %>
-
   <%= render "devise/menu/login_items_new", compact: true %>
 <% end %>

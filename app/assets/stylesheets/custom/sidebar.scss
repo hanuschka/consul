@@ -1,5 +1,6 @@
 .custom-new-design {
-  .sidebar-filter-radio {
+  .sidebar-filter-radio,
+  .sidebar-filter-checkbox {
     ul {
       list-style-type: none;
       margin-bottom: 0;
@@ -18,7 +19,6 @@
     }
 
     .checkmark::before {
-       content: "\f111";
        font-family: 'Font Awesome 5 Free';
        font-weight: normal;
     }
@@ -31,15 +31,40 @@
 
       .checkmark::before {
         color: $dt-base;
-        content: "\f192";
       }
     }
+  }
 
-    input[type='checkbox'],
-    input[type='radio'] {
-      position: absolute;
-      opacity: 0;
-      z-index: -1;
+  .sidebar-filter-radio input[type='checkbox'],
+  .sidebar-filter-radio input[type='radio'],
+  .sidebar-filter-checkbox input[type='checkbox'] {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+  }
+
+  .sidebar-filter-radio {
+    .checkmark::before {
+       content: "\f111";
+    }
+
+    .selected-option .checkmark::before {
+      content: "\f192";
+    }
+  }
+
+  .sidebar-filter-checkbox {
+    label:focus-within {
+      outline: 2px solid $dt-base;
+      outline-offset: 2px;
+    }
+
+    .checkmark::before {
+       content: "\f0c8";
+    }
+
+    .selected-option .checkmark::before {
+      content: "\f14a";
     }
   }
 }

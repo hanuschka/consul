@@ -43,6 +43,7 @@ de:
         success: Dokument wurde erfolgreich importiert
       ai_generate_with_file:
         no_file: Keine Datei hochgeladen
+        unexpected_error: Beim Import ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.
         user_prompt_placeholder: |
           „Formuliere die Sektion XY verständlicher für die Öffentlichkeit."
           „Erstelle zusätzlich einen eigenen Inhaltsblock in leichter Sprache."
@@ -52,6 +53,7 @@ de:
       ai_generate_with_prompt:
         no_prompt: Bitte geben Sie einen Prompt ein
         generation_failed: KI konnte keine Struktur erstellen
+        unexpected_error: Beim Generieren ist ein unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.
       ai_create:
         modal_title: Inhaltsblock mit KI erstellen
         description: "Beschreiben Sie kurz, welchen Inhaltsblock Sie benötigen. Die KI nutzt vorhandene Vorlagen als Inspiration und kann optional den vollständigen Projektkontext einbeziehen, um einen neuen Block zu erstellen."
@@ -66,8 +68,13 @@ de:
         submit_shortcut_hint_html: "Tipp: %{shortcut} zum Absenden drücken"
         cancel: Generierung abbrechen
         processing_message: Inhaltsblock wird erstellt...
-        fallback_note: "Vorlagen von demokratie.today sind nicht verfügbar. KI nutzt nur lokale Vorlagennamen als Inspiration."
+        fallback_note: "Die Vorlagenliste konnte nicht geladen werden. Die KI erstellt den Block ohne Vorlagenbezug."
         cancel_acknowledged: Generierung wird abgebrochen
+        steps:
+          queued: Anfrage wird vorbereitet...
+          templates: Vorlagen werden geladen...
+          generating: Inhalt wird von der KI erstellt...
+          finishing: Inhalt wird geprüft und eingefügt...
         errors:
           no_prompt: Bitte geben Sie einen Prompt ein
           generation_failed: Fehler beim Generieren des Inhaltsblocks
@@ -75,6 +82,8 @@ de:
       destroy_all:
         success: Alle Inhaltsblöcke gelöscht
     sidebar_filter:
+      checkbox:
+        updates_on_change: Die Liste wird bei jeder Auswahl neu geladen.
       my_posts:
         title: 'Meine Beiträge'
         all: 'Alle'

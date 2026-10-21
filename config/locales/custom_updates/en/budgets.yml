@@ -39,6 +39,9 @@ en:
     budgets:
       investments:
         index:
+          informing:
+            title: No proposals yet
+            starts_at: "Proposals can only be submitted in the next phase, which starts on %{date}."
           title: Investments overview
           welcome_default_text_html: In participation projects, citizens can create investment proposals and collect them on this page. Investment proposals can be filtered according to the respective budget and feasibility.
           search_form:
@@ -102,7 +105,7 @@ en:
           qualified_supports: "Total votes: %{count}"
           line_weight_label: "Your votes"
           unverified_note: "Your data will be checked manually. This can take 1-2 working days. After that, your votes will be released."
-          unverified_note_no_data_html: "Plaese %{verify_account}, to make sure your votes are counted."
+          unverified_note_no_data_html: "Please %{verify_account} to make sure your votes are counted."
           unfeasible_html: "This investment proposal <strong>was marked as not feasible</strong> and will not take part in voting."
           feasible_html: "This proposal was classified as feasible."
         show:

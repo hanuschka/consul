@@ -17,11 +17,17 @@ Rails.application.configure do
   # preloads Rails for running tests, you may have to set it to true.
   config.eager_load = false
 
+  config.assets.css_compressor = nil
+
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
   config.public_file_server.headers = {
     "Cache-Control" => "public, max-age=#{1.hour.to_i}"
   }
+
+  # Match production/staging: sassc-rails defaults any env without this key to
+  # the libsass compressor, which rejects CSS min() mixing vh and dvh.
+  config.assets.css_compressor = nil
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
@@ -53,10 +59,13 @@ Rails.application.configure do
 
   config.cache_store = :null_store
 
+  # Skip per-query SQL logging; it wrote ~500 MB of test.log per day.
+  config.log_level = :info
+
   config.after_initialize do
-    Bullet.enable = true
-    Bullet.bullet_logger = true
     if ENV["BULLET"]
+      Bullet.enable = true
+      Bullet.bullet_logger = true
       Bullet.raise = true # raise an error if n+1 query occurs
     end
   end

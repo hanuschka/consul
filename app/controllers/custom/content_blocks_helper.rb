@@ -19,6 +19,10 @@ module ContentBlocksHelper
     tag_name: "p"
   )
     block = SiteCustomization::ContentBlock.custom_block_for(key)
+    inline_urls = site_content_block_inline_urls(block)
+
+    return "" if inline_urls.nil? && block.present? && !block.publicly_visible?
+
     block_body =
       if content_block_body_blank?(block&.body)
         default_content || ""
@@ -31,8 +35,6 @@ module ContentBlocksHelper
     if custom_prefix
       block_body = "#{custom_prefix} #{block_body}"
     end
-
-    inline_urls = site_content_block_inline_urls(block)
 
     if inline_urls
       sanitized_body = AdminWYSIWYGSanitizer.new.sanitize(block_body)
@@ -96,6 +98,7 @@ module ContentBlocksHelper
     res << " data-update-url=\"#{inline_urls[:update_url]}\""
     res << " data-ai-url=\"#{inline_urls[:ai_url]}\""
     res << " data-generate-url=\"#{inline_urls[:generate_url]}\""
+    res << content_block_visibility_data_attributes(block)
 
     if default_content.present?
       res << " data-default-content=\"#{ERB::Util.html_escape(default_content)}\""
@@ -117,6 +120,18 @@ module ContentBlocksHelper
     end
 
     res
+  end
+
+  # Read by the studio editor to render the eye/calendar state. Every value is
+  # a boolean, a fixed status word or a formatted time, so none needs escaping.
+  def content_block_visibility_data_attributes(block)
+    state = block.visibility_state
+
+    attributes = " data-visible=\"#{state[:visible]}\""
+    attributes << " data-visible-from=\"#{state[:visible_from]}\""
+    attributes << " data-visible-until=\"#{state[:visible_until]}\""
+    attributes << " data-visibility-status=\"#{state[:status]}\""
+    attributes.html_safe
   end
 
   def wrap_with_admin_empty_hint(block_html)
@@ -170,7 +185,7 @@ module ContentBlocksHelper
   def render_custom_content_block?(key)
     content_block = SiteCustomization::ContentBlock.find_custom_block(key)
 
-    return true if content_block&.body.present?
+    return true if content_block&.body.present? && content_block.publicly_visible?
 
     current_user.present? && current_user&.administrator?
   end
@@ -178,7 +193,7 @@ module ContentBlocksHelper
   def render_custom_projekt_content_block?(key, projekt)
     content_block = SiteCustomization::ContentBlock.find_custom_block(key)
 
-    return true if content_block&.body.present?
+    return true if content_block&.body.present? && content_block.publicly_visible?
 
     current_user&.administrator? || current_user&.projekt_manager?(projekt)
   end

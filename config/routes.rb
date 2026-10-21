@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   draw "adm/projekts"
   draw "adm/landing_pages"
   draw "adm/deficiency_reports"
+  draw "adm/municipal_plans"
   draw "adm/moderation"
   draw "adm/valuation"
   draw "adm/officing"
@@ -39,11 +40,13 @@ Rails.application.routes.draw do
   draw :verification
   draw :projekt
   draw :ideas
+  draw :municipal_plans
   draw :projekt_management
   draw :deficiency_report_management
   draw :idea_management
   draw :internal_api
   draw :api
+  draw :whatsapp_api
   draw :custom
 
   root "welcome#index"
@@ -55,7 +58,6 @@ Rails.application.routes.draw do
   resources :images, only: [:destroy]
   resources :documents, only: [:destroy]
   resources :follows, only: [:create, :destroy]
-  resources :remote_translations, only: [:create]
 
   # Deficiency reports
   resources :deficiency_reports, only: [:index, :show, :new, :create, :destroy] do
@@ -71,11 +73,6 @@ Rails.application.routes.draw do
       put     :unflag
     end
   end
-
-  # More info pages
-  get "help",             to: "pages#show", id: "help/index",             as: "help"
-  get "help/how-to-use",  to: "pages#show", id: "help/how_to_use/index",  as: "how_to_use"
-  get "help/faq",         to: "pages#show", id: "faq",                    as: "faq"
 
   # Static pages
   resources :pages, path: "/", only: [:show] do

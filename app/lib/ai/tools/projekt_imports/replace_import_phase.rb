@@ -5,7 +5,7 @@ class Ai::Tools::ProjektImports::ReplaceImportPhase < Ai::Tools::ProjektImports:
               "phase object is lost, so always include its poll questions, events, " \
               "milestones and other resources."
 
-  params Ai::Tools::ProjektImports::PhaseParamSchema.with_index
+  parameters Ai::Tools::ProjektImports::PhaseParamSchema.with_index
 
   def execute(phase_index:, phase:)
     editor.replace_phase(phase_index, phase.deep_stringify_keys)

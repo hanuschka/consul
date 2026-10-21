@@ -19,6 +19,14 @@ module Mitmachbox
     config[:client_secret]
   end
 
+  def self.participant_key(user_id:, survey_version_id:)
+    OpenSSL::HMAC.hexdigest(
+      "SHA256",
+      Rails.application.secret_key_base,
+      "mitmachbox-participant:#{user_id}:#{survey_version_id}"
+    )
+  end
+
   def self.configured?
     base_url.present? && org_id.present? && client_id.present? && client_secret.present?
   end

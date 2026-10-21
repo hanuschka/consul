@@ -1,0 +1,15 @@
+// Standalone pack exposing Font Awesome to host pages outside the main app
+// packs (currently the /adm Kern-UX shell, which needs the .fa* classes for
+// its icon pickers). The main app gets the same partials via application.scss.
+//
+// /adm cannot pull these through application.adm.scss: that file is compiled
+// by the dart-sass CLI, which resolves neither the font-awesome-sass gem's
+// load path nor the font-url helper that font-awesome-sprockets relies on to
+// point at the fingerprinted webfont assets.
+
+@import "font-awesome-sprockets";
+@import "font-awesome/variables";
+@import "font-awesome/path";
+@import "font-awesome/mixins";
+@import "font-awesome/core";
+@import "font-awesome/icons";

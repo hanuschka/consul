@@ -27,6 +27,18 @@ module MailerHelper
     )
   end
 
+  def mailer_inline_html(html)
+    return "" if html.blank?
+
+    fragment = Nokogiri::HTML::DocumentFragment.parse(AdminWYSIWYGSanitizer.new.sanitize(html))
+    fragment.children
+            .map { |node| node.name == "p" ? node.inner_html : node.to_html }
+            .map(&:strip)
+            .reject(&:blank?)
+            .join("<br><br>")
+            .html_safe
+  end
+
   def mailer_simple_format(text)
     simple_format(sanitize_and_auto_link(text), { style: css_for_mailer_text }, sanitize: false)
   end

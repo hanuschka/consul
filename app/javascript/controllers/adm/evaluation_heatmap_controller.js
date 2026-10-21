@@ -1,6 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-
-const LEAFLET_JS = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+import { loadLeaflet } from "../../lib/map_vendor_assets"
 
 const DEFAULT_CENTER = [51.163, 10.447]
 const DEFAULT_ZOOM = 12
@@ -17,45 +16,6 @@ const HEAT_OPTIONS = {
     0.7: "rgba(255, 150, 0, 0.85)",
     1.0: "rgba(255, 0, 0, 0.9)"
   }
-}
-
-let scriptsPromise = null
-
-const loadScript = (src) =>
-  new Promise((resolve, reject) => {
-    const existing = document.querySelector(`script[src="${src}"]`)
-
-    if (existing) {
-      if (existing.dataset.loaded === "true") {
-        resolve()
-      } else {
-        existing.addEventListener("load", () => resolve())
-        existing.addEventListener("error", reject)
-      }
-
-      return
-    }
-
-    const script = document.createElement("script")
-    script.src = src
-    script.async = false
-    script.addEventListener("load", () => {
-      script.dataset.loaded = "true"
-      resolve()
-    })
-    script.addEventListener("error", reject)
-    document.head.appendChild(script)
-  })
-
-const loadLeaflet = () => {
-  if (scriptsPromise) return scriptsPromise
-
-  scriptsPromise = (async () => {
-    if (typeof window.L === "undefined") await loadScript(LEAFLET_JS)
-    if (typeof window.L.heatLayer !== "function") await import("leaflet.heat/dist/leaflet-heat")
-  })()
-
-  return scriptsPromise
 }
 
 export default class extends Controller {

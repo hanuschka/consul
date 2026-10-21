@@ -1,0 +1,37 @@
+<%# The page's answer to "what is being sent right now", for all eleven places a
+    template name can be stored. One row per slot, one line each: the two
+    broadcast variants and the nine pushes read the same way, because to an
+    admin they are the same question asked eleven times. %>
+<section class="adm-whatsapp-page--slots mb-5">
+  <h2 class="kern-heading-medium mb-2"><%= t("adm.whatsapp.show.slots_title") %></h2>
+
+  <p class="kern-body adm-whatsapp-page--explanation mb-2">
+    <%= t("adm.whatsapp.show.slots_intro") %>
+  </p>
+
+  <p class="kern-body kern-body--bold mb-3">
+    <%= t("adm.whatsapp.show.slots_armed_summary",
+      count: @armed_slot_count, total: @template_slots.size) %>
+  </p>
+
+  <div class="kern-table-responsive" tabindex="0">
+    <table class="kern-table adm-whatsapp-page--slot-table">
+      <thead class="kern-table__head">
+        <tr class="kern-table__row">
+          <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.show.slot_column") %></th>
+          <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.show.template_name") %></th>
+          <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.show.template_language") %></th>
+          <th scope="col" class="kern-table__header"><%= t("adm.whatsapp.show.template_status") %></th>
+          <th scope="col" class="kern-table__header kern-table__header--action">
+            <%= t("adm.whatsapp.show.template_use") %>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody class="kern-table__body">
+        <%= render partial: "adm/whatsapp/template_slot_row",
+          collection: @template_slots, as: :slot %>
+      </tbody>
+    </table>
+  </div>
+</section>

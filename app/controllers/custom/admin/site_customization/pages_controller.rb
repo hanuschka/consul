@@ -49,7 +49,7 @@ class Admin::SiteCustomization::PagesController < Admin::SiteCustomization::Base
     end
 
     def redirect_path
-      if @page.projekt.present? && @page.published? && params[:origin] == "public_page"
+      if @page.projekt.present? && params[:origin] == "public_page"
         page_path(@page.slug)
       elsif @page.projekt.present?
         namespace = params[:namespace] || :admin

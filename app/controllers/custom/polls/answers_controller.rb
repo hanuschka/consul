@@ -9,7 +9,7 @@ class Polls::AnswersController < ApplicationController
     if @question.vote_type == "multiple_with_weight" &&
          updated_weight > 0 &&
          params[:button] != "remove_answer"
-      answer = @question.find_or_initialize_user_answer(current_user, @answer.answer)
+      answer = @question.find_or_initialize_user_answer(current_user, @answer.question_answer)
       answer.answer_weight = updated_weight
       answer.save_and_record_voter_participation
 

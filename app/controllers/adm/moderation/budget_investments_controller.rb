@@ -1,4 +1,6 @@
 class Adm::Moderation::BudgetInvestmentsController < Adm::Moderation::BaseController
+  include Adm::HidesContributions
+
   FILTERS = %w[pending_flag_review with_ignored_flag hidden all].freeze
 
   def index
@@ -21,8 +23,7 @@ class Adm::Moderation::BudgetInvestmentsController < Adm::Moderation::BaseContro
     @budget_investment = Budget::Investment.find(params[:id])
     authorize @budget_investment, :hide?, policy_class: Adm::Moderation::BudgetInvestmentPolicy
 
-    @budget_investment.hide
-    Activity.log(current_user, :hide, @budget_investment)
+    hide_and_notify_author(@budget_investment)
     @budget_investment.reload
   end
 

@@ -1,8 +1,8 @@
 module GeoServices
   class DistrictConverter < ApplicationService
-    require "proj"
-
     def initialize(coords)
+      require "proj"
+
       @coords = coords
       @transform = Proj::Transformation.new("EPSG:25832", "EPSG:4326")
     end

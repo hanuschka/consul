@@ -6,7 +6,7 @@
     ) %>
   <% end %>
 
-  <%= translatable_form_for(resource, url: @url, html: { class: "js-rich-text-form user-resource-form", id: dom_id(resource, :form) }) do |f| %>
+  <%= translatable_form_for(resource, url: @url, html: { class: form_css_class, id: dom_id(resource, :form) }) do |f| %>
     <% if show_back_button? %>
       <%= back_link %>
     <% end %>
@@ -19,7 +19,7 @@
 
           <% if show_documents_input? %>
             <%= render(Shared::SidebarCardComponent.new(
-              title: "Dokumente hinzufügen",
+              title: t("custom.user_resources.form.documents_card_title"),
               icon_name: "file")) do %>
               <div class="documents" id="attach-documents">
                 <%= render "documents/nested_documents", f: f %>
@@ -27,28 +27,15 @@
             <% end %>
           <% end %>
 
-          <% if translations_interface_enabled? %>
-            <%= render(Shared::SidebarCardComponent.new(
-              title: "Sprachen",
-              opened_on_mobile: true,
-              icon_name: "language")) do %>
-              <p>
-              Wählen Sie aus, in welcher Sprache/welchen Sprachen Ihre Diskussion stattfinden soll:
-              </p>
-              <%= render "shared/globalize_locales", resource: resource %>
-            <% end %>
-          <% end %>
-
           <% if show_external_video_input? %>
             <%= render(Shared::SidebarCardComponent.new(
-              title: "Video hinzufügen",
+              title: t("custom.user_resources.form.video_card_title"),
               opened_on_mobile: true,
               icon_name: "video")) do %>
               <p>
-              Gibt es Videos, die Ihre Argumentation und Sichtweise stützen?
-              Dann fügen Sie diese über einen Link hinzu.
+              <%= t("custom.user_resources.form.video_card_hint") %>
               </p>
-              <%= f.text_field :video_url, label: false, placeholder: "YouTube oder Vimeo-Link eingeben", class: "light-input" %>
+              <%= f.text_field :video_url, label: false, placeholder: t("custom.user_resources.form.video_url_placeholder"), class: "light-input" %>
             <% end %>
           <% end %>
 
@@ -56,7 +43,7 @@
 
           <% if helpers.allowed_to_post_on_behalf_of?(current_user, resource) %>
             <%= render(Shared::SidebarCardComponent.new(
-              title: "Veröffentlichen für",
+              title: t("custom.user_resources.form.on_behalf_of_card_title"),
               opened_on_mobile: true,
               icon_name: "user")) do %>
               <p>
@@ -93,7 +80,9 @@
           </div>
         <% end %>
 
-        <%= render "shared/errors", resource: resource %>
+        <div class="js-user-resource-form-errors">
+          <%= render "shared/errors", resource: resource %>
+        </div>
 
         <% if params[:origin].present? %>
           <%= hidden_field_tag :origin, params[:origin] %>
@@ -207,7 +196,12 @@
             </div>
 
           <% end %>
-          <%= f.submit(t("custom.user_resources.form.submit_button"), class: "button") %>
+          <% if !similar_contributions_check_running? %>
+            <%= f.submit(t("custom.user_resources.form.submit_button"),
+                         class: "button js-user-resource-submit") %>
+          <% end %>
+
+          <%= render ::SimilarContributions::ProgressComponent.new(resource) %>
         </div>
         <% end %>
       </div>
@@ -217,5 +211,17 @@
       </div>
     </div>
 
+  <% end %>
+
+  <%# Outside the form on purpose: the decision block offers the matches with
+      their own support buttons, and button_to inside a form is dropped by the
+      HTML parser. The layout wrapper is the form's own, so the block keeps the
+      width and the left edge of the fields above it. %>
+  <% if !@embbeded_in_ai_flow %>
+    <div class="flex-layout">
+      <div class="main-column">
+        <%= render ::SimilarContributions::DecisionComponent.new(resource) %>
+      </div>
+    </div>
   <% end %>
 </main>

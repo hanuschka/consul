@@ -1,0 +1,27 @@
+<%# One mirrored template setting: title, description and the active value, with
+    no input. The value is written by the templates tab, which is the only place
+    that can vouch for a name Meta has approved — locals: setting. %>
+<div class="attribute-editor-component mb-2" role="group">
+  <div class="kern-title kern-title--small mb-3"><%= t("setting.#{setting.key}") %></div>
+
+  <div class="kern-row">
+    <div class="kern-col-12 kern-col-md-5">
+      <p class="kern-body mb-3 mb-md-0"><%= t("setting.#{setting.key}_description") %></p>
+    </div>
+    <div class="kern-col-12 kern-col-md-5">
+      <% if setting.value.present? %>
+        <p class="kern-body adm-whatsapp-page--mirrored-value"><%= setting.value %></p>
+      <% else %>
+        <p class="kern-body adm-whatsapp-page--mirrored-value adm-whatsapp-page--mirrored-value--empty">
+          <%= t("adm.whatsapp.show.settings_mirrored_value_empty") %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="kern-row">
+  <div class="kern-col-12 kern-col-md-10">
+    <hr class="kern-divider mb-4" aria-hidden="true" />
+  </div>
+</div>

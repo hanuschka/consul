@@ -64,6 +64,61 @@
   </div>
 <% end %>
 
+<%# Cloned by every calendar button's <inline-popup template-id="..."> %>
+<template id="content-block-visibility-period-popup-template">
+  <p class="content-block-visibility-period-popup--intro">
+    <%= t("custom.projekts.page.content_block_visibility_period_popup.description") %>
+  </p>
+
+  <p class="content-block-visibility-period-popup--note js-content-block-visibility-period-hidden-note" hidden>
+    <i class="fas fa-eye-slash" aria-hidden="true"></i>
+    <%= t("custom.projekts.page.content_block_visibility_period_popup.hidden_note") %>
+  </p>
+
+  <div class="content-block-visibility-period-popup--fields">
+    <label class="studio-edit-popup--label">
+      <%= t("custom.projekts.page.content_block_visibility_period_popup.visible_from") %>
+      <input type="datetime-local" class="js-content-block-visible-from-input">
+    </label>
+    <label class="studio-edit-popup--label">
+      <%= t("custom.projekts.page.content_block_visibility_period_popup.visible_until") %>
+      <input type="datetime-local" class="js-content-block-visible-until-input">
+    </label>
+  </div>
+
+  <p class="content-block-visibility-period-popup--error js-content-block-visibility-period-order-error" role="alert" hidden>
+    <%= t("custom.projekts.page.content_block_visibility_period_popup.order_error") %>
+  </p>
+  <p class="content-block-visibility-period-popup--error js-content-block-visibility-period-save-error" role="alert" hidden>
+    <%= t("custom.projekts.page.content_block_visibility_period_popup.save_error") %>
+  </p>
+
+  <div class="content-block-visibility-period-popup--actions js-content-block-visibility-period-actions">
+    <button
+      type="button"
+      class="studio-edit-button -green -with-background js-content-block-accept-visibility-period"
+    >
+      <i class="fas fa-save"></i>
+      <%= t("custom.projekts.page.studio_edit_popup.save") %>
+    </button>
+    <button
+      type="button"
+      class="studio-edit-button -with-background"
+      data-inline-popup-close
+    >
+      <i class="fas fa-xmark"></i>
+      <%= t("custom.projekts.page.studio_edit_popup.cancel") %>
+    </button>
+    <button
+      type="button"
+      class="studio-edit-button -red -with-background content-block-visibility-period-popup--clear js-content-block-clear-visibility-period"
+    >
+      <i class="fas fa-calendar-times"></i>
+      <%= t("custom.projekts.page.content_block_visibility_period_popup.clear") %>
+    </button>
+  </div>
+</template>
+
 <%= render Shared::ModalComponent.new(id: "siteCodeEditorModal", blur_backdrop: false) do %>
   <div class="site-code-editor-modal--content">
     <div class="site-code-editor-modal--header">
@@ -173,6 +228,7 @@
               <i class="fas fa-check"></i>
             </div>
           </div>
+          <div class="ai-edit-mode--step js-ai-edit-step"></div>
           <div class="ai-instructions-hint js-ai-instructions-hint">
             <%= t('ai.instructions_hint') %>
           </div>

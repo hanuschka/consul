@@ -25,9 +25,15 @@ class ProjektImports::AttachSourceImagesService < ApplicationService
       image_urls: embeddable.filter_map { |candidate| store_admin_image(candidate) }
     )
   rescue StandardError => e
-    Rails.logger.error("[ProjektImports::AttachSourceImagesService] failed: #{e.message}")
-    Sentry.capture_exception(e, extra: { projekt_import_id: projekt_import.id, stage: "source_images" }) if defined?(Sentry)
-    projekt_import.add_warning!(I18n.t("adm.projekts.imports.warnings.source_images_failed", message: e.message))
+    projekt_import.add_warning!(
+      ProjektImports::FailureReporter.warning_message(
+        e,
+        source: self.class.name,
+        stage: "source_images",
+        key: "source_images_failed",
+        sentry_context: { projekt_import_id: projekt_import.id }
+      )
+    )
 
     ServiceResult.success(hero_attached: false, image_urls: [])
   end
@@ -78,7 +84,14 @@ class ProjektImports::AttachSourceImagesService < ApplicationService
     admin_image.url_content
   rescue StandardError => e
     projekt_import.add_warning!(
-      I18n.t("adm.projekts.imports.warnings.source_image_store_failed", image: candidate.filename, message: e.message)
+      ProjektImports::FailureReporter.warning_message(
+        e,
+        source: self.class.name,
+        stage: "source_images",
+        key: "source_image_store_failed",
+        sentry_context: { projekt_import_id: projekt_import.id },
+        image: candidate.filename
+      )
     )
     nil
   end

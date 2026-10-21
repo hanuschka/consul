@@ -4,6 +4,7 @@ class DeficiencyReport::Status < ApplicationRecord
   translates :title, touch: true
   translates :description, touch: true
   include Globalizable
+  include MachineTranslatable
 
   has_many :deficiency_reports, foreign_key: :deficiency_report_status_id
 
@@ -35,7 +36,7 @@ class DeficiencyReport::Status < ApplicationRecord
   end
 
   def safe_to_destroy?
-    !deficiency_reports.exists?
+    !deficiency_reports.with_deleted.exists?
   end
 
   def self.order_statuses(ordered_array)

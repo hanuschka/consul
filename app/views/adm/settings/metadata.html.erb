@@ -10,6 +10,7 @@
 <div class="kern-container">
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "org_name"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "url"), :value, :string) %>
+  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "handbook.url"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "mailer_from_address"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "mailer_from_name"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_title"), :value, :string) %>

@@ -1,5 +1,6 @@
 class Projekts::GenerateBannerImageJob < ApplicationJob
   queue_as :default
+  self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
 
   def perform(projekt_id, user_id, user_prompt = nil, use_projekt_content = true)
     projekt = Projekt.find_by(id: projekt_id)

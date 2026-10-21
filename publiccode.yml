@@ -1,20 +1,47 @@
-publiccodeYmlVersion: '0.4'
+# This repository adheres to the publiccode.yml standard by including this 
+# metadata file that makes public software easily discoverable.
+# More info at https://github.com/italia/publiccode.yml
+
+publiccodeYmlVersion: '0.2'
 name: Mitmachportal Würzburg
 url: 'https://gitlab.opencode.de/wuerzburg/mitmachportal/mitmachportal'
-landingURL: 'https://mitmachportal.wuerzburg.de'
-landingUrl: 'https://mitmachportal.wuerzburg.de'
-isBasedOn: 'https://github.com/consuldemocracy/consuldemocracy'
-softwareVersion: '2026-06-29'
+landingURL: 'https://gitlab.opencode.de/wuerzburg/mitmachportal/mitmachportal'
+softwareVersion: 2026.06.29
 releaseDate: '2026-06-29'
+developmentStatus: stable
+softwareType: standalone/backend
 logo: logo.svg
 platforms:
   - web
+usedBy:
+  - Stadt Wuerzburg
+  - Landkreis Würzburg
+dependsOn:
+  open:
+    - name: Ruby on Rails
+    - name: PostgreSQL
 categories:
+  - collaboration
   - digital-citizenship
-  - online-community
-  - smart-city
-developmentStatus: stable
-softwareType: standalone/web
+  - feedback-and-reviews-management
+  - communications
+maintenance:
+  type: contract
+  contractors:
+    - name: demokratie.today
+      until: '2027-01-31'
+legal:
+  license: AGPL-3.0
+  mainCopyrightOwner: demokratie.today
+  repoOwner: Stadt Wuerzburg
+intendedAudience:
+  scope:
+    - government
+    - local-authorities
+localisation:
+  localisationReady: true
+  availableLanguages:
+    - de
 description:
   de:
     localisedName: Mitmachportal der Region Würzburg
@@ -24,20 +51,17 @@ description:
       Bürgerhaushalt, Vorschläge und weitere Beteiligungsformate.
     longDescription: >-
       Das Mitmachportal ist die Online-Beteiligungsplattform von Stadt und
-      Landkreis Würzburg. Bürgerinnen und Bürger können Vorschläge
-      einreichen, diskutieren und über Beteiligungsprojekte wie den
-      Bürgerhaushalt abstimmen. Beteiligungsverfahren werden als Projekte
-      mit eigenen Phasen abgebildet – von der Ideensammlung über die
-      Diskussion bis zur Abstimmung und der Rückmeldung der Verwaltung.
-      Ortsbezogene Anliegen und Projekte können auf einer interaktiven
-      Karte verortet werden. Ein geschützter Verwaltungsbereich dient der
-      Redaktion, Moderation und Auswertung der eingegangenen Beiträge. Die
-      Plattform basiert auf einer angepassten Version der
-      Open-Source-Software Consul, ist datenschutzfreundlich
-      vorkonfiguriert und wird von demokratie.today betrieben, gehostet
-      und weiterentwickelt.
-    documentation: 'https://gitlab.opencode.de/wuerzburg/mitmachportal/mitmachportal/-/blob/cli_wur_2/BETRIEBSHANDBUCH.md'
-    apiDocumentation: 'https://mitmachportal.wuerzburg.de/api/docs'
+      Landkreis Würzburg. Bürgerinnen und Bürger können Vorschläge einreichen,
+      diskutieren und über Beteiligungsprojekte wie den Bürgerhaushalt
+      abstimmen. Beteiligungsverfahren werden als Projekte mit eigenen Phasen
+      abgebildet – von der Ideensammlung über die Diskussion bis zur Abstimmung
+      und der Rückmeldung der Verwaltung. Ortsbezogene Anliegen und Projekte
+      können auf einer interaktiven Karte verortet werden. Ein geschützter
+      Verwaltungsbereich dient der Redaktion, Moderation und Auswertung der
+      eingegangenen Beiträge. Die Plattform basiert auf einer angepassten
+      Version der Open-Source-Software Consul, ist datenschutzfreundlich
+      vorkonfiguriert und wird von demokratie.today betrieben, gehostet und
+      weiterentwickelt.
     features:
       - Bürgerbeteiligung
       - Bürgerhaushalt
@@ -47,30 +71,31 @@ description:
       - Geschützter Redaktions- und Moderationsbereich
     screenshots:
       - doc/publiccode/screenshot.png
-legal:
-  license: AGPL-3.0
-  mainCopyrightOwner: demokratie.today
-  repoOwner: Stadt Würzburg
-maintenance:
-  type: contract
-  contractors:
-    - name: demokratie.today
-      email: info@demokratie.today
-      website: 'https://demokratie.today'
-      until: '2027-01-31'
-localisation:
-  localisationReady: true
-  availableLanguages:
-    - de
-intendedAudience:
-  countries:
-    - de
-  scope:
-    - local-authorities
-usedBy:
-  - Stadt Würzburg
-  - Landkreis Würzburg
-dependsOn:
-  open:
-    - name: Ruby on Rails
-    - name: PostgreSQL
+    documentation: >-
+      https://gitlab.opencode.de/wuerzburg/mitmachportal/mitmachportal/-/blob/cli_wur_2/BETRIEBSHANDBUCH.md
+    apiDocumentation: 'https://mitmachportal.wuerzburg.de/api/docs'
+  en:
+    localisedName: Mitmachportal der Region Würzburg
+    genericName: Citizen participation platform
+    shortDescription: >-
+      Digital participation platform by the City and District of Würzburg for
+      citizen budgeting, proposals, and other participation formats.
+    longDescription: >-
+      The Mitmachportal is the online participation platform of the City and
+      District of Würzburg. Citizens can submit proposals, engage in
+      discussions, and vote on participation projects such as the citizen
+      budget. Participation processes are structured as projects with distinct
+      phases—from idea collection and discussion to voting and administrative
+      feedback. Location-based concerns and projects can be pinned on an
+      interactive map. A secure administrative area is used for editing,
+      moderating, and evaluating submitted contributions. The platform is based
+      on a customized version of the open-source software Consul, comes
+      pre-configured with privacy-friendly settings, and is operated, hosted,
+      and further developed by demokratie.today.
+    features:
+      - Citizen participation
+      - Citizen budget (participatory budgeting)
+      - Proposals and voting
+      - Discussion forums
+      - Location-based participation on an interactive map
+      - Secure editorial and moderation area

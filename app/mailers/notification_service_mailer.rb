@@ -316,6 +316,8 @@ class NotificationServiceMailer < ApplicationMailer
                            polymorphic_url([namespace, @root_memoable.budget, @root_memoable])
                          elsif @root_memoable.is_a?(MunicipalPlan)
                            adm_municipal_plans_municipal_plan_url(@root_memoable)
+                         elsif @root_memoable.is_a?(DeficiencyReport)
+                           adm_deficiency_reports_deficiency_report_url(@root_memoable)
                          else
                            polymorphic_url([namespace, @root_memoable])
                          end

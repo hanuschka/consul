@@ -1,0 +1,184 @@
+name: Nightly specs on new-connection
+
+on:
+  schedule:
+    - cron: "17 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly-specs
+  cancel-in-progress: true
+
+jobs:
+  rspec:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      TZ: Europe/Berlin
+
+    steps:
+      - id: checkout
+        uses: actions/checkout@v4
+        with:
+          ref: new-connection
+
+      - id: system
+        name: Install system packages
+        run: sudo apt-get update && sudo apt-get install -y imagemagick libpq-dev
+
+      - id: ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - id: node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - id: assets
+        name: Build /adm assets
+        run: |
+          npm ci
+          npm run build
+          npm run build:css
+
+      - id: config
+        name: Write config files
+        run: |
+          cat > config/database.yml <<'YAML'
+          test:
+            adapter: postgresql
+            encoding: unicode
+            host: localhost
+            username: postgres
+            password: postgres
+            pool: 5
+            database: consul_test
+          YAML
+          cp config/secrets.yml.example config/secrets.yml
+          cat >> config/secrets.yml <<'YAML'
+
+          test:
+            secret_key_base: "nightly-specs-dummy-secret-key-base-0000000000000000000000000000000000000000"
+            server_name: "localhost"
+            force_ssl: false
+            delay_jobs: false
+            email_interceptor_recipients: ""
+            http_basic_username: ""
+            http_basic_password: ""
+            authentication_logs: false
+            devise_lockable: false
+            managers_url: ""
+            managers_application_key: ""
+            multitenancy: false
+            swagger_host_url: "http://localhost:3000"
+            security:
+              last_sign_in: false
+              password_complexity: false
+              devise_confirm_within_days: 3
+              devise_timeout_in_minutes: 30
+            <<: *maps
+            <<: *mapbox
+            <<: *masterportal
+            <<: *apis
+            <<: *dt
+            <<: *ai
+            <<: *mitmachbox
+            <<: *deepl
+            <<: *kobil
+            <<: *whatsapp
+          YAML
+
+      - id: database
+        name: Prepare database
+        run: bin/rails db:create db:schema:load
+
+      - id: rspec
+        name: Run specs
+        timeout-minutes: 35
+        run: |
+          status=0
+          bundle exec rspec --format progress > rspec.log 2>&1 || status=$?
+          grep -E "^[0-9]+ examples" rspec.log || echo "rspec exited with status ${status} before printing a summary"
+          exit $status
+
+      - name: Notify Teams on failure
+        if: failure()
+        env:
+          TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.AZURE_REFRESH_TOKEN }}
+          CHAT_ID: ${{ secrets.TEAMS_CHAT_ID_GROUP }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RSPEC_OUTCOME: ${{ steps.rspec.outcome }}
+          SETUP_OUTCOMES: >-
+            checkout=${{ steps.checkout.outcome }}
+            system_packages=${{ steps.system.outcome }}
+            ruby=${{ steps.ruby.outcome }}
+            node=${{ steps.node.outcome }}
+            asset_build=${{ steps.assets.outcome }}
+            config_files=${{ steps.config.outcome }}
+            database=${{ steps.database.outcome }}
+        run: |
+          if [ "$RSPEC_OUTCOME" = "skipped" ]; then
+            FAILED_STEP=unknown
+            for outcome in $SETUP_OUTCOMES; do
+              if [ "${outcome#*=}" = "failure" ]; then
+                FAILED_STEP=${outcome%%=*}
+                break
+              fi
+            done
+            SUMMARY="Setup failed at step: ${FAILED_STEP}. No specs ran — see the run for details."
+            DETAILS=""
+          else
+            SUMMARY=$(grep -E "^[0-9]+ examples" rspec.log 2>/dev/null | tail -1)
+            if [ -n "$SUMMARY" ]; then
+              DETAILS=$(grep "^rspec ./spec" rspec.log | sed -E 's/ #.*//' | head -20)
+            else
+              SUMMARY="rspec crashed before printing a summary."
+              DETAILS=$(tail -15 rspec.log 2>/dev/null)
+            fi
+          fi
+          FAILED=$(printf '%s\n' "$DETAILS" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g' | paste -sd '|' - | sed 's/|/<br>/g')
+
+          TOKEN=$(curl -s --fail -X POST \
+            "https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=refresh_token&refresh_token=${REFRESH_TOKEN}&scope=Chat.ReadWrite+offline_access" \
+            | jq -r '.access_token')
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "Could not get a Microsoft Graph token for the Teams message"
+            exit 1
+          fi
+
+          MESSAGE="❌ <b>Nightly specs failed on new-connection</b><br><br>${SUMMARY}<br><br>${FAILED}<br><br>🔗 ${RUN_URL}"
+
+          jq -n --arg content "$MESSAGE" '{body: {contentType: "html", content: $content}}' \
+            | curl -s --fail -o /dev/null -X POST \
+              "https://graph.microsoft.com/v1.0/chats/${CHAT_ID}/messages" \
+              -H "Authorization: Bearer ${TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d @-

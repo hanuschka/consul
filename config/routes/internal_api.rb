@@ -19,6 +19,8 @@ namespace :internal_api do
     resources :projekt_content_blocks, only: [:create]
   end
 
+  resources :municipal_plans, only: [:index, :show]
+
   resources :users, only: [] do
     member do
       patch :mark_as_on_dt
@@ -72,6 +74,7 @@ namespace :internal_api do
   patch "connection/sync_client_domain", to: "connection#sync_client_domain"
 
   get "stats", to: "stats#show"
+  get "stats/memory", to: "stats#memory"
 
   get "ai_features", to: "ai_features#show"
 end

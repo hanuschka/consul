@@ -18,6 +18,10 @@
   //   dismiss    "auto" (default — closes on outside click + Escape) |
   //              "manual" (stays open on outside click; Escape, the
   //              trigger and [data-inline-popup-close] still close it)
+  //   template-id  clone the body from an external <template> by id instead
+  //                of an inline one; the shared template stays in place, so
+  //                many popups can use it
+  //   body-class   extra css class(es) added to the popup body element
   //
   // Public methods: open(), close(), toggle().
   // Any element with [data-inline-popup-close] inside the body closes the popup.
@@ -41,7 +45,7 @@
 
     setup() {
       this.trigger = this.findTrigger()
-      const template = this.querySelector(":scope > template")
+      const template = this.findTemplate()
 
       if (!this.trigger || !template) return
 
@@ -57,12 +61,22 @@
       return Array.from(this.children).find((child) => child.tagName !== "TEMPLATE")
     }
 
+    findTemplate() {
+      const templateId = this.getAttribute("template-id")
+
+      if (templateId) return document.getElementById(templateId)
+
+      return this.querySelector(":scope > template")
+    }
+
     buildBody(template) {
       const body = document.createElement("div")
+      const extraClasses = (this.getAttribute("body-class") || "").split(/\s+/).filter(Boolean)
 
       inlinePopupIdCounter += 1
       body.id = `inline-popup-${inlinePopupIdCounter}`
       body.className = "inline-popup--body"
+      body.classList.add(...extraClasses)
       body.setAttribute("role", "dialog")
 
       if (SUPPORTS_POPOVER) {
@@ -70,7 +84,8 @@
       }
 
       body.appendChild(template.content.cloneNode(true))
-      template.remove()
+
+      if (template.parentElement === this) template.remove()
 
       this.appendChild(body)
       this.body = body

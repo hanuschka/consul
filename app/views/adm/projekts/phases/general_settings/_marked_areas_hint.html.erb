@@ -1,0 +1,12 @@
+<% unless projekt_phase.map_boundary.restricted? %>
+  <div class="kern-row">
+    <div class="kern-col-12 kern-col-md-10">
+      <div class="kern-alert kern-alert--info mb-4" role="status">
+        <div class="kern-alert__header">
+          <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+          <span class="kern-title"><%= t("adm.projekts.phases.general_settings.no_marked_areas") %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

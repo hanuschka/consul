@@ -149,6 +149,8 @@ en:
     milestones:
       collapse_title: Milestones - set by the administration (%{count})
     pages:
+      forbidden:
+        visibility_restricted_to: "Visibility is restricted to: %{groups}"
       impressum:
         title: Imprint
       contact_us:

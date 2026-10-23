@@ -46,7 +46,9 @@
           <% status_chips.each do |chip| %>
             <% if chip[:phase].present? %>
               <%= link_to projekt_phase_footer_tab_page_path(@projekt.page, chip[:phase]),
-                class: "custom-page--banner-chip #{chip[:modifier]} js-remote-link-push-state js-sidebar-phase-link",
+                class: ["custom-page--banner-chip", chip[:modifier], "js-banner-phase-chip",
+                        ("-deactivated" if phase_chips_deactivated?),
+                        "js-remote-link-push-state", "js-sidebar-phase-link"].compact.join(" "),
                 onclick: "$('#footer-content').addClass('show-loader');",
                 title: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]),
                 aria: { label: t("custom.projekts.page.sidebar.banner.go_to_phase", title: chip[:text]) },
@@ -163,8 +165,8 @@
               </div>
             </div>
             <%= studio_rich_tooltip(
-              title: "Titelbild ändern",
-              text: "Lädt ein neues Titelbild für diese Seite hoch. Empfohlen wird ein breites Querformat in hoher Auflösung.",
+              title: t("custom.studio.change_banner.title"),
+              text: t("custom.studio.change_banner.text"),
               delay: 1200
             ) do %>
               <label for="projektImageUploadInput" class="image-change-button projekt-image-upload-button js-studio-hide-on-preview">
@@ -210,8 +212,8 @@
               </button>
             <% end %>
             <%= studio_rich_tooltip(
-              title: "Titelbild entfernen",
-              text: "Entfernt das aktuelle Titelbild. Die Seite wird anschließend ohne Banner angezeigt.",
+              title: t("custom.studio.remove_banner.title"),
+              text: t("custom.studio.remove_banner.text"),
               delay: 1200
             ) do %>
               <button type="button"

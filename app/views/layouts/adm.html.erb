@@ -16,9 +16,10 @@
 
     <%= stylesheet_link_tag "elements" %>
     <%= stylesheet_link_tag "application.adm" %>
-    <!-- Font Awesome for icon selection (temporary until frontend migrates to Material) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <%# Font Awesome for icon selection (temporary until frontend migrates to Material) %>
+    <%= stylesheet_link_tag "font_awesome" %>
     <%= javascript_include_tag "elements", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "vendor_asset_urls", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application-kern", "data-turbo-track": "reload", type: "module", crossorigin: "anonymous" %>
   </head>
 
@@ -32,7 +33,7 @@
 
       <%# Rechts daneben: Header + Sidebar + Content %>
       <div class="flex-grow-1 d-flex flex-column" style="min-width: 0;">
-        <header class="header d-flex align-items-center justify-content-between">
+        <header class="adm-header d-flex align-items-center justify-content-between">
           <div class="header__decorations">
             <div style=" position:absolute; right:-60px; top:-40px; width:160px; height:160px; background-color:rgba(255,255,255,0.14); border-radius:999px; "></div>
             <div style=" position:absolute; left:10%; bottom:-60px; width:140px; height:140px; background-color:rgba(27,95,214,0.28); border-radius:999px; "></div>
@@ -53,7 +54,7 @@
         </header>
 
         <div class="d-flex adm-layout">
-          <aside id="adm-sidebar" class="d-none d-lg-flex position-lg-static" data-adm-sidebar-target="sidebar">
+          <aside id="adm-sidebar" class="d-none d-lg-flex position-lg-sticky" data-adm-sidebar-target="sidebar">
             <%= render adm_menu_component %>
 
             <div class="adm-sidebar-footer">

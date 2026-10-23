@@ -1,0 +1,49 @@
+<%= content_for :title, t("adm.projekts.imports.from_urls.new.title") %>
+
+<%= render Adm::HeaderComponent.new(
+      title: t("adm.projekts.imports.from_urls.new.title"),
+      breadcrumbs: @breadcrumbs,
+      back_button_url: adm_projekts_imports_path,
+      compact: true
+    ) %>
+
+<div class="kern-container my-3">
+  <div class="projekt-import-source-page">
+    <p class="kern-body"><%= t("adm.projekts.imports.from_urls.new.intro") %></p>
+
+    <%= form_with(url: adm_projekts_imports_from_url_path, method: :post) do |f| %>
+      <%= render Kern::FormFieldComponent.new(
+            label: t("adm.projekts.imports.from_urls.new.url_label"),
+            hint: t("adm.projekts.imports.from_urls.new.url_hint"),
+            stacked: true,
+            divider: false
+          ) do %>
+        <div class="projekt-import-source-form">
+          <%= f.url_field :source_url,
+                label: t("adm.projekts.imports.from_urls.new.url_field_label"),
+                placeholder: t("adm.projekts.imports.from_urls.new.url_placeholder") %>
+        </div>
+      <% end %>
+
+      <%= render Kern::FormFieldComponent.new(
+            label: t("adm.projekts.imports.from_urls.new.instructions_label"),
+            hint: t("adm.projekts.imports.from_urls.new.instructions_hint"),
+            stacked: true,
+            divider: false
+          ) do %>
+        <%= f.text_area :additional_user_instructions,
+              rows: 4,
+              label: t("adm.projekts.imports.from_urls.new.instructions_field_label"),
+              placeholder: t("adm.projekts.imports.from_urls.new.instructions_placeholder") %>
+      <% end %>
+
+      <div class="projekt-import-source-form--actions">
+        <%= kern_button(
+          text: t("adm.projekts.imports.from_urls.new.action"),
+          icon: "language",
+          type: :submit
+        ) %>
+      </div>
+    <% end %>
+  </div>
+</div>

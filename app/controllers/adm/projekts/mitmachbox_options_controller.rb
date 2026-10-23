@@ -2,12 +2,15 @@ class Adm::Projekts::MitmachboxOptionsController < Adm::Projekts::BaseController
   include Adm::Projekts::MitmachboxErrorHandling
 
   MAX_OPTIONS_PER_QUESTION = 5
+  END_OF_SURVEY = "end".freeze
 
   before_action :set_projekt_phase
   before_action :authorize_phase
   before_action :set_survey_and_draft
   before_action :set_question
   before_action :set_option, only: %i[edit update destroy]
+
+  helper_method :branchable_question?, :follow_up_choices, :current_follow_up
 
   def new
     @option = {}
@@ -97,12 +100,42 @@ class Adm::Projekts::MitmachboxOptionsController < Adm::Projekts::BaseController
     end
 
     def option_params
-      permitted = params.require(:option).permit(:label, :value)
+      permitted = params.require(:option).permit(:label, :value, :follow_up)
 
       {
         label: permitted[:label].to_s,
         value: permitted[:value].presence&.to_i
-      }
+      }.merge(branch_params(permitted[:follow_up]))
+    end
+
+    # Only single_choice picks exactly one option, so only there is the
+    # follow-up unambiguous — the API rejects the fields on any other type.
+    def branch_params(follow_up)
+      return {} unless branchable_question?
+
+      case follow_up.to_s
+      when "" then { next_question_id: nil, ends_survey: false }
+      when END_OF_SURVEY then { next_question_id: nil, ends_survey: true }
+      else { next_question_id: follow_up.to_i, ends_survey: false }
+      end
+    end
+
+    def branchable_question?
+      @question["question_type"] == "single_choice"
+    end
+
+    # A follow-up always lies later in the order, so the run cannot loop back.
+    def follow_up_choices
+      @draft_detail["questions"]
+        .select { |question| question["position"].to_i > @question["position"].to_i }
+        .sort_by { |question| question["position"].to_i }
+        .map { |question| [question["prompt"], question["id"]] }
+    end
+
+    def current_follow_up
+      return END_OF_SURVEY if @option["ends_survey"]
+
+      @option["next_question_id"]
     end
 
     def breadcrumbs_for_action(action_title)

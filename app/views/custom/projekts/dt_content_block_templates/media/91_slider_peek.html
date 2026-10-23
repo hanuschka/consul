@@ -1,0 +1,68 @@
+<!-- BlockID: C08 Image Slider – "Peek"-Modus: naechste Karte sichtbar, horizontales Scrollen -->
+<!-- GLightbox + Image-Edit + Studio-List-Edit aktiv (Hinzufuegen/Loeschen/Sortieren pro Slide). -->
+<!-- Navigation: Maus-Drag, Touch-Swipe, Dot-Navigation am unteren Rand (von JS App.SliderPeek injiziert). -->
+<!-- Mehrere Instanzen pro Seite: data-gallery wird per JS pro Instanz eindeutig vergeben. -->
+<!-- ANPASSEN: src-Attribut in den img-Tags und href im umschliessenden a-Tag ersetzen. -->
+
+<div class="js-slider-peek" style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 32px 32px 24px 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+  <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; letter-spacing: -0.3px; margin-bottom: 4px; margin-top: 0;"><span style="display: inline-block; width: 8px; height: 8px; background: var(--brand-color, #1779ba); border-radius: 50%; margin-right: 10px; vertical-align: middle;"></span>Einblicke aus dem Beteiligungsverfahren</h3>
+  <p style="font-size: 14px; color: #64748b; margin-bottom: 20px; margin-top: 0; line-height: 1.6;">Ziehen, wischen oder unten auf einen Punkt klicken, um alle Stationen zu sehen</p>
+
+  <!-- Scroll-Container (als ul fuer Studio-List-Edit; Add-Button aussserhalb des scrollbaren Bereichs) -->
+  <ul class="js-slider-peek-viewport" data-list-edit-add-outside style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; list-style: none; padding: 0 0 12px 0; margin: 0 -4px;">
+
+    <!-- Karte 1 -->
+    <li class="js-slider-peek-slide" style="flex: 0 0 85%; scroll-snap-align: start; margin-right: 14px; position: relative; list-style: none;">
+      <a class="glightbox" href="https://placehold.co/1200x700/1a365d/ffffff?text=Workshop+Januar" data-glightbox="type: image" data-title="Auftakt-Workshop" data-description="80 Teilnehmende, 12 Thementische, erste Ideen gesammelt." target="_blank" style="display: block; border-radius: 12px; overflow: hidden; position: relative; min-height: 300px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); text-decoration: none; color: inherit;">
+        <img src="https://placehold.co/900x400/1a365d/ffffff?text=Workshop+Januar" alt="Auftakt-Workshop" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 24px;">
+          <div style="font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">Januar 2025</div>
+          <h4 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 4px 0;">Auftakt-Workshop</h4>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">80 Teilnehmende, 12 Thementische, erste Ideen gesammelt.</p>
+        </div>
+      </a>
+    </li>
+
+    <!-- Karte 2 -->
+    <li class="js-slider-peek-slide" style="flex: 0 0 85%; scroll-snap-align: start; margin-right: 14px; position: relative; list-style: none;">
+      <a class="glightbox" href="https://placehold.co/1200x700/0d5c53/ffffff?text=Online-Phase+März" data-glightbox="type: image" data-title="Online-Beteiligung" data-description="Ueber 400 Ideen aus der gesamten Stadtgesellschaft eingereicht." target="_blank" style="display: block; border-radius: 12px; overflow: hidden; position: relative; min-height: 300px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); text-decoration: none; color: inherit;">
+        <img src="https://placehold.co/900x400/0d5c53/ffffff?text=Online-Phase+März" alt="Online-Beteiligung" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 24px;">
+          <div style="font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">Maerz -- September 2025</div>
+          <h4 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 4px 0;">Online-Beteiligung</h4>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Ueber 400 Ideen aus der gesamten Stadtgesellschaft eingereicht.</p>
+        </div>
+      </a>
+    </li>
+
+    <!-- Karte 3 -->
+    <li class="js-slider-peek-slide" style="flex: 0 0 85%; scroll-snap-align: start; margin-right: 14px; position: relative; list-style: none;">
+      <a class="glightbox" href="https://placehold.co/1200x700/1a5c3a/ffffff?text=Abschluss-Workshop" data-glightbox="type: image" data-title="Ergebnis-Praesentation" data-description="Alle Beitraege im Ergebnisbericht -- oeffentlich einsehbar." target="_blank" style="display: block; border-radius: 12px; overflow: hidden; position: relative; min-height: 300px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); text-decoration: none; color: inherit;">
+        <img src="https://placehold.co/900x400/1a5c3a/ffffff?text=Abschluss-Workshop" alt="Ergebnis-Praesentation" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 24px;">
+          <div style="font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">Oktober 2025</div>
+          <h4 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 4px 0;">Ergebnis-Praesentation</h4>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Alle Beitraege im Ergebnisbericht -- oeffentlich einsehbar.</p>
+        </div>
+      </a>
+    </li>
+
+    <!-- Karte 4 -->
+    <li class="js-slider-peek-slide" style="flex: 0 0 85%; scroll-snap-align: start; margin-right: 14px; position: relative; list-style: none;">
+      <a class="glightbox" href="https://placehold.co/1200x700/1a3050/ffffff?text=Stadtrat+November" data-glightbox="type: image" data-title="Stadtratsbeschluss" data-description="Politische Beratung der Ergebnisse und finale Entscheidung." target="_blank" style="display: block; border-radius: 12px; overflow: hidden; position: relative; min-height: 300px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); text-decoration: none; color: inherit;">
+        <img src="https://placehold.co/900x400/1a3050/ffffff?text=Stadtrat+November" alt="Stadtratsbeschluss" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.7) 100%); pointer-events: none;"></div>
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 24px;">
+          <div style="font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em;">November 2025</div>
+          <h4 style="font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0 0 4px 0;">Stadtratsbeschluss</h4>
+          <p style="font-size: 14px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">Politische Beratung der Ergebnisse und finale Entscheidung.</p>
+        </div>
+      </a>
+    </li>
+
+  </ul><!-- /viewport -->
+
+</div>

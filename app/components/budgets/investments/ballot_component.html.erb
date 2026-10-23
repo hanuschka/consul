@@ -28,14 +28,22 @@
                       class: "button button-remove-support expanded",
                       method: :delete,
                       remote: true,
+                      data: { disable: true },
                       "aria-label": remove_vote_aria_label do %>
           <%= t("budgets.ballots.show.remove") %>
         <% end %>
 
         <% if ballot.conditional? %>
-          <div class='callout warning'>
-            <%= t("custom.budgets.investments.investment.unverified_note") %>
-          </div>
+          <% if ballot.user.data_complete? %>
+            <div class='callout warning'>
+              <%= t("custom.budgets.investments.investment.unverified_note") %>
+            </div>
+          <% else %>
+            <div class='callout alert'>
+              <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+              <%= t("custom.budgets.investments.investment.unverified_note_no_data_html", verify_account: link_to_verify_account) %>
+            </div>
+          <% end %>
         <% end %>
 
       <% end %>
@@ -89,6 +97,7 @@
                         title: t("budgets.investments.investment.support_title"),
                         method: :post,
                         remote: true,
+                        data: { disable: true },
                         "aria-label": vote_aria_label do %>
             <%= t("budgets.investments.investment.add") %>
           <% end %>

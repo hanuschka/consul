@@ -1,5 +1,7 @@
 de:
   custom:
+    formular_phase:
+      to_answers: Zu den Antworten
     formular_answer:
       form:
         select_prompt: für eine Auswahl hier klicken

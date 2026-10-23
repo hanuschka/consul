@@ -2,8 +2,9 @@
 // identically in both stylesheet packs: the main user-facing app
 // (Foundation/Sprockets, driven by App.ImageCropper) and the /adm pack
 // (kern/esbuild, driven by the shared--image-cropper Stimulus controller).
-// Self-contained — no Foundation/pack tokens. The vendor Cropper.js CSS is
-// imported separately by each pack.
+// Self-contained — no Foundation/pack tokens. Cropper.js v2 ships no
+// stylesheet: the <cropper-*> elements style themselves from their shadow
+// roots, so only the surrounding chrome is defined here.
 
 .image-cropper-modal {
   width: 880px;
@@ -48,23 +49,32 @@
   color: #555;
 }
 
-// Cropper.js measures the <img> to build its crop box, then renders its own
-// absolutely-positioned canvas inside. Do NOT clip this wrapper with
-// `overflow: hidden`: the crop box fills the whole canvas (autoCropArea: 1),
-// so its resize handles sit right on the wrapper's edges — clipping hides the
-// bottom/right handles and makes the crop area impossible to resize.
+// <cropper-canvas> has no intrinsic size and fits the image with `contain`, so
+// any mismatch between its box and the image's ratio letterboxes the image —
+// and <cropper-shade> darkens those strips into visible grey bars. The ratio is
+// written onto the element from JS once the source has decoded, which makes the
+// canvas hug the image and leaves nothing to letterbox; the fallback only has
+// to hold until then. The wrapper stays transparent for the same reason: past
+// the canvas edge there is no image, so anything painted there reads as a bar.
 .image-cropper--canvas-wrapper {
+  display: flex;
   flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
   min-height: 0;
   width: 100%;
-  background-color: #f3f3f3;
-  border-radius: 8px;
 }
 
-.image-cropper--image {
+// Width is the driven axis on purpose: with `height` set, a `max-width` clamp
+// cannot feed back through `aspect-ratio` and a panorama keeps its bands. Here
+// the height stays auto, so both clamps reshape the box and the ratio holds.
+.image-cropper--canvas {
   display: block;
+  width: calc(62vh * var(--image-cropper-canvas-ratio, 1.5));
   max-width: 100%;
-  max-height: 72vh;
+  max-height: 100%;
+  aspect-ratio: var(--image-cropper-canvas-ratio, 1.5);
+  border-radius: 8px;
 }
 
 .image-cropper--actions {

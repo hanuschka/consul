@@ -14,6 +14,7 @@ class DeficiencyReport < ApplicationRecord
   translates :summary, touch: true
   translates :official_answer, touch: true
   include Globalizable
+  include MachineTranslatable
 
   acts_as_votable
   acts_as_paranoid column: :hidden_at
@@ -205,6 +206,12 @@ class DeficiencyReport < ApplicationRecord
 
   def on_behalf_of_account_linked?
     recorded_by.present? && recorded_by_id != author_id
+  end
+
+  def reporter_mailable?
+    return false if author&.email.blank?
+
+    recorded_by_id.nil? || recorded_by_id != author_id
   end
 
   def publicly_visible?

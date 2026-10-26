@@ -1,5 +1,32 @@
 $("#poll-participation-confirmed-callout").remove();
-$("#<%= dom_id(@question) %>_answers").html("<%= j render Polls::Questions::AnswersComponent.new(@question, answer_updated: @answer_updated, open_answer_updated: @open_answer_updated) %>");
+<% if @skip_answers_rerender %>
+  $("#<%= dom_id(@question) %>_answers .js-poll-open-answer-autosave").addClass("js-question-answered");
+<% elsif @keep_open_answer_form %>
+  (function() {
+    var $answers = $("#<%= dom_id(@question) %>_answers");
+    var $liveForm = $answers.find(".js-poll-open-answer-autosave").first();
+    var liveTextarea = $liveForm.find("textarea").get(0);
+    var hadFocus = liveTextarea && document.activeElement === liveTextarea;
+    var selStart = liveTextarea && liveTextarea.selectionStart;
+    var selEnd = liveTextarea && liveTextarea.selectionEnd;
+
+    $liveForm.detach();
+    $answers.html("<%= j render Polls::Questions::AnswersComponent.new(@question, answer_updated: @answer_updated, open_answer_updated: @open_answer_updated) %>");
+
+    var $renderedForm = $answers.find(".js-poll-open-answer-autosave").first();
+    if (!liveTextarea || $renderedForm.length === 0) return;
+
+    $renderedForm.replaceWith($liveForm);
+    $liveForm.toggleClass("js-question-answered", <%= @answer.present? && !@answer.destroyed? && @answer.open_answer_text.present? %>);
+
+    if (hadFocus) {
+      liveTextarea.focus();
+      liveTextarea.setSelectionRange(selStart, selEnd);
+    }
+  })();
+<% else %>
+  $("#<%= dom_id(@question) %>_answers").html("<%= j render Polls::Questions::AnswersComponent.new(@question, answer_updated: @answer_updated, open_answer_updated: @open_answer_updated) %>");
+<% end %>
 App.PollsCustom.showOpenAnswers();
 App.PollsCustom.formatVisibleRatingScalesAfterRepaint();
 
@@ -10,5 +37,12 @@ App.PollsCustom.formatVisibleRatingScalesAfterRepaint();
 <% else %>
   <% if @question.poll.in_wizard_mode? %>
       App.QuestionWizard.mandatoryQuestionActions();
+      <%# Whether a question follows this one can change with the answer just given —
+          a branch past the rest, or a question contextualised by the option chosen —
+          and the server is what knows. Absent for a nested sub-question, which is not
+          a step of its own. %>
+      <% if !@wizard_has_next.nil? %>
+        App.QuestionWizard.setHasNext(<%= @question.id %>, <%= @wizard_has_next %>);
+      <% end %>
   <% end %>
 <% end %>

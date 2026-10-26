@@ -9,7 +9,8 @@ class Resources::List::ToolbarComponent < ApplicationComponent
     text_search_enabled: false,
     remote_url: nil,
     hide_view_mode_button: false,
-    in_projekt_footer_tab: false
+    in_projekt_footer_tab: false,
+    wide: false
   )
     @i18n_namespace = i18n_namespace
     @filters = filters
@@ -19,6 +20,7 @@ class Resources::List::ToolbarComponent < ApplicationComponent
     @remote_url = remote_url
     @hide_view_mode_button = hide_view_mode_button
     @in_projekt_footer_tab = in_projekt_footer_tab
+    @wide = wide
   end
 
   def render?
@@ -44,7 +46,7 @@ class Resources::List::ToolbarComponent < ApplicationComponent
   end
 
   def wide?
-    helpers.cookies["wide_resources"] == "true"
+    @wide
   end
 
   def switch_view_mode_icon
@@ -53,9 +55,9 @@ class Resources::List::ToolbarComponent < ApplicationComponent
 
   def switch_view_mode_label
     if wide?
-      t("custom.accessibility.shared.switch-view-button.to-list")
-    else
       t("custom.accessibility.shared.switch-view-button.to-tile")
+    else
+      t("custom.accessibility.shared.switch-view-button.to-list")
     end
   end
 end

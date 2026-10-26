@@ -18,6 +18,8 @@
       display: flex;
       align-items: stretch;
       width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
       border-bottom: 1px solid var(--custom-tabs-border);
     }
 

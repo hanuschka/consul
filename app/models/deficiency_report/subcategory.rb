@@ -1,6 +1,7 @@
 class DeficiencyReport::Subcategory < ApplicationRecord
   translates :name, touch: true
   include Globalizable
+  include MachineTranslatable
 
   attr_accessor :default_officer_id, :default_officer_group_id
 
@@ -20,6 +21,6 @@ class DeficiencyReport::Subcategory < ApplicationRecord
   end
 
   def safe_to_destroy?
-    !deficiency_reports.exists?
+    !deficiency_reports.with_deleted.exists?
   end
 end

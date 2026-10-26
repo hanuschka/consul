@@ -40,6 +40,13 @@ class Images::MarkAiGeneratedService < ApplicationService
   AI_SYSTEM_TAG = "XMP-iptcExt:AISystemUsed".freeze
   AI_SYSTEM_VERSION_TAG = "XMP-iptcExt:AISystemVersionUsed".freeze
 
+  # The same fact in prose, in the one field every picture viewer shows under
+  # "Description". It documents the file for a person opening its properties;
+  # verification tools key on the source type above, so this line is never what
+  # marking succeeds or fails on. English, because the field has no language.
+  IMAGE_DESCRIPTION_TAG = "EXIF:ImageDescription".freeze
+  AI_DESCRIPTION = "AI-generated image.".freeze
+
   def initialize(image:, data:, filename:, content_type:, ai_system: nil, ai_system_version: nil)
     @image = image
     @data = data
@@ -87,17 +94,47 @@ class Images::MarkAiGeneratedService < ApplicationService
       raise MarkingFailedError.new("marking runtime unavailable (#{status})", reason: status)
     end
 
+    # Only what the running exiftool can actually write is asked for. A tag it
+    # does not define, or a group it cannot delete, is a warning that still
+    # exits 0 -- so sending one would leave the read-back below unable to tell
+    # a refused write from a binary that never supported the tag.
     def marking_arguments
-      arguments = [
-        "-overwrite_original",
-        "-jumbf:all=",
-        "-#{DIGITAL_SOURCE_TYPE_TAG}=#{TRAINED_ALGORITHMIC_MEDIA}"
-      ]
+      arguments = ["-overwrite_original"]
 
-      arguments << "-#{AI_SYSTEM_TAG}=#{@ai_system}" if @ai_system.present?
-      arguments << "-#{AI_SYSTEM_VERSION_TAG}=#{@ai_system_version}" if @ai_system_version.present?
+      arguments << "-jumbf:all=" if ::ExiftoolCommand.supports_jumbf_delete?
+
+      written_tags.each { |tag, value| arguments << "-#{tag}=#{value}" }
+
+      # Outside written_tags on purpose: the prose line is documentation for a
+      # person opening the file's properties, and no verification tool keys on
+      # it, so it is never what the read-back below fails marking over.
+      arguments << "-#{IMAGE_DESCRIPTION_TAG}=#{AI_DESCRIPTION}"
 
       arguments
+    end
+
+    # The tags this run asks for, and the value each one has to read back as.
+    def written_tags
+      @written_tags ||= begin
+        tags = { DIGITAL_SOURCE_TYPE_TAG => TRAINED_ALGORITHMIC_MEDIA }
+
+        if ::ExiftoolCommand.supports_ai_system_tags?
+          tags[AI_SYSTEM_TAG] = @ai_system if @ai_system.present?
+          tags[AI_SYSTEM_VERSION_TAG] = @ai_system_version if @ai_system_version.present?
+        end
+
+        tags
+      end
+    end
+
+    # The first tag that did not survive the write, or nil when all of them
+    # did. Every asked-for tag is checked rather than only the source type: a
+    # tag exiftool refuses is reported as a warning next to a successful write
+    # of the others, so the exit status says nothing about any single one.
+    def unwritten_tag(path)
+      written_tags.find do |tag, value|
+        ::ExiftoolCommand.read_tag(path, tag) != value
+      end
     end
 
     def mark
@@ -121,9 +158,15 @@ class Images::MarkAiGeneratedService < ApplicationService
         # Read back before reporting success: a marker that did not survive the
         # write is indistinguishable from an unmarked image to every later
         # reader, and the caller must be able to tell the difference now.
-        written = ::ExiftoolCommand.read_tag(file.path, DIGITAL_SOURCE_TYPE_TAG)
+        missing_tag, = unwritten_tag(file.path)
 
-        return nil if written != TRAINED_ALGORITHMIC_MEDIA
+        if missing_tag.present?
+          Rails.logger.warn(
+            "[Images::MarkAiGeneratedService] #{missing_tag} did not survive the write"
+          )
+
+          return nil
+        end
 
         File.binread(file.path)
       ensure

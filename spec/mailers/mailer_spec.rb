@@ -90,4 +90,26 @@ describe Mailer do
       expect(email.body.encoded).to include("Hallo Anna,")
     end
   end
+
+  describe "the formular answer created email" do
+    let(:author) { create(:user, email: "anna@beispiel.de") }
+    let(:formular) { Formular.create!(projekt_phase: create(:projekt_phase)) }
+
+    def answer_with(email)
+      field = formular.formular_fields.create!(name: "E-Mail", kind: "email", email_for_confirmation: "1")
+      formular.formular_answers.create!(submitter_id: author.id, answers: { field.key => email })
+    end
+
+    it "is not sent when the confirmation email goes to the account address" do
+      email = Mailer.formular_answer_created(answer_with(" Anna@Beispiel.de "))
+
+      expect { email.deliver_now }.not_to change { ActionMailer::Base.deliveries.count }
+    end
+
+    it "is sent when the confirmation email goes to another address" do
+      Mailer.formular_answer_created(answer_with("freund@beispiel.de")).deliver_now
+
+      expect(ActionMailer::Base.deliveries.last.to).to eq ["anna@beispiel.de"]
+    end
+  end
 end

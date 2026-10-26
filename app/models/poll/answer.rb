@@ -45,7 +45,6 @@ class Poll::Answer < ApplicationRecord
       return if !question || question&.unique? || question.votation_type&.rating_scale?
       return if map_points?
 
-      author.save! if author.guest? && author.changed == ["locale"]
       author.lock!
 
       used_weight = question.answers.by_author(author)

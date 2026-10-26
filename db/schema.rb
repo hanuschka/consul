@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_15_080832) do
+ActiveRecord::Schema.define(version: 2026_10_19_102809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -565,6 +565,7 @@ ActiveRecord::Schema.define(version: 2026_10_15_080832) do
     t.boolean "generated_image", default: false, null: false
     t.string "similar_contributions_check_status"
     t.jsonb "similar_contributions_matches"
+    t.boolean "selection_email_deferred", default: false, null: false
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"

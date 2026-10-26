@@ -7,16 +7,12 @@ module Questionable
 
   private
 
-    def find_by_attributes(user, title)
+    def find_by_attributes(user, question_answer)
       case vote_type
-      when "unique", nil
+      when "unique", nil, "rating_scale"
         { author: user }
-      when "multiple"
-        { author: user, answer: title }
-      when "multiple_with_weight"
-        { author: user, answer: title }
-      when "rating_scale"
-        { author: user }
+      when "multiple", "multiple_with_weight"
+        { author: user, question_answer_id: question_answer&.id }
       end
     end
 end

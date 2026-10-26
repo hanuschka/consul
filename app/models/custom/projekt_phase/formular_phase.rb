@@ -51,9 +51,11 @@ class ProjektPhase::FormularPhase < ProjektPhase
   private
 
     def phase_specific_permission_problems(user, location)
-      return :past_regular_formular_cutoff_date if formular.past_cutoff_date?
-
       :submissions_limit_reached if formular.submissions_limit_reached_for?(user)
+    end
+
+    def phase_state_permission_problem(location)
+      :past_regular_formular_cutoff_date if formular&.past_cutoff_date?
     end
 
     def create_formular

@@ -120,13 +120,18 @@ to: :budget
 
     def send_selection_email
       return unless selection_email_due?
+      return update_column(:selection_email_deferred, true) unless budget.selection_public?
 
       if selected?
         Mailer.budget_investment_selected(self).deliver_later
       else
         Mailer.budget_investment_unselected(self).deliver_later
       end
-      update_column(:email_on_selected_sent_at, Time.zone.now)
+      update_columns(email_on_selected_sent_at: Time.zone.now, selection_email_deferred: false)
+    end
+
+    def publicly_selected?
+      selected? && budget.selection_public?
     end
 
     def should_show_feasibility_explanation?

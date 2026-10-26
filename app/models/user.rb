@@ -383,7 +383,7 @@ class User < ApplicationRecord
   end
 
   def locale
-    self[:locale] ||= I18n.default_locale.to_s
+    self[:locale].presence || I18n.default_locale.to_s
   end
 
   def confirmation_required?

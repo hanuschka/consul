@@ -121,7 +121,8 @@ de:
           costs: Kosten
           formal: Formelle Beteiligung
           informal: Informelle Beteiligung
-          procedure_step: Verfahrensschritt
+        procedure_steps_legend:
+          title: Legende Verfahrensschritte
         last_resolution: Letzter Beschluss
         processing_status: Aktueller Bearbeitungsstand
         next_steps: Geplanter Zeitpunkt, nächste Schritte

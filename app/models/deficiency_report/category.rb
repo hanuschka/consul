@@ -23,7 +23,7 @@ class DeficiencyReport::Category < ApplicationRecord
   end
 
   def safe_to_destroy?
-    !deficiency_reports.exists?
+    !deficiency_reports.with_deleted.exists?
   end
 
   def self.order_categories(ordered_array)

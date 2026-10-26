@@ -19,7 +19,7 @@ en:
             progress_preparing: "Preparing…"
             instructions_label: "Additional context (optional)"
             instructions_placeholder: "Anything the document doesn't make clear — audience, scope, goals…"
-            submit_label: "Start analysis"
+            submit_label: "Import document"
             progress:
               extracting: "Extracting text from your documents…"
               processing: "Analyzing the document with AI…"
@@ -206,6 +206,7 @@ en:
           ai_chat_failed: "The AI could not answer this message. Please send it again. If the error persists, contact support."
           ai_empty_response: "AI returned an empty response."
           ai_malformed: "AI returned an invalid response. Please try again."
+          ai_request_failed: "The AI service could not be reached or rejected the request. Please try again later. If the error persists, contact support."
           dt_prompt_missing: "Configuration error: the AI prompt could not be loaded from DT."
           no_ai_result: "No AI result is available yet."
           resolve_content_blocks_failed: "The content blocks could not be created. Please try again or add them manually."

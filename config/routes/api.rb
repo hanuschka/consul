@@ -58,6 +58,8 @@
     resources :ideas, only: [:index, :show, :create, :update]
     resources :idea_categories, only: [:index, :show, :create, :update, :destroy]
     resources :idea_officers, only: [:index]
+    resources :municipal_plans, only: [:index, :show]
+    resources :municipal_plan_topics, only: [:index]
     resources :polls, only: [:index, :show] do
       resources :poll_questions, only: [:index, :create], path: "questions", as: :questions
     end

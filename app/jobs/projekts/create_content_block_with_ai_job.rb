@@ -1,5 +1,6 @@
 class Projekts::CreateContentBlockWithAiJob < ApplicationJob
   queue_as :default
+  self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
 
   def perform(content_block_id, mode)
     content_block = SiteCustomization::ContentBlock.unscoped.find_by(id: content_block_id)
@@ -11,7 +12,7 @@ class Projekts::CreateContentBlockWithAiJob < ApplicationJob
     data = content_block.ai_generation_data || {}
     options = data["options"] || {}
 
-    Ai::GenerateContentBlock.call(
+    result = Ai::GenerateContentBlock.call(
       content_block: content_block,
       projekt: projekt,
       prompt: options["prompt"],
@@ -20,6 +21,8 @@ class Projekts::CreateContentBlockWithAiJob < ApplicationJob
       use_projekt_context: options["use_projekt_context"],
       text_locale: options["text_locale"]
     )
+
+    handle_failure(content_block, mode, result.error) if !result.success?
   rescue Ai::GenerateContentBlock::AiCancelledError
     handle_cancellation(content_block, mode)
   rescue => e
@@ -50,6 +53,6 @@ class Projekts::CreateContentBlockWithAiJob < ApplicationJob
   def restore_prior_body(content_block)
     data = content_block.ai_generation_data || {}
 
-    content_block.update_columns(body: data["prior_body"].to_s)
+    content_block.update_without_validation!(body: data["prior_body"].to_s)
   end
 end

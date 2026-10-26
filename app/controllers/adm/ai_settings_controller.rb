@@ -3,12 +3,14 @@ class Adm::AiSettingsController < Adm::BaseController
     :endpoint_without_custom_model?, :ai_feature_enabled?,
     :default_llm_model_in_use?, :effective_llm_model,
     :non_default_provider?, :default_api_key_in_use?,
-    :highlight_llm_model?, :highlight_api_key?
+    :highlight_llm_model?, :highlight_api_key?, :image_marking_unavailable?,
+    :image_marking_recovery_command
 
   def index
     authorize [:adm, Setting], :index?, policy_class: Adm::AiSettingPolicy
     @ai_settings = policy_scope(Setting, policy_scope_class: Adm::AiSettingPolicy::Scope)
       .where("key LIKE ?", "ai.%")
+      .where.not(key: ::Ai::Settings::WHATSAPP_MODEL_TIER_SETTING_KEY)
       .order(:key)
     @evaluation_context_setting =
       @ai_settings.find { |setting| setting.key == Ai::EvaluationContext::SETTING_KEY }
@@ -27,12 +29,17 @@ class Adm::AiSettingsController < Adm::BaseController
       return
     end
 
+    if invalid_api_endpoint?
+      redirect_to adm_ai_settings_path, alert: t("adm.ai_settings.flash.invalid_api_endpoint")
+      return
+    end
+
     provider_change = changing_llm_provider?
 
-    @setting.update!(settings_params)
+    @setting.update!(value: setting_value)
     Ai::Settings.reset_llm_model! if provider_change
 
-    redirect_to adm_ai_settings_path, notice: t("adm.ai_settings.flash.updated")
+    redirect_to adm_ai_settings_path, notice: update_notice
   end
 
   def update_api_key
@@ -125,6 +132,19 @@ class Adm::AiSettingsController < Adm::BaseController
       non_default_provider? || Setting["ai.llm_api_endpoint"].present?
     end
 
+    # Generated pictures are marked by shelling out to exiftool, and marking is
+    # mandatory — a box that cannot reach the binary answers every generation
+    # with "it did not work" and puts the reason in the log only. Surfaced here
+    # rather than left to a Sentry event, because the people who notice
+    # generation failing are the ones on this page.
+    def image_marking_unavailable?
+      !::ExiftoolCommand.available?
+    end
+
+    def image_marking_recovery_command
+      ::ExiftoolCommand::RECOVERY_COMMAND
+    end
+
     def changing_llm_provider?
       @setting.key == "ai.llm_provider" && @setting.value != settings_params[:value]
     end
@@ -133,5 +153,30 @@ class Adm::AiSettingsController < Adm::BaseController
       @setting.key == "ai.llm_custom_model" &&
         settings_params[:value].blank? &&
         Setting["ai.llm_api_endpoint"].present?
+    end
+
+    def api_endpoint_setting?
+      @setting.key == "ai.llm_api_endpoint"
+    end
+
+    def setting_value
+      return settings_params[:value] if !api_endpoint_setting?
+
+      Ai::EndpointUrl.normalize(settings_params[:value])
+    end
+
+    def invalid_api_endpoint?
+      return false if !api_endpoint_setting?
+      return false if setting_value.blank?
+
+      !Ai::EndpointUrl.valid?(setting_value)
+    end
+
+    def update_notice
+      if api_endpoint_setting? && Ai::EndpointUrl.request_path(settings_params[:value]).present?
+        return t("adm.ai_settings.flash.api_endpoint_shortened", url: setting_value)
+      end
+
+      t("adm.ai_settings.flash.updated")
     end
 end

@@ -20,7 +20,7 @@ class Ai::EditContentBlock < ApplicationService
         .with_instructions(system_instructions)
         .ask(user_prompt)
 
-    AdminWYSIWYGSanitizer.new.sanitize(llm_response.content["html"])
+    AdminWYSIWYGSanitizer.new.sanitize(::Ai::StructuredOutput.content_of(llm_response)["html"])
   end
 
   private

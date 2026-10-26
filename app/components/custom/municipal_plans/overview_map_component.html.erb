@@ -1,0 +1,8 @@
+<div class="js-municipal-plans-map margin-bottom">
+  <p id="<%= NOTE_ID %>" class="show-for-sr"><%= t("custom.municipal_plans.index.overview_map.note") %></p>
+
+  <%= tag.div class: "js-municipal-plans-map-container map_location map #{rendering_library}",
+              role: "region",
+              aria: { label: t("custom.municipal_plans.index.overview_map.region_label"), describedby: NOTE_ID },
+              data: map_data %>
+</div>

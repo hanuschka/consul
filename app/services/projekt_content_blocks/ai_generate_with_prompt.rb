@@ -23,7 +23,7 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
       templates_tool = Ai::Tools::FetchContentBlockTemplates.new(
         templates_by_category: dt_templates_by_category
       )
-      Ai::RubyLlmFactory.attach_tools(chat, templates_tool)
+      Ai::RubyLlmFactory.attach_tools(chat, [templates_tool], Ai::ModelProfile.default)
     end
 
     response =
@@ -31,7 +31,7 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
         .with_instructions(build_system_instructions(base_prompt, dt_templates_by_category))
         .ask(user_prompt)
 
-    process_response(response.content)
+    process_response(::Ai::StructuredOutput.content_of(response))
   end
 
   private
@@ -106,17 +106,20 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
   def build_templates_reference(dt_templates_by_category)
     lines = []
     lines << "You MUST use the HTML from content block templates as the basis for every content block you generate."
-    lines << "Do NOT invent your own HTML structures. Pick the most appropriate template for each section, fetch its HTML with the fetch_content_block_templates tool, and adapt it by replacing placeholder text with the actual content."
+    lines << "Do NOT invent your own HTML structures. Pick the most appropriate template for each section and adapt it by replacing placeholder text with the actual content."
+    lines << "Make exactly ONE call to the fetch_content_block_templates tool and request everything you might use in it: pass the category ids to receive every template of a category, or the ids of the individual templates you want."
+    lines << "You get at most #{Ai::Tools::FetchContentBlockTemplates::MAX_CALLS} tool calls; after that you must answer with what you already have."
 
     if dt_templates_by_category.any?
       lines << ""
       lines << "Templates from demokratie.today:"
       dt_templates_by_category.each do |category_data|
         category_name = category_data.dig("category", "name_de") || category_data.dig("category", "name")
+        category_id = category_data.dig("category", "id")
         templates = category_data["templates"] || []
 
         if templates.any?
-          lines << "  Category: #{category_name}"
+          lines << "  Category: #{category_name} (category id: #{category_id})"
           templates.each do |template|
             template_info = "    - name: #{template['name']}, id: #{template['id']}"
             template_info += ", description: #{template['description']}" if template['description'].present?

@@ -1,4 +1,6 @@
 class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
+  include Adm::HidesContributions
+
   before_action :find_projekt_phase
   before_action :find_proposal
 
@@ -17,6 +19,8 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
           resize_to_limit: [500, 500],
           format: "jpeg"
         )
+
+        @similar_contributions = ::SimilarContributions::StoredGroup.call(@proposal)
       end
       format.pdf do
         pdf_content = PdfServices::ProposalExporter.call(@proposal, request.host)
@@ -25,11 +29,30 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
     end
   end
 
+  def similar_contributions
+    authorize [:adm, @proposal], :show?
+
+    render partial: "adm/projekts/similar_contributions/popup",
+           locals: { matches: ::SimilarContributions::StoredGroup.call(@proposal), resource: @proposal }
+  end
+
+  def exclude_similar_contribution
+    authorize [:adm, @proposal], :update?
+
+    excluded = ::SimilarContributions::Scopes
+      .excludable_relation(@proposal, @projekt_phase)
+      .find(params[:excluded_id])
+
+    ::SimilarContributions::ExcludeFromGroup.call(@proposal, excluded, admin: current_user)
+
+    redirect_to adm_projekts_phase_proposal_path(@projekt_phase, @proposal),
+                notice: t("adm.projekts.similar_contributions.excluded")
+  end
+
   def hide
     authorize [:adm, @proposal], :hide?
 
-    @proposal.hide
-    Activity.log(current_user, :hide, @proposal)
+    hide_and_notify_author(@proposal)
     @proposal.reload
   end
 

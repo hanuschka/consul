@@ -1,0 +1,14 @@
+<%= content_for :title, @title %>
+
+<h1 class="kern-sr-only"><%= @title %></h1>
+
+<div class="adm-embed adm-embed--full"
+     data-controller="adm--handbook-embed"
+     data-adm--handbook-embed-origin-value="<%= @help_origin %>">
+  <iframe class="adm-embed__iframe"
+          src="<%= @help_url %>"
+          title="<%= t("adm.help.show.iframe_title") %>"
+          referrerpolicy="no-referrer"
+          data-adm--handbook-embed-target="frame"
+          data-action="load->adm--handbook-embed#loaded"></iframe>
+</div>

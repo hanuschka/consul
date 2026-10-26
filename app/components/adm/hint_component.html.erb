@@ -3,12 +3,12 @@
           class="adm-hint__toggle"
           data-action="click->components-adm-hint#toggle"
           aria-expanded="false"
-          aria-controls="adm-hint-panel">
+          aria-controls="<%= panel_id %>">
     <span class="material-symbols-outlined" aria-hidden="true">info</span>
     <%= t(".link_text") %>
   </button>
 
-  <div id="adm-hint-panel"
+  <div id="<%= panel_id %>"
        class="adm-hint__panel"
        data-components-adm-hint-target="panel"
        role="note"

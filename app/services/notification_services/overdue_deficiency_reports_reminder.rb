@@ -36,7 +36,7 @@ module NotificationServices
       def candidate_reports
         DeficiencyReport.assigned.not_closed
           .where.not(status_changed_at: nil)
-          .where.not(deficiency_report_statuses: { reminder_delay: nil })
+          .where.not(deficiency_report_statuses: { reminder_delay: [nil, 0] })
           .where(official_answer: [nil, ""])
       end
 

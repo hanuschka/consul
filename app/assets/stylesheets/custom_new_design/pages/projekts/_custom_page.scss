@@ -389,6 +389,11 @@ $phase-marker-border: #cbd5e1;
     }
   }
 
+  .custom-page--banner-chip.-deactivated {
+    opacity: 0.45;
+    filter: grayscale(1);
+  }
+
   a.custom-page--banner-chip {
     color: rgba(0, 0, 0, 0.78);
     text-decoration: none;

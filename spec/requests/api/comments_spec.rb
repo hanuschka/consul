@@ -21,8 +21,8 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       security [bearer_auth: []]
       description "Retrieve all root-level comments for a projekt phase. Comments support nested replies (children). Returns paginated results with comment hierarchy information. Can be filtered by phase to see all discussion within that phase. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :sort, in: :query, type: :string, required: false, description: "Sort comments by. Valid values: 'oldest' (**default**, oldest comments first), 'newest' (newest comments first), 'most_voted' (highest voted first, then oldest)"
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number for results (**default:** 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of comments per page (**default:** 100, max: 500)'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 5000, max: 5000)'
 
       response '200', 'comments found and returned' do
         before do
@@ -418,8 +418,8 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       produces 'application/json'
       security [bearer_auth: []]
       description "Retrieve all comments across all projekt phases. Returns a paginated list of root-level comments from all phases. Useful for moderation, analytics, and global discussion oversight. #{ApiAccessRequirements::GET_READ_ONLY}"
-      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number for results (**default:** 1)'
-      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of comments per page (**default:** 100, max: 500)'
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 5000, max: 5000)'
 
       response '200', 'comments found and returned' do
         before do

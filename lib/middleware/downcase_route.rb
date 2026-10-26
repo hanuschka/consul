@@ -14,6 +14,8 @@ class DowncaseRoute
     /sp/SAML2
   ].freeze
 
+  LEADING_SLASHES_PATTERN = %r{\A[/\\]+}
+
   def initialize(app)
     @app = app
   end
@@ -22,7 +24,7 @@ class DowncaseRoute
     path = env["PATH_INFO"]
 
     if needs_redirect?(env, path)
-      lowered = path.downcase
+      lowered = path.downcase.sub(LEADING_SLASHES_PATTERN, "/")
       query = env["QUERY_STRING"]
       location = !query.to_s.empty? ? "#{lowered}?#{query}" : lowered
 

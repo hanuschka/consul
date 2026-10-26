@@ -7,8 +7,10 @@ module Adm::MemosHelper
       adm_deficiency_reports_memos_path
     when Idea
       adm_ideas_memos_path
-    when Budget::Investment
+    when Budget::Investment, Proposal
       adm_projekts_memos_path
+    when MunicipalPlan
+      adm_municipal_plans_memos_path
     end
   end
 
@@ -18,8 +20,10 @@ module Adm::MemosHelper
       send_notification_adm_deficiency_reports_memo_path(memo)
     when Idea
       send_notification_adm_ideas_memo_path(memo)
-    when Budget::Investment
+    when Budget::Investment, Proposal
       send_notification_adm_projekts_memo_path(memo)
+    when MunicipalPlan
+      send_notification_adm_municipal_plans_memo_path(memo)
     end
   end
 
@@ -29,8 +33,10 @@ module Adm::MemosHelper
       adm_deficiency_reports_memo_path(memo)
     when Idea
       adm_ideas_memo_path(memo)
-    when Budget::Investment
+    when Budget::Investment, Proposal
       adm_projekts_memo_path(memo)
+    when MunicipalPlan
+      adm_municipal_plans_memo_path(memo)
     end
   end
 end

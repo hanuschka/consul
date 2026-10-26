@@ -30,6 +30,14 @@
         </p>
 
         <p class="kern-body kern-body--small mb-0">
+          <strong><%= t(".source_device_label") %>:</strong> <%= @results.dig("responses_total_by_source", "device") %>
+        </p>
+
+        <p class="kern-body kern-body--small mb-0">
+          <strong><%= t(".source_web_label") %>:</strong> <%= @results.dig("responses_total_by_source", "web") %>
+        </p>
+
+        <p class="kern-body kern-body--small mb-0">
           <%= t(".version_label", number: @results["version"]["version_number"]) %>
           <% if @results["version"]["published_at"].present? %>
             (<%= t(".published_at_label", date: l(Time.zone.parse(@results["version"]["published_at"]), format: :short)) %>)
@@ -43,7 +51,12 @@
       <% (@results["questions"] || []).sort_by { |question| question["position"].to_i }.each do |question| %>
         <div class="mb-5">
           <h3 class="kern-title kern-title--small mb-1"><%= question["prompt"] %></h3>
-          <p class="kern-body kern-body--small mb-3"><%= t(".answered_label", count: question["answered"]) %></p>
+          <p class="kern-body kern-body--small mb-3">
+            <%= t(".answered_label", count: question["answered"]) %>
+            <% if question["reached"].to_i < @results["responses_total"].to_i %>
+              · <%= t(".reached_label", count: question["reached"]) %>
+            <% end %>
+          </p>
 
           <% question_options = (question["options"] || []).sort_by { |option| option["position"].to_i } %>
           <% if question_options.any? %>
@@ -54,6 +67,8 @@
                   <tr class="kern-table__row">
                     <th scope="col" class="kern-table__header"><%= t(".option_label") %></th>
                     <th scope="col" class="kern-table__header"><%= t(".count_label") %></th>
+                    <th scope="col" class="kern-table__header"><%= t(".source_device_label") %></th>
+                    <th scope="col" class="kern-table__header"><%= t(".source_web_label") %></th>
                     <th scope="col" class="kern-table__header"></th>
                   </tr>
                 </thead>
@@ -63,6 +78,8 @@
                     <tr class="kern-table__row">
                       <th scope="row" class="kern-table__header"><%= option["label"] %></th>
                       <td class="kern-table__cell"><%= option["count"] %></td>
+                      <td class="kern-table__cell"><%= option.dig("count_by_source", "device") %></td>
+                      <td class="kern-table__cell"><%= option.dig("count_by_source", "web") %></td>
                       <td class="kern-table__cell" style="min-width: 160px;">
                         <div class="kern-progress">
                           <progress value="<%= option["count"].to_i %>" max="<%= max_count %>" aria-hidden="true"></progress>

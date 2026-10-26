@@ -1,4 +1,5 @@
 <%= content_for :title, [@projekt_phase.title, t(".title")].join(" | ") %>
+<% turbo_refreshes_with(method: :replace, scroll: :preserve) %>
 
 <% survey_ready = Mitmachbox.configured? && !@survey_lost && @mitmachbox_error.nil? && @survey.present? %>
 
@@ -24,5 +25,6 @@
   <% else %>
     <%= render "adm/projekts/phases/mitmachbox_survey/lifecycle" %>
     <%= render "adm/projekts/phases/mitmachbox_survey/versions_panel" %>
+    <%= render "adm/projekts/phases/mitmachbox_survey/end_section" %>
   <% end %>
 </div>

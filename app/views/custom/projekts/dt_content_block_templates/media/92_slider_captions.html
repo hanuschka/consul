@@ -1,0 +1,73 @@
+<!-- BlockID: C09 Image Slider – Quadratische Slides mit Titel-Overlay oben + Untertitel darunter (ausserhalb des Bildes) -->
+<!-- CSS-only: kein JavaScript, kein Foundation Orbit -->
+<!-- ANPASSEN: src-Attribut in den img-Tags ersetzen, id-Attribute eindeutig halten bei mehreren Slidern pro Seite -->
+
+<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 32px 32px 24px 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+  <div style="display: flex; align-items: center; margin-bottom: 8px;">
+    <div style="width: 40px; height: 3px; background: var(--brand-color, #1779ba); border-radius: 2px;"></div>
+  </div>
+  <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; letter-spacing: -0.3px; margin-bottom: 4px; margin-top: 0;">Impressionen aus dem Stadtpark</h3>
+  <p style="font-size: 14px; color: #64748b; margin-bottom: 20px; margin-top: 0; line-height: 1.6;">Schieben Sie, um mehr Bilder zu sehen</p>
+
+  <!-- Scroll-Container (flex-wrap intentionally omitted: horizontal scroll requires nowrap) -->
+  <div style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 4px;">
+
+    <!-- Slide 1 -->
+    <div style="flex: 0 0 280px; scroll-snap-align: start; margin-right: 16px; flex-shrink: 0;">
+      <!-- Quadratisches Bild mit Overlay oben -->
+      <div style="position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+        <img src="https://placehold.co/560x560/1a365d/ffffff?text=Gruenflaeche" alt="Hauptwiese West" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <!-- Top Overlay -->
+        <div style="position: absolute; top: 0; right: 0; left: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%); padding: 18px 18px 30px 18px;">
+          <div style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.06em;">Bereich A</div>
+          <div style="font-size: 15px; font-weight: 700; color: #ffffff; margin-top: 3px; line-height: 1.3;">Hauptwiese West</div>
+        </div>
+        <!-- Anzahl-Badge -->
+        <div style="position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-radius: 4px; padding: 4px 12px; font-size: 13px; color: #ffffff; font-weight: 600;">42 Ideen</div>
+      </div>
+      <!-- Untertitel ausserhalb -->
+      <p style="font-size: 14px; color: #64748b; margin: 10px 0 0 2px; line-height: 1.6;">Mehr Sitzmoeglichkeiten und schattige Plaetze gewuenscht.</p>
+    </div>
+
+    <!-- Slide 2 -->
+    <div style="flex: 0 0 280px; scroll-snap-align: start; margin-right: 16px; flex-shrink: 0;">
+      <div style="position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+        <img src="https://placehold.co/560x560/0d7e6d/ffffff?text=Spielplatz" alt="Spielbereich Sued" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; left: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%); padding: 18px 18px 30px 18px;">
+          <div style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.06em;">Bereich B</div>
+          <div style="font-size: 15px; font-weight: 700; color: #ffffff; margin-top: 3px; line-height: 1.3;">Spielbereich Sued</div>
+        </div>
+        <div style="position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-radius: 4px; padding: 4px 12px; font-size: 13px; color: #ffffff; font-weight: 600;">67 Ideen</div>
+      </div>
+      <p style="font-size: 14px; color: #64748b; margin: 10px 0 0 2px; line-height: 1.6;">Erweiterung des Spielplatzes und Wasserspielbereich im Fokus.</p>
+    </div>
+
+    <!-- Slide 3 -->
+    <div style="flex: 0 0 280px; scroll-snap-align: start; margin-right: 16px; flex-shrink: 0;">
+      <div style="position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+        <img src="https://placehold.co/560x560/b45309/ffffff?text=Eingang+Nord" alt="Eingang Nordseite" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; left: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%); padding: 18px 18px 30px 18px;">
+          <div style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.06em;">Bereich C</div>
+          <div style="font-size: 15px; font-weight: 700; color: #ffffff; margin-top: 3px; line-height: 1.3;">Eingang Nordseite</div>
+        </div>
+        <div style="position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-radius: 4px; padding: 4px 12px; font-size: 13px; color: #ffffff; font-weight: 600;">29 Ideen</div>
+      </div>
+      <p style="font-size: 14px; color: #64748b; margin: 10px 0 0 2px; line-height: 1.6;">Bessere Beleuchtung und ein barrierefreier Zugang gefordert.</p>
+    </div>
+
+    <!-- Slide 4 -->
+    <div style="flex: 0 0 280px; scroll-snap-align: start; flex-shrink: 0;">
+      <div style="position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 1 / 1; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+        <img src="https://placehold.co/560x560/1a3050/ffffff?text=Veranstaltungsfl%C3%A4che" alt="Veranstaltungsflaeche" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+        <div style="position: absolute; top: 0; right: 0; left: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%); padding: 18px 18px 30px 18px;">
+          <div style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.06em;">Bereich D</div>
+          <div style="font-size: 15px; font-weight: 700; color: #ffffff; margin-top: 3px; line-height: 1.3;">Veranstaltungsflaeche</div>
+        </div>
+        <div style="position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-radius: 4px; padding: 4px 12px; font-size: 13px; color: #ffffff; font-weight: 600;">51 Ideen</div>
+      </div>
+      <p style="font-size: 14px; color: #64748b; margin: 10px 0 0 2px; line-height: 1.6;">Multifunktionale Nutzung fuer Maerkte, Konzerte und Sportevents.</p>
+    </div>
+
+  </div><!-- /scroll-container -->
+
+</div>

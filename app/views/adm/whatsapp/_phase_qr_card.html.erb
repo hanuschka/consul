@@ -1,0 +1,8 @@
+<%= render Adm::WhatsappQrCodeComponent.new(
+  title: projekt_phase.title,
+  subline: t(
+    "adm.whatsapp.phase_codes.card_subline",
+    projekt: projekt_phase.projekt.page&.title.presence || projekt_phase.projekt.name
+  ),
+  token: ::Whatsapp::QrToken.for_projekt_phase(projekt_phase)
+) %>

@@ -8,4 +8,9 @@ namespace :budgets do
     ApplicationLogger.new.info "Updating current phase for budgets"
     Budget.update_cached_current_phase
   end
+
+  task send_deferred_selection_emails: :environment do
+    ApplicationLogger.new.info "Sending deferred selection emails"
+    Budget.send_deferred_selection_emails
+  end
 end

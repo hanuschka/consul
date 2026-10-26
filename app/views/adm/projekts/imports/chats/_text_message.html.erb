@@ -59,11 +59,21 @@
               alt: "",
               aria: { hidden: true } %>
       <% elsif message.role == "assistant" && message.content.present? %>
-        <%= markdown(message.content) %>
+        <%= import_chat_markdown(message.content) %>
       <% else %>
         <%= simple_format(message.content.to_s) %>
       <% end %>
     </div>
+
+    <% proposals = ProjektImports::AiEditJournal.proposals(message.tool_activity) %>
+    <% if proposals.present? %>
+      <ul class="projekt-import-chat--proposals" aria-label="<%= t("adm.projekts.imports.proposals.list_label") %>">
+        <%= render partial: "adm/projekts/imports/chats/proposal",
+              collection: proposals,
+              as: :proposal,
+              locals: { message: message } %>
+      </ul>
+    <% end %>
 
     <% if message.attached_documents.present? %>
       <div class="projekt-import-chat--message-documents">

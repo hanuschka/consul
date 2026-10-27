@@ -1,14 +1,13 @@
 {
   "name": "consuldemocracy",
   "dependencies": {
-    "@geoman-io/leaflet-geoman-free": "^2.15.0",
+    "@geoman-io/leaflet-geoman-free": "^2.20.4",
     "@hotwired/stimulus": "^3.2.2",
-    "@hotwired/turbo-rails": "^8.0.18",
+    "@hotwired/turbo-rails": "^8.0.23",
     "@kern-ux/native": "^2.3.1",
     "@mapbox/mapbox-gl-draw": "^1.5.0",
     "@mapbox/mapbox-gl-geocoder": "^5.0.3",
     "@rails/activestorage": "^8.1.100",
-    "@redocly/cli": "^2.9.0",
     "@simonwep/pickr": "^1.9.1",
     "ace-builds": "^1.44.0",
     "chart.js": "^4.5.1",
@@ -16,7 +15,6 @@
     "ckeditor5": "43.3.0",
     "cropperjs": "^2.2.0",
     "esbuild": "^0.25.10",
-    "eslint": "^9.28.0",
     "glightbox": "^3.3.0",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
@@ -31,7 +29,7 @@
     "leaflet.locatecontrol": "^0.79.0",
     "leaflet.markercluster": "^1.5.3",
     "mapbox-gl": "^3.12.0",
-    "markdown-it": "^14.1.1",
+    "markdown-it": "^14.3.3",
     "material-symbols": "^0.37.0",
     "plyr": "^3.8.4",
     "puppeteer": "^23.0.0",
@@ -40,6 +38,9 @@
     "select2": "^4.1.0-rc.0",
     "siriwave": "^2.4.0",
     "sortablejs": "^1.15.6"
+  },
+  "devDependencies": {
+    "eslint": "^9.28.0"
   },
   "scripts": {
     "build": "esbuild app/javascript/application-kern.js --bundle --format=esm --outdir=app/assets/builds --public-path=/assets",

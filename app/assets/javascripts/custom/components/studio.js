@@ -41,6 +41,7 @@
     App.Studio.ContentBlocks.CodeEditMode.initialize();
     App.Studio.ContentBlocks.Copy.initialize();
     App.Studio.ContentBlocks.EmptyHintToggle.initialize();
+    App.Studio.ContentBlocks.Visibility.initialize();
 
     window.studioContentBlockModulesInitialized = true;
   };
@@ -103,7 +104,8 @@
             updateUrl: updateUrl,
             aiUrl: aiUrl,
             generateUrl: generateUrl,
-            toolbarPosition: toolbarPosition
+            toolbarPosition: toolbarPosition,
+            visibility: App.Studio.ContentBlocks.Visibility.readFromElement(block)
           }
         );
 

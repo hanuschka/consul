@@ -1,0 +1,7 @@
+<% municipal_plan = projekt.public_municipal_plan %>
+<% if municipal_plan.present? %>
+  <%= render Shared::SidebarCardComponent.new(title: t("custom.municipal_plans.projekt_sidebar.title"),
+                                              icon_name: "landmark") do %>
+    <%= link_to municipal_plan.title, municipal_plan_path(municipal_plan) %>
+  <% end %>
+<% end %>

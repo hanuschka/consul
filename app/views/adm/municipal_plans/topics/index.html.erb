@@ -1,0 +1,72 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
+
+<%
+  headers = {
+    name: Kern::Table::HeaderComponent.new(:name, t(".table.name"), data_field: "name")
+  }
+%>
+
+<div class="kern-container my-5">
+  <%= new_resource_link(new_adm_municipal_plans_topic_path, t(".new_topic")) %>
+
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "municipal_plan_topics_table",
+        records: @topics,
+        headers: headers,
+        column_count: 3,
+        body_html_options: {
+          data: {
+            controller: "sortable",
+            "sortable-url-value": order_topics_adm_municipal_plans_topics_path
+          }
+        },
+        empty_state: {
+          title: t(".no_items_title"),
+          description: t(".no_items_description"),
+          icon: "category"
+        }
+      ) do |c| %>
+    <% c.with_header_row do %>
+      <th scope="col" class="kern-table__header">
+        <span class="sr-only"><%= t(".table.order") %></span>
+      </th>
+      <%= render headers[:name] %>
+      <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @topics.each do |topic| %>
+        <tr id="<%= dom_id(topic) %>" class="kern-table__row" data-sortable-id="<%= topic.id %>">
+          <td class="kern-table__cell" data-sortable-handle style="cursor: grab;">
+            <span class="material-symbols-outlined" aria-hidden="true">drag_indicator</span>
+          </td>
+          <th scope="row" class="kern-table__header" data-field="name"><%= topic.name %></th>
+          <td class="kern-table__cell">
+            <%= render Kern::Table::ActionsComponent.new do |actions| %>
+              <% actions.with_action(
+                label: t("shared.edit"),
+                url: edit_adm_municipal_plans_topic_path(topic),
+                icon: "edit",
+                style: :edit,
+                data: { turbo_frame: "_top" }
+              ) %>
+              <% actions.with_action(
+                label: t("shared.delete"),
+                url: adm_municipal_plans_topic_path(topic),
+                icon: "delete",
+                style: :delete,
+                data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete"), turbo_frame: "_top" }
+              ) %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

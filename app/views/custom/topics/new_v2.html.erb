@@ -7,7 +7,7 @@
     <div class="main-column">
       <h1><%= t("community.topic.create") %></h1>
       <div class="resource-page--intro-text">
-        Ein Arbeitskreis lebt von der Beteiligung seiner Teilnehmer. Sie möchten der Runde für das nachstehende Projekt ein neues Thema zur Diskussion bereitstellen? Dann beschreiben Sie anhand einer Überschrift und der Erläuterung Ihres Themas, worum es Ihnen geht. Jeder Beitrag ist wertvoll und hilft dabei, Klarheit über den Vorschlag zu gewinnen.
+        <%= t("custom.topics.new.intro") %>
       </div>
       <div class="margin-bottom">
         <%= render ResourcePage::BannerComponent.new(resource: @communitable_resource, compact: true) %>

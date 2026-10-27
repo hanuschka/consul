@@ -1,4 +1,9 @@
 App.Studio.ContentBlocks.SimpleEditMode.TextFormat = {
+  formats: {
+    bold: { tagName: "strong", matchingTagNames: ["strong", "b"] },
+    italic: { tagName: "em", matchingTagNames: ["em", "i"] }
+  },
+
   initialize() {
     this.initEventListeners()
   },
@@ -6,9 +11,18 @@ App.Studio.ContentBlocks.SimpleEditMode.TextFormat = {
   initEventListeners() {
     const $document = $(document);
     $document.on("click", ".js-content-block-toggle-bold", this.toggleBold.bind(this));
+    $document.on("click", ".js-content-block-toggle-italic", this.toggleItalic.bind(this));
   },
 
   toggleBold(e) {
+    this.toggleFormat(e, this.formats.bold);
+  },
+
+  toggleItalic(e) {
+    this.toggleFormat(e, this.formats.italic);
+  },
+
+  toggleFormat(e, format) {
     e.preventDefault();
 
     const selection = window.getSelection();
@@ -31,38 +45,37 @@ App.Studio.ContentBlocks.SimpleEditMode.TextFormat = {
       return;
     }
 
-    const newRange = this.applyBoldFormatting(range);
+    const newRange = this.applyFormatting(range, format);
     if (newRange) {
       selection.removeAllRanges();
       selection.addRange(newRange);
     }
   },
 
-  applyBoldFormatting(range) {
+  applyFormatting(range, format) {
     const container = range.commonAncestorContainer;
     const parentElement = container.nodeType === 3 ? container.parentNode : container;
 
-    const boldParent = this.findBoldParent(parentElement);
+    const formattedParent = this.findFormattedParent(parentElement, format);
 
-    if (boldParent) {
-      return this.unwrapBoldElement(boldParent, range);
+    if (formattedParent) {
+      return this.unwrapFormattedElement(formattedParent, range, format);
     } else {
       const selectedContent = range.extractContents();
-      const strongElement = document.createElement("strong");
-      strongElement.appendChild(selectedContent);
-      range.insertNode(strongElement);
+      const formattedElement = this.wrapInFormatElement(selectedContent, format);
+      range.insertNode(formattedElement);
 
       const newRange = document.createRange();
-      newRange.selectNodeContents(strongElement);
+      newRange.selectNodeContents(formattedElement);
       return newRange;
     }
   },
 
-  findBoldParent(element) {
+  findFormattedParent(element, format) {
     let current = element;
     while (current && current.nodeType === 1) {
       const tagName = current.nodeName.toLowerCase();
-      if (tagName === "strong" || tagName === "b") {
+      if (format.matchingTagNames.includes(tagName)) {
         return current;
       }
       if (current.getAttribute("contenteditable") === "true") {
@@ -73,26 +86,26 @@ App.Studio.ContentBlocks.SimpleEditMode.TextFormat = {
     return null;
   },
 
-  unwrapBoldElement(boldElement, range) {
+  unwrapFormattedElement(formattedElement, range, format) {
     const selectedText = window.getSelection().toString();
 
-    if (selectedText === boldElement.textContent) {
-      const nodes = Array.from(boldElement.childNodes);
+    if (selectedText === formattedElement.textContent) {
+      const nodes = Array.from(formattedElement.childNodes);
       const fragment = document.createDocumentFragment();
       fragment.append(...nodes);
-      boldElement.parentNode.replaceChild(fragment, boldElement);
+      formattedElement.parentNode.replaceChild(fragment, formattedElement);
       return this.createRangeAround(nodes);
     }
 
     const beforeRange = document.createRange();
-    beforeRange.setStart(boldElement.firstChild || boldElement, 0);
+    beforeRange.setStart(formattedElement.firstChild || formattedElement, 0);
     beforeRange.setEnd(range.startContainer, range.startOffset);
 
     const afterRange = document.createRange();
     afterRange.setStart(range.endContainer, range.endOffset);
     afterRange.setEnd(
-      boldElement.lastChild || boldElement,
-      boldElement.lastChild ? boldElement.lastChild.textContent.length : 0
+      formattedElement.lastChild || formattedElement,
+      formattedElement.lastChild ? formattedElement.lastChild.textContent.length : 0
     );
 
     const selectedContent = range.extractContents();
@@ -102,17 +115,17 @@ App.Studio.ContentBlocks.SimpleEditMode.TextFormat = {
     const fragment = document.createDocumentFragment();
 
     if (beforeContent.textContent) {
-      fragment.appendChild(this.wrapInStrong(beforeContent));
+      fragment.appendChild(this.wrapInFormatElement(beforeContent, format));
     }
 
     const selectedNodes = Array.from(selectedContent.childNodes);
     fragment.append(...selectedNodes);
 
     if (afterContent.textContent) {
-      fragment.appendChild(this.wrapInStrong(afterContent));
+      fragment.appendChild(this.wrapInFormatElement(afterContent, format));
     }
 
-    boldElement.parentNode.replaceChild(fragment, boldElement);
+    formattedElement.parentNode.replaceChild(fragment, formattedElement);
     return this.createRangeAround(selectedNodes);
   },
 
@@ -125,9 +138,9 @@ App.Studio.ContentBlocks.SimpleEditMode.TextFormat = {
     return range;
   },
 
-  wrapInStrong(content) {
-    const strong = document.createElement("strong");
-    strong.appendChild(content);
-    return strong;
+  wrapInFormatElement(content, format) {
+    const element = document.createElement(format.tagName);
+    element.appendChild(content);
+    return element;
   }
 }

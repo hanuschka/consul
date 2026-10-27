@@ -16,10 +16,20 @@ class Projekts::CrossInstanceImport::ImportService < ApplicationService
     check_format_version
     adopt_source_name
 
-    Projekts::Copying::CopyRunner.call(
+    result = Projekts::Copying::CopyRunner.call(
       bundle: sanitized_bundle,
       copy: target,
       record_copier: record_copier,
+      id_map: id_map
+    )
+    return result if !result.success?
+
+    # The map travels out with the result so a caller that edited the bundle's
+    # records before the copy can find what each one became. Without it the
+    # only handle on a copied phase is its position in the bundle.
+    ServiceResult.success(
+      projekt: result.projekt,
+      skipped_blobs: result.skipped_blobs,
       id_map: id_map
     )
   rescue UnsupportedFormatError => e

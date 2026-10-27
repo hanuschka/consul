@@ -1,5 +1,6 @@
 class ProjektPointOfInterestPin < ApplicationRecord
   include Mappable
+  include MarkedAreasValidation
 
   translates :description, touch: true
   include Globalizable

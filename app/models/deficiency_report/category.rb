@@ -3,6 +3,7 @@ class DeficiencyReport::Category < ApplicationRecord
 
   translates :name, touch: true
   include Globalizable
+  include MachineTranslatable
 
   attr_accessor :default_officer_id, :default_officer_group_id
 
@@ -22,7 +23,7 @@ class DeficiencyReport::Category < ApplicationRecord
   end
 
   def safe_to_destroy?
-    !deficiency_reports.exists?
+    !deficiency_reports.with_deleted.exists?
   end
 
   def self.order_categories(ordered_array)

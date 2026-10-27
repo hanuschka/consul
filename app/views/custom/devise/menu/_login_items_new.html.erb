@@ -17,6 +17,7 @@
        current_user.poll_officer? ||
        current_user.officing_manager? ||
        Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).index? ||
+       Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, nil).index? ||
        Adm::Ideas::IdeaPolicy.new(current_user, nil).index?
      ) %>
 
@@ -65,7 +66,16 @@
     <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
       <%= link_to adm_deficiency_reports_root_path, class: "flyout-item--link" do %>
         <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["deficiency_reports"]) %>
-        <%= Setting["deficiency_reports.feature_name"].presence || t("custom.layouts.header.deficiency_report_management") %>
+        <%= setting_text("deficiency_reports.feature_name").presence || t("custom.layouts.header.deficiency_report_management") %>
+      <% end %>
+    </li>
+  <% end %>
+
+  <% if Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, nil).index? %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to adm_municipal_plans_root_path, class: "flyout-item--link" do %>
+        <%= flyout_item_icon(icon_set: icon_set, **Adm::Section::ICONS["municipal_plans"]) %>
+        <%= t("adm.municipal_plans.title") %>
       <% end %>
     </li>
   <% end %>

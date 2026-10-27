@@ -467,6 +467,12 @@ module Whatsapp
     Setting["whatsapp.administration_contact_url"].to_s.strip.presence
   end
 
+  def self.administration_contact_entered?
+    [
+      administration_contact_phone, administration_contact_email, administration_contact_url
+    ].any?
+  end
+
   def self.retention_days
     positive_setting("whatsapp.message_retention_days") || DEFAULT_RETENTION_DAYS
   end

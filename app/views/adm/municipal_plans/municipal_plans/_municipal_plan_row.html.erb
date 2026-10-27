@@ -10,7 +10,7 @@
     <%= t("adm.municipal_plans.statuses.#{municipal_plan.status}") %>
   </td>
   <td class="kern-table__cell" data-field="districts">
-    <%= municipal_plan.districts.map(&:name_for_display).join(", ") %>
+    <%= municipal_plan.sorted_district_names.join(", ") %>
   </td>
   <td class="kern-table__cell" data-field="topics">
     <%= municipal_plan.topics.map(&:name).join(", ") %>

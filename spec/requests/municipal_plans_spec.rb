@@ -21,6 +21,20 @@ describe "Vorhabenliste", type: :request do
     allow(Setting).to receive(:[]).with("process.municipal_plans").and_return(enabled)
   end
 
+  def participation_info(kind, key)
+    I18n.t("custom.municipal_plans.participation_info.#{kind}.#{key}")
+  end
+
+  def expect_participation_info(container, kind)
+    tooltip = container.at_css("rich-tooltip.municipal-plan-participation-info")
+    trigger = tooltip.at_css("> span[role=img][tabindex='0']")
+
+    expect(trigger["aria-label"]).to eq participation_info(kind, :label)
+    expect(trigger.at_css("i.fas.fa-info-circle[aria-hidden=true]")).to be_present
+    expect(tooltip.at_css("> template .rich-tooltip-content--text").text.strip)
+      .to eq participation_info(kind, :text)
+  end
+
   describe "the module setting" do
     it "keeps the overview unreachable when it is off" do
       enable_module(nil)
@@ -441,6 +455,46 @@ describe "Vorhabenliste", type: :request do
     end
   end
 
+  describe "Gesamtes Stadtgebiet" do
+    before { enable_module(true) }
+
+    let(:city_wide_label) { MunicipalPlan.human_attribute_name(:city_wide) }
+    let!(:city_wide) do
+      create(:municipal_plan, :published, responsible: officer, title: "Klimaschutzkonzept").tap do |created|
+        created.district_assignments.destroy_all
+        created.update!(city_wide: true)
+      end
+    end
+
+    it "offers it as an Ortsteil filter that finds only the Vorhaben for the whole city" do
+      plan
+
+      get municipal_plans_path(districts: [MunicipalPlansQuery::CITY_WIDE])
+
+      document = Nokogiri::HTML(response.body)
+      expect(document.at_css("#filter_district_city_wide")["checked"]).to be_present
+      expect(response.body).to include("Klimaschutzkonzept")
+      expect(response.body).not_to include("Weiterentwicklung des Eichplatz-Areals")
+    end
+
+    it "keeps the Vorhaben for the whole city out of the filter for a single Ortsteil" do
+      get municipal_plans_path(districts: plan.district_ids)
+
+      expect(response.body).to include("Weiterentwicklung des Eichplatz-Areals")
+      expect(response.body).not_to include("Klimaschutzkonzept")
+    end
+
+    it "names it on the detail page and shows no map, even with an old pin" do
+      expect(city_wide.map_location).to be_present
+
+      get municipal_plan_path(city_wide)
+
+      document = Nokogiri::HTML(response.body)
+      expect(document.at_css(".municipal-plan-glance").text).to include(city_wide_label)
+      expect(document.at_css(".municipal-plan-location")).to be_nil
+    end
+  end
+
   describe "the Ortsteil map" do
     before { enable_module(true) }
 
@@ -532,6 +586,17 @@ describe "Vorhabenliste", type: :request do
       expect(document.css("[role=status]").size).to eq 1
     end
 
+    it "labels the result count in the archive as archived Vorhaben" do
+      plan
+      2.times { create(:municipal_plan, :published, responsible: officer).update!(status: "archived") }
+
+      get archive_municipal_plans_path
+
+      count = document.at_css("#municipal-plans-sidebar .resources--info-count[role=status]")
+      expect(count.css("span").map { |node| node.text.strip })
+        .to eq [I18n.t("custom.municipal_plans.index.archive_count"), "2"]
+    end
+
     it "shows every Ortsteil of a Vorhaben" do
       names = %w[Lobeda Wenigenjena Winzerla Zwätzen]
       plan.district_assignments.destroy_all
@@ -557,6 +622,23 @@ describe "Vorhabenliste", type: :request do
       expect(document.at_css("#filter_district_#{district.id}")["checked"]).to be_present
     end
 
+    it "explains both kinds of Bürgerbeteiligung next to their filter, outside the label" do
+      plan
+
+      get municipal_plans_path
+
+      MunicipalPlansQuery::PARTICIPATION_KINDS.each do |kind|
+        item = document.at_css("#filter_participation_#{kind}").ancestors("li").first
+
+        expect(item.at_css("label rich-tooltip")).to be_nil
+        expect(item.at_css("> label + rich-tooltip")).to be_present
+        expect_participation_info(item, kind)
+      end
+      other_filters = document.css("ul[data-identifier]:not([data-identifier=participation])")
+      expect(other_filters).not_to be_empty
+      expect(other_filters.css("rich-tooltip")).to be_empty
+    end
+
     it "lists the newest update first when sorted by Aktualisierungsdatum" do
       older = create(:municipal_plan, :published, responsible: officer, title: "Älteres Vorhaben")
       newer = create(:municipal_plan, :published, responsible: officer, title: "Neueres Vorhaben")
@@ -572,7 +654,7 @@ describe "Vorhabenliste", type: :request do
   describe "the table view" do
     before do
       enable_module(true)
-      cookies["wide_resources"] = "true"
+      cookies["municipal_plans_wide"] = "true"
     end
 
     def document
@@ -933,7 +1015,25 @@ describe "Vorhabenliste", type: :request do
           .to be_present
         expect(trigger.at_css(".municipal-plans-table--badge-label[aria-hidden=true]").text.strip)
           .to eq badge_label(badge)
-        expect(tooltip.at_css("> template").inner_html.strip).to eq badge_label(badge)
+      end
+      expect(tooltips.first.at_css("> template").inner_html.strip).to eq badge_label(:new)
+    end
+
+    it "explains formelle and informelle Bürgerbeteiligung in their Kennzeichnung tooltip" do
+      plan.update_columns(formal_participation: true, informal_participation: true)
+
+      get municipal_plans_path
+
+      cell = row_for("Weiterentwicklung des Eichplatz-Areals")
+        .at_css("td[data-label='#{I18n.t("custom.municipal_plans.index.table.columns.badges")}']")
+      { formal_participation: :formal, informal_participation: :informal }.each do |badge, kind|
+        trigger = cell.at_css("rich-tooltip > span[aria-label='#{badge_label(badge)}']")
+        template = trigger.parent.at_css("> template")
+
+        expect(template.at_css(".rich-tooltip-content--title").text.strip).to eq badge_label(badge)
+        expect(template.at_css(".rich-tooltip-content--text").text.strip)
+          .to eq participation_info(kind, :text)
+        expect(trigger.at_css(".fa-info-circle")).to be_nil
       end
     end
 
@@ -945,10 +1045,21 @@ describe "Vorhabenliste", type: :request do
       legend = document.at_css(".municipal-plans-table > .municipal-plans-table--legend")
       list = legend.at_css("ul")
       expect(list["aria-label"]).to eq I18n.t("custom.municipal_plans.index.table.legend")
-      expect(list.css("li").map { |item| item.text.strip })
+      expect(list.css("li").map { |item| item.xpath("text()").text.strip })
         .to eq MunicipalPlans::BadgesComponent::ICONS.keys.map { |badge| badge_label(badge) }
-      expect(list.css("i.fas[aria-hidden=true]").size).to eq 4
+      expect(list.css("li > i.fas[aria-hidden=true]").size).to eq 4
       expect(legend.next_element["class"]).to eq "municipal-plans-table--scroll"
+    end
+
+    it "explains formelle and informelle Bürgerbeteiligung in the legend" do
+      plan
+
+      get municipal_plans_path
+
+      items = document.css(".municipal-plans-table--legend li")
+      expect(items.map { |item| item.css("rich-tooltip").size }).to eq [0, 0, 1, 1]
+      expect_participation_info(items[2], :formal)
+      expect_participation_info(items[3], :informal)
     end
 
     def tile_for_plan
@@ -1028,17 +1139,48 @@ describe "Vorhabenliste", type: :request do
         .to eq I18n.t("custom.municipal_plans.index.table.archive_caption")
     end
 
-    it "renders the table without the cookie too, next to the list, for CSS to switch" do
-      cookies.delete("wide_resources")
+    it "opens the table on the first visit, next to the list, for CSS to switch" do
+      cookies.delete("municipal_plans_wide")
+      plan
+
+      get municipal_plans_path
+
+      expect(document.at_css(".resources-list.-wide")).to be_present
+      expect(document.at_css(".resources-list .municipal-plans-table + .resources-list--body")).to be_present
+      expect(row_titles).to eq ["Weiterentwicklung des Eichplatz-Areals"]
+      expect(document.css(".resources-list--inner .resource-item--title").map { |t| t.text.strip })
+        .to eq ["Weiterentwicklung des Eichplatz-Areals"]
+    end
+
+    it "opens the tiles when the visitor chose them" do
+      cookies["municipal_plans_wide"] = "false"
       plan
 
       get municipal_plans_path
 
       expect(document.at_css(".resources-list.-wide")).to be_nil
-      expect(document.at_css(".resources-list .municipal-plans-table + .resources-list--body")).to be_present
-      expect(row_titles).to eq ["Weiterentwicklung des Eichplatz-Areals"]
-      expect(document.css(".resources-list--inner .resource-item--title").map { |t| t.text.strip })
-        .to eq ["Weiterentwicklung des Eichplatz-Areals"]
+      expect(document.at_css(".resources-list")).to be_present
+    end
+
+    it "ignores the view cookie shared by the other lists" do
+      cookies["municipal_plans_wide"] = "false"
+      cookies["wide_resources"] = "true"
+      plan
+
+      get municipal_plans_path
+
+      expect(document.at_css(".resources-list.-wide")).to be_nil
+      expect(document.at_css(".resources-list")["data-view-cookie"]).to eq "municipal_plans_wide"
+    end
+
+    it "offers the switch to the tiles in the table view" do
+      plan
+
+      get municipal_plans_path
+
+      button = document.at_css(".resources-list .js-resource-list-switch-view-button")
+      expect(button["aria-label"]).to eq I18n.t("custom.accessibility.shared.switch-view-button.to-tile")
+      expect(button["title"]).to eq I18n.t("custom.accessibility.shared.switch-view-button.to-tile")
     end
 
     it "renders no table when the list is empty" do
@@ -1230,6 +1372,26 @@ describe "Vorhabenliste", type: :request do
       expect(meta_items).to include I18n.t("custom.municipal_plans.show.updated_on", date: "03.02.2026")
       expect(hero.css(".municipal-plan-hero--meta .fa-hashtag")).to be_empty
     end
+
+    it "leaves out the version and shows no step when Verfahrensschritte are used" do
+      Setting["municipal_plans.procedure_steps"] = true
+      plan.update_columns(version: "1.2", procedure_step_id: create(:municipal_plan_procedure_step).id)
+
+      get municipal_plan_path(plan)
+
+      expect(hero.css(".municipal-plan-hero--meta .fa-hashtag")).to be_empty
+      expect(meta_items.join(" ")).not_to include I18n.t("custom.municipal_plans.show.banner.version")
+      expect(hero.text).not_to include plan.procedure_step_label
+    end
+
+    it "keeps the version when Verfahrensschritte are not used" do
+      Setting["municipal_plans.procedure_steps"] = false
+      plan.update_columns(version: "1.2", procedure_step_id: create(:municipal_plan_procedure_step).id)
+
+      get municipal_plan_path(plan)
+
+      expect(meta_items).to include "#{I18n.t("custom.municipal_plans.show.banner.version")} 1.2"
+    end
   end
 
   describe "the content blocks on the detail page" do
@@ -1247,7 +1409,7 @@ describe "Vorhabenliste", type: :request do
       plan.translations.update_all(fields.index_with("<p> </p>"))
     end
 
-    describe "Worum es geht" do
+    describe "Zusammenfassung" do
       it "shows the Kurze Beschreibung under its own heading" do
         plan.update!(short_description: "<p>Neubau einer Brücke</p>")
 
@@ -1257,6 +1419,17 @@ describe "Vorhabenliste", type: :request do
 
         expect(intro.at_css("h2").text.strip).to eq show_key("intro.title")
         expect(intro.text).to include "Neubau einer Brücke"
+      end
+
+      it "renders lines starting with a dash as a list" do
+        plan.update!(short_description: "Geplant sind:\n– Neubau einer Brücke\n– Radweg")
+
+        get municipal_plan_path(plan)
+
+        text = document.at_css(".municipal-plan-intro .municipal-plan-block--text")
+
+        expect(text.at_css("p").text.strip).to eq "Geplant sind:"
+        expect(text.css("ul > li").map { |item| item.text.strip }).to eq ["Neubau einer Brücke", "Radweg"]
       end
 
       it "is left out when the Kurze Beschreibung is empty" do
@@ -1336,18 +1509,29 @@ describe "Vorhabenliste", type: :request do
       end
     end
 
-    describe "Weitere Informationen zum Vorhaben" do
-      it "shows the text with simple_format under the Hintergrund heading" do
+    describe "Hintergrund – Weitere Informationen zum Vorhaben" do
+      it "shows the text with simple_format under its own heading" do
         plan.update!(further_information: "Erster Absatz\n\nZweiter Absatz")
 
         get municipal_plan_path(plan)
 
         block = document.at_css(".municipal-plan-background")
 
-        expect(block.at_css(".municipal-plan-block--eyebrow").text.strip).to eq show_key("background.eyebrow")
         expect(block.at_css("h2").text.strip).to eq show_key("background.title")
         expect(block.css(".municipal-plan-block--text p").map { |p| p.text.strip })
           .to eq ["Erster Absatz", "Zweiter Absatz"]
+        expect(block.css(".municipal-plan-block--text ul")).to be_empty
+      end
+
+      it "renders lines starting with a dash or a bullet as a list" do
+        plan.update!(further_information: "Am Stadtrand.\n\n– Gewerbe ansiedeln\n• Wohnen")
+
+        get municipal_plan_path(plan)
+
+        text = document.at_css(".municipal-plan-background .municipal-plan-block--text")
+
+        expect(text.css("p").map { |p| p.text.strip }).to eq ["Am Stadtrand."]
+        expect(text.css("ul > li").map { |item| item.text.strip }).to eq ["Gewerbe ansiedeln", "Wohnen"]
       end
 
       it "is left out when the field is empty" do
@@ -1387,6 +1571,16 @@ describe "Vorhabenliste", type: :request do
           .to eq [show_key("participation_block.status_yes"), show_key("participation_block.status_no")]
         expect(rows.map { |row| row.at_css(".municipal-plan-participation--reason").text.strip })
           .to eq ["Im Zuge des Planverfahrens", "Keine Gründe erkennbar"]
+      end
+
+      it "explains each kind next to its heading, outside it" do
+        get municipal_plan_path(plan)
+
+        rows.zip(%i[formal informal]).each do |row, kind|
+          expect(row.at_css("h3 rich-tooltip")).to be_nil
+          expect(row.at_css("h3 + rich-tooltip")).to be_present
+          expect_participation_info(row, kind)
+        end
       end
     end
 
@@ -1431,14 +1625,15 @@ describe "Vorhabenliste", type: :request do
     end
 
     it "orders the blocks and leaves the Kosten out of the main column" do
-      plan.update!(further_information: "Hintergrundtext", costs: "ca. 50.000 €")
+      plan.update!(short_description: "<p>Neubau einer Brücke</p>", further_information: "Hintergrundtext",
+                   formal_participation: true, costs: "ca. 50.000 €")
 
       get municipal_plan_path(plan)
 
       headings = document.css(".main-column h2").map { |heading| heading.text.strip }
 
       expect(headings.first(5)).to eq [
-        show_key("intro.title"), show_key("timeline.title"), show_key("background.title"),
+        show_key("intro.title"), show_key("background.title"), show_key("timeline.title"),
         show_key("participation"), show_key("location.title")
       ]
       expect(document.at_css(".main-column").text).not_to include("ca. 50.000 €")
@@ -1472,7 +1667,7 @@ describe "Vorhabenliste", type: :request do
 
     def glance_rows
       card_titled("at_a_glance.title").css(".municipal-plan-glance--row").map do |row|
-        [row.at_css("dt").text.strip, row.at_css("dd").text.strip]
+        "#{row.at_css("dt").text.strip} #{row.at_css("dd").xpath("text()").text.strip}"
       end
     end
 
@@ -1548,12 +1743,34 @@ describe "Vorhabenliste", type: :request do
         get municipal_plan_path(plan.reload)
 
         expect(glance_rows).to eq [
-          [show_key("at_a_glance.area"), "Lobeda, Zwätzen"],
-          [show_key("at_a_glance.costs"), "ca. 50.000 €"],
-          [show_key("at_a_glance.formal"), show_key("participation_block.status_yes")],
-          [show_key("at_a_glance.informal"), show_key("participation_block.status_no")],
-          [show_key("banner.version"), plan.version]
+          "#{show_key("at_a_glance.area")}: Lobeda, Zwätzen",
+          "#{show_key("at_a_glance.costs")}: ca. 50.000 €",
+          "#{show_key("at_a_glance.formal")}: #{show_key("participation_block.status_yes")}",
+          "#{show_key("at_a_glance.informal")}: #{show_key("participation_block.status_no")}",
+          "#{show_key("banner.version")}: #{plan.version}"
         ]
+      end
+
+      it "shows no Verfahrensschritt and no Version when Verfahrensschritte are used" do
+        Setting["municipal_plans.procedure_steps"] = true
+        step = create(:municipal_plan_procedure_step, name: "2.0 Frühzeitige Unterrichtung")
+        plan.update_columns(version: "1.2", procedure_step_id: step.id)
+
+        get municipal_plan_path(plan)
+
+        expect(glance_rows.last)
+          .to eq "#{show_key("at_a_glance.informal")}: #{show_key("participation_block.status_no")}"
+        expect(glance_rows).not_to include a_string_starting_with("#{show_key("banner.version")}:")
+        expect(card_titled("at_a_glance.title").text).not_to include "2.0 Frühzeitige Unterrichtung"
+      end
+
+      it "keeps the Version when Verfahrensschritte are not used" do
+        Setting["municipal_plans.procedure_steps"] = false
+        plan.update_columns(version: "1.2", procedure_step_id: create(:municipal_plan_procedure_step).id)
+
+        get municipal_plan_path(plan)
+
+        expect(glance_rows.last).to eq "#{show_key("banner.version")}: 1.2"
       end
 
       it "leaves out the Kosten row when no costs are given" do
@@ -1561,7 +1778,101 @@ describe "Vorhabenliste", type: :request do
 
         get municipal_plan_path(plan)
 
-        expect(glance_rows.map(&:first)).not_to include show_key("at_a_glance.costs")
+        expect(glance_rows).not_to include a_string_starting_with("#{show_key("at_a_glance.costs")}:")
+      end
+
+      it "explains both participation kinds after their value" do
+        plan.update!(formal_participation: true, informal_participation: false)
+
+        get municipal_plan_path(plan)
+
+        rows = card_titled("at_a_glance.title").css(".municipal-plan-glance--row")
+        { formal: "status_yes", informal: "status_no" }.each do |kind, status|
+          row = rows.find { |r| r.at_css("dt").text.strip == "#{show_key("at_a_glance.#{kind}")}:" }
+          value = row.at_css("dd").children.reject { |node| node.text? && node.text.strip.empty? }
+
+          expect(row.at_css("dt rich-tooltip")).to be_nil
+          expect(value.first.text.strip).to eq show_key("participation_block.#{status}")
+          expect(value.last.name).to eq "rich-tooltip"
+          expect_participation_info(row.at_css("dd"), kind)
+        end
+        expect(rows.count { |row| row.at_css("rich-tooltip") }).to eq 2
+      end
+    end
+
+    describe "Legende Verfahrensschritte" do
+      let!(:steps) do
+        (1..6).map { |n| create(:municipal_plan_procedure_step, name: "#{n}.0 Schritt #{n}", given_order: n) }
+      end
+
+      def legend_card
+        card_titled("procedure_steps_legend.title")
+      end
+
+      def legend_items
+        legend_card.css("ol li")
+      end
+
+      it "lists every step in order right below Auf einen Blick and marks only the current one" do
+        Setting["municipal_plans.procedure_steps"] = true
+        plan.update_columns(procedure_step_id: steps[2].id)
+
+        get municipal_plan_path(plan)
+
+        expect(legend_items.map { |item| item.text.strip }).to eq steps.map(&:name)
+        expect(legend_items.map { |item| item["aria-current"] }).to eq [nil, nil, "step", nil, nil, nil]
+        expect(legend_items[2]["class"]).to include "-current"
+
+        titles = document.css(".sidebar .sidebar-card--title-text").map { |title| title.text.strip }
+        expect(titles[titles.index(show_key("at_a_glance.title")) + 1])
+          .to eq show_key("procedure_steps_legend.title")
+      end
+
+      it "leaves the card out when the plan has no step" do
+        Setting["municipal_plans.procedure_steps"] = true
+        plan.update_columns(procedure_step_id: nil)
+
+        get municipal_plan_path(plan)
+
+        expect(legend_card).to be_nil
+        expect(response.body).not_to include show_key("procedure_steps_legend.title")
+      end
+
+      it "leaves the card out when Verfahrensschritte are not used" do
+        Setting["municipal_plans.procedure_steps"] = false
+        plan.update_columns(procedure_step_id: steps[2].id)
+
+        get municipal_plan_path(plan)
+
+        expect(legend_card).to be_nil
+        expect(response.body).not_to include show_key("procedure_steps_legend.title")
+      end
+
+      it "shows renamed and reordered steps on the next request" do
+        Setting["municipal_plans.procedure_steps"] = true
+        plan.update_columns(procedure_step_id: steps[2].id)
+
+        get municipal_plan_path(plan)
+
+        steps[0].update!(name: "1.0 Aufstellungsbeschluss")
+        MunicipalPlan::ProcedureStep.order_procedure_steps(steps.map(&:id).reverse)
+
+        get municipal_plan_path(plan)
+
+        expect(legend_items.map { |item| item.text.strip }).to eq [
+          "6.0 Schritt 6", "5.0 Schritt 5", "4.0 Schritt 4", "3.0 Schritt 3", "2.0 Schritt 2",
+          "1.0 Aufstellungsbeschluss"
+        ]
+        expect(legend_items.map { |item| item["aria-current"] }).to eq [nil, nil, nil, "step", nil, nil]
+      end
+
+      it "shows no Version anywhere in the sidebar when Verfahrensschritte are used" do
+        Setting["municipal_plans.procedure_steps"] = true
+        plan.update_columns(version: "1.2", procedure_step_id: steps[2].id)
+
+        get municipal_plan_path(plan)
+
+        expect(document.at_css(".sidebar").text).not_to include show_key("banner.version")
       end
     end
 

@@ -10,9 +10,10 @@ describe "Vorhabenliste settings in /adm", type: :request do
     Setting["process.municipal_plans"] = false
     Setting["municipal_plans.officers_see_all"] = false
     Setting["municipal_plans.auto_archive"] = false
+    Setting["municipal_plans.procedure_steps"] = false
   end
 
-  it "shows the three settings to an administrator" do
+  it "shows the four settings to an administrator" do
     login_as(admin)
 
     get adm_municipal_plans_settings_path
@@ -21,6 +22,7 @@ describe "Vorhabenliste settings in /adm", type: :request do
     expect(response.body).to include(I18n.t("setting.process.municipal_plans"))
     expect(response.body).to include(I18n.t("setting.municipal_plans.officers_see_all"))
     expect(response.body).to include(I18n.t("setting.municipal_plans.auto_archive"))
+    expect(response.body).to include(I18n.t("setting.municipal_plans.procedure_steps"))
   end
 
   it "turns an officer away" do

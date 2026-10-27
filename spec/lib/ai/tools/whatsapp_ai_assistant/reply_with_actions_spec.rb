@@ -41,6 +41,7 @@ describe Ai::Tools::WhatsappAiAssistant::ReplyWithActions do
     allow(Whatsapp::StatePills).to receive(:buttons).with(conversation: conversation)
       .and_return(state_pills)
     allow(Whatsapp::FlowActions).to receive(:projekt_choice?).and_return(false)
+    allow(Whatsapp::BallotResume).to receive(:question_follows_reply?).and_return(false)
     allow(Whatsapp::AiAssistant::DecisionLog).to receive(:record)
     allow(Whatsapp::Send).to receive(:buttons).and_return(double(:message, status: "sent"))
   end

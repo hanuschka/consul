@@ -17,6 +17,7 @@ de:
           officers: Team
           officer_groups: Sachbearbeitergruppen
           topics: Kategorien
+          procedure_steps: Verfahrensschritte
           settings: Konfiguration
       settings:
         title: Konfiguration
@@ -123,6 +124,7 @@ de:
           informal_participation: Bürgerbeteiligung informell
           content_updated_at: Aktualisierungsdatum
           version: Versionsnummer
+          procedure_step: Verfahrensschritt
           no_links: Keine Links und Dokumente hinterlegt.
           contact_name: Name
           contact_role: Funktion
@@ -177,10 +179,13 @@ de:
           no_districts_description: Ortsteile werden aus den registrierten Adressen übernommen. Ohne Ortsteile kann kein Vorhaben gespeichert werden.
           no_topics_title: Keine Kategorien vorhanden
           no_topics_description: Legen Sie zunächst unter „Kategorien" eine Kategorie an. Ohne Kategorie kann kein Vorhaben gespeichert werden.
+          no_procedure_steps: Es sind noch keine Verfahrensschritte angelegt.
+          manage_procedure_steps: Verfahrensschritte anlegen
           labels:
             title: Titel des Vorhabens
             short_description: Kurze Beschreibung
             further_information: Weitere Informationen
+            procedure_step: Verfahrensschritt
             last_resolution: Letzter Beschluss
             processing_status: Aktueller Bearbeitungsstand
             next_steps: Geplanter Zeitpunkt / nächste Schritte
@@ -207,6 +212,7 @@ de:
             title: Der Titel benennt das Vorhaben so, wie es Bürgerinnen und Bürger in der Vorhabenliste sehen. Wählen Sie eine kurze, verständliche Bezeichnung ohne Aktenzeichen und Abkürzungen.
             short_description: Die Kurzbeschreibung ist der Einstiegstext in der öffentlichen Vorhabenliste und soll das Vorhaben in etwa 420 Zeichen zusammenfassen. Beschreiben Sie in wenigen Sätzen, worum es geht und warum die Stadt das Vorhaben verfolgt.
             further_information: Ergänzende Erläuterungen für Interessierte, zum Beispiel Hintergründe, Planungsstände oder Rahmenbedingungen. Dieses Feld ist optional und wird unterhalb der Kurzbeschreibung angezeigt.
+            procedure_step: Der Verfahrensschritt zeigt, wo das Vorhaben im förmlichen Verfahren steht, und erscheint auf der öffentlichen Detailseite in der Box „Legende Verfahrensschritte“. Die Angabe ist freiwillig.
             last_resolution: Der letzte politische Beschluss zu diesem Vorhaben, zum Beispiel Gremium, Datum und Inhalt des Beschlusses. Lassen Sie das Feld leer, wenn noch kein Beschluss vorliegt.
             processing_status: Der aktuelle Bearbeitungsstand beschreibt, wo das Vorhaben gerade steht. Halten Sie ihn aktuell – er ist für Bürgerinnen und Bürger die wichtigste Information und erhöht bei jeder Änderung die Versionsnummer.
             next_steps: Die geplanten nächsten Schritte mit Zeitangabe, soweit absehbar. Grobe Angaben wie „1. Halbjahr 2027" sind ausdrücklich erwünscht, wenn noch kein genaues Datum feststeht.
@@ -229,6 +235,7 @@ de:
             title: z. B. Neugestaltung des Marktplatzes
             short_description: z. B. Der Marktplatz wird barrierefrei umgestaltet und erhält mehr Grün und Sitzplätze.
             further_information: z. B. Hintergründe, Ziele und bisherige Planungsschritte
+            procedure_step: Kein Verfahrensschritt
             last_resolution: z. B. Beschluss des Stadtrats vom 12.03.2026 zur Vorplanung
             processing_status: z. B. Die Entwurfsplanung ist abgeschlossen, die Ausschreibung wird vorbereitet.
             next_steps: z. B. Vergabe der Bauleistungen im Frühjahr, Baubeginn im Sommer
@@ -346,4 +353,30 @@ de:
           name_label: Name
           name_hint: Der Name der Kategorie wird den Bürgerinnen und Bürgern in der Vorhabenliste als Filter angezeigt und erscheint bei jedem Vorhaben, dem diese Kategorie zugeordnet ist. Wählen Sie einen kurzen, allgemein verständlichen Begriff wie „Mobilität und Verkehr" oder „Grün und Umwelt".
           name_placeholder: z. B. Mobilität und Verkehr
+          submit: Speichern
+      procedure_steps:
+        index:
+          title: Verfahrensschritte
+          page_hint: "Hier verwalten Sie die Verfahrensschritte der Vorhabenliste. Der Verfahrensschritt zeigt, wo ein Vorhaben im förmlichen Verfahren steht, und erscheint mit seinem Namen auf der öffentlichen Detailseite, zum Beispiel „2.0 Frühzeitige Unterrichtung der Öffentlichkeit“. Per Drag & Drop legen Sie fest, in welcher Reihenfolge die Verfahrensschritte im Formular zur Auswahl stehen. Verfahrensschritte, denen noch Vorhaben zugeordnet sind, können nicht gelöscht werden."
+          new_procedure_step: Neuer Verfahrensschritt
+          no_items_title: Keine Verfahrensschritte vorhanden
+          no_items_description: Legen Sie einen Verfahrensschritt an, um ihn Vorhaben zuordnen zu können.
+          table:
+            order: Reihenfolge
+            name: Name
+        new:
+          title: Neuer Verfahrensschritt
+        edit:
+          title: Verfahrensschritt bearbeiten
+        create:
+          success: Der Verfahrensschritt wurde erstellt.
+        update:
+          success: Der Verfahrensschritt wurde aktualisiert.
+        destroy:
+          success: Der Verfahrensschritt wurde gelöscht.
+          cannot_destroy: Der Verfahrensschritt kann nicht gelöscht werden, da ihm noch Vorhaben zugeordnet sind.
+        form:
+          name_label: Name
+          name_hint: Der Name erscheint in der Auswahl im Formular eines Vorhabens und auf der öffentlichen Detailseite unter „Auf einen Blick“. Stellen Sie die Nummer des Schritts voran, wenn Ihr Verfahren eine Zählung kennt, zum Beispiel „2.0 Frühzeitige Unterrichtung der Öffentlichkeit gem. § 3 Abs. 1 BauGB“.
+          name_placeholder: z. B. 2.0 Frühzeitige Unterrichtung der Öffentlichkeit
           submit: Speichern

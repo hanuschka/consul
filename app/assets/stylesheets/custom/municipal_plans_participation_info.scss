@@ -1,0 +1,13 @@
+.municipal-plan-participation-info--trigger {
+  display: inline-flex;
+  align-items: center;
+  color: var(--brand-color);
+  font-size: 0.875rem;
+  line-height: 1;
+  cursor: help;
+
+  &:focus-visible {
+    outline: $outline-focus;
+    outline-offset: 2px;
+  }
+}

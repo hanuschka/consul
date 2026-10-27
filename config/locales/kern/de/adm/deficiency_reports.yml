@@ -146,10 +146,11 @@ de:
           votes: Bewertungen
           comments: Kommentare
           answer_template_label: Antwortvorlage
-          answer_template_hint: >
-            Wählen Sie eine vorgefertigte Antwortvorlage aus, um den Text automatisch in das Antwortfeld zu übernehmen. Die Vorlage kann anschließend individuell angepasst werden. Antwortvorlagen werden unter „Antwortvorlagen" in der Seitennavigation verwaltet.
           answer_template_prompt: "— Vorlage auswählen —"
           official_answer: Offizielle Antwort
+          reporter_answer: "Antwort an die meldende Person (E-Mail)"
+          reporter_answer_hint: "Wird per E-Mail an die meldende Person gesendet und nicht öffentlich angezeigt."
+          public_answer: "Öffentliche Antwort (Web)"
           official_answer_hint: "Geben Sie hier die offizielle Antwort zu diesem Anliegen ein. <strong>Wichtiger Hinweis:</strong> Dieser Text ist öffentlich sichtbar."
           official_answer_documents: Dokumente zur Antwort
           official_answer_documents_hint: >-

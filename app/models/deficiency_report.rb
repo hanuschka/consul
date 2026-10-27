@@ -13,6 +13,7 @@ class DeficiencyReport < ApplicationRecord
   translates :description, touch: true
   translates :summary, touch: true
   translates :official_answer, touch: true
+  translates :reporter_answer, touch: true
   include Globalizable
   include MachineTranslatable
 
@@ -206,6 +207,22 @@ class DeficiencyReport < ApplicationRecord
 
   def on_behalf_of_account_linked?
     recorded_by.present? && recorded_by_id != author_id
+  end
+
+  def self.machine_translation_excluded_attributes
+    [:reporter_answer]
+  end
+
+  def self.separate_reporter_answer?
+    Setting["deficiency_reports.separate_reporter_answer"].present?
+  end
+
+  def answered?
+    official_answer.present? || reporter_answer.present?
+  end
+
+  def official_answer_for_reporter
+    self.class.separate_reporter_answer? ? reporter_answer : official_answer
   end
 
   def reporter_mailable?

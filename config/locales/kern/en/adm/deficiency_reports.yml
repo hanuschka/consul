@@ -146,10 +146,11 @@ en:
           votes: Ratings
           comments: Comments
           answer_template_label: Response template
-          answer_template_hint: >
-            Choose a pre-built response template to automatically insert the text into the response field. The template can then be customized individually. Response templates are managed under "Response templates" in the sidebar.
           answer_template_prompt: "— Select template —"
           official_answer: Official response
+          reporter_answer: "Answer to the reporter (e-mail)"
+          reporter_answer_hint: "Sent to the reporter by e-mail and not shown publicly."
+          public_answer: "Public answer (web)"
           official_answer_hint: "Enter the official response to this report here. Note: this text is publicly visible."
           official_answer_documents: Documents for the response
           official_answer_documents_hint: >-

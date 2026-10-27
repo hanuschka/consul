@@ -316,6 +316,15 @@ describe NotificationServices::OverdueDeficiencyReportsReminder do
       expect(overview_recipient_ids).to be_empty
     end
 
+    it "ignores reports that carry only a reporter answer" do
+      create_report(responsible: officer, reporter_answer: "Persönliche Rückmeldung")
+
+      described_class.new.call
+
+      expect(personal_recipient_ids).to be_empty
+      expect(overview_recipient_ids).to be_empty
+    end
+
     it "counts a report with a blank official answer as unanswered" do
       report = create_report(responsible: officer, official_answer: "")
 

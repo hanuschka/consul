@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_19_102809) do
+ActiveRecord::Schema.define(version: 2026_10_27_162102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1003,6 +1003,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.text "description"
     t.text "summary"
     t.text "official_answer"
+    t.text "reporter_answer"
     t.index ["deficiency_report_id"], name: "index_deficiency_report_translations_on_deficiency_report_id"
     t.index ["locale"], name: "index_deficiency_report_translations_on_locale"
   end

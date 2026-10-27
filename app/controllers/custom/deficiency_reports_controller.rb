@@ -219,7 +219,7 @@ class DeficiencyReportsController < ApplicationController
                   documents_attributes: document_attributes,
                   image_attributes: image_attributes]
 
-    params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
+    params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport, except: :reporter_answer))
   end
 
   def destroy_map_location_association

@@ -32,7 +32,7 @@ module MachineTranslation
     end
 
     def characters_in(model, source_row)
-      model.translated_attribute_names.sum { |field| source_row[field].to_s.length }
+      MachineTranslation.attribute_names(model).sum { |field| source_row[field].to_s.length }
     end
   end
 end

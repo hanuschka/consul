@@ -28,7 +28,8 @@ module CsvServices
           "Sachbearbeiter*in", "Zugewiesen an",
           "Video URL", "Meldung im Namen von", "Erfasst von",
           "Erstellt am",
-          "Officielle Antwort"
+          "Officielle Antwort",
+          *("Antwort an die meldende Person" if DeficiencyReport.separate_reporter_answer?)
         ]
       end
 
@@ -43,7 +44,8 @@ module CsvServices
           sanitize_for_csv(dr.video_url), sanitize_for_csv(dr.on_behalf_of),
           sanitize_for_csv(dr.on_behalf_of_account_linked? ? dr.recorded_by.username : nil),
           dr.created_at,
-          strip_tags(dr.official_answer)
+          strip_tags(dr.official_answer),
+          *(sanitize_for_csv(strip_tags(dr.reporter_answer)) if DeficiencyReport.separate_reporter_answer?)
         ]
       end
   end

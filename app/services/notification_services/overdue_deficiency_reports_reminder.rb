@@ -37,7 +37,7 @@ module NotificationServices
         DeficiencyReport.assigned.not_closed
           .where.not(status_changed_at: nil)
           .where.not(deficiency_report_statuses: { reminder_delay: [nil, 0] })
-          .where(official_answer: [nil, ""])
+          .where(official_answer: [nil, ""], reporter_answer: [nil, ""])
       end
 
       # The Anliegen that cross their reminder delay today. This is what nudges the responsible

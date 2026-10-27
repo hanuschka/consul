@@ -23,15 +23,16 @@ gem 'geocoder', '~> 1.8', '>= 1.8.3'
 gem 'rgeo', '~> 3.0', '>= 3.0.1'
 gem 'rgeo-geojson', '~> 2.2'
 
-gem "sentry-ruby"
-gem "sentry-rails"
+# 5.17+ parses Ruby 3.4 backtraces; older versions send errors without frames.
+gem "sentry-ruby", "~> 5.28.1"
+gem "sentry-rails", "~> 5.28.1"
 
 gem "acts_as_list"
 gem "jwt"
 gem 'rack-cors'
 
 gem "prawn", "2.5.0"
-gem 'prawn-svg', '~> 0.37.0'
+gem 'prawn-svg', '~> 0.40.4'
 gem "rqrcode", "~> 2.0"
 
 # Adm
@@ -61,25 +62,28 @@ gem 'ruby_llm', '2.0.0'
 
 gem 'pdf-reader', '2.15.1'
 
-gem 'docx', '0.10.0'
+# 0.10.1 turns off the Zip64 format rubyzip 3 writes by default, which some
+# readers reject.
+gem 'docx', '0.10.1'
 
 # rubyzip is a ruby module for reading and writing zip files
 # Already resolved transitively through docx; declared explicitly because
-# DocumentImageExtractor uses Zip::File directly. Held at 2.3.2 rather than the
-# latest 3.4.1 because docx and selenium-webdriver both require rubyzip < 3.
-gem 'rubyzip', '2.3.2'
+# DocumentImageExtractor uses Zip::File directly.
+gem 'rubyzip', '3.7.0'
 
 group :test do
   gem 'shoulda-matchers', '~> 6.0'
+
+  # Distributed object system for Ruby.
+  # Ruby 3.4 no longer ships it as a default gem, and Rails 6.1's test helpers
+  # require it without declaring it.
+  gem 'drb', '2.2.3'
 end
 
 group :development, :test do
   gem 'pry', '~> 0.14'
   gem 'pry-byebug', '~> 3.9'
   gem 'pry-rails'
-
-  # Improves pry shortcuts
-  gem 'rb-readline', '0.5.5'
 
   gem 'rswag-specs'
 end
@@ -88,3 +92,13 @@ gem 'proj4rb'
 
 # A Ruby gem to transform HTML into PDF, PNG or JPEG by wrapping the NodeJS Google Puppeteer driver for Chromium
 gem 'grover', '1.2.10'
+
+# Ruby 3.4 no longer ships these as default gems. Rails 6.1 requires base64,
+# bigdecimal, mutex_m and racc, factory_bot 6.2 requires observer, and the app
+# requires csv, all without declaring them.
+gem 'base64', '0.3.0'
+gem 'bigdecimal', '3.1.8'
+gem 'csv', '3.3.0'
+gem 'mutex_m', '0.2.0'
+gem 'observer', '0.1.2'
+gem 'racc', '1.7.3'

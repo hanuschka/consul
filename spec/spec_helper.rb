@@ -12,6 +12,10 @@ RSpec.configure do |config|
 
   config.filter_run_when_matching :focus
   config.include RequestSpecHelper, type: :request
+  # Real have_css/have_link matchers instead of RSpec's dynamic have_* lookup:
+  # on Ruby 3.2+ that lookup loses keyword options (count:, href:) in Rails
+  # 6.1's routing-assertion method_missing.
+  config.include Capybara::RSpecMatchers, type: :request
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
   config.include FactoryBot::Syntax::Methods

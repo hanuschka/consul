@@ -10,7 +10,7 @@ gem "ancestry", "~> 4.3.3"
 gem "audited", "~> 5.4.0"
 gem "autoprefixer-rails", "~> 8.2.0"
 gem "cancancan", "~> 3.5.0"
-gem "caxlsx", "~> 3.4.1"
+gem "caxlsx", "~> 4.5.0"
 gem "caxlsx_rails", "~> 0.6.3"
 gem "cocoon", "~> 1.2.15"
 gem "daemons", "~> 1.4.1"
@@ -78,7 +78,7 @@ group :test do
   gem "capybara-webmock", "~> 0.7.0"
   gem "email_spec", "~> 2.2.2"
   gem "rspec-rails", "~> 5.1.2"
-  gem "selenium-webdriver", "~> 4.16.0"
+  gem "selenium-webdriver", "~> 4.51.0"
   gem "simplecov", "~> 0.22.0", require: false
   gem "simplecov-lcov", "~> 0.8.0", require: false
 end
@@ -96,7 +96,7 @@ group :development do
   gem "pronto-eslint", "~> 0.11.1", require: false
   gem "pronto-rubocop", "~> 0.11.5", require: false
   gem "pronto-scss", "~> 0.11.0", require: false
-  gem "rubocop", "~> 1.56.4", require: false
+  gem "rubocop", "~> 1.57.2", require: false
   gem "rubocop-capybara", "~> 2.19.0", require: false
   gem "rubocop-factory_bot", "~> 2.24.0", require: false
   gem "rubocop-performance", "~> 1.19.1", require: false

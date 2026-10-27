@@ -11,7 +11,6 @@ de:
         map_location_instructions_mandatory: "Bitte setzen Sie einen Eintrag auf die Karte (Pflichtfeld)."
         map_location_instructions_optional: "Bitte setzen Sie einen Eintrag auf die Karte."
       image_upload:
-        top_line_default: Wählen Sie ein passendes Bild für Ihren Beitrag. Beiträge mit Bild erhalten meistens mehr Unterstützung.
         title_default: Bild hinzufügen (optional)
         bottom_line_default: "Am besten eignet sich ein Bild im Format 490 x 290 Pixel."
         max_image_size: Die maximale Bildgröße beträgt %{size} MB.

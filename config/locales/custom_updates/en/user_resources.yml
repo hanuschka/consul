@@ -11,7 +11,6 @@ en:
         map_location_instructions_mandatory: "Please place a pin on the map (mandatory)."
         map_location_instructions_optional: "Please place a pin on the map (optional)."
       image_upload:
-        top_line_default: Choose a fitting image for your contribution. Contributions with an image usually receive more support.
         title_default: Add an image (optional)
         bottom_line_default: "An image in a format of 490 x 290 pixels works best."
         max_image_size: Maximum image size is %{size} MB.

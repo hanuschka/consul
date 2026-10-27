@@ -52,6 +52,7 @@ User.class_eval do
   has_many :user_individual_group_values, dependent: :destroy
   has_many :individual_group_values, through: :user_individual_group_values
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
+  has_one :municipal_plan_officer, class_name: "MunicipalPlan::Officer"
   has_one :projekt_manager
   has_one :landing_page_manager
   has_one :deficiency_report_manager
@@ -63,6 +64,7 @@ User.class_eval do
 
   has_many :projekt_subscriptions, -> { where(active: true) }
   has_many :projekt_phase_subscriptions
+  has_one :whatsapp_account, class_name: "Whatsapp::Account"
 
   belongs_to :api_client, optional: true
 
@@ -237,6 +239,10 @@ User.class_eval do
 
   def deficiency_report_officer?
     deficiency_report_officer.present?
+  end
+
+  def municipal_plan_officer?
+    municipal_plan_officer.present?
   end
 
   def idea_officer?
@@ -439,6 +445,7 @@ User.class_eval do
     def remove_subscriptions
       projekt_subscriptions.destroy_all
       projekt_phase_subscriptions.destroy_all
+      whatsapp_account&.destroy!
     end
 
     def update_conditional_ballots_for_relevant_budgets

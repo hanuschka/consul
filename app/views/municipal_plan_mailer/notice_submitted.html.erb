@@ -1,0 +1,23 @@
+<td style="<%= css_for_mailer_content %>">
+  <p style="<%= css_for_mailer_text %>">
+    <%= I18n.t("custom.municipal_plan_mailer.notice_submitted.greeting") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= I18n.t("custom.municipal_plan_mailer.notice_submitted.body", title: @municipal_plan.title) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= link_to @municipal_plan.title, @municipal_plan_url, style: "color: #004a83;" %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= I18n.t("custom.municipal_plan_mailer.notice_submitted.sender") %>:</strong>
+    <%= @notice.name.presence || I18n.t("custom.municipal_plan_mailer.notice_submitted.no_name") %>
+    (<%= @notice.email %>)
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= simple_format(@notice.body) %>
+  </p>
+</td>

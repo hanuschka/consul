@@ -12,6 +12,8 @@ class Budget
     def add_investment(investment, line_weight = 1)
       line_weight ||= 1
       lines.create(investment: investment, line_weight: line_weight).persisted?
+    rescue ActiveRecord::RecordNotUnique
+      false
     end
 
     def total_amount_spent

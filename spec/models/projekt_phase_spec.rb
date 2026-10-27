@@ -105,6 +105,55 @@ describe ProjektPhase do
       expect(phase.permission_problem(citizen, location: :officing)).to eq(:phase_not_active)
     end
 
+    describe "availability, which a guest-status phase does not waive" do
+      def guest_phase(type)
+        phase = create(:projekt_phase, type: type, projekt: projekt, active: true, user_status: "guest")
+        ProjektPhase.find(phase.id)
+      end
+
+      context "with a poll in test mode" do
+        let(:phase) { guest_phase("ProjektPhase::VotingPhase") }
+        let!(:poll) { create(:poll, projekt_phase: phase, live: false) }
+
+        it "keeps guests, anonymous visitors and registered citizens out" do
+          expect(phase.permission_problem(guest_account_user)).to eq(:poll_not_live)
+          expect(phase.permission_problem(nil)).to eq(:poll_not_live)
+          expect(phase.permission_problem(create(:user))).to eq(:poll_not_live)
+        end
+
+        it "lets administrators and projekt managers test it" do
+          expect(phase.permission_problem(administrator)).to be_nil
+          expect(phase.permission_problem(manager_with_manage(on: projekt))).to be_nil
+        end
+
+        it "lets Abstimmungshelfer record votes on site" do
+          expect(phase.permission_problem(create(:user), location: :officing)).to be_nil
+        end
+
+        it "opens the poll to guests once it is released" do
+          poll.update!(live: true)
+
+          expect(ProjektPhase.find(phase.id).permission_problem(guest_account_user)).to be_nil
+        end
+      end
+
+      it "closes a form to guests after its cutoff date" do
+        phase = guest_phase("ProjektPhase::FormularPhase")
+        Formular.find_or_create_by!(projekt_phase: phase)
+        phase.settings.find_or_initialize_by(key: "option.general.primary_formular_cutoff_date")
+             .update!(value: 1.day.ago.to_date.to_s)
+
+        expect(ProjektPhase.find(phase.id).permission_problem(guest_account_user))
+          .to eq(:past_regular_formular_cutoff_date)
+      end
+
+      it "keeps guests from placing pins while pins are switched off" do
+        phase = guest_phase("ProjektPhase::PointOfInterestPhase")
+
+        expect(phase.permission_problem(guest_account_user)).to eq(:not_enabled)
+      end
+    end
+
     it "returns :guest_not_logged_in for a completely anonymous visitor on a guest-status phase" do
       phase = create(:projekt_phase, projekt: projekt, active: true, user_status: "guest")
 
@@ -141,6 +190,67 @@ describe ProjektPhase do
       verified_citizen = create(:user, :verified)
 
       expect(phase.permission_problem(verified_citizen)).to be_nil
+    end
+  end
+
+  describe "#map_features_restricted_to_marked_areas?" do
+    let(:phase) { create(:proposal_phase, projekt: projekt) }
+    let(:area) do
+      {
+        "type" => "FeatureCollection",
+        "features" => [{
+          "type" => "Feature",
+          "properties" => {},
+          "geometry" => {
+            "type" => "Polygon",
+            "coordinates" => [[[7.0, 50.8], [7.2, 50.8], [7.2, 51.0], [7.0, 51.0], [7.0, 50.8]]]
+          }
+        }]
+      }
+    end
+
+    def switch_on(phase)
+      phase.settings.find_by!(key: "feature.form.restrict_map_features_to_marked_areas").update!(value: "active")
+    end
+
+    it "is false while the setting is off, even with areas drawn" do
+      phase.reload.map_location.update!(features: area)
+
+      expect(phase.reload.map_features_restricted_to_marked_areas?).to be false
+    end
+
+    it "is false when the setting is on but no areas are drawn" do
+      switch_on(phase)
+
+      expect(phase.reload.map_features_restricted_to_marked_areas?).to be false
+    end
+
+    it "is true when the setting is on and areas are drawn" do
+      switch_on(phase)
+      phase.reload.map_location.update!(features: area)
+
+      expect(phase.reload.map_features_restricted_to_marked_areas?).to be true
+    end
+
+    it "does not take areas from the projekt map" do
+      switch_on(phase)
+      projekt.map_location.update!(features: area)
+
+      expect(phase.reload.map_features_restricted_to_marked_areas?).to be false
+    end
+  end
+
+  describe "#marked_areas_restrictable?" do
+    it "is true for proposal, budget and point-of-interest phases" do
+      %i[proposal_phase budget_phase point_of_interest_phase].each do |factory|
+        expect(create(factory).marked_areas_restrictable?).to be(true), factory.to_s
+      end
+    end
+
+    it "is false for other phase types" do
+      phase = ProjektPhase.find(create(:projekt_phase, type: "ProjektPhase::DebatePhase").id)
+
+      expect(phase.marked_areas_restrictable?).to be false
     end
   end
 end

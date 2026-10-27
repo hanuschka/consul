@@ -45,7 +45,7 @@ class AiAnalytics::TopicClustering < ApplicationService
           .with_instructions(Ai::EvaluationContext.prepend_to(system_instructions, projekt_phase))
           .ask(user_prompt)
 
-      response.content["topics"]
+      ::Ai::StructuredOutput.content_of(response)["topics"]
     rescue StandardError => e
       Rails.logger.error("TopicClustering error: #{e.message}")
       []

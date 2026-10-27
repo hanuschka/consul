@@ -21,7 +21,7 @@ class Projekts::Copying::Serializing::ProjektSerializer < ApplicationService
       "projekt_settings" => setting_nodes,
       "map" => Projekts::Copying::Serializing::MapSerializer.call(source: source),
       "tags" => tag_lists,
-      "sdg_relations" => Projekts::Copying::Serializing::SdgCodeSerializer.call(source: source),
+      "sdg_relations" => Projekts::Copying::Serializing::SDGCodeSerializer.call(source: source),
       "milestones" => attachable_nodes(source.milestones),
       "progress_bars" => serialize_all(source.progress_bars),
       "navbar_items" => navbar_item_nodes,

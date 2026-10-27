@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "widget", "feed").to_s
+load Rails.root.join("app", "models", "widget", "feed.rb")
 
 class Widget::Feed < ApplicationRecord
   KINDS = %w[active_projekts polls proposals debates expired_projekts investment_proposals].freeze

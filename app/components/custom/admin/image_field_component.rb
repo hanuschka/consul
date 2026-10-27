@@ -1,4 +1,4 @@
-class Custom::Admin::ImageFieldComponent < ApplicationComponent
+class Admin::ImageFieldComponent < ApplicationComponent
   def initialize(form:, label:, required: false, hint: nil)
     @form = form
     @required = required

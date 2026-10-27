@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "budget_investments_helper").to_s
+load Rails.root.join("app", "helpers", "budget_investments_helper.rb")
 
 module BudgetInvestmentsHelper
   def default_active_investment_footer_tab?(tab)

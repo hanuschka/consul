@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "polls_controller").to_s
+load Rails.root.join("app", "controllers", "polls_controller.rb")
 
 class PollsController < ApplicationController
 

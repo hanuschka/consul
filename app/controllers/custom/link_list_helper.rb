@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "link_list_helper").to_s
+load Rails.root.join("app", "helpers", "link_list_helper.rb")
 
 module LinkListHelper
   def link_list_sdg_goals(*links, **options)

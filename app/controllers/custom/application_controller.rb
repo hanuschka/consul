@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
+load Rails.root.join("app", "controllers", "application_controller.rb")
 
 class ApplicationController < ActionController::Base
   before_action :sanitize_pagination_params

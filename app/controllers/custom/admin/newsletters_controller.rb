@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "admin", "newsletters_controller").to_s
+load Rails.root.join("app", "controllers", "admin", "newsletters_controller.rb")
 
 class Admin::NewslettersController < Admin::BaseController
   def new

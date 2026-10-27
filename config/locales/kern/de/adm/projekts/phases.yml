@@ -131,6 +131,7 @@ de:
             no_restriction: Keine Einschränkung
         general_settings:
           title: Funktionen
+          no_marked_areas: Im Tab „Karte“ sind für diese Phase noch keine Flächen eingezeichnet. Solange bleibt die Karte unbeschränkt.
         form_author:
           title: Formular Autor
         user_functions:

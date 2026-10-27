@@ -1,0 +1,87 @@
+<%
+  configured_name = notification_template[:configured_name]
+  in_use = configured_name == notification_template[:name]
+  placeholder = "{{1}}"
+%>
+
+<article class="kern-card adm-whatsapp-page--notification-card">
+  <div class="kern-card__container">
+    <header class="kern-card__header">
+      <hgroup>
+        <h3 class="kern-title">
+          <%= t("adm.whatsapp.show.notification_template_kinds.#{notification_template[:kind]}") %>
+        </h3>
+      </hgroup>
+
+      <%= whatsapp_template_status_badge(notification_template[:status]) %>
+    </header>
+
+    <section class="kern-card__body">
+      <%# The wording the citizen receives, quoted as it arrives — the line break
+          is content, not source formatting. %>
+      <blockquote class="adm-whatsapp-page--template-body">
+        <%= notification_template[:body] %>
+      </blockquote>
+
+      <%# The button is approved with the template, so the card has to show what
+          it says: two pushes differ only in their button and would otherwise
+          read the same. %>
+      <% if notification_template[:button].present? %>
+        <p class="kern-body kern-body--small adm-whatsapp-page--template-button">
+          <%= t("adm.whatsapp.show.notification_template_button",
+            label: notification_template[:button]) %>
+        </p>
+      <% end %>
+
+      <%# The raw placeholder used to sit in the body with nothing explaining it.
+          It is the only variable these templates carry, and why the message names
+          nothing is a privacy decision worth stating. %>
+      <% if notification_template[:body].include?(placeholder) %>
+        <p class="kern-body kern-body--small kern-body--muted adm-whatsapp-page--placeholder-hint">
+          <%= t("adm.whatsapp.show.notification_template_placeholder_hint", placeholder: placeholder) %>
+        </p>
+      <% end %>
+    </section>
+
+    <footer class="kern-card__footer">
+      <%# The setting is what the jobs read, so it is asked first: a portal whose
+          template was approved and then withdrawn at Meta still pushes with it,
+          and a card that offered "submit" there would suggest otherwise. %>
+      <% if in_use %>
+        <span class="kern-body kern-body--muted"><%= t("adm.whatsapp.show.template_in_use") %></span>
+      <% else %>
+        <% if configured_name.present? %>
+          <p class="kern-body kern-body--small kern-body--muted">
+            <%= t("adm.whatsapp.show.notification_template_other_in_use", name: configured_name) %>
+          </p>
+        <% end %>
+
+        <%# A real form rather than an <a> carrying data-turbo-method, for the
+            reason the slot table gives: only POST and PATCH are routed, so a
+            Turbo prefetch or a middle-click on a link would raise. %>
+        <% if notification_template[:approved] %>
+          <%= form_with url: use_notification_template_adm_whatsapp_path, method: :patch do |form| %>
+            <%= form.hidden_field :kind, value: notification_template[:kind], id: nil %>
+            <%= kern_button(
+              text: t("adm.whatsapp.show.template_use"),
+              type: "submit",
+              style: :secondary
+            ) %>
+          <% end %>
+        <% elsif !notification_template[:submitted] %>
+          <%= form_with url: create_notification_template_adm_whatsapp_path, method: :post do |form| %>
+            <%= form.hidden_field :kind, value: notification_template[:kind], id: nil %>
+            <%= kern_button(
+              text: t("adm.whatsapp.show.notification_template_submit"),
+              type: "submit",
+              style: :tertiary
+            ) %>
+          <% end %>
+        <% elsif whatsapp_template_rejected?(notification_template[:status]) %>
+          <%= render "adm/whatsapp/notification_resubmit_form",
+            kind: notification_template[:kind], button_options: {} %>
+        <% end %>
+      <% end %>
+    </footer>
+  </div>
+</article>

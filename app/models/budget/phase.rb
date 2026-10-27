@@ -11,6 +11,7 @@ class Budget
     translates :main_link_text, touch: true
     translates :main_link_url, touch: true
     include Globalizable
+    include MachineTranslatable
     include Sanitizable
     include Imageable
 

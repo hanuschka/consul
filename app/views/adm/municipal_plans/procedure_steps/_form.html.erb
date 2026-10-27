@@ -1,0 +1,10 @@
+<% url = @procedure_step.persisted? ? adm_municipal_plans_procedure_step_path(@procedure_step) : adm_municipal_plans_procedure_steps_path %>
+
+<%= form_with model: @procedure_step, url: url do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint"),
+                                          required: true) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_placeholder") %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

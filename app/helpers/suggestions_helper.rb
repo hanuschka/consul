@@ -4,6 +4,7 @@ module SuggestionsHelper
     projekt_phase_id = record.respond_to?(:projekt_phase_id) ? record.projekt_phase_id : nil
 
     return unless record.new_record? || projekt_phase_id.present?
+    return if SimilarContributions::Scopes.enabled_for_resource?(record)
 
     {
       js_suggest_result: "js_suggest_result",

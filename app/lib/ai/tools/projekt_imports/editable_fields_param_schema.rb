@@ -4,7 +4,7 @@
 # Categories and SDG codes are advertised as plain strings rather than as the
 # enum the initial extraction uses. RubyLLM memoizes a tool's JSON schema on a
 # class level SchemaDefinition for the life of the process
-# (RubyLLM::Tool.params + SchemaDefinition#json_schema), so an enum resolved
+# (RubyLLM::Tool.parameters + SchemaDefinition#json_schema), so an enum resolved
 # here would freeze at worker boot: a category added afterwards could never be
 # set from the chat until the worker restarted. UpdateImportFields validates
 # both lists against the current records on every call instead.

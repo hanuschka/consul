@@ -1,0 +1,141 @@
+.municipal-plan-hero {
+  margin-bottom: 20px;
+  padding: 36px 40px;
+  border-radius: $radius-base;
+  background-color: var(--brand-color);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: -70px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    border: 40px solid rgba(255, 255, 255, 0.06);
+  }
+
+  &::after {
+    bottom: -190px;
+    left: 62%;
+    width: 260px;
+    height: 260px;
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  @media (max-width: $mobile-viewport-start) {
+    padding: 20px;
+
+    &::before {
+      top: -50px;
+      right: -50px;
+      width: 130px;
+      height: 130px;
+      border-width: 26px;
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+
+  @media print {
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+
+  .municipal-plan-hero--chips,
+  .municipal-plan-hero--topics,
+  .municipal-plan-hero--meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .municipal-plan-hero--chips {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .municipal-plan-hero--topics {
+    gap: 8px;
+
+    li {
+      margin: 0;
+    }
+  }
+
+  .municipal-plan-hero--chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+
+    &.-status {
+      border-color: #fff;
+      background-color: #fff;
+      color: var(--brand-color);
+      font-weight: 700;
+    }
+  }
+
+  .municipal-plan-hero--topics .municipal-plan-hero--chip:hover,
+  .municipal-plan-hero--topics .municipal-plan-hero--chip:focus {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  a:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+  }
+
+  .municipal-plan-hero--title {
+    margin: 0 0 20px;
+    color: #fff;
+    font-size: 40px;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+
+    @media (max-width: $mobile-viewport-start) {
+      font-size: 28px;
+    }
+  }
+
+  .municipal-plan-hero--meta {
+    gap: 8px 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 16px;
+
+    li {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+    }
+  }
+}

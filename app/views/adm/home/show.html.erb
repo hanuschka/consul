@@ -64,6 +64,17 @@
       <span class="material-symbols-outlined" aria-hidden="true">language</span>
       <h3>demokratie.today</h3>
     </div>
+    <% if Adm::Handbook.configured? %>
+      <div class="adm-module-bento adm-module-bento--wide mb-4">
+        <%= render Adm::ModuleBentoCardComponent.new(
+              path: adm_help_path,
+              icon: "groups",
+              title: t("adm.home.show.dt.community"),
+              metric_text: t("adm.home.show.dt.community_text"),
+              cta_text: t("adm.home.show.dt.community_cta")
+            ) %>
+      </div>
+    <% end %>
     <div class="adm-dt-links">
       <%= link_to Dt.ticket_system_url, target: "_blank", rel: "noopener", class: "adm-dt-link-card" do %>
         <%= image_tag "dt/ticket_system.jpg", alt: "" %>

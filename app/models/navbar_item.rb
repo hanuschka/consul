@@ -5,6 +5,7 @@ class NavbarItem < ApplicationRecord
     ideas: :ideas_path,
     projekts: :projekts_path,
     investments: :investments_path,
+    municipal_plans: :municipal_plans_path,
     polls: :polls_path,
     proposals: :proposals_path
   }.freeze
@@ -17,6 +18,7 @@ class NavbarItem < ApplicationRecord
     ideas: "process.ideas",
     projekts: "process.projekts",
     investments: "extended_feature.general.enable_investments_overview",
+    municipal_plans: "process.municipal_plans",
     polls: "process.polls",
     proposals: "process.proposals"
   }.freeze

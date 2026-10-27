@@ -50,7 +50,6 @@
         <% end %>
 
         <% if can? :update_official_answer, @deficiency_report %>
-          <%= render "shared/globalize_locales", resource: @deficiency_report %>
           <%= translatable_form_for @deficiency_report, url: update_official_answer_deficiency_report_path do |f| %>
             <%= f.translatable_fields do |translations_form| %>
 

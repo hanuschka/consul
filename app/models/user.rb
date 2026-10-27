@@ -246,6 +246,8 @@ class User < ApplicationRecord
     Proposal.hide_all proposal_ids
     Budget::Investment.hide_all budget_investment_ids
     ProposalNotification.hide_all ProposalNotification.where(author_id: id).ids
+    Idea.hide_all idea_ids
+    DeficiencyReport.hide_all deficiency_report_ids
     remove_roles
   end
 
@@ -259,6 +261,8 @@ class User < ApplicationRecord
       ProposalNotification.restore_all(
         ProposalNotification.only_hidden.where("hidden_at >= ?", hidden_at).where(author_id: id)
       )
+      Idea.restore_all Idea.only_hidden.where(author_id: id).where("hidden_at >= ?", hidden_at)
+      DeficiencyReport.restore_all deficiency_reports.where("hidden_at >= ?", hidden_at)
 
       restore
     end
@@ -382,7 +386,7 @@ class User < ApplicationRecord
   end
 
   def locale
-    self[:locale] ||= I18n.default_locale.to_s
+    self[:locale].presence || I18n.default_locale.to_s
   end
 
   def confirmation_required?

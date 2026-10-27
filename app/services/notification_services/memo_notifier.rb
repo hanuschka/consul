@@ -6,7 +6,7 @@ module NotificationServices
 
     def call
       users_to_notify.each do |user|
-        NotificationServiceMailer.memo(@memo.id, user.id, namespace(user, @memo)).deliver_later
+        NotificationServiceMailer.memo(@memo.id, user.id, namespace(user)).deliver_later
         Notification.add(user, @memo)
         Activity.log(user, "email", @memo)
       end
@@ -17,7 +17,7 @@ module NotificationServices
     private
 
       def users_to_notify
-        [administrators, projekt_managers, deficiency_report_officers]
+        [administrators, projekt_managers, deficiency_report_officers, municipal_plan_officers]
           .flatten.uniq(&:id).reject { |user| user.id == @memo.user_id || user.not_actual? }
       end
 
@@ -41,9 +41,18 @@ module NotificationServices
         )
       end
 
-      def namespace(user, memo)
-        return :deficiency_report_management if memo.root_memoable.is_a?(DeficiencyReport)
+      def municipal_plan_officers
+        memoable = @memo.root_memoable
+        return Array.new unless memoable.is_a?(MunicipalPlan)
 
+        case memoable.responsible
+        when MunicipalPlan::Officer then [memoable.responsible.user]
+        when MunicipalPlan::OfficerGroup then memoable.responsible.officers.includes(:user).map(&:user)
+        else Array.new
+        end.compact
+      end
+
+      def namespace(user)
         if user.administrator?
           :admin
         elsif user.projekt_manager?

@@ -19,6 +19,7 @@ class Comment < ApplicationRecord
 
   translates :body, touch: true
   include Globalizable
+  include MachineTranslatable
 
   validates_translation :body, presence: true
   validates :user, presence: true

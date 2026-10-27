@@ -2,7 +2,7 @@
   "use strict";
   App.CkeEditorPlaceholder = {
     initialize: function() {
-      var form = document.querySelector(".js-rich-text-form");
+      const form = document.querySelector(".js-rich-text-form");
 
       if (!form) {
         return;
@@ -10,20 +10,49 @@
 
       // Add a submit event listener to the form
       form.addEventListener("submit", function(event) {
+        // The similar-contributions module submits this form via AJAX and
+        // clears the placeholders itself; forcing a native form.submit() here
+        // would fire a second, full-page submission alongside it.
+        if (App.SimilarContributionsCheck.controlsForm(form)) {
+          return;
+        }
+
         // Prevent the form from submitting immediately
         event.preventDefault();
 
-        // Get the current content of the CKEditor
-        document.querySelectorAll( '.ck-editor__editable' ).forEach( function(editor) {
-          var existingPlaceholderElement = editor.ckeditorInstance.editing.view.document.getRoot( 'main' );
-
-          if (existingPlaceholderElement.placeholder) {
-            existingPlaceholderElement.placeholder = "";
-          }
-        })
+        App.CkeEditorPlaceholder.clearPlaceholders();
+        App.CkeEditorPlaceholder.preserveSubmitter(form, event.submitter);
 
         form.submit();
       });
+    },
+
+    // The editors keep rendering their placeholder into the submitted value,
+    // so it has to be emptied before the form is sent.
+    clearPlaceholders: function() {
+      // Get the current content of the CKEditor
+      document.querySelectorAll(".ck-editor__editable").forEach(function(editor) {
+        const root = editor.ckeditorInstance.editing.view.document.getRoot("main");
+
+        if (root.placeholder) {
+          root.placeholder = "";
+        }
+      });
+    },
+
+    // form.submit() sends no submitter, so a named submit button would lose
+    // its name/value pair. Carry it over as a hidden field instead.
+    preserveSubmitter: function(form, submitter) {
+      if (!submitter || !submitter.name) {
+        return;
+      }
+
+      const field = document.createElement("input");
+      field.type = "hidden";
+      field.name = submitter.name;
+      field.value = submitter.value;
+
+      form.appendChild(field);
     }
   };
 }).call(this);

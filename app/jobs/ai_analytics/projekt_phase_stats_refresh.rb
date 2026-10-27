@@ -1,6 +1,7 @@
 module AiAnalytics
   class ProjektPhaseStatsRefresh < ApplicationJob
     queue_as :default
+    self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
 
     def perform(projekt_phase_id)
       projekt_phase = ProjektPhase.find(projekt_phase_id)

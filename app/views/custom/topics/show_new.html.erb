@@ -47,7 +47,7 @@
           <% else %>
             <%= button_to t("custom.community.sidebar.topic.hide"),
               hide_community_topic_path(@community.id, @topic),
-              data: { confirm: "Sind Sie sicher?" },
+              data: { confirm: t("custom.shared.destroy_confirmation") },
               class: "button hollow expanded alert" %>
           <% end %>
         <% end %>

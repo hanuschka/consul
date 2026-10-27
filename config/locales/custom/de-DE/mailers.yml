@@ -94,7 +94,7 @@ de:
     budget_investment_selected:
       subject: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
       title: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
-      hi: "Hello %{username},"
+      hi: "Hallo %{username},"
       text: "Bewerben Sie Ihren Vorschlag %{proposal_link} für die Abstimmungsphase."
       share_button: "Jetzt Vorschlag teilen!"
       thanks: "Viel Erfolg!"
@@ -102,7 +102,7 @@ de:
     budget_investment_unselected:
       subject: "Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft."
       title: "Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft."
-      hi: "Hello %{username},"
+      hi: "Hallo %{username},"
       text: "Ihr Vorschlag %{proposal_link} hat leider nicht genügend Stimmen erhalten. Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen."
       projekt_link_text: "Projekts"
       sincerely: "Mit freundlichen Grüßen"

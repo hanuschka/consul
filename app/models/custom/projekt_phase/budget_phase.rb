@@ -121,6 +121,18 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     "budget_phase"
   end
 
+  def start_date
+    return super if budget.blank?
+
+    enabled_stages.first&.starts_at&.to_date
+  end
+
+  def end_date
+    return super if budget.blank?
+
+    enabled_stages.last&.ends_at&.then { |ends_at| (ends_at - 1.second).to_date }
+  end
+
   def sidebar_cta_kind
     return :new_button if budget&.accepting?
     return :budget_vote if budget&.selecting?
@@ -145,8 +157,20 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     budget&.investments&.count
   end
 
+  def self.selectable_by_users_feature_key
+    "resource.users_can_create_investment_proposals"
+  end
+
   def selectable_by_users?
-    feature?("resource.users_can_create_investment_proposals")
+    feature?(self.class.selectable_by_users_feature_key)
+  end
+
+  def ai_flow_feature_key
+    "resource.create_investment_with_ai"
+  end
+
+  def whatsapp_submissions_enabled?
+    feature?(WHATSAPP_SUBMISSIONS_FEATURE_KEY)
   end
 
   def selectable_by_admins_only?
@@ -193,7 +217,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   end
 
   def admin_nav_bar_items
-    %w[
+    items = %w[
       budget_phases
       naming restrictions
       budget_edit budget_investments comments
@@ -204,6 +228,10 @@ class ProjektPhase::BudgetPhase < ProjektPhase
       email_templates
       ai_settings ai_user_flow
     ]
+
+    return items if !::Whatsapp.enabled?
+
+    items + %w[whatsapp]
   end
 
 
@@ -241,6 +269,12 @@ class ProjektPhase::BudgetPhase < ProjektPhase
 
   private
 
+    def enabled_stages
+      budget.phases
+        .select(&:enabled?)
+        .sort_by { |stage| Budget::Phase::PHASE_KINDS.index(stage.kind) }
+    end
+
     def group_value_counts
       individual_group_value_counts || {}
     end
@@ -248,7 +282,7 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     def phase_specific_permission_problems(user, location)
       return :organization if user.organization?
 
-      if location == :new_button_component && submissions_limit_exceeded?(user)
+      if location.in?(ProjektPhase::SUBMISSION_LOCATIONS) && submissions_limit_exceeded?(user)
         :submissions_limit_exceeded
       elsif location == :votes_component && supports_limit_exceeded?(user)
         :supports_limit_exceeded

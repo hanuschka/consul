@@ -37,15 +37,6 @@
   font-size: 12px;
 }
 
-body:not(.-ai-enabled) {
-  .js-content-block-enter-ai-edit-mode,
-  .js-content-block-enter-ai-edit-mode-from-simple {
-    cursor: not-allowed;
-    opacity: 0.4;
-    filter: grayscale(1);
-  }
-}
-
 .content-block-ai-edit-popup {
   z-index: 20;
   background: #fff;

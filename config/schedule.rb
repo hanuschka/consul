@@ -83,6 +83,10 @@ every 1.day, at: "1:00 am", roles: [:cron] do
   rake "budgets:process_preselected_investments"
 end
 
+every 1.day, at: "1:00 am", roles: [:cron] do
+  rake "budgets:send_deferred_selection_emails"
+end
+
 every 1.day, at: "2:00 am", roles: [:cron] do
   rake "budgets:update_cached_current_phase"
 end

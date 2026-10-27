@@ -38,7 +38,9 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     budget_investments = apply_filters(budget_investments)
     budget_investments = apply_sorting(budget_investments)
 
-    serialized_budget_investments = BudgetInvestmentSerializer.serialize_collection(budget_investments)
+    serialized_budget_investments = BudgetInvestmentSerializer.serialize_collection(
+      budget_investments, hide_unpublished_selection: hide_unpublished_selection?
+    )
 
     render json: {
       data: { budget_investments: serialized_budget_investments },
@@ -48,7 +50,9 @@ class Api::Budgets::InvestmentsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_budget_investment = BudgetInvestmentSerializer.new(@budget_investment).serialize
+    serialized_budget_investment = BudgetInvestmentSerializer.new(
+      @budget_investment, hide_unpublished_selection: hide_unpublished_selection?
+    ).serialize
 
     render json: { data: { budget_investment: serialized_budget_investment } }
   end
@@ -152,7 +156,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     end
 
     if params[:selected].present?
-      budget_investments = params[:selected] == 'true' ? budget_investments.selected : budget_investments.unselected
+      budget_investments = filter_by_selected(budget_investments, params[:selected] == "true")
     end
 
     if params[:valuation_finished].present?
@@ -181,5 +185,25 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     else
       budget_investments.sort_by_id
     end
+  end
+
+  def filter_by_selected(budget_investments, selected)
+    scope = selected ? budget_investments.selected : budget_investments.unselected
+    return scope unless hide_unpublished_selection?
+
+    if selected
+      scope.where(budget_id: public_selection_budget_ids)
+    else
+      scope.or(budget_investments.selected.where.not(budget_id: public_selection_budget_ids))
+    end
+  end
+
+  def hide_unpublished_selection?
+    !internal_api_client? && !current_client&.admin?
+  end
+
+  def public_selection_budget_ids
+    budgets = @budget.present? ? Budget.where(id: @budget) : Budget.all
+    @public_selection_budget_ids ||= budgets.selection_public_ids
   end
 end

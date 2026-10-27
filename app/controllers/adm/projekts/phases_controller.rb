@@ -331,6 +331,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def budget_edit
     authorize_phase(:update?)
+    if @projekt_phase.budget.blank?
+      return redirect_to phases_adm_projekts_projekt_path(@projekt_phase.projekt),
+                         alert: t("adm.projekts.phases.missing_budget")
+    end
+
     @budget = @projekt_phase.budget
     @heading = @budget.heading
 
@@ -343,6 +348,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def budget_investments
     authorize_phase(:moderate?)
+    if @projekt_phase.budget.blank?
+      return redirect_to phases_adm_projekts_projekt_path(@projekt_phase.projekt),
+                         alert: t("adm.projekts.phases.missing_budget")
+    end
+
     @budget = @projekt_phase.budget
     base_scope = BudgetInvestmentsQuery.call(@budget.investments.with_hidden.order(id: :desc), params)
 
@@ -983,6 +993,8 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       if @projekt_phase.is_a?(ProjektPhase::ProposalPhase)
         Comment.with_hidden.where(commentable: @projekt_phase.proposals.with_hidden)
       elsif @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+        return Comment.none if @projekt_phase.budget.blank?
+
         Comment.with_hidden.where(commentable: @projekt_phase.budget.investments.with_hidden)
       else
         @projekt_phase.comments.with_hidden

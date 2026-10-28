@@ -55,10 +55,19 @@ class RemoteTranslations::Caller
     end
 
     def translated_values
-      @translated_values ||= Deepl::Client.new.translate(fields_values,
-                                                         target_locale: locale,
-                                                         source_locale: deepl_source_locale,
-                                                         tag_handling: "html")
+      @translated_values ||= begin
+        values = fields_values
+        translated = Deepl::Client.new.translate(values,
+                                                 target_locale: locale,
+                                                 source_locale: deepl_source_locale,
+                                                 tag_handling: "html")
+        attributes = MachineTranslation::HtmlAttributes.translate(
+          values.flat_map { |value| MachineTranslation::HtmlAttributes.extract(value) }.uniq,
+          target_locale: locale, source_locale: deepl_source_locale
+        )
+
+        translated.map { |value| MachineTranslation::HtmlAttributes.apply(value, attributes) }
+      end
     end
 
     def fields_values

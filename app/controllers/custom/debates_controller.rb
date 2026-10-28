@@ -185,7 +185,7 @@ class DebatesController < ApplicationController
       redirect_to debate_path(@debate), status: :moved_permanently
 
     elsif !@projekt.visible_for?(current_user)
-      @individual_group_value_names = @projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @projekt.individual_group_values.map(&:name)
       render "custom/pages/forbidden", layout: false
 
     elsif Setting.new_design_enabled?

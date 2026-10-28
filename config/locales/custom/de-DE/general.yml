@@ -49,6 +49,8 @@ de:
     comment:
       admin: Administrator*in
       author: Verfasser*in
+      author_link_title: sagte
+      author_prefix: Kommentar von
       deleted: Dieser Kommentar wurde gelöscht
       moderator: Moderator*in
       projekt_manager: Projektmanager*in

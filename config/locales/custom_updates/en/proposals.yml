@@ -37,8 +37,8 @@ en:
         projekts: Projects
         show_larger_map: Show more
         show_smaller_map: Show less
-        creation_only_for_citizens: Neue Vorschläge können in diesem Projekt nur von Bürgerinnen und Bürgern der Stadt %{city} eingereicht werden.
-        creation_only_for_specific_geozones: Vorschläge können nur von Bürger*innen aus dem Postleitzahlbereich %{geozones} eingebracht werden.
+        creation_only_for_citizens: In this project, new proposals can only be submitted by citizens of %{city}.
+        creation_only_for_specific_geozones: Proposals can only be submitted by citizens from the postcode area %{geozones}.
         empty_list_text: No connected proposals
         welcome_default_text_html: In participation projects, citizens can create suggestions and collect them on this page.
           Suggestions can be filtered by level of participation, publication date or approval. Individual suggestions can be supported, commented on or created yourself.

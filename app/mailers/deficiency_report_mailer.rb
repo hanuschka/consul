@@ -30,9 +30,24 @@ class DeficiencyReportMailer < ApplicationMailer
         "username" => @deficiency_report.author.username,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
-        "official_answer" => @deficiency_report.official_answer
+        "official_answer" => @deficiency_report.official_answer_for_reporter
       }, to: @email_to,
         default_subject: t("custom.deficiency_reports.mailers.notify_author_about_official_answer.subject"))
+    end
+  end
+
+  def management_report(management_report, email, user = nil)
+    @management_report = management_report
+    @user = user
+    @email_to = email
+
+    I18n.with_locale(:de) do
+      pdf = PdfServices::DeficiencyReportManagementReportExporter.call(management_report, default_url_options[:host])
+      attachments["bericht_#{management_report.id}.pdf"] = { mime_type: "application/pdf", content: pdf.render }
+
+      mail(to: email, subject: t("custom.deficiency_reports.mailers.management_report.subject",
+                                 name: management_report.profile_name,
+                                 period_end: management_report.period_end.strftime("%d.%m.%Y")))
     end
   end
 

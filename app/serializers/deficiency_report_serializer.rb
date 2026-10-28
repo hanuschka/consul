@@ -1,8 +1,9 @@
 class DeficiencyReportSerializer < BaseSerializer
   attr_reader :deficiency_report
 
-  def initialize(deficiency_report)
+  def initialize(deficiency_report, include_reporter_answer: false)
     @deficiency_report = deficiency_report
+    @include_reporter_answer = include_reporter_answer
   end
 
   def serialize
@@ -33,6 +34,8 @@ class DeficiencyReportSerializer < BaseSerializer
       summary: deficiency_report.summary,
       official_answer: deficiency_report.official_answer
     )
+
+    report_data[:reporter_answer] = deficiency_report.reporter_answer if @include_reporter_answer
 
     report_data[:code] = deficiency_report.code
 
@@ -100,8 +103,8 @@ class DeficiencyReportSerializer < BaseSerializer
     report_data
   end
 
-  def self.serialize_collection(deficiency_reports)
-    deficiency_reports.map { |report| new(report).serialize }
+  def self.serialize_collection(deficiency_reports, **settings)
+    deficiency_reports.map { |report| new(report, **settings).serialize }
   end
 end
 

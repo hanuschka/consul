@@ -1,0 +1,106 @@
+<% title = t(".title", name: @management_report.profile_name) %>
+<%= content_for :title, title %>
+
+<%= render Adm::HeaderComponent.new(title: title, breadcrumbs: @breadcrumbs) do |header| %>
+  <% if @management_report.completed? %>
+    <% header.with_actions do %>
+      <%= kern_link_button(adm_deficiency_reports_management_report_path(@management_report, format: :pdf),
+                           text: t(".download_pdf"), icon: "download", data: { turbo: false }) %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <dl class="kern-description-list mb-5">
+    <div class="kern-description-list-item">
+      <dt class="kern-description-list-item__key"><%= t(".period") %></dt>
+      <dd class="kern-description-list-item__value">
+        <%= l(@management_report.period_start, format: :long) %> – <%= l(@management_report.period_end, format: :long) %>
+      </dd>
+    </div>
+    <div class="kern-description-list-item">
+      <dt class="kern-description-list-item__key"><%= t(".profile") %></dt>
+      <dd class="kern-description-list-item__value"><%= @management_report.profile_name %></dd>
+    </div>
+    <% if @management_report.generated_at %>
+      <div class="kern-description-list-item">
+        <dt class="kern-description-list-item__key"><%= t(".generated_at") %></dt>
+        <dd class="kern-description-list-item__value"><%= l(@management_report.generated_at, format: :long) %></dd>
+      </div>
+    <% end %>
+  </dl>
+
+  <% if @management_report.completed? %>
+    <div class="kern-alert kern-alert--info mb-5">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t(".ai_notice") %></span>
+      </div>
+    </div>
+
+    <% @management_report.building_blocks.each do |building_block| %>
+      <% heading_id = "management-report-#{building_block.dasherize}" %>
+      <% figure_rows = @management_report.figure_rows(building_block) %>
+      <% statements = @management_report.statements_for(building_block) %>
+
+      <section class="adm-detail-section" aria-labelledby="<%= heading_id %>">
+        <h2 id="<%= heading_id %>" class="adm-detail-section-title mb-3">
+          <%= t("adm.deficiency_reports.management_reports.sections.#{building_block}") %>
+        </h2>
+
+        <% if figure_rows.any? %>
+          <dl class="kern-description-list mb-4">
+            <% figure_rows.each do |row| %>
+              <div class="kern-description-list-item">
+                <dt class="kern-description-list-item__key">
+                  <% if row[:report_id] %>
+                    <%= link_to "##{row[:report_id]} #{row[:label]}",
+                                adm_deficiency_reports_deficiency_report_path(row[:report_id]),
+                                class: "kern-link" %>
+                  <% else %>
+                    <%= row[:label] %>
+                  <% end %>
+                </dt>
+                <dd class="kern-description-list-item__value"><%= row[:value] %></dd>
+              </div>
+            <% end %>
+          </dl>
+        <% end %>
+
+        <% if statements.any? %>
+          <ul class="kern-list kern-list--bullet">
+            <% statements.each do |statement| %>
+              <% report_links = Array(statement["report_ids"]).map do |report_id|
+                   link_to t(".report_link", id: report_id), adm_deficiency_reports_deficiency_report_path(report_id), class: "kern-link"
+                 end %>
+              <li><%= statement["text"] %><% if report_links.any? %> (<%= safe_join(report_links, ", ") %>)<% end %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="kern-body kern-body--muted"><%= t(".no_statements") %></p>
+        <% end %>
+      </section>
+    <% end %>
+  <% elsif @management_report.failed? %>
+    <div class="kern-alert kern-alert--danger">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--danger" aria-hidden="true"></span>
+        <span class="kern-title"><%= t(".failed") %></span>
+      </div>
+      <% if Adm::DeficiencyReports::ManagementReportPolicy.new(current_user, @management_report).retry? %>
+        <div class="kern-alert__body">
+          <%= form_with url: retry_adm_deficiency_reports_management_report_path(@management_report), method: :post do %>
+            <%= kern_button(type: :submit, text: t("adm.deficiency_reports.management_reports.retry.button"), icon: "refresh", style: :secondary) %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="kern-alert kern-alert--info" role="status">
+      <div class="kern-alert__header">
+        <span class="kern-icon kern-icon--info" aria-hidden="true"></span>
+        <span class="kern-title"><%= t(".pending") %></span>
+      </div>
+    </div>
+  <% end %>
+</div>

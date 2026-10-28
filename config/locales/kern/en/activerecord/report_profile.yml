@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    errors:
+      models:
+        deficiency_report/report_profile:
+          attributes:
+            building_blocks:
+              blank_selection: Select at least one content block.
+            recipient_user_ids:
+              no_recipients: Select at least one person or enter an e-mail address.
+              ineligible: At least one selected person has no access to deficiency reports.
+            recipient_emails_text:
+              invalid_entries:
+                one: "Invalid e-mail address: %{entries}"
+                other: "Invalid e-mail addresses: %{entries}"

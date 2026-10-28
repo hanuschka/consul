@@ -2,6 +2,16 @@ de:
   custom:
     deficiency_reports:
       mailers:
+        management_report:
+          subject: "Bericht „%{name}“ bis %{period_end}"
+          hi: "Guten Tag %{username},"
+          hi_without_name: Guten Tag,
+          intro: "anbei erhalten Sie den Bericht „%{name}“ zu den Anliegen im Mängelmelder für den Zeitraum %{period}."
+          figures_title: Die wichtigsten Kennzahlen
+          attachment_hint: Den vollständigen Bericht mit allen Abschnitten finden Sie im PDF-Anhang.
+          adm_link_text: Bericht in der Verwaltung öffnen
+          ai_notice: Die Texte des Berichts wurden mit KI erstellt. Die Kennzahlen stammen direkt aus der Datenbank.
+          internal_notice: Dieser Bericht ist nur für den internen Gebrauch bestimmt.
         closing: Freundliche Grüße
         signature: Euer Anliegenmanagement
         contact_info: Bei inhaltlichen Fragen wendet euch bitte an <a href="mailto:%{email}">%{email}</a>

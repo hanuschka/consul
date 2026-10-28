@@ -103,6 +103,10 @@ every 1.day, at: "3:30 am", roles: [:cron] do
   rake "deficiency_reports:archive_closed"
 end
 
+every 1.hour, roles: [:cron] do
+  rake "deficiency_reports:management_reports"
+end
+
 every 1.day, at: "6:00 am", roles: [:cron] do
   rake "reminders:overdue_deficiency_reports"
   rake "reminders:not_assigned_deficiency_reports"

@@ -3379,6 +3379,12 @@ paths:
                       nullable: true
                       description: Official response or answer from administrators
                         regarding the reported issue
+                    reporter_answer:
+                      type: string
+                      nullable: true
+                      description: Answer e-mailed to the reporter and not shown publicly;
+                        used when the setting "separate reporter answer" is enabled,
+                        in which case official_answer is the public answer only
                     on_behalf_of:
                       type: string
                       nullable: true
@@ -3648,6 +3654,12 @@ paths:
                       nullable: true
                       description: Official response or answer from administrators
                         regarding the reported issue
+                    reporter_answer:
+                      type: string
+                      nullable: true
+                      description: Answer e-mailed to the reporter and not shown publicly;
+                        used when the setting "separate reporter answer" is enabled,
+                        in which case official_answer is the public answer only
                     deficiency_report_category_id:
                       type: integer
                       nullable: true
@@ -16793,6 +16805,15 @@ components:
           type: string
           nullable: true
           description: Detailed description of the deficiency
+        official_answer:
+          type: string
+          nullable: true
+          description: Official answer shown publicly above the report
+        reporter_answer:
+          type: string
+          nullable: true
+          description: Answer e-mailed to the reporter and not shown publicly; only
+            returned to admin clients
           example: Large pothole causing safety concerns near intersection
         author_id:
           type: integer

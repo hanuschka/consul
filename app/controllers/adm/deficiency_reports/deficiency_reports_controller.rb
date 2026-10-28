@@ -309,15 +309,18 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     @deficiency_report = DeficiencyReport.find(params[:id])
     authorize @deficiency_report, :update?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
-    answer_was = @deficiency_report.official_answer.presence
+    answers_were = [@deficiency_report.official_answer.presence, @deficiency_report.reporter_answer.presence]
+    reporter_answer_was = @deficiency_report.official_answer_for_reporter.presence
     documents = Array(params[:deficiency_report][:official_answer_documents]).reject(&:blank?)
 
-    if @deficiency_report.update(params.require(:deficiency_report).permit(:official_answer))
-      answer_now = @deficiency_report.official_answer.presence
+    if @deficiency_report.update(params.require(:deficiency_report).permit(:official_answer, :reporter_answer))
+      answers_now = [@deficiency_report.official_answer.presence, @deficiency_report.reporter_answer.presence]
+      reporter_answer_now = @deficiency_report.official_answer_for_reporter.presence
 
-      if answer_now != answer_was
-        notify_watchers_about_change(@deficiency_report)
-        notify_reporter_about_official_answer(@deficiency_report) if answer_now.present?
+      notify_watchers_about_change(@deficiency_report) if answers_now != answers_were
+
+      if reporter_answer_now.present? && reporter_answer_now != reporter_answer_was
+        notify_reporter_about_official_answer(@deficiency_report)
       end
 
       if documents.any? && !@deficiency_report.official_answer_documents.attach(documents)

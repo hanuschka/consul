@@ -111,6 +111,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
       params[:user].delete(:redeemable_code) if params[:user].present? &&
                                                 params[:user][:redeemable_code].blank?
 
+      drop_incomplete_date_of_birth
+
       params.require(:user).permit(:username, :email,
                                    :first_name, :last_name,
                                    :city_name, :plz, :street_name, :street_number, :street_number_extension,
@@ -122,5 +124,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
                                    :locale,
                                    :redeemable_code,
                                    individual_group_value_ids: [])
+    end
+
+    def drop_incomplete_date_of_birth
+      return if params[:user].blank?
+
+      keys = %w[date_of_birth(1i) date_of_birth(2i) date_of_birth(3i)]
+      return unless keys.any? { |key| params[:user][key].blank? }
+
+      keys.each { |key| params[:user].delete(key) }
     end
 end

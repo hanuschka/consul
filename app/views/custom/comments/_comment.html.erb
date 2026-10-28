@@ -53,7 +53,7 @@
             <% elsif comment.user.guest? %>
               <span class="user-name"><%= User.human_attribute_name(:guest) %></span>
             <% else %>
-              <span class="user-name" aria-label="Er antwortete"><%= link_to comment.user.name, user_path(comment.user), title: 'sagte'  %></span>
+              <span class="user-name"><span class="show-for-sr"><%= t("comments.comment.author_prefix") %> </span><%= link_to comment.user.name, user_path(comment.user), title: t("comments.comment.author_link_title") %></span>
               <% if comment.user.display_official_position_badge? %>
                 &nbsp;&bull;&nbsp;
                 <%= render Shared::OfficialPositionBadgeComponent.new(user: comment.user) %>

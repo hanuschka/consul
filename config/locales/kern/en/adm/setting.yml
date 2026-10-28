@@ -371,6 +371,9 @@ en:
       send_feedback_form_link: Send feedback form
       send_feedback_form_link_description: >
         When enabled, users receive an email with a link to a feedback form after their deficiency report is closed. They can rate the processing of their concern and give feedback on their satisfaction with the workflow. This helps administration monitor and improve the quality of deficiency processing.
+      separate_reporter_answer: Separate reporter answer and public answer
+      separate_reporter_answer_description: >
+        Splits the official answer to a report into two fields: an answer e-mailed to the reporter and a public answer on the platform. The frontend shows only the public answer above the report; if it is empty, no answer box is shown. Enable this to answer reporters in more detail or more personally than should be publicly visible.
       show_create_report_button: Submission of new deficiency reports
       show_create_report_button_description: >
         Controls whether users can submit new deficiency reports. When this option is disabled, all submit buttons are hidden and the report form can no longer be reached through a direct link either; reports already received stay publicly visible. Disable this option when no new reports should be accepted temporarily, for example during a break in operations.

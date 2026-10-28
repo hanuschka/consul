@@ -26,12 +26,14 @@ namespace :adm do
 
     resources :official_answer_templates, except: :show
     resources :officer_groups, except: :show
-    resources :report_profiles, except: :show do
+    resources :report_profiles do
       member do
         patch :pause
         patch :resume
+        post :generate
       end
     end
+    resources :management_reports, only: :show
     resources :districts, only: [:index, :edit, :update]
 
     resources :areas, except: :show do

@@ -443,6 +443,44 @@ de:
           text_hint: Der Text der Antwortvorlage wird als Standardinhalt in das Antwortfeld eingefügt, wenn ein Sachbearbeiter diese Vorlage auswählt. Der Text kann vor dem Absenden noch individuell angepasst werden. Formulieren Sie den Text bürgerfreundlich und sachlich, da er als offizielle Antwort der Verwaltung öffentlich auf der Meldung erscheint.
           text_placeholder: Ihre Antwortvorlage...
           submit: Speichern
+      management_reports:
+        sections:
+          incoming_and_closed: Eingang und Abschluss
+          status_overview: Statusübersicht
+          top_categories: Häufigste Kategorien
+          open_and_overdue: Offene und überfällige Anliegen
+          frequent_topics: Häufig gemeldete Themen
+          notable_items: Auffällige Anliegen
+        show:
+          title: "Bericht: %{name}"
+          period: Zeitraum
+          profile: Berichtsprofil
+          generated_at: Erstellt am
+          download_pdf: PDF herunterladen
+          ai_notice: Die Texte dieses Berichts wurden mit KI erstellt. Die Kennzahlen stammen direkt aus der Datenbank.
+          report_link: "Anliegen %{id}"
+          no_statements: Für diesen Abschnitt liegt keine Zusammenfassung vor.
+          pending: Der Bericht wird gerade erstellt. Laden Sie die Seite in einigen Minuten neu.
+          failed: Der Bericht konnte nicht erstellt werden.
+        figures:
+          incoming: Eingegangene Anliegen
+          closed: Abgeschlossene Anliegen
+          open: Offene Anliegen insgesamt
+          overdue: Davon überfällig
+          comments:
+            one: "%{count} Kommentar"
+            other: "%{count} Kommentare"
+          supports:
+            one: "%{count} Unterstützung"
+            other: "%{count} Unterstützungen"
+        statuses:
+          pending: Wartet
+          processing: Wird erstellt
+          completed: Erstellt
+          failed: Fehlgeschlagen
+        triggers:
+          manual: Manuell
+          scheduled: Geplant
       report_profiles:
         index:
           title: Berichte
@@ -468,6 +506,24 @@ de:
             recipients: Empfänger
             status: Status
             actions: Aktionen
+        show:
+          page_hint: Hier finden Sie alle Berichte, die mit diesem Profil erstellt wurden.
+          generate: Jetzt erstellen
+          generate_hint: Erstellt einen Bericht für den Zeitraum seit dem letzten versendeten Bericht. Der Bericht wird nicht per E-Mail versendet.
+          edit: Profil bearbeiten
+          no_items_title: Noch keine Berichte
+          no_items_description: Sobald ein Bericht erstellt wurde, erscheint er hier.
+          table:
+            created_at: Erstellt am
+            period: Zeitraum
+            trigger: Auslöser
+            status: Status
+            sent_at: Versendet
+            not_sent: Nicht versendet
+            open: Öffnen
+            actions: Aktionen
+        generate:
+          success: Der Bericht wird erstellt. Das dauert in der Regel einige Minuten.
         new:
           title: Neues Berichtsprofil
         create:

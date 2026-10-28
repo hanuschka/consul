@@ -443,6 +443,44 @@ en:
           text_hint: The text of the response template is inserted as default content into the response field when an officer selects this template. The text can be customized before sending. Phrase the text in a citizen-friendly and factual way, since it appears publicly on the report as the administration's official response.
           text_placeholder: Your response template...
           submit: Save
+      management_reports:
+        sections:
+          incoming_and_closed: Incoming and closed
+          status_overview: Status overview
+          top_categories: Top categories
+          open_and_overdue: Open and overdue reports
+          frequent_topics: Frequently reported topics
+          notable_items: Notable reports
+        show:
+          title: "Report: %{name}"
+          period: Period
+          profile: Report profile
+          generated_at: Created at
+          download_pdf: Download PDF
+          ai_notice: The text in this report was written with AI. The figures come directly from the database.
+          report_link: "Report %{id}"
+          no_statements: There is no summary for this section.
+          pending: The report is being created. Reload the page in a few minutes.
+          failed: The report could not be created.
+        figures:
+          incoming: Incoming reports
+          closed: Closed reports
+          open: Open reports in total
+          overdue: Of which overdue
+          comments:
+            one: "%{count} comment"
+            other: "%{count} comments"
+          supports:
+            one: "%{count} support"
+            other: "%{count} supports"
+        statuses:
+          pending: Waiting
+          processing: Being created
+          completed: Created
+          failed: Failed
+        triggers:
+          manual: Manual
+          scheduled: Scheduled
       report_profiles:
         index:
           title: Reports
@@ -468,6 +506,24 @@ en:
             recipients: Recipients
             status: Status
             actions: Actions
+        show:
+          page_hint: All reports created with this profile.
+          generate: Create now
+          generate_hint: Creates a report for the time since the last sent report. The report is not e-mailed.
+          edit: Edit profile
+          no_items_title: No reports yet
+          no_items_description: Reports appear here once they have been created.
+          table:
+            created_at: Created at
+            period: Period
+            trigger: Trigger
+            status: Status
+            sent_at: Sent
+            not_sent: Not sent
+            open: Open
+            actions: Actions
+        generate:
+          success: The report is being created. This usually takes a few minutes.
         new:
           title: New report profile
         create:

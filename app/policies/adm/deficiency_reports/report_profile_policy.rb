@@ -4,6 +4,14 @@ class Adm::DeficiencyReports::ReportProfilePolicy < ApplicationPolicy
     deficiency_report_manager?
   end
 
+  def show?
+    deficiency_report_manager?
+  end
+
+  def generate?
+    deficiency_report_manager?
+  end
+
   def new?
     deficiency_report_manager?
   end

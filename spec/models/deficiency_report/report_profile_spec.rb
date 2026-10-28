@@ -79,4 +79,38 @@ describe DeficiencyReport::ReportProfile do
 
     expect(described_class.active).to eq [active]
   end
+
+  describe "#next_period_start" do
+    let(:profile) { create(:deficiency_report_report_profile) }
+    let(:now) { Time.zone.local(2026, 10, 30, 15) }
+
+    def report_for(profile, period_end:, sent_at:)
+      DeficiencyReport::ManagementReport.create!(
+        report_profile: profile, profile_name: profile.name, building_blocks: profile.building_blocks,
+        period_start: period_end - 7.days, period_end: period_end, sent_at: sent_at
+      )
+    end
+
+    it "goes back one week for a weekly profile without reports" do
+      expect(profile.next_period_start(now)).to eq now - 7.days
+    end
+
+    it "goes back one month for a monthly profile without reports" do
+      profile.update!(frequency: "monthly", day_of_month: 1)
+
+      expect(profile.next_period_start(now)).to eq now - 1.month
+    end
+
+    it "starts where the last sent report ended" do
+      report_for(profile, period_end: now - 2.days, sent_at: now - 2.days)
+
+      expect(profile.next_period_start(now)).to eq now - 2.days
+    end
+
+    it "ignores reports that were not sent" do
+      report_for(profile, period_end: now - 1.day, sent_at: nil)
+
+      expect(profile.next_period_start(now)).to eq now - 7.days
+    end
+  end
 end

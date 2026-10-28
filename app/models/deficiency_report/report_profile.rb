@@ -10,6 +10,8 @@ class DeficiencyReport::ReportProfile < ApplicationRecord
   FREQUENCIES = %w[weekly monthly].freeze
   INSTRUCTIONS_MAX_LENGTH = 2000
 
+  has_many :management_reports, class_name: "DeficiencyReport::ManagementReport", dependent: :destroy
+
   validates :name, presence: true
   validates :frequency, inclusion: { in: FREQUENCIES }
   validates :hour, inclusion: { in: 0..23 }
@@ -38,6 +40,23 @@ class DeficiencyReport::ReportProfile < ApplicationRecord
 
   def monthly?
     frequency == "monthly"
+  end
+
+  def next_period_start(now = Time.current)
+    management_reports.sent.maximum(:period_end) || (monthly? ? now - 1.month : now - 7.days)
+  end
+
+  def deficiency_reports
+    reports = DeficiencyReport.all
+    reports = reports.where(deficiency_report_category_id: category_ids) if category_ids.any?
+    return reports if officer_group_ids.empty?
+
+    member_officer_ids = DeficiencyReport::OfficerGroupAssignment
+      .where(deficiency_report_officer_group_id: officer_group_ids)
+      .select(:deficiency_report_officer_id)
+
+    reports.where(responsible_type: "DeficiencyReport::OfficerGroup", responsible_id: officer_group_ids)
+      .or(reports.where(responsible_type: "DeficiencyReport::Officer", responsible_id: member_officer_ids))
   end
 
   def recipient_users

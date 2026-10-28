@@ -43,7 +43,7 @@
         <% time = format("%02d:00", report_profile.hour) %>
         <tr id="<%= dom_id(report_profile) %>" class="kern-table__row">
           <th scope="row" class="kern-table__header" data-field="name">
-            <%= link_to report_profile.name, edit_adm_deficiency_reports_report_profile_path(report_profile),
+            <%= link_to report_profile.name, adm_deficiency_reports_report_profile_path(report_profile),
                         class: "kern-link", data: { turbo_frame: "_top" } %>
           </th>
           <td class="kern-table__cell" data-field="schedule">

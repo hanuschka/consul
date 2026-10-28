@@ -1,5 +1,5 @@
 class Adm::DeficiencyReports::ReportProfilesController < Adm::DeficiencyReports::BaseController
-  before_action :load_report_profile, only: [:edit, :update, :destroy, :pause, :resume]
+  before_action :load_report_profile, only: [:show, :edit, :update, :destroy, :pause, :resume, :generate]
   before_action :load_form_options, only: [:new, :edit, :create, :update]
 
   def index
@@ -10,6 +10,14 @@ class Adm::DeficiencyReports::ReportProfilesController < Adm::DeficiencyReports:
                          .order(:name)
 
     @breadcrumbs = [{ name: t("adm.deficiency_reports.menu.items.report_profiles"), icon: "summarize" }]
+  end
+
+  def show
+    authorize @report_profile, policy_class: Adm::DeficiencyReports::ReportProfilePolicy
+
+    @pagy, @management_reports = pagy(@report_profile.management_reports.newest_first)
+
+    @breadcrumbs = breadcrumbs_for_action(@report_profile.name)
   end
 
   def new
@@ -69,6 +77,13 @@ class Adm::DeficiencyReports::ReportProfilesController < Adm::DeficiencyReports:
 
     @report_profile.update_column(:paused, false)
     redirect_to adm_deficiency_reports_report_profiles_path, notice: t(".success", name: @report_profile.name)
+  end
+
+  def generate
+    authorize @report_profile, policy_class: Adm::DeficiencyReports::ReportProfilePolicy
+
+    DeficiencyReport::ManagementReport.start_for(@report_profile, trigger: :manual)
+    redirect_to adm_deficiency_reports_report_profile_path(@report_profile), notice: t(".success")
   end
 
   private

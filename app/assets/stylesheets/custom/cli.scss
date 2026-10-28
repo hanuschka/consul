@@ -121,3 +121,14 @@ h1.no-narrative-line {
     font-size: 18px !important;
   }
 }
+
+.custom-new-design .resource-item--body .resource-item--title-heading {
+  .resource-item--title {
+    margin-bottom: 0;
+  }
+
+  &:not(.no-narrative-line)::after {
+    margin-top: 4px;
+    margin-bottom: 10px;
+  }
+}

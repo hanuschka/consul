@@ -23,7 +23,7 @@
 //= link packs/mapbox_vendor.js
 //= link packs/plyr_vendor.js
 //= link vendor_asset_urls.js
-//= link redoc/bundle/redoc.standalone.js
+//= link redoc/bundles/redoc.standalone.js
 //= link leaflet/dist/images/layers.png
 //= link leaflet/dist/images/layers-2x.png
 //= link leaflet/dist/images/marker-icon.png

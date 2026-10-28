@@ -5,8 +5,6 @@
 //= link elements.css
 //= link elements.js
 //
-//= link stat_graphs.js
-//= link dashboard_graphs.js
 //= link dashboard_poster.css
 //= link print.css
 //= link pdf_fonts.css

@@ -28,7 +28,7 @@ module CsvServices
           "Sachbearbeiter*in", "Zugewiesen an",
           "Video URL", "Meldung im Namen von", "Erfasst von",
           "Erstellt am",
-          "Officielle Antwort",
+          "Offizielle Antwort",
           *("Antwort an die meldende Person" if DeficiencyReport.separate_reporter_answer?)
         ]
       end

@@ -109,7 +109,7 @@ describe "Separate reporter answer for Anliegen", type: :request do
 
       rows = CSV.parse(CsvServices::DeficiencyReportsExporter.new([report]).call, col_sep: ";", headers: true)
 
-      expect(rows.first["Officielle Antwort"]).to eq "Öffentlich"
+      expect(rows.first["Offizielle Antwort"]).to eq "Öffentlich"
       expect(rows.first["Antwort an die meldende Person"]).to eq "Persönlich"
     end
 
@@ -168,7 +168,7 @@ describe "Separate reporter answer for Anliegen", type: :request do
   end
 
   describe "creating a report from the public form" do
-    it "ignores a submitted reporter answer" do
+    it "ignores a submitted official and reporter answer" do
       login_as(create(:user))
       category = create(:deficiency_report_category)
 
@@ -179,6 +179,7 @@ describe "Separate reporter answer for Anliegen", type: :request do
             resource_terms: "1",
             translations_attributes: {
               "0" => { locale: "en", title: "Kaputte Bank", description: "Die Bank im Park ist kaputt.",
+                       official_answer: "Gefälschte öffentliche Antwort",
                        reporter_answer: "Gefälschte Antwort" }
             },
             map_location_attributes: { latitude: 50.7956, longitude: 7.2044, zoom: 12, rendering_library: "leaflet" }
@@ -186,7 +187,28 @@ describe "Separate reporter answer for Anliegen", type: :request do
         }
       end.to change(DeficiencyReport, :count).by(1)
 
+      expect(DeficiencyReport.last.official_answer).to be_nil
       expect(DeficiencyReport.last.reporter_answer).to be_nil
+    end
+  end
+
+  describe "withdraw button on the public page" do
+    let(:withdraw_label) { I18n.t("custom.deficiency_reports.show.author_actions.delete_button") }
+
+    before { login_as(report.author) }
+
+    it "is shown to the author of an unanswered report" do
+      get deficiency_report_path(report)
+
+      expect(response.body).to include(withdraw_label)
+    end
+
+    it "is hidden from the author once the report is answered" do
+      report.update!(official_answer: "Wird repariert.")
+
+      get deficiency_report_path(report)
+
+      expect(response.body).not_to include(withdraw_label)
     end
   end
 

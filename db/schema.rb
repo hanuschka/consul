@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_27_162102) do
+ActiveRecord::Schema.define(version: 2026_10_28_094651) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -946,6 +946,23 @@ ActiveRecord::Schema.define(version: 2026_10_27_162102) do
   create_table "deficiency_report_official_answer_templates", force: :cascade do |t|
     t.string "title"
     t.text "text"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "deficiency_report_report_profiles", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "building_blocks", default: [], null: false, array: true
+    t.integer "category_ids", default: [], null: false, array: true
+    t.integer "officer_group_ids", default: [], null: false, array: true
+    t.integer "recipient_user_ids", default: [], null: false, array: true
+    t.text "recipient_emails", default: [], null: false, array: true
+    t.text "instructions"
+    t.string "frequency", default: "weekly", null: false
+    t.integer "weekday"
+    t.integer "day_of_month"
+    t.integer "hour", default: 8, null: false
+    t.boolean "paused", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

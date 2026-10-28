@@ -29,6 +29,7 @@ en:
           districts: Areas
           officer_groups: Officer groups
           stats: Statistics
+          report_profiles: Reports
           ai_settings: AI settings
       email_templates:
         tabs:
@@ -441,6 +442,80 @@ en:
           text_label: Text
           text_hint: The text of the response template is inserted as default content into the response field when an officer selects this template. The text can be customized before sending. Phrase the text in a citizen-friendly and factual way, since it appears publicly on the report as the administration's official response.
           text_placeholder: Your response template...
+          submit: Save
+      report_profiles:
+        index:
+          title: Reports
+          page_hint: "Report profiles create an AI-assisted summary of incoming reports on a schedule and e-mail it to their recipients. Reports are internal only and never published."
+          new_report_profile: New report profile
+          no_items_title: No report profiles yet
+          no_items_description: Create a report profile to send a regular summary.
+          paused: Paused
+          active: Active
+          pause: Pause
+          resume: Resume
+          edit: Edit
+          delete: Delete
+          delete_confirm: Delete report profile "%{name}"?
+          schedule_weekly: "Weekly, %{weekday}, %{time}"
+          schedule_monthly: "Monthly on day %{day}, %{time}"
+          recipients:
+            one: 1 recipient
+            other: "%{count} recipients"
+          table:
+            name: Name
+            schedule: Schedule
+            recipients: Recipients
+            status: Status
+            actions: Actions
+        new:
+          title: New report profile
+        create:
+          success: Report profile created.
+        edit:
+          title: Edit report profile
+        update:
+          success: Report profile saved.
+        destroy:
+          success: Report profile deleted.
+        pause:
+          success: Report profile "%{name}" is paused and sends no reports.
+        resume:
+          success: Report profile "%{name}" is active again.
+        form:
+          name_label: Name
+          name_hint: Shown in the overview, the e-mail subject and the report.
+          name_placeholder: e.g. Mayor
+          building_blocks_label: Content
+          building_blocks_hint: The report has a short section for each selected item.
+          building_blocks:
+            incoming_and_closed: Incoming and closed reports in the period
+            status_overview: Status overview
+            top_categories: Top categories
+            open_and_overdue: Open and overdue reports
+            frequent_topics: Frequently reported topics
+            notable_items: Notable reports, e.g. many comments or supports
+          categories_label: Categories
+          categories_hint: Only include reports in these categories. Leave empty to include all.
+          officer_groups_label: Officer groups
+          officer_groups_hint: Only include reports assigned to these groups. Leave empty to include all.
+          instructions_label: Instructions for the summary
+          instructions_hint: Optional. Focus, tone or length, e.g. "Ignore anything about street lights".
+          frequency_label: Frequency
+          frequency_hint: Each report covers the time since the previous one.
+          frequencies:
+            weekly: Weekly
+            monthly: Monthly
+          weekday_label: Weekday
+          day_of_month_label: Day of month
+          day_of_month_hint: Days 1 to 28, so the report goes out every month.
+          hour_label: Time
+          hour_option: "%{hour}:00"
+          recipient_users_label: Recipients with access
+          recipient_users_hint: People with access to deficiency reports. The e-mail links them to the report in the administration.
+          no_eligible_recipients: Nobody has access to deficiency reports yet.
+          recipient_emails_label: Other e-mail addresses
+          recipient_emails_hint: For people without access. One address per line. They receive the report as a PDF attachment only.
           submit: Save
       officer_groups:
         index:

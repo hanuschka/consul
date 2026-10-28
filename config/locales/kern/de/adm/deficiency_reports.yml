@@ -29,6 +29,7 @@ de:
           districts: Gebiete
           officer_groups: Sachbearbeitergruppen
           stats: Statistiken
+          report_profiles: Berichte
           ai_settings: KI-Einstellungen
       email_templates:
         tabs:
@@ -441,6 +442,80 @@ de:
           text_label: Text
           text_hint: Der Text der Antwortvorlage wird als Standardinhalt in das Antwortfeld eingefügt, wenn ein Sachbearbeiter diese Vorlage auswählt. Der Text kann vor dem Absenden noch individuell angepasst werden. Formulieren Sie den Text bürgerfreundlich und sachlich, da er als offizielle Antwort der Verwaltung öffentlich auf der Meldung erscheint.
           text_placeholder: Ihre Antwortvorlage...
+          submit: Speichern
+      report_profiles:
+        index:
+          title: Berichte
+          page_hint: "Berichtsprofile erstellen in festen Abständen eine KI-gestützte Zusammenfassung der eingegangenen Anliegen und senden sie per E-Mail an die hinterlegten Empfänger. Die Berichte sind nur intern und werden nicht veröffentlicht."
+          new_report_profile: Neues Berichtsprofil
+          no_items_title: Keine Berichtsprofile vorhanden
+          no_items_description: Erstellen Sie ein Berichtsprofil, um regelmäßig eine Zusammenfassung zu versenden.
+          paused: Pausiert
+          active: Aktiv
+          pause: Pausieren
+          resume: Fortsetzen
+          edit: Bearbeiten
+          delete: Löschen
+          delete_confirm: Berichtsprofil „%{name}" wirklich löschen?
+          schedule_weekly: "Wöchentlich, %{weekday}, %{time} Uhr"
+          schedule_monthly: "Monatlich am %{day}., %{time} Uhr"
+          recipients:
+            one: 1 Empfänger
+            other: "%{count} Empfänger"
+          table:
+            name: Name
+            schedule: Zeitplan
+            recipients: Empfänger
+            status: Status
+            actions: Aktionen
+        new:
+          title: Neues Berichtsprofil
+        create:
+          success: Berichtsprofil wurde erstellt.
+        edit:
+          title: Berichtsprofil bearbeiten
+        update:
+          success: Berichtsprofil wurde gespeichert.
+        destroy:
+          success: Berichtsprofil wurde gelöscht.
+        pause:
+          success: Berichtsprofil „%{name}" ist pausiert und versendet keine Berichte.
+        resume:
+          success: Berichtsprofil „%{name}" ist wieder aktiv.
+        form:
+          name_label: Name
+          name_hint: Wird in der Übersicht, im Betreff der E-Mail und im Bericht angezeigt.
+          name_placeholder: z. B. Bürgermeister
+          building_blocks_label: Inhalte
+          building_blocks_hint: Für jeden ausgewählten Inhalt enthält der Bericht einen kurzen Abschnitt.
+          building_blocks:
+            incoming_and_closed: Eingegangene und abgeschlossene Anliegen im Zeitraum
+            status_overview: Statusübersicht
+            top_categories: Häufigste Kategorien
+            open_and_overdue: Offene und überfällige Anliegen
+            frequent_topics: Häufig gemeldete Themen
+            notable_items: Auffällige Anliegen, z. B. mit vielen Kommentaren oder Unterstützungen
+          categories_label: Kategorien
+          categories_hint: Nur Anliegen aus diesen Kategorien berücksichtigen. Ohne Auswahl werden alle Kategorien berücksichtigt.
+          officer_groups_label: Sachbearbeitergruppen
+          officer_groups_hint: Nur Anliegen berücksichtigen, die diesen Gruppen zugewiesen sind. Ohne Auswahl werden alle Anliegen berücksichtigt.
+          instructions_label: Hinweise für die Zusammenfassung
+          instructions_hint: Optional. Schwerpunkt, Tonalität oder Länge, z. B. „Straßenbeleuchtung nicht berücksichtigen".
+          frequency_label: Häufigkeit
+          frequency_hint: Jeder Bericht umfasst den Zeitraum seit dem vorherigen Bericht.
+          frequencies:
+            weekly: Wöchentlich
+            monthly: Monatlich
+          weekday_label: Wochentag
+          day_of_month_label: Tag im Monat
+          day_of_month_hint: Möglich sind der 1. bis 28., damit der Bericht in jedem Monat versendet wird.
+          hour_label: Uhrzeit
+          hour_option: "%{hour}:00 Uhr"
+          recipient_users_label: Empfänger mit Zugang
+          recipient_users_hint: Personen mit Zugang zum Mängelmelder. Sie erhalten in der E-Mail einen Link zum Bericht in der Verwaltung.
+          no_eligible_recipients: Es gibt noch keine Personen mit Zugang zum Mängelmelder.
+          recipient_emails_label: Weitere E-Mail-Adressen
+          recipient_emails_hint: Für Personen ohne Zugang. Eine Adresse pro Zeile. Sie erhalten den Bericht nur als PDF-Anhang.
           submit: Speichern
       officer_groups:
         index:

@@ -31,7 +31,7 @@ module Adm
 
     def create_pending
       role_class = role_class_from_param
-      authorize role_class, :index?, policy_class: policy_class_for(role_class)
+      authorize role_class, :create?, policy_class: policy_class_for(role_class)
 
       @pending = PendingRoleAssignment.new(
         email: params[:email],
@@ -53,7 +53,7 @@ module Adm
 
     def destroy_pending
       role_class = role_class_from_param
-      authorize role_class, :index?, policy_class: policy_class_for(role_class)
+      authorize role_class, :destroy?, policy_class: policy_class_for(role_class)
 
       @pending = PendingRoleAssignment.find(params[:pending_id])
       @pending.destroy!

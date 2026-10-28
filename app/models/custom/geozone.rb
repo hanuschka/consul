@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "geozone").to_s
+load Rails.root.join("app", "models", "geozone.rb")
 
 class Geozone < ApplicationRecord
   has_many :projekt_phase_geozones

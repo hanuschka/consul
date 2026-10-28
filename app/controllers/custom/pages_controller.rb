@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "pages_controller").to_s
+load Rails.root.join("app", "controllers", "pages_controller.rb")
 
 class PagesController < ApplicationController
   include CommentableActions

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "organizations", "registrations_controller").to_s
+load Rails.root.join("app", "controllers", "organizations", "registrations_controller.rb")
 
 class Organizations::RegistrationsController < Devise::RegistrationsController
   private

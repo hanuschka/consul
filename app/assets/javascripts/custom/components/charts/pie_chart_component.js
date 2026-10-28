@@ -3,6 +3,8 @@
 
   App.PieChartComponent = {
     initialize: function() {
+      App.ChartInstances.destroyDetached();
+
       const charts = document.querySelectorAll("[data-pie-chart]");
       charts.forEach(this.initChart.bind(this));
     },

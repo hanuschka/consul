@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "admin", "budgets", "actions_component").to_s
+load Rails.root.join("app", "components", "admin", "budgets", "actions_component.rb")
 
 class Admin::Budgets::ActionsComponent < ApplicationComponent
   private

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "application_component").to_s
+load Rails.root.join("app", "components", "application_component.rb")
 
 class ApplicationComponent < ViewComponent::Base
   delegate :url_to_footer_tab, :current_user, :can, :can?,

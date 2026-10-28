@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "admin_helper").to_s
+load Rails.root.join("app", "helpers", "admin_helper.rb")
 
 module AdminHelper
   def dashboard_index_back_path

@@ -1,3 +1,5 @@
+require "csv"
+
 class IndividualGroupValue < ApplicationRecord
   translates :name, touch: true
   include Globalizable

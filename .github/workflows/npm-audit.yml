@@ -1,0 +1,71 @@
+name: npm audit on new-connection
+
+on:
+  push:
+    branches:
+      - new-connection
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-audit
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+
+      - name: Audit production npm packages
+        run: |
+          status=0
+          npm audit --package-lock-only --omit=dev --audit-level=critical --json > npm-audit.json || status=$?
+          jq -r '.metadata.vulnerabilities // empty | "critical \(.critical), high \(.high), moderate \(.moderate), low \(.low)"' npm-audit.json
+          exit $status
+
+      - name: Notify Teams on failure
+        if: failure()
+        env:
+          TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.AZURE_REFRESH_TOKEN }}
+          CHAT_ID: ${{ secrets.TEAMS_CHAT_ID_GROUP }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          COUNTS=$(jq -r '.metadata.vulnerabilities // empty | "critical \(.critical), high \(.high), moderate \(.moderate), low \(.low)"' npm-audit.json 2>/dev/null)
+          CRITICAL=$(jq -r '[.vulnerabilities // {} | to_entries[] | select(.value.severity == "critical") | .key] | join(", ")' npm-audit.json 2>/dev/null)
+
+          if [ -z "$COUNTS" ]; then
+            SUMMARY="npm audit did not produce a report — see the run for details."
+          else
+            SUMMARY="${COUNTS}<br><br>Critical: ${CRITICAL}"
+          fi
+
+          TOKEN=$(curl -s --fail -X POST \
+            "https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=refresh_token&refresh_token=${REFRESH_TOKEN}&scope=Chat.ReadWrite+offline_access" \
+            | jq -r '.access_token')
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "Could not get a Microsoft Graph token for the Teams message"
+            exit 1
+          fi
+
+          MESSAGE="❌ <b>npm audit failed on new-connection</b><br><br>${SUMMARY}<br><br>🔗 ${RUN_URL}"
+
+          jq -n --arg content "$MESSAGE" '{body: {contentType: "html", content: $content}}' \
+            | curl -s --fail -o /dev/null -X POST \
+              "https://graph.microsoft.com/v1.0/chats/${CHAT_ID}/messages" \
+              -H "Authorization: Bearer ${TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d @-

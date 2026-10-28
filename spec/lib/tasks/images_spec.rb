@@ -11,6 +11,6 @@ describe "images:strip_metadata" do
     allow(Images::StripStoredMetadataService).to receive(:call).and_yield(report, 100, 300).and_return(report)
 
     expect { Rake::Task["images:strip_metadata"].invoke }
-      .to output(/100\/300: .*\nImage metadata: .*:stripped=>2/).to_stdout
+      .to output(/100\/300: .*\nImage metadata: .*stripped(: |=>)2/).to_stdout
   end
 end

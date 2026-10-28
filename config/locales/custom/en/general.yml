@@ -20,6 +20,9 @@ en:
     comment:
       author_link_title: said
       author_prefix: Comment by
+  dashboard:
+    progress:
+      load_error: "The chart could not be loaded. Please reload the page later."
   proposals:
     retire_form:
       retired_explanation_hint: "Maximum 500 characters"

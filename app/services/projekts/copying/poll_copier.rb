@@ -64,7 +64,7 @@ class Projekts::Copying::PollCopier < ApplicationService
     end
 
     def copy_sdg_relations(node, copy)
-      related_sdgs = Projekts::Copying::Serializing::SdgCodeSerializer
+      related_sdgs = Projekts::Copying::Serializing::SDGCodeSerializer
         .resolve(node["sdg_relations"])
 
       related_sdgs.each do |related_sdg|

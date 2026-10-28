@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "users", "registrations_controller").to_s
+load Rails.root.join("app", "controllers", "users", "registrations_controller.rb")
 
 class Users::RegistrationsController < Devise::RegistrationsController
   include HasRegisteredAddress

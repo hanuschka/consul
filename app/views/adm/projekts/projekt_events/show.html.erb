@@ -74,8 +74,8 @@
     elsif @projekt_event.open_ended?
       schedule_rows << { label: t("adm.projekts.projekt_events.form.open_ended_label"), value: human_boolean(true) }
     end
-    if @projekt_event.weblink.present?
-      schedule_rows << { label: t("adm.projekts.projekt_events.form.weblink_label"), value: link_to(@projekt_event.weblink, @projekt_event.weblink, target: "_blank", rel: "noopener") }
+    if @projekt_event.weblink_url.present?
+      schedule_rows << { label: t("adm.projekts.projekt_events.form.weblink_label"), value: link_to(@projekt_event.weblink_url, @projekt_event.weblink_url, target: "_blank", rel: "noopener") }
     end
   %>
 

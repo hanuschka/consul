@@ -197,26 +197,27 @@
   <section class="adm-detail-section">
     <h2 class="adm-detail-section-title mb-3"><%= t(".official_answer") %></h2>
 
-    <% if DeficiencyReport::OfficialAnswerTemplate.any? && may_administer %>
-      <%= render Kern::FormFieldComponent.new(label: t(".answer_template_label"), hint: t(".answer_template_hint"), divider: false) do %>
-        <div class="kern-form-input">
-          <select class="kern-form-input__input"
-            onchange="if(this.value) { document.querySelectorAll('.ck-editor__editable').forEach(function(editor) { if(editor.ckeditorInstance) editor.ckeditorInstance.setData(this.value) }.bind(this)) }">
-            <option value=""><%= t(".answer_template_prompt") %></option>
-            <% DeficiencyReport::OfficialAnswerTemplate.all.each do |template| %>
-              <%= content_tag(:option, template.title, value: template.text) %>
-            <% end %>
-          </select>
-        </div>
-      <% end %>
-    <% end %>
-
     <% if may_administer %>
       <%= render "official_answer_form", deficiency_report: @deficiency_report %>
     <% else %>
-      <div class="adm-detail-description">
-        <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.official_answer) %>
-      </div>
+      <% if DeficiencyReport.separate_reporter_answer? %>
+        <% if @deficiency_report.reporter_answer.present? %>
+          <h3 class="kern-title kern-title--small mb-2"><%= t(".reporter_answer") %></h3>
+          <div class="adm-detail-description mb-3">
+            <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.reporter_answer) %>
+          </div>
+        <% end %>
+        <% if @deficiency_report.official_answer.present? %>
+          <h3 class="kern-title kern-title--small mb-2"><%= t(".public_answer") %></h3>
+          <div class="adm-detail-description">
+            <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.official_answer) %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="adm-detail-description">
+          <%= auto_link_already_sanitized_html wysiwyg(@deficiency_report.official_answer) %>
+        </div>
+      <% end %>
 
       <%= render "official_answer_documents", deficiency_report: @deficiency_report %>
     <% end %>

@@ -30,7 +30,7 @@ class MachineTranslation::Enqueuer
     end
 
     def translated_attribute_names
-      resource.translated_attribute_names.map(&:to_s)
+      MachineTranslation.attribute_names(resource.class).map(&:to_s)
     end
 
     def hidden_resource?

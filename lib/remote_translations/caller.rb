@@ -32,7 +32,7 @@ class RemoteTranslations::Caller
 
       row ||= resource.translations.new(locale: locale)
 
-      resource.translated_attribute_names.each_with_index do |field, index|
+      MachineTranslation.attribute_names(resource.class).each_with_index do |field, index|
         row[field] = translated_values[index]
       end
 
@@ -63,7 +63,7 @@ class RemoteTranslations::Caller
 
     def fields_values
       Globalize.with_locale(source_locale) do
-        resource.translated_attribute_names.map { |field| resource.send(field) }
+        MachineTranslation.attribute_names(resource.class).map { |field| resource.send(field) }
       end
     end
 

@@ -102,6 +102,12 @@ class PagesController < ApplicationController
   end
 
   def projekt_phase_footer_tab
+    unless request.xhr? || request.format.csv?
+      return redirect_to helpers.url_to_footer_tab(extras: { anchor: "projekt-footer" }) if request.format.html?
+
+      return head :not_acceptable
+    end
+
     @projekt_phase = ProjektPhase.find(params[:projekt_phase_id])
     @projekt = @projekt_phase.projekt
 

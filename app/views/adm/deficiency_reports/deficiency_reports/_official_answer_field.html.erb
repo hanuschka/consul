@@ -1,0 +1,24 @@
+<% field_name = label || t("adm.deficiency_reports.deficiency_reports.show.official_answer") %>
+<%= render Kern::FormFieldComponent.new(label: label, hint: hint, stacked: true, divider: false) do %>
+  <% if templates.any? %>
+    <div class="kern-form-input mb-3">
+      <select class="kern-form-input__input"
+              aria-label="<%= t("adm.deficiency_reports.deficiency_reports.show.answer_template_label") %>: <%= field_name %>"
+              data-editor-id="official_answer_editor_<%= attribute %>"
+              onchange="if (this.value) { var editor = document.getElementById(this.dataset.editorId); var editable = editor && editor.nextElementSibling && editor.nextElementSibling.querySelector('.ck-editor__editable'); if (editable && editable.ckeditorInstance) { editable.ckeditorInstance.setData(this.value) } }">
+        <option value=""><%= t("adm.deficiency_reports.deficiency_reports.show.answer_template_prompt") %></option>
+        <% templates.each do |template| %>
+          <%= content_tag(:option, template.title, value: template.text) %>
+        <% end %>
+      </select>
+    </div>
+  <% end %>
+
+  <div role="group" aria-label="<%= field_name %>">
+    <%= f.text_area attribute,
+          id: "official_answer_editor_#{attribute}",
+          value: AdminWYSIWYGSanitizer.new.sanitize(deficiency_report.public_send(attribute)),
+          label: false,
+          data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
+  </div>
+<% end %>

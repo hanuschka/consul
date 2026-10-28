@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_19_102809) do
+ActiveRecord::Schema.define(version: 2026_10_28_110955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -911,6 +911,25 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "deficiency_report_management_reports", force: :cascade do |t|
+    t.bigint "report_profile_id", null: false
+    t.string "profile_name", null: false
+    t.text "building_blocks", default: [], null: false, array: true
+    t.datetime "period_start", null: false
+    t.datetime "period_end", null: false
+    t.string "status", default: "pending", null: false
+    t.string "trigger", default: "manual", null: false
+    t.jsonb "figures", default: {}, null: false
+    t.jsonb "sections", default: [], null: false
+    t.text "error_message"
+    t.datetime "generated_at"
+    t.datetime "sent_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "deliver", default: false, null: false
+    t.index ["report_profile_id"], name: "index_dr_management_reports_on_report_profile_id"
+  end
+
   create_table "deficiency_report_managers", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
@@ -946,6 +965,23 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
   create_table "deficiency_report_official_answer_templates", force: :cascade do |t|
     t.string "title"
     t.text "text"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "deficiency_report_report_profiles", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "building_blocks", default: [], null: false, array: true
+    t.integer "category_ids", default: [], null: false, array: true
+    t.integer "officer_group_ids", default: [], null: false, array: true
+    t.integer "recipient_user_ids", default: [], null: false, array: true
+    t.text "recipient_emails", default: [], null: false, array: true
+    t.text "instructions"
+    t.string "frequency", default: "weekly", null: false
+    t.integer "weekday"
+    t.integer "day_of_month"
+    t.integer "hour", default: 8, null: false
+    t.boolean "paused", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -1003,6 +1039,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.text "description"
     t.text "summary"
     t.text "official_answer"
+    t.text "reporter_answer"
     t.index ["deficiency_report_id"], name: "index_deficiency_report_translations_on_deficiency_report_id"
     t.index ["locale"], name: "index_deficiency_report_translations_on_locale"
   end
@@ -4046,6 +4083,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
   add_foreign_key "debates", "sentiments"
   add_foreign_key "deficiency_report_confirmation_popup_answers", "deficiency_report_confirmation_popups", column: "confirmation_popup_id", on_delete: :cascade
   add_foreign_key "deficiency_report_feedback_forms", "deficiency_reports"
+  add_foreign_key "deficiency_report_management_reports", "deficiency_report_report_profiles", column: "report_profile_id", on_delete: :cascade
   add_foreign_key "deficiency_report_managers", "users"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"

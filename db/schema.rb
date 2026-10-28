@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_28_110955) do
+ActiveRecord::Schema.define(version: 2026_10_28_150501) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -1431,6 +1431,26 @@ ActiveRecord::Schema.define(version: 2026_10_28_110955) do
     t.boolean "ai_generated_in_app", default: false, null: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
+  end
+
+  create_table "individual_group_translations", force: :cascade do |t|
+    t.bigint "individual_group_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["individual_group_id"], name: "index_individual_group_translations_on_individual_group_id"
+    t.index ["locale"], name: "index_individual_group_translations_on_locale"
+  end
+
+  create_table "individual_group_value_translations", force: :cascade do |t|
+    t.bigint "individual_group_value_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["individual_group_value_id"], name: "index_2b0ea2ce3f866d3faad4ccd3adf1ca7d3c778e95"
+    t.index ["locale"], name: "index_individual_group_value_translations_on_locale"
   end
 
   create_table "individual_group_values", force: :cascade do |t|

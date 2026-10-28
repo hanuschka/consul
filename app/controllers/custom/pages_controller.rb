@@ -87,7 +87,7 @@ class PagesController < ApplicationController
       render action: custom_page_name
 
     elsif @custom_page.present? && @custom_page.projekt.present?
-      @individual_group_value_names = @custom_page.projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @custom_page.projekt.individual_group_values.map(&:name)
       render "custom/pages/forbidden", layout: false
 
     elsif @custom_page.present?

@@ -42,6 +42,12 @@ class DeficiencyReport::ReportProfile < ApplicationRecord
     frequency == "monthly"
   end
 
+  def due_at?(time)
+    return false unless time.hour == hour
+
+    weekly? ? time.wday == weekday : time.day == day_of_month
+  end
+
   def next_period_start(now = Time.current)
     management_reports.sent.maximum(:period_end) || (monthly? ? now - 1.month : now - 7.days)
   end

@@ -18,15 +18,25 @@ class DeficiencyReport::ManagementReport < ApplicationRecord
   scope :newest_first, -> { order(created_at: :desc) }
   scope :sent, -> { where.not(sent_at: nil) }
 
-  def self.start_for(profile, trigger:, now: Time.current)
+  def self.start_for(profile, trigger:, deliver:, now: Time.current)
     create!(
       report_profile: profile,
       profile_name: profile.name,
       building_blocks: profile.building_blocks,
       period_start: profile.next_period_start(now),
       period_end: now,
-      trigger: trigger
+      trigger: trigger,
+      deliver: deliver
     ).tap(&:generate_later)
+  end
+
+  def retry!
+    update!(status: :pending, error_message: nil)
+    generate_later
+  end
+
+  def deliverable?
+    completed? && deliver? && sent_at.nil?
   end
 
   def generate_later

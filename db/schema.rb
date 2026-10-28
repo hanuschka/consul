@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_28_102619) do
+ActiveRecord::Schema.define(version: 2026_10_28_110955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -926,6 +926,7 @@ ActiveRecord::Schema.define(version: 2026_10_28_102619) do
     t.datetime "sent_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "deliver", default: false, null: false
     t.index ["report_profile_id"], name: "index_dr_management_reports_on_report_profile_id"
   end
 

@@ -63,6 +63,27 @@ describe "Management report archive in the deficiency report administration", ty
       expect(response.body).not_to include("Faraday::TimeoutError")
     end
 
+    it "creates a report on demand that is sent to the recipients" do
+      post generate_adm_deficiency_reports_report_profile_path(profile), params: { deliver: "1" }
+
+      expect(DeficiencyReport::ManagementReport.last).to be_deliver
+    end
+
+    it "retries a failed report" do
+      management_report.update!(status: :failed, error_message: "provider down")
+
+      expect { post retry_adm_deficiency_reports_management_report_path(management_report) }
+        .to have_enqueued_job(DeficiencyReports::GenerateManagementReportJob)
+
+      expect(management_report.reload).to be_pending
+      expect(management_report.error_message).to be_nil
+    end
+
+    it "does not retry a report that was created" do
+      expect { post retry_adm_deficiency_reports_management_report_path(management_report) }
+        .not_to have_enqueued_job(DeficiencyReports::GenerateManagementReportJob)
+    end
+
     it "downloads the report as PDF" do
       get adm_deficiency_reports_management_report_path(management_report, format: :pdf)
 

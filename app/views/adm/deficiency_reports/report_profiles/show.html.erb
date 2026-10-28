@@ -22,12 +22,13 @@
 %>
 
 <div class="kern-container my-5">
-  <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
-    <%= form_with url: generate_adm_deficiency_reports_report_profile_path(@report_profile), method: :post do %>
+  <%= form_with url: generate_adm_deficiency_reports_report_profile_path(@report_profile), method: :post, class: "mb-4" do |f| %>
+    <%= f.check_box :deliver, label: t(".deliver") %>
+    <div class="d-flex flex-wrap align-items-center gap-3">
       <%= kern_button(type: :submit, text: t(".generate"), icon: "summarize", aria: { describedby: "report-profile-generate-hint" }) %>
-    <% end %>
-    <p id="report-profile-generate-hint" class="kern-body kern-body--muted m-0"><%= t(".generate_hint") %></p>
-  </div>
+      <p id="report-profile-generate-hint" class="kern-body kern-body--muted m-0"><%= t(".generate_hint") %></p>
+    </div>
+  <% end %>
 
   <%= render Adm::IndexTableComponent.new(
         turbo_frame_id: "deficiency_report_management_reports_table",
@@ -71,14 +72,28 @@
             <%= management_report.sent_at ? l(management_report.sent_at, format: "%d.%m.%Y %H:%M") : t(".table.not_sent") %>
           </td>
           <td class="kern-table__cell">
-            <%= render Kern::Table::InlineActionsComponent.new do |actions| %>
-              <% actions.with_action(
-                label: t(".table.open"),
-                url: adm_deficiency_reports_management_report_path(management_report),
-                icon: "visibility",
-                data: { turbo_frame: "_top" }
-              ) %>
-            <% end %>
+            <div class="d-flex align-items-center gap-2">
+              <%= render Kern::Table::InlineActionsComponent.new do |actions| %>
+                <% actions.with_action(
+                  label: t(".table.open"),
+                  url: adm_deficiency_reports_management_report_path(management_report),
+                  icon: "visibility",
+                  data: { turbo_frame: "_top" }
+                ) %>
+              <% end %>
+              <% if Adm::DeficiencyReports::ManagementReportPolicy.new(current_user, management_report).retry? %>
+                <% retry_label = t("#{scope}.retry.button_label", date: l(management_report.created_at, format: "%d.%m.%Y %H:%M")) %>
+                <%= form_with url: retry_adm_deficiency_reports_management_report_path(management_report),
+                      method: :post, class: "d-flex", data: { turbo_frame: "_top" } do %>
+                  <button type="submit" class="px-2"
+                          style="background: none; border: none; line-height: 0; cursor: pointer;"
+                          title="<%= t("#{scope}.retry.button") %>"
+                          aria-label="<%= retry_label %>">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 20px; color: var(--kern-grey-600);">refresh</span>
+                  </button>
+                <% end %>
+              <% end %>
+            </div>
           </td>
         </tr>
       <% end %>

@@ -6,5 +6,6 @@ class DeficiencyReports::GenerateManagementReportJob < ApplicationJob
     report = DeficiencyReport::ManagementReport.find(management_report_id)
 
     DeficiencyReports::ManagementReports::Generate.call(report)
+    DeficiencyReports::ManagementReports::Deliver.call(report) if report.reload.deliverable?
   end
 end

@@ -444,6 +444,10 @@ de:
           text_placeholder: Ihre Antwortvorlage...
           submit: Speichern
       management_reports:
+        retry:
+          success: Der Bericht wird erneut erstellt.
+          button: Erneut versuchen
+          button_label: "Erneut versuchen: %{date}"
         sections:
           incoming_and_closed: Eingang und Abschluss
           status_overview: Statusübersicht
@@ -507,9 +511,10 @@ de:
             status: Status
             actions: Aktionen
         show:
+          deliver: Bericht per E-Mail an die Empfänger senden
           page_hint: Hier finden Sie alle Berichte, die mit diesem Profil erstellt wurden.
           generate: Jetzt erstellen
-          generate_hint: Erstellt einen Bericht für den Zeitraum seit dem letzten versendeten Bericht. Der Bericht wird nicht per E-Mail versendet.
+          generate_hint: Erstellt einen Bericht für den Zeitraum seit dem letzten versendeten Bericht. Ohne Versand wird er nur im Archiv abgelegt.
           edit: Profil bearbeiten
           no_items_title: Noch keine Berichte
           no_items_description: Sobald ein Bericht erstellt wurde, erscheint er hier.
@@ -524,6 +529,7 @@ de:
             actions: Aktionen
         generate:
           success: Der Bericht wird erstellt. Das dauert in der Regel einige Minuten.
+          success_with_delivery: Der Bericht wird erstellt und anschließend an die Empfänger gesendet. Das dauert in der Regel einige Minuten.
         new:
           title: Neues Berichtsprofil
         create:

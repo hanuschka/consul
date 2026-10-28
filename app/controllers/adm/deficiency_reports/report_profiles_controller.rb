@@ -82,8 +82,10 @@ class Adm::DeficiencyReports::ReportProfilesController < Adm::DeficiencyReports:
   def generate
     authorize @report_profile, policy_class: Adm::DeficiencyReports::ReportProfilePolicy
 
-    DeficiencyReport::ManagementReport.start_for(@report_profile, trigger: :manual)
-    redirect_to adm_deficiency_reports_report_profile_path(@report_profile), notice: t(".success")
+    deliver = params[:deliver] == "1"
+    DeficiencyReport::ManagementReport.start_for(@report_profile, trigger: :manual, deliver: deliver)
+    redirect_to adm_deficiency_reports_report_profile_path(@report_profile),
+                notice: t(deliver ? ".success_with_delivery" : ".success")
   end
 
   private

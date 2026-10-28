@@ -87,6 +87,13 @@
         <span class="kern-icon kern-icon--danger" aria-hidden="true"></span>
         <span class="kern-title"><%= t(".failed") %></span>
       </div>
+      <% if Adm::DeficiencyReports::ManagementReportPolicy.new(current_user, @management_report).retry? %>
+        <div class="kern-alert__body">
+          <%= form_with url: retry_adm_deficiency_reports_management_report_path(@management_report), method: :post do %>
+            <%= kern_button(type: :submit, text: t("adm.deficiency_reports.management_reports.retry.button"), icon: "refresh", style: :secondary) %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   <% else %>
     <div class="kern-alert kern-alert--info" role="status">

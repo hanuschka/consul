@@ -33,7 +33,9 @@ namespace :adm do
         post :generate
       end
     end
-    resources :management_reports, only: :show
+    resources :management_reports, only: :show do
+      post :retry, on: :member
+    end
     resources :districts, only: [:index, :edit, :update]
 
     resources :areas, except: :show do

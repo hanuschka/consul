@@ -14,6 +14,14 @@ class Adm::DeficiencyReports::ManagementReportsController < Adm::DeficiencyRepor
     end
   end
 
+  def retry
+    @management_report = DeficiencyReport::ManagementReport.find(params[:id])
+    authorize @management_report, policy_class: Adm::DeficiencyReports::ManagementReportPolicy
+
+    @management_report.retry!
+    redirect_to adm_deficiency_reports_report_profile_path(@management_report.report_profile), notice: t(".success")
+  end
+
   private
 
     def breadcrumbs

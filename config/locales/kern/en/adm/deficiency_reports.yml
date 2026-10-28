@@ -444,6 +444,10 @@ en:
           text_placeholder: Your response template...
           submit: Save
       management_reports:
+        retry:
+          success: The report is being created again.
+          button: Try again
+          button_label: "Try again: %{date}"
         sections:
           incoming_and_closed: Incoming and closed
           status_overview: Status overview
@@ -507,9 +511,10 @@ en:
             status: Status
             actions: Actions
         show:
+          deliver: E-mail the report to the recipients
           page_hint: All reports created with this profile.
           generate: Create now
-          generate_hint: Creates a report for the time since the last sent report. The report is not e-mailed.
+          generate_hint: Creates a report for the time since the last sent report. Without sending, it is only stored in the archive.
           edit: Edit profile
           no_items_title: No reports yet
           no_items_description: Reports appear here once they have been created.
@@ -524,6 +529,7 @@ en:
             actions: Actions
         generate:
           success: The report is being created. This usually takes a few minutes.
+          success_with_delivery: The report is being created and will then be sent to the recipients. This usually takes a few minutes.
         new:
           title: New report profile
         create:

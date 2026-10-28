@@ -5,6 +5,10 @@ class Adm::DeficiencyReports::ManagementReportPolicy < ApplicationPolicy
     deficiency_report_manager? || recipient?
   end
 
+  def retry?
+    deficiency_report_manager? && @record.failed?
+  end
+
   private
 
     def recipient?

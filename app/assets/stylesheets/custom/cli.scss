@@ -78,9 +78,32 @@ h1.no-narrative-line {
     }
   }
 
-  @media (max-width: 40em) {
-    .top-bar--title-logo-top, .top-bar--title-logo-stikcy {
-      max-width: 180px;
+  @media (max-width: $mobile-viewport-start) {
+    .top-bar-wrapper .top-bar {
+      flex-direction: row;
+      width: 100%;
+    }
+
+    .top-bar .top-bar--title {
+      display: block;
+      flex: 0 1 auto;
+      min-width: 0;
+      max-width: 200px;
+      margin-right: 1rem;
+
+      img {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 40px;
+      }
+    }
+
+    .top-bar .header--mobile-hamburger-menu {
+      order: 1;
+      flex-shrink: 0;
+      margin-left: auto;
+      margin-right: 0;
     }
   }
 
@@ -91,28 +114,12 @@ h1.no-narrative-line {
         background-color: #fff;
         color: #0ab4ff;
       }
-
-      .top-bar--title-logo-top {
-        display: block;
-      }
-
-      .top-bar--title-logo-stikcy {
-        display: none;
-      }
     }
 
     .top-bar-wrapper.sticky-header {
       a.button.sign-in-button.-brand {
         background-color: #0ab4ff;
         color: #fff;
-      }
-
-      .top-bar--title-logo-top {
-        display: none;
-      }
-
-      .top-bar--title-logo-stikcy {
-        display: block;
       }
     }
   }

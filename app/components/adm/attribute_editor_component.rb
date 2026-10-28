@@ -110,6 +110,10 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     @options[:hide_label] == true
   end
 
+  def field_token(kind)
+    Adm::AttributeEditorToken.generate(@record, @attribute, kind)
+  end
+
   private
 
     def update_policy

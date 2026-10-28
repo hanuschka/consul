@@ -1,6 +1,7 @@
 <%= form_with model: @record, url: path do |form| %>
   <%= hidden_field_tag :kind, "text" %>
   <%= hidden_field_tag :attribute, @attribute %>
+  <%= hidden_field_tag :field_token, field_token("text") %>
   <%= hidden_field_tag :wide, true if @options[:wide] %>
   <%= hidden_field_tag :divider, @options[:divider] if @options.key?(:divider) %>
 

@@ -73,7 +73,12 @@ describe "Vorhabenliste settings in /adm", type: :request do
     def switch_on(key)
       setting = Setting.find_by!(key: key)
       patch adm_attribute_path(record_type: "setting", id: setting.id),
-            params: { attribute: "value", kind: "boolean", setting: { value: "true" } }
+            params: {
+              attribute: "value",
+              kind: "boolean",
+              field_token: Adm::AttributeEditorToken.generate(setting, "value", "boolean"),
+              setting: { value: "true" }
+            }
     end
 
     it "works for an administrator" do

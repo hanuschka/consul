@@ -80,7 +80,7 @@ module Budgets
       resolve_landing_page_for_projekt(@investment.projekt)
 
       if !@investment.projekt.visible_for?(current_user)
-        @individual_group_value_names = @investment.projekt.individual_group_values.pluck(:name)
+        @individual_group_value_names = @investment.projekt.individual_group_values.map(&:name)
         render "custom/pages/forbidden", layout: false
 
       elsif Setting.new_design_enabled?

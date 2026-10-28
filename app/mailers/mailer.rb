@@ -257,18 +257,6 @@ class Mailer < ApplicationMailer
     mail(to: @email_to.email, subject: @email.subject) if @email.can_be_sent?
   end
 
-  def machine_learning_error(user)
-    @email_to = user.email
-
-    mail(to: @email_to, subject: t("mailers.machine_learning_error.subject"))
-  end
-
-  def machine_learning_success(user)
-    @email_to = user.email
-
-    mail(to: @email_to, subject: t("mailers.machine_learning_success.subject"))
-  end
-
   def already_confirmed(user)
     @email_to = user.email
     @user = user
@@ -297,8 +285,10 @@ class Mailer < ApplicationMailer
     @author = User.find_by(id: formular_answer.submitter_id)
     return if @author.blank?
 
-    @email_to = @author.email
     @projekt_phase = formular_answer.formular.projekt_phase
+    return if formular_answer.email_address.to_s.strip.casecmp?(@author.email.to_s)
+
+    @email_to = @author.email
 
     with_user(@author) do
       mail_with_custom_template(@projekt_phase, {

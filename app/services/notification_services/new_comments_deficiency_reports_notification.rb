@@ -2,6 +2,24 @@
 
 module NotificationServices
   class NewCommentsDeficiencyReportsNotification < ApplicationService
+    def self.deliver(deficiency_report, last_notified_time, initial: false)
+      if deficiency_report.responsible.is_a?(DeficiencyReport::OfficerGroup)
+        NotificationServiceMailer
+          .with(initial: initial)
+          .new_comments_for_deficiency_report(deficiency_report, last_notified_time)
+          .deliver_now
+      end
+
+      return unless deficiency_report.email_officers_individually?
+
+      deficiency_report.responsible_officers.each do |officer|
+        NotificationServiceMailer
+          .with(officer: officer, initial: initial)
+          .new_comments_for_deficiency_report(deficiency_report, last_notified_time)
+          .deliver_now
+      end
+    end
+
     def initialize
       @threshold_date = 14.days.ago
     end
@@ -25,12 +43,7 @@ module NotificationServices
 
         deficiency_report.update!(notified_officer_about_new_comments_datetime: Time.current)
 
-        if new_comments.exists?
-          NotificationServiceMailer.new_comments_for_deficiency_report(
-            deficiency_report,
-            last_notified_time
-          ).deliver_now
-        end
+        self.class.deliver(deficiency_report, last_notified_time) if new_comments.exists?
       end
   end
 end

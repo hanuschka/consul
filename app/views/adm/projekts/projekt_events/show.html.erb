@@ -74,8 +74,8 @@
     elsif @projekt_event.open_ended?
       schedule_rows << { label: t("adm.projekts.projekt_events.form.open_ended_label"), value: human_boolean(true) }
     end
-    if @projekt_event.weblink.present?
-      schedule_rows << { label: t("adm.projekts.projekt_events.form.weblink_label"), value: link_to(@projekt_event.weblink, @projekt_event.weblink, target: "_blank", rel: "noopener") }
+    if @projekt_event.weblink_url.present?
+      schedule_rows << { label: t("adm.projekts.projekt_events.form.weblink_label"), value: link_to(@projekt_event.weblink_url, @projekt_event.weblink_url, target: "_blank", rel: "noopener") }
     end
   %>
 
@@ -104,10 +104,11 @@
   <%# === Section: Registration === %>
   <%
     registration_rows = [
-      { label: t("adm.projekts.projekt_events.form.max_attendees_label"), value: @projekt_event.max_attendees.presence || t(".registration_disabled") },
-      { label: t(".confirmed_count"), value: @projekt_event.projekt_event_registrations.where(status: "confirmed").count },
-      { label: t(".waitlisted_count"), value: @projekt_event.projekt_event_registrations.where(status: "waitlisted").count }
+      { label: t("adm.projekts.projekt_events.form.registration_enabled_label"), value: human_boolean(@projekt_event.registration_enabled?) }
     ]
+    registration_rows << { label: t("adm.projekts.projekt_events.form.max_attendees_label"), value: @projekt_event.max_attendees.presence || t(".unlimited") } if @projekt_event.registration_enabled?
+    registration_rows << { label: t(".confirmed_count"), value: @projekt_event.projekt_event_registrations.where(status: "confirmed").count }
+    registration_rows << { label: t(".waitlisted_count"), value: @projekt_event.projekt_event_registrations.where(status: "waitlisted").count }
     registration_rows << { label: t("adm.projekts.projekt_events.form.admin_emails_label"), value: @projekt_event.admin_emails } if @projekt_event.admin_emails.present?
   %>
 

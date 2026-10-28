@@ -28,6 +28,9 @@ module Whatsapp::ParticipationRules
     submissions_limit_exceeded:
       "The citizen has already submitted as many contributions as this phase allows.",
     archived: "This contribution has been archived, and an archived one takes no more supports.",
+    own_proposal:
+      "This is the citizen's own proposal, and its author cannot support it. Call it their own " \
+      "proposal; do not offer a support for it.",
     supports_limit_exceeded:
       "The citizen has already supported as many contributions as this phase allows. Taking one " \
       "of those supports back frees a place.",

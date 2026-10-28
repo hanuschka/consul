@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "comments_controller").to_s
+load Rails.root.join("app", "controllers", "comments_controller.rb")
 
 class CommentsController < ApplicationController
   include GuestUsers

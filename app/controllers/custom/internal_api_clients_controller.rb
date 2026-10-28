@@ -36,12 +36,6 @@ class InternalApiClientsController < ApplicationController
         projekt_manager_projekt_ids:
       )
 
-    if dt_response.present? && dt_response.code != 200
-      2.times { puts "" }
-      Rails.logger.error("Error connection to server. HTTP code: #{dt_response.code}, message: #{dt_response.message}, response: #{dt_response.response}, url: #{dt_response.request.uri}")
-      2.times { puts "" }
-    end
-
     redirect_url = dt_response["redirect_url"]
     redirect_type = dt_response["redirect_type"]
 

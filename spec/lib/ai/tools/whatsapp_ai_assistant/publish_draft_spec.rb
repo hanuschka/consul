@@ -26,6 +26,8 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
     )
   end
 
+  after { Current.reset }
+
   before do
     allow(Whatsapp::Drafting::ResourceCreationValidationService).to receive(:call).and_return(nil)
     allow(Whatsapp::Drafting::SubmissionAuthorService).to receive(:call).and_return(user)
@@ -150,13 +152,12 @@ describe Ai::Tools::WhatsappAiAssistant::PublishDraft do
       tool.execute
     end
 
-    # The reply after it carries the new proposal's state pills (Whatsapp::StatePills).
-    it "keeps the published proposal in focus for the reply" do
+    # The reply after it carries the next steps after a submission
+    # (Whatsapp::StatePills).
+    it "puts the completed submission in focus for the reply" do
       tool.execute
 
-      expect(Current.whatsapp_pill_focus).to eq(proposal_id: 77)
-    ensure
-      Current.reset
+      expect(Current.whatsapp_pill_focus).to eq(submission_completed: true, projekt_phase_id: 7)
     end
 
     context "when the phase holds contributions for review" do

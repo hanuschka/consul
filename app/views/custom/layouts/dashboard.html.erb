@@ -13,6 +13,7 @@
       <%= stylesheet_link_tag "custom_new_design" %>
     <% end %>
 
+    <%= javascript_include_tag "packs/charts_vendor", "data-turbolinks-track" => "reload" %>
     <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
     <%= javascript_include_tag "elements", "data-turbolinks-track" => "reload" %>
     <%= csrf_meta_tags %>

@@ -24,7 +24,7 @@
     <% @statuses.each do |status| %>
       <tr id="<%= dom_id(status) %>" data-answer-id="<%= status.id %>">
         <td><%= status.title %></td>
-        <td><%= "<i class=\"fas fa-#{status.icon}\" style=\"color:#{status.color}\"></i>".html_safe if status.icon %></td>
+        <td><%= tag.i(class: ["fas", "fa-#{status.icon}"], style: "color:#{status.color}") if status.icon %></td>
         <td><%= status.color %></td>
         <td><%= status.reminder_delay %></td>
         <td><%= t("shared.#{status.archive_reports ? 'yes' : 'no'}") %></td>

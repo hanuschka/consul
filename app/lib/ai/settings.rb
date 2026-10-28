@@ -1,13 +1,18 @@
 module Ai::Settings
-  DEFAULT_GPT_MODEL = "gpt-5.6-sol"
+  # The tier above DEFAULT_GPT_MODEL, for work where the quality of the answer
+  # outweighs its cost.
+  HEAVY_MODEL = "gpt-6-astra".freeze
 
-  # Cheaper tiers of the same generation, for calls that classify pre-filtered
-  # candidates rather than generate prose. Read them through fast_model and
-  # ultrafast_model, never directly: the names exist only on OpenAI itself, as
-  # does DEFAULT_GPT_MODEL read through big_model.
-  FAST_MODEL = "gpt-5.6-terra".freeze
-  ULTRAFAST_MODEL = "gpt-5.6-luna".freeze
-  private_constant :FAST_MODEL, :ULTRAFAST_MODEL
+  # The tiers below MEDIUM_MODEL are for calls that classify pre-filtered
+  # candidates rather than generate prose. Read all of them through
+  # heavy_model, medium_model, light_model and ultrafast_model, never directly:
+  # the names exist only on OpenAI itself, as does DEFAULT_GPT_MODEL read
+  # through big_model.
+  MEDIUM_MODEL = "gpt-6.1-sol".freeze
+  LIGHT_MODEL = "gpt-6.1-terra".freeze
+  ULTRAFAST_MODEL = "gpt-6-luna".freeze
+
+  DEFAULT_GPT_MODEL = MEDIUM_MODEL
 
   # A temporary control for comparing the three tiers against each other on the
   # staging system, read by the WhatsApp chat services and nothing else. When
@@ -141,6 +146,10 @@ module Ai::Settings
     Setting["ai.llm_provider"].presence || "openai"
   end
 
+  def self.heavy_model
+    openai_tier_model(HEAVY_MODEL)
+  end
+
   # The big tier names DEFAULT_GPT_MODEL rather than current_llm_model so the
   # three tiers stay the three models being compared: an instance that has
   # moved ai.llm_model onto one of the cheaper ids would otherwise offer the
@@ -149,8 +158,12 @@ module Ai::Settings
     openai_tier_model(DEFAULT_GPT_MODEL)
   end
 
-  def self.fast_model
-    openai_tier_model(FAST_MODEL)
+  def self.medium_model
+    openai_tier_model(MEDIUM_MODEL)
+  end
+
+  def self.light_model
+    openai_tier_model(LIGHT_MODEL)
   end
 
   def self.ultrafast_model
@@ -183,7 +196,7 @@ module Ai::Settings
     when WHATSAPP_TIER_ULTRAFAST
       ultrafast_model
     else
-      fast_model
+      medium_model
     end
   end
 

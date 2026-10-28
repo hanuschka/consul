@@ -29,6 +29,7 @@ en:
           districts: Areas
           officer_groups: Officer groups
           stats: Statistics
+          report_profiles: Reports
           ai_settings: AI settings
       email_templates:
         tabs:
@@ -146,10 +147,11 @@ en:
           votes: Ratings
           comments: Comments
           answer_template_label: Response template
-          answer_template_hint: >
-            Choose a pre-built response template to automatically insert the text into the response field. The template can then be customized individually. Response templates are managed under "Response templates" in the sidebar.
           answer_template_prompt: "— Select template —"
           official_answer: Official response
+          reporter_answer: "Answer to the reporter (e-mail)"
+          reporter_answer_hint: "Sent to the reporter by e-mail and not shown publicly."
+          public_answer: "Public answer (web)"
           official_answer_hint: "Enter the official response to this report here. Note: this text is publicly visible."
           official_answer_documents: Documents for the response
           official_answer_documents_hint: >-
@@ -440,6 +442,142 @@ en:
           text_label: Text
           text_hint: The text of the response template is inserted as default content into the response field when an officer selects this template. The text can be customized before sending. Phrase the text in a citizen-friendly and factual way, since it appears publicly on the report as the administration's official response.
           text_placeholder: Your response template...
+          submit: Save
+      management_reports:
+        retry:
+          success: The report is being created again.
+          button: Try again
+          button_label: "Try again: %{date}"
+        sections:
+          incoming_and_closed: Incoming and closed
+          status_overview: Status overview
+          top_categories: Top categories
+          open_and_overdue: Open and overdue reports
+          frequent_topics: Frequently reported topics
+          notable_items: Notable reports
+        show:
+          title: "Report: %{name}"
+          period: Period
+          profile: Report profile
+          generated_at: Created at
+          download_pdf: Download PDF
+          ai_notice: The text in this report was written with AI. The figures come directly from the database.
+          report_link: "Report %{id}"
+          no_statements: There is no summary for this section.
+          pending: The report is being created. Reload the page in a few minutes.
+          failed: The report could not be created.
+        figures:
+          incoming: Incoming reports
+          closed: Closed reports
+          open: Open reports in total
+          overdue: Of which overdue
+          comments:
+            one: "%{count} comment"
+            other: "%{count} comments"
+          supports:
+            one: "%{count} support"
+            other: "%{count} supports"
+        statuses:
+          pending: Waiting
+          processing: Being created
+          completed: Created
+          failed: Failed
+        triggers:
+          manual: Manual
+          scheduled: Scheduled
+      report_profiles:
+        index:
+          title: Reports
+          page_hint: "Report profiles create an AI-assisted summary of incoming reports on a schedule and e-mail it to their recipients. Reports are internal only and never published."
+          new_report_profile: New report profile
+          no_items_title: No report profiles yet
+          no_items_description: Create a report profile to send a regular summary.
+          paused: Paused
+          active: Active
+          pause: Pause
+          resume: Resume
+          edit: Edit
+          delete: Delete
+          delete_confirm: Delete report profile "%{name}"?
+          schedule_weekly: "Weekly, %{weekday}, %{time}"
+          schedule_monthly: "Monthly on day %{day}, %{time}"
+          recipients:
+            one: 1 recipient
+            other: "%{count} recipients"
+          table:
+            name: Name
+            schedule: Schedule
+            recipients: Recipients
+            status: Status
+            actions: Actions
+        show:
+          deliver: E-mail the report to the recipients
+          page_hint: All reports created with this profile.
+          generate: Create now
+          generate_hint: Creates a report for the time since the last sent report. Without sending, it is only stored in the archive.
+          edit: Edit profile
+          no_items_title: No reports yet
+          no_items_description: Reports appear here once they have been created.
+          table:
+            created_at: Created at
+            period: Period
+            trigger: Trigger
+            status: Status
+            sent_at: Sent
+            not_sent: Not sent
+            open: Open
+            actions: Actions
+        generate:
+          success: The report is being created. This usually takes a few minutes.
+          success_with_delivery: The report is being created and will then be sent to the recipients. This usually takes a few minutes.
+        new:
+          title: New report profile
+        create:
+          success: Report profile created.
+        edit:
+          title: Edit report profile
+        update:
+          success: Report profile saved.
+        destroy:
+          success: Report profile deleted.
+        pause:
+          success: Report profile "%{name}" is paused and sends no reports.
+        resume:
+          success: Report profile "%{name}" is active again.
+        form:
+          name_label: Name
+          name_hint: Shown in the overview, the e-mail subject and the report.
+          name_placeholder: e.g. Mayor
+          building_blocks_label: Content
+          building_blocks_hint: The report has a short section for each selected item.
+          building_blocks:
+            incoming_and_closed: Incoming and closed reports in the period
+            status_overview: Status overview
+            top_categories: Top categories
+            open_and_overdue: Open and overdue reports
+            frequent_topics: Frequently reported topics
+            notable_items: Notable reports, e.g. many comments or supports
+          categories_label: Categories
+          categories_hint: Only include reports in these categories. Leave empty to include all.
+          officer_groups_label: Officer groups
+          officer_groups_hint: Only include reports assigned to these groups. Leave empty to include all.
+          instructions_label: Instructions for the summary
+          instructions_hint: Optional. Focus, tone or length, e.g. "Ignore anything about street lights".
+          frequency_label: Frequency
+          frequency_hint: Each report covers the time since the previous one.
+          frequencies:
+            weekly: Weekly
+            monthly: Monthly
+          weekday_label: Weekday
+          day_of_month_label: Day of month
+          day_of_month_hint: Days 1 to 28, so the report goes out every month.
+          hour_label: Time
+          hour_option: "%{hour}:00"
+          recipient_users_label: Recipients with access
+          recipient_users_hint: People with access to deficiency reports. The e-mail links them to the report in the administration.
+          no_eligible_recipients: Nobody has access to deficiency reports yet.
+          recipient_emails_label: Other e-mail addresses
+          recipient_emails_hint: For people without access. One address per line. They receive the report as a PDF attachment only.
           submit: Save
       officer_groups:
         index:

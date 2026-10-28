@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "images_helper").to_s
+load Rails.root.join("app", "helpers", "images_helper.rb")
 
 module ImagesHelper
  def render_image_attachment(builder, imageable, image)

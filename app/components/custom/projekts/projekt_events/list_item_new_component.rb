@@ -9,4 +9,10 @@ class Projekts::ProjektEvents::ListItemNewComponent < ApplicationComponent
     @projekt_event = projekt_event
     @show_projekt_link = show_projekt_link
   end
+
+  private
+
+    def weblink_url
+      @weblink_url ||= projekt_event.weblink_url
+    end
 end

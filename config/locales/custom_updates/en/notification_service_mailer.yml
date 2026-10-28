@@ -17,7 +17,7 @@ en:
         fresh_hint: Reports marked "%{label}" became overdue today.
         no_responsible: no officer assigned
       new_comments_for_deficiency_report:
-        subject: "Kommentar zur Mangelmeldung (%{deficiency_report_title}) wurde noch nicht bearbeitet"
+        subject: "Comment on the deficiency report (%{deficiency_report_title}) has not been handled yet"
         hi: Dear Officer.
         p1_initial: You have just been assigned the following comment on a deficiency report for processing.
         p1_reminder: You were recently assigned a comment on a deficiency report that has not yet been processed.

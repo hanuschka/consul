@@ -402,20 +402,29 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       # the next turn reads back as fact.
       body = retried.presence || body
 
-      record_missed_actions
+      question_follows = ::Whatsapp::BallotResume.question_follows_reply?(@conversation)
+
+      if !question_follows
+        record_missed_actions
+      end
+
       record_skipped_preview
 
-      # Through the way-out send rather than text, and it is the one path that has to
-      # use it: this composes no buttons of its own, so without the pill the message
-      # would be an interactive one with nothing in it, which WhatsApp refuses
-      # outright. It is also honestly a dead end — the model answered in words and
-      # named no next step — which is what the pill is now for. The state pills of
-      # what the turn was about go on it all the same (Whatsapp::StatePills).
-      message = ::Whatsapp::Send.buttons_with_way_out(
-        account: @conversation.whatsapp_account,
-        body: body,
-        buttons: ::Whatsapp::StatePills.buttons(conversation: @conversation)
-      )
+      # Plain text where the ballot question follows with its own buttons, since a
+      # way-out or state pill under the words would be a second set
+      # (Whatsapp::BallotResume). Otherwise it is honestly a dead end — the model
+      # answered in words and named no next step — so the way-out send carries the
+      # pill and the state pills of what the turn was about (Whatsapp::StatePills).
+      message =
+        if question_follows
+          ::Whatsapp::Send.text(account: @conversation.whatsapp_account, body: body)
+        else
+          ::Whatsapp::Send.buttons_with_way_out(
+            account: @conversation.whatsapp_account,
+            body: body,
+            buttons: ::Whatsapp::StatePills.buttons(conversation: @conversation)
+          )
+        end
 
       # A refused send is not an answer. Reported as its own failure so the
       # caller says so and offers the retry pill, and — because the failure
@@ -450,6 +459,7 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       return if @reasked_empty_reply
       return if turn.chat.blank?
       return if @tool_calls_made >= MAX_TOOL_CALLS
+      return if buttons_withheld?
 
       keep_waiting_visible
 
@@ -468,6 +478,15 @@ class Whatsapp::AiAssistant::RouterService < ApplicationService
       drop_failed_retry(turn.chat, messages_before_retry)
 
       nil
+    end
+
+    # Asking for the reply again with buttons pays for buttons the send then drops
+    # where the ballot question follows with its own (Whatsapp::BallotResume). The
+    # preview retry still runs: a comment written mid-ballot still has to be shown.
+    def buttons_withheld?
+      return false if @conversation.unshown_preview_kind.present?
+
+      ::Whatsapp::BallotResume.question_follows_reply?(@conversation)
     end
 
     # The first answer still goes out after a retry that raised, and the turn is stored

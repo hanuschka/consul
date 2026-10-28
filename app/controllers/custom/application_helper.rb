@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "application_helper").to_s
+load Rails.root.join("app", "helpers", "application_helper.rb")
 
 module ApplicationHelper
   def url_to_footer_tab(

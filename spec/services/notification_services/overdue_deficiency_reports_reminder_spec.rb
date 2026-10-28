@@ -215,14 +215,16 @@ describe NotificationServices::OverdueDeficiencyReportsReminder do
       expect(overview_recipient_ids).to be_empty
     end
 
-    it "treats a report under a status without any delay as overdue on the same day" do
-      immediate_status = create(:deficiency_report_status, reminder_delay: 0)
-      report = create_report(responsible: officer, days_stuck: 0, report_status: immediate_status)
+    it "sends no reminder for a status whose reminder value is 0" do
+      disabled_status = create(:deficiency_report_status, reminder_delay: 0)
+      create_report(responsible: officer, days_stuck: 0, report_status: disabled_status)
+      create_report(responsible: officer, days_stuck: 30, report_status: disabled_status)
+      oversight_officer
 
       described_class.new.call
 
-      expect(personal_digest_for(officer)[:report_ids]).to eq [report.id]
-      expect(overview_for(oversight_officer)[:fresh_ids]).to eq [report.id]
+      expect(personal_recipient_ids).to be_empty
+      expect(overview_recipient_ids).to be_empty
     end
   end
 
@@ -307,6 +309,15 @@ describe NotificationServices::OverdueDeficiencyReportsReminder do
 
     it "ignores reports that already carry an official answer" do
       create_report(responsible: officer, official_answer: "Already taken care of")
+
+      described_class.new.call
+
+      expect(personal_recipient_ids).to be_empty
+      expect(overview_recipient_ids).to be_empty
+    end
+
+    it "ignores reports that carry only a reporter answer" do
+      create_report(responsible: officer, reporter_answer: "Persönliche Rückmeldung")
 
       described_class.new.call
 

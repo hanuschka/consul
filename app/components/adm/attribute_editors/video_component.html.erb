@@ -1,6 +1,7 @@
 <%= form_with model: @record, url: path do |form| %>
   <%= hidden_field_tag :kind, "video" %>
   <%= hidden_field_tag :attribute, @attribute %>
+  <%= hidden_field_tag :field_token, field_token("video") %>
 
   <%= render Kern::Form::VideoComponent.new(form: form, attribute: @attribute, auto_submit: true, disabled: disabled?) %>
 <% end %>

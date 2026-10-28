@@ -61,8 +61,8 @@ en:
         index_order_upcoming_title: 'The "Future project plans" tab lists participation projects that will only take place in the future.'
         index_order_individual_list: "Individual list"
         index_order_individual_list_title: "Individual list"
-        index_order_drafts: "Entwürfe"
-        index_order_drafts_title: "Entwürfe"
+        index_order_drafts: "Drafts"
+        index_order_drafts_title: "Drafts"
       search_form:
         placeholder: Search...
       homepage_search_form:

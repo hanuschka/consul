@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "verification", "residence_controller").to_s
+load Rails.root.join("app", "controllers", "verification", "residence_controller.rb")
 
 class Verification::ResidenceController < ApplicationController
   include HasRegisteredAddress
@@ -23,7 +23,8 @@ class Verification::ResidenceController < ApplicationController
 
     if @residence.save
       NotificationServices::NewManualVerificationRequestNotifier.call(current_user.id) if Setting["feature.melderegister"].blank?
-      redirect_to account_path, notice: t("custom.verification.residence.create.flash.success_manual")
+      redirect_to session.delete(:verification_return_path).presence || account_path,
+                  notice: t("custom.verification.residence.create.flash.success_manual")
     else
       if Setting["feature.melderegister"].present? && @residence.user.verified?
         NotificationServices::UserReverificationFailedNotifier.call(@residence.user.id)

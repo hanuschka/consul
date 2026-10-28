@@ -38,6 +38,8 @@ en:
             Enables sending an automatic confirmation email to the email address entered in the form.
             Users receive a confirmation after submission with the subject and text you define.
             Suitable for forms where a receipt or submission confirmation is desired.
+            If the address entered matches the signed-in account's email, only this confirmation is sent –
+            the general submission email from the "System emails" tab is skipped.
           email_for_confirmation_subject_label: Confirmation email subject
           email_for_confirmation_subject_hint: >
             Enter the subject of the automatic confirmation email sent to the user after form submission.

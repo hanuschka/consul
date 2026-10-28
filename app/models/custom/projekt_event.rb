@@ -16,8 +16,11 @@ class ProjektEvent < ApplicationRecord
   validates :title, presence: true
   validates :datetime, presence: true
   validates :max_attendees, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
+  validates :weblink, format: { with: WebLink::HTTP_SCHEME }, allow_blank: true, if: :weblink_changed?
 
   before_validation :nullify_zero_max_attendees
+  before_validation :clear_max_attendees_without_registration
+  before_validation :normalize_weblink
 
   default_scope { order(datetime: :asc) }
 
@@ -37,12 +40,12 @@ class ProjektEvent < ApplicationRecord
     joins(projekt_phase: :projekt).merge(Projekt.activated).merge(ProjektPhase.active)
   }
 
-  def registration_enabled?
-    max_attendees.present?
-  end
-
   def started?
     datetime.present? && datetime <= Time.zone.now
+  end
+
+  def attendee_limit?
+    max_attendees.present?
   end
 
   def spots_available
@@ -50,7 +53,7 @@ class ProjektEvent < ApplicationRecord
   end
 
   def fully_booked?
-    registration_enabled? && spots_available <= 0
+    attendee_limit? && spots_available <= 0
   end
 
   def registrations_by(user)
@@ -65,9 +68,23 @@ class ProjektEvent < ApplicationRecord
     admin_emails.split(",").map { |e| e.strip.downcase }.include?(email.downcase)
   end
 
+  def weblink_url
+    WebLink.normalize(weblink)
+  end
+
   private
 
     def nullify_zero_max_attendees
       self.max_attendees = nil if max_attendees == 0
+    end
+
+    def clear_max_attendees_without_registration
+      self.max_attendees = nil unless registration_enabled?
+    end
+
+    def normalize_weblink
+      return if weblink.blank?
+
+      self.weblink = weblink_url || weblink
     end
 end

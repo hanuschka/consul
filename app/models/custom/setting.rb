@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "setting").to_s
+load Rails.root.join("app", "models", "setting.rb")
 
 class Setting < ApplicationRecord
   AI_GATED_KEYS = %w[
@@ -268,6 +268,7 @@ class Setting < ApplicationRecord
         "process.municipal_plans": false,
         "municipal_plans.officers_see_all": false,
         "municipal_plans.auto_archive": false,
+        "municipal_plans.procedure_steps": false,
         "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,
@@ -389,6 +390,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.external_video": true,
         "deficiency_reports.voice_assistant": false,
         "deficiency_reports.send_feedback_form_link": false,
+        "deficiency_reports.separate_reporter_answer": false,
         "deficiency_reports.show_create_report_button": "active",
         "deficiency_reports.show_homepage_cta": false,
         "deficiency_reports.feature_name": nil,

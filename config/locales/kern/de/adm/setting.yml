@@ -2,7 +2,7 @@ de:
   setting:
     handbook:
       url: Adresse des Nutzerhandbuchs
-      url_description: "Legt die Adresse des Nutzerhandbuchs fest, das in allen Dashboards unter „Hilfe“ angezeigt wird. Im Verwaltungsbereich erscheint in jedem Menü ganz unten der Eintrag „Hilfe“, der den passenden Abschnitt des Handbuchs öffnet. Die Adresse ist voreingestellt. Lassen Sie das Feld leer, um den Eintrag auszublenden."
+      url_description: "Legt die Adresse des Nutzerhandbuchs fest, das in allen Dashboards unter „Handbuch“ und in der Administration unter „Community“ angezeigt wird. Im Verwaltungsbereich erscheint in jedem Menü ganz unten der passende Eintrag, auf der Startseite der Administration zusätzlich eine Kachel. Die Adresse ist voreingestellt; lassen Sie das Feld leer, um Eintrag und Kachel auszublenden."
     proposals:
       email_on_official_answer: "E-Mail-Benachrichtigung bei offizieller Antwort (Vorschläge)"
       email_on_official_answer_description: "Versendet eine E-Mail an die einreichende Person, sobald zu ihrem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Die E-Mail enthält den Text der offiziellen Antwort sowie einen Link zum Vorschlag, auf der Vorschlagsseite selbst bleibt die Antwort wie bisher öffentlich sichtbar. Aktivieren Sie diese Einstellung, wenn Einreichende aktiv über die Rückmeldung der Verwaltung informiert werden sollen und nicht selbst auf die Plattform zurückkehren müssen."
@@ -115,13 +115,13 @@ de:
         content_types_description: "Bestimmt, welche Dateiformate beim Hochladen von Dokumenten zulässig sind. Aktivieren Sie nur die Formate, die Sie tatsächlich zulassen möchten, z. B. PDF für unveränderliche Dokumente."
     welcomepage:
       usage_stats: Nutzerübersicht
-      usage_stats_description: "Wenn aktiviert, wird auf der Startseite die Gesamtzahl aller registrierten Nutzer eingeblendet. Zusätzlich erscheint ein öffentlicher Link zur Nutzerübersichtsseite. Diese Funktion eignet sich, um die Reichweite der Plattform transparent darzustellen. Deaktivieren, wenn nicht gewünscht."
+      usage_stats_description: "Wenn aktiviert, zeigt die Startseite eine Karte mit den zuletzt registrierten Nutzerinnen und Nutzern. Die Gesamtzahl und der Link zur Nutzerübersicht erscheinen nur, wenn zusätzlich die Nutzerübersichtsseite aktiviert ist. Nicht angemeldete Besucher sehen außerdem einen Anmelde-Button. Aktivieren Sie diese Funktion, um die Reichweite der Plattform sichtbar zu machen."
       newsletter_subscription: Newsletter-Anmeldung
       newsletter_subscription_description: "Wenn aktiviert, wird auf der Startseite ein gut sichtbares Element zur Newsletter-Anmeldung eingeblendet. Eingeloggte Nutzer können sich direkt anmelden, nicht angemeldete Personen über ein separates Registrierungsformular. Für den tatsächlichen Versand wird ein separat konfigurierter Newsletter-Dienst benötigt."
       platform_activity: Plattformstatistik
-      platform_activity_description: "Wenn aktiviert, werden auf der Startseite zentrale Plattform-Kennzahlen eingeblendet – darunter die Anzahl der Projekte, Vorschläge, Abstimmungen und Kommentare. Die Werte aktualisieren sich automatisch und geben Besuchern einen schnellen Überblick über die Aktivität der Plattform."
+      platform_activity_description: "Wenn aktiviert, zeigt die Startseite zentrale Kennzahlen: Projekte, Vorschläge, Debatten, Abstimmungen und Kommentare. Kennzahlen mit dem Wert 0 werden ausgeblendet, die übrigen werden bei jedem Aufruf neu berechnet. Aktivieren Sie diese Funktion, um Besuchern einen schnellen Überblick über die Aktivität der Plattform zu geben."
       projekt_search: Projektsuche
-      projekt_search_description: "Wenn aktiviert, erscheint auf der Startseite eine Suchleiste, über die Nutzer gezielt nach Projekten suchen können. Diese Option und der Startseiten-Button schließen sich gegenseitig aus. Die Projektsuche eignet sich besonders bei Plattformen mit vielen laufenden oder geplanten Projekten."
+      projekt_search_description: "Wenn aktiviert, erscheint auf der Startseite eine Suchleiste, über die Nutzer gezielt nach Projekten suchen können. Sie wird zusätzlich zum Startseiten-Button angezeigt, wenn beide eingerichtet sind. Die Projektsuche eignet sich besonders für Plattformen mit vielen laufenden oder geplanten Projekten."
     extended_feature:
       projekts_overview_page_navigation:
         show_index_order_all: Alle Projekte
@@ -222,17 +222,17 @@ de:
     extended_option:
       general:
         city_name: Name der Stadt/Gemeinde
-        city_name_description: "Der hier hinterlegte Name der Stadt oder Gemeinde wird bei der BundID-Verifizierung herangezogen, um den im Melderegister hinterlegten Wohnort der Nutzer abzugleichen. So wird sichergestellt, dass nur Personen mit gemeldetem Wohnsitz in Ihrer Kommune an Beteiligungsverfahren teilnehmen können. Bitte tragen Sie den offiziellen Namen exakt so ein, wie er im Melderegister geführt wird."
+        city_name_description: "Der hier hinterlegte Name erscheint auf der Seite zur Wohnsitz-Verifizierung, etwa in „Verifizierung für Bürger:innen der Stadt …“. Er wird dort in die Hinweistexte für Nutzer eingesetzt. Tragen Sie den Namen so ein, wie er Bürgerinnen und Bürgern angezeigt werden soll."
         title: Titel der Anwendung
         title_description: "Dieser Titel wird großformatig innerhalb des Hintergrundbildes im oberen Bereich der Startseite angezeigt. Er dient als erster inhaltlicher Ankerpunkt für Besucher. Der Text sollte kurz und prägnant sein – ideal sind ein bis fünf Wörter. Wenn das Feld leer bleibt, wird kein Titel angezeigt."
         subtitle: Untertitel der Anwendung
-        subtitle_description: "Der Untertitel erscheint direkt unterhalb des Haupttitels im Hintergrundbild auf der Startseite. Er ermöglicht eine kurze ergänzende Information oder Beschreibung des Beteiligungsangebots. Formulieren Sie ihn als prägnanten Satz, der den Kontext der Plattform auf den Punkt bringt. Wenn das Feld leer bleibt, wird kein Untertitel angezeigt."
+        subtitle_description: "Der Untertitel erscheint direkt unterhalb des Haupttitels im Hintergrundbild der Startseite. Er wird nur angezeigt, wenn auch ein Titel eingetragen ist. Formulieren Sie ihn als prägnanten Satz, der den Kontext der Plattform auf den Punkt bringt."
         homepage_button_text: Homepage-Button-Text
         homepage_button_text_description: "Text, der auf dem Button im Hero-Bereich der Startseite angezeigt wird. Der Button dient als zentraler Call-to-Action für Besucher. Wählen Sie eine kurze, handlungsorientierte Beschriftung (z. B. 'Jetzt mitmachen' oder 'Projekte entdecken'). Wenn das Feld leer bleibt, wird kein Button angezeigt."
         homepage_button_link: Homepage-Button-Link
-        homepage_button_link_description: "Ziel-URL, die beim Klick auf den Homepage-Button aufgerufen wird. Sie können einen internen Pfad (z. B. /projekts) oder eine vollständige externe URL (z. B. https://beispiel.de) angeben. Der Link wird nur wirksam, wenn auch ein Button-Text eingetragen ist. Ohne Button-Text bleibt der Link unsichtbar."
+        homepage_button_link_description: "Ziel-URL, die beim Klick auf den Homepage-Button aufgerufen wird. Erlaubt sind interne Pfade, die mit / beginnen (z. B. /projekts), und vollständige Adressen mit http:// oder https://, die in einem neuen Tab öffnen. Bei anderen Angaben wird der Button nicht angezeigt, bleibt das Feld leer, führt er nirgendwohin. Der Link wirkt nur, wenn auch ein Button-Text eingetragen ist."
         homepage_navigation_link_color: Farbe der Links in der Top-Navigation
-        homepage_navigation_link_color_description: "Legt die Schriftfarbe der Links in der oberen Navigationsleiste der Startseite fest. Das ist wichtig, da das Hintergrundbild dunkel sein kann und die Lesbarkeit sichergestellt sein muss."
+        homepage_navigation_link_color_description: "Legt die Schriftfarbe der Links in der oberen Navigationsleiste der Startseite fest, solange sie über dem Headerbild liegt. Nach dem Scrollen werden die Links schwarz. Auf Smartphones wird nur das Menüsymbol eingefärbt, und Landingpages haben eine eigene Einstellung. Wählen Sie eine Farbe, die sich gut vom Headerbild abhebt."
       gdpr:
         devise_timeout_min: "Dauer von Nutzer-Sitzungen in Minuten"
         devise_timeout_min_description: >
@@ -304,6 +304,9 @@ de:
       auto_archive: Vorhaben automatisch archivieren
       auto_archive_description: >
         Archiviert ein Vorhaben selbsttätig, sobald das an ihm hinterlegte Archivdatum erreicht ist. Im Frontend verschwindet es zu diesem Zeitpunkt aus der Übersicht und bleibt im Archivbereich unter derselben Adresse erreichbar. Aktivieren Sie diese Funktion, wenn Ihre Fachbereiche das Ende eines Vorhabens verlässlich im Voraus eintragen und Sie sich das manuelle Archivieren sparen wollen.
+      procedure_steps: Verfahrensschritte verwenden
+      procedure_steps_description: >
+        Bietet im Formular eines Vorhabens die im Verwaltungsbereich gepflegten Verfahrensschritte zur Auswahl an, in der dort festgelegten Reihenfolge. Die öffentliche Detailseite zeigt dann den Verfahrensschritt statt der Versionsnummer; im Verwaltungsbereich bleibt die Versionsnummer sichtbar. Aktivieren Sie diese Funktion, wenn Ihre Vorhaben ein förmliches Verfahren mit festen Schritten durchlaufen, etwa Bauleitplanverfahren nach dem BauGB.
     deficiency_reports:
       feature_name: Bezeichnung des Bereichs
       feature_name_description: >
@@ -374,6 +377,9 @@ de:
       send_feedback_form_link: Feedback-Formular versenden
       send_feedback_form_link_description: >
         Wenn aktiviert, erhalten Nutzer nach Abschluss ihrer Mangelmeldung per E-Mail einen Link zu einem Feedback-Formular. Damit können sie die Bearbeitung ihres Anliegens bewerten und Rückmeldung zur Zufriedenheit mit dem Prozess geben. Dies hilft der Verwaltung, die Qualität der Mängelbearbeitung zu überwachen und zu verbessern.
+      separate_reporter_answer: Antwort an meldende Person und öffentliche Antwort trennen
+      separate_reporter_answer_description: >
+        Teilt die offizielle Antwort zu einer Meldung in zwei Felder: eine Antwort, die per E-Mail an die meldende Person geht, und eine öffentliche Antwort auf der Plattform. Im Frontend erscheint oberhalb der Meldung nur die öffentliche Antwort; bleibt sie leer, wird kein Antwortbereich angezeigt. Aktivieren Sie diese Funktion, wenn Sie meldenden Personen ausführlicher oder persönlicher antworten möchten, als es öffentlich sichtbar sein soll.
       show_create_report_button: Einreichung neuer Mängelmeldungen
       show_create_report_button_description: >
         Steuert, ob Nutzende neue Mängelmeldungen einreichen können. Ist die Option deaktiviert, werden alle Schaltflächen zum Einreichen ausgeblendet und das Meldeformular ist auch über einen direkten Link nicht mehr erreichbar; bereits eingegangene Meldungen bleiben weiterhin öffentlich sichtbar. Deaktivieren Sie diese Option, wenn vorübergehend keine neuen Meldungen entgegengenommen werden sollen, etwa während einer Betriebspause.

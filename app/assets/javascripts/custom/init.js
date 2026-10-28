@@ -36,6 +36,7 @@
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();
       App.PieChartComponent.initialize();
+      App.ProposalProgressChartComponent.initialize();
       App.HeatmapComponent.initialize();
       App.StatsRefresh.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();

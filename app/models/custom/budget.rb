@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "budget").to_s
+load Rails.root.join("app", "models", "budget.rb")
 
 class Budget < ApplicationRecord
   belongs_to :projekt_phase, optional: true
@@ -23,11 +23,34 @@ class Budget < ApplicationRecord
     ].compact
   end
 
+  def self.send_deferred_selection_emails
+    Budget::Investment.where(selection_email_deferred: true).includes(:budget).find_each do |investment|
+      next unless investment.budget&.selection_public?
+
+      investment.send_selection_email
+      investment.update_column(:selection_email_deferred, false) if investment.selection_email_deferred?
+    end
+  end
+
+  def self.selection_public_ids
+    all.select(&:selection_public?).map(&:id)
+  end
+
   def selection_open?
-    return true if publishing_prices_or_later?
-    return false if phases.publishing_prices&.enabled?
+    return true if valuating_or_later?
+    return false if price_phase_enabled?
 
     Budget::Phase.kind_or_later("reviewing").include?(current_phase&.kind)
+  end
+
+  def selection_public?
+    return true unless price_phase_enabled?
+
+    publishing_prices_or_later? && !price_phase.starts_at&.future?
+  end
+
+  def price_phase_enabled?
+    price_phase&.enabled? || false
   end
 
   def knapsack_voting?
@@ -56,4 +79,12 @@ class Budget < ApplicationRecord
 
     projekt_phase.age_ranges_for_stats.map { |ar| [ar.effective_min_age, ar.effective_max_age] }
   end
+
+  private
+
+    def price_phase
+      return @price_phase if defined?(@price_phase)
+
+      @price_phase = phases.publishing_prices
+    end
 end

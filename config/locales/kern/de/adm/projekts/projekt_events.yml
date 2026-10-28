@@ -9,7 +9,7 @@ de:
         show:
           title: Übersicht
           registrations_button: "Anmeldungen (%{count})"
-          registration_disabled: Anmeldung deaktiviert
+          unlimited: Unbegrenzt
           confirmed_count: Bestätigte Anmeldungen
           waitlisted_count: Warteliste
           no_accessibility_flags: Keine Barrierefreiheitsmerkmale angegeben.
@@ -51,8 +51,10 @@ de:
           language_hint: "Geben Sie die Sprache an, in der die Veranstaltung durchgeführt wird – z. B. 'Deutsch', 'Englisch' oder 'Deutsch / Türkisch' bei mehrsprachigen Formaten. Diese Information hilft Teilnehmern einzuschätzen, ob sie der Veranstaltung sprachlich folgen können."
           accessibility_legend: Barrierefreiheit
           accessibility_hint: "Geben Sie an, welche Barrierefreiheitsmerkmale am Veranstaltungsort vorhanden sind. Diese Informationen werden im Frontend angezeigt und helfen Menschen mit Behinderungen bei der Entscheidung, ob sie teilnehmen können. Aktivieren Sie alle zutreffenden Optionen."
+          registration_enabled_label: Anmeldung erforderlich
+          registration_enabled_hint: "Aktivieren, damit sich Teilnehmer im Frontend für die Veranstaltung anmelden können."
           max_attendees_label: Maximale Teilnehmerzahl
-          max_attendees_hint: "Maximale Anzahl bestätigter Teilnehmer. Weitere Anmeldungen kommen automatisch auf eine Warteliste. Leer lassen oder 0 eingeben, um die Anmeldung zu deaktivieren."
+          max_attendees_hint: "Maximale Anzahl bestätigter Teilnehmer. Weitere Anmeldungen kommen automatisch auf eine Warteliste. Leer lassen, wenn die Teilnehmerzahl nicht begrenzt ist."
           admin_emails_label: Sammelanmeldungs-E-Mail-Adressen
           admin_emails_hint: "Komma-getrennte Liste vertrauenswürdiger E-Mail-Adressen, die mehrere Teilnehmer für diese Veranstaltung anmelden dürfen. Diese Adressen müssen die Anmeldung nicht per E-Mail bestätigen. Optional."
           confirmation_email_text_label: Text der Bestätigungs-E-Mail

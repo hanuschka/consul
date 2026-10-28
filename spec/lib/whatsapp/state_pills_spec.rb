@@ -5,7 +5,7 @@ describe Whatsapp::StatePills do
   # offered, read off the state: the support pill's direction off the vote, the
   # comment pill off whether a comment would be taken, the follow pill off the
   # subscription.
-  let(:user) { double(:user) }
+  let(:user) { double(:user, id: 1) }
   let(:conversation) { double(:conversation, user: user, comment_invited?: false) }
 
   around { |example| I18n.with_locale(:de) { example.run } }
@@ -21,7 +21,7 @@ describe Whatsapp::StatePills do
   end
 
   describe "for a proposal" do
-    let(:proposal) { double(:proposal, id: 482) }
+    let(:proposal) { double(:proposal, id: 482, author_id: 2) }
     let(:supported) { false }
     let(:comment_refusal) { nil }
 
@@ -77,6 +77,29 @@ describe Whatsapp::StatePills do
       )
     end
 
+    describe "that the citizen wrote" do
+      let(:proposal) { double(:proposal, id: 482, author_id: 1) }
+
+      it "leaves out Jetzt unterstützen" do
+        expect(Whatsapp::StatePills.buttons(conversation: conversation)).to eq(
+          [pill(:comment_start, 482, "Kommentieren")]
+        )
+      end
+
+      describe "and supported on the page before" do
+        let(:supported) { true }
+
+        it "keeps Zurücknehmen" do
+          expect(Whatsapp::StatePills.buttons(conversation: conversation)).to eq(
+            [
+              pill(:support_withdraw, 482, "Zurücknehmen"),
+              pill(:comment_start, 482, "Kommentieren")
+            ]
+          )
+        end
+      end
+    end
+
     it "offers nothing while the citizen has been asked to write their comment" do
       allow(conversation).to receive(:comment_invited?).and_return(true)
 
@@ -125,6 +148,33 @@ describe Whatsapp::StatePills do
       it "offers nothing, since following needs an account" do
         expect(Whatsapp::StatePills.buttons(conversation: conversation)).to eq([])
       end
+    end
+  end
+
+  describe "after a submission" do
+    let(:projekt_phase) { double(:projekt_phase, id: 7) }
+    let(:same_phase_pill) { pill(:idea_start, 7, "Vorschlag erstellen") }
+
+    before do
+      allow(ProjektPhase).to receive(:find_by).with(id: 7).and_return(projekt_phase)
+      allow(Whatsapp::Drafting::SubmissionAuthorService).to receive(:call).and_return(user)
+      allow(Whatsapp::Drafting::ResourceCreationValidationService).to receive(:call)
+        .with(projekt_phase: projekt_phase, user: user).and_return(nil)
+      allow(Whatsapp::AssistantActions).to receive(:offered_button)
+        .with(spec: "idea_start-7", label: nil, conversation: conversation)
+        .and_return(same_phase_pill)
+
+      Whatsapp::StatePills.focus_submission_completed(7)
+    end
+
+    it "comes with another idea in the same phase, the projekts and the citizen's own" do
+      expect(Whatsapp::StatePills.buttons(conversation: conversation)).to eq(
+        [
+          same_phase_pill,
+          pill(:discover, nil, "Projekte ansehen"),
+          pill(:my_contributions, nil, "Meine Beiträge")
+        ]
+      )
     end
   end
 

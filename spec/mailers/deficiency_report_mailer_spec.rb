@@ -89,4 +89,21 @@ describe DeficiencyReportMailer do
       expect { mail.deliver_now }.not_to change(ActionMailer::Base.deliveries, :count)
     end
   end
+
+  describe "#notify_author_about_official_answer" do
+    let(:mail) { DeficiencyReportMailer.notify_author_about_official_answer(report) }
+
+    before { report.update!(official_answer: "<p>Die Stelle wird am Montag ausgebessert.</p>") }
+
+    it "goes to the reporter" do
+      expect(mail.to).to eq([report.author.email])
+    end
+
+    it "shows the official answer and links to the report" do
+      expect(mail.body.encoded).to include("Die Stelle wird am Montag ausgebessert.")
+      expect(mail.body.encoded).to include(
+        Rails.application.routes.url_helpers.deficiency_report_path(report)
+      )
+    end
+  end
 end

@@ -24,11 +24,13 @@
       var switchButton = e.currentTarget;
       var resourcesList = switchButton.closest(".js-resources-list");
       var currentViewModeWide = this.isResourcesListInWideMode(resourcesList);
+      var cookieValue = currentViewModeWide ? "false" : "true";
+      var viewCookie = resourcesList.dataset.viewCookie;
 
-      if (currentViewModeWide) {
-        document.cookie = "wide_resources=false";
+      if (viewCookie) {
+        document.cookie = viewCookie + "=" + cookieValue + "; path=/; max-age=31536000; SameSite=Lax";
       } else {
-        document.cookie = "wide_resources=true";
+        document.cookie = "wide_resources=" + cookieValue;
       }
 
       this.switchViewModeForAllResourcesLists();
@@ -58,7 +60,7 @@
         switchButtonIcon.classList.toggle("fa-bars");
 
         var isNowWide = this.isResourcesListInWideMode(resourcesList);
-        var newLabel = isNowWide ? switchButton.dataset.labelToList : switchButton.dataset.labelToTile;
+        var newLabel = isNowWide ? switchButton.dataset.labelToTile : switchButton.dataset.labelToList;
 
         switchButton.setAttribute("title", newLabel);
         switchButton.setAttribute("aria-label", newLabel);

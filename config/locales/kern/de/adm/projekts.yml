@@ -106,6 +106,7 @@ de:
           projekt_managers: Projektmanager
           map: Karte
           projekt_phases: Beteiligungsphasen
+          contributions: Beiträge
           images: Bilder
           documents: Dokumente
           delete: Löschen
@@ -172,10 +173,14 @@ de:
             permissions:
               manage: Projekt administrieren
               moderate: Inhalte moderieren
+              approve: Beiträge freigeben
               create_on_behalf_of: Beiträge im Namen anderer erstellen
               get_notifications: Benachrichtigungen erhalten
               access_graphql: GraphQL-Zugriff erhalten
               review: Offline Stimmen hinzufügen
+            permission_hints:
+              approve: Erlaubt, eingereichte Beiträge in Phasen mit Vorab-Freigabe anzunehmen oder abzulehnen.
+              moderate: Erlaubt, Beiträge und Kommentare auszublenden und Meldungen zu bearbeiten. Die Freigabe neuer Beiträge gehört nicht dazu.
         map:
           title: Karte
           hint_title: Hinweis zur Kartenansicht

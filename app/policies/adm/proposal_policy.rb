@@ -2,7 +2,7 @@ class Adm::ProposalPolicy < ApplicationPolicy
   include Adm::Projekts::PermissionCheck
 
   def show?
-    manage_permitted? || moderate_permitted?
+    manage_permitted? || moderate_permitted? || approve_permitted?
   end
 
   def update?
@@ -10,7 +10,7 @@ class Adm::ProposalPolicy < ApplicationPolicy
   end
 
   def toggle_admin_accepted?
-    manage_permitted? || moderate_permitted?
+    manage_permitted? || approve_permitted?
   end
 
   def hide?

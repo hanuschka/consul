@@ -37,6 +37,16 @@ describe "Separate reporter answer for Anliegen", type: :request do
 
       expect(response.body).to include(box_title, "Die Laterne wird morgen repariert.")
     end
+
+    it "prints only the official answer in the PDF" do
+      report.update!(official_answer: "Öffentliche Antwort", reporter_answer: "Persönliche Antwort")
+
+      text = pdf_text(report)
+
+      expect(text).to include(I18n.t("adm.deficiency_reports.deficiency_reports.show.official_answer"),
+                              "Öffentliche Antwort")
+      expect(text).not_to include("Persönliche Antwort")
+    end
   end
 
   context "with the setting on" do
@@ -102,6 +112,39 @@ describe "Separate reporter answer for Anliegen", type: :request do
       expect(rows.first["Officielle Antwort"]).to eq "Öffentlich"
       expect(rows.first["Antwort an die meldende Person"]).to eq "Persönlich"
     end
+
+    it "fills the official answer placeholder of a customized e-mail with the reporter answer" do
+      SiteCustomization::EmailTemplate.create!(
+        mailer_class: "DeficiencyReportMailer",
+        mailer_action: "notify_author_about_official_answer",
+        locale: I18n.locale,
+        subject: "Antwort auf Ihr Anliegen",
+        body: "<p>Antwort: {{ official_answer }}</p>"
+      )
+      report.update!(official_answer: "Öffentliche Antwort", reporter_answer: "Persönliche Antwort")
+
+      mail = DeficiencyReportMailer.notify_author_about_official_answer(report)
+
+      expect(mail.subject).to eq "Antwort auf Ihr Anliegen"
+      expect(mail.body.encoded).to include("Antwort: Persönliche Antwort")
+      expect(mail.body.encoded).not_to include("Öffentliche Antwort")
+    end
+
+    it "prints both answers under their own headings in the PDF" do
+      report.update!(official_answer: "Öffentliche Antwort", reporter_answer: "Persönliche Antwort")
+
+      text = pdf_text(report)
+
+      expect(text).to include(I18n.t("adm.deficiency_reports.deficiency_reports.show.reporter_answer"),
+                              "Persönliche Antwort",
+                              I18n.t("adm.deficiency_reports.deficiency_reports.show.public_answer"),
+                              "Öffentliche Antwort")
+    end
+  end
+
+  def pdf_text(report)
+    pdf = PdfServices::DeficiencyReportExporter.new(report, "example.org").call.render
+    PDF::Reader.new(StringIO.new(pdf)).pages.map(&:text).join("\n").squeeze(" ")
   end
 
   describe "when a report counts as answered" do
@@ -109,6 +152,12 @@ describe "Separate reporter answer for Anliegen", type: :request do
 
     it "no longer lets the author delete a report that has only a reporter answer" do
       report.update!(reporter_answer: "Persönliche Rückmeldung")
+
+      expect(Ability.new(author).can?(:destroy, report)).to be false
+    end
+
+    it "no longer lets the author delete a report that has only a public answer" do
+      report.update!(official_answer: "Wird repariert.")
 
       expect(Ability.new(author).can?(:destroy, report)).to be false
     end

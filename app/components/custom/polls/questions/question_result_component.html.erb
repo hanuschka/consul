@@ -70,7 +70,7 @@
                           </div>
                         </div>
                       <% end %>
-                      <%= paginate open_answers.page(params[page_name]).per(20), param_name: page_name %>
+                      <%= helpers.paginate open_answers.page(params[page_name]).per(20), param_name: page_name %>
                     </div>
                   <% end %>
 

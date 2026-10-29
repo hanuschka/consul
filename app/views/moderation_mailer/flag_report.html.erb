@@ -5,7 +5,7 @@
 
   <p style="<%= css_for_mailer_text %>">
     <%= I18n.t("custom.moderation_mailer.flag_report.body_prefix") %>
-    <%= link_to @resource_title, @resource_url, style: "color: #004a83;" %>
+    <%= link_to_if @resource_url.present?, @resource_title, @resource_url, style: "color: #004a83;" %>
     <%= I18n.t("custom.moderation_mailer.flag_report.body_suffix") %>
   </p>
 

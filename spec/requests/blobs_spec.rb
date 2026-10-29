@@ -75,7 +75,9 @@ describe "Stored files served by BlobsController", type: :request do
 
     it "refuses a file attached to a record type that is not public" do
       blob = upload_blob("internal.jpg")
-      ActiveStorage::Attachment.create!(name: "internal_file", record: create(:newsletter), blob: blob)
+      ActiveStorage::Attachment.create!(
+        name: "official_answer_documents", record: create(:deficiency_report), blob: blob
+      )
 
       get blob_asset_path(blob.key)
 

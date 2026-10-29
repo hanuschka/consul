@@ -4,7 +4,7 @@
 
 <div id="sdg_managers">
   <% if users.any? %>
-    <h3 class="margin"><%= page_entries_info users %></h3>
+    <h3 class="margin"><%= helpers.page_entries_info users %></h3>
 
     <table>
       <thead>
@@ -29,7 +29,7 @@
       </tbody>
     </table>
 
-    <%= paginate users %>
+    <%= helpers.paginate users %>
   <% else %>
     <div class="callout primary">
       <%= t("admin.sdg_managers.index.no_sdg_managers") %>

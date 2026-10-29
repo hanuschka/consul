@@ -45,5 +45,5 @@ class DeficiencyReport::Status < ApplicationRecord
     end
   end
 
-  alias_attribute :name, :title
+  alias_method :name, :title
 end

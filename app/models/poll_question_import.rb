@@ -4,7 +4,7 @@ class PollQuestionImport < ApplicationRecord
 
   has_many_attached :source_files
 
-  enum status: {
+  enum :status, {
     pending: "pending",
     extracting: "extracting",
     processing: "processing",

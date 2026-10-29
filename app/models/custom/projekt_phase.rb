@@ -204,40 +204,40 @@ class ProjektPhase < ApplicationRecord
 
   accepts_nested_attributes_for :settings
 
-  enum user_status: {
+  enum :user_status, {
     guest: 0,
     registered: 1,
     verified: 2
   }
 
-  enum ai_stats_refresh_status: {
+  enum :ai_stats_refresh_status, {
     pending: "pending",
     processing: "processing",
     completed: "completed",
     failed: "failed"
-  }, _prefix: :ai_stats_refresh
+  }, prefix: :ai_stats_refresh
 
   # Nil is the fourth state and the one every phase starts in: no re-check of
   # the already published contributions has ever been asked for.
-  enum similar_search_recheck_status: {
+  enum :similar_search_recheck_status, {
     processing: "processing",
     completed: "completed",
     failed: "failed"
-  }, _prefix: :similar_search_recheck
+  }, prefix: :similar_search_recheck
 
-  enum masterportal_import_status: {
+  enum :masterportal_import_status, {
     pending: "pending",
     running: "running",
     success: "success",
     failed: "failed"
-  }, _prefix: :masterportal_import
+  }, prefix: :masterportal_import
 
-  enum masterportal_destroy_status: {
+  enum :masterportal_destroy_status, {
     pending: "pending",
     running: "running",
     success: "success",
     failed: "failed"
-  }, _prefix: :masterportal_destroy
+  }, prefix: :masterportal_destroy
 
   validates :projekt, presence: true
   validate :type_must_be_valid

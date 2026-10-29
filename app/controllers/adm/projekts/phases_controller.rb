@@ -1104,7 +1104,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     end
 
     def projekt_breadcrumb_path(projekt)
-      phases_adm_projekts_projekt_path(projekt) if policy([:adm, :projekts, projekt]).show?
+      phases_adm_projekts_projekt_path(projekt) if policy([:adm, :projekts, projekt]).contributions?
     end
 
     def filter_empty_registered_address_grouping_restrictions

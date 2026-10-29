@@ -14,10 +14,10 @@ de:
     failure:
       already_authenticated: "Sie sind bereits angemeldet."
       inactive: "Ihr Konto wurde noch nicht aktiviert."
-      invalid: "Ungültiger %{authentication_keys} oder Passwort."
+      invalid: "%{authentication_keys} oder Passwort ungültig."
       locked: "Ihr Konto wurde gesperrt."
       last_attempt: "Sie haben noch einen weiteren Versuch bevor Ihr Konto gesperrt wird."
-      not_found_in_database: "Ungültiger %{authentication_keys} oder Passwort."
+      not_found_in_database: "%{authentication_keys} oder Passwort ungültig."
       timeout: "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an, um fortzufahren."
       unauthenticated: "Sie müssen sich anmelden oder registrieren, um fortzufahren."
       unconfirmed: "Um fortzufahren, bestätigen Sie bitte den Verifizierungslink, den wir Ihnen per E-Mail gesendet haben"

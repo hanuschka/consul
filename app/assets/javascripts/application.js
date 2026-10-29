@@ -55,7 +55,6 @@
 //= require turbolinks
 //= require turbolinks_anchors
 //= require social-share-button
-//= require initial
 //= require ahoy
 //= require app
 //= require config/map_zoom
@@ -73,7 +72,6 @@
 //= require annotator
 //= require jquery.amsify.suggestags
 //= require tags
-//= require users
 //= require participation_not_allowed
 //= require advanced_search
 //= require registration_form
@@ -153,7 +151,6 @@ var initialize_modules = function() {
   App.Answers.initialize();
   App.Questions.initialize();
   App.Comments.initialize();
-  App.Users.initialize();
   App.ParticipationNotAllowed.initialize();
   App.Tags.initialize();
   App.FoundationExtras.initialize();

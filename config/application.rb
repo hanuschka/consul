@@ -8,7 +8,68 @@ Bundler.require(*Rails.groups)
 
 module Consul
   class Application < Rails::Application
-    config.load_defaults 6.1
+    config.load_defaults 7.2
+
+    # Keep YJIT off: it adds memory per Puma worker on servers that already
+    # run close to their limit
+    config.yjit = false
+
+    # Keep raw SQL date columns as strings, as the stats queries expect
+    config.active_record.postgresql_adapter_decode_dates = false
+
+    # Keep enqueueing jobs at once, inside the open transaction; the
+    # delayed_job 4.2 adapter would otherwise hold them until commit
+    config.active_job.enqueue_after_transaction_commit = :never
+
+    # Keep ImageMagick variants: the libvips path is exposed to CVE-2026-66066
+    # until the app runs a patched Rails
+    config.active_storage.variant_processor = :mini_magick
+
+    # Keep resizing and serving inline the blobs stored as image/jpg or
+    # image/pjpeg, which Rails 7.0 still listed
+    config.active_storage.variable_content_types += %w[image/jpg image/pjpeg]
+    config.active_storage.web_image_content_types += %w[image/jpg]
+    config.active_storage.content_types_allowed_inline += %w[image/jpg]
+
+    # Derive keys with SHA1 permanently: every tenant has only ever issued
+    # SHA1-signed cookies and ActiveStorage URLs, and content HTML stores the
+    # URLs. Moving to SHA256 needs message-verifier rotations kept forever or
+    # a rewrite of stored links; review before NIST retires SHA-1 in 2030
+    config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
+
+    # Keep Net::SMTP's own open and read timeouts instead of 5 seconds
+    config.action_mailer.smtp_timeout = nil
+
+    # Keep writing caches, marshalled records and messages in formats the
+    # Rails 7.0 release can read, so a rollback to it keeps the cache and
+    # signed tokens. The 7.0 cache format also reads entries written by
+    # Rails 6.1
+    config.active_support.cache_format_version = 7.0
+    config.active_record.marshalling_format_version = 6.1
+    config.active_support.message_serializer = :marshal
+    config.active_support.use_message_serializer_for_metadata = false
+
+    # Keep the HTML4 sanitizer the WYSIWYG sanitizers were written against
+    config.action_view.sanitizer_vendor = Rails::HTML4::Sanitizer
+    config.action_text.sanitizer_vendor = Rails::HTML4::Sanitizer
+
+    # Keep running after_commit callbacks in reverse order of definition
+    config.active_record.run_after_transaction_callbacks_in_order_defined = false
+
+    # Keep rendering button_to as input[type=submit] and stylesheet links with
+    # media="screen"
+    config.action_view.button_to_generates_button_tag = false
+    config.action_view.apply_stylesheet_media_default = true
+
+    # Keep inserting only the assigned columns, so database-side defaults apply
+    config.active_record.partial_inserts = true
+
+    # Don't add an empty hidden field to multiple file inputs
+    config.active_storage.multiple_file_field_include_hidden = false
+
+    # Render fields with errors without a field_with_errors wrapper; the
+    # form builders mark them with the is-invalid-* classes instead
+    config.action_view.field_error_proc = proc { |html_tag, _instance| html_tag }
 
     # Keep belongs_to fields optional by default, because that's the way
     # Rails 4 models worked
@@ -81,6 +142,11 @@ module Consul
     config.i18n.available_locales = available_locales
     config.i18n.fallbacks.defaults = [:de]
     config.i18n.fallbacks.map = { de: :en }
+
+    # Keep the Rails 6.1 flat locale glob: the nested locale dirs are added
+    # below in override order, and a recursive glob would load them sorted
+    # alphabetically first, letting base files override custom ones
+    config.paths["config/locales"].glob = "*.{rb,yml}"
 
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**[^custom]*", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom", "**", "*.{rb,yml}")]

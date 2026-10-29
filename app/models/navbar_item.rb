@@ -43,7 +43,7 @@ class NavbarItem < ApplicationRecord
   belongs_to :linked_page, class_name: "SiteCustomization::Page",
                            optional: true
 
-  enum kind: { presets: 0, projekts: 1, external: 2, landing_pages: 3 }
+  enum :kind, { presets: 0, projekts: 1, external: 2, landing_pages: 3 }
 
   validates :kind, presence: true
 

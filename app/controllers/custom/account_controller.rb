@@ -5,21 +5,9 @@ class AccountController < ApplicationController
   include HasRegisteredAddress
 
   def show
-    @account_individial_groups_hard = IndividualGroup.hard
-    @account_individial_groups_soft = IndividualGroup.soft
-    @account_individual_group_values = @account.individual_group_values
-    @notifications =
-      if params[:notifications] == "read"
-        current_user.notifications.read
-      else
-        current_user.notifications.unread
-      end
+    load_account_page
 
-    if Setting.new_design_enabled?
-      render :show_new
-    else
-      render :show
-    end
+    render account_page_template
   end
 
   def refresh_activities; end
@@ -43,8 +31,10 @@ class AccountController < ApplicationController
         end
       end
     else
-      @account.errors.messages.delete(:organization)
-      render :show
+      @account.errors.delete(:organization)
+      load_account_page
+
+      render account_page_template, status: :unprocessable_entity
     end
   end
 
@@ -75,6 +65,22 @@ class AccountController < ApplicationController
   end
 
   private
+
+    def load_account_page
+      @account_individial_groups_hard = IndividualGroup.hard
+      @account_individial_groups_soft = IndividualGroup.soft
+      @account_individual_group_values = @account.individual_group_values
+      @notifications =
+        if params[:notifications] == "read"
+          current_user.notifications.read
+        else
+          current_user.notifications.unread
+        end
+    end
+
+    def account_page_template
+      Setting.new_design_enabled? ? :show_new : :show
+    end
 
     def account_params
       process_individual_group_values_param

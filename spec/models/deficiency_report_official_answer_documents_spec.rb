@@ -20,7 +20,7 @@ describe DeficiencyReport do
     end
 
     it "rejects a content type the instance does not allow" do
-      expect(report.official_answer_documents.attach(png)).to be false
+      expect(report.official_answer_documents.attach(png)).to be_falsey
 
       expect(report.reload.official_answer_documents).not_to be_attached
     end
@@ -29,7 +29,7 @@ describe DeficiencyReport do
       allow(DeficiencyReport).to receive(:max_documents_allowed).and_return(1)
       report.official_answer_documents.attach(pdf)
 
-      expect(report.official_answer_documents.attach(pdf)).to be false
+      expect(report.official_answer_documents.attach(pdf)).to be_falsey
       expect(report.reload.official_answer_documents.count).to eq(1)
     end
 

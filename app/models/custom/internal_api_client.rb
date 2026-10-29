@@ -1,5 +1,5 @@
 class InternalApiClient < ApplicationRecord
-  enum registration_status: [:registration_in_progress, :registered]
+  enum :registration_status, [:registration_in_progress, :registered]
   has_secure_token :auth_token, length: 85
 
   validates :name, presence: true

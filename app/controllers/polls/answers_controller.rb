@@ -10,7 +10,7 @@ class Polls::AnswersController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to request.referer
+        redirect_back(fallback_location: root_path)
       end
       format.js do
         render "polls/questions/answers"

@@ -24,7 +24,7 @@ class SiteCustomization::ContentCard < ApplicationRecord
     "events" => { "limit" => 3 }
   }.freeze
 
-  store :settings
+  store :settings, coder: YamlInJsonbCoder.new(:settings)
   store_accessor :settings, *DEFAULT_SETTINGS.map { |_k, v| v.keys }.flatten.uniq
 
   belongs_to :landing_page, class_name: "SiteCustomization::Page", optional: true

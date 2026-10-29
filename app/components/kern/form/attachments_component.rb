@@ -10,7 +10,7 @@ class Kern::Form::AttachmentsComponent < ApplicationComponent
 
   private
 
-    def field_name
+    def input_name
       "#{@form.object_name}[#{@attribute}][]"
     end
 

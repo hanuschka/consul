@@ -25,7 +25,7 @@ Rails.application.config.to_prepare do
 
         if @blob.present?
           expires_in ActiveStorage.service_urls_expire_in
-          redirect_to @blob.url(disposition: params[:disposition])
+          redirect_to @blob.url(disposition: params[:disposition]), allow_other_host: true
         else
           head :not_found
         end

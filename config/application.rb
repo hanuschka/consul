@@ -8,7 +8,26 @@ Bundler.require(*Rails.groups)
 
 module Consul
   class Application < Rails::Application
-    config.load_defaults 6.1
+    config.load_defaults 7.0
+
+    # Keep ImageMagick variants: the libvips path is exposed to CVE-2026-66066
+    # until the app runs a patched Rails
+    config.active_storage.variant_processor = :mini_magick
+
+    # Keep the Rails 6.1 cache format so a rollback to Rails 6.1 can still
+    # read the cache
+    config.active_support.cache_format_version = 6.1
+
+    # Keep rendering button_to as input[type=submit] and stylesheet links with
+    # media="screen"
+    config.action_view.button_to_generates_button_tag = false
+    config.action_view.apply_stylesheet_media_default = true
+
+    # Keep inserting only the assigned columns, so database-side defaults apply
+    config.active_record.partial_inserts = true
+
+    # Don't add an empty hidden field to multiple file inputs
+    config.active_storage.multiple_file_field_include_hidden = false
 
     # Keep belongs_to fields optional by default, because that's the way
     # Rails 4 models worked
@@ -81,6 +100,11 @@ module Consul
     config.i18n.available_locales = available_locales
     config.i18n.fallbacks.defaults = [:de]
     config.i18n.fallbacks.map = { de: :en }
+
+    # Keep the Rails 6.1 flat locale glob: the nested locale dirs are added
+    # below in override order, and a recursive glob would load them sorted
+    # alphabetically first, letting base files override custom ones
+    config.paths["config/locales"].glob = "*.{rb,yml}"
 
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**[^custom]*", "*.{rb,yml}")]
     config.i18n.load_path += Dir[Rails.root.join("config", "locales", "custom", "**", "*.{rb,yml}")]

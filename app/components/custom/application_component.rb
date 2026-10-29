@@ -2,7 +2,7 @@ load Rails.root.join("app", "components", "application_component.rb")
 
 class ApplicationComponent < ViewComponent::Base
   delegate :url_to_footer_tab, :current_user, :can, :can?,
-    :embedded_and_frame_access_code_valid?, to: :helpers
+    :embedded_and_frame_access_code_valid?, :avatar_image, to: :helpers
 
   def set_comment_flags(comments)
     @comment_flags = helpers.current_user ? helpers.current_user.comment_flags(comments) : {}

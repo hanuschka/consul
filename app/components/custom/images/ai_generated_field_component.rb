@@ -29,7 +29,7 @@ class Images::AiGeneratedFieldComponent < ApplicationComponent
       t("components.images.ai_generated_field_component.tooltip_note")
     end
 
-    def field_name
+    def input_name
       "#{@form.object_name}[ai_generated]"
     end
 

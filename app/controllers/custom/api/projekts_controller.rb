@@ -488,7 +488,9 @@ class Api::ProjektsController < Api::BaseController
   # preloaded by find_projekt, which still holds the blocks before the write.
   def serialize_projekt_with_all_content_blocks(projekt)
     projekt.content_blocks.reset
-    ActiveRecord::Associations::Preloader.new.preload(projekt, content_blocks: :translations)
+    ActiveRecord::Associations::Preloader
+      .new(records: [projekt], associations: { content_blocks: :translations })
+      .call
 
     content_blocks =
       projekt.content_blocks.sort_by { |content_block| content_block.position.to_i }

@@ -24,6 +24,33 @@ describe MachineTranslation::Enqueuer do
     end
   end
 
+  describe "a deficiency report's reporter answer" do
+    it "is not enqueued for translation when it changes alone" do
+      report = Globalize.with_locale(source) { create(:deficiency_report) }
+      RemoteTranslation.where(remote_translatable: report).delete_all
+
+      Globalize.with_locale(source) { report.update!(reporter_answer: "Persönliche Rückmeldung") }
+
+      expect(RemoteTranslation.where(remote_translatable: report)).to be_empty
+    end
+
+    it "is never sent to the translation service" do
+      report = Globalize.with_locale(source) do
+        create(:deficiency_report, official_answer: "Öffentliche Antwort", reporter_answer: "Persönliche Rückmeldung")
+      end
+      remote_translation = RemoteTranslation.create!(remote_translatable: report, locale: foreign.to_s)
+      sent = nil
+      client = instance_double(Deepl::Client)
+      allow(Deepl::Client).to receive(:new).and_return(client)
+      allow(client).to receive(:translate) { |values, **| sent = values; values }
+
+      RemoteTranslations::Caller.new(remote_translation, source_locale: source).call
+
+      expect(sent).to include("Öffentliche Antwort")
+      expect(sent).not_to include("Persönliche Rückmeldung")
+    end
+  end
+
   describe "enqueueing for a comment" do
     def enqueued_locales_for(comment)
       RemoteTranslation.where(remote_translatable: comment).pluck(:locale)

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "admin", "budgets", "form_component").to_s
+load Rails.root.join("app", "components", "admin", "budgets", "form_component.rb")
 
 class Admin::Budgets::FormComponent < ApplicationComponent
   def phases_select_options

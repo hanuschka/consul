@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "sdg", "goals", "tag_cloud_component").to_s
+load Rails.root.join("app", "components", "sdg", "goals", "tag_cloud_component.rb")
 
 class SDG::Goals::TagCloudComponent < ApplicationComponent
   def initialize(class_name, sdg_targets: [])

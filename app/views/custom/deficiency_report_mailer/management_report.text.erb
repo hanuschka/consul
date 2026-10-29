@@ -1,0 +1,44 @@
+<% scope = "custom.deficiency_reports.mailers.management_report" %>
+<% period = "#{l(@management_report.period_start, format: "%d.%m.%Y")} – #{l(@management_report.period_end, format: "%d.%m.%Y")}" %>
+<% figure_blocks = @management_report.building_blocks.map { |block| [block, @management_report.figure_rows(block)] }.reject { |_block, rows| rows.empty? } %>
+<% if @user.present? %>
+<%= t("#{scope}.hi", username: @user.username) %>
+<% else %>
+<%= t("#{scope}.hi_without_name") %>
+<% end %>
+
+<%= t("#{scope}.intro", name: @management_report.profile_name, period: period) %>
+<% if figure_blocks.any? %>
+
+<%= t("#{scope}.figures_title") %>
+<% figure_blocks.each do |building_block, rows| %>
+
+<%= t("adm.deficiency_reports.management_reports.sections.#{building_block}") %>
+<% rows.each do |row| %>
+- <%= "#{row[:label]}: #{row[:value]}" %>
+<% end %>
+<% end %>
+<% end %>
+
+<%= t("#{scope}.attachment_hint") %>
+<% if @user.present? %>
+
+<%= t("#{scope}.adm_link_text") %>:
+<%= adm_deficiency_reports_management_report_url(@management_report) %>
+<% end %>
+
+<%= t("#{scope}.ai_notice") %>
+<%= t("#{scope}.internal_notice") %>
+<% if custom_email_footer_present? %>
+<% footer_text = CGI.unescapeHTML(strip_tags(customizable_email_footer_html.to_str.gsub(%r{<br\s*/?>|</(?:p|div|li|h[1-6])>}i, "\n"))).lines.map(&:squish).reject(&:blank?).join("\n") %>
+
+<%= footer_text %>
+<% else %>
+
+<%= t("custom.deficiency_reports.mailers.closing") %>
+<%= t("custom.deficiency_reports.mailers.signature") %>
+<% if Setting["mailer_from_deficiency_report_address"].present? %>
+
+<%= strip_tags(t("custom.deficiency_reports.mailers.contact_info", email: Setting["mailer_from_deficiency_report_address"])) %>
+<% end %>
+<% end %>

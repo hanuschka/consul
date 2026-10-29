@@ -96,6 +96,18 @@ describe "Sign-up", type: :request do
       expect(response).to redirect_to(users_sign_up_success_path)
     end
 
+    it "rejects a date of birth without a day instead of failing" do
+      partial_date = extended_params.except(:date_of_birth)
+                                    .merge("date_of_birth(1i)" => "1971", "date_of_birth(2i)" => "12")
+
+      expect { sign_up(partial_date) }.not_to change(User, :count)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(
+        CGI.escapeHTML(User.new.errors.full_message(:date_of_birth, I18n.t("errors.messages.blank")))
+      )
+    end
+
     context "when an account with the same name, date of birth and postcode exists" do
       let!(:existing) do
         build(:user, unique_stamp: "lena_vogt_1990_05_01_80331").tap { |user| user.save!(validate: false) }

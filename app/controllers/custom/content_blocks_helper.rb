@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "content_blocks_helper").to_s
+load Rails.root.join("app", "helpers", "content_blocks_helper.rb")
 
 module ContentBlocksHelper
   # A <p> may only contain phrasing content, so any block-level body (e.g. the

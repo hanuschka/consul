@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "navbar_item").to_s
+load Rails.root.join("app", "models", "navbar_item.rb")
 
 class NavbarItem < ApplicationRecord
   # Presets whose menu label should follow the feature's configurable name

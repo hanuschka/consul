@@ -38,7 +38,7 @@ class PollsController < ApplicationController
     @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
 
     if !@poll.projekt.visible_for?(current_user)
-      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @poll.projekt.individual_group_values.map(&:name)
       render "custom/pages/forbidden", layout: false
 
     elsif Setting.new_design_enabled?

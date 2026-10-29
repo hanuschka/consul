@@ -62,10 +62,10 @@ en:
             title: Reported Proposals
             tooltip: Total number of proposals that have received at least one user report.
       proposal_navigation:
-        back_to_detail_view: Blättern-Modus aktivieren
-        back_to_overview: Zur Übersicht
+        back_to_detail_view: Activate browse mode
+        back_to_overview: Back to overview
         next: "Weiter"
-        back: "Zurück"
+        back: "Back"
         first: "Erster Vorschlag"
       cta:
         title: Participation
@@ -113,7 +113,7 @@ en:
             phase_not_active: This project phase is not active
             phase_expired: This project phase has already expired
             phase_not_current: This project phase has not yet started
-            only_admins: Die Beteiligung ist auf Admin-Benutzer beschränkt.
+            only_admins: Participation is restricted to admin users.
             no_registered_address: A registered address could not be assigned to your account. Please update your account.
             only_specific_registered_address_groupings: Participation is limited to another area.
           formular_phase:
@@ -187,7 +187,7 @@ en:
             no_registered_address: A registered address could not be assigned to your account. Please update your account.
             only_specific_registered_address_groupings: Participation is limited to another area.
           budget_phase:
-            investment_unfeasible: Für nicht durchführbare Investitionsvorschläge kann nicht kommentiert werden
+            investment_unfeasible: Unfeasible investment projects cannot be commented on.
             too_late: No further comments are possible at this time.
         poll_votes:
           guest_not_logged_in: "To continue you must %{sign_in} or %{sign_up} or %{guest_sign_in}."

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "tags_helper").to_s
+load Rails.root.join("app", "helpers", "tags_helper.rb")
 
 module TagsHelper
   def taggables_path(taggable_type, tag_name)

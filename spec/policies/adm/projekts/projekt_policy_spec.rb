@@ -159,6 +159,42 @@ describe Adm::Projekts::ProjektPolicy do
     end
   end
 
+  describe "#contributions?" do
+    it "is true for a projekt manager with 'manage' permission on this projekt" do
+      user = scoped_manager(permissions: ["manage"], on: projekt)
+
+      expect(policy_for(user, projekt).contributions?).to be true
+    end
+
+    it "is true for a projekt manager with only 'moderate' permission on this projekt" do
+      user = scoped_manager(permissions: ["moderate"], on: projekt)
+
+      expect(policy_for(user, projekt).contributions?).to be true
+    end
+
+    it "is true for a projekt manager with only 'approve' permission on this projekt" do
+      user = scoped_manager(permissions: ["approve"], on: projekt)
+
+      expect(policy_for(user, projekt).contributions?).to be true
+    end
+
+    it "is false for a projekt manager with only 'create_on_behalf_of' permission on this projekt" do
+      user = scoped_manager(permissions: ["create_on_behalf_of"], on: projekt)
+
+      expect(policy_for(user, projekt).contributions?).to be false
+    end
+
+    it "is false for a projekt manager with 'approve' on another projekt" do
+      user = scoped_manager(permissions: ["approve"], on: create(:projekt))
+
+      expect(policy_for(user, projekt).contributions?).to be false
+    end
+
+    it "is false for a citizen" do
+      expect(policy_for(citizen, projekt).contributions?).to be false
+    end
+  end
+
   describe "#destroy?" do
     it "is true for a projekt manager with 'manage' permission on this projekt" do
       user = scoped_manager(permissions: ["manage"], on: projekt)

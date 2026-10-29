@@ -1,6 +1,7 @@
 <%= form_with model: @record, url: path do |form| %>
   <%= hidden_field_tag :kind, "select" %>
   <%= hidden_field_tag :attribute, @attribute %>
+  <%= hidden_field_tag :field_token, field_token("select") %>
   <%= hidden_field_tag :select_options, @select_options.to_json %>
 
   <%= form.select @attribute, translated_select_options, {}, { label: false, disabled: disabled? } %>

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "progress_bar").to_s
+load Rails.root.join("app", "models", "progress_bar.rb")
 
 class ProgressBar < ApplicationRecord
   def projekt

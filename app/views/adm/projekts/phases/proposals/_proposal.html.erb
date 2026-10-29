@@ -16,11 +16,17 @@
   </td>
   <% if projekt_phase.feature?("general.require_admin_acceptance") %>
     <td class="kern-table__cell" data-field="admin_accepted">
-      <%= render Adm::AttributeEditors::BooleanComponent.new(
-        proposal,
-        :admin_accepted,
-        path: toggle_admin_accepted_adm_projekts_phase_proposal_path(projekt_phase, proposal)
-      ) %>
+      <% if policy([:adm, proposal]).toggle_admin_accepted? %>
+        <%= render Adm::AttributeEditors::BooleanComponent.new(
+          proposal,
+          :admin_accepted,
+          path: toggle_admin_accepted_adm_projekts_phase_proposal_path(projekt_phase, proposal)
+        ) %>
+      <% else %>
+        <span class="adm-detail-pill">
+          <%= proposal.admin_accepted? ? t("adm.projekts.proposals.show.accepted") : t("adm.projekts.proposals.show.not_accepted") %>
+        </span>
+      <% end %>
     </td>
   <% end %>
   <th scope="row" class="kern-table__header" data-field="title"><%= link_to adm_projekts_phase_proposal_path(projekt_phase, proposal), class: "kern-link", data: { turbo_frame: "_top" } do %><%= proposal.title %><% end %><%= similar_contributions_badge(

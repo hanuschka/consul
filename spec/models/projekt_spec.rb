@@ -252,7 +252,7 @@ describe Projekt do
   end
 
   describe "#assign_author_as_manager" do
-    it "grants a scoped (non-super) projekt-manager author all six permissions on the new projekt" do
+    it "grants a scoped (non-super) projekt-manager author all seven permissions on the new projekt" do
       author_user = create(:user)
       create(:projekt_manager, user: author_user)
 
@@ -264,7 +264,7 @@ describe Projekt do
       )
       expect(assignment).to be_present
       expect(assignment.permissions).to match_array(
-        %w[manage moderate create_on_behalf_of get_notifications access_graphql review]
+        %w[manage moderate approve create_on_behalf_of get_notifications access_graphql review]
       )
     end
 

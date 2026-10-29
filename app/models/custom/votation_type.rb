@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "votation_type").to_s
+load Rails.root.join("app", "models", "votation_type.rb")
 
 class VotationType < ApplicationRecord
   translates :min_rating_scale_label, :max_rating_scale_label, touch: true

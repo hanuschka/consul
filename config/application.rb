@@ -25,6 +25,10 @@ module Consul
     # until the app runs a patched Rails
     config.active_storage.variant_processor = :mini_magick
 
+    # Keep allowing the saver and loader options the variant definitions
+    # use; Rails 7.1 dropped them from the supported transformations
+    config.active_storage.supported_image_processing_methods = %w[saver loader]
+
     # Keep resizing and serving inline the blobs stored as image/jpg or
     # image/pjpeg, which Rails 7.0 still listed
     config.active_storage.variable_content_types += %w[image/jpg image/pjpeg]

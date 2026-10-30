@@ -1,4 +1,4 @@
-require_dependency "deepl/error"
+require "deepl/error"
 
 module Deepl
   FREE_KEY_SUFFIX = ":fx".freeze

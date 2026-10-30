@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "milestone").to_s
+load Rails.root.join("app", "models", "milestone.rb")
 
 class Milestone < ApplicationRecord
 include MachineTranslatable

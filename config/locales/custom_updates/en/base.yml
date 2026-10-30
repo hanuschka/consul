@@ -67,9 +67,9 @@ en:
       select:
         prompt: Please select
         gender_prompt: Gender (please select)
-        prompt_city: City (bitte wählen)
-        prompt_street: Street (bitte wählen)
-        prompt_address: Address (bitte wählen)
+        prompt_city: City (please select)
+        prompt_street: Street (please select)
+        prompt_address: Address (please select)
         document_prompt: Document type (please select)
         not_in_list: Not in the list
         birth_year: Birth year

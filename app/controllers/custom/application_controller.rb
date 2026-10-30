@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
+load Rails.root.join("app", "controllers", "application_controller.rb")
 
 class ApplicationController < ActionController::Base
   before_action :sanitize_pagination_params
@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
   helper_method :set_comment_flags
+
+  rescue_from ActionController::InvalidAuthenticityToken, with: :handle_expired_session_token
 
   # unless Rails.env.production?
   #   around_action :n_plus_one_detection
@@ -19,6 +21,15 @@ class ApplicationController < ActionController::Base
   # end
 
   private
+
+    def handle_expired_session_token(exception)
+      raise exception if user_signed_in?
+
+      respond_to do |format|
+        format.html { redirect_to new_user_session_path, alert: t("devise.failure.timeout") }
+        format.any { head :unauthorized }
+      end
+    end
 
     # Overrides CanCan's default so a request arriving from an on-behalf-of account mail can read the
     # one hidden record that mail was about. Everything else about the visitor is unchanged: the

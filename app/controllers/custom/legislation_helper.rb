@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "legislation_helper").to_s
+load Rails.root.join("app", "helpers", "legislation_helper.rb")
 
 module LegislationHelper
   def cannot_annotate_callout_text(permission_problem_key, legislation_phase)

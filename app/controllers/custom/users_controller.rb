@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "users_controller").to_s
+load Rails.root.join("app", "controllers", "users_controller.rb")
 
 class UsersController < ApplicationController
   include FeatureFlags

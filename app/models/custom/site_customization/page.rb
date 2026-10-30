@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "site_customization", "page").to_s
+load Rails.root.join("app", "models", "site_customization", "page.rb")
 
 class SiteCustomization::Page < ApplicationRecord
 include MachineTranslatable

@@ -1,6 +1,7 @@
 <%= form_with model: @record, url: path, class: "d-flex gap-3 align-items-center" do |form| %>
   <%= hidden_field_tag :kind, "boolean" %>
   <%= hidden_field_tag :attribute, @attribute %>
+  <%= hidden_field_tag :field_token, field_token("boolean") %>
 
   <%= form.hidden_field @attribute, value: alternate_value %>
   <%= form.button "", class: "toggle-button small #{'disabled' if disabled?}",

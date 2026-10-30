@@ -24,7 +24,7 @@ class Api::DeficiencyReportsController < Api::BaseController
     deficiency_reports = apply_filters(deficiency_reports)
     deficiency_reports = apply_sorting(deficiency_reports)
 
-    serialized_deficiency_reports = DeficiencyReportSerializer.serialize_collection(deficiency_reports)
+    serialized_deficiency_reports = DeficiencyReportSerializer.serialize_collection(deficiency_reports, include_reporter_answer: admin_client?)
 
     render json: {
       data: { deficiency_reports: serialized_deficiency_reports },
@@ -34,7 +34,7 @@ class Api::DeficiencyReportsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report).serialize
+    serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, include_reporter_answer: admin_client?).serialize
 
     render json: { data: { deficiency_report: serialized_deficiency_report } }
   end
@@ -48,7 +48,7 @@ class Api::DeficiencyReportsController < Api::BaseController
 
     if deficiency_report.save
       process_image_with_base64(deficiency_report, params[:deficiency_report][:image_attributes])
-      serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report).serialize
+      serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report, include_reporter_answer: admin_client?).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }, status: 201
     else
@@ -66,7 +66,7 @@ class Api::DeficiencyReportsController < Api::BaseController
 
     if @deficiency_report.save
       process_image_with_base64(@deficiency_report, params[:deficiency_report][:image_attributes]) if params[:deficiency_report]&.key?(:image_attributes)
-      serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report).serialize
+      serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, include_reporter_answer: admin_client?).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }
     else
@@ -93,12 +93,17 @@ class Api::DeficiencyReportsController < Api::BaseController
       .find(params[:id])
   end
 
+  def admin_client?
+    internal_api_client? || current_client&.admin?
+  end
+
   def deficiency_report_params
     params.require(:deficiency_report).permit(
       :title,
       :description,
       :summary,
       :official_answer,
+      :reporter_answer,
       :deficiency_report_category_id,
       :deficiency_report_status_id,
       :on_behalf_of,

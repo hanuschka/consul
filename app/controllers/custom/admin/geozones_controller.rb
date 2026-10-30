@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "admin", "geozones_controller").to_s
+load Rails.root.join("app", "controllers", "admin", "geozones_controller.rb")
 
 class Admin::GeozonesController < Admin::BaseController
   private

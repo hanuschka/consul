@@ -331,6 +331,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def budget_edit
     authorize_phase(:update?)
+    if @projekt_phase.budget.blank?
+      return redirect_to phases_adm_projekts_projekt_path(@projekt_phase.projekt),
+                         alert: t("adm.projekts.phases.missing_budget")
+    end
+
     @budget = @projekt_phase.budget
     @heading = @budget.heading
 
@@ -343,6 +348,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
 
   def budget_investments
     authorize_phase(:moderate?)
+    if @projekt_phase.budget.blank?
+      return redirect_to phases_adm_projekts_projekt_path(@projekt_phase.projekt),
+                         alert: t("adm.projekts.phases.missing_budget")
+    end
+
     @budget = @projekt_phase.budget
     base_scope = BudgetInvestmentsQuery.call(@budget.investments.with_hidden.order(id: :desc), params)
 
@@ -546,7 +556,11 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     end
 
     if @masterportal_pins_view == "map"
-      @masterportal_pins_for_map = base_scope.select(:id, :latitude, :longitude).order(:id)
+      @masterportal_pins_for_map =
+        base_scope
+          .select(:id, :latitude, :longitude, :geometry, :properties, :masterportal_collection_id)
+          .includes(:masterportal_collection)
+          .order(:id)
       @masterportal_pins_total_count = base_scope.count
     else
       list_scope = base_scope
@@ -983,6 +997,8 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
       if @projekt_phase.is_a?(ProjektPhase::ProposalPhase)
         Comment.with_hidden.where(commentable: @projekt_phase.proposals.with_hidden)
       elsif @projekt_phase.is_a?(ProjektPhase::BudgetPhase)
+        return Comment.none if @projekt_phase.budget.blank?
+
         Comment.with_hidden.where(commentable: @projekt_phase.budget.investments.with_hidden)
       else
         @projekt_phase.comments.with_hidden
@@ -1088,7 +1104,7 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
     end
 
     def projekt_breadcrumb_path(projekt)
-      phases_adm_projekts_projekt_path(projekt) if policy([:adm, :projekts, projekt]).show?
+      phases_adm_projekts_projekt_path(projekt) if policy([:adm, :projekts, projekt]).contributions?
     end
 
     def filter_empty_registered_address_grouping_restrictions

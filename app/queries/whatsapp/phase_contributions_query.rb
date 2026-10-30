@@ -165,7 +165,7 @@ class Whatsapp::PhaseContributionsQuery < ApplicationQuery
     # An event's own weblink points outside the portal when the organiser set
     # one; otherwise the phase page is where it is described.
     def event_url(event)
-      event.weblink.presence || phase_url
+      event.weblink_url || phase_url
     end
 
     def phase_url

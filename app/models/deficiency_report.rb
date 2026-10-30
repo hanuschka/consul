@@ -13,6 +13,7 @@ class DeficiencyReport < ApplicationRecord
   translates :description, touch: true
   translates :summary, touch: true
   translates :official_answer, touch: true
+  translates :reporter_answer, touch: true
   include Globalizable
   include MachineTranslatable
 
@@ -110,6 +111,27 @@ class DeficiencyReport < ApplicationRecord
   scope :not_archived, -> { where(archived_at: nil) }
   scope :closed_to_archive, -> { closed.not_archived.where("status_changed_at < ?", 7.days.ago) }
 
+  # Whichever of the two timestamps sits closer to now is the one the reminder delay counts from.
+  OVERDUE_EFFECTIVE_DATE_SQL = <<~SQL.squish.freeze
+    (
+      CASE
+        WHEN abs(EXTRACT(EPOCH FROM (deficiency_reports.assigned_at - CURRENT_TIMESTAMP))) <
+             abs(EXTRACT(EPOCH FROM (deficiency_reports.status_changed_at - CURRENT_TIMESTAMP))) THEN deficiency_reports.assigned_at
+        ELSE deficiency_reports.status_changed_at
+      END
+    )::date
+  SQL
+
+  OVERDUE_THRESHOLD_SQL = "CURRENT_DATE - (deficiency_report_statuses.reminder_delay || ' days')::interval".freeze
+
+  scope :overdue_candidates, -> {
+    assigned.not_closed
+      .where.not(status_changed_at: nil)
+      .where.not(deficiency_report_statuses: { reminder_delay: [nil, 0] })
+      .where(official_answer: [nil, ""], reporter_answer: [nil, ""])
+  }
+  scope :overdue, -> { overdue_candidates.where(Arel.sql("#{OVERDUE_EFFECTIVE_DATE_SQL} <= #{OVERDUE_THRESHOLD_SQL}")) }
+
   pg_search_scope :pg_search,
     against: [:id, :on_behalf_of],
     associated_against: {
@@ -206,6 +228,22 @@ class DeficiencyReport < ApplicationRecord
 
   def on_behalf_of_account_linked?
     recorded_by.present? && recorded_by_id != author_id
+  end
+
+  def self.machine_translation_excluded_attributes
+    [:reporter_answer]
+  end
+
+  def self.separate_reporter_answer?
+    Setting["deficiency_reports.separate_reporter_answer"].present?
+  end
+
+  def answered?
+    official_answer.present? || reporter_answer.present?
+  end
+
+  def official_answer_for_reporter
+    self.class.separate_reporter_answer? ? reporter_answer : official_answer
   end
 
   def reporter_mailable?

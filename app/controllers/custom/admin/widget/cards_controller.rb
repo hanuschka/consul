@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "admin", "widget", "cards_controller").to_s
+load Rails.root.join("app", "controllers", "admin", "widget", "cards_controller.rb")
 class Admin::Widget::CardsController < Admin::BaseController
 
   private

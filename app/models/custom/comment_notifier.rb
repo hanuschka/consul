@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "comment_notifier").to_s
+load Rails.root.join("app", "models", "comment_notifier.rb")
 
 class CommentNotifier
 

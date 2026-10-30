@@ -72,10 +72,10 @@
               <span><%= projekt_event.location %></span>
             </div>
           <% end %>
-          <% if projekt_event.weblink.present? %>
+          <% if weblink_url.present? %>
             <div class="projekt-event-item-new-body--details-row">
               <i class="fa fa-globe"></i>
-              <span><a href="<%= projekt_event.weblink %>"><%= projekt_event.weblink %></a></span>
+              <span><%= link_to weblink_url, weblink_url %></span>
             </div>
           <% end %>
           <%= render "custom/projekt_event_registrations/registration_section", projekt_event: projekt_event %>

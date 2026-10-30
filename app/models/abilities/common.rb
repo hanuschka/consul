@@ -170,8 +170,7 @@ module Abilities
       can deficiency_report_read_actions, DeficiencyReport, author_id: user.id
       can [:create], DeficiencyReport if DeficiencyReport.submissions_open?
       can :destroy, DeficiencyReport do |dr|
-        dr.author_id == user.id &&
-          dr.official_answer.blank?
+        dr.author_id == user.id && !dr.answered?
       end
 
       can :create, Budget::Investment do |investment|

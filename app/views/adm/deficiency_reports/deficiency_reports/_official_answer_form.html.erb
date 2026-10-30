@@ -3,16 +3,21 @@
         url: update_official_answer_adm_deficiency_reports_deficiency_report_path(deficiency_report),
         multipart: true do |f| %>
 
-    <%= render Kern::FormFieldComponent.new(
-          hint: sanitize(t("adm.deficiency_reports.deficiency_reports.show.official_answer_hint")),
-          stacked: true, divider: false) do %>
-      <div role="group"
-           aria-label="<%= t("adm.deficiency_reports.deficiency_reports.show.official_answer") %>">
-        <%= f.text_area :official_answer,
-              value: AdminWYSIWYGSanitizer.new.sanitize(deficiency_report.official_answer),
-              label: false,
-              data: { controller: "ckeditor", ckeditor_toolbar_value: ck_editor_class(current_user) } %>
-      </div>
+    <% templates = DeficiencyReport::OfficialAnswerTemplate.all.to_a %>
+
+    <% if DeficiencyReport.separate_reporter_answer? %>
+      <%= render "adm/deficiency_reports/deficiency_reports/official_answer_field",
+                 f: f, deficiency_report: deficiency_report, templates: templates, attribute: :reporter_answer,
+                 label: t("adm.deficiency_reports.deficiency_reports.show.reporter_answer"),
+                 hint: t("adm.deficiency_reports.deficiency_reports.show.reporter_answer_hint") %>
+      <%= render "adm/deficiency_reports/deficiency_reports/official_answer_field",
+                 f: f, deficiency_report: deficiency_report, templates: templates, attribute: :official_answer,
+                 label: t("adm.deficiency_reports.deficiency_reports.show.public_answer"),
+                 hint: sanitize(t("adm.deficiency_reports.deficiency_reports.show.official_answer_hint")) %>
+    <% else %>
+      <%= render "adm/deficiency_reports/deficiency_reports/official_answer_field",
+                 f: f, deficiency_report: deficiency_report, templates: templates, attribute: :official_answer,
+                 label: nil, hint: sanitize(t("adm.deficiency_reports.deficiency_reports.show.official_answer_hint")) %>
     <% end %>
 
     <%= render Kern::FormFieldComponent.new(

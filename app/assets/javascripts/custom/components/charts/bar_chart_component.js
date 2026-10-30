@@ -3,6 +3,8 @@
 
   App.BarChartComponent = {
     initialize: function() {
+      App.ChartInstances.destroyDetached();
+
       const charts = document.querySelectorAll("[data-bar-chart]");
       charts.forEach(this.initChart.bind(this));
     },

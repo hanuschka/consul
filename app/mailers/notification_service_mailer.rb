@@ -41,10 +41,13 @@ class NotificationServiceMailer < ApplicationMailer
     end
   end
 
-  def new_comments_for_deficiency_report(deficiency_report, last_notified_time, officer: nil, initial: false)
+  # Options come through `with` params: on Ruby 3.2+ Rails 6.1 hands a mailer
+  # action's keyword arguments over as a positional hash.
+  def new_comments_for_deficiency_report(deficiency_report, last_notified_time)
+    officer = params[:officer]
     @deficiency_report = deficiency_report
     @new_comments = @deficiency_report.comments.where("created_at > ?", last_notified_time)
-    @initial = initial
+    @initial = params[:initial]
     email_to = officer ? officer.email : deficiency_report.responsible.default_email
     return if email_to.blank?
 
@@ -316,6 +319,8 @@ class NotificationServiceMailer < ApplicationMailer
                            polymorphic_url([namespace, @root_memoable.budget, @root_memoable])
                          elsif @root_memoable.is_a?(MunicipalPlan)
                            adm_municipal_plans_municipal_plan_url(@root_memoable)
+                         elsif @root_memoable.is_a?(DeficiencyReport)
+                           adm_deficiency_reports_deficiency_report_url(@root_memoable)
                          else
                            polymorphic_url([namespace, @root_memoable])
                          end

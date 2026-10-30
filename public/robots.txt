@@ -16,6 +16,7 @@ Disallow: /*?*locale-switcher
 Disallow: /*?*filter
 Disallow: /*?*page
 Disallow: /*?*page_a
+Disallow: /*?*tags
 Disallow: user_id
 
 User-agent: Bingbot
@@ -31,6 +32,7 @@ Disallow: /*?*locale-switcher
 Disallow: /*?*filter
 Disallow: /*?*page
 Disallow: /*?*page_a
+Disallow: /*?*tags
 Disallow: user_id
 
 User-agent: facebookexternalhit
@@ -46,6 +48,7 @@ Disallow: /*?*locale-switcher
 Disallow: /*?*filter
 Disallow: /*?*page
 Disallow: /*?*page_a
+Disallow: /*?*tags
 Disallow: user_id
 
 User-agent: meta-webindexer
@@ -134,6 +137,7 @@ User-agent: SiteimproveBot
 Disallow: /users/
 Disallow: /comments/
 Disallow: /ahoy/
+Disallow: /*?*tags
 
 # Block everything else
 User-agent: *

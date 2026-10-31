@@ -4,11 +4,12 @@
 # Disallow: /
 
 User-agent: Googlebot
+User-agent: Applebot
+User-agent: PerplexityBot
 Disallow: /users/
 Disallow: /comments/
 Disallow: /ahoy/
 Disallow: /polls/*/results
-
 Disallow: /*?*locale
 Disallow: /*?*order
 Disallow: /*?*search
@@ -24,7 +25,6 @@ Disallow: /users/
 Disallow: /comments/
 Disallow: /ahoy/
 Disallow: /polls/*/results
-
 Disallow: /*?*locale
 Disallow: /*?*order
 Disallow: /*?*search
@@ -36,11 +36,11 @@ Disallow: /*?*tags
 Disallow: user_id
 
 User-agent: facebookexternalhit
+User-agent: meta-webindexer
 Disallow: /users/
 Disallow: /comments/
 Disallow: /ahoy/
 Disallow: /polls/*/results
-
 Disallow: /*?*locale
 Disallow: /*?*order
 Disallow: /*?*search
@@ -50,9 +50,6 @@ Disallow: /*?*page
 Disallow: /*?*page_a
 Disallow: /*?*tags
 Disallow: user_id
-
-User-agent: meta-webindexer
-Disallow: /
 
 # Block AI training crawlers
 User-agent: GPTBot
@@ -70,18 +67,13 @@ Disallow: /
 User-agent: ByteSpider
 Disallow: /
 
-# Apple — explicit stanzas required; Apple does not fall back to User-agent: *
-User-agent: Applebot
-Disallow: /
-
+# Apple — Applebot (Siri, Spotlight, Safari search) shares the Googlebot group
+# above; Applebot-Extended opts out of Apple AI training only
 User-agent: Applebot-Extended
 Disallow: /
 
 # Other major AI / search crawlers
 User-agent: Amazonbot
-Disallow: /
-
-User-agent: PerplexityBot
 Disallow: /
 
 User-agent: Bytespider

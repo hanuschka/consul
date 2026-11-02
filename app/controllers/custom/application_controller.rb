@@ -62,7 +62,8 @@ class ApplicationController < ActionController::Base
     def normalize_tags_param
       return if params[:tags].blank?
 
-      normalized_tags = ::Tags::ExistingNamesService.call(params[:tags]).presence&.join(",")
+      tags_value = params[:tags].is_a?(String) ? params[:tags] : ""
+      normalized_tags = ::Tags::ExistingNamesService.call(tags_value).presence&.join(",")
       params[:tags] = normalized_tags
 
       if normalized_tags.blank?

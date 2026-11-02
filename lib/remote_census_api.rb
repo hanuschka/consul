@@ -6,6 +6,8 @@ class RemoteCensusApi
 
   def call(first_name:, last_name:, street_name:, street_number:, street_number_extension:, plz:, city_name:, date_of_birth:, gender:)
     gender = GENDER_CODES[gender]
+    plz = plz.to_s.strip
+    plz = plz.rjust(5, "0") if plz.match?(/\A\d{1,4}\z/)
 
     Response.new(get_response_body(first_name: first_name,
                                    last_name: last_name,

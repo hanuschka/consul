@@ -8,7 +8,7 @@ class Admin::ProjektPhaseSettingsController < Admin::BaseController
     @projekt_phase_setting.update!(projekt_phase_setting_params)
 
     respond_to do |format|
-      format.html { redirect_to request.referer, notice: t("admin.settings.flash.updated") }
+      format.html { redirect_back(fallback_location: root_path, notice: t("admin.settings.flash.updated")) }
       format.js
     end
   end

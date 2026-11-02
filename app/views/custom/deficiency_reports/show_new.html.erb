@@ -115,7 +115,7 @@
           <% end %>
         <% end %>
 
-        <% if current_user == @deficiency_report.author %>
+        <% if current_user == @deficiency_report.author && can?(:destroy, @deficiency_report) %>
           <%= render(Shared::SidebarCardComponent.new(
             title: t("custom.deficiency_reports.show.author_actions.title"),
             icon_name: "user-edit")) do |c| %>

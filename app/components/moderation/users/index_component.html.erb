@@ -4,7 +4,7 @@
   <%= render Admin::SearchComponent.new(label: t("moderation.users.index.search_placeholder")) %>
 
   <% if users.present? %>
-    <h3><%= page_entries_info users %></h3>
+    <h3><%= helpers.page_entries_info users %></h3>
 
     <table id="moderation_users" class="moderation-users">
       <thead>
@@ -42,6 +42,6 @@
       </tbody>
     </table>
 
-    <%= paginate users %>
+    <%= helpers.paginate users %>
   <% end %>
 </main>

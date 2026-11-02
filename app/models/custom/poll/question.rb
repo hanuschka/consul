@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "poll", "question").to_s
+load Rails.root.join("app", "models", "poll", "question.rb")
 
 class Poll::Question < ApplicationRecord
   include Mappable

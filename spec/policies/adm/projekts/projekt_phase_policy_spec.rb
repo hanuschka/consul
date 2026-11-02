@@ -111,6 +111,12 @@ describe Adm::Projekts::ProjektPhasePolicy do
       expect(policy_for(user, projekt_phase).moderate?).to be true
     end
 
+    it "is true for a projekt manager with only 'approve' permission on the parent projekt" do
+      user = scoped_manager(permissions: ["approve"], on: projekt)
+
+      expect(policy_for(user, projekt_phase).moderate?).to be true
+    end
+
     it "is false for a projekt manager with only 'create_on_behalf_of' permission on the parent projekt" do
       user = scoped_manager(permissions: ["create_on_behalf_of"], on: projekt)
 

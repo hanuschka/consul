@@ -22,7 +22,7 @@ class Adm::Projekts::ProjektPhasePolicy < ApplicationPolicy
   end
 
   def moderate?
-    manage_permitted? || moderate_permitted?
+    manage_permitted? || moderate_permitted? || approve_permitted?
   end
 
   class Scope < Scope

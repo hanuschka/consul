@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "legislation", "annotations_controller").to_s
+load Rails.root.join("app", "controllers", "legislation", "annotations_controller.rb")
 
 class Legislation::AnnotationsController < Legislation::BaseController
   def comments

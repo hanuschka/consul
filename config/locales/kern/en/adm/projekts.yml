@@ -106,6 +106,7 @@ en:
           projekt_managers: Project managers
           map: Map
           projekt_phases: Participation phases
+          contributions: Contributions
           images: Images
           documents: Documents
           delete: Delete
@@ -172,10 +173,14 @@ en:
             permissions:
               manage: Administer project
               moderate: Moderate content
+              approve: Approve contributions
               create_on_behalf_of: Create contributions on behalf of others
               get_notifications: Receive notifications
               access_graphql: Get GraphQL access
               review: Add offline votes
+            permission_hints:
+              approve: Allows accepting or rejecting submitted contributions in phases that require prior approval.
+              moderate: Allows hiding contributions and comments and handling flags. Approving new contributions is not included.
         map:
           title: Map
           hint_title: About the map view

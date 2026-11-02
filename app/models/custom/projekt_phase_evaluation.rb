@@ -2,7 +2,7 @@ class ProjektPhaseEvaluation < ApplicationRecord
   belongs_to :projekt_evaluation
   belongs_to :projekt_phase
 
-  enum status: {
+  enum :status, {
     pending: "pending",
     processing: "processing",
     completed: "completed",

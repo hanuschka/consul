@@ -69,7 +69,7 @@ describe "Interne Notizen on a Vorhaben in /adm", type: :request do
     login_as(admin)
 
     expect { post send_notification_adm_municipal_plans_memo_path(memo), as: :turbo_stream }
-      .to have_enqueued_mail(NotificationServiceMailer, :memo).with(memo.id, officer.user.id, anything)
+      .to have_enqueued_mail(NotificationServiceMailer, :memo).with(memo.id, officer.user.id)
 
     expect(memo.reload.last_notification_sent_at).to be_present
   end

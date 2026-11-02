@@ -62,6 +62,10 @@ module MachineTranslation
     Deepl.configured?
   end
 
+  def self.attribute_names(model)
+    model.translated_attribute_names - Array(model.try(:machine_translation_excluded_attributes))
+  end
+
   def self.all_translations(record)
     scope = record.translations
 

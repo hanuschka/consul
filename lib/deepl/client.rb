@@ -1,4 +1,4 @@
-require_dependency "deepl/error"
+require "deepl/error"
 
 class Deepl::Client
   include HTTParty

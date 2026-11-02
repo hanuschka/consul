@@ -1,5 +1,5 @@
 class ApiClient < ApplicationRecord
-  enum access_level: { public_data: "public_data", admin: "admin" }
+  enum :access_level, { public_data: "public_data", admin: "admin" }
 
   has_one :user, foreign_key: :api_client_id
 

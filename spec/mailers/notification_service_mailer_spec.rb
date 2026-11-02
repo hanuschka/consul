@@ -157,4 +157,24 @@ describe NotificationServiceMailer do
       end
     end
   end
+
+  describe "#memo" do
+    include ActiveJob::TestHelper
+
+    let(:report) { create(:deficiency_report, title: "Broken swing") }
+    let(:memo) { Memo.create!(memoable: report, user: create(:user), text: "Checked on site") }
+
+    before do
+      create(:administrator)
+      ActionMailer::Base.deliveries.clear
+    end
+
+    it "links a deficiency report memo to the report in /adm" do
+      perform_enqueued_jobs { NotificationServices::MemoNotifier.new(memo.id).call }
+      body = ActionMailer::Base.deliveries.last.body.decoded
+
+      expect(body).to include "/adm/deficiency_reports/#{report.id}"
+      expect(body).not_to include "deficiency_report_management"
+    end
+  end
 end

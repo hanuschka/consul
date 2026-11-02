@@ -2,8 +2,10 @@ class RemoteCensusApi
   require "uri"
   require "net/http"
 
+  GENDER_CODES = { "male" => "m", "female" => "w", "other_gen" => "d" }.freeze
+
   def call(first_name:, last_name:, street_name:, street_number:, street_number_extension:, plz:, city_name:, date_of_birth:, gender:)
-    gender = gender == "male" ? "m" : "w"
+    gender = GENDER_CODES[gender]
 
     Response.new(get_response_body(first_name: first_name,
                                    last_name: last_name,
@@ -13,12 +15,51 @@ class RemoteCensusApi
                                    plz: plz,
                                    city_name: city_name,
                                    date_of_birth: date_of_birth,
-                                   gender: gender))
+                                   gender: gender),
+                 version: version,
+                 street_check: settings[:street_check] == true)
+  end
+
+  class XmeldVersion
+    VERSIONS = {
+      "3.4" => { namespace_token: "34", fassung: "2024-01-31", unstructured_names: false },
+      "24.11" => { namespace_token: "2411", fassung: "2024-01-31", unstructured_names: false },
+      "25.05" => { namespace_token: "2505", fassung: "2024-07-31", unstructured_names: false },
+      "26.05" => { namespace_token: "2605", fassung: "2025-07-31", unstructured_names: true },
+      "26.11" => { namespace_token: "2611", fassung: "2026-01-31", unstructured_names: true }
+    }.freeze
+
+    attr_reader :number
+
+    def initialize(number)
+      @number = number.to_s
+      @attributes = VERSIONS.fetch(@number) do
+        raise ArgumentError, "Unsupported XMeld version #{number.inspect}, expected one of #{VERSIONS.keys.join(", ")}"
+      end
+    end
+
+    def namespace
+      "http://www.osci.de/xmeld#{@attributes[:namespace_token]}"
+    end
+
+    def service_namespace
+      "XMeld#{@attributes[:namespace_token]}Auskunft"
+    end
+
+    def fassung
+      @attributes[:fassung]
+    end
+
+    def unstructured_names?
+      @attributes[:unstructured_names]
+    end
   end
 
   class Response
-    def initialize(body)
+    def initialize(body, version:, street_check: false)
       @body = body
+      @version = version
+      @street_check = street_check
     end
 
     def valid?
@@ -28,36 +69,37 @@ class RemoteCensusApi
         house_number_matched? &&
         house_number_extension_matched? &&
         postleitzahl_matched? &&
+        (!@street_check || street_matched?) &&
         city_matched?
     end
 
     def response_code_matched?
-      @body.xpath("//ns2:ergebnisstatus/code", "ns2" => "http://www.osci.de/xmeld34").text == "01"
+      xpath("//ns2:ergebnisstatus/code").text == "01"
     end
 
     def first_name_matched?
-      @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:vornamen/name", "ns2" => "http://www.osci.de/xmeld34").text ==
-        @body.xpath("//ns2:datenZurAnfrage //ns2:vornamen/name", "ns2" => "http://www.osci.de/xmeld34").text
+      registered_first_name = xpath("//ns2:ergebnis/ns2:ergebnis //ns2:vornamen/name").text
+
+      registered_first_name.present? &&
+        registered_first_name == xpath("//ns2:datenZurAnfrage //ns2:vornamen/name").text
     end
 
     def last_name_matched?
-      last_name_particle = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:familienname/ns2:namensbestandteil", "ns2" => "http://www.osci.de/xmeld34").text
-      last_name = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:familienname/ns2:nachname", "ns2" => "http://www.osci.de/xmeld34").text
+      registered = registered_last_name.strip.downcase
 
-      [last_name_particle, last_name].join(" ").strip.downcase ==
-        @body.xpath("//ns2:datenZurAnfrage //ns2:nachname/name", "ns2" => "http://www.osci.de/xmeld34").text.downcase
+      registered.present? && registered == xpath("//ns2:datenZurAnfrage //ns2:nachname/name").text.downcase
     end
 
     def house_number_matched?
-      request_house_number = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummer", "ns2" => "http://www.osci.de/xmeld34").text
-      registered_house_numbers = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummer", "ns2" => "http://www.osci.de/xmeld34").map(&:text)
+      request_house_number = xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummer").text
+      registered_house_numbers = xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummer").map(&:text)
 
       request_house_number.in?(registered_house_numbers)
     end
 
     def house_number_extension_matched?
-      request_house_number_extension = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummerBuchstabeZusatzziffer", "ns2" => "http://www.osci.de/xmeld34").text
-      registered_house_number_extensions = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummerBuchstabeZusatzziffer", "ns2" => "http://www.osci.de/xmeld34").map(&:text)
+      request_house_number_extension = xpath("//ns2:datenZurAnfrage //ns2:anschrift/hausnummerBuchstabeZusatzziffer").text
+      registered_house_number_extensions = xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //hausnummerBuchstabeZusatzziffer").map(&:text)
 
       return true if request_house_number_extension.blank? && registered_house_number_extensions.blank?
 
@@ -65,37 +107,74 @@ class RemoteCensusApi
     end
 
     def postleitzahl_matched?
-      request_plz = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/postleitzahl", "ns2" => "http://www.osci.de/xmeld34").text
-      registered_plzs = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //postleitzahl", "ns2" => "http://www.osci.de/xmeld34").map(&:text)
+      request_plz = xpath("//ns2:datenZurAnfrage //ns2:anschrift/postleitzahl").text
+      registered_plzs = xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //postleitzahl").map(&:text)
 
       request_plz.in?(registered_plzs)
     end
 
     def street_matched?
-      request_street = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/strasse", "ns2" => "http://www.osci.de/xmeld34").text
-      registered_streets = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //strasse", "ns2" => "http://www.osci.de/xmeld34").map(&:text)
+      request_street = normalized_street(xpath("//ns2:datenZurAnfrage //ns2:anschrift/strasse").text)
+      registered_streets = xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //strasse")
+                             .map { |street| normalized_street(street.text) }
 
-      request_street.in?(registered_streets)
+      request_street.present? && request_street.in?(registered_streets)
     end
 
     def city_matched?
-      request_city = @body.xpath("//ns2:datenZurAnfrage //ns2:anschrift/wohnort", "ns2" => "http://www.osci.de/xmeld34").text
-      registered_cities = @body.xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //wohnort", "ns2" => "http://www.osci.de/xmeld34").map(&:text)
+      request_city = xpath("//ns2:datenZurAnfrage //ns2:anschrift/wohnort").text
+      registered_cities = xpath("//ns2:ergebnis/ns2:ergebnis //ns2:anschrift.aktuell //wohnort").map(&:text)
 
       request_city.in?(registered_cities)
     end
+
+    private
+
+      def xpath(path)
+        @body.xpath(path, "ns2" => @version.namespace)
+      end
+
+      def registered_last_name
+        if @version.unstructured_names?
+          xpath("//ns2:ergebnis/ns2:ergebnis //ns2:familienname.unstrukturiert/ns2:nachname/name").text
+        else
+          last_name_particle = xpath("//ns2:ergebnis/ns2:ergebnis //ns2:familienname/ns2:namensbestandteil").text
+          last_name = xpath("//ns2:ergebnis/ns2:ergebnis //ns2:familienname/ns2:nachname").text
+
+          [last_name_particle, last_name].join(" ")
+        end
+      end
+
+      def normalized_street(street)
+        street.downcase.gsub("ß", "ss")
+              .gsub(/strasse\b/, "str").gsub("str.", "str")
+              .gsub(/platz\b/, "pl").gsub("pl.", "pl")
+              .squish
+      end
   end
 
   private
 
+    def settings
+      @settings ||= Rails.application.secrets.xmeld || {}
+    end
+
+    def version
+      @version ||= XmeldVersion.new(settings[:version])
+    end
+
+    def proxy
+      settings[:proxy_ip].present? ? [settings[:proxy_ip], settings[:proxy_port]] : []
+    end
+
     def get_response_body(first_name:, last_name:, street_name:, street_number:, street_number_extension:, plz:, city_name:, date_of_birth:, gender:)
-      url = URI(Rails.application.secrets.soap_endpoint)
-      https = Net::HTTP.new(url.host, url.port)
+      url = URI(settings[:endpoint])
+      https = Net::HTTP.new(url.host, url.port, *proxy)
       https.use_ssl = true
 
       request = Net::HTTP::Post.new(url)
-      request["X-username"] = Rails.application.secrets.soap_username
-      request["X-password"] = Rails.application.secrets.soap_password
+      request["X-username"] = settings[:username]
+      request["X-password"] = settings[:password]
       request["Content-Type"] = "text/xml"
 
       request.body = form_request_xml(first_name: first_name,
@@ -113,17 +192,20 @@ class RemoteCensusApi
     end
 
     def form_request_xml(first_name:, last_name:, street_name:, street_number:, street_number_extension:, plz:, city_name:, date_of_birth:, gender:)
+      xmeld_version = version
+      behoerdenkennung = settings[:behoerdenkennung]
+      organisationseinheit = settings[:organisationseinheit]
       b = Nokogiri::XML::Builder.new(encoding: "UTF-8")
 
-      b.Envelope("xmlns:xmel": "XMeld34Auskunft", "xmlns:xmel1": "http://www.osci.de/xmeld34") {
+      b.Envelope("xmlns:xmel": xmeld_version.service_namespace, "xmlns:xmel1": xmeld_version.namespace) {
         b.parent.namespace = b.parent.add_namespace_definition("soapenv", "http://schemas.xmlsoap.org/soap/envelope/")
         b["soapenv"].Header
         b["soapenv"].Body {
           b["xmel"].abfrage0600 {
-            b["xmel1"].send("melderegisterauskunfteinfach.anforderung.0600", fassung: "2024-01-31", id: "ID_1", produkt: "?", produkthersteller: "?", produktversion: "?", test: "?", version: "3.4" ) {
+            b["xmel1"].send("melderegisterauskunfteinfach.anforderung.0600", fassung: xmeld_version.fassung, id: "ID_1", produkt: "?", produkthersteller: "?", produktversion: "?", test: "?", version: xmeld_version.number ) {
               b.nachrichtenkopf {
                 b.send("identifikation.nachricht") {
-                  b.nachrichtennummer(listURI: "urn:de:xmeld:schluesseltabelle:xmeld.nachrichten", listVersionID: "3.4") {
+                  b.nachrichtennummer(listURI: "urn:de:xmeld:schluesseltabelle:xmeld.nachrichten", listVersionID: xmeld_version.number) {
                     b.code {
                       b.parent.content = "0600"
                       b.parent.namespace = nil
@@ -136,24 +218,43 @@ class RemoteCensusApi
                 b.absender {
                   b.send("kunde.bezeichnung") {
                     b.NAMENATUERLICHEPERSON {
-                      b.familienname {
-                        b.nachname{
-                          b.parent.content = "Mustermann 1"
+                      if xmeld_version.unstructured_names?
+                        b.send("familienname.unstrukturiert") {
+                          b.nachname {
+                            b.name {
+                              b.parent.content = "Mustermann 1"
+                              b.parent.namespace = nil
+                            }
+                          }
                         }
-                      }
-                      b.vornamen {
-                        b.name {
-                          b.parent.content = "xMaximilian "
-                          b.parent.namespace = nil
+                        b.vornamen {
+                          b.vornamen {
+                            b.name {
+                              b.parent.content = "xMaximilian "
+                              b.parent.namespace = nil
+                            }
+                          }
                         }
-                      }
+                      else
+                        b.familienname {
+                          b.nachname{
+                            b.parent.content = "Mustermann 1"
+                          }
+                        }
+                        b.vornamen {
+                          b.name {
+                            b.parent.content = "xMaximilian "
+                            b.parent.namespace = nil
+                          }
+                        }
+                      end
                     }
                   }
                 }
                 b.empfaenger {
-                  b.behoerdenkennung("ags:05513000")
+                  b.behoerdenkennung(behoerdenkennung)
                   b.ORGANISATIONSEINHEIT {
-                    b.bezeichnung("Gelsenkirchen")
+                    b.bezeichnung(organisationseinheit)
                     b.hierarchieebene(1)
                   }
                 }
@@ -224,14 +325,16 @@ class RemoteCensusApi
                       }
                     }
                   }
-                  b.geschlechtOderFamilienstand {
-                    b.geschlecht(listURI: "urn:de:dsmeld:schluesseltabelle:geschlecht", listVersionID: 2) {
-                      b.code {
-                        b.parent.content = gender
-                        b.parent.namespace = nil
+                  if gender
+                    b.geschlechtOderFamilienstand {
+                      b.geschlecht(listURI: "urn:xoev-de:xinneres:codeliste:geschlecht", listVersionID: 1) {
+                        b.code {
+                          b.parent.content = gender
+                          b.parent.namespace = nil
+                        }
                       }
                     }
-                  }
+                  end
                 }
                 b.send("technische.einzelidentifikation") {
                   b.ereigniszeitpunkt(Time.current.strftime("%Y-%m-%dT%H:%M:%S"))

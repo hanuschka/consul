@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "6.1.7.6"
+gem "rails", "6.1.7.10"
 
 gem "acts-as-taggable-on", "~> 9.0.1"
 gem "acts_as_votable", "~> 0.14.0"
@@ -10,7 +10,7 @@ gem "ancestry", "~> 4.3.3"
 gem "audited", "~> 5.4.0"
 gem "autoprefixer-rails", "~> 8.2.0"
 gem "cancancan", "~> 3.5.0"
-gem "caxlsx", "~> 3.4.1"
+gem "caxlsx", "~> 4.5.0"
 gem "caxlsx_rails", "~> 0.6.3"
 gem "cocoon", "~> 1.2.15"
 gem "daemons", "~> 1.4.1"
@@ -25,8 +25,7 @@ gem "foundation-rails", "~> 6.6.2.0"
 gem "foundation_rails_helper", "~> 4.0.1"
 gem "globalize", "~> 6.2.1"
 gem "globalize-accessors", "~> 0.3.0"
-gem "graphiql-rails", "~> 1.8.0"
-gem "graphql", "~> 1.12.14"
+gem "graphql", "~> 2.6.13"
 gem "groupdate", "~> 6.4.0"
 gem "image_processing", "~> 1.12.2"
 gem "initialjs-rails", "~> 0.2.0.9"
@@ -42,13 +41,13 @@ gem "omniauth-twitter", "~> 1.4.0"
 gem "paranoia", "~> 2.6.2"
 gem "pg", "~> 1.4.3"
 gem "pg_search", "~> 2.3.6"
-gem "puma", "~> 5.6.7"
+gem "puma", "~> 7.2.1"
 gem "recipient_interceptor", "~> 0.3.1"
 gem "redcarpet", "~> 3.6.0"
 gem "responders", "~> 3.1.0"
 gem "rinku", "~> 2.0.6", require: "rails_rinku"
 gem "sassc-rails", "~> 2.1.2"
-gem "savon", "~> 2.14.0"
+gem "savon", "~> 2.17.5"
 gem "sitemap_generator", "~> 6.3.0"
 gem "social-share-button", "~> 1.2.4"
 gem "sprockets", "~> 4.2.1"
@@ -56,7 +55,7 @@ gem "turbolinks", "~> 5.2.1"
 gem "turnout", "~> 2.5.0"
 gem "terser", "~> 1.2"
 gem "uuidtools", "~> 2.2.0"
-gem "view_component", "~> 3.6.0"
+gem "view_component", "~> 3.25"
 gem "whenever", "~> 1.0.0", require: false
 gem "wicked_pdf", "~> 2.7.0"
 gem "wkhtmltopdf-binary", "~> 0.12.6"
@@ -79,7 +78,7 @@ group :test do
   gem "capybara-webmock", "~> 0.7.0"
   gem "email_spec", "~> 2.2.2"
   gem "rspec-rails", "~> 5.1.2"
-  gem "selenium-webdriver", "~> 4.16.0"
+  gem "selenium-webdriver", "~> 4.51.0"
   gem "simplecov", "~> 0.22.0", require: false
   gem "simplecov-lcov", "~> 0.8.0", require: false
 end
@@ -89,7 +88,7 @@ group :development do
   gem "capistrano-bundler", "~> 2.1.0", require: false
   gem "capistrano-npm", "~> 1.0.3", require: false
   gem "capistrano-rails", "~> 1.6.3", require: false
-  gem "capistrano3-puma", "~> 5.2.0"
+  gem "capistrano3-puma", "~> 8.1"
   gem "erb_lint", "~> 0.5.0", require: false
   gem "mdl", "~> 0.12.0", require: false
   gem "pronto", "~> 0.11.1", require: false
@@ -97,7 +96,7 @@ group :development do
   gem "pronto-eslint", "~> 0.11.1", require: false
   gem "pronto-rubocop", "~> 0.11.5", require: false
   gem "pronto-scss", "~> 0.11.0", require: false
-  gem "rubocop", "~> 1.56.4", require: false
+  gem "rubocop", "~> 1.57.2", require: false
   gem "rubocop-capybara", "~> 2.19.0", require: false
   gem "rubocop-factory_bot", "~> 2.24.0", require: false
   gem "rubocop-performance", "~> 1.19.1", require: false

@@ -1,4 +1,6 @@
 class Proposals::DashboardProgressChartComponent < ApplicationComponent
+  GROUP_BY_OPTIONS = %w[week month].freeze
+
   attr_reader :proposal
   delegate :daily_selected_class,
            :weekly_selected_class,
@@ -13,4 +15,10 @@ class Proposals::DashboardProgressChartComponent < ApplicationComponent
   def render?
     @proposal.published?
   end
+
+  private
+
+    def group_by
+      params[:group_by].presence_in(GROUP_BY_OPTIONS)
+    end
 end

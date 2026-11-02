@@ -29,7 +29,7 @@ class Ai::ModelProfile
   # The cheap tier, for the short judgements made while someone waits on the
   # other end of a chat — routing a message, rewording one line.
   def self.fast
-    new(::Ai::Settings.fast_model)
+    new(::Ai::Settings.medium_model)
   end
 
   # The cheapest tier, for classifying candidates a query has already narrowed.

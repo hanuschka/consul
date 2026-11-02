@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "votes_helper").to_s
+load Rails.root.join("app", "helpers", "votes_helper.rb")
 
 module VotesHelper
   def votable_percentage_of_likes(votable)

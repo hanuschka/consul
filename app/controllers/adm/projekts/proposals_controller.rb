@@ -10,7 +10,7 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
     respond_to do |format|
       format.html do
         @breadcrumbs = [
-          { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title, url: proposals_adm_projekts_phase_path(@projekt_phase) },
           { name: @proposal.title }
         ]

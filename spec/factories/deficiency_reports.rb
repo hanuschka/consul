@@ -53,4 +53,13 @@ FactoryBot.define do
     association :officer, factory: :deficiency_report_officer
     association :officer_group, factory: :deficiency_report_officer_group
   end
+
+  factory :deficiency_report_report_profile, class: "DeficiencyReport::ReportProfile" do
+    sequence(:name) { |n| "Bericht #{n}" }
+    building_blocks { DeficiencyReport::ReportProfile::BUILDING_BLOCKS }
+    frequency { "weekly" }
+    weekday { 5 }
+    hour { 15 }
+    recipient_emails { ["buergermeister@example.org"] }
+  end
 end

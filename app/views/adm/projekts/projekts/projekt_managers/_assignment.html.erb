@@ -3,9 +3,14 @@
     <% disabled = !policy([:adm, :projekts, assignment]).update? %>
     <%= form_with model: assignment, url: adm_projekts_projekt_manager_assignment_path(projekt, assignment), namespace: dom_id(assignment) do |f| %>
       <%= f.collection_check_boxes :permissions, ProjektManagerAssignment::ACCEPTABLE_PERMISSIONS, :to_s, :to_s do |cb| %>
+        <% hint = t(".permission_hints.#{cb.value}", default: "") %>
+        <% hint_id = "#{dom_id(assignment)}_#{cb.value}_hint" %>
         <div class="kern-form-check mb-3">
-          <%= cb.check_box(class: "kern-form-check__checkbox", disabled: disabled) %>
+          <%= cb.check_box(class: "kern-form-check__checkbox", disabled: disabled, aria: { describedby: (hint_id if hint.present?) }) %>
           <%= cb.label(class: "kern-label") { t(".permissions.#{cb.value}") } %>
+          <% if hint.present? %>
+            <span id="<%= hint_id %>" class="kern-body kern-body--small kern-body--muted pt-0" style="grid-column: 2;"><%= hint %></span>
+          <% end %>
         </div>
       <% end %>
       <%= form_submit_button(disabled: disabled) %>

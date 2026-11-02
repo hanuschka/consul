@@ -1,4 +1,5 @@
 <% manage_allowed = policy([:adm, :projekts, projekt]).update? %>
+<% contributions_allowed = policy([:adm, :projekts, projekt]).contributions? %>
 <tr class="kern-table__row" id="<%= dom_id(projekt) %>">
   <th scope="row" class="kern-table__header" data-field="name">
     <div class="d-flex align-items-center gap-3">
@@ -6,6 +7,8 @@
       <div>
         <% if manage_allowed %>
           <%= link_to projekt.title, details_adm_projekts_projekt_path(projekt), class: "link strong", data: { turbo_frame: "_top" } %>
+        <% elsif contributions_allowed %>
+          <%= link_to projekt.title, phases_adm_projekts_projekt_path(projekt), class: "link strong", data: { turbo_frame: "_top" } %>
         <% else %>
           <span class="strong"><%= projekt.title %></span>
         <% end %>
@@ -51,6 +54,10 @@
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
       <% if !projekt.copy_unfinished? %>
         <% actions.with_action(label: t(".frontend_page"), url: projekt_path(projekt), icon: "open_in_new", data: { turbo: false }, target: "_blank") %>
+
+        <% if !manage_allowed && contributions_allowed %>
+          <% actions.with_action(label: t(".contributions"), url: phases_adm_projekts_projekt_path(projekt), icon: "forum", data: { turbo_frame: "_top" }) %>
+        <% end %>
 
         <% if manage_allowed %>
           <% actions.with_action(label: t(".details"), url: details_adm_projekts_projekt_path(projekt), icon: "settings", data: { turbo_frame: "_top" }) %>

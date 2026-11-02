@@ -21,10 +21,6 @@ module Consul
     # in any CONSUL installations
     config.active_support.use_authenticated_message_encryption = false
 
-    # Keep using the classic autoloader until we decide how custom classes
-    # should work with zeitwerk
-    config.autoloader = :classic
-
     # Don't enable has_many_inversing because it doesn't seem to currently
     # work with the _count database columns we use for caching purposes
     config.active_record.has_many_inversing = false
@@ -102,6 +98,7 @@ module Consul
 
     # Add lib to the autoload path
     config.autoload_paths << Rails.root.join("lib")
+    config.eager_load_paths << Rails.root.join("lib")
     config.time_zone = "Berlin"
     config.active_job.queue_adapter = :delayed_job
 
@@ -120,13 +117,22 @@ module Consul
     # * English: https://github.com/consul/consul/blob/master/CUSTOMIZE_EN.md
     # * Spanish: https://github.com/consul/consul/blob/master/CUSTOMIZE_ES.md
     #
-    config.autoload_paths << "#{Rails.root}/app/components/concerns/custom"
-    config.autoload_paths << "#{Rails.root}/app/components/custom"
-    config.autoload_paths << "#{Rails.root}/app/controllers/concerns/custom"
-    config.autoload_paths << "#{Rails.root}/app/controllers/custom"
-    config.autoload_paths << "#{Rails.root}/app/models/concerns/custom"
-    config.autoload_paths << "#{Rails.root}/app/graphql/custom"
-    config.autoload_paths << "#{Rails.root}/app/models/custom"
+    #
+    # A custom file shadows the original file of the same name, which it loads
+    # explicitly with `load` before reopening the class.
+    [
+      "app/components/concerns/custom",
+      "app/components/custom",
+      "app/controllers/concerns/custom",
+      "app/controllers/custom",
+      "app/models/concerns/custom",
+      "app/graphql/custom",
+      "app/models/custom"
+    ].each do |path|
+      config.autoload_paths << Rails.root.join(path)
+      config.eager_load_paths << Rails.root.join(path)
+    end
+
     config.paths["app/views"].unshift(Rails.root.join("app", "views", "custom"))
     config.paths["app/views"].unshift(Rails.root.join("app", "views", "cli"))
   end

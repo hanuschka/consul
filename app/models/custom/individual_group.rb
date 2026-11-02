@@ -1,4 +1,8 @@
 class IndividualGroup < ApplicationRecord
+  translates :name, touch: true
+  include Globalizable
+  include MachineTranslatable
+
   has_many :individual_group_values, dependent: :destroy
   validates :name, presence: true
 

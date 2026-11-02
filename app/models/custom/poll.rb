@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "poll").to_s
+load Rails.root.join("app", "models", "poll.rb")
 
 class Poll < ApplicationRecord
 include MachineTranslatable

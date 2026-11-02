@@ -4,7 +4,9 @@ class Adm::MemoPolicy < ApplicationPolicy
   # leave notes on an Anliegen they cannot otherwise touch. Policies that do not answer add_memo?
   # keep the old behaviour through ApplicationPolicy#add_memo?.
   def create?
-    memoable_policy.add_memo?
+    parent_policy = memoable_policy
+
+    parent_policy.present? && parent_policy.add_memo?
   end
 
   def destroy?
@@ -31,8 +33,6 @@ class Adm::MemoPolicy < ApplicationPolicy
         Adm::ProposalPolicy.new(@user, memoable)
       when MunicipalPlan
         Adm::MunicipalPlans::MunicipalPlanPolicy.new(@user, memoable)
-      else
-        OpenStruct.new(add_memo?: false)
       end
     end
 end

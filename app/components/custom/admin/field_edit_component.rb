@@ -17,6 +17,10 @@ class Admin::FieldEditComponent < ViewComponent::Base
     )
   end
 
+  def field_token
+    Adm::AttributeEditorToken.generate(@record, @attribute, @kind)
+  end
+
   def max_visible_length
     return nil unless @allow_br_tags
 

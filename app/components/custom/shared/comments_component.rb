@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "shared", "comments_component").to_s
+load Rails.root.join("app", "components", "shared", "comments_component.rb")
 
 class Shared::CommentsComponent < ApplicationComponent
   private

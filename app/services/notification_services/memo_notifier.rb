@@ -6,7 +6,7 @@ module NotificationServices
 
     def call
       users_to_notify.each do |user|
-        NotificationServiceMailer.memo(@memo.id, user.id, namespace(user, @memo)).deliver_later
+        NotificationServiceMailer.memo(@memo.id, user.id, namespace(user)).deliver_later
         Notification.add(user, @memo)
         Activity.log(user, "email", @memo)
       end
@@ -52,9 +52,7 @@ module NotificationServices
         end.compact
       end
 
-      def namespace(user, memo)
-        return :deficiency_report_management if memo.root_memoable.is_a?(DeficiencyReport)
-
+      def namespace(user)
         if user.administrator?
           :admin
         elsif user.projekt_manager?

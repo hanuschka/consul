@@ -37,6 +37,9 @@ class Adm::DeficiencyReports::MenuComponent < Adm::BaseMenuComponent
       (if Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).stats?
          { label: t("adm.deficiency_reports.menu.items.stats"), icon: "bar_chart", path: adm_deficiency_reports_stats_path }
        end),
+      (if Adm::DeficiencyReports::ReportProfilePolicy.new(current_user, nil).index?
+         { label: t("adm.deficiency_reports.menu.items.report_profiles"), icon: "summarize", path: adm_deficiency_reports_report_profiles_path }
+       end),
       (if Adm::DeficiencyReports::SettingPolicy.new(current_user, nil).show?
          { label: t("adm.deficiency_reports.menu.items.ai_settings"), icon: "smart_toy", path: adm_deficiency_reports_ai_settings_path }
        end)

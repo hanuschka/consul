@@ -1,0 +1,28 @@
+<%#
+  Reproduces the unit capistrano3-puma 5.x generated. The 8.x default would
+  run Type=notify with a watchdog, but behind the fnm/rvm wrapper Puma is not
+  the unit's main process, so its readiness notifications would be dropped and
+  systemd would keep killing it.
+-%>
+[Unit]
+Description=Puma HTTP Server for <%= "#{fetch(:application)} (#{fetch(:stage)})" %>
+After=network.target
+
+[Service]
+Type=simple
+<%= "User=#{puma_user(@role)}" if fetch(:puma_systemctl_user) == :system %>
+WorkingDirectory=<%= current_path %>
+# Support older bundler versions where file descriptors weren't kept
+# See https://github.com/rubygems/rubygems/issues/3254
+ExecStart=<%= expanded_bundle_command %> exec --keep-file-descriptors puma -C <%= fetch(:puma_conf) %>
+ExecReload=/bin/kill -USR1 $MAINPID
+StandardOutput=append:<%= fetch(:puma_access_log) %>
+StandardError=append:<%= fetch(:puma_error_log) %>
+
+Restart=always
+RestartSec=1
+
+SyslogIdentifier=puma
+
+[Install]
+WantedBy=<%= fetch(:puma_systemctl_user) == :system ? "multi-user.target" : "default.target" %>

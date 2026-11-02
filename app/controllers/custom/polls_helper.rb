@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "polls_helper").to_s
+load Rails.root.join("app", "helpers", "polls_helper.rb")
 
 module PollsHelper
   def poll_answers_by_question_for_current_user(poll)

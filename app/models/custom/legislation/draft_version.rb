@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "legislation", "draft_version").to_s
+load Rails.root.join("app", "models", "legislation", "draft_version.rb")
 
 class Legislation::DraftVersion < ApplicationRecord
   clear_validators!

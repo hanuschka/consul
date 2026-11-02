@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "proposal").to_s
+load Rails.root.join("app", "models", "proposal.rb")
 class Proposal < ApplicationRecord
 include MachineTranslatable
   include Labelable

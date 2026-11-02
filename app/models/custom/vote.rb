@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "vote").to_s
+load Rails.root.join("app", "models", "vote.rb")
 
 class Vote < ActsAsVotable::Vote
   # Catalog B12's "new supports" trigger. Hooked on the vote row rather than in

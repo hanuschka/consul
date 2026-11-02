@@ -32,7 +32,7 @@ class Dashboard::ActionsController < Dashboard::BaseController
 
     Dashboard::ExecutedAction.create(proposal: proposal, action: dashboard_action,
                                                          executed_at: Time.current)
-    redirect_to request.referer
+    redirect_back(fallback_location: root_path)
   end
 
   def unexecute
@@ -40,7 +40,7 @@ class Dashboard::ActionsController < Dashboard::BaseController
 
     Dashboard::ExecutedAction.find_by(proposal: proposal, action: dashboard_action).destroy!
 
-    redirect_to request.referer
+    redirect_back(fallback_location: root_path)
   end
 
   private

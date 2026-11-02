@@ -1,4 +1,4 @@
-require_dependency "mitmachbox/error"
+require "mitmachbox/error"
 
 class Mitmachbox::Client
   include HTTParty

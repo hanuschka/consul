@@ -49,7 +49,12 @@ module PdfServices
           qr_y = pdf.bounds.top - (banner_height - qr_size) / 2
           pdf.fill_color COLORS[:white]
           pdf.fill_rounded_rectangle([pdf.bounds.width - 40 - qr_size - 4, qr_y + 4], qr_size + 8, qr_size + 8, 3)
-          pdf.svg(generate_qr_svg(qr_url), at: [pdf.bounds.width - 40 - qr_size, qr_y], width: qr_size)
+          pdf.svg(
+            generate_qr_svg(qr_url),
+            at: [pdf.bounds.width - 40 - qr_size, qr_y],
+            width: qr_size,
+            enable_web_requests: false
+          )
           title_width = pdf.bounds.width - 10 - qr_size - 24
         else
           title_width = pdf.bounds.width - 10
@@ -130,7 +135,12 @@ module PdfServices
         if qr_url
           qr_y = right_top_y
           qr_y -= ts_height + ts_gap if timestamp
-          pdf.svg(generate_qr_svg(qr_url), at: [right_x, qr_y], width: qr_size)
+          pdf.svg(
+            generate_qr_svg(qr_url),
+            at: [right_x, qr_y],
+            width: qr_size,
+            enable_web_requests: false
+          )
         end
 
         pdf.move_cursor_to(start_y - card_height - 12)

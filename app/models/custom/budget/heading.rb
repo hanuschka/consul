@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "budget", "heading").to_s
+load Rails.root.join("app", "models", "budget", "heading.rb")
 
 class Budget
   class Heading < ApplicationRecord

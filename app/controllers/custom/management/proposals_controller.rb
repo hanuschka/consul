@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "management", "proposals_controller").to_s
+load Rails.root.join("app", "controllers", "management", "proposals_controller.rb")
 
 class Management::ProposalsController < Management::BaseController
 

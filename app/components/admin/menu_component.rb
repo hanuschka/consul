@@ -552,15 +552,6 @@ class Admin::MenuComponent < ApplicationComponent
         )
     end
 
-    def machine_learning_link
-      [
-        t("admin.menu.machine_learning"),
-        admin_machine_learning_path,
-        controller_name == "machine_learning",
-        class: "ml-link"
-      ]
-    end
-
     def administrator_tasks_link
       [
         t("admin.menu.administrator_tasks"),

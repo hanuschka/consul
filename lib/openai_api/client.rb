@@ -2,9 +2,10 @@ require "faraday"
 require "faraday/multipart"
 
 # The app's own client for the two OpenAI endpoints the WhatsApp assistant
-# needs: the Responses API and audio transcription. It exists instead of the
-# official openai gem because every released version of that gem requires
-# Ruby >= 3.2.0 and this app runs 3.1.4.
+# needs: the Responses API and audio transcription. It was written when the
+# official openai gem required a newer Ruby than the app ran. It stays because
+# it covers both endpoints on the Faraday stack the app already carries,
+# without adding the SDK as another dependency.
 #
 # Faraday and faraday-multipart are not declared in the Gemfile: they arrive
 # with ruby_llm, which is pinned to an exact version, so the transport under

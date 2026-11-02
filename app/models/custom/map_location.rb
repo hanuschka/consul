@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "map_location").to_s
+load Rails.root.join("app", "models", "map_location.rb")
 
 class MapLocation < ApplicationRecord
   # What a single dropped pin zooms to when the phase carries no map of its own

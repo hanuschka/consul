@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "tag_cloud").to_s
+load Rails.root.join("app", "models", "tag_cloud.rb")
 
 class TagCloud
   def tags

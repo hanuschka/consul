@@ -6,7 +6,7 @@ module NotificationServices
 
     def call
       users_to_notify.each do |user|
-        NotificationServiceMailer.memo(@memo.id, user.id, namespace(user, @memo)).deliver_later
+        NotificationServiceMailer.memo(@memo.id, user.id).deliver_later
         Notification.add(user, @memo)
         Activity.log(user, "email", @memo)
       end
@@ -50,16 +50,6 @@ module NotificationServices
         when MunicipalPlan::OfficerGroup then memoable.responsible.officers.includes(:user).map(&:user)
         else Array.new
         end.compact
-      end
-
-      def namespace(user, memo)
-        return :deficiency_report_management if memo.root_memoable.is_a?(DeficiencyReport)
-
-        if user.administrator?
-          :admin
-        elsif user.projekt_manager?
-          :projekt_management
-        end
       end
   end
 end

@@ -49,7 +49,7 @@ module AdminActions::Poll::Questions::Answers::Videos
              else
                t("flash.actions.destroy.error")
              end
-    redirect_back(fallback_location: (request.referer || root_path), notice: notice)
+    redirect_back(fallback_location: root_path, notice: notice)
   end
 
   private

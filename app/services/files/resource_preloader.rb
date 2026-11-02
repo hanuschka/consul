@@ -36,6 +36,6 @@ module Files::ResourcePreloader
   def preload(records, associations)
     return if records.empty?
 
-    ActiveRecord::Associations::Preloader.new.preload(records, associations)
+    ActiveRecord::Associations::Preloader.new(records: records, associations: associations).call
   end
 end

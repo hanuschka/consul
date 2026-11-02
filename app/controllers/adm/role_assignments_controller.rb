@@ -94,7 +94,7 @@ module Adm
         when "OfficingManager"
           adm_officing_managers_path
         else
-          request.referer || adm_root_path
+          url_from(request.referer) || adm_root_path
         end
       end
 
@@ -105,7 +105,7 @@ module Adm
         when "LandingPageManager"
           adm_landing_pages_managers_path
         else
-          request.referer || adm_root_path
+          url_from(request.referer) || adm_root_path
         end
       end
   end

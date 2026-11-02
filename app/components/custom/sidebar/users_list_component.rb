@@ -18,7 +18,7 @@ class Sidebar::UsersListComponent < ApplicationComponent
         @users.includes(PRELOAD_ASSOCIATIONS).last(VISIBLE_USERS_LIMIT)
       else
         @users.last(VISIBLE_USERS_LIMIT).tap do |users|
-          ActiveRecord::Associations::Preloader.new.preload(users, PRELOAD_ASSOCIATIONS)
+          ActiveRecord::Associations::Preloader.new(records: users, associations: PRELOAD_ASSOCIATIONS).call
         end
       end
   end

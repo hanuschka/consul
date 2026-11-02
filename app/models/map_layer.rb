@@ -8,7 +8,7 @@ class MapLayer < ApplicationRecord
 
   belongs_to :mappable, polymorphic: true
 
-  enum protocol: { regular: 0, wms: 1, geojson: 2 }
+  enum :protocol, { regular: 0, wms: 1, geojson: 2 }
 
   has_one_attached :geojson_file
 

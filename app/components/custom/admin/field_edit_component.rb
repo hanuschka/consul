@@ -6,7 +6,7 @@ class Admin::FieldEditComponent < ViewComponent::Base
     @allow_br_tags = allow_br_tags
   end
 
-  def field_name
+  def input_name
     "#{@record.model_name.param_key}[#{@attribute}]"
   end
 

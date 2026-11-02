@@ -1,4 +1,5 @@
 require "deepl/error"
+require "deepl/document"
 
 class Deepl::Client
   include HTTParty
@@ -32,20 +33,22 @@ class Deepl::Client
 
   def translate(texts, target_locale:, source_locale: nil, **options)
     values = Array(texts)
-    pending = values.each_with_index.reject { |text, _index| text.to_s.blank? }
-    return values.dup if pending.empty?
+    return values.dup if values.all? { |text| text.to_s.blank? }
 
     target_lang = target_lang_for(target_locale)
     source_lang = source_locale.present? ? source_lang_for(source_locale) : nil
-    results = values.dup
-
-    chunks(pending).each do |chunk|
-      translated = request_translation(chunk.map(&:first), target_lang:, source_lang:, options:)
-
-      chunk.each_with_index { |(_text, index), position| results[index] = translated[position] }
+    html = options[:tag_handling].to_s == "html"
+    documents = values.map do |text|
+      Deepl::Document.new(text, html:, max_bytes: MAX_TEXT_BYTES) unless text.to_s.blank?
     end
 
-    results
+    chunks(documents.compact.flat_map(&:parts)).each do |chunk|
+      translated = request_translation(chunk.map(&:text), target_lang:, source_lang:, options:)
+
+      chunk.zip(translated) { |part, text| part.translated = text }
+    end
+
+    values.each_with_index.map { |value, index| documents[index] ? documents[index].result : value }
   end
 
   def usage
@@ -97,13 +100,13 @@ class Deepl::Client
       Deepl.formality.present? && Deepl::Languages.supports_formality?(target_lang)
     end
 
-    def chunks(pending)
+    def chunks(parts)
       chunks = []
       current = []
       current_bytes = 0
 
-      pending.each do |pair|
-        bytes = encoded_size(pair.first)
+      parts.each do |part|
+        bytes = Deepl::Document.encoded_size(part.text)
         ensure_text_fits!(bytes)
 
         if current.size >= MAX_TEXTS_PER_REQUEST || current_bytes + bytes > MAX_TEXT_BYTES
@@ -112,7 +115,7 @@ class Deepl::Client
           current_bytes = 0
         end
 
-        current << pair
+        current << part
         current_bytes += bytes
       end
 
@@ -186,10 +189,6 @@ class Deepl::Client
       return source_lang if source_lang.present?
 
       raise Deepl::UnsupportedLanguageError, "no DeepL source language for locale #{locale.inspect}"
-    end
-
-    def encoded_size(text)
-      text.to_json.bytesize + 1
     end
 
     def ensure_text_fits!(bytes)

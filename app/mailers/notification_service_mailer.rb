@@ -310,19 +310,22 @@ class NotificationServiceMailer < ApplicationMailer
     end
   end
 
-  def memo(memo_id, user_id, namespace)
+  def memo(memo_id, user_id)
     @user = User.find(user_id)
     @memo = Memo.find(memo_id)
     @root_memoable = @memo.root_memoable
 
-    @root_memoable_url = if @root_memoable.is_a?(Budget::Investment)
-                           polymorphic_url([namespace, @root_memoable.budget, @root_memoable])
-                         elsif @root_memoable.is_a?(MunicipalPlan)
+    @root_memoable_url = case @root_memoable
+                         when Budget::Investment
+                           adm_projekts_phase_budget_investment_url(@root_memoable.projekt_phase, @root_memoable)
+                         when Proposal
+                           adm_projekts_phase_proposal_url(@root_memoable.projekt_phase, @root_memoable)
+                         when Idea
+                           adm_ideas_idea_url(@root_memoable)
+                         when MunicipalPlan
                            adm_municipal_plans_municipal_plan_url(@root_memoable)
-                         elsif @root_memoable.is_a?(DeficiencyReport)
+                         when DeficiencyReport
                            adm_deficiency_reports_deficiency_report_url(@root_memoable)
-                         else
-                           polymorphic_url([namespace, @root_memoable])
                          end
 
     subject = t("custom.notification_service_mailers.memo.subject")

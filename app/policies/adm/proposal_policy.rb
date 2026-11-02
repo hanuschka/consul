@@ -13,6 +13,10 @@ class Adm::ProposalPolicy < ApplicationPolicy
     manage_permitted? || approve_permitted?
   end
 
+  def update_official_answer?
+    manage_permitted? || approve_permitted?
+  end
+
   def hide?
     moderate_permitted?
   end

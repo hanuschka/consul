@@ -41,9 +41,6 @@ module Consul
     # a rewrite of stored links; review before NIST retires SHA-1 in 2030
     config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
 
-    # Keep Net::SMTP's own open and read timeouts instead of 5 seconds
-    config.action_mailer.smtp_timeout = nil
-
     # Keep writing caches, marshalled records and messages in formats the
     # Rails 7.0 release can read, so a rollback to it keeps the cache and
     # signed tokens. The 7.0 cache format also reads entries written by

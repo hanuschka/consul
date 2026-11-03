@@ -99,3 +99,8 @@ gem 'csv', '3.3.0'
 gem 'mutex_m', '0.2.0'
 gem 'observer', '0.1.2'
 gem 'racc', '1.7.3'
+
+# Class to build custom data structures, similar to a Hash.
+# Ruby 4.0 no longer ships it as a default gem, and sprockets-es6 and
+# file_validators require it without declaring it.
+gem 'ostruct', '0.6.3'

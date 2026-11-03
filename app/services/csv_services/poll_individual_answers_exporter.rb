@@ -43,13 +43,13 @@ module CsvServices
       def answer_text(answer)
         return answer.answer unless answer.map_points?
 
-        I18n.t("custom.polls.questions.map_points.csv_pin_count", count: answer.map_points.size)
+        answer.map_points.sort_by(&:id).map { |point| "#{point.latitude}, #{point.longitude}" }.join("; ")
       end
 
       def answers
         @answers ||= Poll::Answer
           .where(question_id: @poll.question_ids)
-          .includes(:map_points, question: [:context, :votation_type])
+          .includes(:map_points, question: [:context, :votation_type, { parent_question: :context }])
           .order(:author_id, :question_id, :id)
       end
 
@@ -73,7 +73,7 @@ module CsvServices
       end
 
       def question_title(question)
-        question.context.present? ? "#{question.title} (#{question.context.title})" : question.title
+        question.context_title.present? ? "#{question.title} (#{question.context_title})" : question.title
       end
   end
 end

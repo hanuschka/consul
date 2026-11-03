@@ -21,5 +21,15 @@
       });
     <% end %>
     <%# Future setting-driven Klaro services: add more feature-gated unshift blocks here. %>
+
+    if (!klaroConfig.services.some(function(service) { return !service.required; })) {
+      klaroConfig.acceptAll = false;
+      klaroConfig.hideDeclineAll = true;
+      klaroConfig.hideLearnMore = true;
+      klaroConfig.translations.de.ok = 'OK';
+      klaroConfig.translations.de.consentNotice.description = 'Diese Plattform verwendet nur Cookies, die für ihren Betrieb notwendig sind. Mehr dazu in unserer {privacyPolicy}.';
+      klaroConfig.translations.en.ok = 'OK';
+      klaroConfig.translations.en.consentNotice.description = 'This platform only uses cookies that are necessary for it to run. Learn more in our {privacyPolicy}.';
+    }
   }
 </script>

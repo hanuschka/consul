@@ -1,14 +1,14 @@
 class DeficiencyReport::ManagementReport < ApplicationRecord
   belongs_to :report_profile, class_name: "DeficiencyReport::ReportProfile"
 
-  enum status: {
+  enum :status, {
     pending: "pending",
     processing: "processing",
     completed: "completed",
     failed: "failed"
   }
 
-  enum trigger: {
+  enum :trigger, {
     manual: "manual",
     scheduled: "scheduled"
   }

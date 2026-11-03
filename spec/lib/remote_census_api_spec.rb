@@ -213,9 +213,9 @@ describe RemoteCensusApi do
       end
     end
 
-    def call_api(gender: "female")
+    def call_api(gender: "female", plz: "53721")
       RemoteCensusApi.new.call(first_name: "Maria", last_name: "Muster", street_name: "Hauptstraße",
-                               street_number: "12", street_number_extension: "", plz: "53721",
+                               street_number: "12", street_number_extension: "", plz: plz,
                                city_name: "Siegburg", date_of_birth: "1980-05-17", gender: gender)
     end
 
@@ -248,6 +248,15 @@ describe RemoteCensusApi do
       expect(message["fassung"]).to eq "2026-01-31"
       expect(sent_node("//x:empfaenger/x:behoerdenkennung").text).to eq "ags:05382060"
       expect(sent_node("//x:empfaenger//x:bezeichnung").text).to eq "Siegburg"
+    end
+
+    it "restores the leading zero of a postcode stored as a number" do
+      [7749, "7749", "07749"].each do |plz|
+        call_api(plz: plz)
+
+        expect(Nokogiri::XML(sent_requests.last.body).at_xpath("//*[local-name()='postleitzahl']").text)
+          .to eq "07749"
+      end
     end
 
     it "sends the gender with the code list the schema fixes" do

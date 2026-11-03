@@ -73,13 +73,13 @@ var klaroConfig = {
     acceptAll: true,
 
     // replace "decline" with cookie manager modal
-    hideDeclineAll: true,
+    hideDeclineAll: false,
 
     // hide "learnMore" link
     hideLearnMore: false,
 
     // show cookie notice as modal
-    noticeAsModal: true,
+    noticeAsModal: false,
 
     // You can also remove the 'Realized with Klaro!' text in the consent modal.
     // Please don't do this! We provide Klaro as a free open source tool.
@@ -114,7 +114,7 @@ var klaroConfig = {
         // bundled translations.
         de: {
             consentModal: {
-                description: 'Hier können Sie einsehen und anpassen, welche Informationen wir über Sie sammeln. Einträge, die als "Beispiel" gekennzeichnet sind, dienen lediglich zu Demonstrationszwecken und werden nicht wirklich verwendet.'
+                description: 'Hier können Sie einsehen und anpassen, welche Informationen wir über Sie sammeln.'
             },
             inlineTracker: {
                 description: 'Beispiel für ein Inline-Tracking Skript',
@@ -156,16 +156,20 @@ var klaroConfig = {
                 translation: 'Übersetzungsdienst'
             },
             ok: 'Alle akzeptieren',
+            decline: 'Alle ablehnen',
+            privacyPolicy: {
+              name: 'Datenschutzerklärung'
+            },
             consentNotice: {
               learnMore: 'Individuelle Datenschutzeinstellungen',
-              description: 'Wir speichern und verarbeiten Ihre personenbezogenen Informationen für folgende Zwecke: {purposes}'
+              description: 'Wir speichern und verarbeiten Ihre personenbezogenen Informationen für folgende Zwecke: {purposes}. Mehr dazu in unserer {privacyPolicy}.'
             }
         },
         en: {
             consentModal: {
-                title: '<u>test</u>',
+                title: 'Privacy settings',
                 description:
-                    'Here you can see and customize the information that we collect about you. Entries marked as "Example" are just for demonstration purposes and are not really used on this website.',
+                    'Here you can see and customize the information that we collect about you.',
             },
             inlineTracker: {
                 description: 'Example of an inline tracking script',
@@ -206,6 +210,14 @@ var klaroConfig = {
                 system: 'Plattform operation',
                 translation: 'Translation'
             },
+            ok: 'Accept all',
+            decline: 'Reject all',
+            privacyPolicy: {
+              name: 'privacy policy'
+            },
+            consentNotice: {
+              description: 'We store and process your personal information for the following purposes: {purposes}. Learn more in our {privacyPolicy}.'
+            }
         },
     },
 

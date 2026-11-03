@@ -11,7 +11,7 @@ class Moderation::Shared::IndexComponent < ApplicationComponent
       table_name
     end
 
-    def field_name
+    def input_name
       "#{records.model.model_name.singular}_ids[]"
     end
 

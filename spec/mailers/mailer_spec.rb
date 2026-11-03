@@ -112,4 +112,29 @@ describe Mailer do
       expect(ActionMailer::Base.deliveries.last.to).to eq ["anna@beispiel.de"]
     end
   end
+
+  describe "the individual group users added email" do
+    it "links to the group value in /adm" do
+      admin = create(:administrator).user
+      value = create(:individual_group_value)
+
+      body = Mailer.individual_group_value_users_added(admin.id, value.id).body.decoded
+
+      expect(body).to include "/adm/individual_groups/#{value.individual_group.id}/individual_group_values/#{value.id}"
+      expect(body).not_to include "/admin/"
+    end
+  end
+
+  describe "the new valuator assignment email" do
+    it "links to the valuation of the investment in /adm" do
+      investment = create(:budget_investment)
+      valuator = Valuator.create!(user: create(:user))
+      assignment = Budget::ValuatorAssignment.create!(valuator: valuator, investment: investment)
+
+      body = Mailer.new_valuator_assignment(assignment).body.decoded
+
+      expect(body).to include "/adm/valuation/investments/#{investment.id}/edit"
+      expect(body).not_to include "/valuation/budgets/"
+    end
+  end
 end

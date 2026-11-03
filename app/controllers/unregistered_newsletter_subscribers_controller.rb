@@ -19,10 +19,10 @@ class UnregisteredNewsletterSubscribersController < ApplicationController
       @subscriber_email = @existing_unregistered_newsletter_subscriber.email
 
       if @existing_unregistered_newsletter_subscriber.not_confirmed?
-        NewsletterSubscriptionMailer.confirm(
-          @existing_unregistered_newsletter_subscriber.email,
-          unregistered_newsletter_subscriber: @existing_unregistered_newsletter_subscriber
-        ).deliver_later
+        NewsletterSubscriptionMailer
+          .with(unregistered_newsletter_subscriber: @existing_unregistered_newsletter_subscriber)
+          .confirm(@existing_unregistered_newsletter_subscriber.email)
+          .deliver_later
       end
 
     else
@@ -32,10 +32,10 @@ class UnregisteredNewsletterSubscribersController < ApplicationController
         )
 
       if @unregistered_newsletter_subscriber.save
-        NewsletterSubscriptionMailer.confirm(
-          @unregistered_newsletter_subscriber.email,
-          unregistered_newsletter_subscriber: @unregistered_newsletter_subscriber
-        ).deliver_later
+        NewsletterSubscriptionMailer
+          .with(unregistered_newsletter_subscriber: @unregistered_newsletter_subscriber)
+          .confirm(@unregistered_newsletter_subscriber.email)
+          .deliver_later
 
         @subscriber_email = @unregistered_newsletter_subscriber.email
       else

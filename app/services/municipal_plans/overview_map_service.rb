@@ -73,7 +73,7 @@ class MunicipalPlans::OverviewMapService
     end
 
     def districts_with_map_location
-      ActiveRecord::Associations::Preloader.new.preload(@districts, :map_location)
+      ActiveRecord::Associations::Preloader.new(records: @districts, associations: :map_location).call
       @districts.select(&:map_location)
     end
 

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "legislation", "process").to_s
+load Rails.root.join("app", "models", "legislation", "process.rb")
 
 class Legislation::Process < ApplicationRecord
   clear_validators!

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "legislation", "proposal").to_s
+load Rails.root.join("app", "models", "legislation", "proposal.rb")
 
 class Legislation::Proposal < ApplicationRecord
   # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create

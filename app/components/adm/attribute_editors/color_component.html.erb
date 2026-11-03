@@ -1,6 +1,7 @@
 <%= form_with model: @record, url: path, data: { controller: "adm-color-picker" } do |form| %>
   <%= hidden_field_tag :kind, "color" %>
   <%= hidden_field_tag :attribute, @attribute %>
+  <%= hidden_field_tag :field_token, field_token("color") %>
 
   <%= tag.div class: "color-picker #{'disabled' if disabled?}",
               role: "application",

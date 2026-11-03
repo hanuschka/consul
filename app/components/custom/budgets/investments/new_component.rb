@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "budgets", "investments", "new_component").to_s
+load Rails.root.join("app", "components", "budgets", "investments", "new_component.rb")
 
 class Budgets::Investments::NewComponent < ApplicationComponent
   attr_reader :investment

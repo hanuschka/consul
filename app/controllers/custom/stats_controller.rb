@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "stats_controller").to_s
+load Rails.root.join("app", "controllers", "stats_controller.rb")
 
 class StatsController < ApplicationController
   include FeatureFlags

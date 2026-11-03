@@ -8,6 +8,8 @@ module Schemas
         id: { type: :integer, description: 'Unique identifier for the deficiency report', example: 1 },
         title: { type: :string, description: 'Title or summary of the deficiency/issue', example: 'Pothole on Main Street' },
         description: { type: :string, nullable: true, description: 'Detailed description of the deficiency', example: 'Large pothole causing safety concerns near intersection' },
+        official_answer: { type: :string, nullable: true, description: 'Official answer shown publicly above the report' },
+        reporter_answer: { type: :string, nullable: true, description: 'Answer e-mailed to the reporter and not shown publicly; only returned to admin clients' },
         author_id: { type: :integer, nullable: true, description: 'ID of the user who reported the deficiency', example: 18 },
         category_id: { type: :integer, nullable: true, description: 'ID of the deficiency report category', example: 3 },
         status_id: { type: :integer, nullable: true, description: 'ID of the current status (open, in_progress, resolved, etc.)', example: 1 },

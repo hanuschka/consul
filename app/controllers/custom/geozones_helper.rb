@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "geozones_helper").to_s
+load Rails.root.join("app", "helpers", "geozones_helper.rb")
 
 module GeozonesHelper
   def prepare_geo_restriction_name(taggable)

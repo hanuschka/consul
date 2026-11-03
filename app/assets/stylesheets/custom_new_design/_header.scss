@@ -92,6 +92,17 @@ $homepage-image-header-max-width: 1920px;
     pointer-events: none;
   }
 
+  .homepage-image-header--image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    z-index: 0;
+    pointer-events: none;
+  }
+
   .homepage-image-header--video--desktop {
     @media (max-width: $small-tablet-viewport-start) {
       display: none;
@@ -633,13 +644,6 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
       max-height: 52px;
       max-width: 200px;
     }
-
-    // Hide the navbar logo/title on phones; the fixed header keeps only the
-    // hamburger menu there. Hamburger stays left-aligned (it becomes the sole
-    // visible flex child of the space-between .top-bar on mobile).
-    @media(max-width: $mobile-viewport-start) {
-      display: none;
-    }
   }
 
   .header--navigation {
@@ -1106,6 +1110,25 @@ body.custom-new-design .wrapper > header .locale.locale-custom {
     .top-bar {
       justify-content: space-between !important;
       padding-top: 5px;
+      width: 100%;
+
+      .top-bar--title {
+        flex: 0 1 auto;
+        min-width: 0;
+        max-width: 200px;
+        margin-right: 1rem;
+
+        img {
+          width: auto;
+          max-width: 100%;
+          max-height: 40px;
+        }
+      }
+
+      .header--mobile-hamburger-menu {
+        flex-shrink: 0;
+        margin-left: auto;
+      }
     }
 
     header, .wrapper > header {

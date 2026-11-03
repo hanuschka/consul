@@ -192,7 +192,7 @@ class: "resources-link" do
 
     content_tag :span, class: "geo-restriction-icon" do
       projekt_phase.individual_group_values.group_by(&:individual_group).map do |individual_group, values|
-        "#{individual_group.name}: #{values.pluck(:name).join(", ")}"
+        "#{individual_group.name}: #{values.map(&:name).join(", ")}"
       end.join("; ")
     end
   end

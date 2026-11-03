@@ -111,15 +111,23 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
   end
 
   def phases
-    authorize [:adm, :projekts, @projekt], :show?
+    authorize [:adm, :projekts, @projekt], :contributions?
     base_scope = policy_scope([:adm, :projekts, @projekt.projekt_phases])
       .includes(:geozone_restrictions, :age_restriction)
     @projekt_phases = ProjektPhasesQuery.call(base_scope, params)
+    manage_allowed = policy([:adm, :projekts, @projekt]).update?
+
+    unless manage_allowed
+      @projekt_phases = @projekt_phases.select { |phase| helpers.visible_phase_actions(phase).any? }
+    end
 
     @name_header_options = { search: true }
 
     @breadcrumbs = [
-      { name: @projekt.page&.title || @projekt.name, url: details_adm_projekts_projekt_path(@projekt) },
+      {
+        name: @projekt.page&.title || @projekt.name,
+        url: (details_adm_projekts_projekt_path(@projekt) if manage_allowed)
+      },
       { name: t(".title") }
     ]
   end

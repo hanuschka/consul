@@ -29,7 +29,7 @@ class Whatsapp::Account < ApplicationRecord
     inverse_of: :whatsapp_account,
     dependent: :destroy
 
-  enum state: {
+  enum :state, {
     unlinked: "unlinked",
     link_pending: "link_pending",
     linked: "linked"

@@ -51,6 +51,11 @@ set :puma_systemctl_user, :user
 # don't let capistrano-puma also generate a systemd .socket unit, otherwise
 # the two race to bind the same path and puma crashes on boot.
 set :puma_enable_socket_service, false
+# capistrano3-puma 8 renamed the unit and moved its access log. Keep the old
+# names: per-host drop-ins (jemalloc, OOMPolicy) live under the unit's name.
+# The unit itself comes from config/deploy/templates/puma.service.erb.
+set :puma_service_unit_name, -> { "puma_#{fetch(:application)}_#{fetch(:stage)}" }
+set :puma_access_log, -> { File.join(shared_path, "log", "puma_access.log") }
 
 set :delayed_job_workers, 2
 set :delayed_job_roles, :background
@@ -70,7 +75,6 @@ namespace :deploy do
   after "deploy:migrate", "add_new_settings"
 
   after :publishing, "setup_puma"
-  before "puma:restart", "stop_puma_daemon"
   after :finished, "restart_delayed_jobs"
   after :finished, "refresh_sitemap"
 
@@ -227,25 +231,7 @@ task :setup_puma do
     end
   end
 
-  after "setup_puma", "puma:systemd:config"
-  after "setup_puma", "puma:systemd:enable"
-end
-
-# Code adapted from the task to stop the daemon in capistrano3-puma
-desc "Stops the Puma daemon so systemd can start the Puma process"
-task :stop_puma_daemon do
-  on roles(fetch(:puma_role)) do |role|
-    within release_path do
-      with rails_env: fetch(:rails_env) do
-        if test("[ -f #{fetch(:puma_pid)} ]") &&
-           !test("systemctl --user is-active #{fetch(:puma_service_unit_name)}") &&
-           test(:kill, "-0 $( cat #{fetch(:puma_pid)} )")
-          info "Puma: stopping daemon"
-          execute :pumactl, "-S #{fetch(:puma_state)} -F #{fetch(:puma_conf)} stop"
-        end
-      end
-    end
-  end
+  after "setup_puma", "puma:install"
 end
 
 # Print total wall-clock deploy time as the final line. Registered after the

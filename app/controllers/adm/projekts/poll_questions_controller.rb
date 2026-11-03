@@ -54,7 +54,7 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @map_point_count = Poll::Answer::MapPoint.for_question(@question).count if @question.map_points?
+        @map_point_count = Poll::Answer::MapPoint.for_question([@question, *@question.contexted_variants]).count if @question.map_points?
         @breadcrumbs = breadcrumbs_for_action(@question.title)
       end
 

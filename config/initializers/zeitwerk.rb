@@ -5,6 +5,7 @@ Rails.autoloaders.main.ignore(
   lib.join("capistrano"),
   lib.join("middleware"),
   lib.join("omniauth_wordpress.rb"),
+  lib.join("overrides"),
   lib.join("scripts"),
   lib.join("tasks")
 )

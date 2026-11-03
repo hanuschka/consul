@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "i18n_content").to_s
+load Rails.root.join("app", "models", "i18n_content.rb")
 
 class I18nContent < ApplicationRecord
   def self.all_translation_strings

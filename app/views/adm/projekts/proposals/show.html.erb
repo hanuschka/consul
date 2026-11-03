@@ -4,7 +4,7 @@
 
 <%= render Adm::TabsComponent.new(tabs: projekt_phase_tabs(@projekt_phase, current_action: "proposals")) %>
 
-<% may_administer = policy([:adm, @proposal]).update? %>
+<% may_answer = policy([:adm, @proposal]).update_official_answer? %>
 
 <div class="kern-container mb-5">
 
@@ -141,23 +141,26 @@
   </section>
 
   <%# === Section 5: Offizielle Antwort === %>
-  <section class="adm-detail-section">
-    <% if may_administer %>
-      <%= render Adm::AttributeEditorComponent.new(
-        @proposal,
-        :official_answer,
-        :rich_text,
-        path: update_official_answer_adm_projekts_phase_proposal_path(@projekt_phase, @proposal),
-        label: t("adm.projekts.proposals.show.official_answer"),
-        description: t("adm.projekts.proposals.show.official_answer_hint")
-      ) %>
-    <% else %>
-      <h2 class="adm-detail-section-title mb-3"><%= t("adm.projekts.proposals.show.official_answer") %></h2>
+  <% if may_answer || @proposal.official_answer.present? %>
+    <section class="adm-detail-section">
+      <% if may_answer %>
+        <%= render Adm::AttributeEditorComponent.new(
+          @proposal,
+          :official_answer,
+          :rich_text,
+          path: update_official_answer_adm_projekts_phase_proposal_path(@projekt_phase, @proposal),
+          label: t("adm.projekts.proposals.show.official_answer"),
+          description: t("adm.projekts.proposals.show.official_answer_hint"),
+          policy_action: :update_official_answer?
+        ) %>
+      <% else %>
+        <h2 class="adm-detail-section-title mb-3"><%= t("adm.projekts.proposals.show.official_answer") %></h2>
 
-      <div class="adm-detail-description">
-        <%= auto_link_already_sanitized_html wysiwyg(@proposal.official_answer) %>
-      </div>
-    <% end %>
-  </section>
+        <div class="adm-detail-description">
+          <%= auto_link_already_sanitized_html wysiwyg(@proposal.official_answer) %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
 
 </div>

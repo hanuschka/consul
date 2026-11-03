@@ -1,4 +1,5 @@
 class Adm::Officing::HomeController < Adm::Officing::BaseController
+  skip_before_action :require_officing_manager
   skip_after_action :verify_policy_scoped, only: :show
 
   def show

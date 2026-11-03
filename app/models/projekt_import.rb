@@ -17,7 +17,7 @@ class ProjektImport < ApplicationRecord
   # were attached in, and described in the source_images column alongside.
   has_many_attached :extracted_images
 
-  enum status: {
+  enum :status, {
     pending: "pending",
     extracting: "extracting",
     processing: "processing",
@@ -31,13 +31,13 @@ class ProjektImport < ApplicationRecord
   # Where the projekt being imported comes from. All three run the same record
   # through the same states; they differ in how the material is gathered before
   # the review step and in what the execute step builds from it.
-  enum source_kind: {
+  enum :source_kind, {
     file: "file",
     url: "url",
     consul_projekt: "consul_projekt"
-  }, _prefix: :from
+  }, prefix: :from
 
-  enum image_status: {
+  enum :image_status, {
     image_pending: "pending",
     image_running: "running",
     image_completed: "completed",
@@ -48,11 +48,11 @@ class ProjektImport < ApplicationRecord
   # What the projekt's title image will be. "document" is the default and means
   # one of the pictures in the uploaded files — which one is title_image_index,
   # preset to the best candidate and overridable by the admin in the chat.
-  enum title_image_mode: {
+  enum :title_image_mode, {
     document: "document",
     generated: "generated",
     none: "none"
-  }, _prefix: :title_image
+  }, prefix: :title_image
 
   ANALYSIS_STALL_AFTER = 15.minutes
 

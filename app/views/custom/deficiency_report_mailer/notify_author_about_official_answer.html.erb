@@ -9,9 +9,9 @@
     <%= link_to @deficiency_report.title, deficiency_report_url(@deficiency_report), target: "_blank" %>
   </p>
 
-  <% if @deficiency_report.official_answer.present? %>
+  <% if @deficiency_report.official_answer_for_reporter.present? %>
     <div style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-      <%= auto_link_already_sanitized_html(wysiwyg(@deficiency_report.official_answer)) %>
+      <%= auto_link_already_sanitized_html(wysiwyg(@deficiency_report.official_answer_for_reporter)) %>
     </div>
   <% end %>
 

@@ -157,7 +157,7 @@ de:
       recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.
     notify_author_about_official_answer:
       title: Offizielle Antwort auf ein Anliegen
-      description: Wird an die meldende Person gesendet, sobald die offizielle Antwort auf ihr Anliegen hinzugefügt oder geändert wird.
+      description: Wird an die meldende Person gesendet, sobald die offizielle Antwort auf ihr Anliegen hinzugefügt oder geändert wird. Sind Antwort an die meldende Person und öffentliche Antwort getrennt, enthält die E-Mail nur die Antwort an die meldende Person.
       recipient: Die Person, die das Anliegen gemeldet hat.
     notify_officer:
       title: Mangelmeldung einem Sachbearbeiter zugewiesen

@@ -3,6 +3,8 @@
 
   App.AreaChartComponent = {
     initialize: function() {
+      App.ChartInstances.destroyDetached();
+
       var charts = document.querySelectorAll("[data-area-chart]");
       charts.forEach(this.initChart.bind(this));
     },

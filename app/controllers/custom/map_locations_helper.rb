@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "map_locations_helper").to_s
+load Rails.root.join("app", "helpers", "map_locations_helper.rb")
 
 module MapLocationsHelper
   # def map_location_available?(resource)

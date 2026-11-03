@@ -1,7 +1,7 @@
 def generate_content(page)
   page.title = I18n.t("pages.accessibility.title")
 
-  content = ""
+  content = +""
   I18n.t("pages.accessibility.description").each_line do |line|
     content << "<p>#{line}</p>"
   end

@@ -4,17 +4,19 @@ module NotificationServices
   class NewCommentsDeficiencyReportsNotification < ApplicationService
     def self.deliver(deficiency_report, last_notified_time, initial: false)
       if deficiency_report.responsible.is_a?(DeficiencyReport::OfficerGroup)
-        NotificationServiceMailer.new_comments_for_deficiency_report(
-          deficiency_report, last_notified_time, initial: initial
-        ).deliver_now
+        NotificationServiceMailer
+          .with(initial: initial)
+          .new_comments_for_deficiency_report(deficiency_report, last_notified_time)
+          .deliver_now
       end
 
       return unless deficiency_report.email_officers_individually?
 
       deficiency_report.responsible_officers.each do |officer|
-        NotificationServiceMailer.new_comments_for_deficiency_report(
-          deficiency_report, last_notified_time, officer: officer, initial: initial
-        ).deliver_now
+        NotificationServiceMailer
+          .with(officer: officer, initial: initial)
+          .new_comments_for_deficiency_report(deficiency_report, last_notified_time)
+          .deliver_now
       end
     end
 

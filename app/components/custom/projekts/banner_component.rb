@@ -138,7 +138,7 @@ class Projekts::BannerComponent < ApplicationComponent
     def running_phase_chips
       return [] unless phases_visible_in_sidebar? || show_admin_controls?
 
-      @projekt.active_and_visible_projekt_phases.current.map do |phase|
+      @projekt.active_and_visible_projekt_phases.select(&:current?).map do |phase|
         { phase: phase,
           index: footer_tab_index_for(phase),
           icon: "circle",

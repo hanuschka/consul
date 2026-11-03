@@ -3,6 +3,7 @@ class Adm::Officing::BaseController < Adm::BaseController
 
   before_action :set_officing_manager
   before_action :authorize_officing_access
+  before_action :require_officing_manager
 
   def verify_user
     authorize :base, policy_class: Adm::Officing::BasePolicy
@@ -77,6 +78,10 @@ class Adm::Officing::BaseController < Adm::BaseController
 
     def authorize_officing_access
       authorize :base, :index?, policy_class: Adm::Officing::BasePolicy
+    end
+
+    def require_officing_manager
+      raise ActionController::RoutingError, "Not Found" if @officing_manager.nil?
     end
 
     def user_params

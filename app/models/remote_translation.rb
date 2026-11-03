@@ -6,6 +6,7 @@ class RemoteTranslation < ApplicationRecord
   validates :locale, presence: true
   validates :locale, inclusion: { in: ->(_) { MachineTranslation.deepl_locales.map(&:to_s) }}
   validate :translating_into_source_locale
+  before_create :discard_failed_attempts
   after_create :enqueue_remote_translation
 
   attr_accessor :source_locale, :backfill
@@ -13,6 +14,12 @@ class RemoteTranslation < ApplicationRecord
   def enqueue_remote_translation
     RemoteTranslations::Caller.new(self, source_locale: source_locale, backfill: backfill.present?)
                              .delay.call
+  end
+
+  def discard_failed_attempts
+    RemoteTranslation.where(remote_translatable_type:, remote_translatable_id:, locale:)
+                     .where.not(error_message: nil)
+                     .delete_all
   end
 
   def translating_into_source_locale

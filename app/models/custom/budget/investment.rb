@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "budget", "investment").to_s
+load Rails.root.join("app", "models", "budget", "investment.rb")
 
 class Budget
   class Investment < ApplicationRecord
@@ -31,7 +31,7 @@ to: :budget
     scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
     scope :user_created, -> { where(masterportal_pin_id: nil) }
 
-    enum implementation_performer: { city: 0, user: 1 }
+    enum :implementation_performer, { city: 0, user: 1 }
 
     scope :sort_by_newest, -> { reorder(created_at: :desc) }
 

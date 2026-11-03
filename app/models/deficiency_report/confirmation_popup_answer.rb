@@ -1,7 +1,7 @@
 class DeficiencyReport::ConfirmationPopupAnswer < ApplicationRecord
   self.table_name = "deficiency_report_confirmation_popup_answers"
 
-  enum behavior: { allow: 0, block: 1 }
+  enum :behavior, { allow: 0, block: 1 }
 
   belongs_to :confirmation_popup,
     class_name: "DeficiencyReport::ConfirmationPopup",

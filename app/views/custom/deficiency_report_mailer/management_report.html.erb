@@ -1,0 +1,64 @@
+<% scope = "custom.deficiency_reports.mailers.management_report" %>
+<% period = "#{l(@management_report.period_start, format: "%d.%m.%Y")} – #{l(@management_report.period_end, format: "%d.%m.%Y")}" %>
+<% figure_blocks = @management_report.building_blocks.map { |block| [block, @management_report.figure_rows(block)] }.reject { |_block, rows| rows.empty? } %>
+<td style="padding-bottom: 20px; padding-left: 10px;">
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <% if @user.present? %>
+      <%= t("#{scope}.hi", username: @user.username) %>
+    <% else %>
+      <%= t("#{scope}.hi_without_name") %>
+    <% end %>
+  </p>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("#{scope}.intro", name: @management_report.profile_name, period: period) %>
+  </p>
+
+  <% if figure_blocks.any? %>
+    <h2 style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 16px;font-weight: bold;line-height: 24px;margin: 24px 0 8px;">
+      <%= t("#{scope}.figures_title") %>
+    </h2>
+
+    <% figure_blocks.each do |building_block, rows| %>
+      <h3 style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: bold;line-height: 24px;margin: 16px 0 4px;">
+        <%= t("adm.deficiency_reports.management_reports.sections.#{building_block}") %>
+      </h3>
+      <ul style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;margin: 0 0 16px;padding-left: 20px;">
+        <% rows.each do |row| %>
+          <li><%= "#{row[:label]}: #{row[:value]}" %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+    <%= t("#{scope}.attachment_hint") %>
+  </p>
+
+  <% if @user.present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= link_to t("#{scope}.adm_link_text"),
+                  adm_deficiency_reports_management_report_url(@management_report), target: "_blank" %>
+    </p>
+  <% end %>
+
+  <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 12px;font-weight: normal;line-height: 18px;color: #595959;">
+    <%= t("#{scope}.ai_notice") %><br>
+    <%= t("#{scope}.internal_notice") %>
+  </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("custom.deficiency_reports.mailers.closing") %><br>
+      <%= t("custom.deficiency_reports.mailers.signature") %>
+    </p>
+
+    <% if Setting["mailer_from_deficiency_report_address"].present? %>
+      <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+        <em><%= sanitize t("custom.deficiency_reports.mailers.contact_info", email: Setting["mailer_from_deficiency_report_address"]) %></em>
+      </p>
+    <% end %>
+  <% end %>
+
+</td>

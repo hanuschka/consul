@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "budget").to_s
+load Rails.root.join("app", "models", "budget.rb")
 
 class Budget < ApplicationRecord
   belongs_to :projekt_phase, optional: true

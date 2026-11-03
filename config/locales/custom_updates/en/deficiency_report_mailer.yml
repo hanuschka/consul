@@ -2,6 +2,16 @@ en:
   custom:
     deficiency_reports:
       mailers:
+        management_report:
+          subject: "Report \"%{name}\" up to %{period_end}"
+          hi: "Hello %{username},"
+          hi_without_name: Hello,
+          intro: "attached is the report \"%{name}\" on deficiency reports for the period %{period}."
+          figures_title: Key figures
+          attachment_hint: The full report with all sections is attached as a PDF.
+          adm_link_text: Open the report in the administration
+          ai_notice: The text in the report was written with AI. The figures come directly from the database.
+          internal_notice: This report is for internal use only.
         closing: Best regards
         signature: Your team
         contact_info: With any qustions please contact us at <a href="mailto:%{email}">%{email}</a>

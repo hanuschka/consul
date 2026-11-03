@@ -70,7 +70,16 @@
       return null;
     },
 
+    updateNoticeSpacing: function() {
+      if (!this.klaroElement) return;
+
+      var notice = this.klaroElement.querySelector('.cookie-notice:not(.cookie-notice-hidden)');
+      document.body.style.paddingBottom = notice ? notice.offsetHeight + 'px' : '';
+    },
+
     checkModalState: function() {
+      this.updateNoticeSpacing();
+
       var modal = this.getModalContainer();
       var isVisible = modal && modal.offsetParent !== null;
 
@@ -108,6 +117,10 @@
       if (this.keyHandlerBound) return;
 
       this.keyHandlerBound = true;
+
+      window.addEventListener('resize', () => {
+        this.updateNoticeSpacing();
+      });
 
       document.addEventListener('keydown', (event) => {
         if (!this.isModalActive) return;

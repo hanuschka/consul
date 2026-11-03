@@ -2,6 +2,7 @@ module Adm
   class OfficingManagersController < Adm::Officing::BaseController
     include Admin::PendingRoleAssignable
     skip_before_action :set_officing_manager
+    skip_before_action :require_officing_manager
 
     def index
       authorize [:adm, OfficingManager]

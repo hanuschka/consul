@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "debates", "votes_component").to_s
+load Rails.root.join("app", "components", "debates", "votes_component.rb")
 
 class Debates::VotesComponent < ApplicationComponent
   delegate :user_signed_in?, :link_to_signin, :link_to_signup,

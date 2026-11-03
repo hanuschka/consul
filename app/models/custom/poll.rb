@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "poll").to_s
+load Rails.root.join("app", "models", "poll.rb")
 
 class Poll < ApplicationRecord
 include MachineTranslatable
@@ -16,12 +16,12 @@ include MachineTranslatable
   belongs_to :projekt_phase
   validates :projekt_phase, presence: true
 
-  enum ai_stats_refresh_status: {
+  enum :ai_stats_refresh_status, {
     pending: "pending",
     processing: "processing",
     completed: "completed",
     failed: "failed"
-  }, _prefix: :ai_stats_refresh
+  }, prefix: :ai_stats_refresh
 
   scope :last_week, -> { where("polls.created_at >= ?", 7.days.ago) }
 

@@ -58,7 +58,7 @@ class ContentCard::LatestResourcesComponent < ApplicationComponent
     def preload_associations(records, associations)
       return if records.empty?
 
-      ActiveRecord::Associations::Preloader.new.preload(records, associations)
+      ActiveRecord::Associations::Preloader.new(records: records, associations: associations).call
     end
 
     def latest_debates

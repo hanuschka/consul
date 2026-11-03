@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "welcome_controller").to_s
+load Rails.root.join("app", "controllers", "welcome_controller.rb")
 
 class WelcomeController < ApplicationController
   include Takeable

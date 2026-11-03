@@ -157,7 +157,7 @@ en:
       recipient: The user who submitted the deficiency report.
     notify_author_about_official_answer:
       title: Official answer to a report
-      description: Sent to the reporting person as soon as the official answer to their report is added or changed.
+      description: Sent to the reporting person as soon as the official answer to their report is added or changed. When the reporter answer and the public answer are separated, the e-mail contains only the answer to the reporter.
       recipient: The person who submitted the report.
     notify_officer:
       title: Deficiency report assigned to officer

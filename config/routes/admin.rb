@@ -548,11 +548,6 @@ as: "update_heading_content_block"
     resources :imports, only: [:new, :create, :show]
   end
 
-  resource :machine_learning, controller: :machine_learning, only: [:show] do
-    post :execute, on: :collection
-    delete :cancel, on: :collection
-  end
-
   resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]
   resources :projekt_content_blocks, only: [:destroy, :update] do
     member do

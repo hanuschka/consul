@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "site_customization", "content_block").to_s
+load Rails.root.join("app", "models", "site_customization", "content_block.rb")
 
 class SiteCustomization::ContentBlock < ApplicationRecord
   VALID_BLOCKS = %w[top_links footer subnavigation_left subnavigation_left_desktop subnavigation_left_mobile subnavigation_right_desktop subnavigation_right_mobile custom].freeze

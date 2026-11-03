@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "verification", "residence_controller").to_s
+load Rails.root.join("app", "controllers", "verification", "residence_controller.rb")
 
 class Verification::ResidenceController < ApplicationController
   include HasRegisteredAddress

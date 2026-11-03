@@ -60,7 +60,7 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
 
       format.geojson do
         if @question.map_points?
-          send_data JSON.generate(Polls::MapPointsFeatureCollection.call(@question)),
+          send_data JSON.generate(Polls::MapPointsFeatureCollection.call(@question, export: true)),
                     filename: "poll-question-#{@question.id}-map-points-#{Time.zone.today}.geojson",
                     type: "application/geo+json"
         else

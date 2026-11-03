@@ -48,15 +48,15 @@ gem "sassc-rails", "~> 2.1.2"
 gem "savon", "~> 2.17.5"
 gem "sitemap_generator", "~> 6.3.0"
 gem "social-share-button", "~> 1.2.4"
-gem "sprockets", "~> 4.2.1"
-gem "sprockets-rails", "~> 3.4.2"
+gem "sprockets", "~> 4.2.2"
+gem "sprockets-rails", "~> 3.5.2"
 gem "turbolinks", "~> 5.2.1"
 gem "turnout", "~> 2.5.0"
 gem "terser", "~> 1.2"
 gem "uuidtools", "~> 2.2.0"
 gem "view_component", "~> 4.20.0"
 gem "whenever", "~> 1.0.0", require: false
-gem "wicked_pdf", "~> 2.7.0"
+gem "wicked_pdf", "~> 2.8.2"
 gem "wkhtmltopdf-binary", "~> 0.12.6"
 
 group :development, :test do

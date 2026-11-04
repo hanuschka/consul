@@ -5,5 +5,5 @@ de:
         subject: "Ein Vorschlag wurde gemeldet"
         greeting: "Hallo,"
         body_prefix: "der Vorschlag"
-        body_suffix: "auf Consul wurde gemeldet."
+        body_suffix: "auf der Beteiligungsplattform wurde gemeldet."
         review_link: Zur Vorschlagsmoderation.

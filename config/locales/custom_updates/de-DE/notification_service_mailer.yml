@@ -28,11 +28,11 @@ de:
         p1_s: es liegt ein Mangel vor, der noch nicht zugewiesen wurde.
         p1_p: es liegen mehrere Mängel vor, die noch nicht zugewiesen wurden.
       new_proposal:
-        subject: Neuer Vorschlag auf Consul
-        p1: es ist ein neuer Vorschlag auf Consul eingegangen oder ein existierender Vorschlag wurde geändert.
+        subject: "Neuer Vorschlag auf der Beteiligungsplattform"
+        p1: "es ist ein neuer Vorschlag auf der Beteiligungsplattform eingegangen oder ein bestehender Vorschlag wurde geändert."
       new_debate:
-        subject: Neue Diskussionsbeitrag auf Consul
-        p1: es ist ein neuer Diskussionsbeitrag auf Consul erstellt worden.
+        subject: "Neuer Diskussionsbeitrag auf der Beteiligungsplattform"
+        p1: "es ist ein neuer Diskussionsbeitrag auf der Beteiligungsplattform erstellt worden."
       new_comment:
         subject: Neuer Kommentar auf der Beteiligungsplattform.
         title: Neuer Kommentar auf der Beteiligungsplattform.
@@ -49,16 +49,16 @@ de:
         p1: "%{user_to_verify_username} hat sich soeben verifiziert."
         link_text: Admin (demokratie.today)
       new_poll:
-        subject: Neue Abstimmung auf Consul
-        p1: es ist eine neue Abstimmung auf Consul eingegangen.
+        subject: "Neue Abstimmung auf der Beteiligungsplattform"
+        p1: "es ist eine neue Abstimmung auf der Beteiligungsplattform eingegangen."
       projekt_questions:
-        subject: Neue Kurzumfrage auf Consul
+        subject: "Neue Kurzumfrage auf der Beteiligungsplattform"
         link: Kurzumfrage
-        p1: es ist eine neue Kurzumfrage auf Consul eingegangen.
+        p1: "es ist eine neue Kurzumfrage auf der Beteiligungsplattform eingegangen."
       projekt_arguments:
-        subject: Pro und Contra Stimmen auf Consul
+        subject: "Neue Pro- und Contra-Stimmen auf der Beteiligungsplattform"
         link: Pro und Contra Stimmen
-        p1: es sind neue Pro und Contra Stimmen auf Consul eingegangen.
+        p1: "es sind neue Pro- und Contra-Stimmen auf der Beteiligungsplattform eingegangen."
       new_budget_investment:
         subject: Ein neuer Vorschlag wurde eingereicht!
         title: Ein neuer Vorschlag wurde eingereicht!
@@ -66,21 +66,21 @@ de:
         projekt_link_text: Projekt
         sincerely: Mit freundlichen Grüßen
       new_projekt_notification:
-        subject: Neue Projektbenachrichtigung auf Consul
+        subject: "Neue Projektbenachrichtigung auf der Beteiligungsplattform"
         link: Projektbenachrichtigung
-        p1: es ist eine neue Projektbenachrichtigung auf Consul eingegangen.
+        p1: "es ist eine neue Projektbenachrichtigung auf der Beteiligungsplattform eingegangen."
       new_projekt_event:
-        subject: Neue Veranstaltung auf Consul
+        subject: "Neue Veranstaltung auf der Beteiligungsplattform"
         link: Veranstaltung
-        p1: es ist eine neue Veranstaltung auf Consul eingegangen.
+        p1: "es ist eine neue Veranstaltung auf der Beteiligungsplattform eingegangen."
       new_projekt_milestone:
-        subject: Neuer Meilenstein auf Consul
+        subject: "Neuer Meilenstein auf der Beteiligungsplattform"
         link: Meilenstein
-        p1: es ist ein neuen Meilenstein auf Consul eingegangen.
+        p1: "es ist ein neuer Meilenstein auf der Beteiligungsplattform eingegangen."
       new_projekt_livestream:
-        subject: Neue Livestream auf Consul
+        subject: "Neuer Livestream auf der Beteiligungsplattform"
         link: Livestream
-        p1: es ist ein neue Livestream auf Consul eingegangen.
+        p1: "es ist ein neuer Livestream auf der Beteiligungsplattform eingegangen."
       user_reverification_failed:
         subject: Die Verifizierung Ihres Kontos wurde aufgehoben
         p1_html: die Verifizierung Ihres Nutzerkontos auf der Mitmachen-Plattform wurde aufgehoben. Somit können Sie aktuell an keinen Beteiligungsprojekten teilnehmen, für die ein verifizierter Account erforderlich ist (beispielsweise Bürgerbudget)
@@ -93,7 +93,7 @@ de:
         p1_html: die Verifizierung Ihres Nutzerkontos auf der Mitmachen-Plattform wurde abgeschlossen. Somit können Sie an Beteiligungsprojekten teilnehmen, für die ein verifizierter Account erforderlich ist.
         signature_html: Vielen Dank für Ihre Teilhabe.
       new_topic:
-        subject: Neues Thema auf Consul
+        subject: "Neues Thema auf der Beteiligungsplattform"
         p1: es ist ein neues Thema erstellt worden.
       new_proposal_notification:
         subject: "Neue Benachrichtigung zum Vorschlag: %{proposal_title}"

@@ -28,33 +28,33 @@ en:
         p1_s: There is an outstanding deficiency report, which was not assigned yet.
         p1_p: There are multiple outstanding deficiency reports, which were not assigned yet.
       new_proposal:
-        subject: New Proposal added to Consul
+        subject: "New proposal on the participation platform"
         p1: New proposal has just been added or edited.
       new_debate:
-        subject: New Debate added to Consul
-        p1: New Debate has just been added to Consul.
+        subject: "New debate on the participation platform"
+        p1: "a new debate has been posted on the participation platform."
       new_comment:
-        subject: New Comment added to Consul
-        title: New Comment added to Consul
-        p1: New comment has just been added to Consul.
+        subject: "New comment on the participation platform"
+        title: "New comment on the participation platform"
+        p1: "a new comment has been posted on the participation platform."
       new_contribution_comment:
         subject: New comment on a contribution on the participation platform.
         title: New comment on a contribution on the participation platform.
         p1: a new comment on a contribution has been posted on the participation platform.
       new_deficiency_report:
         subject: New Deficiency Report %{identifier}
-        p1: New deficiency report has just been added to Consul
+        p1: "a new report has been submitted on the participation platform."
       new_poll:
-        subject: New Poll added to Consul
-        p1: New poll has just been added to Consul
+        subject: "New poll on the participation platform"
+        p1: "a new poll has been added to the participation platform."
       projekt_questions:
-        subject: New short survey added to Consul
+        subject: "New short survey on the participation platform"
         link: Short survey
-        p1: New short survey has just been added to Consul
+        p1: "a new short survey has been added to the participation platform."
       projekt_arguments:
-        subject: Arguments added to Consul
+        subject: "New pro and contra arguments on the participation platform"
         link: Projekt arguments
-        p1: Projekt arguments were just added to Consul
+        p1: "new pro and contra arguments have been added to the participation platform."
       new_budget_investment:
         subject: A new proposal has been submitted!
         title: A new proposal has been submitted!
@@ -62,21 +62,21 @@ en:
         projekt_link_text: Project
         sincerely: Kind regards,
       new_projekt_notification:
-        subject: New projekt notification added to Consul
+        subject: "New project notification on the participation platform"
         link: Projekt notification
-        p1: New projekt notification has just been added to Consul
+        p1: "a new project notification has been added to the participation platform."
       new_projekt_event:
-        subject: New projekt event added to Consul
+        subject: "New event on the participation platform"
         link: Projekt event
-        p1: New projekt event has just been added to Consul
+        p1: "a new event has been added to the participation platform."
       new_projekt_milestone:
-        subject: New projekt milestone added to Consul
+        subject: "New milestone on the participation platform"
         link: Projekt milestone
-        p1: New projekt milestone has just been added to Consul
+        p1: "a new milestone has been added to the participation platform."
       new_projekt_livestream:
-        subject: New projekt livestream added to Consul
+        subject: "New livestream on the participation platform"
         link: Projekt livestream
-        p1: New projekt livestream has just been added to Consul
+        p1: "a new livestream has been added to the participation platform."
       user_reverification_failed:
         subject: Your account has been de-verified
         p1_html: The verification of your user account on the Participation platform has been canceled. This means that you cannot currently take part in any participation projects that require a verified account (e.g. citizen budget).
@@ -89,8 +89,8 @@ en:
         p1_html: The verification of your user account on the Participation platform has been completed. This means you can take part in participation projects that require a verified account.
         signature_html: Thank you for your participation.
       new_topic:
-        subject: New Topic added to Consul
-        p1: New topic was added to Consul.
+        subject: "New topic on the participation platform"
+        p1: "a new topic has been added to the participation platform."
       new_proposal_notification:
         subject: "New notification related to Proposal: %{proposal_title}"
         intro_html: "Author of the proposal %{proposal_link} added a new notification"

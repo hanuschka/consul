@@ -304,12 +304,12 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
   end
 
   def self.find_template(projekt_phase, mailer_class, mailer_action, locale = I18n.locale)
-    find_by(
-      projekt_phase: projekt_phase,
-      mailer_class: mailer_class,
-      mailer_action: mailer_action,
-      locale: locale
-    )
+    templates = where(projekt_phase: projekt_phase, mailer_class: mailer_class, mailer_action: mailer_action)
+                  .index_by { |template| template.locale.to_s }
+
+    [locale, I18n.default_locale].map(&:to_s).uniq
+                                 .filter_map { |candidate| templates[candidate] }
+                                 .find(&:customized?)
   end
 
   private

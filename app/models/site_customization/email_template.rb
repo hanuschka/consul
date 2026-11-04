@@ -3,91 +3,121 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
 
   EMAIL_TEMPLATES = {
     "Mailer#budget_investment_created" => {
-      variables: %w[username investment_title projekt_title investment_url]
+      variables: %w[recipient_greeting investment_title projekt_title investment_url],
+      hidden_variables: %w[username]
     },
     "Mailer#budget_investment_feasible" => {
-      variables: %w[username investment_title projekt_title feasibility_explanation investment_url]
+      variables: %w[recipient_greeting investment_title projekt_title feasibility_explanation investment_url],
+      hidden_variables: %w[username]
     },
     "Mailer#budget_investment_unfeasible" => {
-      variables: %w[username investment_title projekt_title unfeasibility_explanation investment_url]
+      variables: %w[recipient_greeting investment_title projekt_title unfeasibility_explanation
+                    investment_url],
+      hidden_variables: %w[username]
     },
     "Mailer#budget_investment_selected" => {
-      variables: %w[username investment_title investment_url]
+      variables: %w[recipient_greeting investment_title investment_url],
+      hidden_variables: %w[username]
     },
     "Mailer#budget_investment_unselected" => {
-      variables: %w[username investment_title investment_url projekt_title]
+      variables: %w[recipient_greeting investment_title investment_url projekt_title],
+      hidden_variables: %w[username]
     },
     "Mailer#budget_investment_preselected" => {
-      variables: %w[username investment_title investment_url projekt_title]
+      variables: %w[recipient_greeting investment_title investment_url projekt_title],
+      hidden_variables: %w[username]
     },
     "Mailer#budget_investment_not_preselected" => {
-      variables: %w[username investment_title investment_url projekt_title]
+      variables: %w[recipient_greeting investment_title investment_url projekt_title],
+      hidden_variables: %w[username]
     },
     "Mailer#proposal_created" => {
-      variables: %w[username proposal_title proposal_url]
+      variables: %w[recipient_greeting proposal_title proposal_url],
+      hidden_variables: %w[username]
     },
     "Mailer#proposal_official_answer" => {
-      variables: %w[username proposal_title official_answer proposal_url]
+      variables: %w[recipient_greeting proposal_title official_answer proposal_url],
+      hidden_variables: %w[username]
     },
     "Mailer#formular_answer_created" => {
-      variables: %w[username projekt_title phase_title]
+      variables: %w[recipient_greeting projekt_title phase_title],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#new_proposal" => {
-      variables: %w[username proposal_title proposal_url]
+      variables: %w[recipient_greeting proposal_title proposal_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#new_poll" => {
-      variables: %w[username poll_title poll_url]
+      variables: %w[recipient_greeting poll_title poll_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#new_comment" => {
-      variables: %w[username comment_body comment_url]
+      variables: %w[recipient_greeting comment_body comment_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#projekt_questions" => {
-      variables: %w[username phase_url]
+      variables: %w[recipient_greeting phase_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#projekt_arguments" => {
-      variables: %w[username phase_url]
+      variables: %w[recipient_greeting phase_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#new_projekt_notification" => {
-      variables: %w[username phase_url]
+      variables: %w[recipient_greeting phase_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#new_projekt_event" => {
-      variables: %w[username phase_url]
+      variables: %w[recipient_greeting phase_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#new_projekt_milestone" => {
-      variables: %w[username phase_url]
+      variables: %w[recipient_greeting phase_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#new_projekt_livestream" => {
-      variables: %w[username phase_url]
+      variables: %w[recipient_greeting phase_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#new_budget_investment" => {
-      variables: %w[username investment_title investment_url projekt_title projekt_url]
+      variables: %w[recipient_greeting investment_title investment_url projekt_title projekt_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#user_reverification_failed" => {
-      variables: %w[last_name base_url]
+      variables: %w[recipient_greeting base_url],
+      hidden_variables: %w[last_name]
     },
     "NotificationServiceMailer#user_reverification_succeeded" => {
-      variables: %w[last_name]
+      variables: %w[recipient_greeting],
+      hidden_variables: %w[last_name]
     },
     "Mailer#comment" => {
-      variables: %w[username commenter_name commentable_title commentable_url comment_body]
+      variables: %w[recipient_greeting commenter_name commentable_title commentable_url comment_body],
+      hidden_variables: %w[username]
     },
     "Mailer#reply" => {
-      variables: %w[username reply_body comment_url]
+      variables: %w[recipient_greeting reply_body comment_url],
+      hidden_variables: %w[username]
     },
     "Mailer#direct_message_for_receiver" => {
-      variables: %w[username sender_name message_title message_body sender_url]
+      variables: %w[recipient_greeting sender_name message_title message_body sender_url],
+      hidden_variables: %w[username]
     },
     "Mailer#resource_hidden" => {
-      variables: %w[username resource_text]
+      variables: %w[recipient_greeting resource_text],
+      hidden_variables: %w[username]
     },
     "Mailer#already_confirmed" => {
-      variables: %w[username new_password_url]
+      variables: %w[recipient_greeting new_password_url],
+      hidden_variables: %w[username]
     },
     "Mailer#manual_verification_confirmation" => {
-      variables: %w[username]
+      variables: %w[recipient_greeting],
+      hidden_variables: %w[username]
     },
     "Mailer#newsletter_subscription_for_existing_user" => {
-      variables: %w[username account_url]
+      variables: %w[recipient_greeting account_url],
+      hidden_variables: %w[username]
     },
     "Mailer#user_invite" => {
       variables: %w[org_name registration_url]
@@ -96,28 +126,36 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       variables: %w[org_name role_name registration_url]
     },
     "Mailer#csv_download_ready" => {
-      variables: %w[username download_url]
+      variables: %w[recipient_greeting download_url],
+      hidden_variables: %w[username]
     },
     "Mailer#file_ready" => {
-      variables: %w[username file_name]
+      variables: %w[recipient_greeting file_name],
+      hidden_variables: %w[username]
     },
     "Mailer#individual_group_value_users_added" => {
-      variables: %w[username group_name group_value_name]
+      variables: %w[recipient_greeting group_name group_value_name],
+      hidden_variables: %w[username]
     },
     "Mailer#existing_stamp_notify_existing_user" => {
-      variables: %w[username]
+      variables: %w[recipient_greeting],
+      hidden_variables: %w[username]
     },
     "Mailer#existing_stamp_notify_new_user" => {
       variables: %w[]
     },
     "Mailer#user_verification_failed" => {
-      variables: %w[username verification_url]
+      variables: %w[recipient_greeting verification_url],
+      hidden_variables: %w[username]
     },
     "DeficiencyReportMailer#notify_author_about_status_change" => {
-      variables: %w[username deficiency_report_title deficiency_report_url status_name status_notice_text]
+      variables: %w[recipient_greeting deficiency_report_title deficiency_report_url status_name
+                    status_notice_text],
+      hidden_variables: %w[username]
     },
     "DeficiencyReportMailer#notify_author_about_official_answer" => {
-      variables: %w[username deficiency_report_title deficiency_report_url official_answer]
+      variables: %w[recipient_greeting deficiency_report_title deficiency_report_url official_answer],
+      hidden_variables: %w[username]
     },
     "DeficiencyReportMailer#notify_officer" => {
       variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url]
@@ -126,33 +164,42 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url]
     },
     "DeficiencyReportMailer#notify_author_about_submission" => {
-      variables: %w[username deficiency_report_title deficiency_report_url account_url]
+      variables: %w[recipient_greeting deficiency_report_title deficiency_report_url account_url],
+      hidden_variables: %w[username]
     },
     "DeficiencyReportMailer#send_feedback_form_link" => {
-      variables: %w[username deficiency_report_title deficiency_report_url status_name feedback_form_url]
+      variables: %w[recipient_greeting deficiency_report_title deficiency_report_url status_name
+                    feedback_form_url],
+      hidden_variables: %w[username]
     },
     "DeficiencyReportMailer#notify_shared_report" => {
-      variables: %w[username shared_by_name deficiency_report_id deficiency_report_title
-                    deficiency_report_url unwatch_url]
+      variables: %w[recipient_greeting shared_by_name deficiency_report_id deficiency_report_title
+                    deficiency_report_url unwatch_url],
+      hidden_variables: %w[username]
     },
     "DeficiencyReportMailer#notify_watcher_about_change" => {
-      variables: %w[username deficiency_report_id deficiency_report_title deficiency_report_url
-                    unwatch_url]
+      variables: %w[recipient_greeting deficiency_report_id deficiency_report_title deficiency_report_url
+                    unwatch_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#new_deficiency_report" => {
-      variables: %w[username deficiency_report_id deficiency_report_title deficiency_report_url]
+      variables: %w[recipient_greeting deficiency_report_id deficiency_report_title deficiency_report_url],
+      hidden_variables: %w[username]
     },
     "NotificationServiceMailer#new_comments_for_deficiency_report" => {
       variables: %w[deficiency_report_title deficiency_report_url comment_count]
     },
     "NotificationServiceMailer#overdue_deficiency_reports" => {
-      variables: %w[officer_name overdue_count]
+      variables: %w[recipient_greeting overdue_count],
+      hidden_variables: %w[officer_name]
     },
     "NotificationServiceMailer#overdue_deficiency_reports_overview" => {
-      variables: %w[officer_name overdue_count fresh_count]
+      variables: %w[recipient_greeting overdue_count fresh_count],
+      hidden_variables: %w[officer_name]
     },
     "NotificationServiceMailer#not_assigned_deficiency_reports" => {
-      variables: %w[admin_name not_assigned_count]
+      variables: %w[recipient_greeting not_assigned_count],
+      hidden_variables: %w[admin_name]
     }
   }.freeze
 
@@ -228,6 +275,10 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
 
   def registered_variables
     EMAIL_TEMPLATES.dig(template_key, :variables) || []
+  end
+
+  def hidden_variables
+    EMAIL_TEMPLATES.dig(template_key, :hidden_variables) || []
   end
 
   def render_subject(variables = {})

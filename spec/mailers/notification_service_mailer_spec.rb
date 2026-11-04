@@ -143,7 +143,7 @@ describe NotificationServiceMailer do
       registered = SiteCustomization::EmailTemplate::EMAIL_TEMPLATES
                      .dig("NotificationServiceMailer#overdue_deficiency_reports_overview", :variables)
 
-      expect(registered).to match_array %w[officer_name overdue_count fresh_count]
+      expect(registered).to match_array %w[recipient_greeting overdue_count fresh_count]
     end
 
     it "has its copy translated in every locale the email is sent in" do

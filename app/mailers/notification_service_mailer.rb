@@ -10,6 +10,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@officer.user) do
       mail_with_custom_template(nil, {
         "officer_name" => @officer.name,
+        "recipient_greeting" => @officer.user.recipient_greeting,
         "overdue_count" => @overdue_reports.count
       }, to: @officer.email,
         default_subject: t("custom.notification_service_mailers.overdue_deficiency_reports.subject"))
@@ -34,6 +35,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@officer.user) do
       mail_with_custom_template(nil, {
         "officer_name" => @officer.name,
+        "recipient_greeting" => @officer.user.recipient_greeting,
         "overdue_count" => @overdue_reports.count,
         "fresh_count" => @fresh_reports_ids.size
       }, to: @officer.email,
@@ -71,6 +73,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(nil, {
         "admin_name" => @user.name,
+        "recipient_greeting" => @user.recipient_greeting,
         "not_assigned_count" => @not_assigned_reports.count
       }, to: @user.email,
         default_subject: t("custom.notification_service_mailers.not_assigned_deficiency_reports.subject"))
@@ -85,6 +88,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(@projekt_phase, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "proposal_title" => @proposal.title,
         "proposal_url" => proposal_url(@proposal)
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_proposal.subject"))
@@ -111,6 +115,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(@projekt_phase, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "poll_title" => @poll.title,
         "poll_url" => poll_url(@poll)
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_poll.subject"))
@@ -125,6 +130,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(@projekt_phase, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "comment_body" => @comment.body.truncate(100),
         "comment_url" => comment_url(@comment)
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_comment.subject"))
@@ -138,6 +144,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(nil, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "deficiency_report_id" => @deficiency_report.id,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report)
@@ -166,6 +173,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(@projekt_phase, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "phase_url" => @url
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.projekt_questions.subject"))
     end
@@ -179,6 +187,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(@projekt_phase, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "phase_url" => @url
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.projekt_arguments.subject"))
     end
@@ -193,6 +202,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(@projekt_phase, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "investment_title" => @investment.title,
         "investment_url" => budget_investment_url(@investment.budget, @investment),
         "projekt_title" => @projekt&.name,
@@ -210,6 +220,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(@projekt_phase, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "phase_url" => @url
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_projekt_notification.subject"))
     end
@@ -224,6 +235,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(@projekt_phase, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "phase_url" => @url
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_projekt_event.subject"))
     end
@@ -243,6 +255,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(@projekt_phase, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "phase_url" => @url
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_projekt_milestone.subject"))
     end
@@ -257,6 +270,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(@projekt_phase, {
         "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
         "phase_url" => @url
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.new_projekt_livestream.subject"))
     end
@@ -271,6 +285,7 @@ class NotificationServiceMailer < ApplicationMailer
     with_user(@user) do
       mail_with_custom_template(nil, {
         "last_name" => @user.last_name,
+        "recipient_greeting" => @user.recipient_greeting,
         "base_url" => @base_url
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.user_reverification_failed.subject"))
     end
@@ -281,7 +296,8 @@ class NotificationServiceMailer < ApplicationMailer
 
     with_user(@user) do
       mail_with_custom_template(nil, {
-        "last_name" => @user.last_name
+        "last_name" => @user.last_name,
+        "recipient_greeting" => @user.recipient_greeting
       }, to: @user.email, default_subject: t("custom.notification_service_mailers.user_reverification_succeeded.subject"))
     end
   end

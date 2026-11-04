@@ -83,6 +83,21 @@ describe Mailer do
       expect(email.body.encoded).to include("Guten Tag Anna, Mehr Bänke im Park")
     end
 
+    it "fills the recipient greeting in the customized template" do
+      author.update!(first_name: "Anna", last_name: "Muster")
+      set_setting("email_templates.recipient_greeting", "full_name")
+      SiteCustomization::EmailTemplate.create!(
+        mailer_class: "Mailer",
+        mailer_action: "resource_hidden",
+        locale: "de",
+        body: "<p>{{ recipient_greeting }}, {{ username }}</p>"
+      )
+
+      email = Mailer.resource_hidden(proposal)
+
+      expect(email.body.encoded).to include("Hallo Anna Muster, Anna")
+    end
+
     it "uses the default text otherwise" do
       email = Mailer.resource_hidden(proposal)
 

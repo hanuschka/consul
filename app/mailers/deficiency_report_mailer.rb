@@ -12,6 +12,7 @@ class DeficiencyReportMailer < ApplicationMailer
     with_user(@deficiency_report.author) do
       mail_with_custom_template(nil, {
         "username" => @deficiency_report.author.username,
+        "recipient_greeting" => @deficiency_report.author.recipient_greeting,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
         "status_name" => @deficiency_report.status&.name,
@@ -28,6 +29,7 @@ class DeficiencyReportMailer < ApplicationMailer
     with_user(@deficiency_report.author) do
       mail_with_custom_template(nil, {
         "username" => @deficiency_report.author.username,
+        "recipient_greeting" => @deficiency_report.author.recipient_greeting,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
         "official_answer" => @deficiency_report.official_answer_for_reporter
@@ -85,6 +87,7 @@ class DeficiencyReportMailer < ApplicationMailer
     with_user(@deficiency_report.author) do
       mail_with_custom_template(nil, {
         "username" => @deficiency_report.author.username,
+        "recipient_greeting" => @deficiency_report.author.recipient_greeting,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
         "account_url" => account_url
@@ -136,6 +139,7 @@ class DeficiencyReportMailer < ApplicationMailer
     with_user(@deficiency_report.author) do
       mail_with_custom_template(nil, {
         "username" => @deficiency_report.author.username,
+        "recipient_greeting" => @deficiency_report.author.recipient_greeting,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
         "status_name" => @deficiency_report.status&.name,
@@ -170,6 +174,7 @@ class DeficiencyReportMailer < ApplicationMailer
     def watcher_variables
       officer_notification_variables.merge(
         "username" => @user.username.to_s,
+        "recipient_greeting" => @user.recipient_greeting,
         "unwatch_url" => unwatch_adm_deficiency_reports_deficiency_report_url(@deficiency_report)
       )
     end

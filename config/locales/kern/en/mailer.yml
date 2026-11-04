@@ -46,10 +46,10 @@ en:
       description: Sent to logged-in users after they have successfully completed and submitted a form.
       recipient: The logged-in user who submitted the form (to the email address on their account).
     comment:
-      title: New comment
+      title: "Comment on own contribution"
       description: Sent to the author when someone comments on their contribution.
     reply:
-      title: New reply to comment
+      title: "Reply to own comment"
       description: Sent to the comment author when someone replies to their comment.
     direct_message_for_receiver:
       title: New direct message
@@ -100,12 +100,12 @@ en:
       description: Sent to subscribers when a new vote has been created.
       recipient: All users subscribed to the project.
     new_comment:
-      title: Notification of new comment
-      description: Sent to subscribers when a new comment has been posted.
-      recipient: All users subscribed to the project.
+      title: "New comment in the comment phase"
+      description: "Sent when a new comment is posted directly in this comment phase."
+      recipient: "Administrators and project managers who enabled notifications about new comments, and the subscribers of this phase."
     new_contribution_comment:
-      title: Notification of new comment on a contribution
-      description: Sent when a new comment is posted on a proposal, idea or other contribution. Comments posted directly in a comment phase use the "Notification of new comment" template in that phase's email templates.
+      title: "New comment on a contribution"
+      description: "Sent when a new comment is posted on a proposal, idea or other contribution. Comments posted directly in a comment phase use the \"New comment in the comment phase\" template in that phase's email templates."
       recipient: Administrators and project managers who enabled notifications about new comments, and the subscribers of the phase the contribution belongs to.
     projekt_questions:
       title: Notification of new quick poll

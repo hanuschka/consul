@@ -76,7 +76,7 @@ en:
     budget_investment_unselected:
       subject: "Unfortunately, your proposal didn't make it to the next round."
       title: "Unfortunately, your proposal didn't make it to the next round."
-      text: "Unfortunately, your proposal %{proposal_link} didn't receive enough votes. It will therefore not be admitted to the next phase of the %{project_link}."
+      text: "Unfortunately, your proposal %{proposal_link} didn't receive enough votes. It will therefore not be admitted to the next phase of the %{projekt_link}."
       project_link_text: "Project"
       sincerely: "Sincerely"
     evaluation_comment:

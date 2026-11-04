@@ -5,6 +5,7 @@ de:
       neutral: "Guten Tag %{name}"
       formal_male: "Sehr geehrter Herr %{last_name}"
       formal_female: "Sehr geehrte Frau %{last_name}"
+      without_name: "Guten Tag"
     budget_investment_created:
       title: Bestätigung nach Einreichung
       description: 'Wird in der Budget-Phase „Investitionsvorschläge einreichen" (2. Phase) an den Autor gesendet, sobald sein Bürgervorschlag erfolgreich eingereicht wurde.'

@@ -185,6 +185,7 @@ class Adm::EmailTemplateComponent < ApplicationComponent
       # Extract meaningful name from common patterns
       case expression
       when /\.recipient_greeting\z/ then "recipient_greeting"
+      when /\A@(\w+)\z/ then $1
       when /@(\w+)\.(\w+)/  then $2
       when /link_to.*?,\s*(\w+)/ then "link"
       when /(\w+_url|_path)/ then $1

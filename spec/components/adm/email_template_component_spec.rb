@@ -27,4 +27,13 @@ describe Adm::EmailTemplateComponent, type: :component, controller: Adm::BaseCon
     expect(preview).to include("{{ recipient_greeting }},")
     expect(preview).to include("{{ comment_url }}")
   end
+
+  it "shows a single greeting in the officer emails" do
+    %w[DeficiencyReportMailer#notify_officer NotificationServiceMailer#new_comments_for_deficiency_report].each do |key|
+      preview = default_preview(template_for(key))
+
+      expect(preview).to include("{{ recipient_greeting }},"), key
+      expect(preview).not_to include(I18n.t("mailers.shared.greeting_without_name")), key
+    end
+  end
 end

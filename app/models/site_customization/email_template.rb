@@ -183,7 +183,7 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       }
     },
     "DeficiencyReportMailer#notify_officer" => {
-      variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url
+      variables: %w[recipient_greeting deficiency_report_id deficiency_report_title deficiency_report_url
                     public_deficiency_report_url],
       preview_aliases: {
         "title" => "deficiency_report_title",
@@ -192,7 +192,7 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       }
     },
     "DeficiencyReportMailer#notify_default_officer_group_email" => {
-      variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url
+      variables: %w[recipient_greeting deficiency_report_id deficiency_report_title deficiency_report_url
                     public_deficiency_report_url]
     },
     "DeficiencyReportMailer#notify_author_about_submission" => {
@@ -230,7 +230,7 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       preview_aliases: { "title" => "deficiency_report_title" }
     },
     "NotificationServiceMailer#new_comments_for_deficiency_report" => {
-      variables: %w[deficiency_report_title deficiency_report_url comment_count]
+      variables: %w[recipient_greeting deficiency_report_title deficiency_report_url comment_count]
     },
     "NotificationServiceMailer#overdue_deficiency_reports" => {
       variables: %w[recipient_greeting overdue_count],

@@ -61,6 +61,7 @@ class DeficiencyReportMailer < ApplicationMailer
     @email_to = @deficiency_report_officer.email
 
     with_user(@deficiency_report_officer.user) do
+      @recipient_greeting = @deficiency_report_officer.user.recipient_greeting
       mail_with_custom_template(nil, officer_notification_variables,
         to: @email_to, default_subject: officer_notification_subject)
     end
@@ -73,6 +74,7 @@ class DeficiencyReportMailer < ApplicationMailer
     return if @email_to.blank?
 
     I18n.with_locale(:de) do
+      @recipient_greeting = t("mailer.recipient_greeting.without_name")
       mail_with_custom_template(nil, officer_notification_variables,
         to: @email_to, default_subject: officer_notification_subject) do |format|
         format.html { render "deficiency_report_mailer/notify_officer" }
@@ -155,6 +157,7 @@ class DeficiencyReportMailer < ApplicationMailer
 
     def officer_notification_variables
       {
+        "recipient_greeting" => @recipient_greeting,
         "deficiency_report_id" => @deficiency_report.id,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => adm_deficiency_reports_deficiency_report_url(@deficiency_report),

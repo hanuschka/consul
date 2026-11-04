@@ -54,7 +54,10 @@ class NotificationServiceMailer < ApplicationMailer
     return if email_to.blank?
 
     I18n.with_locale(@officer ? @officer.user.locale : :de) do
+      @recipient_greeting =
+        @officer ? @officer.user.recipient_greeting : t("mailer.recipient_greeting.without_name")
       mail_with_custom_template(nil, {
+        "recipient_greeting" => @recipient_greeting,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
         "comment_count" => @new_comments.count

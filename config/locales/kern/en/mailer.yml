@@ -5,6 +5,7 @@ en:
       neutral: "Hello %{name}"
       formal_male: "Dear Mr %{last_name}"
       formal_female: "Dear Ms %{last_name}"
+      without_name: "Hello"
     budget_investment_created:
       title: Submission confirmation
       description: 'Sent to the author during the "Accepting projects" budget phase (phase 2), as soon as their project idea has been successfully submitted.'

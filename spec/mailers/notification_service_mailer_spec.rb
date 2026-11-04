@@ -231,4 +231,31 @@ describe NotificationServiceMailer do
       expect(body).not_to include "/admin/users"
     end
   end
+
+  describe "#new_contribution_comment" do
+    let(:admin) { create(:administrator).user }
+    let(:comment) { create(:comment, commentable: create(:proposal), body: "Tolle Idee") }
+
+    it "uses the default text" do
+      mail = described_class.new_contribution_comment(admin.id, comment.id)
+
+      expect(mail.subject).to eq I18n.t("custom.notification_service_mailers.new_contribution_comment.subject")
+      expect(mail.body.encoded).to include("Tolle Idee")
+    end
+
+    it "uses the global template" do
+      SiteCustomization::EmailTemplate.create!(
+        mailer_class: "NotificationServiceMailer",
+        mailer_action: "new_contribution_comment",
+        locale: admin.locale,
+        subject: "Neuer Kommentar",
+        body: "<p>Kommentar: {{ comment_body }}</p>"
+      )
+
+      mail = described_class.new_contribution_comment(admin.id, comment.id)
+
+      expect(mail.subject).to eq "Neuer Kommentar"
+      expect(mail.body.encoded).to include("Kommentar: Tolle Idee")
+    end
+  end
 end

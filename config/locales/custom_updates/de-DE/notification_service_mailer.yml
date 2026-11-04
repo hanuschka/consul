@@ -37,6 +37,10 @@ de:
         subject: Neuer Kommentar auf der Beteiligungsplattform.
         title: Neuer Kommentar auf der Beteiligungsplattform.
         p1: es ist ein neuer Kommentar auf der Beteiligungsplattform veröffentlicht worden.
+      new_contribution_comment:
+        subject: Neuer Kommentar zu einem Beitrag auf der Beteiligungsplattform.
+        title: Neuer Kommentar zu einem Beitrag auf der Beteiligungsplattform.
+        p1: es ist ein neuer Kommentar zu einem Beitrag auf der Beteiligungsplattform veröffentlicht worden.
       new_deficiency_report:
         subject: Neue Mangelmeldung %{identifier}
         p1: es wurde ein neuer Mangel gemeldet.

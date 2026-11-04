@@ -103,6 +103,10 @@ de:
       title: Benachrichtigung über neuen Kommentar
       description: Wird an Abonnenten gesendet, wenn ein neuer Kommentar geschrieben wurde.
       recipient: Alle Nutzer, die das Projekt abonniert haben.
+    new_contribution_comment:
+      title: Benachrichtigung über neuen Kommentar zu einem Beitrag
+      description: Wird gesendet, wenn ein neuer Kommentar zu einem Vorschlag, einer Idee oder einem anderen Beitrag geschrieben wurde. Für Kommentare direkt in einer Kommentarphase gilt die Vorlage „Benachrichtigung über neuen Kommentar“ in den E-Mail-Vorlagen dieser Phase.
+      recipient: Administratoren und Projektmanager, die Benachrichtigungen über neue Kommentare aktiviert haben, sowie die Abonnenten der Phase, zu der der Beitrag gehört.
     projekt_questions:
       title: Benachrichtigung über neue Kurzumfrage
       description: Wird an Abonnenten gesendet, wenn eine neue Kurzumfrage erstellt wurde.

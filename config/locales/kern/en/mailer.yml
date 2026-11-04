@@ -103,6 +103,10 @@ en:
       title: Notification of new comment
       description: Sent to subscribers when a new comment has been posted.
       recipient: All users subscribed to the project.
+    new_contribution_comment:
+      title: Notification of new comment on a contribution
+      description: Sent when a new comment is posted on a proposal, idea or other contribution. Comments posted directly in a comment phase use the "Notification of new comment" template in that phase's email templates.
+      recipient: Administrators and project managers who enabled notifications about new comments, and the subscribers of the phase the contribution belongs to.
     projekt_questions:
       title: Notification of new quick poll
       description: Sent to subscribers when a new quick poll has been created.

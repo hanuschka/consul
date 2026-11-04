@@ -137,6 +137,21 @@ class NotificationServiceMailer < ApplicationMailer
     end
   end
 
+  def new_contribution_comment(user_id, comment_id)
+    @user = User.find(user_id)
+    @comment = Comment.find(comment_id)
+
+    with_user(@user) do
+      mail_with_custom_template(nil, {
+        "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
+        "comment_body" => @comment.body.truncate(100),
+        "comment_url" => comment_url(@comment)
+      }, to: @user.email,
+        default_subject: t("custom.notification_service_mailers.new_contribution_comment.subject"))
+    end
+  end
+
   def new_deficiency_report(user_id, deficiency_report_id)
     @user = User.find(user_id)
     @deficiency_report = DeficiencyReport.find(deficiency_report_id)

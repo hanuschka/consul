@@ -37,6 +37,10 @@ en:
         subject: New Comment added to Consul
         title: New Comment added to Consul
         p1: New comment has just been added to Consul.
+      new_contribution_comment:
+        subject: New comment on a contribution on the participation platform.
+        title: New comment on a contribution on the participation platform.
+        p1: a new comment on a contribution has been posted on the participation platform.
       new_deficiency_report:
         subject: New Deficiency Report %{identifier}
         p1: New deficiency report has just been added to Consul

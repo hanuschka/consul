@@ -61,6 +61,11 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       hidden_variables: %w[username],
       preview_aliases: { "body" => "comment_body" }
     },
+    "NotificationServiceMailer#new_contribution_comment" => {
+      variables: %w[recipient_greeting comment_body comment_url],
+      hidden_variables: %w[username],
+      preview_aliases: { "body" => "comment_body" }
+    },
     "NotificationServiceMailer#projekt_questions" => {
       variables: %w[recipient_greeting phase_url],
       hidden_variables: %w[username],
@@ -246,6 +251,7 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     ["NotificationServiceMailer", "user_reverification_succeeded"],
     ["Mailer", "comment"],
     ["Mailer", "reply"],
+    ["NotificationServiceMailer", "new_contribution_comment"],
     ["Mailer", "direct_message_for_receiver"],
     ["Mailer", "resource_hidden"],
     ["Mailer", "already_confirmed"],

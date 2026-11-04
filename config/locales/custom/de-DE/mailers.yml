@@ -10,7 +10,7 @@ de:
       subject: "Danke, dass Sie einen Vorschlag eingereicht haben!"
     proposal_official_answer:
       subject: "Es gibt eine offizielle Antwort zu Ihrem Vorschlag"
-      text1: "zu Ihrem Vorschlag %{proposal_link} liegt eine offizielle Antwort der Verwaltung vor:"
+      text1: "zu Ihrem Vorschlag %{proposal_title} liegt eine offizielle Antwort der Verwaltung vor:"
     formular_answer_created:
       subject: "Vielen Dank für Ihre Einsendung!"
     comment:
@@ -58,9 +58,9 @@ de:
       button: Registrierung abschließen
       subject: "Einladung an %{org_name}"
     pending_role_invite:
-      subject: "Sie wurden als %{role} eingeladen"
-      title: "Sie wurden als %{role} eingeladen"
-      text: "Erstellen Sie jetzt Ihr Konto, um als %{role} auf der Beteiligungsplattform loszulegen."
+      subject: "Sie wurden als %{role_name} eingeladen"
+      title: "Sie wurden als %{role_name} eingeladen"
+      text: "Erstellen Sie jetzt Ihr Konto, um als %{role_name} auf der Beteiligungsplattform loszulegen."
       button: "Konto erstellen"
       ignore: "Wenn Sie diese Einladung nicht angefordert haben, können Sie diese E-Mail einfach ignorieren."
       thanks: "Vielen Dank."
@@ -76,8 +76,7 @@ de:
     budget_investment_created:
       subject: "Danke, dass Sie einen Vorschlag eingereicht haben!"
       title: "Danke, dass Sie einen Vorschlag eingereicht haben!"
-      intro: "Hallo <strong>%{author}</strong>,"
-      text: "vielen Dank, dass Sie einen Vorschlag %{investment_link} für das Projekt eingereicht haben. Ihr Vorschlag ist ab sofort im Projektraum %{projekt_link} sichtbar."
+      text: "vielen Dank, dass Sie einen Vorschlag %{investment_title} für das Projekt eingereicht haben. Ihr Vorschlag ist ab sofort im Projektraum %{projekt_title} sichtbar."
       follow: "Teilen Sie Ihren Vorschlag in den sozialen Netzwerken und laden Sie andere Personen ein, Ihren Vorschlag zu kommentieren."
       share: "Jetzt Vorschlag teilen!"
       notifications: "Möchten Sie Benachrichtigungen per E-Mail erhalten, wenn eine andere Person Ihren Vorschlag kommentiert? Dann prüfen Sie bitte die Einstellungen in %{account_link}."
@@ -92,14 +91,14 @@ de:
     budget_investment_selected:
       subject: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
       title: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
-      text: "Bewerben Sie Ihren Vorschlag %{proposal_link} für die Abstimmungsphase."
+      text: "Bewerben Sie Ihren Vorschlag %{investment_title} für die Abstimmungsphase."
       share_button: "Jetzt Vorschlag teilen!"
       thanks: "Viel Erfolg!"
       sincerely: "Mit freundlichen Grüßen"
     budget_investment_unselected:
       subject: "Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft."
       title: "Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft."
-      text: "Ihr Vorschlag %{proposal_link} hat leider nicht genügend Stimmen erhalten. Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen."
+      text: "Ihr Vorschlag %{investment_title} hat leider nicht genügend Stimmen erhalten. Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen."
       projekt_link_text: "Projekts"
       sincerely: "Mit freundlichen Grüßen"
     evaluation_comment:

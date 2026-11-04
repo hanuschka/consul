@@ -118,7 +118,7 @@ class Mailer < ApplicationMailer
         "org_name" => Setting["org_name"],
         "role_name" => @role_name,
         "registration_url" => new_user_registration_url(invitation_token: pending_role_assignment.invitation_token)
-      }, to: @email_to, default_subject: t("mailers.pending_role_invite.subject", role: @role_name))
+      }, to: @email_to, default_subject: t("mailers.pending_role_invite.subject", role_name: @role_name))
     end
   end
 

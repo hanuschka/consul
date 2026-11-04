@@ -1,13 +1,13 @@
 <td style="<%= css_for_mailer_content %>">
   <h1 style="<%= css_for_mailer_heading %>">
     <%= t("mailers.pending_role_invite.title",
-        role: @role_name) %>
+        role_name: @role_name) %>
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
     <%= t("mailers.pending_role_invite.text",
         org: Setting["org_name"],
-        role: @role_name) %>
+        role_name: @role_name) %>
   </p>
 
   <p style="text-align: center;">

@@ -54,7 +54,7 @@ en:
       new_budget_investment:
         subject: A new proposal has been submitted!
         title: A new proposal has been submitted!
-        p1: "a new proposal has been submitted in %{projekt_link}. Check it out here: %{proposal_link}"
+        p1: "a new proposal has been submitted in %{projekt_link}. Check it out here: %{investment_title}"
         projekt_link_text: Project
         sincerely: Kind regards,
       new_projekt_notification:

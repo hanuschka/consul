@@ -4,7 +4,8 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
   EMAIL_TEMPLATES = {
     "Mailer#budget_investment_created" => {
       variables: %w[recipient_greeting investment_title projekt_title investment_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "budget" => "investment_url" }
     },
     "Mailer#budget_investment_feasible" => {
       variables: %w[recipient_greeting investment_title projekt_title feasibility_explanation investment_url],
@@ -13,11 +14,13 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     "Mailer#budget_investment_unfeasible" => {
       variables: %w[recipient_greeting investment_title projekt_title unfeasibility_explanation
                     investment_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "valuator_explanation" => "unfeasibility_explanation" }
     },
     "Mailer#budget_investment_selected" => {
       variables: %w[recipient_greeting investment_title investment_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "budget" => "investment_url" }
     },
     "Mailer#budget_investment_unselected" => {
       variables: %w[recipient_greeting investment_title investment_url projekt_title],
@@ -45,39 +48,48 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     },
     "NotificationServiceMailer#new_proposal" => {
       variables: %w[recipient_greeting proposal_title proposal_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "title" => "proposal_title" }
     },
     "NotificationServiceMailer#new_poll" => {
       variables: %w[recipient_greeting poll_title poll_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "title" => "poll_title" }
     },
     "NotificationServiceMailer#new_comment" => {
       variables: %w[recipient_greeting comment_body comment_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "body" => "comment_body" }
     },
     "NotificationServiceMailer#projekt_questions" => {
       variables: %w[recipient_greeting phase_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "@url" => "phase_url" }
     },
     "NotificationServiceMailer#projekt_arguments" => {
       variables: %w[recipient_greeting phase_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "@url" => "phase_url" }
     },
     "NotificationServiceMailer#new_projekt_notification" => {
       variables: %w[recipient_greeting phase_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "@url" => "phase_url" }
     },
     "NotificationServiceMailer#new_projekt_event" => {
       variables: %w[recipient_greeting phase_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "@url" => "phase_url" }
     },
     "NotificationServiceMailer#new_projekt_milestone" => {
       variables: %w[recipient_greeting phase_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "@url" => "phase_url" }
     },
     "NotificationServiceMailer#new_projekt_livestream" => {
       variables: %w[recipient_greeting phase_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "@url" => "phase_url" }
     },
     "NotificationServiceMailer#new_budget_investment" => {
       variables: %w[recipient_greeting investment_title investment_url projekt_title projekt_url],
@@ -101,7 +113,8 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     },
     "Mailer#direct_message_for_receiver" => {
       variables: %w[recipient_greeting sender_name message_title message_body sender_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "title" => "message_title", "body" => "message_body", "sender" => "sender_name" }
     },
     "Mailer#resource_hidden" => {
       variables: %w[recipient_greeting resource_text],
@@ -120,10 +133,12 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       hidden_variables: %w[username]
     },
     "Mailer#user_invite" => {
-      variables: %w[org_name registration_url]
+      variables: %w[org_name registration_url],
+      preview_aliases: { "org" => "org_name", "new_user_registration_url" => "registration_url" }
     },
     "Mailer#pending_role_invite" => {
-      variables: %w[org_name role_name registration_url]
+      variables: %w[org_name role_name registration_url],
+      preview_aliases: { "invitation_token" => "registration_url" }
     },
     "Mailer#csv_download_ready" => {
       variables: %w[recipient_greeting download_url],
@@ -151,17 +166,29 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     "DeficiencyReportMailer#notify_author_about_status_change" => {
       variables: %w[recipient_greeting deficiency_report_title deficiency_report_url status_name
                     status_notice_text],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "title" => "deficiency_report_title", "status" => "status_name" }
     },
     "DeficiencyReportMailer#notify_author_about_official_answer" => {
       variables: %w[recipient_greeting deficiency_report_title deficiency_report_url official_answer],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: {
+        "title" => "deficiency_report_title",
+        "official_answer_for_reporter" => "official_answer"
+      }
     },
     "DeficiencyReportMailer#notify_officer" => {
-      variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url]
+      variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url
+                    public_deficiency_report_url],
+      preview_aliases: {
+        "title" => "deficiency_report_title",
+        "deficiency_report_url" => "public_deficiency_report_url",
+        "adm_deficiency_reports_deficiency_report_url" => "deficiency_report_url"
+      }
     },
     "DeficiencyReportMailer#notify_default_officer_group_email" => {
-      variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url]
+      variables: %w[deficiency_report_id deficiency_report_title deficiency_report_url
+                    public_deficiency_report_url]
     },
     "DeficiencyReportMailer#notify_author_about_submission" => {
       variables: %w[recipient_greeting deficiency_report_title deficiency_report_url account_url],
@@ -174,17 +201,28 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     },
     "DeficiencyReportMailer#notify_shared_report" => {
       variables: %w[recipient_greeting shared_by_name deficiency_report_id deficiency_report_title
-                    deficiency_report_url unwatch_url],
-      hidden_variables: %w[username]
+                    deficiency_report_url unwatch_url public_deficiency_report_url],
+      hidden_variables: %w[username],
+      preview_aliases: {
+        "title" => "deficiency_report_title",
+        "adm_deficiency_reports_deficiency_report_url" => "deficiency_report_url",
+        "unwatch_adm_deficiency_reports_deficiency_report_url" => "unwatch_url"
+      }
     },
     "DeficiencyReportMailer#notify_watcher_about_change" => {
       variables: %w[recipient_greeting deficiency_report_id deficiency_report_title deficiency_report_url
-                    unwatch_url],
-      hidden_variables: %w[username]
+                    unwatch_url public_deficiency_report_url],
+      hidden_variables: %w[username],
+      preview_aliases: {
+        "title" => "deficiency_report_title",
+        "adm_deficiency_reports_deficiency_report_url" => "deficiency_report_url",
+        "unwatch_adm_deficiency_reports_deficiency_report_url" => "unwatch_url"
+      }
     },
     "NotificationServiceMailer#new_deficiency_report" => {
       variables: %w[recipient_greeting deficiency_report_id deficiency_report_title deficiency_report_url],
-      hidden_variables: %w[username]
+      hidden_variables: %w[username],
+      preview_aliases: { "title" => "deficiency_report_title" }
     },
     "NotificationServiceMailer#new_comments_for_deficiency_report" => {
       variables: %w[deficiency_report_title deficiency_report_url comment_count]
@@ -279,6 +317,10 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
 
   def hidden_variables
     EMAIL_TEMPLATES.dig(template_key, :hidden_variables) || []
+  end
+
+  def preview_aliases
+    EMAIL_TEMPLATES.dig(template_key, :preview_aliases) || {}
   end
 
   def render_subject(variables = {})

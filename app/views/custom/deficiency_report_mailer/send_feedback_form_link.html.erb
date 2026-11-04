@@ -7,8 +7,8 @@
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <%= sanitize(
       t("custom.deficiency_reports.mailers.send_feedback_form_link.p1",
-        deficiency_report_link: link_to(@deficiency_report.title, deficiency_report_url(@deficiency_report), target: "_blank"),
-        status: @deficiency_report.status.name)
+        deficiency_report_title: link_to(@deficiency_report.title, deficiency_report_url(@deficiency_report), target: "_blank"),
+        status_name: @deficiency_report.status.name)
     ) %>
   </p>
 
@@ -19,7 +19,7 @@
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <%= sanitize(
       t("custom.deficiency_reports.mailers.send_feedback_form_link.p3",
-        feedback_form_link:
+        feedback_form_url:
           link_to(
             t("custom.deficiency_reports.mailers.send_feedback_form_link.feedback_form_link_text"),
             new_deficiency_report_feedback_form_url(@deficiency_report),

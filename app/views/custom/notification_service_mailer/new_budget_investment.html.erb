@@ -11,7 +11,7 @@
     <%= sanitize(
       t("custom.notification_service_mailers.new_budget_investment.p1",
         projekt_link: link_to(t("custom.notification_service_mailers.new_budget_investment.projekt_link_text"), page_url(@projekt.page.slug)),
-        proposal_link: link_to(@investment.title, budget_investment_url(@investment.budget, @investment))
+        investment_title: link_to(@investment.title, budget_investment_url(@investment.budget, @investment))
       ),
       attributes: %w[href style]
     ) %>

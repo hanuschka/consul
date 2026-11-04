@@ -1,4 +1,8 @@
 class Adm::EmailTemplateComponent < ApplicationComponent
+  PLACEHOLDER_START = "\u{E000}".freeze
+  PLACEHOLDER_END = "\u{E001}".freeze
+  PLACEHOLDER_PATTERN = /#{PLACEHOLDER_START}([^#{PLACEHOLDER_END}]*)#{PLACEHOLDER_END}/
+
   delegate :ck_editor_class, to: :helpers
 
   def initialize(email_template, open: false, recipient_type: nil)
@@ -95,13 +99,17 @@ class Adm::EmailTemplateComponent < ApplicationComponent
       source = source.gsub(/<%=.*?%>/m) { |match| match.gsub(/\s+/, " ") }
 
       # Resolve any ERB tag containing a t() call — handles sanitize(t(...)), link_to(t(...)), etc.
-      source.gsub(/<%=\s*[^%]*t\("([^"]+)"[^%]*%>/) do
-        key = $1
+      source.gsub(/<%=\s*(?:(?!%>).)*?t\("([^"]+)"(?:(?!%>).)*%>/) do
+        tag = Regexp.last_match(0)
+        key = Regexp.last_match(1)
         translation = I18n.t(key, default: nil, **default_interpolations(key))
-        translation || "[#{key}]"
+        next placeholder(key) if translation.nil?
+
+        url_expression = translated_link_target(tag, key)
+        url_expression ? link_preview(translation, summarize_erb(url_expression)) : translation
       end
       # Replace remaining ERB output tags with bracketed placeholders
-      .gsub(/<%=\s*(.+?)\s*%>/) { "[#{summarize_erb($1)}]" }
+      .gsub(/<%=\s*(.+?)\s*%>/) { placeholder(summarize_erb($1)) }
       # Remove non-output ERB tags (logic)
       .gsub(/<%[^=].*?%>/m, "")
     end
@@ -110,12 +118,73 @@ class Adm::EmailTemplateComponent < ApplicationComponent
       # Provide placeholder values for common interpolation keys
       translation_source = I18n.t(key, default: "")
       placeholders = translation_source.scan(/%\{(\w+)\}/).flatten
-      placeholders.to_h { |p| [p.to_sym, "[#{p}]"] }
+      placeholders.to_h { |p| [p.to_sym, placeholder(p)] }
+    end
+
+    def placeholder(name)
+      "#{PLACEHOLDER_START}#{name}#{PLACEHOLDER_END}"
+    end
+
+    def variable_for(name)
+      @email_template.preview_aliases[name] || (name if variables.include?(name))
+    end
+
+    def link_preview(text, name)
+      variable = variable_for(name)
+      variable ? "#{text} ({{ #{variable} }})" : text
+    end
+
+    def translated_link_target(tag, key)
+      code = tag.sub(/\A<%=/, "").sub(/%>\z/, "")
+      match = code.match(/link_to\s*\(?\s*(?=t\("#{Regexp.escape(key)}")/)
+      return if match.nil?
+
+      rest = code[match.end(0)..]
+      text_argument = first_argument(rest)
+      after_text = rest[text_argument.length..]
+      return unless after_text.match?(/\A\s*,/)
+
+      url_expression = first_argument(after_text.sub(/\A\s*,/, "")).strip
+      url_expression.presence
+    end
+
+    def first_argument(code)
+      depth = 0
+      quote = nil
+
+      code.each_char.with_index do |char, index|
+        if quote
+          quote = nil if char == quote
+        elsif char == '"' || char == "'"
+          quote = char
+        elsif "([{".include?(char)
+          depth += 1
+        elsif ")]}".include?(char)
+          return code[0...index] if depth.zero?
+
+          depth -= 1
+        elsif char == "," && depth.zero?
+          return code[0...index]
+        end
+      end
+
+      code
+    end
+
+    def resolve_placeholders(html)
+      html.gsub(/<a\b[^>]*?\bhref=(["']?)(?:mailto:)?#{PLACEHOLDER_PATTERN}\1(?=[\s>])[^>]*>(.*?)<\/a>/m) do
+        link_preview(Regexp.last_match(3).strip, Regexp.last_match(2))
+      end
+      .gsub(PLACEHOLDER_PATTERN) do
+        variable = variable_for(Regexp.last_match(1))
+        variable ? "{{ #{variable} }}" : "\u2026"
+      end
     end
 
     def summarize_erb(expression)
       # Extract meaningful name from common patterns
       case expression
+      when /\.recipient_greeting\z/ then "recipient_greeting"
       when /@(\w+)\.(\w+)/  then $2
       when /link_to.*?,\s*(\w+)/ then "link"
       when /(\w+_url|_path)/ then $1
@@ -128,6 +197,7 @@ class Adm::EmailTemplateComponent < ApplicationComponent
       html = html.gsub(/\s*style="[^"]*"/, "")
       # Strip css helper calls
       html = html.gsub(/\s*style="<%= css_for_\w+ %>"/, "")
+      html = resolve_placeholders(html)
       # Allow basic structural tags only
       helpers.sanitize(html, tags: %w[p h1 h2 h3 br strong em a div span td tr table ul ol li], attributes: %w[href])
     end

@@ -6,7 +6,7 @@ de:
     budget_investment_unfeasible:
       subject: "Ihr Vorschlag entspricht leider nicht den Kriterien."
       title: "Ihr Vorschlag entspricht leider nicht den Kriterien."
-      text1: "wir haben Ihren Vorschlag %{proposal_link} geprüft: Leider entspricht dieser nicht den Kriterien."
+      text1: "wir haben Ihren Vorschlag %{investment_title} geprüft: Leider entspricht dieser nicht den Kriterien."
       text2: "Er wird somit nicht zur nächsten Phase des %{projekt_link} zugelassen."
       reason: "Begründung:"
       text3: "Sollten Sie dazu Fragen haben, kontaktieren Sie uns gerne."
@@ -26,14 +26,14 @@ de:
       title: "Herzlichen Glückwunsch, Ihr Vorschlag entspricht den Kriterien."
       projekt_link_1_text: Kriterien
       projekt_link_2_text: Projekts
-      text: "wir haben Ihren Vorschlag %{proposal_link} geprüft: Ihr Vorschlag entspricht den %{projekt_link_1}. Damit wird er zur nächsten Phase des %{projekt_link_2} zugelassen."
+      text: "wir haben Ihren Vorschlag %{investment_title} geprüft: Ihr Vorschlag entspricht den %{projekt_link_1}. Damit wird er zur nächsten Phase des %{projekt_link_2} zugelassen."
       sincerely: Mit freundlichen Grüßen
     newsletter_subscription_for_existing_user:
       subject: Anmeldung zum Newsletter
-      p1_html: Es gab einen Versuch, sich mit Ihrer E-Mail-Adresse für unseren Newsletter anzumelden. Da Sie bereits über ein Consul-Konto verfügen, möchten wir Sie bitten, sich einzuloggen und die Option zum Empfang des Newsletters in Ihren <a href=%{link}>Konto-Einstellungen</a> zu aktivieren.
+      p1_html: Es gab einen Versuch, sich mit Ihrer E-Mail-Adresse für unseren Newsletter anzumelden. Da Sie bereits über ein Consul-Konto verfügen, möchten wir Sie bitten, sich einzuloggen und die Option zum Empfang des Newsletters in Ihren <a href=%{account_url}>Konto-Einstellungen</a> zu aktivieren.
     csv_download_ready:
       subject: Daten-Export
-      p1_html: 'Sie haben einen Export beantragt. Die Daten wurden exportiert und stehen zum Download bereit: <a href="%{url}">CSV herunterladen</a>'
+      p1_html: 'Sie haben einen Export beantragt. Die Daten wurden exportiert und stehen zum Download bereit: <a href="%{download_url}">CSV herunterladen</a>'
     file_ready:
       subject: Daten-Export
       p1_html: Sie haben einen Export beantragt. Die Daten wurden nun exportiert und sind im Anhang anbei.
@@ -42,7 +42,7 @@ de:
       p1_html: "Ihre Daten wurden erfolgreich hinzugefügt: <a href=\"%{url}\">%{url}</a>"
     resource_hidden:
       subject: Ihr Vorschlag verstößt gegen die Zulassungsbedingungen.
-      text1: "wir haben Ihren Themenvorschlag %{text} geprüft."
+      text1: "wir haben Ihren Themenvorschlag %{resource_text} geprüft."
       text2: "Leider verstößt er gegen die Zulassungsbedingungen unserer Themenwahl. Wir haben Ihren Vorschlag daher entfernt."
       text3: Die Zulassungsbedingungen können Sie %{netiquette_link} nachlesen.
       netiquette_link_text: hier
@@ -59,25 +59,25 @@ de:
       subject: Es wurde auf Ihren Kommentar geantwortet.
       title: Es wurde auf Ihren Kommentar geantwortet.
       hi: Hallo %{username},
-      text: "Ein anderer Nutzer hat auf Ihren Kommentar geantwortet. Sehen Sie sich die Antwort hier an: %{comment_link}"
+      text: "Ein anderer Nutzer hat auf Ihren Kommentar geantwortet. Sehen Sie sich die Antwort hier an: %{comment_url}"
       comment_link_text: hier
       sincerely: Mit freundlichen Grüßen
     budget_investment_preselected:
       subject: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
       title: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
-      text1: Ihr Vorschlag %{proposal_link} hat ausreichend Stimmen erhalten und wird nun fachlich geprüft.
+      text1: Ihr Vorschlag %{investment_title} hat ausreichend Stimmen erhalten und wird nun fachlich geprüft.
       text2: Das Ergebnis der Prüfung wird zu Beginn der nächsten Phase des %{projekt_link} veröffentlicht.
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
     budget_investment_not_preselected:
       subject: Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft.
       title: Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft.
-      text1: Ihr Vorschlag %{proposal_link} hat leider nicht genügend Stimmen erhalten.
+      text1: Ihr Vorschlag %{investment_title} hat leider nicht genügend Stimmen erhalten.
       text2: Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen.
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
     proposal_created:
-      text1: "Ihr Vorschlag ist erfolgreich eingegangen: %{proposal_link}"
+      text1: "Ihr Vorschlag ist erfolgreich eingegangen: %{proposal_title}"
     formular_answer_created:
       subject: "Vielen Dank für Ihre Einsendung!"
       text1: "Ihre Einsendung zum Formular \"%{phase_title}\" im Projekt \"%{projekt_title}\" ist erfolgreich eingegangen."
@@ -108,7 +108,7 @@ de:
       b1_item6: Tippfehler (z. B. „ß/ss“, Leerzeichen, führende Nullen).
       b1_item7: Es besteht bereits ein verifiziertes Nutzerkonto mit einer anderen E-Mail-Adresse von Ihnen.
       b2_title: So lösen Sie das Problem
-      b2_item1: "Öffnen Sie Ihre Verifizierung erneut: %{link}"
+      b2_item1: "Öffnen Sie Ihre Verifizierung erneut: %{verification_url}"
       b2_item2: "Übernehmen Sie Namen und Adresse exakt wie im Ausweis/Meldebescheinigung. – Mehrteilig? Bitte vollständig angeben (z. B. „Müller-Schmidt“)."
       b2_item3: "Wenn Sie sich kürzlich umgemeldet haben: Warten Sie 1–2 Werktage und versuchen Sie es erneut."
       b2_item4: "Bei Auskunfts-/Übermittlungssperre: Kontaktieren Sie uns direkt"

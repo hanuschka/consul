@@ -58,7 +58,7 @@ de:
       new_budget_investment:
         subject: Ein neuer Vorschlag wurde eingereicht!
         title: Ein neuer Vorschlag wurde eingereicht!
-        p1: "es wurde ein neuer Vorschlag im %{projekt_link} eingereicht. Sehen Sie sich ihn hier an: %{proposal_link}"
+        p1: "es wurde ein neuer Vorschlag im %{projekt_link} eingereicht. Sehen Sie sich ihn hier an: %{investment_title}"
         projekt_link_text: Projekt
         sincerely: Mit freundlichen Grüßen
       new_projekt_notification:

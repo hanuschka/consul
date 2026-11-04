@@ -5,7 +5,7 @@
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= t("devise_views.mailer.confirmation_instructions.welcome") %> <strong><%= @email %></strong>
+    <%= @resource.recipient_greeting %>,
   </p>
 
   <p style="<%= css_for_mailer_text %>">
@@ -17,4 +17,12 @@
                 confirmation_url(@resource, confirmation_token: @token),
                 style: css_for_mailer_link %>
   </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

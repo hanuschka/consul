@@ -134,7 +134,7 @@ en:
       dashboard_button: "Go ahead, discover them!"
     new_actions_notification_on_published:
       subject: "Your citizen proposal is already published. Don't stop spreading!"
-      hi: "Congratulations %{name}! Your proposal %{title} has been created successfully."
+      hi: "Congratulations! Your proposal %{title} has been created successfully."
       text_1: "And now, go for your first 100 supports!"
       text_2: "Why 100?"
       text_3: "Our experience tells us that the first day is fundamental. Because in addition to having the energy to launch something new, being a newly published proposal, you will have the important visibility of being among the new proposals highlighted."

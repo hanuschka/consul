@@ -17,10 +17,8 @@ de:
         confirm_link: Mein Konto bestätigen
         text: "Bestätigen Sie Ihre E-Mail-Adresse mithilfe des folgenden Links:"
         title: Willkommen
-        welcome: Willkommen
       reset_password_instructions:
         change_link: Mein Passwort ändern
-        hello: Hallo
         ignore_text: Wenn Sie keine Anfrage zum Ändern Ihres Passworts gestellt haben, können Sie diese E-Mail ignorieren.
         info_text: Sie können Ihr Passwort nur ändern, wenn Sie den Link aufrufen und dann die notwendigen Schritte befolgen.
         text: "Wir haben eine Anfrage zur Änderung Ihres Passwort erhalten. Sie können dafür den folgenden Link verwenden:"

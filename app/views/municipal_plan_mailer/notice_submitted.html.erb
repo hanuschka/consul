@@ -1,6 +1,6 @@
 <td style="<%= css_for_mailer_content %>">
   <p style="<%= css_for_mailer_text %>">
-    <%= I18n.t("custom.municipal_plan_mailer.notice_submitted.greeting") %>
+    <%= t("mailers.shared.greeting_without_name") %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">
@@ -20,4 +20,12 @@
   <p style="<%= css_for_mailer_text %>">
     <%= simple_format(@notice.body) %>
   </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

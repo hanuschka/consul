@@ -11,4 +11,12 @@
   <p>
     <%= link_to t("custom.notification_service_mailers.new_manual_verification_request.link_text"), adm_users_url %>
   </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

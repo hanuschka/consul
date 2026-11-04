@@ -3,6 +3,7 @@ de:
     shared:
       sincerely: Mit freundlichen Grüßen
       signature: Ihr Beteiligungs-Team
+      greeting_without_name: "Guten Tag,"
     budget_investment_unfeasible:
       subject: "Ihr Vorschlag entspricht leider nicht den Kriterien."
       title: "Ihr Vorschlag entspricht leider nicht den Kriterien."
@@ -90,7 +91,6 @@ de:
       p2: "Wenn Sie Ihre E-Mail-Adresse ändern möchten, melden Sie sich bitte mit dieser E-Mail-Adresse auf der Beteiligungsplattform an und nehmen die Änderung in Ihren Kontoeinstellungen vor."
     existing_stamp_notify_new_user:
       subject: Verwendung der bestehenden E-Mail-Adresse
-      hi: "Hallo,"
       p1: bitte nutzen Sie die E-Mail-Adresse, mit der Sie sich ursprünglich registriert haben, um sich in Ihren Account einzuloggen.
       p2: "Wenn Sie Ihre ursprünglich hinterlegte E-Mail-Adresse ändern möchten, melden Sie sich bitte mit der bestehenden Adresse auf der Beteiligungsplattform an und nehmen die Änderung in Ihren Kontoeinstellungen vor. Sollten Sie den Verifizierungsversuch nicht veranlasst haben, wenden Sie sich bitte an die Administration der Beteiligungsplattform."
     projekt_event_registration_confirmation:

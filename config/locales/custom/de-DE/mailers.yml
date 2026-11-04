@@ -147,7 +147,7 @@ de:
       dashboard_button: "Nur zu, es gibt viel zu entdecken!"
     new_actions_notification_on_published:
       subject: "Ihr Bürger-Vorschlag ist bereits veröffentlicht. Hören Sie nicht auf, es zu verbreiten!"
-      hi: "Glückwunsch %{name}! Ihr Vorschlag %{title} wurde erfolgreich angelegt."
+      hi: "Glückwunsch! Ihr Vorschlag %{title} wurde erfolgreich angelegt."
       text_1: "Und jetzt, auf zu den ersten 100 Unterstützungen!"
       text_2: "Warum 100?"
       text_3: "Unsere Erfahrung zeigt uns, dass der erste Tag von grundlegender Bedeutung ist. Denn zu der Energie, etwas Neues auf den Weg zu bringen, kommt die Möglichkeit größerer Sichtbarkeit, da Sie unter den neuen Vorschlägen zu sehen sind."

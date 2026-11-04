@@ -17,10 +17,8 @@ en:
         confirm_link: Confirm my account
         text: "Confirm your email address using the following link:"
         title: Welcome
-        welcome: Welcome
       reset_password_instructions:
         change_link: Change my password
-        hello: Hello
         ignore_text: If you have not requested to change your password, you can ignore this email.
         info_text: You can only change your password if you click on the link and then follow the necessary steps.
         text: "We have received a request to change your password. You can do so using the following link:"

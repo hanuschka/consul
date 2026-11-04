@@ -46,14 +46,14 @@ class NotificationServiceMailer < ApplicationMailer
   # Options come through `with` params: on Ruby 3.2+ Rails 6.1 hands a mailer
   # action's keyword arguments over as a positional hash.
   def new_comments_for_deficiency_report(deficiency_report, last_notified_time)
-    officer = params[:officer]
+    @officer = params[:officer]
     @deficiency_report = deficiency_report
     @new_comments = @deficiency_report.comments.where("created_at > ?", last_notified_time)
     @initial = params[:initial]
-    email_to = officer ? officer.email : deficiency_report.responsible.default_email
+    email_to = @officer ? @officer.email : deficiency_report.responsible.default_email
     return if email_to.blank?
 
-    I18n.with_locale(officer ? officer.user.locale : :de) do
+    I18n.with_locale(@officer ? @officer.user.locale : :de) do
       mail_with_custom_template(nil, {
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),

@@ -2,6 +2,9 @@
            font-family:'Open Sans',arial,sans-serif;line-height: 24px; text-align: justify;">
 
   <p>
+    <%= @proposal.author.recipient_greeting %>,
+  </p>
+  <p>
     <%= t("mailers.new_actions_notification_on_published.hi",
             name: @proposal.author.name,
             title: @proposal.title) %>
@@ -61,4 +64,11 @@
     </tbody>
   </table>
 
+  <% unless custom_email_footer_present? %>
+    <p>
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

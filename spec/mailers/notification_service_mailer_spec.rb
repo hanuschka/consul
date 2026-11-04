@@ -147,7 +147,7 @@ describe NotificationServiceMailer do
     end
 
     it "has its copy translated in every locale the email is sent in" do
-      keys = %i[subject hi p1_s p1_p fresh_badge fresh_hint no_responsible]
+      keys = %i[subject p1_s p1_p fresh_badge fresh_hint no_responsible]
 
       %i[en de].each do |locale|
         keys.each do |key|

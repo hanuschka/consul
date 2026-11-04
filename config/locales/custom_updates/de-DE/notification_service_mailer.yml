@@ -5,12 +5,10 @@ de:
         unsubscribe_html: Wenn Sie keine weiteren Benachrichtigungen zu diesem Beitrag bekommen möchten, dann klicken Sie <a href="%{url}" target="_blank">hier</a> und klicken auf die Benachrichtigungsglocke (Sie müssen eingeloggt sein).
       overdue_deficiency_reports:
         subject: Mangel wurde noch nicht bearbeitet
-        hi: Liebe/r Sachbearbeiter*in,
         p1_s: Ihnen wurde ein Mangel zur Bearbeitung zugewiesen, welcher noch nicht bearbeitet wurde.
         p1_p: Ihnen wurden mehrere Mängel zur Bearbeitung zugewiesen, die noch nicht bearbeitet wurden.
       overdue_deficiency_reports_overview:
         subject: Übersicht überfälliger Anliegen
-        hi: Liebe/r Sachbearbeiter*in,
         p1_s: "ein Anliegen ist seit Längerem unbearbeitet. Sie erhalten diese Übersicht, weil Sie alle Anliegen verwalten:"
         p1_p: "mehrere Anliegen sind seit Längerem unbearbeitet. Sie erhalten diese Übersicht, weil Sie alle Anliegen verwalten:"
         fresh_badge: NEU
@@ -18,13 +16,11 @@ de:
         no_responsible: keine Zuständigkeit zugewiesen
       new_comments_for_deficiency_report:
         subject: "Kommentar zur Mangelmeldung (%{deficiency_report_title}) wurde noch nicht bearbeitet"
-        hi: Liebe/r SachbearbeiterIn,
         p1_initial: "Ihnen wurde gerade folgender Kommentar zu einer Mangelmeldung zur Bearbeitung zugewiesen:"
         p1_reminder: Ihnen wurde kürzlich ein Kommentar zu einer Mangelmeldung zugewiesen, welcher noch nicht bearbeitet wurde.
         link_to_report: "(Link zum Mängelmelder)"
       not_assigned_deficiency_reports:
         subject: Mangelzuweisen noch ausstehend
-        hi: Lieber Admin,
         p1_s: es liegt ein Mangel vor, der noch nicht zugewiesen wurde.
         p1_p: es liegen mehrere Mängel vor, die noch nicht zugewiesen wurden.
       new_proposal:

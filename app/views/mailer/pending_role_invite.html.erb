@@ -5,6 +5,10 @@
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.shared.greeting_without_name") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
     <%= t("mailers.pending_role_invite.text",
         org: Setting["org_name"],
         role_name: @role_name) %>
@@ -21,4 +25,12 @@
   <p style="<%= css_for_mailer_text %>">
     <%= t("mailers.pending_role_invite.thanks") %>
   </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

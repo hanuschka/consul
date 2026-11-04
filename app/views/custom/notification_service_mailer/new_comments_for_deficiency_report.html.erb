@@ -1,6 +1,10 @@
 <td style="padding-bottom: 20px; padding-left: 10px;">
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("custom.notification_service_mailers.new_comments_for_deficiency_report.hi") %>
+    <% if @officer.present? %>
+      <%= @officer.user.recipient_greeting %>,
+    <% else %>
+      <%= t("mailers.shared.greeting_without_name") %>
+    <% end %>
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
@@ -19,4 +23,12 @@
       </li>
     <% end %>
   </ul>
+
+  <% unless custom_email_footer_present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

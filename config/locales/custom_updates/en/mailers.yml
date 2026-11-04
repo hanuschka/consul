@@ -1,8 +1,9 @@
 en:
   mailers:
     shared:
-      sincerely: Kind	regards
+      sincerely: Kind regards
       signature: "Your participation team"
+      greeting_without_name: "Hello,"
     budget_investment_unfeasible:
       subject: "Unfortunately, your proposal does not meet the criteria."
       title: "Unfortunately, your proposal does not meet the criteria."
@@ -88,7 +89,6 @@ en:
       p2: "If you would like to change your email address, please log in to the participation platform using this address and make the change in your account settings."
     existing_stamp_notify_new_user:
       subject: Use of existing email address
-      hi: "Hello,"
       p1: Please use the email address you originally registered with to log in to your account.
       p2: "If you would like to change your email address, please log in to the participation platform using this address and make the change in your account settings."
     projekt_event_registration_confirmation:

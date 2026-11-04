@@ -5,6 +5,10 @@
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
+    <%= @user.recipient_greeting %>,
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
     <%= t("mailers.email_verification.text") %>
   </p>
 
@@ -31,4 +35,12 @@
   <p style="<%= css_for_mailer_text %>">
     <%= t("mailers.email_verification.thanks") %>
   </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

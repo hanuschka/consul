@@ -4,7 +4,7 @@
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= t("mailers.budget_investment_not_preselected.hi", username: @author.username) %>
+    <%= @author.recipient_greeting %>,
   </p>
 
   <p style="<%= css_for_mailer_text %>">

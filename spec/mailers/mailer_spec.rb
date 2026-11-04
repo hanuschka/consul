@@ -104,6 +104,16 @@ describe Mailer do
       expect(email.subject).to eq I18n.t("mailers.resource_hidden.subject", locale: :de)
       expect(email.body.encoded).to include("Hallo Anna,")
     end
+
+    it "uses the configured greeting in the default text" do
+      author.update!(first_name: "Anna", last_name: "Muster", gender: "female")
+      set_setting("email_templates.recipient_greeting", "formal")
+
+      email = Mailer.resource_hidden(proposal)
+
+      expect(email.body.encoded).to include("Sehr geehrte Frau Muster,")
+      expect(email.body.encoded).not_to include("Hallo Anna")
+    end
   end
 
   describe "the formular answer created email" do

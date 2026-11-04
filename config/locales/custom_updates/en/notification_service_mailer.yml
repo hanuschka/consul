@@ -29,65 +29,52 @@ en:
         p1_p: There are multiple outstanding deficiency reports, which were not assigned yet.
       new_proposal:
         subject: New Proposal added to Consul
-        hi: Hi %{username},
         p1: New proposal has just been added or edited.
       new_debate:
         subject: New Debate added to Consul
-        hi: Hi %{username},
         p1: New Debate has just been added to Consul.
       new_comment:
         subject: New Comment added to Consul
         title: New Comment added to Consul
-        hi: Hi %{username},
         p1: New comment has just been added to Consul.
       new_deficiency_report:
         subject: New Deficiency Report %{identifier}
-        hi: Hi %{username},
         p1: New deficiency report has just been added to Consul
       new_poll:
         subject: New Poll added to Consul
-        hi: Hi %{username},
         p1: New poll has just been added to Consul
       projekt_questions:
         subject: New short survey added to Consul
-        hi: Hi %{username},
         link: Short survey
         p1: New short survey has just been added to Consul
       projekt_arguments:
         subject: Arguments added to Consul
-        hi: Hi %{username},
         link: Projekt arguments
         p1: Projekt arguments were just added to Consul
       new_budget_investment:
         subject: A new proposal has been submitted!
         title: A new proposal has been submitted!
-        hi: Hello %{username},
         p1: "a new proposal has been submitted in %{projekt_link}. Check it out here: %{proposal_link}"
         projekt_link_text: Project
         sincerely: Kind regards,
       new_projekt_notification:
         subject: New projekt notification added to Consul
-        hi: Hi %{username},
         link: Projekt notification
         p1: New projekt notification has just been added to Consul
       new_projekt_event:
         subject: New projekt event added to Consul
-        hi: Hi %{username},
         link: Projekt event
         p1: New projekt event has just been added to Consul
       new_projekt_milestone:
         subject: New projekt milestone added to Consul
-        hi: Hi %{username},
         link: Projekt milestone
         p1: New projekt milestone has just been added to Consul
       new_projekt_livestream:
         subject: New projekt livestream added to Consul
-        hi: Hi %{username},
         link: Projekt livestream
         p1: New projekt livestream has just been added to Consul
       user_reverification_failed:
         subject: Your account has been de-verified
-        hi: Dear Mr/Mrs %{last_name},
         p1_html: The verification of your user account on the Participation platform has been canceled. This means that you cannot currently take part in any participation projects that require a verified account (e.g. citizen budget).
         p2_html: <strong>Do you live within the city?</strong><br>At <a href="%{base_url}/account">%{base_url}/account</a> you can check your personal information and verify yourself again. Please ensure that your personal data is spelled correctly.
         p3_html: <strong>Have you moved away?</strong><br>Even as an \"outsider\" you can still take part in many participation projects on the participation platform. Please change your place of residence at <a href="%{base_url}/account">%{base_url}/account</a>.
@@ -95,19 +82,15 @@ en:
         signature_html: Thank you for your participation.
       user_reverification_succeeded:
         subject: Your account verification has been completed
-        hi: Dear Mr/Mrs %{last_name},
         p1_html: The verification of your user account on the Participation platform has been completed. This means you can take part in participation projects that require a verified account.
         signature_html: Thank you for your participation.
       new_topic:
         subject: New Topic added to Consul
-        hi: Hello %{username},
         p1: New topic was added to Consul.
       new_proposal_notification:
         subject: "New notification related to Proposal: %{proposal_title}"
-        hi: Hello %{username},
         intro_html: "Author of the proposal %{proposal_link} added a new notification"
         unsubscribe_html: If you no longer wish to receive emails about this Proposal notifications, go to the <a href="%{url}" target="_blank">Proposal page</a> and click “Unfollow” (you must be logged in to do this).
       new_projekt:
         subject: Review of the project %{projekt_title}
-        hi: Hello %{username},
         p1: The project titled %{link} has been released for your review.

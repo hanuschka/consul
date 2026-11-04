@@ -6,7 +6,6 @@ de:
     budget_investment_unfeasible:
       subject: "Ihr Vorschlag entspricht leider nicht den Kriterien."
       title: "Ihr Vorschlag entspricht leider nicht den Kriterien."
-      hi: "Hallo %{username},"
       text1: "wir haben Ihren Vorschlag %{proposal_link} geprüft: Leider entspricht dieser nicht den Kriterien."
       text2: "Er wird somit nicht zur nächsten Phase des %{projekt_link} zugelassen."
       reason: "Begründung:"
@@ -25,7 +24,6 @@ de:
     budget_investment_feasible:
       subject: "Herzlichen Glückwunsch, Ihr Vorschlag entspricht den Kriterien."
       title: "Herzlichen Glückwunsch, Ihr Vorschlag entspricht den Kriterien."
-      hi: "Hallo %{username},"
       projekt_link_1_text: Kriterien
       projekt_link_2_text: Projekts
       text: "wir haben Ihren Vorschlag %{proposal_link} geprüft: Ihr Vorschlag entspricht den %{projekt_link_1}. Damit wird er zur nächsten Phase des %{projekt_link_2} zugelassen."
@@ -44,7 +42,6 @@ de:
       p1_html: "Ihre Daten wurden erfolgreich hinzugefügt: <a href=\"%{url}\">%{url}</a>"
     resource_hidden:
       subject: Ihr Vorschlag verstößt gegen die Zulassungsbedingungen.
-      hi: "Hallo %{username},"
       text1: "wir haben Ihren Themenvorschlag %{text} geprüft."
       text2: "Leider verstößt er gegen die Zulassungsbedingungen unserer Themenwahl. Wir haben Ihren Vorschlag daher entfernt."
       text3: Die Zulassungsbedingungen können Sie %{netiquette_link} nachlesen.
@@ -68,7 +65,6 @@ de:
     budget_investment_preselected:
       subject: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
       title: Herzlichen Glückwunsch, Ihr Vorschlag geht in die nächste Runde!
-      hi: "Hallo %{username},"
       text1: Ihr Vorschlag %{proposal_link} hat ausreichend Stimmen erhalten und wird nun fachlich geprüft.
       text2: Das Ergebnis der Prüfung wird zu Beginn der nächsten Phase des %{projekt_link} veröffentlicht.
       projekt_link_text: Projekts
@@ -76,25 +72,20 @@ de:
     budget_investment_not_preselected:
       subject: Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft.
       title: Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft.
-      hi: "Hallo %{username},"
       text1: Ihr Vorschlag %{proposal_link} hat leider nicht genügend Stimmen erhalten.
       text2: Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen.
       projekt_link_text: Projekts
       sincerely: Mit freundlichen Grüßen
     proposal_created:
-      hi: "Hallo %{username},"
       text1: "Ihr Vorschlag ist erfolgreich eingegangen: %{proposal_link}"
     formular_answer_created:
       subject: "Vielen Dank für Ihre Einsendung!"
-      hi: "Hallo %{username},"
       text1: "Ihre Einsendung zum Formular \"%{phase_title}\" im Projekt \"%{projekt_title}\" ist erfolgreich eingegangen."
     new_valuator_assignment:
       subject: Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen
-      hi: "Hallo %{username},"
       text1: "Ihnen wurde ein Vorschlag zur Begutachtung zugewiesen: %{valuation_link}"
     existing_stamp_notify_existing_user:
       subject: Verifizierungsversuch über eine andere E-Mail-Adresse
-      hi: "Hallo %{username},"
       p1: soeben wurde ein Verifizierungsversuch mit Ihren Daten über eine andere E-Mail-Adresse unternommen. Bitte verwenden Sie weiterhin diese E-Mail-Adresse für Ihren Zugang zu Consul.
       p2: Wenn Sie Ihre E-Mail-Adresse ändern möchten, loggen Sie sich bitte mit dieser E-Mail Adresse bei Consul ein und nehmen die Änderung in Ihren Kontoeinstellungen vor.
     existing_stamp_notify_new_user:
@@ -107,7 +98,6 @@ de:
       confirm_link: "Anmeldung bestätigen"
     user_verification_failed:
       subject: Verifizierungsversuch fehlgeschlagen
-      hi: "Hallo %{username},"
       p1: bei der Verifizierung über das Melderegister gab es leider keinen Treffer. Das passiert gelegentlich – meist aus formalen Gründen.
       b1_title: Häufige Ursachen
       b1_item1: Schreibweise weicht ab (Umlaute, Bindestriche, Zweitnamen, Reihenfolge der Vornamen).

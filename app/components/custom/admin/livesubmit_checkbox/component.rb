@@ -16,7 +16,7 @@ class Admin::LivesubmitCheckbox::Component < ApplicationComponent
 
   private
 
-  def field_name
+  def input_name
     "#{@resource_name}[#{@attribute_name}]"
   end
 

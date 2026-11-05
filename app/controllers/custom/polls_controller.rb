@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "polls_controller").to_s
+load Rails.root.join("app", "controllers", "polls_controller.rb")
 
 class PollsController < ApplicationController
 
@@ -129,7 +129,7 @@ class PollsController < ApplicationController
     resolve_landing_page_for_projekt(@projekt_phase&.projekt)
 
     if !@poll.projekt.visible_for?(current_user)
-      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @poll.projekt.individual_group_values.map(&:name)
       render "custom/pages/forbidden", layout: false
     elsif Setting.new_design_enabled?
       render :show_new
@@ -143,7 +143,7 @@ class PollsController < ApplicationController
     @stats = Poll::Stats.new(@poll)
 
     if !@poll.projekt.visible_for?(current_user)
-      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @poll.projekt.individual_group_values.map(&:name)
       render "custom/pages/forbidden", layout: false
     elsif Setting.new_design_enabled?
       render :stats_new
@@ -156,7 +156,7 @@ class PollsController < ApplicationController
     @projekt_phase = @poll.projekt_phase
 
     if !@poll.projekt.visible_for?(current_user)
-      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @poll.projekt.individual_group_values.map(&:name)
 
       render "custom/pages/forbidden", layout: false
     elsif Setting.new_design_enabled?
@@ -181,7 +181,7 @@ class PollsController < ApplicationController
     can_view_report = is_admin_or_manager || (@poll.report_visible_for_citizens? && @poll.projekt.visible_for?(current_user))
 
     if !can_view_report
-      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @poll.projekt.individual_group_values.map(&:name)
       render "pages/forbidden", layout: false
     end
   end
@@ -193,7 +193,7 @@ class PollsController < ApplicationController
     can_view_evaluation = is_admin_or_manager || (@poll.evaluation_enabled? && @poll.projekt.visible_for?(current_user))
 
     if !can_view_evaluation
-      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @poll.projekt.individual_group_values.map(&:name)
       render "pages/forbidden", layout: false
     end
   end
@@ -202,7 +202,7 @@ class PollsController < ApplicationController
     @projekt_phase = @poll.projekt_phase
 
     if !@poll.projekt.visible_for?(current_user)
-      @individual_group_value_names = @poll.projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @poll.projekt.individual_group_values.map(&:name)
 
       render "custom/pages/forbidden", layout: false
     end

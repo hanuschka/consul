@@ -121,6 +121,18 @@ class ProjektPhase::BudgetPhase < ProjektPhase
     "budget_phase"
   end
 
+  def start_date
+    return super if budget.blank?
+
+    enabled_stages.first&.starts_at&.to_date
+  end
+
+  def end_date
+    return super if budget.blank?
+
+    enabled_stages.last&.ends_at&.then { |ends_at| (ends_at - 1.second).to_date }
+  end
+
   def sidebar_cta_kind
     return :new_button if budget&.accepting?
     return :budget_vote if budget&.selecting?
@@ -256,6 +268,12 @@ class ProjektPhase::BudgetPhase < ProjektPhase
   end
 
   private
+
+    def enabled_stages
+      budget.phases
+        .select(&:enabled?)
+        .sort_by { |stage| Budget::Phase::PHASE_KINDS.index(stage.kind) }
+    end
 
     def group_value_counts
       individual_group_value_counts || {}

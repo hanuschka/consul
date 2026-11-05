@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "setting").to_s
+load Rails.root.join("app", "models", "setting.rb")
 
 class Setting < ApplicationRecord
   AI_GATED_KEYS = %w[
@@ -279,6 +279,7 @@ class Setting < ApplicationRecord
         "proposals.poster_short_title": nil,
         "proposals.poster_description": nil,
         "proposals.email_on_official_answer": nil,
+        "email_templates.recipient_greeting": "username",
         # Images and Documents
         "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,
@@ -390,6 +391,7 @@ class Setting < ApplicationRecord
         "deficiency_reports.external_video": true,
         "deficiency_reports.voice_assistant": false,
         "deficiency_reports.send_feedback_form_link": false,
+        "deficiency_reports.separate_reporter_answer": false,
         "deficiency_reports.show_create_report_button": "active",
         "deficiency_reports.show_homepage_cta": false,
         "deficiency_reports.feature_name": nil,

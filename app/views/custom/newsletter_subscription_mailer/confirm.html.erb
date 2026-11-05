@@ -10,6 +10,18 @@
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.shared.greeting_without_name") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
     <%= t("custom.newsletters.subscription.confirm_subscription_html", link: link_to("LINK", path)) %>
   </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

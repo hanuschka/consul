@@ -6,6 +6,14 @@ de:
     proposals:
       email_on_official_answer: "E-Mail-Benachrichtigung bei offizieller Antwort (Vorschläge)"
       email_on_official_answer_description: "Versendet eine E-Mail an die einreichende Person, sobald zu ihrem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Die E-Mail enthält den Text der offiziellen Antwort sowie einen Link zum Vorschlag, auf der Vorschlagsseite selbst bleibt die Antwort wie bisher öffentlich sichtbar. Aktivieren Sie diese Einstellung, wenn Einreichende aktiv über die Rückmeldung der Verwaltung informiert werden sollen und nicht selbst auf die Plattform zurückkehren müssen."
+    email_templates:
+      recipient_greeting: "Anrede in System-E-Mails"
+      recipient_greeting_description: "Legt fest, wie die Variable {{ recipient_greeting }} die empfangende Person in angepassten System-E-Mails anspricht. Fehlen dafür Angaben im Nutzerkonto (Vorname, Nachname oder Geschlecht), wird automatisch eine passende Ersatzform verwendet, zuletzt der Nutzername. Vorlagen ohne diese Variable bleiben unverändert."
+      recipient_greeting_options:
+        username: "Nutzername (Hallo maxi84)"
+        first_name: "Vorname (Hallo Max)"
+        full_name: "Vor- und Nachname (Hallo Max Mustermann)"
+        formal: "Förmlich (Sehr geehrte Frau Mustermann)"
     feature:
       bund_id_login: "BundID-Anmeldung aktivieren"
       bund_id_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine BundID-Schaltfläche zur Anmeldung mit BundID-Konto. Die Wohnsitz-Verifizierung ist davon unabhängig. Aktivieren Sie es für Verwaltungskonten. Erfordert Zugangsdaten in der Serverkonfiguration."
@@ -374,6 +382,9 @@ de:
       send_feedback_form_link: Feedback-Formular versenden
       send_feedback_form_link_description: >
         Wenn aktiviert, erhalten Nutzer nach Abschluss ihrer Mangelmeldung per E-Mail einen Link zu einem Feedback-Formular. Damit können sie die Bearbeitung ihres Anliegens bewerten und Rückmeldung zur Zufriedenheit mit dem Prozess geben. Dies hilft der Verwaltung, die Qualität der Mängelbearbeitung zu überwachen und zu verbessern.
+      separate_reporter_answer: Antwort an meldende Person und öffentliche Antwort trennen
+      separate_reporter_answer_description: >
+        Teilt die offizielle Antwort zu einer Meldung in zwei Felder: eine Antwort, die per E-Mail an die meldende Person geht, und eine öffentliche Antwort auf der Plattform. Im Frontend erscheint oberhalb der Meldung nur die öffentliche Antwort; bleibt sie leer, wird kein Antwortbereich angezeigt. Aktivieren Sie diese Funktion, wenn Sie meldenden Personen ausführlicher oder persönlicher antworten möchten, als es öffentlich sichtbar sein soll.
       show_create_report_button: Einreichung neuer Mängelmeldungen
       show_create_report_button_description: >
         Steuert, ob Nutzende neue Mängelmeldungen einreichen können. Ist die Option deaktiviert, werden alle Schaltflächen zum Einreichen ausgeblendet und das Meldeformular ist auch über einen direkten Link nicht mehr erreichbar; bereits eingegangene Meldungen bleiben weiterhin öffentlich sichtbar. Deaktivieren Sie diese Option, wenn vorübergehend keine neuen Meldungen entgegengenommen werden sollen, etwa während einer Betriebspause.

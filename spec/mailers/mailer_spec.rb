@@ -83,11 +83,36 @@ describe Mailer do
       expect(email.body.encoded).to include("Guten Tag Anna, Mehr Bänke im Park")
     end
 
+    it "fills the recipient greeting in the customized template" do
+      author.update!(first_name: "Anna", last_name: "Muster")
+      set_setting("email_templates.recipient_greeting", "full_name")
+      SiteCustomization::EmailTemplate.create!(
+        mailer_class: "Mailer",
+        mailer_action: "resource_hidden",
+        locale: "de",
+        body: "<p>{{ recipient_greeting }}, {{ username }}</p>"
+      )
+
+      email = Mailer.resource_hidden(proposal)
+
+      expect(email.body.encoded).to include("Hallo Anna Muster, Anna")
+    end
+
     it "uses the default text otherwise" do
       email = Mailer.resource_hidden(proposal)
 
       expect(email.subject).to eq I18n.t("mailers.resource_hidden.subject", locale: :de)
       expect(email.body.encoded).to include("Hallo Anna,")
+    end
+
+    it "uses the configured greeting in the default text" do
+      author.update!(first_name: "Anna", last_name: "Muster", gender: "female")
+      set_setting("email_templates.recipient_greeting", "formal")
+
+      email = Mailer.resource_hidden(proposal)
+
+      expect(email.body.encoded).to include("Sehr geehrte Frau Muster,")
+      expect(email.body.encoded).not_to include("Hallo Anna")
     end
   end
 
@@ -110,6 +135,31 @@ describe Mailer do
       Mailer.formular_answer_created(answer_with("freund@beispiel.de")).deliver_now
 
       expect(ActionMailer::Base.deliveries.last.to).to eq ["anna@beispiel.de"]
+    end
+  end
+
+  describe "the individual group users added email" do
+    it "links to the group value in /adm" do
+      admin = create(:administrator).user
+      value = create(:individual_group_value)
+
+      body = Mailer.individual_group_value_users_added(admin.id, value.id).body.decoded
+
+      expect(body).to include "/adm/individual_groups/#{value.individual_group.id}/individual_group_values/#{value.id}"
+      expect(body).not_to include "/admin/"
+    end
+  end
+
+  describe "the new valuator assignment email" do
+    it "links to the valuation of the investment in /adm" do
+      investment = create(:budget_investment)
+      valuator = Valuator.create!(user: create(:user))
+      assignment = Budget::ValuatorAssignment.create!(valuator: valuator, investment: investment)
+
+      body = Mailer.new_valuator_assignment(assignment).body.decoded
+
+      expect(body).to include "/adm/valuation/investments/#{investment.id}/edit"
+      expect(body).not_to include "/valuation/budgets/"
     end
   end
 end

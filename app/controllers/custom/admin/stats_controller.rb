@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "admin", "stats_controller").to_s
+load Rails.root.join("app", "controllers", "admin", "stats_controller.rb")
 
 class Admin::StatsController < Admin::BaseController
   def show

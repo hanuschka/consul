@@ -2,6 +2,7 @@ en:
   adm:
     projekts:
       phases:
+        missing_budget: This phase has no budget.
         index:
           intro_title: About participation phases
           intro_text_p1: "In the table below you manage the individual participation phases of a project. Each phase is assigned to its own tab in the project footer and can be individually shown or hidden. Three central toggles help control the behavior and visibility of phases:"

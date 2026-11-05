@@ -7,23 +7,35 @@ namespace :machine_translation do
     MachineTranslation.translatable_models.each do |model|
       characters = 0
       records = 0
+      attribute_characters = 0
+      attribute_records = 0
 
       MachineTranslation::Tasks.pending_records(model, locale) do |record, source_row|
         records += 1
         characters += MachineTranslation::Tasks.characters_in(model, source_row)
       end
 
-      next if records.zero?
+      MachineTranslation::Tasks.untranslated_attribute_rows(model, locale) do |_record, _source_row, _target_row, values|
+        attribute_records += 1
+        attribute_characters += values.sum(&:length)
+      end
 
-      total += characters
-      puts format("  %-28s %6d records %10d chars", model.name, records, characters)
+      if records.positive?
+        total += characters
+        puts format("  %-28s %6d records %10d chars", model.name, records, characters)
+      end
+
+      if attribute_records.positive?
+        total += attribute_characters
+        puts format("  %-28s %6d records %10d chars (image texts)", model.name, attribute_records, attribute_characters)
+      end
     end
 
     puts format("  %-28s %6s %10d chars (~EUR %.2f at 22/1M)", "TOTAL for #{locale}", "", total,
                 total / 1_000_000.0 * 22)
   end
 
-  desc "Enqueue DeepL translations for existing content in a target locale"
+  desc "Enqueue DeepL translations for existing content in a target locale and translate image texts left in the source language"
   task :backfill, [:locale, :limit] => :environment do |_task, args|
     locale = MachineTranslation::Tasks.validate_locale!(args[:locale], allow_source_locale: true)
 
@@ -33,12 +45,14 @@ namespace :machine_translation do
 
     limit = args[:limit].presence&.to_i
     enqueued = 0
+    updated = 0
 
     MachineTranslation.translatable_models.each do |model|
       model_enqueued = 0
+      model_updated = 0
 
       MachineTranslation::Tasks.pending_records(model, locale) do |record, source_row|
-        break if limit && enqueued >= limit
+        break if limit && enqueued + updated >= limit
         next if MachineTranslation::Tasks.pending_translation?(record, locale)
 
         remote_translation = RemoteTranslation.new(remote_translatable: record, locale: locale)
@@ -51,10 +65,25 @@ namespace :machine_translation do
         model_enqueued += 1
       end
 
+      MachineTranslation::Tasks.untranslated_attribute_rows(model, locale) do |_record, source_row, target_row, values|
+        break if limit && enqueued + updated >= limit
+
+        begin
+          next unless MachineTranslation::Tasks.translate_attributes!(model, source_row, target_row, values)
+        rescue StandardError => e
+          puts "  #{model.name} ##{target_row.globalized_model&.id}: #{e.class}: #{e.message}"
+          next
+        end
+
+        updated += 1
+        model_updated += 1
+      end
+
       puts format("  %-28s %6d enqueued", model.name, model_enqueued) if model_enqueued.positive?
+      puts format("  %-28s %6d image texts updated", model.name, model_updated) if model_updated.positive?
     end
 
-    puts "  enqueued #{enqueued} translations into #{locale}"
+    puts "  enqueued #{enqueued} translations into #{locale}, updated image texts in #{updated}"
     puts "  run machine_translation:clear_cache once the queue has drained"
   end
 

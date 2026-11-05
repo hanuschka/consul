@@ -12,6 +12,7 @@ class DeficiencyReportMailer < ApplicationMailer
     with_user(@deficiency_report.author) do
       mail_with_custom_template(nil, {
         "username" => @deficiency_report.author.username,
+        "recipient_greeting" => @deficiency_report.author.recipient_greeting,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
         "status_name" => @deficiency_report.status&.name,
@@ -28,11 +29,27 @@ class DeficiencyReportMailer < ApplicationMailer
     with_user(@deficiency_report.author) do
       mail_with_custom_template(nil, {
         "username" => @deficiency_report.author.username,
+        "recipient_greeting" => @deficiency_report.author.recipient_greeting,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
-        "official_answer" => @deficiency_report.official_answer
+        "official_answer" => @deficiency_report.official_answer_for_reporter
       }, to: @email_to,
         default_subject: t("custom.deficiency_reports.mailers.notify_author_about_official_answer.subject"))
+    end
+  end
+
+  def management_report(management_report, email, user = nil)
+    @management_report = management_report
+    @user = user
+    @email_to = email
+
+    I18n.with_locale(:de) do
+      pdf = PdfServices::DeficiencyReportManagementReportExporter.call(management_report, default_url_options[:host])
+      attachments["bericht_#{management_report.id}.pdf"] = { mime_type: "application/pdf", content: pdf.render }
+
+      mail(to: email, subject: t("custom.deficiency_reports.mailers.management_report.subject",
+                                 name: management_report.profile_name,
+                                 period_end: management_report.period_end.strftime("%d.%m.%Y")))
     end
   end
 
@@ -44,6 +61,7 @@ class DeficiencyReportMailer < ApplicationMailer
     @email_to = @deficiency_report_officer.email
 
     with_user(@deficiency_report_officer.user) do
+      @recipient_greeting = @deficiency_report_officer.user.recipient_greeting
       mail_with_custom_template(nil, officer_notification_variables,
         to: @email_to, default_subject: officer_notification_subject)
     end
@@ -56,6 +74,7 @@ class DeficiencyReportMailer < ApplicationMailer
     return if @email_to.blank?
 
     I18n.with_locale(:de) do
+      @recipient_greeting = t("mailer.recipient_greeting.without_name")
       mail_with_custom_template(nil, officer_notification_variables,
         to: @email_to, default_subject: officer_notification_subject) do |format|
         format.html { render "deficiency_report_mailer/notify_officer" }
@@ -70,6 +89,7 @@ class DeficiencyReportMailer < ApplicationMailer
     with_user(@deficiency_report.author) do
       mail_with_custom_template(nil, {
         "username" => @deficiency_report.author.username,
+        "recipient_greeting" => @deficiency_report.author.recipient_greeting,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
         "account_url" => account_url
@@ -121,6 +141,7 @@ class DeficiencyReportMailer < ApplicationMailer
     with_user(@deficiency_report.author) do
       mail_with_custom_template(nil, {
         "username" => @deficiency_report.author.username,
+        "recipient_greeting" => @deficiency_report.author.recipient_greeting,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => deficiency_report_url(@deficiency_report),
         "status_name" => @deficiency_report.status&.name,
@@ -136,6 +157,7 @@ class DeficiencyReportMailer < ApplicationMailer
 
     def officer_notification_variables
       {
+        "recipient_greeting" => @recipient_greeting,
         "deficiency_report_id" => @deficiency_report.id,
         "deficiency_report_title" => @deficiency_report.title,
         "deficiency_report_url" => adm_deficiency_reports_deficiency_report_url(@deficiency_report),
@@ -155,6 +177,7 @@ class DeficiencyReportMailer < ApplicationMailer
     def watcher_variables
       officer_notification_variables.merge(
         "username" => @user.username.to_s,
+        "recipient_greeting" => @user.recipient_greeting,
         "unwatch_url" => unwatch_adm_deficiency_reports_deficiency_report_url(@deficiency_report)
       )
     end

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "comments", "votes_component").to_s
+load Rails.root.join("app", "components", "comments", "votes_component.rb")
 
 class Comments::VotesComponent < ApplicationComponent
   delegate :cannot?, :projekt_feature?, :projekt_phase_feature?, :current_user, to: :helpers

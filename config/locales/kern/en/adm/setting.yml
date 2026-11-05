@@ -6,6 +6,14 @@ en:
     proposals:
       email_on_official_answer: "Email notification on official answer (proposals)"
       email_on_official_answer_description: "Sends an email to the submitting person as soon as an official answer to their proposal is saved or changed. The email contains the text of the official answer and a link to the proposal; on the proposal page itself the answer stays publicly visible as before. Enable this setting if submitters should be actively informed about the administration's response instead of having to return to the platform themselves."
+    email_templates:
+      recipient_greeting: "Greeting in system emails"
+      recipient_greeting_description: "Sets how the {{ recipient_greeting }} variable addresses the recipient in customized system emails. If the user account lacks the required details (first name, last name or gender), a suitable fallback is used, ending with the username. Templates without this variable stay unchanged."
+      recipient_greeting_options:
+        username: "Username (Hello maxi84)"
+        first_name: "First name (Hello Max)"
+        full_name: "Full name (Hello Max Mustermann)"
+        formal: "Formal (Dear Ms Mustermann)"
     feature:
       bund_id_login: "Enable BundID login"
       bund_id_login_description: "Adds a BundID button to the sign-in and registration pages for signing in with a BundID account. Residence verification is independent of this. Enable it for existing accounts. Requires the credentials to be configured on the server."
@@ -371,6 +379,9 @@ en:
       send_feedback_form_link: Send feedback form
       send_feedback_form_link_description: >
         When enabled, users receive an email with a link to a feedback form after their deficiency report is closed. They can rate the processing of their concern and give feedback on their satisfaction with the workflow. This helps administration monitor and improve the quality of deficiency processing.
+      separate_reporter_answer: Separate reporter answer and public answer
+      separate_reporter_answer_description: >
+        Splits the official answer to a report into two fields: an answer e-mailed to the reporter and a public answer on the platform. The frontend shows only the public answer above the report; if it is empty, no answer box is shown. Enable this to answer reporters in more detail or more personally than should be publicly visible.
       show_create_report_button: Submission of new deficiency reports
       show_create_report_button_description: >
         Controls whether users can submit new deficiency reports. When this option is disabled, all submit buttons are hidden and the report form can no longer be reached through a direct link either; reports already received stay publicly visible. Disable this option when no new reports should be accepted temporarily, for example during a break in operations.

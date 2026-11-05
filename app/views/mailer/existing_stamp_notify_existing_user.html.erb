@@ -1,6 +1,6 @@
 <td style="<%= css_for_mailer_content %>">
   <p style="<%= css_for_mailer_text %>">
-    <%= t("mailers.existing_stamp_notify_existing_user.hi", username: @user.username) %>
+    <%= @user.recipient_greeting %>,
   </p>
 
   <p style="<%= css_for_mailer_text %>">

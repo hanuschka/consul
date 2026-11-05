@@ -109,6 +109,7 @@ de:
           hidden_state:
             visible: Sichtbar
             hidden: Herausmoderiert
+          untitled: Ohne Titel
         tabs:
           show: Verwalten
           administer: Administrieren

@@ -52,7 +52,7 @@ class Api::ProjektPhasesController < Api::BaseController
     projekt_phase.projekt = @projekt
 
     if projekt_phase.save
-      serialized_projekt_phase = ProjektPhaseSerializer.new(projekt_phase).serialize
+      serialized_projekt_phase = ProjektPhaseSerializer.new(projekt_phase, current_api_client: current_client).serialize
 
       render json: { data: { projekt_phase: serialized_projekt_phase } }, status: 201
     else
@@ -63,7 +63,7 @@ class Api::ProjektPhasesController < Api::BaseController
   def update
     check_admin_access!
     if @projekt_phase.update(projekt_phase_params)
-      serialized_projekt_phase = ProjektPhaseSerializer.new(@projekt_phase).serialize
+      serialized_projekt_phase = ProjektPhaseSerializer.new(@projekt_phase, current_api_client: current_client).serialize
 
       render json: { data: { projekt_phase: serialized_projekt_phase } }
     else

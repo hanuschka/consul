@@ -470,7 +470,7 @@ end
       tags 'Projekt Phases'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a single projekt phase by ID with all its configuration details. Returns the phase type, active status, dates, visibility settings, restrictions (geozone, age range, user status), and all settings. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a single projekt phase by ID with all its configuration details. Returns the phase type, active status, dates, visibility settings, restrictions (geozone, age range, user status), and all settings. The author_id of nested questions and pins is only returned to admin clients. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'projekt phase found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Show') }

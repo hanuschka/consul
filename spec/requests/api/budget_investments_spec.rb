@@ -187,7 +187,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               documents_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the investment proposal. Upload documents as base64-encoded data.',
+                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the investment proposal. Upload documents as base64-encoded data. New documents are attributed to the content author of the API client; the author cannot be set or changed via the API.',
                 items: {
                   type: :object,
                   properties: {
@@ -195,7 +195,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                     title: { type: :string, nullable: true, description: 'Document title or filename' },
                     attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
                     cached_attachment: { type: :string, nullable: true },
-                    user_id: { type: :integer, nullable: true },
                     _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
                   }
                 }
@@ -555,7 +554,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               documents_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true).',
+                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true). New documents are attributed to the content author of the API client; the author cannot be set or changed via the API.',
                 items: {
                   type: :object,
                   properties: {
@@ -563,7 +562,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                     title: { type: :string, nullable: true, description: 'Document title or filename' },
                     attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
                     cached_attachment: { type: :string, nullable: true },
-                    user_id: { type: :integer, nullable: true },
                     _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
                   }
                 }

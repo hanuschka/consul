@@ -158,7 +158,7 @@ class Api::ProjektsController < Api::BaseController
     check_admin_access!
     if @projekt.page.update(projekt_page_params)
       process_image_with_base64(@projekt.page, params[:projekt][:image_attributes])
-      serailized_projekt = ProjektSerializer.new(@projekt).serialize
+      serailized_projekt = ProjektSerializer.new(@projekt, current_api_client: current_client).serialize
 
       render json: { data: { projekt: serailized_projekt } }
     else
@@ -177,7 +177,7 @@ class Api::ProjektsController < Api::BaseController
 
     process_image_with_base64(@projekt.page, image_data)
 
-    render json: { data: { projekt: ProjektSerializer.new(@projekt).serialize } }
+    render json: { data: { projekt: ProjektSerializer.new(@projekt, current_api_client: current_client).serialize } }
   rescue ForbiddenError, UnauthorizedError
     raise
   rescue => e
@@ -479,7 +479,7 @@ class Api::ProjektsController < Api::BaseController
     if content_blocks_sent?
       serialize_projekt_with_all_content_blocks(projekt)
     else
-      ProjektSerializer.new(projekt).serialize
+      ProjektSerializer.new(projekt, current_api_client: current_client).serialize
     end
   end
 
@@ -496,7 +496,7 @@ class Api::ProjektsController < Api::BaseController
       projekt.content_blocks.sort_by { |content_block| content_block.position.to_i }
 
     ProjektSerializer
-      .new(projekt)
+      .new(projekt, current_api_client: current_client)
       .serialize
       .merge("content_blocks" => ContentBlockSerializer.serialize_collection(content_blocks))
   end

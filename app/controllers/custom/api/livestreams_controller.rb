@@ -16,7 +16,7 @@ class Api::LivestreamsController < Api::BaseController
 
     livestreams = paginate(livestreams.order(created_at: :asc))
 
-    serialized_livestreams = LivestreamSerializer.serialize_collection(livestreams)
+    serialized_livestreams = LivestreamSerializer.serialize_collection(livestreams, client: current_client)
 
     render json: {
       data: { projekt_livestreams: serialized_livestreams },
@@ -30,7 +30,7 @@ class Api::LivestreamsController < Api::BaseController
     projekt_livestream = @projekt_phase.projekt_livestreams.new(projekt_livestream_params)
 
     if projekt_livestream.save
-      serialized_projekt_livestream = LivestreamSerializer.new(projekt_livestream).serialize
+      serialized_projekt_livestream = LivestreamSerializer.new(projekt_livestream, client: current_client).serialize
 
       render json: { data: { projekt_livestream: serialized_projekt_livestream } }, status: 201
     else
@@ -40,7 +40,7 @@ class Api::LivestreamsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_projekt_livestream = LivestreamSerializer.new(@projekt_livestream).serialize
+    serialized_projekt_livestream = LivestreamSerializer.new(@projekt_livestream, client: current_client).serialize
 
     render json: { data: { projekt_livestream: serialized_projekt_livestream } }
   end
@@ -48,7 +48,7 @@ class Api::LivestreamsController < Api::BaseController
   def update
     check_admin_access!
     if @projekt_livestream.update(projekt_livestream_params)
-      serialized_projekt_livestream = LivestreamSerializer.new(@projekt_livestream).serialize
+      serialized_projekt_livestream = LivestreamSerializer.new(@projekt_livestream, client: current_client).serialize
 
       render json: { data: { projekt_livestream: serialized_projekt_livestream } }
     else

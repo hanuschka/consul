@@ -45,7 +45,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       tags 'Deficiency Reports'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a paginated list of deficiency reports (citizen-reported maintenance/repair issues). Reports include location data, category, status, and author information. Useful for public issue tracking and municipal maintenance prioritization. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a paginated list of deficiency reports (citizen-reported maintenance/repair issues). Reports include location data, category, status, and the author's public name (null when the author hid their activity). Admin clients additionally get author_id, on_behalf_of, the responsible officer or group and reporter_answer, and can filter by author_id. Useful for public issue tracking and municipal maintenance prioritization. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
 
@@ -98,7 +98,6 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
           deficiency_report: {
             type: :object,
             properties: {
-              author_id: { type: :integer, nullable: true },
               deficiency_report_category_id: { type: :integer },
               deficiency_report_status_id: { type: :integer, nullable: true },
               title: { type: :string },
@@ -108,8 +107,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               reporter_answer: { type: :string, nullable: true, description: 'Answer e-mailed to the reporter and not shown publicly; used when the setting "separate reporter answer" is enabled, in which case official_answer is the public answer only' },
               on_behalf_of: { type: :string, nullable: true, description: 'Name of the organization or group submitting on behalf of' },
               video_url: { type: :string, nullable: true, description: 'URL to a video documenting the deficiency (YouTube, Vimeo, etc.)' },
-              responsible_id: { type: :integer, nullable: true, description: 'ID of the responsible party (user or organization) assigned to address this deficiency' },
-              responsible_type: { type: :string, nullable: true, description: 'Type of responsible party (e.g., "User", "Organization")' },
+              responsible_id: { type: :integer, nullable: true, description: 'ID of the officer or officer group assigned to address this deficiency' },
+              responsible_type: { type: :string, nullable: true, enum: ['DeficiencyReport::Officer', 'DeficiencyReport::OfficerGroup'], description: 'Type of the responsible party. Only officers and officer groups can be made responsible; any other type, or an id that does not exist, is rejected with 422.' },
               tag_list: { type: :string, nullable: true, description: 'Comma-separated list of tags for categorization' },
               resource_terms: { type: :boolean },
               admin_accepted: { type: :boolean, nullable: true },
@@ -263,7 +262,7 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
       tags 'Deficiency Reports'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a single deficiency report by ID with all its details. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a single deficiency report by ID with all its details. Read-only clients get 404 for a report an admin has not accepted yet; admin clients get it, plus the admin-only fields listed on the index. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'deficiency report found' do
         let!(:pre) { create_minimal_prereqs }
@@ -329,8 +328,8 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               deficiency_report_status_id: { type: :integer, nullable: true },
               on_behalf_of: { type: :string, nullable: true, description: 'Name of the organization or group submitting on behalf of' },
               video_url: { type: :string, nullable: true, description: 'URL to a video documenting the deficiency (YouTube, Vimeo, etc.)' },
-              responsible_id: { type: :integer, nullable: true, description: 'ID of the responsible party (user or organization) assigned to address this deficiency' },
-              responsible_type: { type: :string, nullable: true, description: 'Type of responsible party (e.g., "User", "Organization")' },
+              responsible_id: { type: :integer, nullable: true, description: 'ID of the officer or officer group assigned to address this deficiency' },
+              responsible_type: { type: :string, nullable: true, enum: ['DeficiencyReport::Officer', 'DeficiencyReport::OfficerGroup'], description: 'Type of the responsible party. Only officers and officer groups can be made responsible; any other type, or an id that does not exist, is rejected with 422.' },
               tag_list: { type: :string, nullable: true, description: 'Comma-separated list of tags for categorization' },
               map_location_attributes: {
                 type: :object,

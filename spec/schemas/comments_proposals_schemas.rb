@@ -7,7 +7,9 @@ module Schemas
       properties: {
         id: { type: :integer, description: 'Unique identifier for the comment', example: 1 },
         body: { type: :string, description: 'The text content of the comment', example: 'This is a helpful comment on the proposal.' },
-        user_id: { type: :integer, nullable: true, description: 'ID of the user who posted the comment', example: 15 },
+        user_id: { type: :integer, nullable: true, description: 'ID of the user who posted the comment. Only returned to admin clients.', example: 15 },
+        internal: { type: :boolean, description: 'True for internal valuation comments, which are never shown publicly. Only returned to admin clients., the only clients that receive internal comments at all.', example: false },
+        author: { '$ref' => '#/components/schemas/Author' },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the comment was created', example: '2024-01-20T09:15:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the comment was last modified', example: '2024-01-20T10:30:00Z' },
         parent_id: { type: :integer, nullable: true, description: 'ID of the parent comment if this is a reply. Null for root comments.', example: 5 },
@@ -24,7 +26,9 @@ module Schemas
         id: { type: :integer, description: 'Unique identifier for the proposal', example: 1 },
         title: { type: :string, description: 'The title of the proposal', example: 'Green Energy Initiative' },
         description: { type: :string, nullable: true, description: 'Detailed description of the proposal and its goals', example: 'Implement renewable energy across public buildings' },
-        author_id: { type: :integer, nullable: true, description: 'ID of the user who created the proposal', example: 20 },
+        author_id: { type: :integer, nullable: true, description: 'ID of the user who created the proposal. Only returned to admin clients.', example: 20 },
+        responsible_name: { type: :string, nullable: true, description: 'Name of the person or organization responsible for the proposal. Only returned to admin clients.' },
+        author: { '$ref' => '#/components/schemas/Author' },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the proposal was created', example: '2024-01-15T12:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the proposal was last modified', example: '2024-01-18T15:45:00Z' },
         projekt_phase_id: { type: :integer, nullable: true, description: 'ID of the projekt phase this proposal belongs to', example: 25 },
@@ -106,7 +110,7 @@ module Schemas
     DOCUMENTS_ATTRIBUTES = {
       type: :array,
       nullable: true,
-      description: 'Array of document attachments',
+      description: 'Array of document attachments. New documents are attributed to the content author of the API client; the author cannot be set or changed via the API.',
       items: {
         type: :object,
         properties: {
@@ -114,7 +118,6 @@ module Schemas
           title: { type: :string, nullable: true },
           attachment: { type: :string, nullable: true },
           cached_attachment: { type: :string, nullable: true },
-          user_id: { type: :integer, nullable: true },
           _destroy: { type: :boolean, nullable: true }
         }
       }

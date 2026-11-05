@@ -4,6 +4,11 @@ class Api::DeficiencyReportsController < Api::BaseController
   include DocumentAttributes
   include MapLocationAttributes
 
+  ASSIGNABLE_RESPONSIBLE_TYPES = {
+    "DeficiencyReport::Officer" => DeficiencyReport::Officer,
+    "DeficiencyReport::OfficerGroup" => DeficiencyReport::OfficerGroup
+  }.freeze
+
   before_action :find_deficiency_report, only: [:show, :update]
 
   def index
@@ -11,12 +16,12 @@ class Api::DeficiencyReportsController < Api::BaseController
     deficiency_reports = paginate(
       DeficiencyReport
         .includes(
-          :author,
           :tags,
           :category,
           :status,
           :responsible,
-          :map_location
+          :map_location,
+          author: :organization
         )
         .admin_accepted
     )
@@ -24,7 +29,7 @@ class Api::DeficiencyReportsController < Api::BaseController
     deficiency_reports = apply_filters(deficiency_reports)
     deficiency_reports = apply_sorting(deficiency_reports)
 
-    serialized_deficiency_reports = DeficiencyReportSerializer.serialize_collection(deficiency_reports, include_reporter_answer: admin_client?)
+    serialized_deficiency_reports = DeficiencyReportSerializer.serialize_collection(deficiency_reports, client: current_client)
 
     render json: {
       data: { deficiency_reports: serialized_deficiency_reports },
@@ -34,7 +39,12 @@ class Api::DeficiencyReportsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, include_reporter_answer: admin_client?).serialize
+
+    if !admin_client? && !@deficiency_report.publicly_visible?
+      return render_not_found
+    end
+
+    serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, client: current_client).serialize
 
     render json: { data: { deficiency_report: serialized_deficiency_report } }
   end
@@ -46,9 +56,11 @@ class Api::DeficiencyReportsController < Api::BaseController
     deficiency_report.resource_terms = true
     deficiency_report.admin_accepted = true
 
-    if deficiency_report.save
+    if !assignable_responsible?(deficiency_report)
+      render_unassignable_responsible
+    elsif deficiency_report.save
       process_image_with_base64(deficiency_report, params[:deficiency_report][:image_attributes])
-      serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report, include_reporter_answer: admin_client?).serialize
+      serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report, client: current_client).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }, status: 201
     else
@@ -64,9 +76,11 @@ class Api::DeficiencyReportsController < Api::BaseController
     check_admin_access!
     @deficiency_report.assign_attributes(deficiency_report_params)
 
-    if @deficiency_report.save
+    if !assignable_responsible?(@deficiency_report)
+      render_unassignable_responsible
+    elsif @deficiency_report.save
       process_image_with_base64(@deficiency_report, params[:deficiency_report][:image_attributes]) if params[:deficiency_report]&.key?(:image_attributes)
-      serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, include_reporter_answer: admin_client?).serialize
+      serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, client: current_client).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }
     else
@@ -93,8 +107,28 @@ class Api::DeficiencyReportsController < Api::BaseController
       .find(params[:id])
   end
 
-  def admin_client?
-    internal_api_client? || current_client&.admin?
+  # Only staff can be made responsible: any other record type would let a
+  # client read back the name of whatever it points the report at.
+  def assignable_responsible?(deficiency_report)
+    responsible_type = deficiency_report.responsible_type
+    responsible_id = deficiency_report.responsible_id
+    responsible_class = ASSIGNABLE_RESPONSIBLE_TYPES[responsible_type]
+
+    if !deficiency_report.will_save_change_to_responsible_type? &&
+        !deficiency_report.will_save_change_to_responsible_id?
+      true
+    elsif responsible_type.blank? && responsible_id.blank?
+      true
+    else
+      responsible_class.present? && responsible_class.exists?(id: responsible_id)
+    end
+  end
+
+  def render_unassignable_responsible
+    message = "Responsible must be an existing " \
+      "#{ASSIGNABLE_RESPONSIBLE_TYPES.keys.join(" or ")}."
+
+    render json: { error: { messages: [message] } }, status: 422
   end
 
   def deficiency_report_params
@@ -127,7 +161,7 @@ class Api::DeficiencyReportsController < Api::BaseController
     end
 
     # Filter by author
-    if params[:author_id].present?
+    if admin_client? && params[:author_id].present?
       deficiency_reports = deficiency_reports.by_author(params[:author_id])
     end
 

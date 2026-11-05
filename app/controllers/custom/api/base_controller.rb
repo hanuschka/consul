@@ -66,6 +66,18 @@ class Api::BaseController < ActionController::API
       @internal_api_client == true
     end
 
+    def admin_client?
+      current_client.present? && current_client.admin?
+    end
+
+    # Documents arrive without an author: the API never lets a client choose
+    # whom a file is attributed to.
+    def assign_document_authors(resource)
+      resource.documents.select(&:new_record?).each do |document|
+        document.user = current_client.content_author
+      end
+    end
+
     def check_read_access!
       return if internal_api_client?
 

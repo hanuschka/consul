@@ -79,7 +79,7 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Create a new point of interest pin on the map. Pins mark specific locations with descriptions and categories. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Create a new point of interest pin on the map. Pins mark specific locations with descriptions and categories. The pin is attributed to the content author of the API client; the author cannot be set or changed via the API. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_point_of_interest_pin, in: :body, description: 'Projekt point of interest pin creation payload', schema: {
         type: :object,
@@ -87,7 +87,6 @@ end
           projekt_point_of_interest_pin: {
             type: :object,
             properties: {
-              author_id: { type: :integer, nullable: true },
               projekt_point_of_interest_category_id: { type: :integer, nullable: true },
               description: { type: :string, nullable: true },
               map_location_attributes: {
@@ -306,7 +305,6 @@ end
           projekt_point_of_interest_pin: {
             type: :object,
             properties: {
-              author_id: { type: :integer, nullable: true },
               projekt_point_of_interest_category_id: { type: :integer, nullable: true },
               description: { type: :string, nullable: true },
               map_location_attributes: {

@@ -43,18 +43,18 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
     def get_resources(projekt_phase)
       case projekt_phase
       when ProjektPhase::ProposalPhase
-        projekt_phase.resources.base_selection.includes(:author, comments: :user)
+        projekt_phase.resources.base_selection.includes(:comments)
       when ProjektPhase::BudgetPhase
         return [] if projekt_phase.budget.blank?
 
-        projekt_phase.budget.investments.includes(:author, comments: :user)
+        projekt_phase.budget.investments.includes(:comments)
       when ProjektPhase::CommentPhase
-        projekt_phase.comments.includes(:user)
+        projekt_phase.comments
       when ProjektPhase::VotingPhase
         sibling = sibling_proposal_phase(projekt_phase)
         return [] if sibling.blank?
 
-        sibling.resources.base_selection.includes(:author, comments: :user)
+        sibling.resources.base_selection.includes(:comments)
       else
         []
       end
@@ -103,9 +103,7 @@ class AiAnalytics::ProjektPhaseStatQuestion < ApplicationService
     end
 
     def build_comment_item_text(comment)
-      text = "Comment: #{comment.body&.truncate(500)}"
-      text += "\nAuthor: #{comment.user.name}" if comment.user.present?
-      text
+      "Comment: #{comment.body&.truncate(500)}"
     end
 
     def build_system_instructions

@@ -3,15 +3,15 @@
 class IdeaSerializer < BaseSerializer
   attr_reader :idea
 
-  def initialize(idea)
+  def initialize(idea, client: nil)
     @idea = idea
+    @client = client
   end
 
   def serialize
     idea_data = idea.as_json(
       only: [
         :id,
-        :author_id,
         :cached_votes_up,
         :comments_count,
         :created_at,
@@ -32,14 +32,14 @@ class IdeaSerializer < BaseSerializer
       official_answer: idea.official_answer
     )
 
+    if admin_client?
+      idea_data[:author_id] = idea.author_id
+    end
+
     idea_data[:status] = idea.status if idea.respond_to?(:status)
 
     if idea.author.present?
-      idea_data[:author] = {
-        id: idea.author.id,
-        username: idea.author.username,
-        public_name: idea.author.public_name
-      }
+      idea_data[:author] = serialize_on_behalf_of_author(idea)
     end
 
     if idea.category.present?
@@ -79,8 +79,8 @@ class IdeaSerializer < BaseSerializer
     idea_data
   end
 
-  def self.serialize_collection(ideas)
-    ideas.map { |idea| new(idea).serialize }
+  def self.serialize_collection(ideas, client: nil)
+    ideas.map { |idea| new(idea, client: client).serialize }
   end
 end
 

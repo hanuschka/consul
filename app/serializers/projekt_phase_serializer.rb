@@ -4,7 +4,7 @@ class ProjektPhaseSerializer < BaseSerializer
   def initialize(projekt_phase, options = {})
     @projekt_phase = projekt_phase
     @include_nested_fields = options.fetch(:include_nested_fields, false)
-    @current_api_client = options.fetch(:current_api_client, nil)
+    @client = options.fetch(:current_api_client, nil)
   end
 
   def serialize
@@ -133,7 +133,7 @@ class ProjektPhaseSerializer < BaseSerializer
 
   def serialize_questions
     return [] unless projekt_phase.respond_to?(:questions)
-    projekt_phase.questions.as_json(only: [:id, :title, :created_at, :author_id])
+    projekt_phase.questions.as_json(only: [:id, :title, :created_at, *admin_only_author_id])
   end
 
   def serialize_formular
@@ -164,7 +164,12 @@ class ProjektPhaseSerializer < BaseSerializer
   def serialize_pins
     return [] unless projekt_phase.respond_to?(:projekt_point_of_interest_pins)
     projekt_phase.projekt_point_of_interest_pins.map do |pin|
-      pin_data = pin.as_json(only: [:id, :projekt_point_of_interest_category_id, :author_id, :created_at, :updated_at])
+      pin_data = pin.as_json(
+        only: [
+          :id, :projekt_point_of_interest_category_id, *admin_only_author_id,
+          :created_at, :updated_at
+        ]
+      )
 
       if pin.map_location.present?
         pin_data[:map_location] = {
@@ -191,8 +196,12 @@ class ProjektPhaseSerializer < BaseSerializer
 
   private
 
+  def admin_only_author_id
+    admin_client? ? [:author_id] : []
+  end
+
   def client_has_access_to_resources?
-    return true unless @current_api_client&.public_data?
+    return true unless client&.public_data?
     projekt_phase.frontend_visibility && projekt_phase.active && projekt_phase.current?
   end
 end

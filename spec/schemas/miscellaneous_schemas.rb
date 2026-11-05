@@ -101,9 +101,20 @@ module Schemas
       required: %w[id legislation_process_id title status created_at updated_at]
     }.freeze
 
+    AUTHOR_SCHEMA = {
+      type: :object,
+      description: 'Author of a contribution, limited to the name the public site shows next to it. Real names and email addresses are never returned.',
+      properties: {
+        id: { type: :integer, description: 'ID of the user. Only returned to admin clients.', example: 15 },
+        public_name: { type: :string, nullable: true, description: 'Name shown on the site next to the contribution: the organisation name or the username. Null when the author hid their activity.', example: 'Gartenfreunde e.V.' }
+      },
+      required: ['public_name']
+    }.freeze
+
     def self.all
       {
         Argument: ARGUMENT_SCHEMA,
+        Author: AUTHOR_SCHEMA,
         Iframe: IFRAME_SCHEMA,
         ImageResponse: IMAGE_RESPONSE_SCHEMA,
         LegislationDraftVersion: LEGISLATION_DRAFT_VERSION_SCHEMA

@@ -3,8 +3,14 @@
 class BudgetInvestmentSerializer < BaseSerializer
   attr_reader :budget_investment
 
-  def initialize(budget_investment, similar_contributions_count: nil, hide_unpublished_selection: false)
+  def initialize(
+    budget_investment,
+    client: nil,
+    similar_contributions_count: nil,
+    hide_unpublished_selection: false
+  )
     @budget_investment = budget_investment
+    @client = client
     @similar_contributions_count = similar_contributions_count
     @hide_unpublished_selection = hide_unpublished_selection
   end
@@ -13,7 +19,6 @@ class BudgetInvestmentSerializer < BaseSerializer
     investment_data = budget_investment.as_json(
       only: [
         :id,
-        :author_id,
         :heading_id,
         :group_id,
         :budget_id,
@@ -25,7 +30,6 @@ class BudgetInvestmentSerializer < BaseSerializer
         :updated_at,
         :video_url,
         :on_behalf_of,
-        :responsible_name,
         :price,
         :feasibility,
         :valuation_finished,
@@ -34,10 +38,17 @@ class BudgetInvestmentSerializer < BaseSerializer
         :physical_votes,
         :ballot_lines_count,
         :incompatible,
-        :winner,
-        :administrator_id
+        :winner
       ]
     )
+
+    if admin_client?
+      investment_data.merge!(
+        author_id: budget_investment.author_id,
+        responsible_name: budget_investment.responsible_name,
+        administrator_id: budget_investment.administrator_id
+      )
+    end
 
     investment_data[:similar_contributions_count] = similar_contributions_count
     investment_data["selected"] = budget_investment.publicly_selected? if @hide_unpublished_selection
@@ -55,11 +66,7 @@ class BudgetInvestmentSerializer < BaseSerializer
 
     # Add author information
     if budget_investment.author.present?
-      investment_data[:author] = {
-        id: budget_investment.author.id,
-        username: budget_investment.author.username,
-        public_name: budget_investment.author.public_name
-      }
+      investment_data[:author] = serialize_on_behalf_of_author(budget_investment)
     end
 
     # Add heading information
@@ -146,7 +153,7 @@ class BudgetInvestmentSerializer < BaseSerializer
     investment_data[:projekt] = investment_data[:budget][:projekt] if investment_data[:budget] && investment_data[:budget][:projekt]
 
     # Add administrator information
-    if budget_investment.administrator.present?
+    if admin_client? && budget_investment.administrator.present?
       investment_data[:administrator] = {
         id: budget_investment.administrator.id,
         name: budget_investment.administrator.user&.name
@@ -203,13 +210,16 @@ class BudgetInvestmentSerializer < BaseSerializer
     investment_data
   end
 
-  def self.serialize_collection(budget_investments, hide_unpublished_selection: false)
+  def self.serialize_collection(budget_investments, client: nil, hide_unpublished_selection: false)
     counts = SimilarContributions::StoredCounts.call(budget_investments)
 
     budget_investments.map do |budget_investment|
-      new(budget_investment,
-          similar_contributions_count: counts.fetch(budget_investment.id, 0),
-          hide_unpublished_selection: hide_unpublished_selection).serialize
+      new(
+        budget_investment,
+        client: client,
+        similar_contributions_count: counts.fetch(budget_investment.id, 0),
+        hide_unpublished_selection: hide_unpublished_selection
+      ).serialize
     end
   end
 

@@ -417,7 +417,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Comments'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve all comments across all projekt phases. Returns a paginated list of root-level comments from all phases. Useful for moderation, analytics, and global discussion oversight. Internal valuation comments are only returned to admin clients, marked with internal: true. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve all comments across all projekt phases. Returns a paginated list of root-level comments from all phases. Useful for moderation, analytics, and global discussion oversight. Read-only clients only get comments on projekt phases that are visible and active. Internal valuation comments are only returned to admin clients, marked with internal: true. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 5000, max: 5000)'
 
@@ -468,7 +468,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Comments'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a comment by ID. The response includes: (1) parent_comment reference if this comment is a reply, (2) child_comments array containing all direct replies to this comment. This enables clients to reconstruct the full comment thread hierarchy. user_id, also on parent_comment, is only returned to admin clients. Read-only clients get 404 for an internal valuation comment and never see internal replies or parents. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a comment by ID. The response includes: (1) parent_comment reference if this comment is a reply, (2) child_comments array containing all direct replies to this comment. This enables clients to reconstruct the full comment thread hierarchy. user_id, also on parent_comment, is only returned to admin clients. Read-only clients get 404 for an internal valuation comment and for any comment that is not on a visible, active projekt phase, and never see internal replies or parents. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'comment found' do
         let!(:context) { create_phase_with_context }

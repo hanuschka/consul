@@ -153,9 +153,7 @@
           label: t("custom.terms.newsletter.label"),
           class: "checkbox-label--aligned" %>
 
-        <% if Setting.old_design_enabled? %>
-          <p><%= t("custom.terms.revoke_consent.text") %></p>
-        <% end %>
+        <p><%= t("custom.terms.revoke_consent.text") %></p>
 
         <div class="small-12 small-centered margin-top">
           <%= f.submit t("custom.devise_views.users.registrations.new.submit"), class: "button expanded -green" %>

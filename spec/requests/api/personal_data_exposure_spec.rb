@@ -96,7 +96,8 @@ describe "Personal data in the API", type: :request do
   end
 
   describe "comments" do
-    let(:public_comment) { create(:comment, user: author) }
+    let(:comment_phase) { create(:projekt_phase, active: true, frontend_visibility: true) }
+    let(:public_comment) { create(:comment, commentable: comment_phase, user: author) }
     let!(:internal_reply) do
       create(:comment, commentable: public_comment.commentable, parent: public_comment).tap do |comment|
         comment.update_column(:valuation, true)
@@ -118,6 +119,24 @@ describe "Personal data in the API", type: :request do
 
       get "/api/comments/#{internal_reply.id}", headers: headers_for(public_data_client)
       expect(response).to have_http_status(:not_found)
+    end
+
+    it "only returns read-only clients comments on visible, active phases" do
+      hidden_phase_comment = create(:comment, commentable: create(:projekt_phase, active: true, frontend_visibility: false))
+      investment_comment = create(:comment, commentable: create(:budget_investment))
+
+      get "/api/comments", headers: headers_for(public_data_client)
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body).dig("data", "comments").map { |comment| comment["id"] })
+        .to eq [public_comment.id]
+
+      [hidden_phase_comment, investment_comment].each do |comment|
+        get "/api/comments/#{comment.id}", headers: headers_for(public_data_client)
+        expect(response).to have_http_status(:not_found)
+
+        get "/api/comments/#{comment.id}", headers: headers_for(admin_client)
+        expect(response).to have_http_status(:ok)
+      end
     end
 
     it "returns internal valuation comments to admin clients, marked as internal" do

@@ -9,7 +9,8 @@ de:
     title: Titel
     description: Beschreibung
     related_sdg_list: Ziele und Unterziele
-    resource_terms: Die AGB und die Datenschutzbestimmung
+    resource_terms: Die AGB und die Datenschutzerklärung
+    terms_data_protection: Die Datenschutzerklärung
   activerecord:
     models:
       municipal_plan:
@@ -634,7 +635,7 @@ de:
               accepted: "Die Bedingungen zur Datenspeicherung müssen akzeptiert werden"
             terms_data_protection:
               format: "%{message}"
-              accepted: "Die Datenschutzvereinbarung muss akzeptiert werden"
+              accepted: "Die Datenschutzerklärung muss zur Kenntnis genommen werden"
             terms_general:
               format: "%{message}"
               accepted: "Die Allgemeinen Nutzungsbedingungen müssen akzeptiert werden"

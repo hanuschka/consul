@@ -20,9 +20,7 @@ class Api::CommentsController < Api::BaseController
       comments = Comment.includes(:commentable, user: :organization)
 
       if current_client.public_data?
-        comments = comments.joins(commentable: :projekt_phases)
-          .where(projekt_phases: { frontend_visibility: true, active: true })
-          .distinct
+        comments = comments.on_public_projekt_phases
       end
     end
 
@@ -55,7 +53,7 @@ class Api::CommentsController < Api::BaseController
   def show
     check_read_access!
 
-    if @comment.valuation && !admin_client?
+    if !admin_client? && !publicly_visible_comment?(@comment)
       return render_not_found
     end
 
@@ -100,6 +98,10 @@ class Api::CommentsController < Api::BaseController
 
   def find_projekt_phase
     @projekt_phase = ProjektPhase::CommentPhase.find(params[:projekt_phase_id]) if params[:projekt_phase_id].present?
+  end
+
+  def publicly_visible_comment?(comment)
+    Comment.on_public_projekt_phases.not_valuations.exists?(comment.id)
   end
 
   def find_comment

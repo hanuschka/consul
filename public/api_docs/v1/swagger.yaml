@@ -2953,7 +2953,8 @@ paths:
       - bearer_auth: []
       description: "Retrieve all comments across all projekt phases. Returns a paginated
         list of root-level comments from all phases. Useful for moderation, analytics,
-        and global discussion oversight. Internal valuation comments are only returned
+        and global discussion oversight. Read-only clients only get comments on projekt
+        phases that are visible and active. Internal valuation comments are only returned
         to admin clients, marked with internal: true. \n\n*Authorization: Available
         to both `admin` and `public_data` access levels.*"
       parameters:
@@ -3025,8 +3026,9 @@ paths:
         all direct replies to this comment. This enables clients to reconstruct the
         full comment thread hierarchy. user_id, also on parent_comment, is only returned
         to admin clients. Read-only clients get 404 for an internal valuation comment
-        and never see internal replies or parents. \n\n*Authorization: Available to
-        both `admin` and `public_data` access levels.*"
+        and for any comment that is not on a visible, active projekt phase, and never
+        see internal replies or parents. \n\n*Authorization: Available to both `admin`
+        and `public_data` access levels.*"
       responses:
         '200':
           description: reply comment with parent reference

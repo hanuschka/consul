@@ -14730,7 +14730,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve all texts/legislation documents for a projekt phase. Texts support multi-phase review processes: draft publication, debate period, and allegations/amendments period.
+        Retrieve the text drafts of a text participation (legislation) phase, oldest first. Each draft carries its title, changelog, text (Markdown `body` plus the rendered `body_html`) and status. Clients with `public_data` access only receive published drafts, and only for phases that are active and visible in the frontend; other phases return 403. A phase without drafts returns an empty list.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -14760,7 +14760,7 @@ paths:
                       texts:
                         type: array
                         items:
-                          type: object
+                          "$ref": "#/components/schemas/LegislationDraftVersion"
                     required:
                     - texts
                   pagination:
@@ -14777,6 +14777,23 @@ paths:
                 required:
                 - data
                 - pagination
+        '403':
+          description: forbidden - phase not active or not visible in the frontend
+            for public_data access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
         '401':
           description: unauthorized - missing or invalid token
           content:
@@ -16805,6 +16822,7 @@ components:
           type: string
           nullable: true
           description: Detailed description of the deficiency
+          example: Large pothole causing safety concerns near intersection
         official_answer:
           type: string
           nullable: true
@@ -16814,7 +16832,6 @@ components:
           nullable: true
           description: Answer e-mailed to the reporter and not shown publicly; only
             returned to admin clients
-          example: Large pothole causing safety concerns near intersection
         author_id:
           type: integer
           nullable: true
@@ -17347,6 +17364,69 @@ components:
                 (no resizing). Largest payload; use only when the exact source is
                 required.
               example: https://example.com/uploads/original.jpg
+    LegislationDraftVersion:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the text draft
+          example: 1
+        legislation_process_id:
+          type: integer
+          description: ID of the legislation process (one per text participation phase)
+            this draft belongs to
+          example: 7
+        title:
+          type: string
+          description: Title of the draft version
+          example: Second draft after public feedback
+        changelog:
+          type: string
+          nullable: true
+          description: What changed compared to the previous draft version
+          example: Section 3 rewritten based on comments
+        body:
+          type: string
+          nullable: true
+          description: Full text of the draft in Markdown
+          example: |-
+            # Introduction
+
+            The draft text.
+        body_html:
+          type: string
+          nullable: true
+          description: The draft text rendered to sanitized HTML, as shown on the
+            public page
+          example: |-
+            <h1 id="introduction">Introduction</h1>
+
+            <p>The draft text.</p>
+        status:
+          type: string
+          enum:
+          - draft
+          - published
+          description: Publication status. Clients with public_data access only receive
+            published drafts.
+          example: published
+        created_at:
+          type: string
+          format: date_time
+          description: Timestamp when the draft was created
+          example: '2024-03-01T09:00:00Z'
+        updated_at:
+          type: string
+          format: date_time
+          description: Timestamp when the draft was last modified
+          example: '2024-03-05T14:30:00Z'
+      required:
+      - id
+      - legislation_process_id
+      - title
+      - status
+      - created_at
+      - updated_at
     PollQuestion:
       type: object
       properties:

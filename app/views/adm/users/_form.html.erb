@@ -34,24 +34,21 @@
       { label: false } %>
   <% end %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:city_name), hint: t("adm.users.form.hints.city_name"), inline: true, divider: false) do %>
-    <%= f.text_field :city_name, label: false, placeholder: User.human_attribute_name(:city_name) %>
-  <% end %>
+  <%= render Kern::FormFieldComponent.new(label: t("adm.users.index.table.street_address"), inline: true, divider: false) do %>
+    <div data-controller="kern--registered-address-selector"
+         data-kern--registered-address-selector-streets-url-value="/registered_addresses/streets"
+         data-kern--registered-address-selector-addresses-url-value="/registered_addresses/addresses"
+         data-kern--registered-address-selector-not-in-list-label-value="<%= t("custom.helpers.select.not_in_list") %>">
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:plz), hint: t("adm.users.form.hints.plz"), inline: true, divider: false) do %>
-    <%= f.text_field :plz, label: false, placeholder: User.human_attribute_name(:plz) %>
-  <% end %>
+      <%= render Kern::RegisteredAddressSelectorComponent.new(
+        resource: @user,
+        selected_city_id: params[:form_registered_address_city_id].presence || @user.registered_address&.registered_address_city_id || ("0" if @user.city_name.present?),
+        selected_street_id: params[:form_registered_address_street_id].presence || @user.registered_address&.registered_address_street_id,
+        selected_address_id: params[:form_registered_address_id].presence || @user.registered_address&.id
+      ) %>
 
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_name), hint: t("adm.users.form.hints.street_name"), inline: true, divider: false) do %>
-    <%= f.text_field :street_name, label: false, placeholder: User.human_attribute_name(:street_name) %>
-  <% end %>
-
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_number), hint: t("adm.users.form.hints.street_number"), inline: true, divider: false) do %>
-    <%= f.text_field :street_number, label: false, placeholder: User.human_attribute_name(:street_number) %>
-  <% end %>
-
-  <%= render Kern::FormFieldComponent.new(label: User.human_attribute_name(:street_number_extension), hint: t("adm.users.form.hints.street_number_extension"), inline: true, divider: false) do %>
-    <%= f.text_field :street_number_extension, label: false, placeholder: User.human_attribute_name(:street_number_extension) %>
+      <%= render Kern::RegularAddressFieldsComponent.new(f: f, user: @user) %>
+    </div>
   <% end %>
 
   <div class="d-flex gap-2">

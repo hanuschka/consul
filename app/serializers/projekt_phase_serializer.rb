@@ -30,7 +30,7 @@ class ProjektPhaseSerializer < BaseSerializer
       ]
     )
 
-    phase_data[:active] = false if phase_data[:active].nil?
+    phase_data["active"] = projekt_phase.active?
 
     # Add translated attributes if they exist
     translatable_attributes = {}

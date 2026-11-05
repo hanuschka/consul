@@ -1,3 +1,7 @@
+# The app uploads through its own /direct_uploads. Rails' endpoint stays unused
+# and accepts forged blob metadata (identified/analyzed) from the client.
+match "/rails/active_storage/direct_uploads", to: proc { [404, {}, []] }, via: :all
+
 delete "account/disconnect_identity", to: "account#disconnect_identity", as: :disconnect_identity_account
 
 get "/map_data", to: "map_data#show", as: :map_data

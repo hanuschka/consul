@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "user").to_s
+load Rails.root.join("app", "models", "user.rb")
 
 User.class_eval do
   audited only: [:email, :username, :first_name, :last_name, :registered_address_id,
@@ -10,6 +10,8 @@ User.class_eval do
 
   SORTING_OPTIONS = { id: "id", name: "username", email: "email", city_name: "city_name",
     created_at: "created_at", verified_at: "verified_at" }.freeze
+
+  User::RECIPIENT_GREETING_OPTIONS = %w[username first_name full_name formal].freeze
 
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
@@ -374,7 +376,32 @@ User.class_eval do
     idea_manager.present?
   end
 
+  def recipient_greeting
+    case Setting["email_templates.recipient_greeting"]
+    when "first_name" then informal_recipient_greeting(first_name)
+    when "full_name" then informal_recipient_greeting(complete_name)
+    when "formal" then formal_recipient_greeting
+    else informal_recipient_greeting(username)
+    end
+  end
+
   private
+
+    def informal_recipient_greeting(name)
+      I18n.t("mailer.recipient_greeting.informal", name: name.presence || username)
+    end
+
+    def formal_recipient_greeting
+      if last_name.present? && %w[male female].include?(gender)
+        I18n.t("mailer.recipient_greeting.formal_#{gender}", last_name: last_name)
+      else
+        I18n.t("mailer.recipient_greeting.neutral", name: complete_name || username)
+      end
+    end
+
+    def complete_name
+      "#{first_name} #{last_name}" if first_name.present? && last_name.present?
+    end
 
     def geozone_with_plz
       Geozone.find_with_plz(plz)

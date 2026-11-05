@@ -59,7 +59,7 @@ class Whatsapp::Conversation < ApplicationRecord
     AWAITING_CONTINUE_DECISION = "awaiting_continue_decision".freeze
   end
 
-  enum step: {
+  enum :step, {
     idle: Step::IDLE,
     awaiting_link: Step::AWAITING_LINK,
     awaiting_link_decision: Step::AWAITING_LINK_DECISION,

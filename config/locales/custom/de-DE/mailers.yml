@@ -10,8 +10,7 @@ de:
       subject: "Danke, dass Sie einen Vorschlag eingereicht haben!"
     proposal_official_answer:
       subject: "Es gibt eine offizielle Antwort zu Ihrem Vorschlag"
-      hi: "Hallo %{username},"
-      text1: "zu Ihrem Vorschlag %{proposal_link} liegt eine offizielle Antwort der Verwaltung vor:"
+      text1: "zu Ihrem Vorschlag %{proposal_title} liegt eine offizielle Antwort der Verwaltung vor:"
     formular_answer_created:
       subject: "Vielen Dank für Ihre Einsendung!"
     comment:
@@ -59,9 +58,9 @@ de:
       button: Registrierung abschließen
       subject: "Einladung an %{org_name}"
     pending_role_invite:
-      subject: "Sie wurden als %{role} eingeladen"
-      title: "Sie wurden als %{role} eingeladen"
-      text: "Erstellen Sie jetzt Ihr Konto, um als %{role} auf der Beteiligungsplattform loszulegen."
+      subject: "Sie wurden als %{role_name} eingeladen"
+      title: "Sie wurden als %{role_name} eingeladen"
+      text: "Erstellen Sie jetzt Ihr Konto, um als %{role_name} auf der Beteiligungsplattform loszulegen."
       button: "Konto erstellen"
       ignore: "Wenn Sie diese Einladung nicht angefordert haben, können Sie diese E-Mail einfach ignorieren."
       thanks: "Vielen Dank."
@@ -77,15 +76,13 @@ de:
     budget_investment_created:
       subject: "Danke, dass Sie einen Vorschlag eingereicht haben!"
       title: "Danke, dass Sie einen Vorschlag eingereicht haben!"
-      intro: "Hallo <strong>%{author}</strong>,"
-      text: "vielen Dank, dass Sie einen Vorschlag %{investment_link} für das Projekt eingereicht haben. Ihr Vorschlag ist ab sofort im Projektraum %{projekt_link} sichtbar."
+      text: "vielen Dank, dass Sie einen Vorschlag %{investment_title} für das Projekt eingereicht haben. Ihr Vorschlag ist ab sofort im Projektraum %{projekt_title} sichtbar."
       follow: "Teilen Sie Ihren Vorschlag in den sozialen Netzwerken und laden Sie andere Personen ein, Ihren Vorschlag zu kommentieren."
       share: "Jetzt Vorschlag teilen!"
       notifications: "Möchten Sie Benachrichtigungen per E-Mail erhalten, wenn eine andere Person Ihren Vorschlag kommentiert? Dann prüfen Sie bitte die Einstellungen in %{account_link}."
       profile_link_text: "Ihrem Profil"
       sincerely: "Mit freundlichen Grüßen"
     budget_investment_unfeasible:
-      hi: "Liebe*r Benutzer*in,"
       new: "Hierfür laden wir Sie ein, eine <strong>neue Investition</strong> auszuarbeiten, die an die Konditionen dieses Prozesses angepasst sind. Sie können dies über folgenden Link tun: %{url}."
       new_href: "neuer Vorschlag"
       sincerely: "Mit freundlichen Grüßen"
@@ -94,22 +91,19 @@ de:
     budget_investment_selected:
       subject: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
       title: Bewerben Sie Ihren Vorschlag für die finale Abstimmung!
-      hi: "Hallo %{username},"
-      text: "Bewerben Sie Ihren Vorschlag %{proposal_link} für die Abstimmungsphase."
+      text: "Bewerben Sie Ihren Vorschlag %{investment_title} für die Abstimmungsphase."
       share_button: "Jetzt Vorschlag teilen!"
       thanks: "Viel Erfolg!"
       sincerely: "Mit freundlichen Grüßen"
     budget_investment_unselected:
       subject: "Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft."
       title: "Schade, Ihr Vorschlag hat es leider nicht in die nächste Runde geschafft."
-      hi: "Hallo %{username},"
-      text: "Ihr Vorschlag %{proposal_link} hat leider nicht genügend Stimmen erhalten. Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen."
+      text: "Ihr Vorschlag %{investment_title} hat leider nicht genügend Stimmen erhalten. Er wird daher nicht zur nächsten Phase des %{projekt_link} zugelassen."
       projekt_link_text: "Projekts"
       sincerely: "Mit freundlichen Grüßen"
     evaluation_comment:
       subject: "Neuer Bewertungs-Kommentar"
       title: Neuer Bewertungs-Kommentar für %{investment}
-      hi: Hallo
       new_comment_by: Es gibt einen neuen Bewertungs-Kommentar <strong>%{commenter}</strong> für den Budget %{investment}
       commenter_info: "%{commenter}, %{time}:"
     new_actions_notification_rake_created:
@@ -153,7 +147,7 @@ de:
       dashboard_button: "Nur zu, es gibt viel zu entdecken!"
     new_actions_notification_on_published:
       subject: "Ihr Bürger-Vorschlag ist bereits veröffentlicht. Hören Sie nicht auf, es zu verbreiten!"
-      hi: "Glückwunsch %{name}! Ihr Vorschlag %{title} wurde erfolgreich angelegt."
+      hi: "Glückwunsch! Ihr Vorschlag %{title} wurde erfolgreich angelegt."
       text_1: "Und jetzt, auf zu den ersten 100 Unterstützungen!"
       text_2: "Warum 100?"
       text_3: "Unsere Erfahrung zeigt uns, dass der erste Tag von grundlegender Bedeutung ist. Denn zu der Energie, etwas Neues auf den Weg zu bringen, kommt die Möglichkeit größerer Sichtbarkeit, da Sie unter den neuen Vorschlägen zu sehen sind."

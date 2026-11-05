@@ -1,5 +1,11 @@
 en:
   mailer:
+    recipient_greeting:
+      informal: "Hello %{name}"
+      neutral: "Hello %{name}"
+      formal_male: "Dear Mr %{last_name}"
+      formal_female: "Dear Ms %{last_name}"
+      without_name: "Hello"
     budget_investment_created:
       title: Submission confirmation
       description: 'Sent to the author during the "Accepting projects" budget phase (phase 2), as soon as their project idea has been successfully submitted.'
@@ -41,10 +47,10 @@ en:
       description: Sent to logged-in users after they have successfully completed and submitted a form.
       recipient: The logged-in user who submitted the form (to the email address on their account).
     comment:
-      title: New comment
+      title: "Comment on own contribution"
       description: Sent to the author when someone comments on their contribution.
     reply:
-      title: New reply to comment
+      title: "Reply to own comment"
       description: Sent to the comment author when someone replies to their comment.
     direct_message_for_receiver:
       title: New direct message
@@ -95,9 +101,13 @@ en:
       description: Sent to subscribers when a new vote has been created.
       recipient: All users subscribed to the project.
     new_comment:
-      title: Notification of new comment
-      description: Sent to subscribers when a new comment has been posted.
-      recipient: All users subscribed to the project.
+      title: "New comment in the comment phase"
+      description: "Sent when a new comment is posted directly in this comment phase."
+      recipient: "Administrators and project managers who enabled notifications about new comments, and the subscribers of this phase."
+    new_contribution_comment:
+      title: "New comment on a contribution"
+      description: "Sent when a new comment is posted on a proposal, idea or other contribution. Comments posted directly in a comment phase use the \"New comment in the comment phase\" template in that phase's email templates."
+      recipient: Administrators and project managers who enabled notifications about new comments, and the subscribers of the phase the contribution belongs to.
     projekt_questions:
       title: Notification of new quick poll
       description: Sent to subscribers when a new quick poll has been created.
@@ -157,7 +167,7 @@ en:
       recipient: The user who submitted the deficiency report.
     notify_author_about_official_answer:
       title: Official answer to a report
-      description: Sent to the reporting person as soon as the official answer to their report is added or changed.
+      description: Sent to the reporting person as soon as the official answer to their report is added or changed. When the reporter answer and the public answer are separated, the e-mail contains only the answer to the reporter.
       recipient: The person who submitted the report.
     notify_officer:
       title: Deficiency report assigned to officer

@@ -5,6 +5,7 @@ $sidebar-card-horizontal-padding: 22px;
 $brand-tint-8: color-mix(in srgb, var(--brand-color) 8%, transparent);
 $brand-tint-14: color-mix(in srgb, var(--brand-color) 14%, transparent);
 $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
+$brand-tint-24: color-mix(in srgb, var(--brand-color) 24%, transparent);
 
 .sidebar-card {
   position: relative;
@@ -327,6 +328,7 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
 }
 
 .sidebar-card .categories a,
+.sidebar-card .categories button,
 .sidebar-card .categories--simple-selector .tags a {
   margin: 0;
   padding: 4px 10px;
@@ -347,6 +349,35 @@ $brand-tint-16: color-mix(in srgb, var(--brand-color) 16%, transparent);
     background: $brand-tint-16;
     text-decoration: none;
   }
+}
+
+// Kategorie-Filterchips sind Buttons, damit Crawler keine Tag-URLs finden.
+// Ein aktiver Filter bleibt beim Hover unverändert.
+.sidebar-card .categories button {
+  display: inline-block;
+  border: 0;
+  background: $brand-tint-8;
+  color: var(--brand-color);
+  cursor: pointer;
+  user-select: none;
+
+  &:not(.selected):hover {
+    background: $brand-tint-16;
+  }
+
+  &:not(.selected):active {
+    background: $brand-tint-24;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 2px;
+  }
+}
+
+.sidebar-card .categories button.selected {
+  background: var(--brand-color);
+  color: white;
 }
 
 // Admin-View: nicht zugewiesene Tags neutral, gleiche Größe/Padding

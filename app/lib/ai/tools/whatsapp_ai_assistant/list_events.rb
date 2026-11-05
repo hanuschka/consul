@@ -29,7 +29,7 @@ class Ai::Tools::WhatsappAiAssistant::ListEvents < Ai::Tools::WhatsappAiAssistan
         starts_in: ::Whatsapp::DatePhrase.relative(event.datetime),
         location: event.location.presence,
         projekt: projekt_title(event.projekt_phase.projekt),
-        url: event.weblink.presence || ::Whatsapp::ProjektLink.phase_url(event.projekt_phase)
+        url: event.weblink_url || ::Whatsapp::ProjektLink.phase_url(event.projekt_phase)
       }.compact
     end
 end

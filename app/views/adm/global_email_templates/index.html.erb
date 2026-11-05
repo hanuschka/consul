@@ -7,6 +7,11 @@
     <%= render Adm::AttributeEditorComponent.new(
       Setting.find_by!(key: "proposals.email_on_official_answer"), :value, :boolean
     ) %>
+
+    <%= render Adm::AttributeEditorComponent.new(
+      Setting.find_by!(key: "email_templates.recipient_greeting"), :value, :select,
+      select_options: User::RECIPIENT_GREETING_OPTIONS
+    ) %>
   </div>
 
   <% @email_templates.each do |template| %>

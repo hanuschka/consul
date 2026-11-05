@@ -3,7 +3,7 @@ module Randomizable
 
   class_methods do
     def sort_by_random(seed = rand(10_000_000))
-      ids = order(:id).ids.uniq.shuffle(random: Random.new(seed))
+      ids = reorder(:id).ids.uniq.shuffle(random: Random.new(seed))
 
       return all if ids.empty?
 

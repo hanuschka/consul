@@ -1,14 +1,14 @@
 <td style="padding-bottom: 20px; padding-left: 10px;">
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("custom.deficiency_reports.mailers.send_feedback_form_link.hi", username: @deficiency_report.author.username) %>
+    <%= @deficiency_report.author.recipient_greeting %>,
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <%= sanitize(
       t("custom.deficiency_reports.mailers.send_feedback_form_link.p1",
-        deficiency_report_link: link_to(@deficiency_report.title, deficiency_report_url(@deficiency_report), target: "_blank"),
-        status: @deficiency_report.status.name)
+        deficiency_report_title: link_to(@deficiency_report.title, deficiency_report_url(@deficiency_report), target: "_blank"),
+        status_name: @deficiency_report.status.name)
     ) %>
   </p>
 
@@ -19,7 +19,7 @@
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <%= sanitize(
       t("custom.deficiency_reports.mailers.send_feedback_form_link.p3",
-        feedback_form_link:
+        feedback_form_url:
           link_to(
             t("custom.deficiency_reports.mailers.send_feedback_form_link.feedback_form_link_text"),
             new_deficiency_report_feedback_form_url(@deficiency_report),
@@ -34,6 +34,11 @@
   </p>
 
   <% unless custom_email_footer_present? %>
+    <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
+      <%= t("custom.deficiency_reports.mailers.closing") %><br>
+      <%= t("custom.deficiency_reports.mailers.signature") %>
+    </p>
+
     <% if Setting["mailer_from_deficiency_report_address"].present? %>
       <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
         <em><%= sanitize t("custom.deficiency_reports.mailers.contact_info", email: Setting["mailer_from_deficiency_report_address"]) %></em>

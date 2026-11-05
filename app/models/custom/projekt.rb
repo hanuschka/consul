@@ -154,19 +154,19 @@ class Projekt < ApplicationRecord
   attribute :new_content_block_mode, :boolean, default: true
   attribute :show_content_background, :boolean, default: false
 
-  enum import_file_status: {
+  enum :import_file_status, {
     never_run: "never_run",
     pending: "pending",
     processing: "processing",
     completed: "completed",
     failed: "failed"
-  }, _prefix: true, _default: "never_run"
+  }, prefix: true, default: "never_run"
 
-  enum copy_status: {
+  enum :copy_status, {
     processing: "processing",
     completed: "completed",
     failed: "failed"
-  }, _prefix: :copy
+  }, prefix: :copy
 
   # A worker killed mid-copy never reaches CopyJob's rescue, so the row keeps
   # claiming "processing" with nothing left to finish it. Past this age it is

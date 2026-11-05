@@ -43,4 +43,15 @@ class DelayedJobReloaderPlugin < Delayed::Plugin
   end
 end
 
-Delayed::Worker.plugins << DelayedJobReloaderPlugin if Rails.env.development?
+# That idle-branch #reload! reloads the whole app after every sleep_delay,
+# changed files or not: about half a second of CPU every two seconds on an
+# empty queue, and a heap that keeps growing. The plugin above already reloads
+# changed code before each job, so the idle reload only burns CPU.
+if Rails.env.development?
+  Delayed::Worker.plugins << DelayedJobReloaderPlugin
+
+  Delayed::Worker.class_eval do
+    def reload!
+    end
+  end
+end

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "admin", "settings", "featured_settings_form_component").to_s
+load Rails.root.join("app", "components", "admin", "settings", "featured_settings_form_component.rb")
 
 class Admin::Settings::FeaturedSettingsFormComponent < ApplicationComponent
   def initialize(feature, tab: nil, describedby: true, **extra_options)

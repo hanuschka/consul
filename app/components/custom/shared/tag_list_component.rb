@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "shared", "tag_list_component").to_s
+load Rails.root.join("app", "components", "shared", "tag_list_component.rb")
 
 class Shared::TagListComponent < ApplicationComponent
 

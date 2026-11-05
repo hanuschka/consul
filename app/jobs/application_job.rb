@@ -9,7 +9,7 @@ class ApplicationJob < ActiveJob::Base
   # own three attempts are spent within half a minute, so the retry is
   # ActiveJob's: about four hours in all, long enough for the admin page's
   # stale-worker alert to get the worker restarted.
-  retry_on ::Whatsapp::MissingCredentialsError, wait: :exponentially_longer, attempts: 10
+  retry_on ::Whatsapp::MissingCredentialsError, wait: :polynomially_longer, attempts: 10
 
   # Per-job cap on delayed_job's run time, carried in the payload for the
   # JobWrapper patch in config/initializers/delayed_job_config.rb. nil keeps

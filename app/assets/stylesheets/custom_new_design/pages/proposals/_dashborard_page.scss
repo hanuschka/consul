@@ -28,8 +28,10 @@
 
 .proposals-dashboard-progress-chart {
   #proposal-graph {
-    background-color: white;
+    position: relative;
+    height: 20rem;
     margin-bottom: 35px;
+    background-color: white;
     border-radius: 10px;
   }
 
@@ -38,4 +40,26 @@
       margin-right: 10px;
     }
   }
+}
+
+.proposals-dashboard-progress-chart--error {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.proposal-graph.-load-failed .proposals-dashboard-progress-chart--error {
+  display: flex;
+}
+
+.proposal-graph.-load-failed .chart-loading-placeholder {
+  display: none;
 }

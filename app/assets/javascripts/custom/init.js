@@ -36,6 +36,7 @@
       App.BarChartComponent.initialize();
       App.AreaChartComponent.initialize();
       App.PieChartComponent.initialize();
+      App.ProposalProgressChartComponent.initialize();
       App.HeatmapComponent.initialize();
       App.StatsRefresh.initialize();
       App.CkeditorInlineStylesWorkarounds.initialize();
@@ -54,6 +55,7 @@
       App.AccountUsernameEditComponent.initialize();
       App.SimilarContributionsCheck.initialize();
       App.MitmachboxSurvey.initialize();
+      App.TagFilter.initialize();
     }
   };
 }).call(this);

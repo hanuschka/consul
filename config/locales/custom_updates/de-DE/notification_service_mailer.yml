@@ -2,16 +2,13 @@ de:
   custom:
     notification_service_mailers:
       shared:
-        hi: Hallo %{username},
         unsubscribe_html: Wenn Sie keine weiteren Benachrichtigungen zu diesem Beitrag bekommen möchten, dann klicken Sie <a href="%{url}" target="_blank">hier</a> und klicken auf die Benachrichtigungsglocke (Sie müssen eingeloggt sein).
       overdue_deficiency_reports:
         subject: Mangel wurde noch nicht bearbeitet
-        hi: Liebe/r Sachbearbeiter*in,
         p1_s: Ihnen wurde ein Mangel zur Bearbeitung zugewiesen, welcher noch nicht bearbeitet wurde.
         p1_p: Ihnen wurden mehrere Mängel zur Bearbeitung zugewiesen, die noch nicht bearbeitet wurden.
       overdue_deficiency_reports_overview:
         subject: Übersicht überfälliger Anliegen
-        hi: Liebe/r Sachbearbeiter*in,
         p1_s: "ein Anliegen ist seit Längerem unbearbeitet. Sie erhalten diese Übersicht, weil Sie alle Anliegen verwalten:"
         p1_p: "mehrere Anliegen sind seit Längerem unbearbeitet. Sie erhalten diese Übersicht, weil Sie alle Anliegen verwalten:"
         fresh_badge: NEU
@@ -19,81 +16,69 @@ de:
         no_responsible: keine Zuständigkeit zugewiesen
       new_comments_for_deficiency_report:
         subject: "Kommentar zur Mangelmeldung (%{deficiency_report_title}) wurde noch nicht bearbeitet"
-        hi: Liebe/r SachbearbeiterIn,
         p1_initial: "Ihnen wurde gerade folgender Kommentar zu einer Mangelmeldung zur Bearbeitung zugewiesen:"
         p1_reminder: Ihnen wurde kürzlich ein Kommentar zu einer Mangelmeldung zugewiesen, welcher noch nicht bearbeitet wurde.
         link_to_report: "(Link zum Mängelmelder)"
       not_assigned_deficiency_reports:
         subject: Mangelzuweisen noch ausstehend
-        hi: Lieber Admin,
         p1_s: es liegt ein Mangel vor, der noch nicht zugewiesen wurde.
         p1_p: es liegen mehrere Mängel vor, die noch nicht zugewiesen wurden.
       new_proposal:
-        subject: Neuer Vorschlag auf Consul
-        hi: Hallo %{username},
-        p1: es ist ein neuer Vorschlag auf Consul eingegangen oder ein existierender Vorschlag wurde geändert.
+        subject: "Neuer Vorschlag auf der Beteiligungsplattform"
+        p1: "es ist ein neuer Vorschlag auf der Beteiligungsplattform eingegangen oder ein bestehender Vorschlag wurde geändert."
       new_debate:
-        subject: Neue Diskussionsbeitrag auf Consul
-        hi: Hallo %{username},
-        p1: es ist ein neuer Diskussionsbeitrag auf Consul erstellt worden.
+        subject: "Neuer Diskussionsbeitrag auf der Beteiligungsplattform"
+        p1: "es ist ein neuer Diskussionsbeitrag auf der Beteiligungsplattform erstellt worden."
       new_comment:
         subject: Neuer Kommentar auf der Beteiligungsplattform.
         title: Neuer Kommentar auf der Beteiligungsplattform.
-        hi: Hallo %{username},
         p1: es ist ein neuer Kommentar auf der Beteiligungsplattform veröffentlicht worden.
+      new_contribution_comment:
+        subject: Neuer Kommentar zu einem Beitrag auf der Beteiligungsplattform.
+        title: Neuer Kommentar zu einem Beitrag auf der Beteiligungsplattform.
+        p1: es ist ein neuer Kommentar zu einem Beitrag auf der Beteiligungsplattform veröffentlicht worden.
       new_deficiency_report:
         subject: Neue Mangelmeldung %{identifier}
-        hi: Hallo %{username},
         p1: es wurde ein neuer Mangel gemeldet.
       new_manual_verification_request:
         subject: Neue Nutzerverifizierung
-        hi: "Hallo %{user_to_notify_username},"
         p1: "%{user_to_verify_username} hat sich soeben verifiziert."
         link_text: Admin (demokratie.today)
       new_poll:
-        subject: Neue Abstimmung auf Consul
-        hi: Hallo %{username},
-        p1: es ist eine neue Abstimmung auf Consul eingegangen.
+        subject: "Neue Abstimmung auf der Beteiligungsplattform"
+        p1: "es ist eine neue Abstimmung auf der Beteiligungsplattform eingegangen."
       projekt_questions:
-        subject: Neue Kurzumfrage auf Consul
-        hi: Hallo %{username},
+        subject: "Neue Kurzumfrage auf der Beteiligungsplattform"
         link: Kurzumfrage
-        p1: es ist eine neue Kurzumfrage auf Consul eingegangen.
+        p1: "es ist eine neue Kurzumfrage auf der Beteiligungsplattform eingegangen."
       projekt_arguments:
-        subject: Pro und Contra Stimmen auf Consul
-        hi: Hallo %{username},
+        subject: "Neue Pro- und Contra-Stimmen auf der Beteiligungsplattform"
         link: Pro und Contra Stimmen
-        p1: es sind neue Pro und Contra Stimmen auf Consul eingegangen.
+        p1: "es sind neue Pro- und Contra-Stimmen auf der Beteiligungsplattform eingegangen."
       new_budget_investment:
         subject: Ein neuer Vorschlag wurde eingereicht!
         title: Ein neuer Vorschlag wurde eingereicht!
-        hi: Hallo %{username},
-        p1: "es wurde ein neuer Vorschlag im %{projekt_link} eingereicht. Sehen Sie sich ihn hier an: %{proposal_link}"
+        p1: "es wurde ein neuer Vorschlag im %{projekt_link} eingereicht. Sehen Sie sich ihn hier an: %{investment_title}"
         projekt_link_text: Projekt
         sincerely: Mit freundlichen Grüßen
       new_projekt_notification:
-        subject: Neue Projektbenachrichtigung auf Consul
-        hi: Hallo %{username},
+        subject: "Neue Projektbenachrichtigung auf der Beteiligungsplattform"
         link: Projektbenachrichtigung
-        p1: es ist eine neue Projektbenachrichtigung auf Consul eingegangen.
+        p1: "es ist eine neue Projektbenachrichtigung auf der Beteiligungsplattform eingegangen."
       new_projekt_event:
-        subject: Neue Veranstaltung auf Consul
-        hi: Hallo %{username},
+        subject: "Neue Veranstaltung auf der Beteiligungsplattform"
         link: Veranstaltung
-        p1: es ist eine neue Veranstaltung auf Consul eingegangen.
+        p1: "es ist eine neue Veranstaltung auf der Beteiligungsplattform eingegangen."
       new_projekt_milestone:
-        subject: Neuer Meilenstein auf Consul
-        hi: Hallo %{username},
+        subject: "Neuer Meilenstein auf der Beteiligungsplattform"
         link: Meilenstein
-        p1: es ist ein neuen Meilenstein auf Consul eingegangen.
+        p1: "es ist ein neuer Meilenstein auf der Beteiligungsplattform eingegangen."
       new_projekt_livestream:
-        subject: Neue Livestream auf Consul
-        hi: Hallo %{username},
+        subject: "Neuer Livestream auf der Beteiligungsplattform"
         link: Livestream
-        p1: es ist ein neue Livestream auf Consul eingegangen.
+        p1: "es ist ein neuer Livestream auf der Beteiligungsplattform eingegangen."
       user_reverification_failed:
         subject: Die Verifizierung Ihres Kontos wurde aufgehoben
-        hi: Sehr geehrte(r) Herr/Frau %{last_name},
         p1_html: die Verifizierung Ihres Nutzerkontos auf der Siegburger Mitmachen-Plattform wurde aufgehoben. Somit können Sie aktuell an keinen Beteiligungsprojekten teilnehmen, für die ein verifizierter Account erforderlich ist (beispielsweise Bürgerbudget)
         p2_html: <strong>Sie sind in Siegburg wohnhaft?</strong><br>Unter <a href="https://mitmachen.siegburg.de/account">https://mitmachen.siegburg.de/account</a> können Sie Ihre persönlichen Daten überprüfen und sich erneut verifizieren. Achten Sie hierbei auf die exakt richtige Schreibweise Ihrer persönlichen Daten.
         p3_html: <strong>Sie sind weggezogen?</strong><br>Auch als „Nicht-Siegburger“ können Sie weiterhin an vielen Beteiligungsprojekten auf der Mitmachen-Plattform teilnehmen. Ändern Sie bitte Ihren Wohnort unter <a href="https://mitmachen.siegburg.de/account">https://mitmachen.siegburg.de/account</a>.
@@ -101,16 +86,13 @@ de:
         signature_html: Vielen Dank für Ihre Teilhabe.
       user_reverification_succeeded:
         subject: Die Verifizierung Ihres Kontos wurde abgeschlossen
-        hi: Sehr geehrte(r) Herr/Frau %{last_name},
         p1_html: die Verifizierung Ihres Nutzerkontos auf der Siegburger Mitmachen-Plattform wurde abgeschlossen. Somit können Sie an Beteiligungsprojekten teilnehmen, für die ein verifizierter Account erforderlich ist (beispielsweise Bürgerbudget).
         signature_html: Vielen Dank für Ihre Teilhabe.
       new_topic:
-        subject: Neues Thema auf Consul
-        hi: Hallo %{username},
+        subject: "Neues Thema auf der Beteiligungsplattform"
         p1: es ist ein neues Thema erstellt worden.
       new_proposal_notification:
         subject: "Neue Benachrichtigung zum Vorschlag: %{proposal_title}"
-        hi: Hallo %{username},
         intro_html: "Der Autor des Vorschlages %{proposal_link} hat eine neue Benachrichtigung erstellt:"
         unsubscribe_html: Wenn Sie keine weiteren Benachrichtigungen zu diesem Vorschlag bekommen möchten, gehen Sie zur <a href="%{url}" target="_blank">Vorschlagsseite</a> und klicken Sie auf “Nicht länger folgen” (dafür müssen Sie eingeloggt sein).
       memo:
@@ -118,5 +100,4 @@ de:
         intro_html: "Eine neue Memo-Benachrichtigung im Mangel %{root_momoable_link} wurde für Sie hinterlegt:"
       new_projekt:
         subject: Überprüfung des Projektes %{projekt_title}
-        hi: Hallo %{username},
         p1: das Projekt mit dem Titel %{link} wurde zur Überprüfung für Sie freigegeben.

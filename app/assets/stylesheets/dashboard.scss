@@ -6,7 +6,6 @@
 // 04. Goals
 // 05. Sidebar
 // 06. Community
-// 07. Graph
 // 08. Polls
 // 09. Email preview
 // 10. Poster preview
@@ -397,23 +396,6 @@
 
   .community-info {
     font-size: $small-font-size;
-  }
-}
-
-// 07. Graph
-// ---------
-
-.proposal-graph {
-
-  .c3-ygrid-lines {
-
-    line {
-      stroke: #005c92;
-    }
-
-    text {
-      fill: #005c92;
-    }
   }
 }
 

@@ -1,6 +1,6 @@
 <td style="<%= css_for_mailer_content %>">
   <p style="<%= css_for_mailer_text %>">
-    <%= t("mailers.user_verification_failed.hi", username: @user.username) %>
+    <%= @user.recipient_greeting %>,
   </p>
 
   <p style="<%= css_for_mailer_text %>">
@@ -26,7 +26,7 @@
   </p>
 
   <ol style="<%= css_for_mailer_text %>">
-    <li><%= sanitize t("mailers.user_verification_failed.b2_item1", link: link_to(new_residence_url, new_residence_url, target: '_blank') ) %></li>
+    <li><%= sanitize t("mailers.user_verification_failed.b2_item1", verification_url: link_to(new_residence_url, new_residence_url, target: '_blank') ) %></li>
     <li><%= t("mailers.user_verification_failed.b2_item2") %></li>
     <li><%= t("mailers.user_verification_failed.b2_item3") %></li>
     <li><%= t("mailers.user_verification_failed.b2_item4") %></li>

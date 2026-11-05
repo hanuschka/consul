@@ -73,7 +73,7 @@ class DeficiencyReport < ApplicationRecord
 
   before_save :calculate_hot_score
 
-  scope :assigned, -> { where.not(responsible_type: nil, responsible_id: nil, assigned_at: nil) }
+  scope :assigned, -> { where.not(responsible_type: nil).where.not(responsible_id: nil) }
   scope :not_assigned, -> { where(responsible_type: nil).or(where(responsible_id: nil)) }
 
   # A subquery rather than a join, so this stays structurally compatible with assigned_to_officer

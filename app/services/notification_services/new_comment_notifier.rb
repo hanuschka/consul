@@ -5,8 +5,10 @@ module NotificationServices
     end
 
     def call
+      mailer_action = @comment.commentable.is_a?(ProjektPhase) ? :new_comment : :new_contribution_comment
+
       users_to_notify.each do |user|
-        NotificationServiceMailer.new_comment(user.id, @comment.id).deliver_later
+        NotificationServiceMailer.public_send(mailer_action, user.id, @comment.id).deliver_later
         Notification.add(user, @comment)
         Activity.log(user, "email", @comment)
       end

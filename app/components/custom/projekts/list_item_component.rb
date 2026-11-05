@@ -16,7 +16,7 @@ class Projekts::ListItemComponent < ApplicationComponent
       title: projekt.page.title,
       description: strip_tags(projekt.page.subtitle),
       url: projekt_url,
-      url_target: url_target,
+      url_target: link_target,
       title_heading_level: @title_heading_level
     }
   end
@@ -49,7 +49,7 @@ class Projekts::ListItemComponent < ApplicationComponent
     projekt_option(projekt, "general.external_participation_link").presence || projekt.page.url
   end
 
-  def url_target
+  def link_target
     "_blank" if projekt_option(projekt, "general.external_participation_link").present?
   end
 end

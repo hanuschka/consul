@@ -179,6 +179,23 @@ class Poll::Question < ApplicationRecord
     poll.questions.where(contextualize_by_poll_question_id: id)
   end
 
+  def contexted_variants
+    return contexted_clones.to_a if contexted_clones.any?
+    return [] if parent_question.nil?
+
+    position = parent_question.nested_questions.index(self)
+    return [] if position.nil?
+
+    parent_question.contexted_clones.includes(nested_questions: :votation_type).filter_map do |bundle_clone|
+      variant = bundle_clone.nested_questions[position]
+      variant if variant&.votation_type&.vote_type == votation_type&.vote_type
+    end
+  end
+
+  def context_title
+    (context || parent_question&.context)&.title
+  end
+
   # Auto-regeneration entry point for the /adm edit flow. Rebuilds the contexted
   # clones unless the poll already has voters — regeneration destroys and recreates
   # the clone questions, which would discard any votes already cast on them. The

@@ -39,7 +39,7 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   def update_not_permitted?
     return false if update_policy.nil?
 
-    !update_policy.update?
+    !update_policy.public_send(@options[:policy_action] || :update?)
   end
 
   def ai_gated?

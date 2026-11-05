@@ -1,6 +1,6 @@
 <td style="<%= css_for_mailer_content %>">
   <p style="<%= css_for_mailer_text %>">
-    <%= I18n.t("custom.municipal_plan_mailer.submitted_for_release.greeting") %>
+    <%= @administrator.user.recipient_greeting %>,
   </p>
 
   <p style="<%= css_for_mailer_text %>">
@@ -17,4 +17,12 @@
     <%= link_to I18n.t("custom.municipal_plan_mailer.submitted_for_release.review_link"),
                 @review_url, style: "color: #004a83;" %>
   </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

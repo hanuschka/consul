@@ -3,15 +3,9 @@
 }
 
 .klaro {
-  .cookie-modal {
+  .cookie-modal,
+  .cookie-notice {
     z-index: 4999 !important;
-
-     .cookie-modal-notice {
-      padding: 1.5rem;
-      padding-top: 0.8em;
-      max-width: 520px;
-      border-radius: 10px;
-    }
 
     .cn-buttons {
       display: flex;
@@ -42,7 +36,8 @@
         min-height: 3rem;
       }
 
-      .cm-btn.cm-btn-success {
+      .cm-btn.cm-btn-success,
+      .cm-btn.cn-decline {
         padding: 10px 15px;
         background-color: #005a9f;
         min-height: 3rem;
@@ -54,7 +49,8 @@
         background-color: #076ebd;
       }
 
-      .cm-btn.cm-btn-accept-all {
+      .cm-btn.cm-btn-accept-all,
+      .cm-btn.cm-btn-decline {
         background-color: #005a9f;
       }
     }
@@ -62,6 +58,15 @@
     a {
       color: #005a9f !important;
     }
+  }
+}
+
+.klaro .cookie-notice:not(.cookie-modal-notice) .cn-body .cn-ok .cn-buttons {
+  display: flex;
+  gap: 5px;
+
+  button.cm-btn {
+    flex: 1 1 0;
   }
 }
 

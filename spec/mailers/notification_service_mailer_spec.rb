@@ -143,11 +143,11 @@ describe NotificationServiceMailer do
       registered = SiteCustomization::EmailTemplate::EMAIL_TEMPLATES
                      .dig("NotificationServiceMailer#overdue_deficiency_reports_overview", :variables)
 
-      expect(registered).to match_array %w[officer_name overdue_count fresh_count]
+      expect(registered).to match_array %w[recipient_greeting overdue_count fresh_count]
     end
 
     it "has its copy translated in every locale the email is sent in" do
-      keys = %i[subject hi p1_s p1_p fresh_badge fresh_hint no_responsible]
+      keys = %i[subject p1_s p1_p fresh_badge fresh_hint no_responsible]
 
       %i[en de].each do |locale|
         keys.each do |key|
@@ -164,9 +164,19 @@ describe NotificationServiceMailer do
     let(:report) { create(:deficiency_report, title: "Broken swing") }
     let(:memo) { Memo.create!(memoable: report, user: create(:user), text: "Checked on site") }
 
+    let!(:administrator) { create(:administrator) }
+
     before do
-      create(:administrator)
       ActionMailer::Base.deliveries.clear
+    end
+
+    def notify_about(memoable)
+      memo = Memo.create!(memoable: memoable, user: create(:user), text: "Bitte prüfen")
+      perform_enqueued_jobs { NotificationServices::MemoNotifier.new(memo.id).call }
+    end
+
+    def body_for(user)
+      ActionMailer::Base.deliveries.find { |mail| mail.to.include?(user.email) }.body.decoded
     end
 
     it "links a deficiency report memo to the report in /adm" do
@@ -175,6 +185,77 @@ describe NotificationServiceMailer do
 
       expect(body).to include "/adm/deficiency_reports/#{report.id}"
       expect(body).not_to include "deficiency_report_management"
+    end
+
+    it "links a proposal memo to the proposal in /adm for administrators and projekt managers" do
+      proposal = create(:proposal)
+      projekt_manager = create(:projekt_manager)
+      create(:projekt_manager_assignment, :get_notifications,
+             projekt: proposal.projekt, projekt_manager: projekt_manager)
+
+      notify_about(proposal)
+
+      [administrator.user, projekt_manager.user].each do |recipient|
+        body = body_for(recipient)
+
+        expect(body).to include "/adm/projekts/phases/#{proposal.projekt_phase.id}/proposals/#{proposal.id}"
+        expect(body).not_to include "/admin/"
+        expect(body).not_to include "/projekt_management/"
+      end
+    end
+
+    it "links a budget investment memo to the investment in /adm" do
+      investment = create(:budget_investment)
+
+      notify_about(investment)
+
+      expect(body_for(administrator.user))
+        .to include "/adm/projekts/phases/#{investment.projekt_phase.id}/budget_investments/#{investment.id}"
+    end
+
+    it "links an idea memo to the idea in /adm" do
+      idea = create(:idea)
+
+      notify_about(idea)
+
+      expect(body_for(administrator.user)).to include "/adm/ideas/#{idea.id}"
+    end
+  end
+
+  describe "#new_manual_verification_request" do
+    it "links to the user list in /adm" do
+      admin = create(:administrator).user
+      body = described_class.new_manual_verification_request(admin.id, create(:user).id).body.decoded
+
+      expect(body).to include "/adm/users"
+      expect(body).not_to include "/admin/users"
+    end
+  end
+
+  describe "#new_contribution_comment" do
+    let(:admin) { create(:administrator).user }
+    let(:comment) { create(:comment, commentable: create(:proposal), body: "Tolle Idee") }
+
+    it "uses the default text" do
+      mail = described_class.new_contribution_comment(admin.id, comment.id)
+
+      expect(mail.subject).to eq I18n.t("custom.notification_service_mailers.new_contribution_comment.subject")
+      expect(mail.body.encoded).to include("Tolle Idee")
+    end
+
+    it "uses the global template" do
+      SiteCustomization::EmailTemplate.create!(
+        mailer_class: "NotificationServiceMailer",
+        mailer_action: "new_contribution_comment",
+        locale: admin.locale,
+        subject: "Neuer Kommentar",
+        body: "<p>Kommentar: {{ comment_body }}</p>"
+      )
+
+      mail = described_class.new_contribution_comment(admin.id, comment.id)
+
+      expect(mail.subject).to eq "Neuer Kommentar"
+      expect(mail.body.encoded).to include("Kommentar: Tolle Idee")
     end
   end
 end

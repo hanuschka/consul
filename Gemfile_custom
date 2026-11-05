@@ -45,9 +45,7 @@ gem 'pundit', '~> 2.5', '>= 2.5.1'
 gem 'pagy', '~> 9.4'
 # /Adm
 
-# delayed_job 4.2 needs ActiveJob::QueueAdapters::AbstractAdapter, which only
-# exists from Rails 7.2; hold it below 4.2 until the Rails upgrade.
-gem 'delayed_job', '~> 4.1.11'
+gem 'delayed_job', '~> 4.2.0'
 
 gem 'liquid'
 
@@ -101,3 +99,8 @@ gem 'csv', '3.3.0'
 gem 'mutex_m', '0.2.0'
 gem 'observer', '0.1.2'
 gem 'racc', '1.7.3'
+
+# Class to build custom data structures, similar to a Hash.
+# Ruby 4.0 no longer ships it as a default gem, and sprockets-es6 and
+# file_validators require it without declaring it.
+gem 'ostruct', '0.6.3'

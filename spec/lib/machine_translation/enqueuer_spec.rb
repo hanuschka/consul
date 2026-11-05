@@ -93,4 +93,19 @@ describe MachineTranslation::Enqueuer do
       expect(record).not_to be_valid
     end
   end
+
+  describe "a repeated failure" do
+    let(:comment) { Globalize.with_locale(source) { create(:comment) } }
+
+    it "keeps only the latest failed attempt per content and language" do
+      2.times do
+        RemoteTranslation.create!(remote_translatable: comment, locale: foreign.to_s)
+                         .update!(error_message: "Deepl::RequestTooLargeError: too large")
+      end
+
+      failed = RemoteTranslation.where(remote_translatable: comment, locale: foreign.to_s).where.not(error_message: nil)
+
+      expect(failed.count).to eq 1
+    end
+  end
 end

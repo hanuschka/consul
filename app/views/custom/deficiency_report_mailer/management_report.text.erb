@@ -2,9 +2,9 @@
 <% period = "#{l(@management_report.period_start, format: "%d.%m.%Y")} – #{l(@management_report.period_end, format: "%d.%m.%Y")}" %>
 <% figure_blocks = @management_report.building_blocks.map { |block| [block, @management_report.figure_rows(block)] }.reject { |_block, rows| rows.empty? } %>
 <% if @user.present? %>
-<%= t("#{scope}.hi", username: @user.username) %>
+<%= @user.recipient_greeting %>,
 <% else %>
-<%= t("#{scope}.hi_without_name") %>
+<%= t("mailers.shared.greeting_without_name") %>
 <% end %>
 
 <%= t("#{scope}.intro", name: @management_report.profile_name, period: period) %>

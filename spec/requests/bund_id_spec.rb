@@ -196,6 +196,56 @@ describe "BundID" do
         expect(user.geozone).to be_nil
       end
     end
+
+    describe "into an unverified account with a registered address" do
+      let(:old_address) do
+        create(:registered_address, street_name: "Altstraße", street_number: "1", plz: "50667", city_name: "Köln")
+      end
+      let(:username_login) { bund_id_identity(verification_level: "STORK-QAA-Level-1") }
+
+      before do
+        user.update_columns(registered_address_id: old_address.id, street_name: "Altstraße", street_number: "1",
+                            street_number_extension: "b", plz: 50667, city_name: "Köln")
+      end
+
+      it "clears the old registered address when the new address is not a registered one" do
+        relay_state = start_bund_id_request
+
+        post_bund_id_response(relay_state, response_for(relay_state, identity: username_login))
+
+        user.reload
+        expect(user.registered_address_id).to be_nil
+        expect(user.street_name).to eq("Heidestraße")
+        expect(user.street_number).to eq("17")
+        expect(user.street_number_extension).to be_nil
+        expect(user.plz).to eq(51147)
+      end
+
+      it "links the registered address that matches the new address, in the register's spelling" do
+        new_address = create(:registered_address, street_name: "Heidestraße", street_number: "17",
+                                                  plz: "51147", city_name: "Köln")
+        shouting_login = username_login.merge(street_address: "HEIDESTRASSE, 17", locality_name: "KÖLN")
+        relay_state = start_bund_id_request
+
+        post_bund_id_response(relay_state, response_for(relay_state, identity: shouting_login))
+
+        user.reload
+        expect(user.registered_address_id).to eq(new_address.id)
+        expect(user.street_name).to eq("Heidestraße")
+        expect(user.city_name).to eq("Köln")
+      end
+
+      it "leaves the address alone when BundID sends no street address" do
+        relay_state = start_bund_id_request
+
+        post_bund_id_response(relay_state, response_for(relay_state, identity: username_login.merge(street_address: nil)))
+
+        user.reload
+        expect(user.registered_address_id).to eq(old_address.id)
+        expect(user.street_name).to eq("Altstraße")
+        expect(user.plz).to eq(50667)
+      end
+    end
   end
 
   describe "verifying an account" do

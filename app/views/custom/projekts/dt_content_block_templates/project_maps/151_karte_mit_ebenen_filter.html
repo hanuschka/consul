@@ -1,12 +1,24 @@
-<div style="border: 1px solid #e6e9ed; border-radius: 14px; overflow: hidden; background: #ffffff;">
-  <div style="padding: 16px 20px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid #eef1f5;">
-    <span style="color: #8a94a6; font-size: 14px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-right: 4px;">Ebene:</span>
-    <span style="display: inline-flex; align-items: center; min-height: 34px; padding: 6px 16px; border-radius: 999px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 14px; font-weight: 600;">Alle Maßnahmen</span>
-    <span style="display: inline-flex; align-items: center; min-height: 34px; padding: 6px 16px; border-radius: 999px; border: 1px solid #d8dde3; color: #5b6573; font-size: 14px;">Hochwasserschutz</span>
-    <span style="display: inline-flex; align-items: center; min-height: 34px; padding: 6px 16px; border-radius: 999px; border: 1px solid #d8dde3; color: #5b6573; font-size: 14px;">Begrünung</span>
-    <span style="display: inline-flex; align-items: center; min-height: 34px; padding: 6px 16px; border-radius: 999px; border: 1px solid #d8dde3; color: #5b6573; font-size: 14px;">Beschattung</span>
+<!-- BlockID: Projekt Karten - Karte mit Ebenen-Filter (dekorative Ebenen-Etiketten über der Karte) -->
+<!-- Geeignet für: Maßnahmenkarten mit mehreren Themen; die Etiketten sind nicht mit Kartenebenen verknüpft -->
+<!-- Der Kartenbereich wird auf der Projektseite zur echten interaktiven Karte; Platzhalter, Klassen und Kartenhöhe im Kartenbereich nicht ändern (die Höhe stellt der Editor ein). -->
+<!-- Editor: jedes Etikett ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert das letzte; das hervorgehobene Etikett steht an erster Stelle. -->
+<!-- Umbruch: die Ebenen-Etiketten brechen selbständig in weitere Zeilen um, die Karte nutzt immer die volle Breite. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Beschriftung und Etiketten 1rem, aktives Etikett über Fläche und Gewicht -->
+
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+  <div style="padding: 14px 20px; padding: clamp(12px, 2.5vw, 16px) clamp(16px, 4vw, 24px); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; border-bottom: 1px solid #e8edf3; background: #ffffff;">
+    <div style="flex: 0 0 auto; display: flex; align-items: center; gap: 10px;">
+      <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-layer-group" style="font-size: 17px;"></i></span>
+      <span style="font-size: 1rem; line-height: 1.6; font-weight: 700;">Ebene:</span>
+    </div>
+    <ul style="flex: 1 1 14rem; min-width: 0; list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+      <li style="margin: 0; display: inline-flex; align-items: center; min-height: 36px; padding: 2px 14px; border-radius: 999px; border: 1px solid var(--brand-color, #1779ba); background: var(--brand-color, #1779ba); color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">Alle Maßnahmen</li>
+      <li style="margin: 0; display: inline-flex; align-items: center; min-height: 36px; padding: 2px 14px; border-radius: 999px; border: 1px solid #e3e8ef; background: #f5f7fa; font-size: 1rem; line-height: 1.6; font-weight: 400; box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(16,24,40,0.04);">Hochwasserschutz</li>
+      <li style="margin: 0; display: inline-flex; align-items: center; min-height: 36px; padding: 2px 14px; border-radius: 999px; border: 1px solid #e3e8ef; background: #f5f7fa; font-size: 1rem; line-height: 1.6; font-weight: 400; box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(16,24,40,0.04);">Begrünung</li>
+      <li style="margin: 0; display: inline-flex; align-items: center; min-height: 36px; padding: 2px 14px; border-radius: 999px; border: 1px solid #e3e8ef; background: #f5f7fa; font-size: 1rem; line-height: 1.6; font-weight: 400; box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 2px rgba(16,24,40,0.04);">Beschattung</li>
+    </ul>
   </div>
-  <div class="projekt-map-embed js-projekt-map-embed js-content-block-element-not-editable" data-controller="projekt-map-embed" style="height: 440px; border-radius: 0 0 14px 14px;">
+  <div class="projekt-map-embed js-projekt-map-embed js-content-block-element-not-editable" data-controller="projekt-map-embed" style="height: 440px; border-radius: 0 0 12px 12px;">
     <span class="projekt-map-embed--placeholder" aria-hidden="true">
       <i class="fas fa-map-marker-alt projekt-map-embed--pin"></i>
       <span class="projekt-map-embed--label">Kartenansicht</span>

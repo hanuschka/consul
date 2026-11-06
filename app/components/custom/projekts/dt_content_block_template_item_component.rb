@@ -1,6 +1,8 @@
 class Projekts::DtContentBlockTemplateItemComponent < ViewComponent::Base
   include StudioTooltipHelper
 
+  PREVIEW_IFRAME_SRC_PATTERN = /<iframe\b(?![^>]*\bclass=)([^>]*?)\ssrc="/i
+
   def initialize(template:)
     @template = template
   end
@@ -19,6 +21,12 @@ class Projekts::DtContentBlockTemplateItemComponent < ViewComponent::Base
 
   def template_content
     template["content"]
+  end
+
+  def preview_content
+    template_content.gsub(PREVIEW_IFRAME_SRC_PATTERN) do
+      "<iframe class=\"js-template-preview-iframe\"#{Regexp.last_match(1)} data-preview-src=\""
+    end
   end
 
   def hidden?

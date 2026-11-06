@@ -1,0 +1,29 @@
+<!-- BlockID: S02 Seitenleiste Kontakt - eine Ansprechperson kompakt mit Foto, Telefon und E-Mail -->
+<!-- Geeignet für: Karte „Information“ in der rechten Seitenleiste, Ansprechperson zum Projekt; am Handy in voller Breite -->
+<!-- ANPASSEN: Foto über das Bild-Werkzeug ersetzen (quadratisch, mindestens 160 px) oder den Fotobereich löschen, Name, Funktion, Amt, Telefon und Mailadresse ersetzen. Jede Zeile bleibt ein eigenes Element, Zeilenumbrüche entfernt Consul. Icons nur im Code-Modus tauschbar. -->
+<!-- Umbruch: Foto bleibt links neben Name und Funktion, die Kontaktzeilen stehen darunter in voller Breite; lange Mailadressen brechen an jeder Stelle um; der Button ist immer volle Breite. Seitenleiste etwa 380 px breit. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Kartentitel = Theme-H4, Name = 1rem fett, Funktion, Kontaktzeilen und Button = 1rem -->
+
+<div style="position: relative; overflow: hidden; background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; padding: clamp(16px, 4vw, 24px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+
+  <h4 style="position: relative; z-index: 1; margin: 0 0 14px; hyphens: auto; overflow-wrap: break-word;">Ihre Ansprechperson</h4>
+
+  <div style="position: relative; z-index: 1; display: flex; align-items: center; gap: 14px; margin: 0 0 14px;">
+    <img src="https://placehold.co/160x160/e3e8ef/1a2e44?text=Foto" alt="Porträt von Katrin Hofmann" style="flex: 0 0 auto; display: block; width: 72px; height: auto; aspect-ratio: 1 / 1; border-radius: 50%; object-fit: cover; margin: 0; border: 3px solid #ffffff; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+    <div style="flex: 1 1 auto; min-width: 0;">
+      <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Katrin Hofmann</span>
+      <span style="display: block; font-size: 1rem; line-height: 1.6;">Projektleitung Bürgerbeteiligung</span>
+    </div>
+  </div>
+
+  <div style="position: relative; z-index: 1; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 14px 16px; margin: 0 0 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+    <span style="display: block; font-size: 1rem; line-height: 1.6;">Amt für Stadtplanung und Mobilität</span>
+    <span style="display: block; font-size: 1rem; line-height: 1.6; margin: 0 0 10px;">Rathaus, Zimmer 3.08</span>
+    <span style="display: flex; align-items: flex-start; gap: 10px; font-size: 1rem; line-height: 1.6;"><i class="fas fa-phone-alt" aria-hidden="true" style="flex: 0 0 auto; margin-top: 6px; font-size: 14px; color: var(--brand-color, #1779ba);"></i><span style="flex: 1 1 auto; min-width: 0;"><a href="tel:+491234567890" style="font-weight: 600;">01234 567-890</a></span></span>
+    <span style="display: flex; align-items: flex-start; gap: 10px; font-size: 1rem; line-height: 1.6;"><i class="far fa-envelope" aria-hidden="true" style="flex: 0 0 auto; margin-top: 6px; font-size: 14px; color: var(--brand-color, #1779ba);"></i><span style="flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere;"><a href="mailto:buergerbeteiligung@stadt-musterstadt.de" style="font-weight: 600; overflow-wrap: anywhere;">buergerbeteiligung@stadt-musterstadt.de</a></span></span>
+    <span style="display: flex; align-items: flex-start; gap: 10px; font-size: 1rem; line-height: 1.6; margin: 10px 0 0;"><i class="far fa-clock" aria-hidden="true" style="flex: 0 0 auto; margin-top: 6px; font-size: 14px; color: var(--brand-color, #1779ba);"></i><span style="flex: 1 1 auto; min-width: 0;">Erreichbar Mo bis Do 9:00 bis 15:00 Uhr</span></span>
+  </div>
+
+  <a href="mailto:buergerbeteiligung@stadt-musterstadt.de" class="button" style="position: relative; z-index: 1; text-decoration: none; width: 100%; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Nachricht schreiben</a>
+
+</div>

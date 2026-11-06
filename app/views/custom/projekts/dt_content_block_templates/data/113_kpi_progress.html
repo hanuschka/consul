@@ -1,56 +1,58 @@
-<!-- BlockID: E10 -->
-<!-- J4: KPI – Fortschrittsbalken mit Prozentwerten -->
+<!-- BlockID: E10 Kennzahlen mit Fortschrittsbalken - Prozentwerte je Zeile mit Balken -->
 <!-- Geeignet für: Fortschrittsanzeige, Zielerreichung, Projektmetriken -->
+<!-- Editor: jede Zeile ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Zeile. Wert jeweils in der Prozentmarke und in der Balkenbreite (width im Code-Modus) anpassen; der Balken selbst ist gesperrt. -->
+<!-- Umbruch: Balken nutzen immer die volle Breite; lange Bezeichnungen brechen um, der Prozentwert bleibt rechts. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Einleitung, Bezeichnungen und Prozentwerte = 1rem -->
 
-<div style="background: linear-gradient(160deg, #1a2e44 0%, #243b55 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
-  <h3 style="font-size: 22px; font-weight: 700; color: #ffffff; margin-bottom: 6px; text-align: center; letter-spacing: -0.3px;">Aktueller Projektfortschritt</h3>
-  <p style="color: rgba(255,255,255,0.7); font-size: 15px; text-align: center; margin-bottom: 28px; margin-top: 0;">Stand der Buergerbeteiligung im Ueberblick</p>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <div style="max-width: 640px; margin: 0 auto; background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 28px;">
-
-    <!-- Progress Item 1 -->
-    <div style="margin-bottom: 22px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <span style="font-size: 14px; color: rgba(255,255,255,0.85); font-weight: 600;">Beitraege gesammelt</span>
-        <span style="font-size: 14px; color: #ffffff; font-weight: 800;">78%</span>
-      </div>
-      <div style="background: #e2e5ea; border-radius: 4px; height: 10px; overflow: hidden;">
-        <div style="background: var(--brand-color, #1779ba); height: 100%; border-radius: 4px; width: 78%;"></div>
-      </div>
-    </div>
-
-    <!-- Progress Item 2 -->
-    <div style="margin-bottom: 22px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <span style="font-size: 14px; color: rgba(255,255,255,0.85); font-weight: 600;">Online-Beteiligung</span>
-        <span style="font-size: 14px; color: #ffffff; font-weight: 800;">92%</span>
-      </div>
-      <div style="background: #e2e5ea; border-radius: 4px; height: 10px; overflow: hidden;">
-        <div style="background: var(--brand-color, #1779ba); height: 100%; border-radius: 4px; width: 92%;"></div>
-      </div>
-    </div>
-
-    <!-- Progress Item 3 -->
-    <div style="margin-bottom: 22px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <span style="font-size: 14px; color: rgba(255,255,255,0.85); font-weight: 600;">Auswertung</span>
-        <span style="font-size: 14px; color: #ffffff; font-weight: 800;">45%</span>
-      </div>
-      <div style="background: #e2e5ea; border-radius: 4px; height: 10px; overflow: hidden;">
-        <div style="background: var(--brand-color, #1779ba); height: 100%; border-radius: 4px; width: 45%;"></div>
-      </div>
-    </div>
-
-    <!-- Progress Item 4 -->
-    <div style="margin-bottom: 4px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <span style="font-size: 14px; color: rgba(255,255,255,0.85); font-weight: 600;">Umsetzung</span>
-        <span style="font-size: 14px; color: #ffffff; font-weight: 800;">15%</span>
-      </div>
-      <div style="background: #e2e5ea; border-radius: 4px; height: 10px; overflow: hidden;">
-        <div style="background: var(--brand-color, #1779ba); height: 100%; border-radius: 4px; width: 15%;"></div>
-      </div>
-    </div>
-
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 6px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-tasks" aria-hidden="true" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Aktueller Projektfortschritt</h3>
   </div>
+  <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 20px;">Stand der Bürgerbeteiligung im Überblick.</p>
+
+  <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+
+    <li style="margin: 0; background: #f5f7fa; background: linear-gradient(180deg, #f8fafc 0%, #f0f4f8 100%); border: 1px solid #e8edf3; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 10px;">
+        <span style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6; font-weight: 700;">Beiträge gesammelt</span>
+        <span style="flex: 0 0 auto; display: inline-block; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; background: var(--brand-color, #1779ba); border-radius: 999px; padding: 0 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">78 %</span>
+      </div>
+      <div aria-hidden="true" class="js-content-block-element-not-editable" style="background: #e3e8ef; border-radius: 999px; height: 12px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(16,24,40,0.12);">
+        <div aria-hidden="true" class="js-content-block-element-not-editable" style="width: 78%; height: 100%; border-radius: 999px; background: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);"></div>
+      </div>
+    </li>
+
+    <li style="margin: 0; background: #f5f7fa; background: linear-gradient(180deg, #f8fafc 0%, #f0f4f8 100%); border: 1px solid #e8edf3; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 10px;">
+        <span style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6; font-weight: 700;">Online-Beteiligung</span>
+        <span style="flex: 0 0 auto; display: inline-block; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; background: var(--brand-color, #1779ba); border-radius: 999px; padding: 0 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">92 %</span>
+      </div>
+      <div aria-hidden="true" class="js-content-block-element-not-editable" style="background: #e3e8ef; border-radius: 999px; height: 12px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(16,24,40,0.12);">
+        <div aria-hidden="true" class="js-content-block-element-not-editable" style="width: 92%; height: 100%; border-radius: 999px; background: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);"></div>
+      </div>
+    </li>
+
+    <li style="margin: 0; background: #f5f7fa; background: linear-gradient(180deg, #f8fafc 0%, #f0f4f8 100%); border: 1px solid #e8edf3; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 10px;">
+        <span style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6; font-weight: 700;">Auswertung</span>
+        <span style="flex: 0 0 auto; display: inline-block; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; background: var(--brand-color, #1779ba); border-radius: 999px; padding: 0 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">45 %</span>
+      </div>
+      <div aria-hidden="true" class="js-content-block-element-not-editable" style="background: #e3e8ef; border-radius: 999px; height: 12px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(16,24,40,0.12);">
+        <div aria-hidden="true" class="js-content-block-element-not-editable" style="width: 45%; height: 100%; border-radius: 999px; background: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);"></div>
+      </div>
+    </li>
+
+    <li style="margin: 0; background: #f5f7fa; background: linear-gradient(180deg, #f8fafc 0%, #f0f4f8 100%); border: 1px solid #e8edf3; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 10px;">
+        <span style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6; font-weight: 700;">Umsetzung</span>
+        <span style="flex: 0 0 auto; display: inline-block; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; background: var(--brand-color, #1779ba); border-radius: 999px; padding: 0 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">15 %</span>
+      </div>
+      <div aria-hidden="true" class="js-content-block-element-not-editable" style="background: #e3e8ef; border-radius: 999px; height: 12px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(16,24,40,0.12);">
+        <div aria-hidden="true" class="js-content-block-element-not-editable" style="width: 15%; height: 100%; border-radius: 999px; background: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);"></div>
+      </div>
+    </li>
+
+  </ul>
 </div>

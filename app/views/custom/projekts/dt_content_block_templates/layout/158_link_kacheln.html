@@ -1,0 +1,61 @@
+<!-- BlockID: N07 Link-Kacheln - Kacheln mit Linkzeile zu einer Phase, Umfrage oder einem Unterbereich -->
+<!-- Geeignet für: Themenfelder mit eigener Umfrage, Stadtteile oder Schulen mit eigenem Bereich, Jahresarchive -->
+<!-- Editor: jede Kachel ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte. Ziel jeder Kachel ist die Linkzeile unten, über den Stift setzen: Deep Link der Form ?projekt_phase_id=123#projekt-footer, die Zahl durch die ID der Phase ersetzen (steht im Admin in der Adresse der Phase); für eine Abstimmung geht auch /polls/123. Zählung im Etikett pflegen. -->
+<!-- Umbruch: am Handy eine Kachel je Zeile, breit zwei oder drei; Linkzeile und Pfeil stehen in jeder Kachel bündig unten. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Kacheltitel = Theme-H4, aller Text 1rem, Pfeil = Symbol -->
+
+<div style="position: relative; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+
+  <div style="position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; margin: 0 0 6px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-th-large" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Was müssen wir bei der Umsetzung beachten?</h3>
+  </div>
+  <p style="position: relative; z-index: 1; font-size: 1rem; line-height: 1.6; margin: 0 0 20px;">Wählen Sie ein Themenfeld. Dort sehen Sie alle Maßnahmen und können sagen, wo und wie sie umgesetzt werden sollen.</p>
+
+  <ul style="position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 12px;">
+
+    <li style="display: flex; flex-direction: column; margin: 0; padding: 18px; background: #ffffff; border: 1px solid #e8edf3; border-top: 4px solid var(--brand-color, #1779ba); border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span style="align-self: flex-start; display: inline-block; border-radius: 999px; padding: 2px 12px; margin: 0 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600; background: #e3eef8; background: color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff);">Themenfeld · 10 Maßnahmen</span>
+      <h4 style="margin: 0 0 6px; hyphens: auto; overflow-wrap: break-word;">Sicher</h4>
+      <p style="flex-grow: 1; font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Schulwege, Kreuzungen und Tempo: Maßnahmen für mehr Verkehrssicherheit in allen Stadtteilen.</p>
+      <a href="?projekt_phase_id=101#projekt-footer" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; border-top: 1px solid #e8edf3; padding: 10px 0 0; font-size: 1rem; line-height: 1.6; font-weight: 700;"><span>Zu den Maßnahmen</span><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-arrow-right" style="font-size: 14px;"></i></span></a>
+    </li>
+
+    <li style="display: flex; flex-direction: column; margin: 0; padding: 18px; background: #ffffff; border: 1px solid #e8edf3; border-top: 4px solid var(--brand-color, #1779ba); border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span style="align-self: flex-start; display: inline-block; border-radius: 999px; padding: 2px 12px; margin: 0 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600; background: #e3eef8; background: color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff);">Themenfeld · 16 Maßnahmen</span>
+      <h4 style="margin: 0 0 6px; hyphens: auto; overflow-wrap: break-word;">Nachhaltig</h4>
+      <p style="flex-grow: 1; font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Weniger Lärm und Abgase durch Bus, Rad und kurze Wege.</p>
+      <a href="?projekt_phase_id=102#projekt-footer" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; border-top: 1px solid #e8edf3; padding: 10px 0 0; font-size: 1rem; line-height: 1.6; font-weight: 700;"><span>Zu den Maßnahmen</span><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-arrow-right" style="font-size: 14px;"></i></span></a>
+    </li>
+
+    <li style="display: flex; flex-direction: column; margin: 0; padding: 18px; background: #ffffff; border: 1px solid #e8edf3; border-top: 4px solid var(--brand-color, #1779ba); border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span style="align-self: flex-start; display: inline-block; border-radius: 999px; padding: 2px 12px; margin: 0 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600; background: #e3eef8; background: color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff);">Themenfeld · 8 Maßnahmen</span>
+      <h4 style="margin: 0 0 6px; hyphens: auto; overflow-wrap: break-word;">Bezahlbar</h4>
+      <p style="flex-grow: 1; font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Günstige Tickets und Angebote, damit Mobilität für alle erschwinglich bleibt.</p>
+      <a href="?projekt_phase_id=103#projekt-footer" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; border-top: 1px solid #e8edf3; padding: 10px 0 0; font-size: 1rem; line-height: 1.6; font-weight: 700;"><span>Zu den Maßnahmen</span><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-arrow-right" style="font-size: 14px;"></i></span></a>
+    </li>
+
+    <li style="display: flex; flex-direction: column; margin: 0; padding: 18px; background: #ffffff; border: 1px solid #e8edf3; border-top: 4px solid var(--brand-color, #1779ba); border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span style="align-self: flex-start; display: inline-block; border-radius: 999px; padding: 2px 12px; margin: 0 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600; background: #e3eef8; background: color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff);">Themenfeld · 12 Maßnahmen</span>
+      <h4 style="margin: 0 0 6px; hyphens: auto; overflow-wrap: break-word;">Barrierefrei</h4>
+      <p style="flex-grow: 1; font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Abgesenkte Bordsteine, Haltestellen und Leitsysteme für alle, die nicht gut zu Fuß sind.</p>
+      <a href="?projekt_phase_id=104#projekt-footer" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; border-top: 1px solid #e8edf3; padding: 10px 0 0; font-size: 1rem; line-height: 1.6; font-weight: 700;"><span>Zu den Maßnahmen</span><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-arrow-right" style="font-size: 14px;"></i></span></a>
+    </li>
+
+    <li style="display: flex; flex-direction: column; margin: 0; padding: 18px; background: #ffffff; border: 1px solid #e8edf3; border-top: 4px solid var(--brand-color, #1779ba); border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span style="align-self: flex-start; display: inline-block; border-radius: 999px; padding: 2px 12px; margin: 0 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600; background: #e3eef8; background: color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff);">Themenfeld · 9 Maßnahmen</span>
+      <h4 style="margin: 0 0 6px; hyphens: auto; overflow-wrap: break-word;">Vernetzt</h4>
+      <p style="flex-grow: 1; font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Bus, Bahn, Leihrad und Carsharing besser aufeinander abstimmen.</p>
+      <a href="?projekt_phase_id=105#projekt-footer" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; border-top: 1px solid #e8edf3; padding: 10px 0 0; font-size: 1rem; line-height: 1.6; font-weight: 700;"><span>Zu den Maßnahmen</span><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-arrow-right" style="font-size: 14px;"></i></span></a>
+    </li>
+
+    <li style="display: flex; flex-direction: column; margin: 0; padding: 18px; background: #ffffff; border: 1px solid #e8edf3; border-top: 4px solid var(--brand-color, #1779ba); border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span style="align-self: flex-start; display: inline-block; border-radius: 999px; padding: 2px 12px; margin: 0 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600; background: #e3eef8; background: color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff);">Themenfeld · 11 Maßnahmen</span>
+      <h4 style="margin: 0 0 6px; hyphens: auto; overflow-wrap: break-word;">Lebenswert</h4>
+      <p style="flex-grow: 1; font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Mehr Platz zum Verweilen auf Straßen und Plätzen in der Innenstadt.</p>
+      <a href="?projekt_phase_id=106#projekt-footer" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; border-top: 1px solid #e8edf3; padding: 10px 0 0; font-size: 1rem; line-height: 1.6; font-weight: 700;"><span>Zu den Maßnahmen</span><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-arrow-right" style="font-size: 14px;"></i></span></a>
+    </li>
+
+  </ul>
+
+</div>

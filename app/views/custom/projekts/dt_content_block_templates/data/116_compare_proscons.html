@@ -1,95 +1,87 @@
-<!-- BlockID: E13 – Pro/Contra-Darstellung mit farbigen Seitenrändern -->
+<!-- BlockID: E13 Pro und Contra - Vorteile und Herausforderungen mit farbigem Seitenrand -->
 <!-- Geeignet für: Pro/Contra-Darstellung, Abwägungen -->
+<!-- Editor: jeder Punkt ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert den letzten Punkt der Gruppe. Icon über die Klasse fa-… tauschen, nur im Code-Modus. -->
+<!-- Umbruch: beide Gruppen stehen untereinander, Punkte nutzen immer die volle Breite; der Text bricht neben dem Symbol um. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Gruppentitel = Theme-H4, Oberzeile, Punkttitel und Text = 1rem, Unterschiede nur über Gewicht und Farbfläche -->
 
-<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
-  <div style="font-size: 11px; font-weight: 600; color: var(--brand-color, #1779ba); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Chancen &amp; Herausforderungen</div>
-  <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; letter-spacing: -0.3px; margin-bottom: 24px; margin-top: 0;">Online-Bürgerbeteiligung – Chancen &amp; Herausforderungen</h3>
+<div style="position: relative; overflow: hidden; background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <!-- Vorteile section -->
-  <div style="margin-bottom: 24px;">
-    <div style="display: flex; align-items: center; margin-bottom: 14px;">
-      <span style="font-size: 11px; font-weight: 700; color: #059669; text-transform: uppercase; letter-spacing: 0.08em; background: rgba(5,150,105,0.08); border: 1px solid rgba(5,150,105,0.15); border-radius: 4px; padding: 5px 14px;">Vorteile</span>
+  <p style="position: relative; z-index: 1; font-size: 1rem; line-height: 1.6; font-weight: 700; color: var(--brand-color, #1779ba); margin: 0 0 4px;">Abwägung</p>
+  <h3 style="position: relative; z-index: 1; margin: 0 0 20px; hyphens: auto; overflow-wrap: break-word;">Online-Bürgerbeteiligung – Chancen und Herausforderungen</h3>
+
+  <div style="position: relative; z-index: 1; margin: 0 0 24px;">
+    <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 12px;">
+      <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: #047857; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-thumbs-up" aria-hidden="true" style="font-size: 18px;"></i></span>
+      <h4 style="flex: 1 1 auto; min-width: 0; margin: 0; hyphens: auto; overflow-wrap: break-word;">Vorteile</h4>
     </div>
+    <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px;">
 
-    <ul style="display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none;">
-      <li style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 18px 20px; border: 1px solid rgba(255,255,255,0.85); border-left: 4px solid #059669;">
-        <div style="display: flex; align-items: flex-start;">
-          <div style="width: 6px; height: 6px; border-radius: 50%; background: #059669; flex-shrink: 0; margin-top: 8px; margin-right: 12px;"></div>
-          <div>
-            <span style="font-size: 15px; font-weight: 600; color: #1a202c; line-height: 1.6;">Niedrige Teilnahmehürde</span>
-            <p style="font-size: 14px; color: #4b5563; margin: 4px 0 0 0; line-height: 1.7;">Bürger:innen können jederzeit und von überall teilnehmen – ohne Anfahrt oder feste Termine.</p>
-          </div>
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #047857; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+        <i class="fas fa-check" aria-hidden="true" style="flex: 0 0 auto; font-size: 16px; color: #047857; margin: 5px 0 0;"></i>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 0;">Niedrige Teilnahmehürde</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 2px 0 0;">Bürger:innen können jederzeit und von überall teilnehmen – ohne Anfahrt oder feste Termine.</p>
         </div>
       </li>
 
-      <li style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 18px 20px; border: 1px solid rgba(255,255,255,0.85); border-left: 4px solid #059669;">
-        <div style="display: flex; align-items: flex-start;">
-          <div style="width: 6px; height: 6px; border-radius: 50%; background: #059669; flex-shrink: 0; margin-top: 8px; margin-right: 12px;"></div>
-          <div>
-            <span style="font-size: 15px; font-weight: 600; color: #1a202c; line-height: 1.6;">Breitere Zielgruppen</span>
-            <p style="font-size: 14px; color: #4b5563; margin: 4px 0 0 0; line-height: 1.7;">Auch jüngere Zielgruppen, Berufstätige und mobilitätseingeschränkte Personen werden erreicht.</p>
-          </div>
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #047857; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+        <i class="fas fa-check" aria-hidden="true" style="flex: 0 0 auto; font-size: 16px; color: #047857; margin: 5px 0 0;"></i>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 0;">Breitere Zielgruppen</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 2px 0 0;">Auch jüngere Zielgruppen, Berufstätige und mobilitätseingeschränkte Personen werden erreicht.</p>
         </div>
       </li>
 
-      <li style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 18px 20px; border: 1px solid rgba(255,255,255,0.85); border-left: 4px solid #059669;">
-        <div style="display: flex; align-items: flex-start;">
-          <div style="width: 6px; height: 6px; border-radius: 50%; background: #059669; flex-shrink: 0; margin-top: 8px; margin-right: 12px;"></div>
-          <div>
-            <span style="font-size: 15px; font-weight: 600; color: #1a202c; line-height: 1.6;">Transparente Dokumentation</span>
-            <p style="font-size: 14px; color: #4b5563; margin: 4px 0 0 0; line-height: 1.7;">Alle Beiträge werden automatisch erfasst und sind dauerhaft für die Öffentlichkeit einsehbar.</p>
-          </div>
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #047857; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+        <i class="fas fa-check" aria-hidden="true" style="flex: 0 0 auto; font-size: 16px; color: #047857; margin: 5px 0 0;"></i>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 0;">Transparente Dokumentation</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 2px 0 0;">Alle Beiträge werden automatisch erfasst und sind dauerhaft für die Öffentlichkeit einsehbar.</p>
         </div>
       </li>
 
-      <li style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 18px 20px; border: 1px solid rgba(255,255,255,0.85); border-left: 4px solid #059669;">
-        <div style="display: flex; align-items: flex-start;">
-          <div style="width: 6px; height: 6px; border-radius: 50%; background: #059669; flex-shrink: 0; margin-top: 8px; margin-right: 12px;"></div>
-          <div>
-            <span style="font-size: 15px; font-weight: 600; color: #1a202c; line-height: 1.6;">Skalierbarkeit</span>
-            <p style="font-size: 14px; color: #4b5563; margin: 4px 0 0 0; line-height: 1.7;">Hunderte oder tausende Teilnehmende gleichzeitig – ohne Raum- oder Kapazitätsgrenzen.</p>
-          </div>
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #047857; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+        <i class="fas fa-check" aria-hidden="true" style="flex: 0 0 auto; font-size: 16px; color: #047857; margin: 5px 0 0;"></i>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 0;">Skalierbarkeit</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 2px 0 0;">Hunderte oder tausende Teilnehmende gleichzeitig – ohne Raum- oder Kapazitätsgrenzen.</p>
         </div>
       </li>
+
     </ul>
   </div>
 
-  <!-- Herausforderungen section -->
-  <div>
-    <div style="display: flex; align-items: center; margin-bottom: 14px;">
-      <span style="font-size: 11px; font-weight: 700; color: #b91c1c; text-transform: uppercase; letter-spacing: 0.08em; background: rgba(185,28,28,0.06); border: 1px solid rgba(185,28,28,0.12); border-radius: 4px; padding: 5px 14px;">Herausforderungen</span>
+  <div style="position: relative; z-index: 1;">
+    <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 12px;">
+      <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: #b91c1c; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-exclamation" aria-hidden="true" style="font-size: 18px;"></i></span>
+      <h4 style="flex: 1 1 auto; min-width: 0; margin: 0; hyphens: auto; overflow-wrap: break-word;">Herausforderungen</h4>
     </div>
+    <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px;">
 
-    <ul style="display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none;">
-      <li style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 18px 20px; border: 1px solid rgba(255,255,255,0.85); border-left: 4px solid #b91c1c;">
-        <div style="display: flex; align-items: flex-start;">
-          <div style="width: 6px; height: 6px; border-radius: 50%; background: #b91c1c; flex-shrink: 0; margin-top: 8px; margin-right: 12px;"></div>
-          <div>
-            <span style="font-size: 15px; font-weight: 600; color: #1a202c; line-height: 1.6;">Digitale Kluft</span>
-            <p style="font-size: 14px; color: #4b5563; margin: 4px 0 0 0; line-height: 1.7;">Nicht alle Bevölkerungsgruppen haben gleichen Zugang zu digitalen Angeboten – analoge Ergänzung nötig.</p>
-          </div>
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #b91c1c; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+        <i class="fas fa-exclamation-circle" aria-hidden="true" style="flex: 0 0 auto; font-size: 16px; color: #b91c1c; margin: 5px 0 0;"></i>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 0;">Digitale Kluft</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 2px 0 0;">Nicht alle Bevölkerungsgruppen haben gleichen Zugang zu digitalen Angeboten – analoge Ergänzung nötig.</p>
         </div>
       </li>
 
-      <li style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 18px 20px; border: 1px solid rgba(255,255,255,0.85); border-left: 4px solid #b91c1c;">
-        <div style="display: flex; align-items: flex-start;">
-          <div style="width: 6px; height: 6px; border-radius: 50%; background: #b91c1c; flex-shrink: 0; margin-top: 8px; margin-right: 12px;"></div>
-          <div>
-            <span style="font-size: 15px; font-weight: 600; color: #1a202c; line-height: 1.6;">Fehlende Diskussionstiefe</span>
-            <p style="font-size: 14px; color: #4b5563; margin: 4px 0 0 0; line-height: 1.7;">Online-Formate erreichen selten die gleiche Deliberationsqualität wie moderierte Präsenz-Workshops.</p>
-          </div>
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #b91c1c; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+        <i class="fas fa-exclamation-circle" aria-hidden="true" style="flex: 0 0 auto; font-size: 16px; color: #b91c1c; margin: 5px 0 0;"></i>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 0;">Fehlende Diskussionstiefe</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 2px 0 0;">Online-Formate erreichen selten die gleiche Deliberationsqualität wie moderierte Präsenz-Workshops.</p>
         </div>
       </li>
 
-      <li style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 18px 20px; border: 1px solid rgba(255,255,255,0.85); border-left: 4px solid #b91c1c;">
-        <div style="display: flex; align-items: flex-start;">
-          <div style="width: 6px; height: 6px; border-radius: 50%; background: #b91c1c; flex-shrink: 0; margin-top: 8px; margin-right: 12px;"></div>
-          <div>
-            <span style="font-size: 15px; font-weight: 600; color: #1a202c; line-height: 1.6;">Aktivierungsaufwand</span>
-            <p style="font-size: 14px; color: #4b5563; margin: 4px 0 0 0; line-height: 1.7;">Ohne gezielte Öffentlichkeitsarbeit bleibt die Beteiligung oft hinter den Erwartungen zurück.</p>
-          </div>
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #b91c1c; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+        <i class="fas fa-exclamation-circle" aria-hidden="true" style="flex: 0 0 auto; font-size: 16px; color: #b91c1c; margin: 5px 0 0;"></i>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 0;">Aktivierungsaufwand</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 2px 0 0;">Ohne gezielte Öffentlichkeitsarbeit bleibt die Beteiligung oft hinter den Erwartungen zurück.</p>
         </div>
       </li>
+
     </ul>
   </div>
 

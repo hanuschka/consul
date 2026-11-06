@@ -24,7 +24,7 @@ RSpec.describe 'Idea Officers API', type: :request, openapi_spec: 'v1/swagger.ya
       tags 'Idea Officers'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a paginated list of all idea officers.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a paginated list of all idea officers. Officer names and user ids are only returned to admin clients; email addresses are never returned. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
 

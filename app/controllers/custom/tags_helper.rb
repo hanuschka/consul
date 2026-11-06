@@ -4,7 +4,15 @@ module TagsHelper
   def taggables_path(taggable_type, tag_name)
     selected_tags = ::Tags::ToggleSelectionService.call(params[:tags], tag_name)
 
-    updated_params = params.merge({tags: selected_tags}).permit(
+    taggables_index_path(taggable_type, params.merge({tags: selected_tags}))
+  end
+
+  def taggables_filter_base_path(taggable_type)
+    taggables_index_path(taggable_type, params.except(:tags))
+  end
+
+  def taggables_index_path(taggable_type, filter_params)
+    updated_params = filter_params.permit(
       :tags, :geozone_affiliation, :geozone_restriction, :affiliated_districts, :restricted_geozones,
       :sdg_goals, :sdg_targets,
       :order,

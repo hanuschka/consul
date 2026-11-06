@@ -42,6 +42,21 @@ describe Adm::DeficiencyReports::DeficiencyReportPolicy do
       expect(policy.toggle_watch?).to be(true)
       expect(policy.unwatch?).to be(true)
     end
+
+    it "denies changing, watching and sharing a deleted report but still allows viewing it" do
+      report.destroy
+      policy = policy_for(user)
+
+      expect(policy.show?).to be(true)
+      expect(policy.audits?).to be(true)
+      expect(policy.feedback_form?).to be(true)
+      expect(policy.edit?).to be(false)
+      expect(policy.update?).to be(false)
+      expect(policy.destroy?).to be(false)
+      expect(policy.accept?).to be(false)
+      expect(policy.toggle_watch?).to be(false)
+      expect(policy.share?).to be(false)
+    end
   end
 
   context "with an officer" do

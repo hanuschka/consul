@@ -13,9 +13,9 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     check_read_access!
     budget_investments = if @budget.present?
       @budget.investments.includes(
-        :author,
         :heading,
         :map_location,
+        author: :organization,
         budget: {
           projekt_phase: [:settings, :projekt],
           group: :heading
@@ -23,9 +23,9 @@ class Api::Budgets::InvestmentsController < Api::BaseController
       )
     else
       Budget::Investment.includes(
-        :author,
         :heading,
         :map_location,
+        author: :organization,
         budget: {
           projekt_phase: [:settings, :projekt],
           group: :heading
@@ -39,7 +39,9 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     budget_investments = apply_sorting(budget_investments)
 
     serialized_budget_investments = BudgetInvestmentSerializer.serialize_collection(
-      budget_investments, hide_unpublished_selection: hide_unpublished_selection?
+      budget_investments,
+      client: current_client,
+      hide_unpublished_selection: hide_unpublished_selection?
     )
 
     render json: {
@@ -51,7 +53,9 @@ class Api::Budgets::InvestmentsController < Api::BaseController
   def show
     check_read_access!
     serialized_budget_investment = BudgetInvestmentSerializer.new(
-      @budget_investment, hide_unpublished_selection: hide_unpublished_selection?
+      @budget_investment,
+      client: current_client,
+      hide_unpublished_selection: hide_unpublished_selection?
     ).serialize
 
     render json: { data: { budget_investment: serialized_budget_investment } }
@@ -63,10 +67,11 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     budget_investment = @budget.investments.new(budget_investment_params)
     budget_investment.author = @current_client.content_author
     budget_investment.resource_terms = true
+    assign_document_authors(budget_investment)
 
     if budget_investment.save
       process_image_with_base64(budget_investment, params[:budget_investment][:image_attributes])
-      serialized_budget_investment = BudgetInvestmentSerializer.new(budget_investment).serialize
+      serialized_budget_investment = BudgetInvestmentSerializer.new(budget_investment, client: current_client).serialize
 
       render json: { data: { budget_investment: serialized_budget_investment } }, status: 201
     else
@@ -77,6 +82,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
   def update
     check_admin_access!
     @budget_investment.assign_attributes(budget_investment_params)
+    assign_document_authors(@budget_investment)
 
     if @budget_investment.save
       process_image_with_base64(@budget_investment, params[:budget_investment][:image_attributes])
@@ -85,7 +91,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
         @budget_investment.send_feasibility_email
       end
 
-      serialized_budget_investment = BudgetInvestmentSerializer.new(@budget_investment).serialize
+      serialized_budget_investment = BudgetInvestmentSerializer.new(@budget_investment, client: current_client).serialize
 
       render json: { data: { budget_investment: serialized_budget_investment } }
     else
@@ -119,7 +125,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
       :selected,
       :visible_to_valuators,
       map_location_attributes: map_location_attributes,
-      documents_attributes: document_attributes,
+      documents_attributes: document_attributes_api,
       tag_list: []
     )
   end

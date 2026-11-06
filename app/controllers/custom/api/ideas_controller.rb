@@ -10,12 +10,12 @@ class Api::IdeasController < Api::BaseController
 
   def index
     check_read_access!
-    ideas = paginate(Idea.accepted.includes(:author, :category, :map_location))
+    ideas = paginate(Idea.accepted.includes(:category, :map_location, author: :organization))
 
     ideas = apply_filters(ideas)
     ideas = apply_sorting(ideas)
 
-    serialized_ideas = IdeaSerializer.serialize_collection(ideas)
+    serialized_ideas = IdeaSerializer.serialize_collection(ideas, client: current_client)
 
     render json: {
       data: { ideas: serialized_ideas },
@@ -25,7 +25,7 @@ class Api::IdeasController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_idea = IdeaSerializer.new(@idea).serialize
+    serialized_idea = IdeaSerializer.new(@idea, client: current_client).serialize
 
     render json: { data: { idea: serialized_idea } }
   end
@@ -35,12 +35,13 @@ class Api::IdeasController < Api::BaseController
     idea = Idea.new(idea_params)
     idea.author = @current_client.content_author
     idea.resource_terms = true
+    assign_document_authors(idea)
 
     idea.officer = idea.get_default_officer if idea.respond_to?(:get_default_officer)
 
     if idea.save
       process_image_with_base64(idea, params[:idea][:image_attributes])
-      serialized_idea = IdeaSerializer.new(idea).serialize
+      serialized_idea = IdeaSerializer.new(idea, client: current_client).serialize
 
       render json: { data: { idea: serialized_idea } }, status: 201
     else
@@ -55,10 +56,11 @@ class Api::IdeasController < Api::BaseController
   def update
     check_admin_access!
     @idea.assign_attributes(idea_params)
+    assign_document_authors(@idea)
 
     if @idea.save
       process_image_with_base64(@idea, params[:idea][:image_attributes])
-      serialized_idea = IdeaSerializer.new(@idea).serialize
+      serialized_idea = IdeaSerializer.new(@idea, client: current_client).serialize
 
       render json: { data: { idea: serialized_idea } }
     else
@@ -81,7 +83,7 @@ class Api::IdeasController < Api::BaseController
       :video_url,
       :on_behalf_of,
       map_location_attributes: map_location_attributes,
-      documents_attributes: document_attributes
+      documents_attributes: document_attributes_api
     )
   end
 

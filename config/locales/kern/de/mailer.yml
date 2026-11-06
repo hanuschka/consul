@@ -1,5 +1,11 @@
 de:
   mailer:
+    recipient_greeting:
+      informal: "Hallo %{name}"
+      neutral: "Guten Tag %{name}"
+      formal_male: "Sehr geehrter Herr %{last_name}"
+      formal_female: "Sehr geehrte Frau %{last_name}"
+      without_name: "Guten Tag"
     budget_investment_created:
       title: Bestätigung nach Einreichung
       description: 'Wird in der Budget-Phase „Investitionsvorschläge einreichen" (2. Phase) an den Autor gesendet, sobald sein Bürgervorschlag erfolgreich eingereicht wurde.'
@@ -41,10 +47,10 @@ de:
       description: Wird an eingeloggte Nutzer gesendet, wenn sie ein Formular erfolgreich ausgefüllt und abgesendet haben.
       recipient: Der eingeloggte Nutzer, der das Formular abgesendet hat (an die im Konto hinterlegte E-Mail-Adresse).
     comment:
-      title: Neuer Kommentar
+      title: "Kommentar zum eigenen Beitrag"
       description: Wird an den Autor gesendet, wenn jemand einen Kommentar zu seinem Beitrag geschrieben hat.
     reply:
-      title: Neue Antwort auf Kommentar
+      title: "Antwort auf den eigenen Kommentar"
       description: Wird an den Kommentarautor gesendet, wenn jemand auf seinen Kommentar geantwortet hat.
     direct_message_for_receiver:
       title: Neue Direktnachricht
@@ -95,9 +101,13 @@ de:
       description: Wird an Abonnenten gesendet, wenn eine neue Abstimmung erstellt wurde.
       recipient: Alle Nutzer, die das Projekt abonniert haben.
     new_comment:
-      title: Benachrichtigung über neuen Kommentar
-      description: Wird an Abonnenten gesendet, wenn ein neuer Kommentar geschrieben wurde.
-      recipient: Alle Nutzer, die das Projekt abonniert haben.
+      title: "Neuer Kommentar in der Kommentarphase"
+      description: "Wird gesendet, wenn ein neuer Kommentar direkt in dieser Kommentarphase geschrieben wurde."
+      recipient: "Administratoren und Projektmanager, die Benachrichtigungen über neue Kommentare aktiviert haben, sowie die Abonnenten dieser Phase."
+    new_contribution_comment:
+      title: "Neuer Kommentar zu einem Beitrag"
+      description: "Wird gesendet, wenn ein neuer Kommentar zu einem Vorschlag, einer Idee oder einem anderen Beitrag geschrieben wurde. Für Kommentare direkt in einer Kommentarphase gilt die Vorlage „Neuer Kommentar in der Kommentarphase“ in den E-Mail-Vorlagen dieser Phase."
+      recipient: Administratoren und Projektmanager, die Benachrichtigungen über neue Kommentare aktiviert haben, sowie die Abonnenten der Phase, zu der der Beitrag gehört.
     projekt_questions:
       title: Benachrichtigung über neue Kurzumfrage
       description: Wird an Abonnenten gesendet, wenn eine neue Kurzumfrage erstellt wurde.

@@ -42,14 +42,12 @@ de:
     budget_investment_created:
       subject: "Danke, dass Sie einen Budgetvorschlag erstellt haben!"
       title: "Danke, dass Sie einen Budgetvorschlag erstellt haben!"
-      intro: "Hallo <strong>%{author}</strong>,"
       text: "Vielen Dank, dass Sie einen Budgetvorschlag <strong>%{investment}</strong> für den Bürgerhaushalt erstellt haben <strong>%{budget}</strong>."
       follow: "Wir werden Sie über den Fortgang des Prozesses informieren, dem Sie auch über folgenden <strong>%{link}</strong> folgen können."
       follow_link: "Bürgerhaushalte"
       sincerely: "Mit freundlichen Grüßen,"
       share: "Teilen Sie Ihr Projekt"
     budget_investment_unfeasible:
-      hi: "Liebe*r Benutzer*in,"
       new: "Hierfür laden wir Sie ein, eine <strong>neue Investition</strong> auszuarbeiten, die an die Konditionen dieses Prozesses angepasst sind. Sie können dies über folgenden Link tun: %{url}."
       new_href: "neuer Ausgabenvorschlag"
       sincerely: "Mit freundlichen Grüßen"
@@ -57,20 +55,17 @@ de:
       subject: "Ihr Ausgabenvorschlag '%{code}' wurde als undurchführbar markiert"
     budget_investment_selected:
       subject: "Ihr Investitionsprojekt %{code} wurde ausgewählt"
-      hi: "Liebe*r Benutzer*in,"
       share: "Fangen Sie an Stimmen zu bekommen, indem sie Ihr Investitionsprojekt auf sozialen Netzwerken teilen. Teilen ist wichtig, um Ihr Projekt zu verwirklichen."
       share_button: "Teilen Sie Ihr Investitionsprojekt"
       thanks: "Vielen Dank für Ihre Teilnahme."
       sincerely: "Mit freundlichen Grüßen"
     budget_investment_unselected:
       subject: "Ihr Investitionsprojekt %{code} wurde nicht ausgewählt"
-      hi: "Liebe*r Benutzer*in,"
       thanks: "Vielen Dank für Ihre Teilnahme."
       sincerely: "Mit freundlichen Grüßen"
     evaluation_comment:
       subject: "Neuer Bewertungs-Kommentar"
       title: Neuer Bewertungs-Kommentar für %{investment}
-      hi: Hallo
       new_comment_by: Es gibt einen neuen Bewertungs-Kommentar <strong>%{commenter}</strong> für den Bürgerhaushalt %{investment}
       commenter_info: "%{commenter}, %{time}:"
     new_actions_notification_rake_created:
@@ -114,7 +109,7 @@ de:
       dashboard_button: "Nur zu, es gibt viel zu entdecken!"
     new_actions_notification_on_published:
       subject: "Ihr Bürger-Vorschlag ist bereits veröffentlicht. Hören Sie nicht auf, es zu verbreiten!"
-      hi: "Glückwunsch %{name}! Ihr Vorschlag %{title} wurde erfolgreich angelegt."
+      hi: "Glückwunsch! Ihr Vorschlag %{title} wurde erfolgreich angelegt."
       text_1: "Und jetzt, auf zu den ersten 100 Unterstützungen!"
       text_2: "Warum 100?"
       text_3: "Unsere Erfahrung zeigt uns, dass der erste Tag von grundlegender Bedeutung ist. Denn zu der Energie, etwas Neues auf den Weg zu bringen, kommt die Möglichkeit größerer Sichtbarkeit, da Sie unter den neuen Vorschlägen zu sehen sind."

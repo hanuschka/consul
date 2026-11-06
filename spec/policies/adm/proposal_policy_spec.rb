@@ -28,6 +28,20 @@ describe Adm::ProposalPolicy do
     end
   end
 
+  describe "#update_official_answer?" do
+    it "is true for a projekt manager with 'manage' permission" do
+      expect(policy_for(scoped_manager(permissions: ["manage"])).update_official_answer?).to be true
+    end
+
+    it "is true for a projekt manager with only 'approve' permission" do
+      expect(policy_for(scoped_manager(permissions: ["approve"])).update_official_answer?).to be true
+    end
+
+    it "is false for a projekt manager with only 'moderate' permission" do
+      expect(policy_for(scoped_manager(permissions: ["moderate"])).update_official_answer?).to be false
+    end
+  end
+
   describe "#show?" do
     it "is true for a projekt manager with only 'approve' permission" do
       expect(policy_for(scoped_manager(permissions: ["approve"])).show?).to be true

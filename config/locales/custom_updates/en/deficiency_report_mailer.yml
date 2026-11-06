@@ -4,8 +4,6 @@ en:
       mailers:
         management_report:
           subject: "Report \"%{name}\" up to %{period_end}"
-          hi: "Hello %{username},"
-          hi_without_name: Hello,
           intro: "attached is the report \"%{name}\" on deficiency reports for the period %{period}."
           figures_title: Key figures
           attachment_hint: The full report with all sections is attached as a PDF.
@@ -14,31 +12,26 @@ en:
           internal_notice: This report is for internal use only.
         closing: Best regards
         signature: Your team
-        contact_info: With any qustions please contact us at <a href="mailto:%{email}">%{email}</a>
+        contact_info: If you have any questions, please contact us at <a href="mailto:%{email}">%{email}</a>
         unwatch_hint: "No longer want notifications about this report?"
         unwatch_link_text: Unsubscribe from notifications for this report
         notify_shared_report:
           subject: A report was shared with you %{identifier}
-          hi: "Hello %{username},"
           p1: "a report has been shared with you:"
-          p1_by: "%{name} shared a report with you:"
+          p1_by: "%{shared_by_name} shared a report with you:"
           p2: You will now receive notifications about changes to this report.
         notify_watcher_about_change:
           subject: Change to a report you are watching %{identifier}
-          hi: "Hello %{username},"
           p1: "there has been a change to a report you are watching:"
           current_status: "Current status:"
         notify_author_about_status_change:
           subject: Status change of your deficiency report
-          hi: Hi
           p1: Status of your a deficiency report you submitted earlier, was changed.
         notify_author_about_official_answer:
           subject: Official answer to your report
-          hi: "Hello %{username},"
           p1: "there is an official answer to your report:"
         notify_officer:
           subject: New deficiency report %{identifier}
-          hi: Dear Officer,
           p1: Admin has assigned you one of the new deficiency reports.
           adm_page: "To process the report, use the following link:"
           adm_page_link_text: Open report in the administration area
@@ -46,11 +39,10 @@ en:
           public_page_link_text: Public page
         notify_author_about_submission:
           subject: Confirmation of your report
-          hi: "Dear %{username},"
-          p1: "thank you for your %{deficiency_report_link}. Your submission has been successfully received."
+          p1: "thank you for your %{deficiency_report_url}. Your submission has been successfully received."
           deficiency_report_link_text: deficiency report
           p2_pending_review: "Please note that your report is <strong>not yet publicly visible</strong>. Our team will review the content before it can be approved and published."
           p2_published: "Your report is now publicly visible."
           p3: "You will automatically receive an email as soon as the status of your report changes."
-          p4: "In your %{account_link} you can track which submissions you have made at any time."
+          p4: "In your %{account_url} you can track which submissions you have made at any time."
           account_link_text: user account

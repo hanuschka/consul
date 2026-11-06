@@ -25,6 +25,10 @@ module Consul
     # until the app runs a patched Rails
     config.active_storage.variant_processor = :mini_magick
 
+    # Keep allowing the saver and loader options the variant definitions
+    # use; Rails 7.1 dropped them from the supported transformations
+    config.active_storage.supported_image_processing_methods = %w[saver loader]
+
     # Keep resizing and serving inline the blobs stored as image/jpg or
     # image/pjpeg, which Rails 7.0 still listed
     config.active_storage.variable_content_types += %w[image/jpg image/pjpeg]
@@ -36,9 +40,6 @@ module Consul
     # URLs. Moving to SHA256 needs message-verifier rotations kept forever or
     # a rewrite of stored links; review before NIST retires SHA-1 in 2030
     config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
-
-    # Keep Net::SMTP's own open and read timeouts instead of 5 seconds
-    config.action_mailer.smtp_timeout = nil
 
     # Keep writing caches, marshalled records and messages in formats the
     # Rails 7.0 release can read, so a rollback to it keeps the cache and

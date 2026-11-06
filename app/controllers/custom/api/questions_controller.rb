@@ -16,9 +16,9 @@ class Api::QuestionsController < Api::BaseController
       end
 
       questions = @projekt_phase.questions
-        .includes(:projekt_phase, :projekt_livestream, :author)
+        .includes(:projekt_phase, :projekt_livestream, author: :organization)
     else
-      questions = ProjektQuestion.includes(:projekt_phase, :projekt_livestream, :author)
+      questions = ProjektQuestion.includes(:projekt_phase, :projekt_livestream, author: :organization)
 
       if current_client.public_data?
         questions = questions.joins(:projekt_phase)
@@ -29,7 +29,7 @@ class Api::QuestionsController < Api::BaseController
 
     questions = paginate(questions.order(created_at: :asc))
 
-    serialized_questions = QuestionSerializer.serialize_collection(questions)
+    serialized_questions = QuestionSerializer.serialize_collection(questions, client: current_client)
 
     render json: {
       data: { questions: serialized_questions },
@@ -54,7 +54,7 @@ class Api::QuestionsController < Api::BaseController
     projekt_question.author = current_client.content_author
 
     if projekt_question.save
-      serialized_projekt_question = QuestionSerializer.new(projekt_question).serialize
+      serialized_projekt_question = QuestionSerializer.new(projekt_question, client: current_client).serialize
 
       render json: { data: { projekt_question: serialized_projekt_question } }, status: 201
     else
@@ -64,7 +64,7 @@ class Api::QuestionsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_projekt_question = QuestionSerializer.new(@projekt_question).serialize
+    serialized_projekt_question = QuestionSerializer.new(@projekt_question, client: current_client).serialize
 
     render json: { data: { projekt_question: serialized_projekt_question } }
   end
@@ -89,7 +89,7 @@ class Api::QuestionsController < Api::BaseController
       end
       render json: { error: { messages: all_errors } }, status: 422
     else
-      serialized_projekt_question = QuestionSerializer.new(@projekt_question).serialize
+      serialized_projekt_question = QuestionSerializer.new(@projekt_question, client: current_client).serialize
 
       render json: { data: { projekt_question: serialized_projekt_question } }
     end

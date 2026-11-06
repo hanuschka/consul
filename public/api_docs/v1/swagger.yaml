@@ -1177,7 +1177,9 @@ paths:
                       nullable: true
                       description: Array of document attachments (PDFs, Word docs,
                         spreadsheets, etc.) to support the investment proposal. Upload
-                        documents as base64-encoded data.
+                        documents as base64-encoded data. New documents are attributed
+                        to the content author of the API client; the author cannot
+                        be set or changed via the API.
                       items:
                         type: object
                         properties:
@@ -1195,9 +1197,6 @@ paths:
                               formats: PDF, DOC, DOCX, XLS, XLSX, etc.'
                           cached_attachment:
                             type: string
-                            nullable: true
-                          user_id:
-                            type: integer
                             nullable: true
                           _destroy:
                             type: boolean
@@ -1568,7 +1567,9 @@ paths:
                       nullable: true
                       description: Update document attachments. Add new documents,
                         update existing ones (provide id), or remove documents (set
-                        _destroy=true).
+                        _destroy=true). New documents are attributed to the content
+                        author of the API client; the author cannot be set or changed
+                        via the API.
                       items:
                         type: object
                         properties:
@@ -1588,9 +1589,6 @@ paths:
                               formats: PDF, DOC, DOCX, XLS, XLSX, etc.'
                           cached_attachment:
                             type: string
-                            nullable: true
-                          user_id:
-                            type: integer
                             nullable: true
                           _destroy:
                             type: boolean
@@ -2762,8 +2760,9 @@ paths:
       description: "Retrieve all root-level comments for a projekt phase. Comments
         support nested replies (children). Returns paginated results with comment
         hierarchy information. Can be filtered by phase to see all discussion within
-        that phase. \n\n*Authorization: Available to both `admin` and `public_data`
-        access levels.*"
+        that phase. Internal valuation comments are only returned to admin clients,
+        marked with internal: true. \n\n*Authorization: Available to both `admin`
+        and `public_data` access levels.*"
       parameters:
       - name: sort
         in: query
@@ -2954,8 +2953,10 @@ paths:
       - bearer_auth: []
       description: "Retrieve all comments across all projekt phases. Returns a paginated
         list of root-level comments from all phases. Useful for moderation, analytics,
-        and global discussion oversight. \n\n*Authorization: Available to both `admin`
-        and `public_data` access levels.*"
+        and global discussion oversight. Read-only clients only get comments on projekt
+        phases that are visible and active. Internal valuation comments are only returned
+        to admin clients, marked with internal: true. \n\n*Authorization: Available
+        to both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -3023,7 +3024,10 @@ paths:
       description: "Retrieve a comment by ID. The response includes: (1) parent_comment
         reference if this comment is a reply, (2) child_comments array containing
         all direct replies to this comment. This enables clients to reconstruct the
-        full comment thread hierarchy. \n\n*Authorization: Available to both `admin`
+        full comment thread hierarchy. user_id, also on parent_comment, is only returned
+        to admin clients. Read-only clients get 404 for an internal valuation comment
+        and for any comment that is not on a visible, active projekt phase, and never
+        see internal replies or parents. \n\n*Authorization: Available to both `admin`
         and `public_data` access levels.*"
       responses:
         '200':
@@ -3219,9 +3223,11 @@ paths:
       - bearer_auth: []
       description: "Retrieve a paginated list of deficiency reports (citizen-reported
         maintenance/repair issues). Reports include location data, category, status,
-        and author information. Useful for public issue tracking and municipal maintenance
-        prioritization. \n\n*Authorization: Available to both `admin` and `public_data`
-        access levels.*"
+        and the author's public name (null when the author hid their activity). Admin
+        clients additionally get author_id, on_behalf_of, the responsible officer
+        or group and reporter_answer, and can filter by author_id. Useful for public
+        issue tracking and municipal maintenance prioritization. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -3357,9 +3363,6 @@ paths:
                 deficiency_report:
                   type: object
                   properties:
-                    author_id:
-                      type: integer
-                      nullable: true
                     deficiency_report_category_id:
                       type: integer
                     deficiency_report_status_id:
@@ -3398,12 +3401,17 @@ paths:
                     responsible_id:
                       type: integer
                       nullable: true
-                      description: ID of the responsible party (user or organization)
-                        assigned to address this deficiency
+                      description: ID of the officer or officer group assigned to
+                        address this deficiency
                     responsible_type:
                       type: string
                       nullable: true
-                      description: Type of responsible party (e.g., "User", "Organization")
+                      enum:
+                      - DeficiencyReport::Officer
+                      - DeficiencyReport::OfficerGroup
+                      description: Type of the responsible party. Only officers and
+                        officer groups can be made responsible; any other type, or
+                        an id that does not exist, is rejected with 422.
                     tag_list:
                       type: string
                       nullable: true
@@ -3520,7 +3528,9 @@ paths:
       security:
       - bearer_auth: []
       description: "Retrieve a single deficiency report by ID with all its details.
-        \n\n*Authorization: Available to both `admin` and `public_data` access levels.*"
+        Read-only clients get 404 for a report an admin has not accepted yet; admin
+        clients get it, plus the admin-only fields listed on the index. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: deficiency report found
@@ -3679,12 +3689,17 @@ paths:
                     responsible_id:
                       type: integer
                       nullable: true
-                      description: ID of the responsible party (user or organization)
-                        assigned to address this deficiency
+                      description: ID of the officer or officer group assigned to
+                        address this deficiency
                     responsible_type:
                       type: string
                       nullable: true
-                      description: Type of responsible party (e.g., "User", "Organization")
+                      enum:
+                      - DeficiencyReport::Officer
+                      - DeficiencyReport::OfficerGroup
+                      description: Type of the responsible party. Only officers and
+                        officer groups can be made responsible; any other type, or
+                        an id that does not exist, is rejected with 422.
                     tag_list:
                       type: string
                       nullable: true
@@ -5337,10 +5352,10 @@ paths:
       - Idea Officers
       security:
       - bearer_auth: []
-      description: |-
-        Retrieve a paginated list of all idea officers.
-
-        *Authorization: Available to both `admin` and `public_data` access levels.*
+      description: "Retrieve a paginated list of all idea officers. Officer names
+        and user ids are only returned to admin clients; email addresses are never
+        returned. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
       parameters:
       - name: page
         in: query
@@ -5647,7 +5662,9 @@ paths:
                       nullable: true
                       description: Array of document attachments (PDFs, Word docs,
                         spreadsheets, etc.) to support the idea. Upload documents
-                        as base64-encoded data.
+                        as base64-encoded data. New documents are attributed to the
+                        content author of the API client; the author cannot be set
+                        or changed via the API.
                       items:
                         type: object
                         properties:
@@ -5665,9 +5682,6 @@ paths:
                               formats: PDF, DOC, DOCX, XLS, XLSX, etc.'
                           cached_attachment:
                             type: string
-                            nullable: true
-                          user_id:
-                            type: integer
                             nullable: true
                           _destroy:
                             type: boolean
@@ -5879,7 +5893,9 @@ paths:
                       nullable: true
                       description: Update document attachments. Add new documents,
                         update existing ones (provide id), or remove documents (set
-                        _destroy=true).
+                        _destroy=true). New documents are attributed to the content
+                        author of the API client; the author cannot be set or changed
+                        via the API.
                       items:
                         type: object
                         properties:
@@ -5899,9 +5915,6 @@ paths:
                               formats: PDF, DOC, DOCX, XLS, XLSX, etc.'
                           cached_attachment:
                             type: string
-                            nullable: true
-                          user_id:
-                            type: integer
                             nullable: true
                           _destroy:
                             type: boolean
@@ -8544,8 +8557,10 @@ paths:
       security:
       - bearer_auth: []
       description: "Create a new point of interest pin on the map. Pins mark specific
-        locations with descriptions and categories. \n\n*Authorization: Requires `admin`
-        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
+        locations with descriptions and categories. The pin is attributed to the content
+        author of the API client; the author cannot be set or changed via the API.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '201':
@@ -8619,9 +8634,6 @@ paths:
                 projekt_point_of_interest_pin:
                   type: object
                   properties:
-                    author_id:
-                      type: integer
-                      nullable: true
                     projekt_point_of_interest_category_id:
                       type: integer
                       nullable: true
@@ -8849,9 +8861,6 @@ paths:
                 projekt_point_of_interest_pin:
                   type: object
                   properties:
-                    author_id:
-                      type: integer
-                      nullable: true
                     projekt_point_of_interest_category_id:
                       type: integer
                       nullable: true
@@ -11420,7 +11429,8 @@ paths:
       - bearer_auth: []
       description: "Retrieve a single projekt phase by ID with all its configuration
         details. Returns the phase type, active status, dates, visibility settings,
-        restrictions (geozone, age range, user status), and all settings. \n\n*Authorization:
+        restrictions (geozone, age range, user status), and all settings. The author_id
+        of nested questions and pins is only returned to admin clients. \n\n*Authorization:
         Available to both `admin` and `public_data` access levels.*"
       responses:
         '200':
@@ -13236,7 +13246,9 @@ paths:
                     documents_attributes:
                       type: array
                       nullable: true
-                      description: Array of document attachments
+                      description: Array of document attachments. New documents are
+                        attributed to the content author of the API client; the author
+                        cannot be set or changed via the API.
                       items:
                         type: object
                         properties:
@@ -13251,9 +13263,6 @@ paths:
                             nullable: true
                           cached_attachment:
                             type: string
-                            nullable: true
-                          user_id:
-                            type: integer
                             nullable: true
                           _destroy:
                             type: boolean
@@ -13662,7 +13671,9 @@ paths:
                     documents_attributes:
                       type: array
                       nullable: true
-                      description: Array of document attachments
+                      description: Array of document attachments. New documents are
+                        attributed to the content author of the API client; the author
+                        cannot be set or changed via the API.
                       items:
                         type: object
                         properties:
@@ -13677,9 +13688,6 @@ paths:
                             nullable: true
                           cached_attachment:
                             type: string
-                            nullable: true
-                          user_id:
-                            type: integer
                             nullable: true
                           _destroy:
                             type: boolean
@@ -14730,7 +14738,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve all texts/legislation documents for a projekt phase. Texts support multi-phase review processes: draft publication, debate period, and allegations/amendments period.
+        Retrieve the text drafts of a text participation (legislation) phase, oldest first. Each draft carries its title, changelog, text (Markdown `body` plus the rendered `body_html`) and status. Clients with `public_data` access only receive published drafts, and only for phases that are active and visible in the frontend; other phases return 403. A phase without drafts returns an empty list.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -14760,7 +14768,7 @@ paths:
                       texts:
                         type: array
                         items:
-                          type: object
+                          "$ref": "#/components/schemas/LegislationDraftVersion"
                     required:
                     - texts
                   pagination:
@@ -14777,6 +14785,23 @@ paths:
                 required:
                 - data
                 - pagination
+        '403':
+          description: forbidden - phase not active or not visible in the frontend
+            for public_data access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
         '401':
           description: unauthorized - missing or invalid token
           content:
@@ -15032,7 +15057,7 @@ components:
           type: string
           nullable: true
           description: A unique code used for generating preview links to the projekt
-            before publication
+            before publication. Only returned to admin clients.
           example: abc123
         page:
           type: object
@@ -16243,8 +16268,11 @@ components:
         author_id:
           type: integer
           nullable: true
-          description: ID of the user who created the idea
+          description: ID of the user who created the idea. Only returned to admin
+            clients.
           example: 42
+        author:
+          "$ref": "#/components/schemas/Author"
         admin_accepted_at:
           type: string
           format: date_time
@@ -16311,6 +16339,18 @@ components:
           type: string
           description: The name of the category
           example: Infrastructure
+        default_idea_officer:
+          type: object
+          nullable: true
+          description: Officer new ideas in this category are assigned to. Staff email
+            addresses are never returned.
+          properties:
+            id:
+              type: integer
+              description: Officer ID
+            name:
+              type: string
+              description: Officer name. Only returned to admin clients.
         created_at:
           type: string
           format: date_time
@@ -16333,15 +16373,19 @@ components:
           type: integer
           description: Unique identifier for the idea officer
           example: 1
+        user_id:
+          type: integer
+          description: ID of the officer user account. Only returned to admin clients.
+          example: 7
         name:
           type: string
-          description: The name of the idea officer or manager
+          description: The name of the idea officer or manager. Only returned to admin
+            clients. Staff email addresses are never returned.
           example: John Smith
-        email:
-          type: string
-          nullable: true
-          description: The email address of the officer
-          example: john.smith@example.com
+        ideas_count:
+          type: integer
+          description: Number of ideas assigned to the officer
+          example: 4
         created_at:
           type: string
           format: date_time
@@ -16354,7 +16398,7 @@ components:
           example: '2024-01-01T00:00:00Z'
       required:
       - id
-      - name
+      - ideas_count
       - created_at
       - updated_at
     Comment:
@@ -16371,8 +16415,17 @@ components:
         user_id:
           type: integer
           nullable: true
-          description: ID of the user who posted the comment
+          description: ID of the user who posted the comment. Only returned to admin
+            clients.
           example: 15
+        internal:
+          type: boolean
+          description: True for internal valuation comments, which are never shown
+            publicly. Only returned to admin clients., the only clients that receive
+            internal comments at all.
+          example: false
+        author:
+          "$ref": "#/components/schemas/Author"
         created_at:
           type: string
           format: date_time
@@ -16429,8 +16482,16 @@ components:
         author_id:
           type: integer
           nullable: true
-          description: ID of the user who created the proposal
+          description: ID of the user who created the proposal. Only returned to admin
+            clients.
           example: 20
+        responsible_name:
+          type: string
+          nullable: true
+          description: Name of the person or organization responsible for the proposal.
+            Only returned to admin clients.
+        author:
+          "$ref": "#/components/schemas/Author"
         created_at:
           type: string
           format: date_time
@@ -16593,8 +16654,35 @@ components:
         author_id:
           type: integer
           nullable: true
-          description: ID of the user who proposed the investment
+          description: ID of the user who proposed the investment. Only returned to
+            admin clients.
           example: 15
+        author:
+          "$ref": "#/components/schemas/Author"
+        responsible_name:
+          type: string
+          nullable: true
+          description: Name of the person responsible for the investment. Only returned
+            to admin clients.
+        administrator_id:
+          type: integer
+          nullable: true
+          description: ID of the administrator handling the investment. Only returned
+            to admin clients.
+          example: 3
+        administrator:
+          type: object
+          nullable: true
+          description: Administrator handling the investment. Only returned to admin
+            clients.
+          properties:
+            id:
+              type: integer
+              description: Administrator ID
+            name:
+              type: string
+              nullable: true
+              description: Administrator name
         price:
           type: number
           nullable: true
@@ -16657,6 +16745,14 @@ components:
           nullable: true
           description: ID of the projekt phase this question belongs to
           example: 8
+        author_id:
+          type: integer
+          nullable: true
+          description: ID of the user who asked the question. Only returned to admin
+            clients.
+          example: 15
+        author:
+          "$ref": "#/components/schemas/Author"
         created_at:
           type: string
           format: date_time
@@ -16805,6 +16901,7 @@ components:
           type: string
           nullable: true
           description: Detailed description of the deficiency
+          example: Large pothole causing safety concerns near intersection
         official_answer:
           type: string
           nullable: true
@@ -16814,12 +16911,14 @@ components:
           nullable: true
           description: Answer e-mailed to the reporter and not shown publicly; only
             returned to admin clients
-          example: Large pothole causing safety concerns near intersection
         author_id:
           type: integer
           nullable: true
-          description: ID of the user who reported the deficiency
+          description: ID of the user who reported the deficiency. Only returned to
+            admin clients.
           example: 18
+        author:
+          "$ref": "#/components/schemas/Author"
         category_id:
           type: integer
           nullable: true
@@ -16890,6 +16989,21 @@ components:
           nullable: true
           description: Description of what types of reports fit in this category
           example: Reports about roads, bridges, utilities
+        default_responsible:
+          type: object
+          nullable: true
+          description: Officer or officer group new reports in this category are assigned
+            to. Only returned to admin clients.
+          properties:
+            id:
+              type: integer
+            type:
+              type: string
+              enum:
+              - DeficiencyReport::Officer
+              - DeficiencyReport::OfficerGroup
+            name:
+              type: string
         created_at:
           type: string
           format: date_time
@@ -17133,6 +17247,14 @@ components:
           type: integer
           description: ID of the projekt phase this pin belongs to
           example: 12
+        author_id:
+          type: integer
+          nullable: true
+          description: ID of the user who created the pin. Only returned to admin
+            clients.
+          example: 15
+        author:
+          "$ref": "#/components/schemas/Author"
         created_at:
           type: string
           format: date_time
@@ -17210,6 +17332,23 @@ components:
       - projekt_phase_id
       - created_at
       - updated_at
+    Author:
+      type: object
+      description: Author of a contribution, limited to the name the public site shows
+        next to it. Real names and email addresses are never returned.
+      properties:
+        id:
+          type: integer
+          description: ID of the user. Only returned to admin clients.
+          example: 15
+        public_name:
+          type: string
+          nullable: true
+          description: 'Name shown on the site next to the contribution: the organisation
+            name or the username. Null when the author hid their activity.'
+          example: Gartenfreunde e.V.
+      required:
+      - public_name
     Iframe:
       type: object
       properties:
@@ -17347,6 +17486,69 @@ components:
                 (no resizing). Largest payload; use only when the exact source is
                 required.
               example: https://example.com/uploads/original.jpg
+    LegislationDraftVersion:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the text draft
+          example: 1
+        legislation_process_id:
+          type: integer
+          description: ID of the legislation process (one per text participation phase)
+            this draft belongs to
+          example: 7
+        title:
+          type: string
+          description: Title of the draft version
+          example: Second draft after public feedback
+        changelog:
+          type: string
+          nullable: true
+          description: What changed compared to the previous draft version
+          example: Section 3 rewritten based on comments
+        body:
+          type: string
+          nullable: true
+          description: Full text of the draft in Markdown
+          example: |-
+            # Introduction
+
+            The draft text.
+        body_html:
+          type: string
+          nullable: true
+          description: The draft text rendered to sanitized HTML, as shown on the
+            public page
+          example: |-
+            <h1 id="introduction">Introduction</h1>
+
+            <p>The draft text.</p>
+        status:
+          type: string
+          enum:
+          - draft
+          - published
+          description: Publication status. Clients with public_data access only receive
+            published drafts.
+          example: published
+        created_at:
+          type: string
+          format: date_time
+          description: Timestamp when the draft was created
+          example: '2024-03-01T09:00:00Z'
+        updated_at:
+          type: string
+          format: date_time
+          description: Timestamp when the draft was last modified
+          example: '2024-03-05T14:30:00Z'
+      required:
+      - id
+      - legislation_process_id
+      - title
+      - status
+      - created_at
+      - updated_at
     PollQuestion:
       type: object
       properties:

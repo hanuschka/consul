@@ -8,6 +8,7 @@ class Adm::Projekts::Imports::ReviewsController < Adm::Projekts::BaseController
   before_action :authorize_create
   before_action :find_projekt_import
   before_action :ensure_review_step!
+  before_action :redirect_submitting_import, only: [:show, :execute]
 
   def show
     @overlay = @projekt_import.overlay
@@ -36,7 +37,7 @@ class Adm::Projekts::Imports::ReviewsController < Adm::Projekts::BaseController
 
   def execute
     @projekt_import.apply_overlay!(overlay_params)
-    ProjektImports::ExecuteImportJob.perform_later(@projekt_import.id)
+    ProjektImports::StartSubmitService.call(projekt_import: @projekt_import)
 
     redirect_to adm_projekts_import_path(@projekt_import)
   end
@@ -63,6 +64,15 @@ class Adm::Projekts::Imports::ReviewsController < Adm::Projekts::BaseController
       return if @projekt_import.projekt_id.blank?
 
       redirect_to projekt_path(@projekt_import.projekt_id)
+    end
+
+    # The copy is already running: its progress is on the import's own page.
+    # The form would only offer a button that starts it a second time, and a
+    # resubmit from a cached copy must not rewrite the overlay it is reading.
+    def redirect_submitting_import
+      return if !@projekt_import.submitting?
+
+      redirect_to adm_projekts_import_path(@projekt_import)
     end
 
     def overlay_params

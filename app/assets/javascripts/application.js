@@ -55,7 +55,6 @@
 //= require turbolinks
 //= require turbolinks_anchors
 //= require social-share-button
-//= require ahoy
 //= require app
 //= require config/map_zoom
 //= require check_all_none

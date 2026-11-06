@@ -57,9 +57,10 @@
            data-projekt-imports--status-review-url-value="<%= @review_url %>"
            data-projekt-imports--status-progress-extracting-value="<%= t('adm.projekts.imports.show.progress.extracting') %>"
            data-projekt-imports--status-progress-processing-value="<%= t('adm.projekts.imports.show.progress.processing') %>"
-           data-projekt-imports--status-progress-chatting-value="<%= t('adm.projekts.imports.show.progress.chatting') %>">
+           data-projekt-imports--status-progress-chatting-value="<%= t('adm.projekts.imports.show.progress.chatting') %>"
+           data-projekt-imports--status-submit-progress-labels-value="<%= import_submit_progress_labels.to_json %>">
         <h3 class="adm-document-upload--loader-title">
-          <%= t("adm.projekts.imports.show.processing_title") %>
+          <%= import_progress_title(@projekt_import) %>
         </h3>
 
         <div class="adm-document-upload--progress-wrapper">
@@ -69,12 +70,12 @@
           </div>
           <span class="adm-document-upload--progress-label"
                 data-projekt-imports--status-target="progressLabel">
-            <%= @projekt_import.processing? ? t("adm.projekts.imports.show.progress.processing") : t("adm.projekts.imports.show.progress.extracting") %>
+            <%= import_progress_label(@projekt_import) %>
           </span>
         </div>
 
         <p class="adm-document-upload--loader-message">
-          <%= t("adm.projekts.imports.show.processing_message") %>
+          <%= import_progress_message(@projekt_import) %>
         </p>
 
         <div class="adm-document-upload--loader-files">

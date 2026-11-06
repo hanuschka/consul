@@ -223,7 +223,6 @@ class Setting < ApplicationRecord
         "feature.bund_id_login": false,
         "feature.kobil_login": false,
         "feature.kobil_address_verification": false,
-        "feature.public_stats": true,
         "feature.signature_sheets": true,
         "feature.user.recommendations": true,
         "feature.user.recommendations_on_debates": true,
@@ -279,6 +278,7 @@ class Setting < ApplicationRecord
         "proposals.poster_short_title": nil,
         "proposals.poster_description": nil,
         "proposals.email_on_official_answer": nil,
+        "email_templates.recipient_greeting": "username",
         # Images and Documents
         "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,

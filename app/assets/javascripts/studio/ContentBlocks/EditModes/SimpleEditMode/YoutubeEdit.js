@@ -223,7 +223,9 @@ App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit = {
   showPopup() {
     const input = this.getUrlInput();
 
-    App.Studio.ContentBlocks.SimpleEditMode.EditPopup.show(this.getPopup(), this.currentButton, "below");
+    App.Studio.ContentBlocks.SimpleEditMode.EditPopup.show(
+      this.getPopup(), this.currentButton, "below", () => this.hidePopup()
+    );
     this.hideError();
     input.value = this.editorFacingUrl(this.currentIframe);
     input.focus();

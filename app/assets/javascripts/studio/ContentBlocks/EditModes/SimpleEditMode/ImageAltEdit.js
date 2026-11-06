@@ -61,7 +61,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageAltEdit = {
 
   showPopupForImage(img) {
     App.Studio.ContentBlocks.SimpleEditMode.EditPopup.show(
-      this.getPopup(), this.getAltButton(), "above"
+      this.getPopup(), this.getAltButton(), "above", () => this.hidePopup()
     )
 
     const altInput = this.getAltInput()

@@ -96,6 +96,10 @@ App.Studio.ContentBlocks.SimpleEditMode = {
 
     if (enabled) {
       setTimeout(() => {
+        // Before other modules add their controls, whose icons stay unpickable
+        App.Studio.ContentBlocks.SimpleEditMode.IconEdit.toggleIconControls(
+          contentBlock, enabled
+        )
         this.toggleLinksInteration(contentBlock, enabled)
         this.toggleGlighboxGallery(contentBlock, enabled)
 
@@ -126,6 +130,9 @@ App.Studio.ContentBlocks.SimpleEditMode = {
         }
       }, 10)
     } else {
+      App.Studio.ContentBlocks.SimpleEditMode.IconEdit.toggleIconControls(
+        contentBlock, enabled
+      )
       this.toggleLinksInteration(contentBlock, enabled)
       this.toggleGlighboxGallery(contentBlock, enabled)
 

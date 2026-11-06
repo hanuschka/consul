@@ -1,6 +1,7 @@
 App.Studio.utils.YOUTUBE_HOSTS = ["youtube.com", "youtube-nocookie.com", "youtu.be"];
 App.Studio.utils.YOUTUBE_VIDEO_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
 App.Studio.utils.YOUTUBE_EMBED_BASE_URL = "https://www.youtube-nocookie.com/embed/";
+App.Studio.utils.YOUTUBE_WATCH_BASE_URL = "https://www.youtube.com/watch?v=";
 
 // Accepts any link form an editor is likely to paste (watch, youtu.be,
 // shorts, live, embed) and returns the video id plus an optional start
@@ -36,6 +37,14 @@ App.Studio.utils.youtubeEmbedUrl = function(videoId, startSeconds) {
   const embedUrl = `${App.Studio.utils.YOUTUBE_EMBED_BASE_URL}${encodeURIComponent(videoId)}`;
 
   return startSeconds ? `${embedUrl}?start=${startSeconds}` : embedUrl
+}
+
+// The link editors know from the address bar. Shown in place of the
+// youtube-nocookie embed URL the iframe actually uses.
+App.Studio.utils.youtubeWatchUrl = function(videoId, startSeconds) {
+  const watchUrl = `${App.Studio.utils.YOUTUBE_WATCH_BASE_URL}${encodeURIComponent(videoId)}`;
+
+  return startSeconds ? `${watchUrl}&t=${startSeconds}s` : watchUrl
 }
 
 App.Studio.utils.parseUrlLeniently = function(input) {

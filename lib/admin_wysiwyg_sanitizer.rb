@@ -48,6 +48,7 @@ class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
       data-turbolinks
       data-box-shadow
       data-glightbox
+      data-list-edit-add-outside data-list-edit-add-outside-of data-list-edit-follower data-paired-list
       url
     ]
   end

@@ -1,7 +1,17 @@
-// Layer that simple edit mode lays over a content block to carry one
-// "YouTube-Link" button per video (App.Studio.ContentBlocks.SimpleEditMode.
-// YoutubeEdit). It sits in the block wrapper, outside the saved content,
-// above .custom-content-block (z-index 2).
+// YouTube's brand palette (brand.youtube/color). White text on YouTube Red
+// reaches only ~4:1, so filled buttons use a darker shade (~5.3:1, WCAG AA).
+// Saving keeps the studio's save green (see _content_block_wrapper.scss).
+:root {
+  --youtube-red: #ff0033;
+  --youtube-red-fill: #d9002b;
+  --youtube-almost-black: #212121;
+  --youtube-save-fill: #00830e;
+}
+
+// Layer that simple edit mode lays over a content block to carry one control
+// per YouTube video (App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit). It
+// sits in the block wrapper, outside the saved content, above
+// .custom-content-block (z-index 2).
 .studio-youtube-controls {
   position: absolute;
   inset: 0;
@@ -9,21 +19,104 @@
   pointer-events: none;
 }
 
-// Placed at the video's top-left by the editor; look and states come from
-// .studio-edit-button.
+// "YouTube-Link bearbeiten", placed on the video's left edge by the editor.
 .studio-youtube-controls--button {
   position: absolute;
   pointer-events: auto;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
+}
+
+// The YouTube link button. Written on .studio-edit-button, like the save
+// rule below, so it outranks the primitive's color variants.
+.studio-edit-button.studio-youtube-action {
+  color: #fff;
+  background: var(--youtube-red-fill);
+
+  &:hover {
+    color: #fff;
+    background: color-mix(in srgb, var(--youtube-red-fill) 88%, black);
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--youtube-red-fill) 76%, black);
+  }
 
   &:focus-visible {
-    outline: 2px solid var(--brand-color);
+    outline: 2px solid var(--youtube-almost-black);
     outline-offset: 2px;
   }
 }
 
+// Speichern in the popup and the video overlay (the popup's carries -green).
+.studio-edit-button.studio-youtube-save {
+  color: #fff;
+  background: var(--youtube-save-fill);
+
+  &:hover {
+    color: #fff;
+    background: color-mix(in srgb, var(--youtube-save-fill) 88%, black);
+  }
+
+  &:active {
+    background: color-mix(in srgb, var(--youtube-save-fill) 76%, black);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--youtube-almost-black);
+    outline-offset: 2px;
+  }
+}
+
+.studio-youtube-icon {
+  color: var(--youtube-red);
+}
+
+// Neutral counterpart of the studio's blue intro box.
+.studio-youtube-intro {
+  background-color: #f2f2f2;
+
+  @container youtube-inline-form (max-height: 300px) {
+    display: none;
+  }
+}
+
+.studio-youtube-intro--text {
+  color: #3d3d3d;
+}
+
+// Link form laid over a YouTube video that has no link yet, sized to the
+// video by the editor. Short videos (the grid template) drop the intro.
+.studio-youtube-inline-form {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  container-type: size;
+  container-name: youtube-inline-form;
+  pointer-events: auto;
+}
+
+.studio-youtube-inline-form--panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 26rem;
+  max-height: 100%;
+  overflow: auto;
+  padding: 15px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.3);
+}
+
+.studio-youtube-inline-form--save {
+  align-self: flex-start;
+}
+
 .content-block-youtube-popup {
-  width: 420px;
+  width: 504px;
 }
 
 .content-block-youtube-popup--body {
@@ -32,6 +125,12 @@
 
 .content-block-youtube-popup--input {
   margin: 4px 0 0;
+
+  &:focus {
+    border-color: var(--youtube-red);
+    outline: none;
+    box-shadow: 0 0 0 1px var(--youtube-red);
+  }
 }
 
 .content-block-youtube-popup--error {

@@ -1,0 +1,101 @@
+<!-- BlockID: N16 Varianten-Karten - Varianten A, B, C als Karten mit gleichen Merkmalszeilen -->
+<!-- Geeignet für: Variantenvergleich vor einer Abstimmung oder Ratsentscheidung (Neubau oder Sanierung, Standorte, Entwürfe) -->
+<!-- ANPASSEN: Merkmalszeilen in allen Karten gleich halten (gleiche Reihenfolge, gleiche Bezeichnungen). Fehlende Werte als Chip „Angabe folgt“ stehen lassen, bis die Zahl freigegeben ist. Das Bild je Karte ist optional: den Bildbereich löschen, in allen Karten oder in keiner. -->
+<!-- Editor: jede Variante ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Karte; die Merkmalszeilen in jeder Karte sind ebenfalls eine Liste. Bild über das Bild-Werkzeug tauschen. Icon nur im Code-Modus tauschbar. -->
+<!-- Umbruch: Karten stehen am Handy untereinander, ab etwa 760 px Blockbreite drei nebeneinander; in jeder Zeile steht die Bezeichnung über dem Wert, damit auch schmale Karten lesbar bleiben. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Variantentitel = Theme-H4, aller Text 1rem; Bezeichnungen über Gewicht 600 abgesetzt -->
+
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 8px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-balance-scale" style="font-size: 18px;"></i></span>
+    <h3 style="flex: 1 1 auto; min-width: 0; margin: 0; hyphens: auto; overflow-wrap: break-word;">Drei Varianten für die Stadthalle</h3>
+  </div>
+  <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 20px; max-width: 44rem;">Der Stadtrat entscheidet im Frühjahr, wie es mit der Stadthalle weitergeht. Hier sehen Sie die drei Varianten mit den bisher bekannten Zahlen. Fehlende Angaben ergänzen wir, sobald die Gutachten vorliegen.</p>
+
+  <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 12px; gap: clamp(12px, 2vw, 16px);">
+
+    <li style="display: flex; flex-direction: column; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <img src="https://placehold.co/600x338/1a2e44/ffffff?text=Variante+A" alt="Visualisierung des Neubaus von der Parkseite" style="display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin: 0;">
+      <div style="flex: 1 1 auto; padding: 18px;">
+        <span style="display: inline-block; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 2px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 0 0 10px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">Variante A</span>
+        <h4 style="margin: 0 0 8px; hyphens: auto; overflow-wrap: break-word;">Neubau</h4>
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Die bestehende Halle wird abgerissen. An gleicher Stelle entsteht ein Neubau mit großem und kleinem Saal.</p>
+        <ul style="list-style: none; margin: 0; padding: 0;">
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Kosten</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;">rund 38 Mio. Euro</span>
+          </li>
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Bauzeit</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;">etwa 3 Jahre, Halle in dieser Zeit geschlossen</span>
+          </li>
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Finanzierung</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;"><span style="display: inline-block; background: #ffffff; border: 1px dashed #c5cfdb; border-radius: 999px; padding: 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600;">Angabe folgt</span></span>
+          </li>
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Besonderheiten</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;">Barrierefrei, Saal für bis zu 900 Personen</span>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <li style="display: flex; flex-direction: column; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <img src="https://placehold.co/600x338/1a2e44/ffffff?text=Variante+B" alt="Ansicht der sanierten Stadthalle mit neuem Foyer" style="display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin: 0;">
+      <div style="flex: 1 1 auto; padding: 18px;">
+        <span style="display: inline-block; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 2px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 0 0 10px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">Variante B</span>
+        <h4 style="margin: 0 0 8px; hyphens: auto; overflow-wrap: break-word;">Sanierung</h4>
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Das Gebäude bleibt stehen und wird grundlegend saniert. Das Foyer wird neu gebaut und zum Park hin geöffnet.</p>
+        <ul style="list-style: none; margin: 0; padding: 0;">
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Kosten</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;">rund 24 Mio. Euro</span>
+          </li>
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Bauzeit</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;"><span style="display: inline-block; background: #ffffff; border: 1px dashed #c5cfdb; border-radius: 999px; padding: 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600;">Angabe folgt</span></span>
+          </li>
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Finanzierung</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;">Eigenmittel und Fördermittel aus dem Landesprogramm</span>
+          </li>
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Besonderheiten</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;">Denkmalgeschützte Fassade bleibt erhalten</span>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <li style="display: flex; flex-direction: column; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <img src="https://placehold.co/600x338/1a2e44/ffffff?text=Variante+C" alt="Lageplan der Stadthalle mit Instandhaltungsbereichen" style="display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin: 0;">
+      <div style="flex: 1 1 auto; padding: 18px;">
+        <span style="display: inline-block; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 2px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 0 0 10px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">Variante C</span>
+        <h4 style="margin: 0 0 8px; hyphens: auto; overflow-wrap: break-word;">Instandhaltung</h4>
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Es wird nur repariert, was für den sicheren Betrieb nötig ist. Größere Arbeiten werden auf später verschoben.</p>
+        <ul style="list-style: none; margin: 0; padding: 0;">
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Kosten</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;"><span style="display: inline-block; background: #ffffff; border: 1px dashed #c5cfdb; border-radius: 999px; padding: 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600;">Angabe folgt</span></span>
+          </li>
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Bauzeit</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;">in Abschnitten, Betrieb läuft weiter</span>
+          </li>
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Finanzierung</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;">aus dem laufenden Haushalt</span>
+          </li>
+          <li style="margin: 0; border-top: 1px solid #e8edf3; padding: 8px 0;">
+            <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Besonderheiten</span>
+            <span style="display: block; font-size: 1rem; line-height: 1.6;">Grundlegende Sanierung in etwa 10 Jahren nötig</span>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+  </ul>
+
+</div>

@@ -64,6 +64,7 @@
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/MapEdit
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/MapSourceEdit
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/ImageAltEdit
+//= require ../studio/ContentBlocks/EditModes/SimpleEditMode/YoutubeEdit
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/FileManagerDialog
 //= require ../studio/ContentBlocks/EditModes/CKEditorMode
 //= require ../studio/ContentBlocks/SavedContentBlocks

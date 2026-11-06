@@ -1,49 +1,38 @@
-<!-- BlockID: D08 – Bild-Text-Karte: Bild rechts, Text links (Spiegelung von I1) -->
-<!-- Geeignet für: Abwechselnde Darstellung mehrerer Projekte auf einer Seite -->
-<!-- ANPASSEN: src-Attribut im img-Tag ersetzen -->
+<!-- BlockID: D08 Bild-Text-Karte - Bild rechts, Text links auf getönter Fläche (Spiegelung von D07) -->
+<!-- Geeignet für: abwechselnde Darstellung mehrerer Projekte auf einer Seite -->
+<!-- Editor: Bild über das Bild-Werkzeug austauschen (Maus auf das Foto, Alternativtext setzen). Etiketten und Eckdaten sind Listenelemente, „Weiteres Element hinzufügen“ kopiert das letzte. -->
+<!-- Umbruch: am Handy steht das Bild über dem Text, nebeneinander ab etwa 600 px Breite mit Bild rechts; der Button nimmt am Handy die volle Breite bis 18rem. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H3, Etiketten, Text, Eckdaten und Button 1rem, Unterschiede nur über Gewicht -->
 
-<div style="background: #ffffff; border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 20px rgba(0,0,0,0.10), 0 12px 32px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06)'">
+<div style="display: flex; flex-wrap: wrap-reverse; margin: 0; background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <div class="row" style="min-height: 300px; display: flex; flex-wrap: wrap;">
+  <div style="position: relative; z-index: 1; flex: 7 1 20rem; min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: 24px; padding: clamp(20px, 4vw, 32px);">
+    <div aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; top: 0; bottom: 0; right: -80px; width: 80px; background: linear-gradient(to left, rgba(255,255,255,0) 0%, #ffffff 100%); pointer-events: none;"></div><div aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; left: 0; right: 0; bottom: -56px; height: 56px; background: linear-gradient(to top, rgba(255,255,255,0) 0%, #ffffff 100%); pointer-events: none;"></div>
 
-    <!-- Text links -->
-    <div class="column small-12 medium-7">
-      <div style="padding: 32px; display: flex; flex-direction: column; flex-wrap: wrap; justify-content: center; height: 100%;">
+    <ul style="list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px;">
+      <li style="margin: 0; display: inline-block; background: #ffffff; border: 1px solid #d3e2f1; border: 1px solid color-mix(in srgb, var(--brand-color, #1779ba) 24%, #ffffff); border-radius: 999px; padding: 2px 12px; font-size: 1rem; line-height: 1.6; font-weight: 600; box-shadow: 0 1px 2px rgba(16,24,40,0.05);">Grünplanung</li>
+      <li style="margin: 0; display: inline-block; background: #ffffff; border: 1px solid #d3e2f1; border: 1px solid color-mix(in srgb, var(--brand-color, #1779ba) 24%, #ffffff); border-radius: 999px; padding: 2px 12px; font-size: 1rem; line-height: 1.6; font-weight: 600; box-shadow: 0 1px 2px rgba(16,24,40,0.05);">Umwelt</li>
+      <li style="margin: 0; display: inline-block; background: #ffffff; border: 1px solid #d3e2f1; border: 1px solid color-mix(in srgb, var(--brand-color, #1779ba) 24%, #ffffff); border-radius: 999px; padding: 2px 12px; font-size: 1rem; line-height: 1.6; font-weight: 600; box-shadow: 0 1px 2px rgba(16,24,40,0.05);">Laufend</li>
+    </ul>
 
-        <!-- Topic-Chips -->
-        <div style="display: flex; flex-wrap: wrap; margin-bottom: 16px;">
-          <div style="background: rgba(23,121,186,0.08); border: 1px solid rgba(23,121,186,0.16); border-radius: 4px; padding: 4px 12px; font-size: 12px; color: var(--brand-color, #1779ba); margin-right: 8px; margin-bottom: 6px; font-weight: 600;">Grünplanung</div>
-          <div style="background: rgba(23,121,186,0.08); border: 1px solid rgba(23,121,186,0.16); border-radius: 4px; padding: 4px 12px; font-size: 12px; color: var(--brand-color, #1779ba); margin-right: 8px; margin-bottom: 6px; font-weight: 600;">Umwelt</div>
-          <div style="background: rgba(23,121,186,0.08); border: 1px solid rgba(23,121,186,0.16); border-radius: 4px; padding: 4px 12px; font-size: 12px; color: var(--brand-color, #1779ba); margin-bottom: 6px; font-weight: 600;">Laufend</div>
-        </div>
+    <h3 style="margin: 0 0 12px; hyphens: auto; overflow-wrap: break-word;">Begrünung der Schulhöfe – Kinder planen mit</h3>
 
-        <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; margin-bottom: 12px; margin-top: 0; line-height: 1.3; letter-spacing: -0.3px; padding-left: 16px; border-left: 3px solid var(--brand-color, #1779ba);">Begrünung der Schulhöfe – Kinder planen mit</h3>
+    <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 16px;">Im Rahmen des Schulhof-Programms 2026 werden 12 Grundschulen neu begrünt. Schülerinnen und Schüler, Eltern und Lehrkräfte können Wünsche und Ideen einbringen – von der Bepflanzung bis zur Spielzone.</p>
 
-        <p style="font-size: 15px; color: #374151; line-height: 1.65; margin-bottom: 20px; margin-top: 0;">
-          Im Rahmen des Schulhof-Programms 2025 werden 12 Grundschulen neu begrünt. Schüler:innen, Eltern und Lehrkräfte können Wünsche und Ideen einbringen – von der Bepflanzung bis zur Spielzone.
-        </p>
+    <ul style="list-style: none; margin: 0 0 20px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px;">
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; line-height: 1.6; font-weight: 600;"><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="far fa-clock" style="font-size: 14px;"></i></span><span style="font-size: 1rem; line-height: 1.6;">Frist: 31.05.2026</span></li>
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; line-height: 1.6; font-weight: 600;"><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-school" style="font-size: 14px;"></i></span><span style="font-size: 1rem; line-height: 1.6;">Umfang: 12 Schulen</span></li>
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; line-height: 1.6; font-weight: 600;"><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-users" style="font-size: 14px;"></i></span><span style="font-size: 1rem; line-height: 1.6;">Zielgruppe: Familien</span></li>
+    </ul>
 
-        <!-- Metadaten -->
-        <div style="display: flex; flex-wrap: wrap; align-items: center; font-size: 12px; color: #6b7280; margin-bottom: 18px;">
-          <span>Frist: 31.05.2025</span>
-          <span style="display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--brand-color, #1779ba); margin: 0 10px; opacity: 0.5;"></span>
-          <span>Umfang: 12 Schulen</span>
-          <span style="display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--brand-color, #1779ba); margin: 0 10px; opacity: 0.5;"></span>
-          <span>Zielgruppe: Familien</span>
-        </div>
-
-        <a href="#" class="button" style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; padding: 11px 24px; text-decoration: none; font-size: 14px; font-weight: 700; height: 44px; box-sizing: border-box; align-self: flex-start; border-radius: 8px;">Mitmachen &amp; mitplanen</a>
-
-      </div>
-    </div>
-
-    <!-- Bild rechts -->
-    <div class="column small-12 medium-5">
-      <div style="min-height: 240px; position: relative; overflow: hidden; height: 100%;">
-        <img src="https://placehold.co/600x400/10b981/ffffff?text=Schulhof+2025" alt="Schulhof 2025" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
-        <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);"></div>
-      </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+      <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Mitmachen und mitplanen</a></div>
     </div>
 
   </div>
+
+  <div style="flex: 5 1 16rem; position: relative; background: #ffffff;">
+    <img src="https://placehold.co/600x400/10b981/ffffff?text=Schulhof+2026" alt="Kinder pflanzen Beete auf einem Schulhof" style="display: block; width: 100%; height: 240px; height: clamp(200px, 45vw, 320px); min-height: 100%; object-fit: cover; margin: 0;">
+  </div>
+
 </div>

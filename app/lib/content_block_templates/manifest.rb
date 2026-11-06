@@ -4,7 +4,8 @@
 # leave editors with an error instead of a template list.
 #
 # Ids are DT's own and must stay stable — anchor_template_id and
-# category_hint are matched against them.
+# category_hint are matched against them. Ids from 152 on (and category 10)
+# were added in this app, not in DT — a fresh DT snapshot must not reuse them.
 #
 # Template bodies live beside this file under
 # app/views/custom/projekts/dt_content_block_templates/, one file per
@@ -90,6 +91,15 @@ module ContentBlockTemplates::Manifest
           hidden: false,
           hidden_until: nil,
           file: "basics/73_callout_cards.html"
+        },
+        {
+          id: 155,
+          name: "Status-Hinweis",
+          description: "Status notice with the current state of a phase and the next steps. For finished phases, ongoing evaluations, or a paused process.",
+          position: 9,
+          hidden: false,
+          hidden_until: nil,
+          file: "basics/155_status_update.html"
         }
       ]
     },
@@ -299,6 +309,42 @@ module ContentBlockTemplates::Manifest
           hidden: true,
           hidden_until: nil,
           file: "media/130_slider_fullwidth.html"
+        },
+        {
+          id: 152,
+          name: "Video einzeln",
+          description: "Single full-width video with title and explanation. For explainer videos, event recordings, or video greetings.",
+          position: 12,
+          hidden: false,
+          hidden_until: nil,
+          file: "media/152_video_single.html"
+        },
+        {
+          id: 153,
+          name: "Video und Text",
+          description: "Video beside an explanation with a call to action. For putting a video in context or opening a participation phase.",
+          position: 13,
+          hidden: false,
+          hidden_until: nil,
+          file: "media/153_video_text.html"
+        },
+        {
+          id: 154,
+          name: "Video-Raster",
+          description: "Grid of several videos with titles. For video series, recordings of several events, or voices from residents.",
+          position: 14,
+          hidden: false,
+          hidden_until: nil,
+          file: "media/154_video_grid.html"
+        },
+        {
+          id: 164,
+          name: "Externe Einbettung",
+          description: "Header with an open-in-new-window link above embedded external content. For geoportals, web maps, 3D city models, or third-party surveys.",
+          position: 15,
+          hidden: false,
+          hidden_until: nil,
+          file: "media/164_externe_einbettung.html"
         }
       ]
     },
@@ -375,8 +421,8 @@ module ContentBlockTemplates::Manifest
         },
         {
           id: 102,
-          name: "portrait-cards",
-          description: "Portrait cards with photo, name, and role. For team introductions and contact persons.",
+          name: "Themenkarte",
+          description: "Portrait cards with an image, a status label in the image, and text below, in a grid. For topic grids, blog-style overviews, and sub-projects.",
           position: 8,
           hidden: false,
           hidden_until: nil,
@@ -399,6 +445,42 @@ module ContentBlockTemplates::Manifest
           hidden: false,
           hidden_until: nil,
           file: "layout/95_image_text.html"
+        },
+        {
+          id: 158,
+          name: "Link-Kacheln",
+          description: "Tiles with a link row to a phase, survey, or sub-area. For topic areas with their own survey, districts or schools, and yearly archives.",
+          position: 19,
+          hidden: false,
+          hidden_until: nil,
+          file: "layout/158_link_kacheln.html"
+        },
+        {
+          id: 165,
+          name: "Logo- und Förderleiste",
+          description: "Logos of participating organisations and funders with the mandatory funding notice. For funded projects and projects with partners.",
+          position: 20,
+          hidden: false,
+          hidden_until: nil,
+          file: "layout/165_logo_foerderleiste.html"
+        },
+        {
+          id: 166,
+          name: "Personen",
+          description: "Person cards with photo, name, role, and an expandable short profile. For introducing a team, experts, or a jury.",
+          position: 21,
+          hidden: false,
+          hidden_until: nil,
+          file: "layout/166_personen.html"
+        },
+        {
+          id: 167,
+          name: "Varianten-Karten",
+          description: "Variants A, B, C as cards with matching attribute rows. For comparing options before a vote or a council decision.",
+          position: 22,
+          hidden: false,
+          hidden_until: nil,
+          file: "layout/167_varianten_karten.html"
         }
       ]
     },
@@ -544,6 +626,51 @@ module ContentBlockTemplates::Manifest
           hidden: false,
           hidden_until: nil,
           file: "data/118_dodont_traffic.html"
+        },
+        {
+          id: 156,
+          name: "Dokumente",
+          description: "Downloadable documents in groups. For resolutions, expert reports, plans, presentations, and minutes.",
+          position: 16,
+          hidden: false,
+          hidden_until: nil,
+          file: "data/156_dokumente.html"
+        },
+        {
+          id: 157,
+          name: "Ergebnis und Umsetzung",
+          description: "Key figures of the process and a list of implemented proposals. For reporting back after a vote or a yearly participation review.",
+          position: 17,
+          hidden: false,
+          hidden_until: nil,
+          file: "data/157_ergebnis_umsetzung.html"
+        },
+        {
+          id: 160,
+          name: "Termin",
+          description: "Single event with a date badge, location, and registration. For open days, citizen assemblies, workshops, or site visits.",
+          position: 18,
+          hidden: false,
+          hidden_until: nil,
+          file: "data/160_termin.html"
+        },
+        {
+          id: 161,
+          name: "Termine und Fristen",
+          description: "Compact list of dates with the next date and deadline highlighted. For key process dates, submission deadlines, and meetings.",
+          position: 19,
+          hidden: false,
+          hidden_until: nil,
+          file: "data/161_termine_fristen.html"
+        },
+        {
+          id: 163,
+          name: "Bekanntmachung Auslegung",
+          description: "Formal notice of a land-use plan publication with period, legal basis, and how to submit a statement. For formal planning participation.",
+          position: 20,
+          hidden: false,
+          hidden_until: nil,
+          file: "data/163_bekanntmachung_auslegung.html"
         }
       ]
     },
@@ -653,6 +780,24 @@ module ContentBlockTemplates::Manifest
           hidden: false,
           hidden_until: nil,
           file: "interactions/129_grusswort_dark.html"
+        },
+        {
+          id: 159,
+          name: "Ansprechpartner",
+          description: "Two contact cards for questions about the project and about the platform. For the contact section at the end of a project page.",
+          position: 12,
+          hidden: false,
+          hidden_until: nil,
+          file: "interactions/159_ansprechpartner.html"
+        },
+        {
+          id: 162,
+          name: "Wege der Beteiligung",
+          description: "One vote, three ways: online, at the citizens' office, or at the participation box. For hybrid votes and surveys with a QR code.",
+          position: 13,
+          hidden: false,
+          hidden_until: nil,
+          file: "interactions/162_wege_der_beteiligung.html"
         }
       ]
     },
@@ -853,6 +998,43 @@ module ContentBlockTemplates::Manifest
           hidden: false,
           hidden_until: nil,
           file: "project_maps/151_karte_mit_ebenen_filter.html"
+        }
+      ]
+    },
+    {
+      id: 10,
+      name_de: "Seitenleiste",
+      name_en: "Sidebar",
+      section: "sidebar_and_footer",
+      position: 9,
+      directory: "sidebar",
+      templates: [
+        {
+          id: 168,
+          name: "Seitenleiste Projektinformation",
+          description: "Sidebar card with period, status, responsibility, and a short link list. For the information card in the project page sidebar.",
+          position: 1,
+          hidden: false,
+          hidden_until: nil,
+          file: "sidebar/168_seitenleiste_projektinfo.html"
+        },
+        {
+          id: 169,
+          name: "Seitenleiste Kontakt",
+          description: "Compact sidebar card for one contact person with photo, phone, and email. For the information card in the project page sidebar.",
+          position: 2,
+          hidden: false,
+          hidden_until: nil,
+          file: "sidebar/169_seitenleiste_kontakt.html"
+        },
+        {
+          id: 170,
+          name: "Seitenleiste Zeitstrahl",
+          description: "Sidebar card with four stacked steps, the current one highlighted, and a button below. For a short process or competition timeline.",
+          position: 3,
+          hidden: false,
+          hidden_until: nil,
+          file: "sidebar/170_seitenleiste_zeitstrahl.html"
         }
       ]
     }

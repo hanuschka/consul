@@ -1,58 +1,47 @@
-<!-- BlockID: F09 -->
-<!-- K6: FAQ Accordion – Einzelne Karten mit Abstand -->
-<!-- VORAUSSETZUNG: Foundation 6 JS muss auf der Seite geladen sein (in Consul enthalten) -->
-<!-- Geeignet für: Eigenständige FAQ-Karten, visuell getrennte Themenbereiche -->
+<!-- BlockID: F09 FAQ Karten - jede Frage als eigenständige Karte mit Abstand -->
+<!-- Voraussetzung: Foundation 6 JS ist auf der Seite geladen (in Consul enthalten) -->
+<!-- Geeignet für: eigenständige FAQ-Karten, visuell getrennte Themenbereiche -->
+<!-- Editor: jede Karte ist ein Listenelement in einer gemeinsamen Liste, „Weiteres Element hinzufügen“ kopiert die letzte Karte samt Antwort. -->
+<!-- Umbruch: Karten stehen untereinander in voller Breite, Fragen brechen innerhalb der Karte um; rechts bleibt Platz für das Plus-Zeichen des Themes. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Fragen 1rem fett, Antworten 1rem -->
 
-<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
-  <div style="width: 40px; height: 3px; background: var(--brand-color, #1779ba); border-radius: 2px; margin-bottom: 14px;"></div>
-  <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; letter-spacing: -0.3px; margin: 0 0 20px 0;">Fragen &amp; Antworten</h3>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <!-- Card 1 -->
-  <ul class="accordion" data-accordion data-allow-all-closed="true" style="margin: 0 0 12px 0; padding: 0; list-style: none;">
-    <li class="accordion-item" data-accordion-item style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-      <a href="#" class="accordion-title" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 18px 24px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-        <span>Wie kann ich mich beteiligen?</span>
-      </a>
-      <div class="accordion-content" data-tab-content style="padding: 0 24px 18px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Registrieren Sie sich kostenlos auf der Plattform. Anschließend können Sie Vorschläge einreichen, kommentieren und an Abstimmungen teilnehmen. Die Teilnahme ist freiwillig und jederzeit möglich.</p>
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 18px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="far fa-comments" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Fragen &amp; Antworten</h3>
+  </div>
+
+  <ul class="accordion" data-accordion data-allow-all-closed="true" style="list-style: none; margin: 0; padding: 0; background: transparent; border: 0; display: flex; flex-direction: column; gap: 14px;">
+
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-top: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 16px 48px 16px 20px; min-height: 44px; border: 0; background: transparent;">Wie kann ich mich beteiligen?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 20px 18px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Registrieren Sie sich kostenlos auf der Plattform. Anschließend können Sie Vorschläge einreichen, kommentieren und an Abstimmungen teilnehmen. Die Teilnahme ist freiwillig und jederzeit möglich.</p>
       </div>
     </li>
-  </ul>
 
-  <!-- Card 2 -->
-  <ul class="accordion" data-accordion data-allow-all-closed="true" style="margin: 0 0 12px 0; padding: 0; list-style: none;">
-    <li class="accordion-item" data-accordion-item style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-      <a href="#" class="accordion-title" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 18px 24px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-        <span>Werden meine Daten geschützt?</span>
-      </a>
-      <div class="accordion-content" data-tab-content style="padding: 0 24px 18px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Ja. Die Plattform wird DSGVO-konform betrieben. Ihre personenbezogenen Daten werden verschlüsselt auf deutschen Servern gespeichert und nicht an Dritte weitergegeben. Beiträge erscheinen nur unter Ihrem Nutzernamen.</p>
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-top: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 16px 48px 16px 20px; min-height: 44px; border: 0; background: transparent;">Werden meine Daten geschützt?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 20px 18px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Ja. Die Plattform wird DSGVO-konform betrieben. Ihre personenbezogenen Daten werden verschlüsselt auf deutschen Servern gespeichert und nicht an Dritte weitergegeben. Beiträge erscheinen nur unter Ihrem Nutzernamen.</p>
       </div>
     </li>
-  </ul>
 
-  <!-- Card 3 -->
-  <ul class="accordion" data-accordion data-allow-all-closed="true" style="margin: 0 0 12px 0; padding: 0; list-style: none;">
-    <li class="accordion-item" data-accordion-item style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-      <a href="#" class="accordion-title" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 18px 24px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-        <span>Was passiert nach der Beteiligungsphase?</span>
-      </a>
-      <div class="accordion-content" data-tab-content style="padding: 0 24px 18px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Alle eingereichten Beiträge und Abstimmungsergebnisse werden in einem Ergebnisbericht zusammengefasst. Dieser wird dem Stadtrat als Entscheidungsgrundlage vorgelegt und auf der Plattform veröffentlicht.</p>
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-top: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 16px 48px 16px 20px; min-height: 44px; border: 0; background: transparent;">Was passiert nach der Beteiligungsphase?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 20px 18px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Alle eingereichten Beiträge und Abstimmungsergebnisse werden in einem Ergebnisbericht zusammengefasst. Dieser wird dem Stadtrat als Entscheidungsgrundlage vorgelegt und auf der Plattform veröffentlicht.</p>
       </div>
     </li>
-  </ul>
 
-  <!-- Card 4 -->
-  <ul class="accordion" data-accordion data-allow-all-closed="true" style="margin: 0; padding: 0; list-style: none;">
-    <li class="accordion-item" data-accordion-item style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-      <a href="#" class="accordion-title" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 18px 24px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-        <span>Kann ich auch ohne Registrierung mitmachen?</span>
-      </a>
-      <div class="accordion-content" data-tab-content style="padding: 0 24px 18px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Ohne Registrierung können Sie alle Inhalte lesen und sich informieren. Um Vorschläge einzureichen, zu kommentieren oder abzustimmen, ist eine kostenlose Registrierung erforderlich.</p>
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-top: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 16px 48px 16px 20px; min-height: 44px; border: 0; background: transparent;">Kann ich auch ohne Registrierung mitmachen?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 20px 18px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Ohne Registrierung können Sie alle Inhalte lesen und sich informieren. Um Vorschläge einzureichen, zu kommentieren oder abzustimmen, ist eine kostenlose Registrierung erforderlich.</p>
       </div>
     </li>
+
   </ul>
 
 </div>

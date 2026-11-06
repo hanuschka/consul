@@ -1,0 +1,45 @@
+// Layer that simple edit mode lays over a content block to carry one
+// "YouTube-Link" button per video (App.Studio.ContentBlocks.SimpleEditMode.
+// YoutubeEdit). It sits in the block wrapper, outside the saved content,
+// above .custom-content-block (z-index 2).
+.studio-youtube-controls {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+// Placed at the video's top-left by the editor; look and states come from
+// .studio-edit-button.
+.studio-youtube-controls--button {
+  position: absolute;
+  pointer-events: auto;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
+
+  &:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 2px;
+  }
+}
+
+.content-block-youtube-popup {
+  width: 420px;
+}
+
+.content-block-youtube-popup--body {
+  margin-bottom: 20px;
+}
+
+.content-block-youtube-popup--input {
+  margin: 4px 0 0;
+}
+
+.content-block-youtube-popup--error {
+  margin: 8px 0 0;
+  color: #b91c1c;
+  font-size: 14px;
+
+  &[hidden] {
+    display: none;
+  }
+}

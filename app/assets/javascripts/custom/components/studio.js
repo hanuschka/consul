@@ -37,6 +37,7 @@
     App.Studio.ContentBlocks.SimpleEditMode.MapEdit.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.MapSourceEdit.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.ImageAltEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit.initialize();
     App.Studio.ContentBlocks.AiEditMode.initialize();
     App.Studio.ContentBlocks.CodeEditMode.initialize();
     App.Studio.ContentBlocks.Copy.initialize();

@@ -6,8 +6,7 @@
 // - a video without a real link gets the link form itself, centered over the
 //   video, so an empty template asks for its link right away;
 // - a video with a link gets a "YouTube-Link bearbeiten" button on its left
-//   edge, 10% down so the player's title stays visible, which opens the same
-//   form as a popup.
+//   edge, 15% down from its top, which opens the same form as a popup.
 // Observers keep the controls on their videos while the block changes:
 // typing, list items added, removed or sorted, resizes, a changed src.
 //
@@ -16,7 +15,7 @@
 // template, so they follow the locale.
 App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit = {
   buttonInset: 12,
-  buttonTopRatio: 0.1,
+  buttonTopRatio: 0.15,
   blockStates: new Map(),
   iframeByControl: new WeakMap(),
   currentIframe: null,
@@ -159,7 +158,6 @@ App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit = {
 
     control.style.display = rect.width > 0 ? "" : "none";
 
-    // The button sits below the player's top bar (video title, share icons).
     if (videoSet) {
       control.style.left = `${left + this.buttonInset}px`;
       control.style.top = `${top + rect.height * this.buttonTopRatio}px`;

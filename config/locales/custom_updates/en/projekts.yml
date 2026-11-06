@@ -96,6 +96,29 @@ en:
           invalid_url: This is not a valid YouTube link. Please copy the link straight from YouTube.
           placeholder: https://www.youtube.com/watch?v=…
           url_label: YouTube link
+        content_block_progress_bar:
+          slider_label: Progress in percent
+          color_button: Bar color
+        studio_color_picker:
+          presets_title: Palette
+          recent_title: Recently used
+          custom_title: Custom color
+          native_label: Choose any color
+          hex_label: Color as hex code
+          apply: Apply
+          hex_error: "Please enter a color value such as #1a2e44."
+          colors:
+            brand: Brand color
+            navy: Navy
+            blue: Blue
+            teal: Teal
+            green: Green
+            olive: Olive
+            amber: Orange
+            red: Red
+            magenta: Magenta
+            violet: Violet
+            slate: Slate
         toggle_background_label: Background
         toggle_background_tooltip: Show or hide the white background behind the content
         color_picker:

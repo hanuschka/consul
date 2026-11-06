@@ -1,14 +1,13 @@
 // YouTube link editing for simple edit mode.
 //
 // While simple edit mode is on, every YouTube iframe in the block gets a
-// control in one layer appended to the block's studio wrapper, outside the
-// saved content, so nothing has to be stripped before a save:
+// control on the block's ControlLayer, outside the saved content:
 // - a video without a real link gets the link form itself, centered over the
 //   video, so an empty template asks for its link right away;
 // - a video with a link gets a "YouTube-Link bearbeiten" button on its left
 //   edge, 15% down from its top, which opens the same form as a popup.
-// Observers keep the controls on their videos while the block changes:
-// typing, list items added, removed or sorted, resizes, a changed src.
+// The layer's observers keep the controls on their videos while the block
+// changes, including a changed src.
 //
 // Any common YouTube link is accepted and rewritten to the privacy-friendly
 // youtube-nocookie embed. Texts come from the server-rendered popup and
@@ -63,31 +62,19 @@ App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit = {
   enableControls(contentBlock) {
     if (this.blockStates.has(contentBlock)) return
 
-    const wrapper = App.Studio.ContentBlocks.DomHelpers.getParentContentBlockWrapper(contentBlock);
-    const layer = document.createElement("div");
-    layer.className = "studio-youtube-controls js-youtube-controls js-studio-hide-on-preview";
-    wrapper.appendChild(layer);
-
-    const state = {
-      layer: layer,
-      controls: new Map(),
-      frameRequest: null,
-      scheduleSync: () => this.scheduleSync(contentBlock)
-    };
-
-    state.resizeObserver = new ResizeObserver(state.scheduleSync);
-    state.resizeObserver.observe(contentBlock);
-    state.resizeObserver.observe(wrapper);
-    state.mutationObserver = new MutationObserver(state.scheduleSync);
-    state.mutationObserver.observe(contentBlock, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["src", "data-src"]
+    const layer = App.Studio.ContentBlocks.SimpleEditMode.ControlLayer.attach(contentBlock, {
+      className: "studio-youtube-controls js-youtube-controls",
+      mutationOptions: {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["src", "data-src"]
+      },
+      onSync: () => this.syncControls(contentBlock),
+      onDisconnect: () => this.disableControls(contentBlock)
     });
-    window.addEventListener("resize", state.scheduleSync);
 
-    this.blockStates.set(contentBlock, state);
+    this.blockStates.set(contentBlock, { layer: layer, controls: new Map() });
     this.syncControls(contentBlock);
   },
 
@@ -96,37 +83,12 @@ App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit = {
 
     if (!state) return
 
-    state.resizeObserver.disconnect();
-    state.mutationObserver.disconnect();
-    window.removeEventListener("resize", state.scheduleSync);
-    cancelAnimationFrame(state.frameRequest);
-    state.layer.remove();
+    App.Studio.ContentBlocks.SimpleEditMode.ControlLayer.detach(state.layer);
     this.blockStates.delete(contentBlock);
 
     if (this.currentIframe && contentBlock.contains(this.currentIframe)) {
       this.hidePopup();
     }
-  },
-
-  // Observers fire in bursts (one per typed character, several per sort);
-  // one sync per frame is enough to keep the controls in place.
-  // A block deleted while in simple edit mode never gets its toggle-off call,
-  // so its observers and resize listener are dropped here instead.
-  scheduleSync(contentBlock) {
-    const state = this.blockStates.get(contentBlock);
-
-    if (!state || state.frameRequest) return
-
-    if (!contentBlock.isConnected) {
-      this.disableControls(contentBlock);
-
-      return
-    }
-
-    state.frameRequest = requestAnimationFrame(() => {
-      state.frameRequest = null;
-      this.syncControls(contentBlock);
-    });
   },
 
   syncControls(contentBlock) {
@@ -142,7 +104,7 @@ App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit = {
 
     // Every rect is read before any control is written, so a sync costs one
     // layout instead of one per video.
-    const layerRect = state.layer.getBoundingClientRect();
+    const layerRect = state.layer.element.getBoundingClientRect();
     const placements = iframes.map((iframe) => ({ iframe: iframe, rect: iframe.getBoundingClientRect() }));
     const labels = this.getLabels();
 
@@ -182,7 +144,8 @@ App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit = {
       existingControl.remove();
     }
 
-    const control = wantsInlineForm ? this.buildInlineForm(state.layer) : this.buildButton(state.layer);
+    const layerElement = state.layer.element;
+    const control = wantsInlineForm ? this.buildInlineForm(layerElement) : this.buildButton(layerElement);
 
     this.iframeByControl.set(control, iframe);
     state.controls.set(iframe, control);
@@ -262,8 +225,18 @@ App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit = {
 
     App.Studio.ContentBlocks.SimpleEditMode.EditPopup.show(this.getPopup(), this.currentButton, "below");
     this.hideError();
-    input.value = this.iframeUrl(this.currentIframe);
+    input.value = this.editorFacingUrl(this.currentIframe);
     input.focus();
+  },
+
+  // Editors see the familiar youtube.com link; the iframe keeps the
+  // youtube-nocookie embed.
+  editorFacingUrl(iframe) {
+    const video = App.Studio.utils.parseYoutubeUrl(this.iframeUrl(iframe));
+
+    if (!video) return ""
+
+    return App.Studio.utils.youtubeWatchUrl(video.videoId, video.startSeconds)
   },
 
   acceptEdit(e) {

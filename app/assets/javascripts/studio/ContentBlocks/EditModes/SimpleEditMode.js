@@ -117,6 +117,9 @@ App.Studio.ContentBlocks.SimpleEditMode = {
         App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit.toggleYoutubeControls(
           contentBlock, enabled
         )
+        App.Studio.ContentBlocks.SimpleEditMode.ProgressBarEdit.toggleProgressBarControls(
+          contentBlock, enabled
+        )
 
         if (endCallback) {
           endCallback()
@@ -142,6 +145,9 @@ App.Studio.ContentBlocks.SimpleEditMode = {
         contentBlock, enabled
       )
       App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit.toggleYoutubeControls(
+        contentBlock, enabled
+      )
+      App.Studio.ContentBlocks.SimpleEditMode.ProgressBarEdit.toggleProgressBarControls(
         contentBlock, enabled
       )
 

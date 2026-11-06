@@ -30,6 +30,7 @@
 //= require ../studio/Evaluation/base
 //= require ../studio/PreviewMode/base
 //= require ../studio/Projekt/PageBrandColorPicker
+//= require ../studio/StudioColorPicker
 //= require_tree ../studio/utils
 //= require_tree ../studio/templates
 
@@ -56,6 +57,7 @@
 //= require ../studio/ContentBlocks/Visibility
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/EditPopup
+//= require ../studio/ContentBlocks/EditModes/SimpleEditMode/ControlLayer
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/TextFormat
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/HeaderEdit
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/ListEdit
@@ -65,6 +67,7 @@
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/MapSourceEdit
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/ImageAltEdit
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/YoutubeEdit
+//= require ../studio/ContentBlocks/EditModes/SimpleEditMode/ProgressBarEdit
 //= require ../studio/ContentBlocks/EditModes/SimpleEditMode/FileManagerDialog
 //= require ../studio/ContentBlocks/EditModes/CKEditorMode
 //= require ../studio/ContentBlocks/SavedContentBlocks

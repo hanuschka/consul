@@ -96,6 +96,29 @@ de:
           invalid_url: Das ist kein gültiger YouTube-Link. Bitte kopieren Sie den Link direkt von YouTube.
           placeholder: https://www.youtube.com/watch?v=…
           url_label: YouTube-Link
+        content_block_progress_bar:
+          slider_label: Fortschritt in Prozent
+          color_button: Balkenfarbe
+        studio_color_picker:
+          presets_title: Farbpalette
+          recent_title: Zuletzt verwendet
+          custom_title: Eigene Farbe
+          native_label: Farbe frei wählen
+          hex_label: Farbwert als Hex-Code
+          apply: Übernehmen
+          hex_error: "Bitte einen Farbwert wie #1a2e44 eingeben."
+          colors:
+            brand: Hauptfarbe
+            navy: Nachtblau
+            blue: Blau
+            teal: Petrol
+            green: Grün
+            olive: Olivgrün
+            amber: Orange
+            red: Rot
+            magenta: Magenta
+            violet: Violett
+            slate: Schiefergrau
         toggle_background_label: Hintergrund
         toggle_background_tooltip: Weißen Hintergrund hinter dem Inhalt ein- oder ausblenden
         color_picker:

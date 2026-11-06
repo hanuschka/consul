@@ -106,6 +106,25 @@
   </div>
 </template>
 
+<%# Cloned over every progress bar while simple edit mode is on %>
+<template class="js-progress-bar-control-template">
+  <div class="studio-progress-bar-controls--control js-progress-bar-control">
+    <input
+      type="range"
+      min="0"
+      max="100"
+      step="1"
+      class="studio-progress-bar-controls--slider js-progress-bar-slider"
+      aria-label="<%= t("custom.projekts.page.content_block_progress_bar.slider_label") %>"
+    >
+
+    <%= render Shared::StudioColorPickerComponent.new(
+      label: t("custom.projekts.page.content_block_progress_bar.color_button"),
+      picker_class: "studio-progress-bar-controls--color js-progress-bar-color-picker"
+    ) %>
+  </div>
+</template>
+
 <%# Cloned by every calendar button's <inline-popup template-id="..."> %>
 <template id="content-block-visibility-period-popup-template">
   <p class="content-block-visibility-period-popup--intro">

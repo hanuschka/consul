@@ -566,8 +566,23 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
 
     this.showLoadingOverlay(img, selectedPicture.gallery_thumb_url)
 
-    const customThumbUrl = selectedPicture.custom_thumb_url
+    const imagePreload = new Image()
 
+    imagePreload.addEventListener(
+      "load",
+      () => this.applyReplacementImage(img, selectedPicture, contentBlockWrapper, contentBlockId),
+      { once: true }
+    )
+    imagePreload.addEventListener(
+      "error",
+      () => this.cancelImageReplacement(contentBlockWrapper, contentBlockId),
+      { once: true }
+    )
+
+    imagePreload.src = selectedPicture.custom_thumb_url
+  },
+
+  applyReplacementImage(img, selectedPicture, contentBlockWrapper, contentBlockId) {
     const onImageLoadComplete = () => {
       this.hideLoadingOverlay()
       this.finishImageLoading(img, contentBlockWrapper, contentBlockId)
@@ -579,7 +594,18 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
     img.addEventListener("load", onImageLoadComplete)
     img.addEventListener("error", onImageLoadComplete)
 
-    this.setImageSrc(img, selectedPicture, customThumbUrl)
+    this.setImageSrc(img, selectedPicture, selectedPicture.custom_thumb_url)
+  },
+
+  cancelImageReplacement(contentBlockWrapper, contentBlockId) {
+    this.hideLoadingOverlay()
+    this.releaseImageLoading(contentBlockWrapper, contentBlockId)
+
+    App.FlashMessages.showFromTemplate(this.getLoadFailedToastTemplate())
+  },
+
+  getLoadFailedToastTemplate() {
+    return document.querySelector(".js-image-load-failed-toast")
   },
 
   showLoadingOverlay(img, previewUrl) {
@@ -608,8 +634,6 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
   },
 
   finishImageLoading(img, contentBlockWrapper, contentBlockId) {
-    this.decrementImageLoadingCount(contentBlockId)
-
     img.style.objectFit = "cover"
     img.style.objectPosition = ""
 
@@ -621,6 +645,12 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
     img.height = newHeight
     img.dataset.originalThumbHeight = newHeight
     img.style.height = `${newHeight}px`
+
+    this.releaseImageLoading(contentBlockWrapper, contentBlockId)
+  },
+
+  releaseImageLoading(contentBlockWrapper, contentBlockId) {
+    this.decrementImageLoadingCount(contentBlockId)
 
     if (this.contentBlockImageLoadingState[contentBlockId] <= 0) {
       App.Studio.ContentBlocks.SimpleEditMode.toggleLockSaveCancel(

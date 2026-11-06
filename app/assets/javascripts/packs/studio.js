@@ -22,6 +22,7 @@
 //= require ../lib/files/filter_serializer
 //= require ../html_editor
 //= require ../custom/lib/Ajax
+//= require ../custom/flash_messages
 //= require ../custom/components/shared/modal
 //= require ../custom/components/shared/image_cropper
 //= require ../custom/components/shared/dropdown_select_menu_component

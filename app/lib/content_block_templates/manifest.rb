@@ -345,6 +345,15 @@ module ContentBlockTemplates::Manifest
           hidden: false,
           hidden_until: nil,
           file: "media/164_externe_einbettung.html"
+        },
+        {
+          id: 171,
+          name: "YouTube-Video",
+          description: "A single YouTube video on its own, without title, text or card. For placing a video between other blocks.",
+          position: 16,
+          hidden: false,
+          hidden_until: nil,
+          file: "media/171_youtube_video.html"
         }
       ]
     },

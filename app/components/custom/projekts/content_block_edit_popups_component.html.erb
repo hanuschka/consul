@@ -66,42 +66,45 @@
 
 <%= render Projekts::StudioEditPopupComponent.new(
   popup_classes: "js-content-block-youtube-popup content-block-youtube-popup",
-  accept_button_class: "js-content-block-accept-youtube-edit",
+  accept_button_class: "studio-youtube-save js-content-block-accept-youtube-edit",
   cancel_button_class: "js-content-block-cancel-youtube-edit"
 ) do %>
   <div
     class="content-block-youtube-popup--body js-content-block-youtube-popup-labels"
-    data-add-label="<%= t('custom.projekts.page.content_block_youtube_popup.add_link') %>"
     data-edit-label="<%= t('custom.projekts.page.content_block_youtube_popup.edit_link') %>"
   >
-    <div class="studio-edit-popup--intro">
-      <i class="fab fa-youtube studio-edit-popup--intro-icon" aria-hidden="true"></i>
-      <p class="studio-edit-popup--intro-text">
-        <%= t('custom.projekts.page.content_block_youtube_popup.description') %>
-      </p>
-    </div>
-
-    <label class="studio-edit-popup--label">
-      <%= t('custom.projekts.page.content_block_youtube_popup.url_label') %>:
-      <input
-        type="url"
-        class="content-block-youtube-popup--input js-content-block-youtube-url-input"
-        placeholder="<%= t('custom.projekts.page.content_block_youtube_popup.placeholder') %>"
-        autocomplete="off"
-        aria-describedby="content-block-youtube-url-error"
-      >
-    </label>
-
-    <p
-      id="content-block-youtube-url-error"
-      class="content-block-youtube-popup--error js-content-block-youtube-url-error"
-      role="alert"
-      hidden
-    >
-      <%= t('custom.projekts.page.content_block_youtube_popup.invalid_url') %>
-    </p>
+    <%= render(
+      "projekts/youtube_link_fields",
+      label: t("custom.projekts.page.content_block_youtube_popup.url_label"),
+      input_class: "js-content-block-youtube-url-input",
+      error_class: "js-content-block-youtube-url-error",
+      error_id: "content-block-youtube-url-error"
+    ) %>
   </div>
 <% end %>
+
+<%# Cloned over every YouTube video without a link while simple edit mode is on %>
+<template class="js-youtube-inline-form-template">
+  <div class="studio-youtube-inline-form js-youtube-inline-form">
+    <div class="studio-youtube-inline-form--panel">
+      <%= render(
+        "projekts/youtube_link_fields",
+        label: t("custom.projekts.page.content_block_youtube_popup.add_link"),
+        input_class: "js-youtube-inline-form-input",
+        error_class: "js-youtube-inline-form-error",
+        error_id: nil
+      ) %>
+
+      <button
+        type="button"
+        class="studio-edit-button studio-youtube-save studio-youtube-inline-form--save js-youtube-inline-form-save"
+      >
+        <i class="fas fa-save" aria-hidden="true"></i>
+        <%= t("custom.projekts.page.studio_edit_popup.save") %>
+      </button>
+    </div>
+  </div>
+</template>
 
 <%# Cloned by every calendar button's <inline-popup template-id="..."> %>
 <template id="content-block-visibility-period-popup-template">

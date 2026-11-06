@@ -45,9 +45,9 @@
   accept_button_class: "js-content-block-accept-image-alt-edit",
   cancel_button_class: "js-content-block-cancel-image-alt-edit"
 ) do %>
-  <div class="content-block-image-alt-popup--intro">
-    <i class="fas fa-universal-access content-block-image-alt-popup--intro-icon"></i>
-    <p class="content-block-image-alt-popup--intro-text">
+  <div class="studio-edit-popup--intro">
+    <i class="fas fa-universal-access studio-edit-popup--intro-icon"></i>
+    <p class="studio-edit-popup--intro-text">
       <%= t('custom.projekts.page.content_block_image_alt_popup.description') %>
     </p>
   </div>
@@ -61,6 +61,45 @@
         placeholder="<%= t('custom.projekts.page.content_block_image_alt_popup.placeholder') %>"
       ></textarea>
     </label>
+  </div>
+<% end %>
+
+<%= render Projekts::StudioEditPopupComponent.new(
+  popup_classes: "js-content-block-youtube-popup content-block-youtube-popup",
+  accept_button_class: "js-content-block-accept-youtube-edit",
+  cancel_button_class: "js-content-block-cancel-youtube-edit"
+) do %>
+  <div
+    class="content-block-youtube-popup--body js-content-block-youtube-popup-labels"
+    data-add-label="<%= t('custom.projekts.page.content_block_youtube_popup.add_link') %>"
+    data-edit-label="<%= t('custom.projekts.page.content_block_youtube_popup.edit_link') %>"
+  >
+    <div class="studio-edit-popup--intro">
+      <i class="fab fa-youtube studio-edit-popup--intro-icon" aria-hidden="true"></i>
+      <p class="studio-edit-popup--intro-text">
+        <%= t('custom.projekts.page.content_block_youtube_popup.description') %>
+      </p>
+    </div>
+
+    <label class="studio-edit-popup--label">
+      <%= t('custom.projekts.page.content_block_youtube_popup.url_label') %>:
+      <input
+        type="url"
+        class="content-block-youtube-popup--input js-content-block-youtube-url-input"
+        placeholder="<%= t('custom.projekts.page.content_block_youtube_popup.placeholder') %>"
+        autocomplete="off"
+        aria-describedby="content-block-youtube-url-error"
+      >
+    </label>
+
+    <p
+      id="content-block-youtube-url-error"
+      class="content-block-youtube-popup--error js-content-block-youtube-url-error"
+      role="alert"
+      hidden
+    >
+      <%= t('custom.projekts.page.content_block_youtube_popup.invalid_url') %>
+    </p>
   </div>
 <% end %>
 

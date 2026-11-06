@@ -89,6 +89,13 @@ de:
           clear: Zurücksetzen
           order_error: Das Ende darf nicht vor dem Beginn liegen.
           save_error: Der Zeitraum konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.
+        content_block_youtube_popup:
+          add_link: YouTube-Link hinzufügen
+          description: Fügen Sie den Link zu einem YouTube-Video ein. Unterstützt werden Links aus der Adresszeile, Teilen-Links (youtu.be), Shorts und Einbettungslinks; eine Startzeit im Link wird übernommen.
+          edit_link: YouTube-Link bearbeiten
+          invalid_url: Das ist kein gültiger YouTube-Link. Bitte kopieren Sie den Link direkt von YouTube.
+          placeholder: https://www.youtube.com/watch?v=…
+          url_label: YouTube-Link
         toggle_background_label: Hintergrund
         toggle_background_tooltip: Weißen Hintergrund hinter dem Inhalt ein- oder ausblenden
         color_picker:

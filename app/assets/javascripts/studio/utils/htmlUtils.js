@@ -222,6 +222,37 @@ App.Studio.utils.resetMapEmbeds = function(html) {
   return container.innerHTML;
 }
 
+// With the GDPR two-click setting the server renders iframes with an empty
+// src (the URL moved to data-src) and the page wraps each one in a consent
+// overlay. Both are display state only: this puts the URL back into src and
+// drops the overlay markup, so a save can never persist an iframe without
+// its URL. The overlay classes are matched as-is because already saved
+// bodies carry them too.
+App.Studio.utils.restoreConsentIframes = function(html) {
+  if (!html || html.indexOf("<iframe") === -1) return html;
+
+  const container = App.Studio.utils.htmlToDomElement(html);
+
+  container.querySelectorAll(".iframe-explainer").forEach((explainer) => explainer.remove());
+  container.querySelectorAll(".iframe-wrapper").forEach((wrapper) => wrapper.replaceWith(...wrapper.childNodes));
+  container.querySelectorAll("iframe[data-src]").forEach((iframe) => App.Studio.utils.restoreConsentIframeSrc(iframe));
+
+  return container.innerHTML;
+}
+
+App.Studio.utils.restoreConsentIframeSrc = function(iframe) {
+  if (iframe.getAttribute("src")) return
+
+  iframe.setAttribute("src", iframe.dataset.src);
+  iframe.removeAttribute("data-src");
+}
+
+// The HTML a content block is persisted (or versioned) with: map embeds back
+// to their token, consent-processed iframes back to their URL.
+App.Studio.utils.persistableContentBlockHtml = function(html) {
+  return App.Studio.utils.restoreConsentIframes(App.Studio.utils.resetMapEmbeds(html));
+}
+
 App.Studio.utils.formatHTML = function(html) {
   let formatted = '';
   let indent = 0;

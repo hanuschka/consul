@@ -223,7 +223,6 @@ class Setting < ApplicationRecord
         "feature.bund_id_login": false,
         "feature.kobil_login": false,
         "feature.kobil_address_verification": false,
-        "feature.public_stats": true,
         "feature.signature_sheets": true,
         "feature.user.recommendations": true,
         "feature.user.recommendations_on_debates": true,

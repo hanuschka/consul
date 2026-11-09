@@ -1,0 +1,169 @@
+// Icon picker of the content block simple edit mode
+// (Projekts::ContentBlockIconPickerComponent,
+// App.Studio.ContentBlocks.SimpleEditMode.IconEdit). Only the icon grid
+// scrolls, so the search field and the Save and Cancel row stay in view.
+.studio-content-block-icon-picker {
+  width: 23rem;
+  max-width: calc(100vw - 24px);
+}
+
+.studio-content-block-icon-picker--title {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.studio-content-block-icon-picker--search {
+  position: relative;
+  margin: 0 0 4px;
+}
+
+.studio-content-block-icon-picker--search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  font-size: 0.875rem;
+  color: #4a4f57;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+// Foundation gives every text input its own height, margin and focus glow
+.studio-content-block-icon-picker--search-input {
+  height: 40px;
+  margin: 0;
+  padding: 0 12px 0 34px;
+  font-size: 1rem;
+  color: #1c1c1c;
+  border: 1px solid #80868e;
+  border-radius: 6px;
+  box-shadow: none;
+
+  &::placeholder {
+    color: #5e646c;
+  }
+
+  &:focus {
+    border-color: #80868e;
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 1px;
+  }
+}
+
+// Holds its height while empty, so the icon list never jumps
+.studio-content-block-icon-picker--name {
+  min-height: calc(0.875rem * 1.5);
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #4a4f57;
+}
+
+.studio-content-block-icon-picker--status {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #4a4f57;
+
+  &:not(:empty) {
+    padding: 8px 0;
+  }
+}
+
+.studio-content-block-icon-picker--groups {
+  max-height: 50vh;
+  // Interpolated, as libsass would otherwise read min() as its own function
+  max-height: #{"min(22rem, 50svh)"};
+  margin: 0 0 12px;
+  padding: 2px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.studio-content-block-icon-picker--group {
+  margin: 0 0 12px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.studio-content-block-icon-picker--group-title {
+  margin: 0 0 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #4a4f57;
+}
+
+.studio-content-block-icon-picker--options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 40px);
+  gap: 4px;
+}
+
+// Selection is the dark outline drawn over the border; keyboard focus adds a
+// blue ring outside it, so both stay visible on the same option.
+.studio-content-block-icon-picker--option {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  font-size: 1.125rem;
+  line-height: 1;
+  color: #1c1c1c;
+  background: #fff;
+  border: 1px solid #cdd1d6;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 120ms ease-out;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &:not([aria-pressed="true"]):hover {
+    background: #f1f2f4;
+  }
+
+  &:active {
+    background: #e4e6e9;
+  }
+
+  &[aria-pressed="true"] {
+    outline: 2px solid #1c1c1c;
+    outline-offset: -1px;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--focus-outline-color);
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline: 3px dashed CanvasText;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Icons in a block in simple edit mode that open the picker on click.
+.studio-content-block-icon-target {
+  outline: 2px dashed transparent;
+  outline-offset: 2px;
+  cursor: pointer;
+  transition: outline-color 120ms ease-out;
+
+  &:hover {
+    outline-color: var(--focus-outline-color);
+  }
+}

@@ -45,11 +45,15 @@ class Api::ProposalsController < Api::BaseController
 
     proposals = paginate(
       proposals
-        .includes(:author, :tags, :geozone, :projekt_labels, :sentiment,
-                  projekt_phase: [:settings, { projekt: :page }])
+        .includes(
+          :tags, :geozone, :projekt_labels, :sentiment,
+          author: :organization,
+          documents: { attachment_attachment: :blob },
+          projekt_phase: [:settings, { projekt: :page }]
+        )
     )
 
-    serialized_proposals = ProposalSerializer.serialize_collection(proposals)
+    serialized_proposals = ProposalSerializer.serialize_collection(proposals, client: current_client)
 
     render json: {
       data: { proposals: serialized_proposals },
@@ -66,7 +70,7 @@ class Api::ProposalsController < Api::BaseController
       end
     end
 
-    serialized_proposal = ProposalSerializer.new(@proposal).serialize
+    serialized_proposal = ProposalSerializer.new(@proposal, client: current_client).serialize
 
     render json: { data: { proposal: serialized_proposal } }
   end
@@ -77,6 +81,7 @@ class Api::ProposalsController < Api::BaseController
     proposal = @projekt_phase.resources.new(proposal_params.except("image_attributes"))
     proposal.author = @current_client.content_author
     proposal.resource_terms = true
+    assign_document_authors(proposal)
 
     if proposal.save
       process_image_with_base64(proposal, params[:proposal][:image_attributes])
@@ -85,13 +90,13 @@ class Api::ProposalsController < Api::BaseController
         proposal.publish
       end
 
-      serialized_proposal = ProposalSerializer.new(proposal).serialize
+      serialized_proposal = ProposalSerializer.new(proposal, client: current_client).serialize
 
       render json: { data: { proposal: serialized_proposal } }, status: 201
     else
       render json: { error: { messages: proposal.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -100,16 +105,17 @@ class Api::ProposalsController < Api::BaseController
   def update
     check_admin_access!
     @proposal.assign_attributes(proposal_params.except("image_attributes"))
+    assign_document_authors(@proposal)
 
     if @proposal.save
       process_image_with_base64(@proposal, params[:proposal][:image_attributes])
-      serialized_proposal = ProposalSerializer.new(@proposal).serialize
+      serialized_proposal = ProposalSerializer.new(@proposal, client: current_client).serialize
 
       render json: { data: { proposal: serialized_proposal } }
     else
       render json: { error: { messages: @proposal.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -131,10 +137,10 @@ class Api::ProposalsController < Api::BaseController
       @proposal.publish
     end
 
-    serialized_proposal = ProposalSerializer.new(@proposal).serialize
+    serialized_proposal = ProposalSerializer.new(@proposal, client: current_client).serialize
 
     render json: { data: { proposal: serialized_proposal } }
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -143,23 +149,25 @@ class Api::ProposalsController < Api::BaseController
   private
 
   def proposal_params
-    params.require(:proposal).permit(
-      :responsible_name,
-      :video_url,
-      :geozone_id,
-      :selected,
-      :on_behalf_of,
-      :sentiment_id,
-      :official_answer,
-      :admin_accepted,
-      :tag_list,
-      :related_sdg_list,
-      :resource_terms,
-      :title,
-      :description,
-      projekt_label_ids: [],
-      map_location_attributes: map_location_attributes,
-      documents_attributes: document_attributes
+    with_decoded_documents(
+      params.require(:proposal).permit(
+        :responsible_name,
+        :video_url,
+        :geozone_id,
+        :selected,
+        :on_behalf_of,
+        :sentiment_id,
+        :official_answer,
+        :admin_accepted,
+        :tag_list,
+        :related_sdg_list,
+        :resource_terms,
+        :title,
+        :description,
+        projekt_label_ids: [],
+        map_location_attributes: map_location_attributes,
+        documents_attributes: document_attributes_api
+      )
     )
   end
 

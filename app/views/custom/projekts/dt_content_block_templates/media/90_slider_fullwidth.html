@@ -1,60 +1,66 @@
-<!-- BlockID: C07 Image Slider – Vollbreite mit Lightbox -->
-<!-- Foundation Orbit-Slider: navigiert ueber Pfeile und Dots -->
-<!-- Lightbox: Klick auf das Hauptbild oeffnet GLightbox (durchblaetterbar) -->
-<!-- ANPASSEN: src/href + alt + figcaption ersetzen -->
+<!-- BlockID: C07 Bildslider - Vollbreite mit Lightbox, Pfeilen und Punkten -->
+<!-- Geeignet für: Projektphasen, Bildstrecken mit kurzer Bildunterschrift -->
+<!-- Editor: Foundation-Orbit-Slider, blättert über Pfeile und Punkte; Klick auf das Bild öffnet die Lightbox. Jede Folie ist ein Listenelement; Bilder über das Bild-Werkzeug tauschen (Maus auf eine freie Bildstelle). Die Punkte unten entsprechen der Folienzahl: beim Hinzufügen einer Folie im Code-Modus einen Punkt ergänzen. -->
+<!-- Umbruch: Foto in voller Kartenbreite, Höhe wächst mit der Bildschirmbreite (am Handy etwa 240 px, breit bis 440 px); die Bildunterschrift bricht unter das Etikett um. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Etikett und Bildunterschrift 1rem -->
 
-<div class="orbit" role="region" aria-label="Projektphasen" data-orbit>
-  <div class="orbit-wrapper">
-    <div class="orbit-controls">
-      <button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>
-      <button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>
-    </div>
-    <ul class="orbit-container" style="height: 500px !important">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+  <div class="orbit" role="region" aria-label="Projektphasen" data-orbit style="margin: 0; background: #1a2e44;">
+    <div class="orbit-wrapper">
+      <div class="orbit-controls">
+        <button class="orbit-previous"><span class="show-for-sr">Vorheriges Bild</span>&#9664;&#xFE0E;</button>
+        <button class="orbit-next"><span class="show-for-sr">Nächstes Bild</span>&#9654;&#xFE0E;</button>
+      </div>
+      <ul class="orbit-container" style="height: 260px !important; height: clamp(240px, 45vw, 440px) !important; margin: 0; padding: 0; list-style: none;">
 
       <li class="is-active orbit-slide">
-        <figure class="orbit-figure" style="position: relative;">
-          <a class="glightbox" href="https://placehold.co/1600x900/1a365d/ffffff?text=Slide+1" data-gallery="gallery-c07" data-glightbox="type: image" data-title="Auftakt-Workshop im Rathaus" data-description="Ueber 80 Buergerinnen und Buerger diskutierten Ideen fuer den Westpark." target="_blank" style="display: block; text-decoration: none;">
-            <img class="orbit-image" style="height: 500px !important" referrerpolicy="no-referer" src="https://placehold.co/1200x500/1a365d/ffffff?text=Slide+1" alt="Auftakt-Workshop im Rathaus">
-            <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1;" aria-hidden="true">
-              <i class="fas fa-magnifying-glass-plus"></i>
-            </span>
+        <figure class="orbit-figure" style="position: relative; margin: 0;">
+          <a class="glightbox" href="https://placehold.co/1600x900/1a365d/ffffff?text=Slide+1" data-gallery="gallery-c07" data-glightbox="type: image" data-title="Auftakt-Workshop im Rathaus" data-description="Über 80 Bürgerinnen und Bürger diskutierten Ideen für den Westpark." target="_blank" title="Bild vergrößern" style="display: block; text-decoration: none;">
+            <img class="orbit-image" src="https://placehold.co/1200x500/1a365d/ffffff?text=Slide+1" alt="Auftakt-Workshop im Rathaus" style="display: block; width: 100%; height: 260px !important; height: clamp(240px, 45vw, 440px) !important; object-fit: cover; margin: 0;">
+            <span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; z-index: 2; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(10,20,35,0.40); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);; border: 1px solid rgba(255,255,255,0.35); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); pointer-events: none;"><i class="fas fa-search-plus" style="font-size: 18px;"></i></span>
           </a>
-          <figcaption class="orbit-caption">Phase 1 | Abgeschlossen &mdash; Auftakt-Workshop im Rathaus</figcaption>
+          <figcaption class="orbit-caption" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 14px 16px; margin: 0; color: #ffffff; background: rgba(10,20,35,0.6); background: linear-gradient(180deg, rgba(10,20,35,0.35) 0%, rgba(10,20,35,0.82) 100%);">
+            <span style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; background: rgba(10,20,35,0.40); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);; border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 2px 12px; color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700;">Phase 1 · Abgeschlossen</span>
+            <span style="flex: 1 1 12rem; min-width: 0; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; hyphens: auto; overflow-wrap: break-word; text-shadow: 0 1px 2px rgba(0,0,0,0.35);">Auftakt-Workshop im Rathaus</span>
+          </figcaption>
         </figure>
       </li>
 
       <li class="orbit-slide">
-        <figure class="orbit-figure" style="position: relative;">
-          <a class="glightbox" href="https://placehold.co/1600x900/0d7e6d/ffffff?text=Slide+2" data-gallery="gallery-c07" data-glightbox="type: image" data-title="Online-Beteiligung geoeffnet" data-description="Bis 30. September koennen Ideen und Anmerkungen digital eingereicht werden." target="_blank" style="display: block; text-decoration: none;">
-            <img class="orbit-image" style="height: 500px !important" referrerpolicy="no-referer" src="https://placehold.co/1200x500/0d7e6d/ffffff?text=Slide+2" alt="Online-Beteiligung geoeffnet">
-            <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1;" aria-hidden="true">
-              <i class="fas fa-magnifying-glass-plus"></i>
-            </span>
+        <figure class="orbit-figure" style="position: relative; margin: 0;">
+          <a class="glightbox" href="https://placehold.co/1600x900/0d7e6d/ffffff?text=Slide+2" data-gallery="gallery-c07" data-glightbox="type: image" data-title="Online-Beteiligung geöffnet" data-description="Bis 30. September können Ideen und Anmerkungen digital eingereicht werden." target="_blank" title="Bild vergrößern" style="display: block; text-decoration: none;">
+            <img class="orbit-image" src="https://placehold.co/1200x500/0d7e6d/ffffff?text=Slide+2" alt="Online-Beteiligung geöffnet" style="display: block; width: 100%; height: 260px !important; height: clamp(240px, 45vw, 440px) !important; object-fit: cover; margin: 0;">
+            <span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; z-index: 2; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(10,20,35,0.40); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);; border: 1px solid rgba(255,255,255,0.35); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); pointer-events: none;"><i class="fas fa-search-plus" style="font-size: 18px;"></i></span>
           </a>
-          <figcaption class="orbit-caption">Phase 2 | Laufend &mdash; Online-Beteiligung geoeffnet</figcaption>
+          <figcaption class="orbit-caption" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 14px 16px; margin: 0; color: #ffffff; background: rgba(10,20,35,0.6); background: linear-gradient(180deg, rgba(10,20,35,0.35) 0%, rgba(10,20,35,0.82) 100%);">
+            <span style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; background: rgba(10,20,35,0.40); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);; border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 2px 12px; color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700;">Phase 2 · Laufend</span>
+            <span style="flex: 1 1 12rem; min-width: 0; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; hyphens: auto; overflow-wrap: break-word; text-shadow: 0 1px 2px rgba(0,0,0,0.35);">Online-Beteiligung geöffnet</span>
+          </figcaption>
         </figure>
       </li>
 
       <li class="orbit-slide">
-        <figure class="orbit-figure" style="position: relative;">
-          <a class="glightbox" href="https://placehold.co/1600x900/1a5c3a/ffffff?text=Slide+3" data-gallery="gallery-c07" data-glightbox="type: image" data-title="Ergebnispraesentation im Stadtrat" data-description="Im November werden die Ergebnisse oeffentlich vorgestellt und beraten." target="_blank" style="display: block; text-decoration: none;">
-            <img class="orbit-image" style="height: 500px !important" referrerpolicy="no-referer" src="https://placehold.co/1200x500/1a5c3a/ffffff?text=Slide+3" alt="Ergebnispraesentation im Stadtrat">
-            <span style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 47px; height: 47px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: white; font-size: 30px; line-height: 1;" aria-hidden="true">
-              <i class="fas fa-magnifying-glass-plus"></i>
-            </span>
+        <figure class="orbit-figure" style="position: relative; margin: 0;">
+          <a class="glightbox" href="https://placehold.co/1600x900/1a5c3a/ffffff?text=Slide+3" data-gallery="gallery-c07" data-glightbox="type: image" data-title="Ergebnispräsentation im Stadtrat" data-description="Im November werden die Ergebnisse öffentlich vorgestellt und beraten." target="_blank" title="Bild vergrößern" style="display: block; text-decoration: none;">
+            <img class="orbit-image" src="https://placehold.co/1200x500/1a5c3a/ffffff?text=Slide+3" alt="Ergebnispräsentation im Stadtrat" style="display: block; width: 100%; height: 260px !important; height: clamp(240px, 45vw, 440px) !important; object-fit: cover; margin: 0;">
+            <span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; z-index: 2; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(10,20,35,0.40); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);; border: 1px solid rgba(255,255,255,0.35); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); pointer-events: none;"><i class="fas fa-search-plus" style="font-size: 18px;"></i></span>
           </a>
-          <figcaption class="orbit-caption">Phase 3 | Geplant &mdash; Ergebnispraesentation im Stadtrat</figcaption>
+          <figcaption class="orbit-caption" style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 14px 16px; margin: 0; color: #ffffff; background: rgba(10,20,35,0.6); background: linear-gradient(180deg, rgba(10,20,35,0.35) 0%, rgba(10,20,35,0.82) 100%);">
+            <span style="flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; background: rgba(10,20,35,0.40); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);; border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 2px 12px; color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700;">Phase 3 · Geplant</span>
+            <span style="flex: 1 1 12rem; min-width: 0; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; hyphens: auto; overflow-wrap: break-word; text-shadow: 0 1px 2px rgba(0,0,0,0.35);">Ergebnispräsentation im Stadtrat</span>
+          </figcaption>
         </figure>
       </li>
 
-    </ul>
+      </ul>
+    </div>
+    <nav class="orbit-bullets" style="margin: 0; padding: 10px 16px 6px; text-align: center; background: #ffffff;">
+      <button class="is-active" data-slide="0">
+        <span class="show-for-sr">Erstes Bild</span>
+        <span class="show-for-sr" data-slide-active-label>Aktuelles Bild</span>
+      </button>
+      <button data-slide="1"><span class="show-for-sr">Zweites Bild</span></button>
+      <button data-slide="2"><span class="show-for-sr">Drittes Bild</span></button>
+    </nav>
   </div>
-  <nav class="orbit-bullets">
-    <button class="is-active" data-slide="0">
-      <span class="show-for-sr">First slide details.</span>
-      <span class="show-for-sr" data-slide-active-label>Current Slide</span>
-    </button>
-    <button data-slide="1"><span class="show-for-sr">Second slide details.</span></button>
-    <button data-slide="2"><span class="show-for-sr">Third slide details.</span></button>
-  </nav>
 </div>

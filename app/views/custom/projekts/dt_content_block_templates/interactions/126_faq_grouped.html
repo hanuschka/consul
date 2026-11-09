@@ -1,80 +1,69 @@
-<!-- BlockID: F08 -->
-<!-- K4: FAQ Accordion – Gruppiert mit Kategorieüberschriften -->
-<!-- VORAUSSETZUNG: Foundation 6 JS muss auf der Seite geladen sein (in Consul enthalten) -->
-<!-- Geeignet für: Umfangreiche FAQ-Seiten, kategorisierte Informationen -->
+<!-- BlockID: F08 FAQ gruppiert - aufklappbare Fragen in Themengruppen -->
+<!-- Voraussetzung: Foundation 6 JS ist auf der Seite geladen (in Consul enthalten) -->
+<!-- Geeignet für: umfangreiche FAQ-Seiten, kategorisierte Informationen -->
+<!-- Editor: jede Frage ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Frage der Gruppe samt Antwort. Für eine weitere Gruppe Gruppentitel und Liste kopieren. -->
+<!-- Umbruch: Gruppen stehen untereinander, Fragen brechen innerhalb der Karte um; rechts bleibt Platz für das Plus-Zeichen des Themes. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Gruppentitel = Theme-H4, Etikett, Fragen und Antworten 1rem -->
 
-<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
-  <div style="font-size: 11px; font-weight: 600; color: var(--brand-color, #1779ba); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Themengruppen</div>
-  <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; letter-spacing: -0.3px; margin: 0;">Häufig gestellte Fragen</h3>
-  <p style="font-size: 14px; color: #6b7280; margin-bottom: 24px; margin-top: 0;">Finden Sie Antworten nach Themenbereich sortiert.</p>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <!-- Gruppe 1: Allgemeine Fragen -->
-  <div style="margin-bottom: 24px;">
-    <div style="display: flex; align-items: center; margin-bottom: 14px;">
-      <span style="font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--brand-color, #1779ba);">Allgemeine Fragen</span>
-      <div style="flex: 1; height: 1px; background: rgba(0,0,0,0.08); margin-left: 14px;"></div>
-    </div>
+  <span style="display: inline-flex; align-items: center; gap: 8px; background: #dce8f4; background: color-mix(in srgb, var(--brand-color, #1779ba) 16%, #ffffff); color: var(--brand-color, #1779ba); border-radius: 999px; padding: 2px 14px; margin: 0 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 700;"><i class="fas fa-layer-group" aria-hidden="true" style="font-size: 13px;"></i> Themengruppen</span>
+  <h3 style="margin: 0 0 6px; hyphens: auto; overflow-wrap: break-word;">Häufig gestellte Fragen</h3>
+  <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 20px;">Finden Sie Antworten nach Themenbereich sortiert.</p>
 
-    <ul class="accordion" data-accordion data-allow-all-closed="true" style="display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none;">
-
-      <li class="accordion-item" data-accordion-item style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-        <a href="#" class="accordion-title" style="display: block; padding: 16px 20px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-          Was ist eine Bürgerbeteiligung?
-        </a>
-        <div class="accordion-content" data-tab-content style="padding: 0 20px 16px 20px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-          <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Bürgerbeteiligung bedeutet, dass Einwohner:innen aktiv in Planungs- und Entscheidungsprozesse einbezogen werden. Über diese Plattform können Sie Vorschläge einreichen, abstimmen und Ihre Meinung zu städtischen Vorhaben teilen.</p>
-        </div>
-      </li>
-
-      <li class="accordion-item" data-accordion-item style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-        <a href="#" class="accordion-title" style="display: block; padding: 16px 20px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-          Wer kann an der Beteiligung teilnehmen?
-        </a>
-        <div class="accordion-content" data-tab-content style="padding: 0 20px 16px 20px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-          <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Alle Bürger:innen ab 16 Jahren, die in der Stadt wohnen, arbeiten oder in sonstiger Weise betroffen sind. Für bestimmte Abstimmungen kann eine Verifizierung erforderlich sein.</p>
-        </div>
-      </li>
-
-      <li class="accordion-item" data-accordion-item style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-        <a href="#" class="accordion-title" style="display: block; padding: 16px 20px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-          Sind die Ergebnisse verbindlich?
-        </a>
-        <div class="accordion-content" data-tab-content style="padding: 0 20px 16px 20px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-          <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Die Ergebnisse der Beteiligung fließen als wichtige Empfehlung in die politische Entscheidungsfindung ein. Die endgültige Beschlussfassung liegt beim Stadtrat.</p>
-        </div>
-      </li>
-
-    </ul>
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 10px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-info" style="font-size: 15px;"></i></span>
+    <h4 style="flex: 0 1 auto; margin: 0; hyphens: auto; overflow-wrap: break-word;">Allgemeine Fragen</h4>
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 1 1 auto; height: 1px; background: #e3e8ef;"></span>
   </div>
 
-  <!-- Gruppe 2: Technische Fragen -->
-  <div>
-    <div style="display: flex; align-items: center; margin-bottom: 14px;">
-      <span style="font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--brand-color, #1779ba);">Technische Fragen</span>
-      <div style="flex: 1; height: 1px; background: rgba(0,0,0,0.08); margin-left: 14px;"></div>
-    </div>
+  <ul class="accordion" data-accordion data-allow-all-closed="true" style="list-style: none; margin: 0 0 24px; padding: 0; background: transparent; border: 0; display: flex; flex-direction: column; gap: 10px;">
 
-    <ul class="accordion" data-accordion data-allow-all-closed="true" style="display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none;">
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #f8fafc; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 14px 48px 14px 18px; min-height: 44px; border: 0; background: transparent;">Was ist eine Bürgerbeteiligung?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 18px 16px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Bürgerbeteiligung bedeutet, dass Einwohner:innen aktiv in Planungs- und Entscheidungsprozesse einbezogen werden. Über diese Plattform können Sie Vorschläge einreichen, abstimmen und Ihre Meinung zu städtischen Vorhaben teilen.</p>
+      </div>
+    </li>
 
-      <li class="accordion-item" data-accordion-item style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-        <a href="#" class="accordion-title" style="display: block; padding: 16px 20px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-          Wie registriere ich mich auf der Plattform?
-        </a>
-        <div class="accordion-content" data-tab-content style="padding: 0 20px 16px 20px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-          <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Klicken Sie auf "Registrieren" und geben Sie Ihren Namen, eine E-Mail-Adresse und ein Passwort ein. Sie erhalten eine Bestätigungs-E-Mail, mit der Sie Ihr Konto aktivieren.</p>
-        </div>
-      </li>
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #f8fafc; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 14px 48px 14px 18px; min-height: 44px; border: 0; background: transparent;">Wer kann an der Beteiligung teilnehmen?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 18px 16px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Alle Bürger:innen ab 16 Jahren, die in der Stadt wohnen, arbeiten oder in sonstiger Weise betroffen sind. Für bestimmte Abstimmungen kann eine Verifizierung erforderlich sein.</p>
+      </div>
+    </li>
 
-      <li class="accordion-item" data-accordion-item style="border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease;">
-        <a href="#" class="accordion-title" style="display: block; padding: 16px 20px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-          Welche Geräte werden unterstützt?
-        </a>
-        <div class="accordion-content" data-tab-content style="padding: 0 20px 16px 20px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-          <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 14px 0 0 0;">Die Plattform funktioniert auf allen gängigen Geräten – Smartphone, Tablet und Desktop. Wir empfehlen einen aktuellen Browser wie Chrome, Firefox, Safari oder Edge.</p>
-        </div>
-      </li>
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #f8fafc; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 14px 48px 14px 18px; min-height: 44px; border: 0; background: transparent;">Sind die Ergebnisse verbindlich?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 18px 16px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Die Ergebnisse der Beteiligung fließen als wichtige Empfehlung in die politische Entscheidungsfindung ein. Die endgültige Beschlussfassung liegt beim Stadtrat.</p>
+      </div>
+    </li>
 
-    </ul>
+  </ul>
+
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 10px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-laptop" style="font-size: 15px;"></i></span>
+    <h4 style="flex: 0 1 auto; margin: 0; hyphens: auto; overflow-wrap: break-word;">Technische Fragen</h4>
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 1 1 auto; height: 1px; background: #e3e8ef;"></span>
   </div>
+
+  <ul class="accordion" data-accordion data-allow-all-closed="true" style="list-style: none; margin: 0; padding: 0; background: transparent; border: 0; display: flex; flex-direction: column; gap: 10px;">
+
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #f8fafc; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 14px 48px 14px 18px; min-height: 44px; border: 0; background: transparent;">Wie registriere ich mich auf der Plattform?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 18px 16px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Klicken Sie auf „Registrieren“ und geben Sie Ihren Namen, eine E-Mail-Adresse und ein Passwort ein. Sie erhalten eine Bestätigungs-E-Mail, mit der Sie Ihr Konto aktivieren.</p>
+      </div>
+    </li>
+
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #f8fafc; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 14px 48px 14px 18px; min-height: 44px; border: 0; background: transparent;">Welche Geräte werden unterstützt?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 18px 16px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Die Plattform funktioniert auf allen gängigen Geräten – Smartphone, Tablet und Desktop. Wir empfehlen einen aktuellen Browser wie Chrome, Firefox, Safari oder Edge.</p>
+      </div>
+    </li>
+
+  </ul>
 
 </div>

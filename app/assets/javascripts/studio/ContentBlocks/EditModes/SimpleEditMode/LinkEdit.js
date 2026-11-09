@@ -294,7 +294,10 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     linkWrapper.classList.add("-highlight-active")
 
     App.Studio.ContentBlocks.SimpleEditMode.EditPopup.show(
-      $(".js-content-block-link-popup"), linkWrapper
+      $(".js-content-block-link-popup"),
+      linkWrapper,
+      "below",
+      () => this.cancelLinkEdit()
     );
 
     const textInput = document.querySelector(".js-content-block-link-popup .js-content-block-text-input");

@@ -100,7 +100,7 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
   end
 
   def fetch_dt_templates
-    ContentBlockTemplates::Catalogue.call
+    ContentBlockTemplates::Catalogue.call(section: "projekt_page")
   end
 
   def build_templates_reference(dt_templates_by_category)

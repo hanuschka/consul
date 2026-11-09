@@ -6,6 +6,11 @@
 # what made the selector race its own request timeout.
 class ContentBlockTemplates::Catalogue < ApplicationService
   TEMPLATE_ROOT = Rails.root.join("app/views/custom/projekts/dt_content_block_templates").freeze
+  DEFAULT_CATEGORY_SECTIONS = %w[general].freeze
+  SECTION_CATEGORY_SECTIONS = {
+    "newsletter_email" => %w[newsletter_email],
+    "sidebar_and_footer" => %w[sidebar_and_footer general]
+  }.freeze
 
   def initialize(section: nil)
     @section = section.presence
@@ -23,12 +28,16 @@ class ContentBlockTemplates::Catalogue < ApplicationService
     # The DT endpoint only ever populated "general" and "newsletter_email", and
     # answered "projekt_page" and "sidebar_and_footer" with the general set.
     # Keeping that mapping means the selector's existing sections still resolve.
+    # The sidebar cards are added on top of it for "sidebar_and_footer" only,
+    # ahead of the general set so the selector opens on them.
     def categories
       return ContentBlockTemplates::Manifest::CATEGORIES if @section.blank?
 
-      wanted = @section == "newsletter_email" ? "newsletter_email" : "general"
+      wanted_sections = SECTION_CATEGORY_SECTIONS.fetch(@section, DEFAULT_CATEGORY_SECTIONS)
 
-      ContentBlockTemplates::Manifest::CATEGORIES.select { |category| category[:section] == wanted }
+      wanted_sections.flat_map do |wanted_section|
+        ContentBlockTemplates::Manifest::CATEGORIES.select { |category| category[:section] == wanted_section }
+      end
     end
 
     def build_category(category)
@@ -41,11 +50,15 @@ class ContentBlockTemplates::Catalogue < ApplicationService
           "section" => category[:section],
           "position" => category[:position]
         },
-        "templates" => category[:templates].map { |template| build_template(template) }
+        "templates" => category[:templates].filter_map { |template| build_template(template) }
       }
     end
 
     def build_template(template)
+      content = read_content(template[:file])
+
+      return nil if content.nil?
+
       {
         "id" => template[:id],
         "name" => template[:name],
@@ -53,11 +66,15 @@ class ContentBlockTemplates::Catalogue < ApplicationService
         "position" => template[:position],
         "hidden" => template[:hidden],
         "hidden_until" => template[:hidden_until],
-        "content" => read_content(template[:file])
+        "content" => content
       }
     end
 
+    # One unreadable file drops only its own template, not the whole catalogue.
     def read_content(file)
       TEMPLATE_ROOT.join(file).read
+    rescue SystemCallError => e
+      Rails.logger.warn("[ContentBlockTemplates::Catalogue] skipped #{file}: #{e.message}")
+      nil
     end
 end

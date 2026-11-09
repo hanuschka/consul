@@ -44,7 +44,19 @@ module Schemas
         title: { type: :string, description: 'Title of the investment project', example: 'Park Renovation Project' },
         description: { type: :string, nullable: true, description: 'Detailed description of what the investment will fund', example: 'Renovation and maintenance of Central Park' },
         budget_id: { type: :integer, description: 'ID of the budget this investment belongs to', example: 10 },
-        author_id: { type: :integer, nullable: true, description: 'ID of the user who proposed the investment', example: 15 },
+        author_id: { type: :integer, nullable: true, description: 'ID of the user who proposed the investment. Only returned to admin clients.', example: 15 },
+        author: { '$ref' => '#/components/schemas/Author' },
+        responsible_name: { type: :string, nullable: true, description: 'Name of the person responsible for the investment. Only returned to admin clients.' },
+        administrator_id: { type: :integer, nullable: true, description: 'ID of the administrator handling the investment. Only returned to admin clients.', example: 3 },
+        administrator: {
+          type: :object,
+          nullable: true,
+          description: 'Administrator handling the investment. Only returned to admin clients.',
+          properties: {
+            id: { type: :integer, description: 'Administrator ID' },
+            name: { type: :string, nullable: true, description: 'Administrator name' }
+          }
+        },
         price: { type: :number, nullable: true, description: 'Estimated cost or budget amount for this investment', example: 50000 },
         status: { type: :string, nullable: true, description: 'Status of the investment (e.g., selected, unselected, feasible)', example: 'selected' },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the investment was created', example: '2024-01-05T08:00:00Z' },

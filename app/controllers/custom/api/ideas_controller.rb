@@ -10,12 +10,15 @@ class Api::IdeasController < Api::BaseController
 
   def index
     check_read_access!
-    ideas = paginate(Idea.accepted.includes(:author, :category, :map_location))
+    ideas = Idea.accepted.includes(
+      :category,
+      :map_location,
+      documents: { attachment_attachment: :blob },
+      author: :organization
+    )
+    ideas = paginate(apply_sorting(apply_filters(ideas)))
 
-    ideas = apply_filters(ideas)
-    ideas = apply_sorting(ideas)
-
-    serialized_ideas = IdeaSerializer.serialize_collection(ideas)
+    serialized_ideas = IdeaSerializer.serialize_collection(ideas, client: current_client)
 
     render json: {
       data: { ideas: serialized_ideas },
@@ -25,7 +28,7 @@ class Api::IdeasController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_idea = IdeaSerializer.new(@idea).serialize
+    serialized_idea = IdeaSerializer.new(@idea, client: current_client).serialize
 
     render json: { data: { idea: serialized_idea } }
   end
@@ -35,18 +38,20 @@ class Api::IdeasController < Api::BaseController
     idea = Idea.new(idea_params)
     idea.author = @current_client.content_author
     idea.resource_terms = true
+    assign_document_authors(idea)
+    assign_acceptance(idea)
 
     idea.officer = idea.get_default_officer if idea.respond_to?(:get_default_officer)
 
     if idea.save
       process_image_with_base64(idea, params[:idea][:image_attributes])
-      serialized_idea = IdeaSerializer.new(idea).serialize
+      serialized_idea = IdeaSerializer.new(idea, client: current_client).serialize
 
       render json: { data: { idea: serialized_idea } }, status: 201
     else
       render json: { error: { messages: idea.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -55,16 +60,18 @@ class Api::IdeasController < Api::BaseController
   def update
     check_admin_access!
     @idea.assign_attributes(idea_params)
+    assign_document_authors(@idea)
+    assign_acceptance(@idea)
 
     if @idea.save
       process_image_with_base64(@idea, params[:idea][:image_attributes])
-      serialized_idea = IdeaSerializer.new(@idea).serialize
+      serialized_idea = IdeaSerializer.new(@idea, client: current_client).serialize
 
       render json: { data: { idea: serialized_idea } }
     else
       render json: { error: { messages: @idea.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -73,16 +80,32 @@ class Api::IdeasController < Api::BaseController
   private
 
   def idea_params
-    params.require(:idea).permit(
-      :title,
-      :description,
-      :resource_terms,
-      :idea_category_id,
-      :video_url,
-      :on_behalf_of,
-      map_location_attributes: map_location_attributes,
-      documents_attributes: document_attributes
+    with_decoded_documents(
+      params.require(:idea).permit(
+        :title,
+        :description,
+        :resource_terms,
+        :idea_category_id,
+        :video_url,
+        :on_behalf_of,
+        map_location_attributes: map_location_attributes,
+        documents_attributes: document_attributes_api
+      )
     )
+  end
+
+  # The acceptance date starts the idea's timeframe, so accepting an already
+  # accepted idea again keeps the original date.
+  def assign_acceptance(idea)
+    return if !params[:idea].key?(:accepted)
+
+    accepted = ActiveModel::Type::Boolean.new.cast(params[:idea][:accepted])
+
+    if !accepted
+      idea.admin_accepted_at = nil
+    elsif idea.admin_accepted_at.blank?
+      idea.admin_accepted_at = Time.zone.now
+    end
   end
 
   def find_idea
@@ -94,23 +117,37 @@ class Api::IdeasController < Api::BaseController
       ideas = ideas.where(idea_category_id: params[:idea_category])
     end
 
-    if params[:status].in? %w[active archived]
-      ideas = ideas.send("filter_by_status_#{params[:status]}")
+    case params[:status]
+    when "active"
+      ideas = ideas.filter_by_status_active
+    when "archived"
+      ideas = ideas.filter_by_status_archived
     end
 
-    if params[:quorum].in? %w[reached not_reached]
-      ideas = ideas.send("filter_by_quorum_#{params[:quorum]}")
+    case params[:quorum]
+    when "reached"
+      ideas = ideas.filter_by_quorum_reached
+    when "not_reached"
+      ideas = ideas.filter_by_quorum_not_reached
     end
 
     ideas
   end
 
+  # The id tiebreaker keeps rows with equal sort values from moving between
+  # pages.
   def apply_sorting(ideas)
-    order = params[:order] || 'newest'
-    if Idea.idea_orders.include?(order)
-      ideas = ideas.send("sort_by_#{order}")
-    end
-    ideas
+    sorted_ideas =
+      case params[:order]
+      when "most_supported"
+        ideas.sort_by_most_supported
+      when "most_commented"
+        ideas.sort_by_most_commented
+      else
+        ideas.sort_by_newest
+      end
+
+    sorted_ideas.order(id: :desc)
   end
 end
 

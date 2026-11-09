@@ -1,16 +1,15 @@
 class DeficiencyReportSerializer < BaseSerializer
   attr_reader :deficiency_report
 
-  def initialize(deficiency_report, include_reporter_answer: false)
+  def initialize(deficiency_report, client: nil)
     @deficiency_report = deficiency_report
-    @include_reporter_answer = include_reporter_answer
+    @client = client
   end
 
   def serialize
     report_data = deficiency_report.as_json(
       only: [
         :id,
-        :author_id,
         :cached_votes_up,
         :cached_votes_down,
         :cached_votes_total,
@@ -20,7 +19,6 @@ class DeficiencyReportSerializer < BaseSerializer
         :created_at,
         :updated_at,
         :video_url,
-        :on_behalf_of,
         :admin_accepted,
         :assigned_at,
         :status_changed_at,
@@ -35,16 +33,18 @@ class DeficiencyReportSerializer < BaseSerializer
       official_answer: deficiency_report.official_answer
     )
 
-    report_data[:reporter_answer] = deficiency_report.reporter_answer if @include_reporter_answer
+    if admin_client?
+      report_data.merge!(
+        author_id: deficiency_report.author_id,
+        on_behalf_of: deficiency_report.on_behalf_of,
+        reporter_answer: deficiency_report.reporter_answer
+      )
+    end
 
     report_data[:code] = deficiency_report.code
 
     if deficiency_report.author.present?
-      report_data[:author] = {
-        id: deficiency_report.author.id,
-        username: deficiency_report.author.username,
-        public_name: deficiency_report.author.public_name
-      }
+      report_data[:author] = serialize_on_behalf_of_author(deficiency_report)
     end
 
     if deficiency_report.category.present?
@@ -65,7 +65,7 @@ class DeficiencyReportSerializer < BaseSerializer
       }
     end
 
-    if deficiency_report.responsible.present?
+    if admin_client? && deficiency_report.responsible.present?
       report_data[:responsible] = {
         id: deficiency_report.responsible.id,
         type: deficiency_report.responsible_type,
@@ -90,21 +90,14 @@ class DeficiencyReportSerializer < BaseSerializer
     end
 
     if deficiency_report.respond_to?(:documents) && deficiency_report.documents.any?
-      report_data[:documents] = deficiency_report.documents.map do |doc|
-        {
-          id: doc.id,
-          title: doc.title,
-          attachment_file_name: doc.attachment_file_name,
-          attachment_file_size: doc.attachment_file_size
-        }
-      end
+      report_data[:documents] = DocumentSerializer.serialize_collection(deficiency_report.documents)
     end
 
     report_data
   end
 
-  def self.serialize_collection(deficiency_reports, **settings)
-    deficiency_reports.map { |report| new(report, **settings).serialize }
+  def self.serialize_collection(deficiency_reports, client: nil)
+    deficiency_reports.map { |report| new(report, client: client).serialize }
   end
 end
 

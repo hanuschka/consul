@@ -48,14 +48,42 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       tags 'Budget Investments'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Returns paginated results with voting/support information.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Filters and sorting apply to the whole list before it is paginated, so every page is full and in order. Returns paginated results with voting/support information.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
       parameter name: :heading_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category heading'
       parameter name: :group_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category group'
       parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility assessment: "feasible", "unfeasible", or "undecided"'
       parameter name: :selected, in: :query, type: :string, required: false, description: 'Filter by selection status: "true" for selected investments, "false" for unselected'
-      parameter name: :order, in: :query, type: :string, required: false, description: 'Sort by: "id" (**default**), "supports" (vote count), "confidence_score", "price", "ballots", or "newest"'
+      parameter name: :order, in: :query, type: :string, required: false, description: 'Sort by: "id" (**default**, highest id first), "supports" (vote count), "confidence_score", "price", "ballots", or "newest". Ties are broken by id, highest first.'
+
+      response '200', 'budget investments sorted before pagination' do
+        let(:investment_setup) { create_minimal_prereqs }
+        let(:budget_id) { investment_setup[1].id }
+        let(:order) { 'supports' }
+        let(:per_page) { 2 }
+
+        before do
+          author, budget, heading = investment_setup
+
+          [5, 1, 9].each do |supports|
+            Budget::Investment.create!(
+              author: author,
+              heading: heading,
+              budget: budget,
+              resource_terms: true,
+              title: "Investment with #{supports} supports",
+              description: 'Investment description'
+            ).update_column(:cached_votes_up, supports)
+          end
+        end
+
+        run_test! do |response|
+          titles = JSON.parse(response.body)['data']['budget_investments'].map { |investment| investment['title'] }
+
+          expect(titles).to eq(['Investment with 9 supports', 'Investment with 5 supports'])
+        end
+      end
 
       response '200', 'budget investments found and returned' do
         let(:budget_id) do
@@ -187,7 +215,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               documents_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the investment proposal. Upload documents as base64-encoded data.',
+                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the investment proposal. New documents are attributed to the content author of the API client; the author cannot be set or changed via the API. Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...); invalid base64 returns 422. Returned documents carry a download url.',
                 items: {
                   type: :object,
                   properties: {
@@ -195,7 +223,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                     title: { type: :string, nullable: true, description: 'Document title or filename' },
                     attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
                     cached_attachment: { type: :string, nullable: true },
-                    user_id: { type: :integer, nullable: true },
                     _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
                   }
                 }
@@ -273,6 +300,20 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                }
 
         run_test!
+      end
+
+      response '400', 'empty request body' do
+        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
+        let(:budget_investment) { {} }
+
+        schema ApiResponseExamples::ERROR_SCHEMA
+
+        run_test! do |response|
+          error = JSON.parse(response.body)['error']
+
+          expect(error['type']).to eq('bad_request')
+          expect(error['messages']).to eq(["The request body must contain a non-empty 'budget_investment' object."])
+        end
       end
 
       response '403', 'forbidden - admin access required' do
@@ -555,7 +596,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               documents_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true).',
+                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true). New documents are attributed to the content author of the API client; the author cannot be set or changed via the API. Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...); invalid base64 returns 422. Returned documents carry a download url.',
                 items: {
                   type: :object,
                   properties: {
@@ -563,7 +604,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                     title: { type: :string, nullable: true, description: 'Document title or filename' },
                     attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
                     cached_attachment: { type: :string, nullable: true },
-                    user_id: { type: :integer, nullable: true },
                     _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
                   }
                 }

@@ -351,13 +351,9 @@ User.class_eval do
   end
 
   def public_name
-    return nil unless public_activity?
+    return nil if !public_activity? || guest?
 
-    if first_name.present? || last_name.present?
-      full_name
-    else
-      username
-    end
+    name
   end
 
   def first_letter_of_name

@@ -4,12 +4,22 @@ class Api::NotificationsController < Api::BaseController
 
   def index
     check_read_access!
-    notifications = if @projekt_phase.present?
-      @projekt_phase.projekt_notifications
-        .includes(:projekt_phase, projekt_phase: :projekt)
-    else
-      ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt)
+
+    if @projekt_phase.present? && phase_hidden_from_client?(@projekt_phase)
+      raise ForbiddenError, "Access denied"
     end
+
+    notifications =
+      if @projekt_phase.present?
+        @projekt_phase.projekt_notifications
+          .includes(:projekt_phase, projekt_phase: :projekt)
+      elsif current_client.public_data?
+        restrict_to_public_phases(
+          ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt)
+        )
+      else
+        ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt)
+      end
 
     notifications = paginate(notifications.order(created_at: :asc))
 

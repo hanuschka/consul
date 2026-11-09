@@ -9,14 +9,20 @@ class Api::PointOfInterestPinsController < Api::BaseController
     check_read_access!
     pins = if @projekt_phase.present?
       @projekt_phase.projekt_point_of_interest_pins
-        .includes(:author, :projekt_point_of_interest_category, :projekt_phase, :projekt_phase, :map_location)
+        .includes(
+          :projekt_point_of_interest_category, :projekt_phase, :map_location,
+          author: :organization
+        )
     else
-      ProjektPointOfInterestPin.includes(:author, :projekt_point_of_interest_category, :projekt_phase, :projekt_phase, :map_location)
+      ProjektPointOfInterestPin.includes(
+        :projekt_point_of_interest_category, :projekt_phase, :map_location,
+        author: :organization
+      )
     end
 
     pins = paginate(pins.order(created_at: :asc))
 
-    serialized_pins = PointOfInterestPinSerializer.serialize_collection(pins)
+    serialized_pins = PointOfInterestPinSerializer.serialize_collection(pins, client: current_client)
 
     render json: {
       data: { pins: serialized_pins },
@@ -31,7 +37,7 @@ class Api::PointOfInterestPinsController < Api::BaseController
     pin.author = @current_client.content_author
 
     if pin.save
-      serialized_pin = PointOfInterestPinSerializer.new(pin).serialize
+      serialized_pin = PointOfInterestPinSerializer.new(pin, client: current_client).serialize
 
       render json: { data: { pin: serialized_pin } }, status: 201
     else
@@ -41,7 +47,7 @@ class Api::PointOfInterestPinsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_pin = PointOfInterestPinSerializer.new(@pin).serialize
+    serialized_pin = PointOfInterestPinSerializer.new(@pin, client: current_client).serialize
 
     render json: { data: { pin: serialized_pin } }
   end
@@ -51,7 +57,7 @@ class Api::PointOfInterestPinsController < Api::BaseController
     @pin.assign_attributes(pin_params)
 
     if @pin.save
-      serialized_pin = PointOfInterestPinSerializer.new(@pin).serialize
+      serialized_pin = PointOfInterestPinSerializer.new(@pin, client: current_client).serialize
 
       render json: { data: { pin: serialized_pin } }
     else
@@ -73,7 +79,6 @@ class Api::PointOfInterestPinsController < Api::BaseController
   def pin_params
     params.require(:projekt_point_of_interest_pin).permit(
       :description,
-      :author_id,
       :projekt_point_of_interest_category_id,
       map_location_attributes: map_location_attributes
     )

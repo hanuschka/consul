@@ -179,7 +179,7 @@ App.Studio.utils.ADMIN_WYSIWYG_ALLOWLIST = {
     "data-tabs", "aria-selected", "data-tabs-target", "data-tabs-content",
     "data-orbit", "data-slide", "data-slide-active-label",
     "aria-valuenow", "aria-valuemin", "aria-valuemax", "aria-valuetext",
-    "data-tooltip", "data-hint", "data-hint-position", "data-use-m-u-i",
+    "data-tooltip", "data-use-m-u-i",
     "data-anim-in-from-left", "data-anim-in-from-right",
     "data-anim-out-to-left", "data-anim-out-to-right",
     "data-options",
@@ -192,6 +192,8 @@ App.Studio.utils.ADMIN_WYSIWYG_ALLOWLIST = {
     "data-show-more-text", "data-show-less-text",
     "data-pswp-width", "data-pswp-height",
     "data-turbolinks", "data-box-shadow", "data-glightbox",
+    "data-list-edit-add-outside", "data-list-edit-add-outside-of",
+    "data-list-edit-follower", "data-paired-list",
     "url"
   ]
 };
@@ -220,6 +222,37 @@ App.Studio.utils.resetMapEmbeds = function(html) {
   });
 
   return container.innerHTML;
+}
+
+// With the GDPR two-click setting the server renders iframes with an empty
+// src (the URL moved to data-src) and the page wraps each one in a consent
+// overlay. Both are display state only: this puts the URL back into src and
+// drops the overlay markup, so a save can never persist an iframe without
+// its URL. The overlay classes are matched as-is because already saved
+// bodies carry them too.
+App.Studio.utils.restoreConsentIframes = function(html) {
+  if (!html || html.indexOf("<iframe") === -1) return html;
+
+  const container = App.Studio.utils.htmlToDomElement(html);
+
+  container.querySelectorAll(".iframe-explainer").forEach((explainer) => explainer.remove());
+  container.querySelectorAll(".iframe-wrapper").forEach((wrapper) => wrapper.replaceWith(...wrapper.childNodes));
+  container.querySelectorAll("iframe[data-src]").forEach((iframe) => App.Studio.utils.restoreConsentIframeSrc(iframe));
+
+  return container.innerHTML;
+}
+
+App.Studio.utils.restoreConsentIframeSrc = function(iframe) {
+  if (iframe.getAttribute("src")) return
+
+  iframe.setAttribute("src", iframe.dataset.src);
+  iframe.removeAttribute("data-src");
+}
+
+// The HTML a content block is persisted (or versioned) with: map embeds back
+// to their token, consent-processed iframes back to their URL.
+App.Studio.utils.persistableContentBlockHtml = function(html) {
+  return App.Studio.utils.restoreConsentIframes(App.Studio.utils.resetMapEmbeds(html));
 }
 
 App.Studio.utils.formatHTML = function(html) {

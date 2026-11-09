@@ -10,8 +10,16 @@ describe RemoteTranslations::Caller do
     allow(Deepl).to receive(:configured?).and_return(true)
     allow_any_instance_of(RemoteTranslation).to receive(:enqueue_remote_translation)
     allow_any_instance_of(Deepl::Client).to receive(:translate) do |_client, texts, **|
-      texts.map { |text| text.to_s.sub("Gefördert von", "Funded by").sub("Logos der Förderer", "Sponsor logos").sub("Förderer &amp; Partner", "Sponsors &amp; partners") }
+      texts.map do |text|
+        text.to_s.split(/(<[^>]*>)/).map { |part| part.start_with?("<") ? part : fake_deepl(part) }.join
+      end
     end
+  end
+
+  def fake_deepl(text)
+    text.sub("Gefördert von", "Funded by")
+        .sub("Logos der Förderer", "Sponsor logos")
+        .sub("Förderer &amp; Partner", "Sponsors &amp; partners")
   end
 
   def translate!

@@ -4,6 +4,7 @@ class Api::ProjektsController < Api::BaseController
   include Translatable
 
   before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_settings, :update_page, :update_page_image, :update_body]
+  around_action :audit_changes_as_client, only: [:update_setting, :update_settings]
 
   rescue_from ProjektContentBlocks::BulkWrite::InvalidRequestError, with: :render_content_blocks_error
 
@@ -199,13 +200,22 @@ class Api::ProjektsController < Api::BaseController
 
   def update_setting
     check_admin_access!
-    setting = @projekt.projekt_settings.find_by(key: setting_params[:key])
+    configurable_keys = ProjektSetting::ConfigurableKeys.for_projekt(@projekt)
+    key = setting_params[:key].to_s
 
-    unless setting
+    if !configurable_keys.key?(key)
       return render json: { error: { messages: ["Setting not found"] } }, status: 404
     end
 
-    if setting.update(value: setting_params[:value])
+    result = ConfigurableKeys::UpdateService.call(
+      changes: { key => setting_params[:value] },
+      configurable_keys:,
+      setting_rows: @projekt.projekt_settings
+    )
+
+    if result.success?
+      setting = @projekt.projekt_settings.find_by!(key:)
+
       render json: {
         data: {
           setting: {
@@ -218,37 +228,33 @@ class Api::ProjektsController < Api::BaseController
         message: "Setting updated successfully"
       }
     else
-      render json: { error: { messages: setting.errors.full_messages } }, status: 422
+      render json: { error: { messages: result.error_details[key] } }, status: 422
     end
   end
 
+  # All or nothing: when one key is unknown or one value has the wrong type,
+  # no setting is written and every problem is listed under errors.
   def update_settings
     check_admin_access!
     settings_hash = params[:settings]
 
-    if settings_hash.blank?
+    if !settings_hash.is_a?(ActionController::Parameters) || settings_hash.blank?
       return render json: { error: { messages: ["settings parameter is required"] } }, status: 422
     end
 
-    updated = []
-    errors = {}
-
-    settings_hash.each do |key, value|
-      setting = @projekt.projekt_settings.find_by(key: key)
-
-      if setting.blank?
-        errors[key] = ["Setting not found"]
-        next
-      end
-
-      if setting.update(value: value.to_s)
-        updated << key
-      else
-        errors[key] = setting.errors.full_messages
-      end
+    result = ProjektSetting.with_single_overview_sync do
+      ConfigurableKeys::UpdateService.call(
+        changes: settings_hash.to_unsafe_h,
+        configurable_keys: ProjektSetting::ConfigurableKeys.for_projekt(@projekt),
+        setting_rows: @projekt.projekt_settings
+      )
     end
 
-    render json: { data: { updated: updated, errors: errors } }
+    if result.success?
+      render json: { data: { updated: result.data[:values].keys, errors: {} } }
+    else
+      render json: { data: { updated: [], errors: result.error_details } }
+    end
   end
 
   def update_body

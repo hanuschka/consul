@@ -227,6 +227,7 @@ ActiveRecord::Schema.define(version: 2026_11_09_131548) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "use_system_user", default: true, null: false
+    t.boolean "instance_configuration_access", default: false, null: false
   end
 
   create_table "api_request_logs", force: :cascade do |t|

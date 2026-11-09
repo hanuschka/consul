@@ -13,6 +13,8 @@ class Setting < ApplicationRecord
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
+  audited only: :value, on: :update
+
   validate :validate_whatsapp_template_name
   validate :validate_whatsapp_template_language
   validate :validate_whatsapp_address_form

@@ -6,11 +6,16 @@ class ApiClient < ApplicationRecord
   validates :name, uniqueness: true, presence: true
   validates :access_level, presence: true
   validates :service_user_email, presence: true, uniqueness: true, if: :dedicated_user_mode?
+  validate :instance_configuration_access_requires_admin
 
   before_create :generate_access_token
 
   def can_read_public_data?
     public_data? || admin?
+  end
+
+  def can_configure_instance?
+    admin? && instance_configuration_access?
   end
 
   def regenerate_access_token
@@ -31,6 +36,12 @@ class ApiClient < ApplicationRecord
   end
 
   private
+
+  def instance_configuration_access_requires_admin
+    return if !instance_configuration_access? || admin?
+
+    errors.add(:instance_configuration_access, :requires_admin_access_level)
+  end
 
   def generate_access_token
     self.access_token = "sk_#{SecureRandom.hex(41)}"

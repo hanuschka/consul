@@ -106,6 +106,32 @@ class Api::BaseController < ActionController::API
       end
     end
 
+    # Unlike check_admin_access!, internal clients are not let through: the
+    # right has to be granted to the client explicitly in /adm.
+    def check_configuration_access!
+      return if configuration_client?
+
+      raise ForbiddenError,
+        "You do not have permission to change the instance configuration. " \
+        "The API client needs the instance configuration access right."
+    end
+
+    def configuration_client?
+      !internal_api_client? && current_client.can_configure_instance?
+    end
+
+    # Audit rows written during the action carry the client's content author
+    # as their user (the audit views and SectionTrackable expect a User) and
+    # the client itself in their comment.
+    def audit_changes_as_client(&)
+      Current.api_client = current_client
+      audit_user = internal_api_client? ? User.system : current_client.content_author
+
+      ::Audit.as_user(audit_user, &)
+    ensure
+      Current.api_client = nil
+    end
+
     def render_forbidden(exception)
       render json: {
         error: {
@@ -149,6 +175,16 @@ class Api::BaseController < ActionController::API
     def render_invalid_attachment(exception)
       render json: {
         error: { type: "unprocessable_entity", messages: [exception.message] }
+      }, status: :unprocessable_entity
+    end
+
+    def render_invalid_values(errors)
+      render json: {
+        error: {
+          type: "unprocessable_entity",
+          messages: errors.map { |field, messages| "#{field} #{Array(messages).to_sentence}" },
+          details: errors
+        }
       }, status: :unprocessable_entity
     end
 

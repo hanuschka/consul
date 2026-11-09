@@ -15,6 +15,7 @@ require_relative 'schemas/milestones_livestreams_schemas'
 require_relative 'schemas/point_of_interest_schemas'
 require_relative 'schemas/miscellaneous_schemas'
 require_relative 'schemas/polls_schemas'
+require_relative 'schemas/configuration_schemas'
 
 Rswag::Specs::SwaggerRoot = Rails.root.join('public').to_s
 
@@ -102,6 +103,13 @@ RSpec.configure do |config|
         { name: 'Idea Officers', description: 'Officers responsible for citizen ideas' },
         { name: 'Deficiency Report Categories', description: 'Categories for deficiency reports' },
         { name: 'Masterportal', description: 'Masterportal GIS integration endpoints' },
+        { name: 'Configuration Settings', description: 'Typed instance settings: metadata, branding, modules' },
+        { name: 'Configuration Media', description: 'Logo, image and video slots of the instance' },
+        { name: 'Configuration Pages', description: 'Footer pages and landing pages' },
+        { name: 'Configuration Navigation', description: 'Navigation, homepage blocks and cards, banners, modals' },
+        { name: 'Configuration Texts', description: 'Interface texts and email templates' },
+        { name: 'Configuration Maps', description: 'Instance-wide map layers' },
+        { name: 'Configuration Catalogs', description: 'Geozones, tag categories, age ranges, individual groups' },
         { name: 'Error Handling', description: 'Responses for unknown or unsupported API routes' }
       ],
       'x-tagGroups': [
@@ -151,6 +159,18 @@ RSpec.configure do |config|
           tags: ['Masterportal']
         },
         {
+          name: 'Instance Configuration',
+          tags: [
+            'Configuration Settings',
+            'Configuration Media',
+            'Configuration Pages',
+            'Configuration Navigation',
+            'Configuration Texts',
+            'Configuration Maps',
+            'Configuration Catalogs'
+          ]
+        },
+        {
           name: 'General',
           tags: ['Error Handling']
         }
@@ -178,6 +198,7 @@ RSpec.configure do |config|
                          .merge(Schemas::PointOfInterest.all)
                          .merge(Schemas::Miscellaneous.all)
                          .merge(Schemas::Polls.all)
+                         .merge(Schemas::Configuration.all)
       }
     }
   }

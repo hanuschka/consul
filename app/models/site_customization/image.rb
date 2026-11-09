@@ -12,7 +12,8 @@ class SiteCustomization::Image < ApplicationRecord
     "budget_execution_no_image" => [800, 600],
     "map" => [420, 500],
     "logo_email" => [400, 80],
-    "logo_newsletter_email" => [130, 45]
+    "logo_newsletter_email" => [130, 45],
+    "favicon" => [32, 32]
   }.freeze
 
   VALID_FORMATS = ["image/jpeg", "image/png"].freeze
@@ -24,7 +25,7 @@ class SiteCustomization::Image < ApplicationRecord
 
   # Images that only enforce a minimum size: the stored dimensions act as a
   # floor, larger uploads are allowed (cropped client-side to a fixed ratio).
-  MIN_DIMENSION_IMAGE_NAMES = %w[logo_newsletter_email].freeze
+  MIN_DIMENSION_IMAGE_NAMES = %w[logo_newsletter_email favicon].freeze
 
   alias_attribute :key, :name
 

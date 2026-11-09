@@ -10,6 +10,25 @@ include MachineTranslatable
   include SectionTrackable
   attr_reader :origin
 
+  AUDITED_ATTRIBUTES = %i[
+    slug status footer_position landing_show_in_top_nav landing_hide_title_and_subtitle
+    landing_site_logo_follow_to_landing_page landing_navigation_link_color brand_color
+  ].freeze
+
+  # Footer and landing pages are instance configuration; projekt pages are
+  # content saved by the studio editor far too often to keep every revision.
+  audited only: AUDITED_ATTRIBUTES, if: :configuration_page?
+  has_associated_audits
+  translation_class.class_eval do
+    audited(
+      associated_with: :globalized_model,
+      only: %i[title subtitle content header_title],
+      if: lambda do |translation|
+        translation.globalized_model&.configuration_page? && Audit.translation_write_audited?
+      end
+    )
+  end
+
   belongs_to :projekt, touch: true
 
   has_many :comments, through: :projekt
@@ -94,6 +113,10 @@ include MachineTranslatable
   # #force_published_for_projekt_page.
   def projekt_page?
     projekt_id.present? && !landing?
+  end
+
+  def configuration_page?
+    !projekt_page?
   end
 
   def comments_count

@@ -3,6 +3,7 @@ class Api::ProjektPhasesController < Api::BaseController
 
   before_action :find_projekt, only: %i[index new create]
   before_action :find_projekt_phase, only: [:show, :update, :destroy, :update_setting, :update_settings]
+  around_action :audit_changes_as_client, only: [:update_setting, :update_settings]
 
   def index
     check_read_access!
@@ -82,43 +83,55 @@ class Api::ProjektPhasesController < Api::BaseController
 
   def update_setting
     check_admin_access!
-    name = params.dig(:projekt_phase_setting, :key)
+    key = params.dig(:projekt_phase_setting, :key).to_s
     value = params.dig(:projekt_phase_setting, :value)
 
-    unless name.present?
+    if key.blank?
       return render json: { error: { messages: ["name is required"] } }, status: 422
     end
 
-    setting = @projekt_phase.settings.find_or_initialize_by(key: name)
-    if setting.update(value: value)
-      render json: { data: { projekt_phase_setting: setting.as_json(only: [:id, :key, :value]).merge(key: setting.key) } }
+    configurable_keys = ProjektPhaseSetting::ConfigurableKeys.for_phase(@projekt_phase)
+
+    if !configurable_keys.key?(key)
+      return render json: { error: { messages: ["Setting not found"] } }, status: 404
+    end
+
+    result = ConfigurableKeys::UpdateService.call(
+      changes: { key => value },
+      configurable_keys:,
+      setting_rows: @projekt_phase.settings
+    )
+
+    if result.success?
+      setting = @projekt_phase.settings.find_by!(key:)
+
+      render json: { data: { projekt_phase_setting: setting.as_json(only: [:id, :key, :value]) } }
     else
-      render json: { error: { messages: setting.errors.full_messages } }, status: 422
+      render json: { error: { messages: result.error_details[key] } }, status: 422
     end
   end
 
+  # All or nothing: when one key is unknown or one value has the wrong type,
+  # no setting is written and every problem is listed under errors.
   def update_settings
     check_admin_access!
     settings_hash = params[:settings]
 
-    if settings_hash.blank?
+    if !settings_hash.is_a?(ActionController::Parameters) || settings_hash.blank?
       return render json: { error: { messages: ["settings parameter is required"] } }, status: 422
     end
 
-    updated = []
-    errors = {}
+    result = ConfigurableKeys::UpdateService.call(
+      changes: settings_hash.to_unsafe_h,
+      configurable_keys: ProjektPhaseSetting::ConfigurableKeys.for_phase(@projekt_phase),
+      setting_rows: @projekt_phase.settings
+    )
 
-    settings_hash.each do |key, value|
-      setting = @projekt_phase.settings.find_or_initialize_by(key: key)
-
-      if setting.update(value: value.to_s)
-        updated << key
-      else
-        errors[key] = setting.errors.full_messages
-      end
+    if result.success?
+      render json: { data: { updated: result.data[:values].keys, errors: {} } }
+    else
+      render json: { data: { updated: [], errors: result.error_details } }
     end
-
-    render json: { data: { updated: updated, errors: errors } }
   end
 
   private

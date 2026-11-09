@@ -8,6 +8,16 @@ class AgeRange < ApplicationRecord
   include Globalizable
   include MachineTranslatable
 
+  audited
+  has_associated_audits
+  translation_class.class_eval do
+    audited(
+      associated_with: :globalized_model,
+      only: AgeRange.translated_attribute_names,
+      if: ->(_translation) { Audit.translation_write_audited? }
+    )
+  end
+
   has_many :age_range_projekt_phases, dependent: :destroy
   has_many :projekt_phases, through: :age_range_projekt_phases
 

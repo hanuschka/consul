@@ -64,14 +64,7 @@ class IdeaSerializer < BaseSerializer
     end
 
     if idea.respond_to?(:documents) && idea.documents.any?
-      idea_data[:documents] = idea.documents.map do |doc|
-        {
-          id: doc.id,
-          title: doc.title,
-          attachment_file_name: doc.attachment_file_name,
-          attachment_file_size: doc.attachment_file_size
-        }
-      end
+      idea_data[:documents] = DocumentSerializer.serialize_collection(idea.documents)
     end
 
     idea_data[:remaining_days] = idea.remaining_days if idea.respond_to?(:remaining_days)

@@ -110,14 +110,7 @@ class ProposalSerializer < BaseSerializer
     end
 
     if proposal.respond_to?(:documents) && proposal.documents.any?
-      proposal_data[:documents] = proposal.documents.map do |doc|
-        {
-          id: doc.id,
-          title: doc.title,
-          attachment_file_name: doc.attachment_file_name,
-          attachment_file_size: doc.attachment_file_size
-        }
-      end
+      proposal_data[:documents] = DocumentSerializer.serialize_collection(proposal.documents)
     end
 
     proposal_data

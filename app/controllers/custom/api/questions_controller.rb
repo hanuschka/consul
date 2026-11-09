@@ -9,10 +9,8 @@ class Api::QuestionsController < Api::BaseController
     check_read_access!
 
     if @projekt_phase.present?
-      if current_client.public_data?
-        unless @projekt_phase.frontend_visibility && @projekt_phase.active?
-          return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
-        end
+      if phase_hidden_from_client?(@projekt_phase)
+        raise ForbiddenError, "Access denied"
       end
 
       questions = @projekt_phase.questions
@@ -21,9 +19,7 @@ class Api::QuestionsController < Api::BaseController
       questions = ProjektQuestion.includes(:projekt_phase, :projekt_livestream, author: :organization)
 
       if current_client.public_data?
-        questions = questions.joins(:projekt_phase)
-          .where(projekt_phases: { frontend_visibility: true, active: true })
-          .distinct
+        questions = restrict_to_public_phases(questions)
       end
     end
 
@@ -109,7 +105,6 @@ class Api::QuestionsController < Api::BaseController
   def projekt_question_params
     params.require(:projekt_question).permit(
       :title,
-      :description,
       :projekt_livestream_id
     )
   end

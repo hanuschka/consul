@@ -42,12 +42,17 @@ class Api::FormularsController < Api::BaseController
 
   def update
     check_admin_access!
-    if @formular.update(formular_params)
-      serialized_formular = FormularSerializer.new(@formular).serialize
+    result = ProjektPhase::FormularPhase::UpdateSettingsService.call(
+      @formular.projekt_phase,
+      formular_settings_params
+    )
+
+    if result.success?
+      serialized_formular = FormularSerializer.new(@formular.reload).serialize
 
       render json: { data: { formular: serialized_formular } }
     else
-      render json: { error: { messages: @formular.errors.full_messages } }, status: 422
+      render json: { error: { messages: result.error } }, status: 422
     end
   end
 
@@ -65,6 +70,12 @@ class Api::FormularsController < Api::BaseController
   def formular_params
     # Formular has no editable attributes besides projekt_phase association
     {}
+  end
+
+  def formular_settings_params
+    params.require(:formular).permit(
+      *ProjektPhase::FormularPhase::UpdateSettingsService::SETTING_KEYS.keys
+    )
   end
 
   def find_projekt_phase

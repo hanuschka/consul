@@ -90,14 +90,7 @@ class DeficiencyReportSerializer < BaseSerializer
     end
 
     if deficiency_report.respond_to?(:documents) && deficiency_report.documents.any?
-      report_data[:documents] = deficiency_report.documents.map do |doc|
-        {
-          id: doc.id,
-          title: doc.title,
-          attachment_file_name: doc.attachment_file_name,
-          attachment_file_size: doc.attachment_file_size
-        }
-      end
+      report_data[:documents] = DocumentSerializer.serialize_collection(deficiency_report.documents)
     end
 
     report_data

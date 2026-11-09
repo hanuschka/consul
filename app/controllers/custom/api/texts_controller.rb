@@ -4,7 +4,7 @@ class Api::TextsController < Api::BaseController
   def index
     check_read_access!
 
-    if current_client.public_data? && !publicly_visible_phase?
+    if phase_hidden_from_client?(@projekt_phase)
       raise ForbiddenError, "Access denied"
     end
 
@@ -26,10 +26,6 @@ class Api::TextsController < Api::BaseController
 
   def find_projekt_phase
     @projekt_phase = ProjektPhase::LegislationPhase.find(params[:projekt_phase_id])
-  end
-
-  def publicly_visible_phase?
-    @projekt_phase.frontend_visibility && @projekt_phase.active?
   end
 
   def readable_draft_versions(legislation_process)

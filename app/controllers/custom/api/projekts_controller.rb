@@ -178,7 +178,7 @@ class Api::ProjektsController < Api::BaseController
     process_image_with_base64(@projekt.page, image_data)
 
     render json: { data: { projekt: ProjektSerializer.new(@projekt, current_api_client: current_client).serialize } }
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue => e
     render json: { error: { messages: [e.message] } }, status: 422

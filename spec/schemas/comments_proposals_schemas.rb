@@ -110,13 +110,13 @@ module Schemas
     DOCUMENTS_ATTRIBUTES = {
       type: :array,
       nullable: true,
-      description: 'Array of document attachments. New documents are attributed to the content author of the API client; the author cannot be set or changed via the API.',
+      description: 'Array of document attachments. New documents are attributed to the content author of the API client; the author cannot be set or changed via the API. Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...); invalid base64 returns 422. Returned documents carry a download url.',
       items: {
         type: :object,
         properties: {
           id: { type: :integer, nullable: true },
-          title: { type: :string, nullable: true },
-          attachment: { type: :string, nullable: true },
+          title: { type: :string, nullable: true, description: 'Document title; also used for the file name' },
+          attachment: { type: :string, nullable: true, description: 'Base64-encoded file' },
           cached_attachment: { type: :string, nullable: true },
           _destroy: { type: :boolean, nullable: true }
         }

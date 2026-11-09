@@ -106,6 +106,22 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               official_answer: { type: :string, nullable: true, description: 'Official response or answer from administrators regarding the reported issue' },
               reporter_answer: { type: :string, nullable: true, description: 'Answer e-mailed to the reporter and not shown publicly; used when the setting "separate reporter answer" is enabled, in which case official_answer is the public answer only' },
               on_behalf_of: { type: :string, nullable: true, description: 'Name of the organization or group submitting on behalf of' },
+              deficiency_report_intake_channel_id: { type: :integer, nullable: true, description: 'ID of the intake channel the report reached the municipality through, as listed by GET /api/deficiency_report_intake_channels. Required for a report filed on_behalf_of a citizen when the setting "intake channel required for on-behalf-of reports" is on; otherwise the default channel is used. An id that does not exist is rejected with 422.' },
+              documents_attributes: {
+                type: :array,
+                nullable: true,
+                description: 'Document attachments (PDFs etc.). Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...). Add new documents, or remove one by sending its id with _destroy=true. New documents are attributed to the content author of the API client. Returned documents carry a download url.',
+                items: {
+                  type: :object,
+                  properties: {
+                    id: { type: :integer, nullable: true, description: 'ID of an existing document; omit for new documents' },
+                    title: { type: :string, nullable: true, description: 'Document title; also used for the file name' },
+                    attachment: { type: :string, nullable: true, description: 'Base64-encoded file. Invalid base64 returns 422.' },
+                    cached_attachment: { type: :string, nullable: true },
+                    _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
+                  }
+                }
+              },
               video_url: { type: :string, nullable: true, description: 'URL to a video documenting the deficiency (YouTube, Vimeo, etc.)' },
               responsible_id: { type: :integer, nullable: true, description: 'ID of the officer or officer group assigned to address this deficiency' },
               responsible_type: { type: :string, nullable: true, enum: ['DeficiencyReport::Officer', 'DeficiencyReport::OfficerGroup'], description: 'Type of the responsible party. Only officers and officer groups can be made responsible; any other type, or an id that does not exist, is rejected with 422.' },
@@ -179,6 +195,63 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
                  }
                },
                required: ['data']
+
+        run_test!
+      end
+
+      response '201', 'deficiency report filed on behalf of a citizen with intake channel and document' do
+        let!(:pre) { create_minimal_prereqs }
+        let(:intake_channel) { create(:deficiency_report_intake_channel) }
+        let(:deficiency_report) do
+          {
+            deficiency_report: {
+              deficiency_report_category_id: pre[1].id,
+              deficiency_report_status_id: pre[0].id,
+              deficiency_report_intake_channel_id: intake_channel.id,
+              on_behalf_of: 'Citizen at the counter',
+              resource_terms: true,
+              title: 'Reported at the counter',
+              map_location_attributes: { latitude: 40.4168, longitude: -3.7038, zoom: 12 },
+              documents_attributes: [
+                {
+                  title: 'Counter protocol',
+                  attachment: "data:application/pdf;base64,#{Base64.strict_encode64("%PDF-1.4\n%%EOF\n")}"
+                }
+              ]
+            }
+          }
+        end
+
+        before { Setting["deficiency_reports.intake_channel_required_for_on_behalf_of"] = "active" }
+
+        run_test! do |response|
+          report_data = JSON.parse(response.body)['data']['deficiency_report']
+          report = DeficiencyReport.find(report_data['id'])
+
+          expect(report.intake_channel).to eq(intake_channel)
+          expect(report_data['documents'].first).to include(
+            'title' => 'Counter protocol',
+            'attachment_file_name' => 'counter-protocol.pdf'
+          )
+          expect(report_data['documents'].first['url']).to be_present
+        end
+      end
+
+      response '422', 'unknown intake channel' do
+        let!(:pre) { create_minimal_prereqs }
+        let(:deficiency_report) do
+          {
+            deficiency_report: {
+              deficiency_report_category_id: pre[1].id,
+              deficiency_report_intake_channel_id: 999999,
+              resource_terms: true,
+              title: 'Report with unknown channel',
+              map_location_attributes: { latitude: 40.4168, longitude: -3.7038, zoom: 12 }
+            }
+          }
+        end
+
+        schema ApiResponseExamples::ERROR_SCHEMA
 
         run_test!
       end
@@ -327,6 +400,22 @@ RSpec.describe 'Deficiency Reports API', type: :request, openapi_spec: 'v1/swagg
               deficiency_report_category_id: { type: :integer, nullable: true },
               deficiency_report_status_id: { type: :integer, nullable: true },
               on_behalf_of: { type: :string, nullable: true, description: 'Name of the organization or group submitting on behalf of' },
+              deficiency_report_intake_channel_id: { type: :integer, nullable: true, description: 'ID of the intake channel the report reached the municipality through, as listed by GET /api/deficiency_report_intake_channels. Required for a report filed on_behalf_of a citizen when the setting "intake channel required for on-behalf-of reports" is on; otherwise the default channel is used. An id that does not exist is rejected with 422.' },
+              documents_attributes: {
+                type: :array,
+                nullable: true,
+                description: 'Document attachments (PDFs etc.). Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...). Add new documents, or remove one by sending its id with _destroy=true. New documents are attributed to the content author of the API client. Returned documents carry a download url.',
+                items: {
+                  type: :object,
+                  properties: {
+                    id: { type: :integer, nullable: true, description: 'ID of an existing document; omit for new documents' },
+                    title: { type: :string, nullable: true, description: 'Document title; also used for the file name' },
+                    attachment: { type: :string, nullable: true, description: 'Base64-encoded file. Invalid base64 returns 422.' },
+                    cached_attachment: { type: :string, nullable: true },
+                    _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
+                  }
+                }
+              },
               video_url: { type: :string, nullable: true, description: 'URL to a video documenting the deficiency (YouTube, Vimeo, etc.)' },
               responsible_id: { type: :integer, nullable: true, description: 'ID of the officer or officer group assigned to address this deficiency' },
               responsible_type: { type: :string, nullable: true, enum: ['DeficiencyReport::Officer', 'DeficiencyReport::OfficerGroup'], description: 'Type of the responsible party. Only officers and officer groups can be made responsible; any other type, or an id that does not exist, is rejected with 422.' },

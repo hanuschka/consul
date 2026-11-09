@@ -13,21 +13,18 @@ class Api::DeficiencyReportsController < Api::BaseController
 
   def index
     check_read_access!
-    deficiency_reports = paginate(
-      DeficiencyReport
-        .includes(
-          :tags,
-          :category,
-          :status,
-          :responsible,
-          :map_location,
-          author: :organization
-        )
-        .admin_accepted
-    )
-
-    deficiency_reports = apply_filters(deficiency_reports)
-    deficiency_reports = apply_sorting(deficiency_reports)
+    deficiency_reports = DeficiencyReport
+      .includes(
+        :tags,
+        :category,
+        :status,
+        :responsible,
+        :map_location,
+        documents: { attachment_attachment: :blob },
+        author: :organization
+      )
+      .admin_accepted
+    deficiency_reports = paginate(apply_sorting(apply_filters(deficiency_reports)))
 
     serialized_deficiency_reports = DeficiencyReportSerializer.serialize_collection(deficiency_reports, client: current_client)
 
@@ -55,9 +52,12 @@ class Api::DeficiencyReportsController < Api::BaseController
     deficiency_report.author = @current_client.content_author
     deficiency_report.resource_terms = true
     deficiency_report.admin_accepted = true
+    assign_document_authors(deficiency_report)
 
     if !assignable_responsible?(deficiency_report)
       render_unassignable_responsible
+    elsif !assignable_intake_channel?(deficiency_report)
+      render_unassignable_intake_channel
     elsif deficiency_report.save
       process_image_with_base64(deficiency_report, params[:deficiency_report][:image_attributes])
       serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report, client: current_client).serialize
@@ -66,7 +66,7 @@ class Api::DeficiencyReportsController < Api::BaseController
     else
       render json: { error: { messages: deficiency_report.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -75,9 +75,12 @@ class Api::DeficiencyReportsController < Api::BaseController
   def update
     check_admin_access!
     @deficiency_report.assign_attributes(deficiency_report_params)
+    assign_document_authors(@deficiency_report)
 
     if !assignable_responsible?(@deficiency_report)
       render_unassignable_responsible
+    elsif !assignable_intake_channel?(@deficiency_report)
+      render_unassignable_intake_channel
     elsif @deficiency_report.save
       process_image_with_base64(@deficiency_report, params[:deficiency_report][:image_attributes]) if params[:deficiency_report]&.key?(:image_attributes)
       serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, client: current_client).serialize
@@ -86,7 +89,7 @@ class Api::DeficiencyReportsController < Api::BaseController
     else
       render json: { error: { messages: @deficiency_report.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -131,21 +134,42 @@ class Api::DeficiencyReportsController < Api::BaseController
     render json: { error: { messages: [message] } }, status: 422
   end
 
+  def assignable_intake_channel?(deficiency_report)
+    intake_channel_id = deficiency_report.deficiency_report_intake_channel_id
+
+    if !deficiency_report.will_save_change_to_deficiency_report_intake_channel_id? ||
+        intake_channel_id.blank?
+      true
+    else
+      DeficiencyReport::IntakeChannel.exists?(id: intake_channel_id)
+    end
+  end
+
+  def render_unassignable_intake_channel
+    message = "deficiency_report_intake_channel_id must reference an existing intake channel."
+
+    render json: { error: { messages: [message] } }, status: 422
+  end
+
   def deficiency_report_params
-    params.require(:deficiency_report).permit(
-      :title,
-      :description,
-      :summary,
-      :official_answer,
-      :reporter_answer,
-      :deficiency_report_category_id,
-      :deficiency_report_status_id,
-      :on_behalf_of,
-      :video_url,
-      :responsible_id,
-      :responsible_type,
-      :tag_list,
-      map_location_attributes: map_location_attributes
+    with_decoded_documents(
+      params.require(:deficiency_report).permit(
+        :title,
+        :description,
+        :summary,
+        :official_answer,
+        :reporter_answer,
+        :deficiency_report_category_id,
+        :deficiency_report_status_id,
+        :deficiency_report_intake_channel_id,
+        :on_behalf_of,
+        :video_url,
+        :responsible_id,
+        :responsible_type,
+        :tag_list,
+        map_location_attributes: map_location_attributes,
+        documents_attributes: document_attributes_api
+      )
     )
   end
 
@@ -195,16 +219,17 @@ class Api::DeficiencyReportsController < Api::BaseController
   end
 
   def apply_sorting(deficiency_reports)
-    case params[:order]
-    when "hot_score"
-      deficiency_reports.sort_by_hot_score
-    when "newest"
-      deficiency_reports.sort_by_newest
-    when "most_commented"
-      deficiency_reports.sort_by_most_commented
-    else
-      deficiency_reports.sort_by_newest
-    end
+    sorted_deficiency_reports =
+      case params[:order]
+      when "hot_score"
+        deficiency_reports.sort_by_hot_score
+      when "most_commented"
+        deficiency_reports.sort_by_most_commented
+      else
+        deficiency_reports.sort_by_newest
+      end
+
+    sorted_deficiency_reports.order(id: :desc)
   end
 end
 

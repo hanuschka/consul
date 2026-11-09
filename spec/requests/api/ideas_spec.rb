@@ -26,7 +26,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Ideas'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a paginated list of citizen ideas and proposals. Ideas are user-submitted suggestions for community improvements that may have been reviewed and accepted by administrators. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a paginated list of accepted citizen ideas. Ideas that are still pending, including ideas created through the API without `accepted: true`, are not listed until they are accepted. Filters and sorting apply to the whole list before it is paginated. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
 
@@ -101,7 +101,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Submit a new citizen idea for community improvement. Ideas go through an admin review process before being published. Supports categorization, video attachments, location mapping, image attachments, and optional on-behalf-of attribution. Requires acceptance of terms and conditions. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Submit a new citizen idea for community improvement. A new idea is pending and not listed until it is accepted, either here with `accepted: true` or later through the update endpoint. Supports categorization, video attachments, location mapping, image attachments, and optional on-behalf-of attribution. Requires acceptance of terms and conditions. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :idea, in: :body, description: 'Idea submission with required title/description and optional category, location, video, image, and behalf-of information', schema: {
         type: :object,
@@ -115,6 +115,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               on_behalf_of: { type: :string, nullable: true },
               idea_category_id: { type: :integer, nullable: true },
               resource_terms: { type: :boolean },
+              accepted: { type: :boolean, nullable: true, description: 'Set to true to accept the idea, which publishes it in the ideas list and starts its timeframe. Ideas created without it stay pending and are not listed.' },
               map_location_attributes: {
                 type: :object,
                 nullable: true,
@@ -150,7 +151,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               documents_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the idea. Upload documents as base64-encoded data. New documents are attributed to the content author of the API client; the author cannot be set or changed via the API.',
+                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the idea. New documents are attributed to the content author of the API client; the author cannot be set or changed via the API. Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...); invalid base64 returns 422. Returned documents carry a download url.',
                 items: {
                   type: :object,
                   properties: {
@@ -316,7 +317,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update an existing idea with new content, category, location, video, or image. Can add, replace, or remove the idea image. All fields are optional - only provide fields to change. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update an existing idea with new content, category, location, video, or image, or accept it with `accepted: true`. Can add, replace, or remove the idea image. All fields are optional - only provide fields to change. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :idea, in: :body, description: 'Idea attributes to update (title, description, category, video_url, image, translations). Any field not provided remains unchanged.', schema: {
         type: :object,
@@ -329,6 +330,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               video_url: { type: :string, nullable: true },
               on_behalf_of: { type: :string, nullable: true },
               idea_category_id: { type: :integer, nullable: true },
+              accepted: { type: :boolean, nullable: true, description: 'true accepts the idea, so it appears in the ideas list and its timeframe starts; accepting an already accepted idea keeps the original acceptance date. false moves it back to pending, which removes it from the list.' },
               image_attributes: {
                 type: :object,
                 nullable: true,
@@ -347,7 +349,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               documents_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true). New documents are attributed to the content author of the API client; the author cannot be set or changed via the API.',
+                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true). New documents are attributed to the content author of the API client; the author cannot be set or changed via the API. Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...); invalid base64 returns 422. Returned documents carry a download url.',
                 items: {
                   type: :object,
                   properties: {
@@ -398,6 +400,26 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                required: ['data']
 
         run_test!
+      end
+
+      response '200', 'pending idea accepted' do
+        let(:existing_idea) do
+          Idea.create!(
+            author: api_client.user,
+            resource_terms: true,
+            title: 'Pending Idea',
+            description: 'Waiting for acceptance'
+          )
+        end
+        let(:id) { existing_idea.id }
+        let(:idea) { { idea: { accepted: true } } }
+
+        run_test! do |response|
+          status = JSON.parse(response.body)['data']['idea']['status']
+
+          expect(status).to eq('active')
+          expect(Idea.accepted).to include(existing_idea)
+        end
       end
 
       response '403', 'forbidden - admin access required' do

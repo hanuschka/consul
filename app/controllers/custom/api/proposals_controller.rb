@@ -48,6 +48,7 @@ class Api::ProposalsController < Api::BaseController
         .includes(
           :tags, :geozone, :projekt_labels, :sentiment,
           author: :organization,
+          documents: { attachment_attachment: :blob },
           projekt_phase: [:settings, { projekt: :page }]
         )
     )
@@ -95,7 +96,7 @@ class Api::ProposalsController < Api::BaseController
     else
       render json: { error: { messages: proposal.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -114,7 +115,7 @@ class Api::ProposalsController < Api::BaseController
     else
       render json: { error: { messages: @proposal.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -139,7 +140,7 @@ class Api::ProposalsController < Api::BaseController
     serialized_proposal = ProposalSerializer.new(@proposal, client: current_client).serialize
 
     render json: { data: { proposal: serialized_proposal } }
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -148,23 +149,25 @@ class Api::ProposalsController < Api::BaseController
   private
 
   def proposal_params
-    params.require(:proposal).permit(
-      :responsible_name,
-      :video_url,
-      :geozone_id,
-      :selected,
-      :on_behalf_of,
-      :sentiment_id,
-      :official_answer,
-      :admin_accepted,
-      :tag_list,
-      :related_sdg_list,
-      :resource_terms,
-      :title,
-      :description,
-      projekt_label_ids: [],
-      map_location_attributes: map_location_attributes,
-      documents_attributes: document_attributes_api
+    with_decoded_documents(
+      params.require(:proposal).permit(
+        :responsible_name,
+        :video_url,
+        :geozone_id,
+        :selected,
+        :on_behalf_of,
+        :sentiment_id,
+        :official_answer,
+        :admin_accepted,
+        :tag_list,
+        :related_sdg_list,
+        :resource_terms,
+        :title,
+        :description,
+        projekt_label_ids: [],
+        map_location_attributes: map_location_attributes,
+        documents_attributes: document_attributes_api
+      )
     )
   end
 

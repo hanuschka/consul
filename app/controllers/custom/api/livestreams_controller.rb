@@ -5,11 +5,17 @@ class Api::LivestreamsController < Api::BaseController
   def index
     check_read_access!
 
+    if @projekt_phase.present? && phase_hidden_from_client?(@projekt_phase)
+      raise ForbiddenError, "Access denied"
+    end
+
     livestreams =
       if @projekt_phase.present?
         @projekt_phase
           .projekt_livestreams
           .includes(:projekt_phase)
+      elsif current_client.public_data?
+        restrict_to_public_phases(ProjektLivestream.includes(:projekt_phase))
       else
         ProjektLivestream.includes(:projekt_phase)
       end

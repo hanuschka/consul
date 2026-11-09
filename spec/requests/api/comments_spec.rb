@@ -12,6 +12,67 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
     [projekt, phase]
   end
 
+  def create_proposal
+    projekt = Projekt.create!(name: 'Projekt For Proposal Comments')
+    phase = projekt.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true, phase_tab_name: 'Proposals')
+
+    Proposal.create!(
+      author: api_client.user,
+      projekt_phase: phase,
+      geozone: Geozone.create!(name: "Zone #{SecureRandom.hex(2)}"),
+      responsible_name: 'John Doe',
+      resource_terms: true,
+      title: 'Proposal to comment on',
+      description: 'Proposal description'
+    )
+  end
+
+  def create_budget_investment
+    budget = Budget.create!(name: "Budget #{SecureRandom.hex(2)}", currency_symbol: '€')
+    group = budget.create_group!(name: "Group #{SecureRandom.hex(2)}")
+    heading = group.create_heading!(name: "Heading #{SecureRandom.hex(2)}", price: 1000000)
+
+    Budget::Investment.create!(
+      author: api_client.user,
+      heading: heading,
+      budget: budget,
+      resource_terms: true,
+      title: 'Investment to comment on',
+      description: 'Investment description'
+    )
+  end
+
+  def self.create_comment_body_parameter
+    parameter name: :comment, in: :body, description: 'Comment with its body and an optional parent_id for a reply', schema: {
+      type: :object,
+      properties: {
+        comment: {
+          type: :object,
+          properties: {
+            body: { type: :string, description: 'Text content of the comment' },
+            parent_id: { type: :integer, nullable: true, description: 'Optional: ID of a comment on the same resource to reply to' }
+          },
+          required: %w[body]
+        }
+      },
+      required: ['comment']
+    }
+  end
+
+  def self.comment_created_schema
+    schema type: :object,
+           properties: {
+             data: {
+               type: :object,
+               properties: {
+                 comment: { type: :object }
+               },
+               required: ['comment']
+             }
+           },
+           required: ['data']
+  end
+
   path '/api/projekt_phases/{projekt_phase_id}/comments' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (CommentPhase)'
 
@@ -412,6 +473,106 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
     end
   end
 
+  path '/api/proposals/{proposal_id}/comments' do
+    parameter name: :proposal_id, in: :path, type: :integer, description: 'Proposal ID'
+
+    post 'Create a comment on a proposal' do
+      tags 'Comments'
+      produces 'application/json'
+      consumes 'application/json'
+      security [bearer_auth: []]
+      description "Create a comment on a proposal, shown in the proposal's discussion. To reply, send the parent_id of a comment on the same proposal; a parent from another resource returns 422. A body without a `comment` object returns 400. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      create_comment_body_parameter
+
+      response '201', 'comment created on the proposal' do
+        let(:proposal) { create_proposal }
+        let(:proposal_id) { proposal.id }
+        let(:comment) { { comment: { body: 'Comment on a proposal' } } }
+
+        comment_created_schema
+
+        run_test! do |response|
+          commentable = JSON.parse(response.body)['data']['comment']['commentable']
+
+          expect(commentable).to include('id' => proposal.id, 'type' => 'Proposal')
+          expect(proposal.comments.count).to eq(1)
+        end
+      end
+
+      response '422', 'parent comment belongs to a different resource' do
+        let(:proposal_id) { create_proposal.id }
+        let(:phase_comment) do
+          Comment.create!(user: api_client.user, commentable: create_phase_with_context[1], body: 'Phase comment')
+        end
+        let(:comment) { { comment: { body: 'Misplaced reply', parent_id: phase_comment.id } } }
+
+        schema ApiResponseExamples::ERROR_SCHEMA
+
+        run_test!
+      end
+
+      response '400', 'comment object missing' do
+        let(:proposal_id) { create_proposal.id }
+        let(:comment) { {} }
+
+        schema ApiResponseExamples::ERROR_SCHEMA
+
+        run_test! do |response|
+          expect(JSON.parse(response.body)['error']['type']).to eq('bad_request')
+        end
+      end
+
+      response '404', 'proposal not found' do
+        let(:proposal_id) { 999999 }
+        let(:comment) { { comment: { body: 'Comment' } } }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:proposal_id) { 1 } }
+      forbidden_response { let(:proposal_id) { create_proposal.id } }
+    end
+  end
+
+  path '/api/budget_investments/{budget_investment_id}/comments' do
+    parameter name: :budget_investment_id, in: :path, type: :integer, description: 'Budget investment ID'
+
+    post 'Create a comment on a budget investment' do
+      tags 'Comments'
+      produces 'application/json'
+      consumes 'application/json'
+      security [bearer_auth: []]
+      description "Create a comment on a budget investment, shown in the investment's discussion. To reply, send the parent_id of a comment on the same investment; a parent from another resource returns 422. A body without a `comment` object returns 400. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      create_comment_body_parameter
+
+      response '201', 'comment created on the budget investment' do
+        let(:budget_investment) { create_budget_investment }
+        let(:budget_investment_id) { budget_investment.id }
+        let(:comment) { { comment: { body: 'Comment on an investment' } } }
+
+        comment_created_schema
+
+        run_test! do |response|
+          commentable = JSON.parse(response.body)['data']['comment']['commentable']
+
+          expect(commentable).to include('id' => budget_investment.id, 'type' => 'Budget::Investment')
+        end
+      end
+
+      response '404', 'budget investment not found' do
+        let(:budget_investment_id) { 999999 }
+        let(:comment) { { comment: { body: 'Comment' } } }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:budget_investment_id) { 1 } }
+      forbidden_response { let(:budget_investment_id) { create_budget_investment.id } }
+    end
+  end
+
   path '/api/comments' do
     get 'List all comments' do
       tags 'Comments'
@@ -612,6 +773,78 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       end
 
       unauthorized_response { let(:id) { 1 } }
+    end
+
+    patch 'Update a comment' do
+      tags 'Comments'
+      produces 'application/json'
+      consumes 'application/json'
+      security [bearer_auth: []]
+      description "Change the body of a comment. Its place in the thread and the resource it belongs to stay as they are. A body without a `comment` object returns 400. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      parameter name: :comment, in: :body, description: 'New comment body', schema: {
+        type: :object,
+        properties: {
+          comment: {
+            type: :object,
+            properties: {
+              body: { type: :string, description: 'New text content of the comment' }
+            },
+            required: %w[body]
+          }
+        },
+        required: ['comment']
+      }
+
+      response '200', 'comment updated' do
+        let(:comment_record) do
+          Comment.create!(user: api_client.user, commentable: create_phase_with_context[1], body: 'Original body')
+        end
+        let(:id) { comment_record.id }
+        let(:comment) { { comment: { body: 'Corrected body' } } }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     comment: { type: :object }
+                   },
+                   required: ['comment']
+                 }
+               },
+               required: ['data']
+
+        run_test! do
+          expect(comment_record.reload.body).to eq('Corrected body')
+        end
+      end
+
+      response '422', 'invalid comment' do
+        let(:comment_record) do
+          Comment.create!(user: api_client.user, commentable: create_phase_with_context[1], body: 'Original body')
+        end
+        let(:id) { comment_record.id }
+        let(:comment) { { comment: { body: '' } } }
+
+        schema ApiResponseExamples::ERROR_SCHEMA
+
+        run_test!
+      end
+
+      response '404', 'comment not found' do
+        let(:id) { 999999 }
+        let(:comment) { { comment: { body: 'Corrected body' } } }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:id) { 1 } }
+      forbidden_response do
+        let(:id) do
+          Comment.create!(user: api_client.user, commentable: create_phase_with_context[1], body: 'Body').id
+        end
+      end
     end
 
     delete 'Delete a comment' do

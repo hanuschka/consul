@@ -29,7 +29,6 @@
           patch :publish
         end
       end
-      resources :debates, only: [:create, :show, :update, :destroy]
       resources :polls, only: [:index, :create, :show, :update, :destroy]
       resources :livestreams, only: [:index, :create, :show, :update, :destroy] do
         resources :questions, only: [:create]
@@ -43,7 +42,7 @@
       resources :texts, only: [:index]
       resources :point_of_interest_pins, only: [:index, :create, :show, :update, :destroy]
       resources :point_of_interest_categories, only: [:index, :create, :show, :update, :destroy]
-      resources :comments, only: [:index, :create, :show, :destroy]
+      resources :comments, only: [:index, :create, :show, :update, :destroy]
       resources :budgets, only: [:index, :create, :show, :update, :destroy]
       resources :formulars, only: [:index, :create, :show, :update, :destroy]
       resources :milestones, only: [:index, :create]
@@ -55,6 +54,7 @@
 
     resources :deficiency_reports, only: [:index, :show, :create, :update]
     resources :deficiency_report_categories, only: [:index]
+    resources :deficiency_report_intake_channels, only: [:index]
     resources :ideas, only: [:index, :show, :create, :update]
     resources :idea_categories, only: [:index, :show, :create, :update, :destroy]
     resources :idea_officers, only: [:index]
@@ -69,7 +69,9 @@
     end
     resources :poll_question_answers, only: [:show, :update, :destroy]
     resources :livestreams, only: [:index, :show]
-    resources :proposals, only: [:index, :show]
+    resources :proposals, only: [:index, :show] do
+      resources :comments, only: [:create]
+    end
     resources :events, only: [:index, :show]
     resources :notifications, only: [:index, :show]
     resources :questions, only: [:index, :show]
@@ -85,7 +87,9 @@
         end
       end
     end
-    resources :budget_investments, only: [:index, :show], controller: "budgets/investments"
+    resources :budget_investments, only: [:index, :show], controller: "budgets/investments" do
+      resources :comments, only: [:create]
+    end
 
     namespace :masterportal do
       resources :category_icons, only: [:create]

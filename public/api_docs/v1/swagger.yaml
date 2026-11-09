@@ -854,7 +854,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Returns paginated results with voting/support information.
+        Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Filters and sorting apply to the whole list before it is paginated, so every page is full and in order. Returns paginated results with voting/support information.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -899,8 +899,9 @@ paths:
       - name: order
         in: query
         required: false
-        description: 'Sort by: "id" (**default**), "supports" (vote count), "confidence_score",
-          "price", "ballots", or "newest"'
+        description: 'Sort by: "id" (**default**, highest id first), "supports" (vote
+          count), "confidence_score", "price", "ballots", or "newest". Ties are broken
+          by id, highest first.'
         schema:
           type: string
       responses:
@@ -981,6 +982,22 @@ paths:
                   error:
                     type: object
                     properties:
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '400':
+          description: empty request body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -1176,10 +1193,12 @@ paths:
                       type: array
                       nullable: true
                       description: Array of document attachments (PDFs, Word docs,
-                        spreadsheets, etc.) to support the investment proposal. Upload
-                        documents as base64-encoded data. New documents are attributed
-                        to the content author of the API client; the author cannot
-                        be set or changed via the API.
+                        spreadsheets, etc.) to support the investment proposal. New
+                        documents are attributed to the content author of the API
+                        client; the author cannot be set or changed via the API. Upload
+                        each file as base64, bare or as a data URI (data:application/pdf;base64,...);
+                        invalid base64 returns 422. Returned documents carry a download
+                        url.
                       items:
                         type: object
                         properties:
@@ -1569,7 +1588,9 @@ paths:
                         update existing ones (provide id), or remove documents (set
                         _destroy=true). New documents are attributed to the content
                         author of the API client; the author cannot be set or changed
-                        via the API.
+                        via the API. Upload each file as base64, bare or as a data
+                        URI (data:application/pdf;base64,...); invalid base64 returns
+                        422. Returned documents carry a download url.
                       items:
                         type: object
                         properties:
@@ -1985,10 +2006,15 @@ paths:
       - bearer_auth: []
       description: "Update several budget phases of a budget in one request. Each
         entry is matched by its phase kind (e.g. accepting, balloting) and may set
-        starts_at, ends_at, and/or enabled. Returns all updated phases. If any kind
-        cannot be found, the request fails with 422 and no further phases are returned.
-        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
-        access level will receive `403 Forbidden`.*"
+        starts_at, ends_at, and/or enabled. All entries are applied first and then
+        every updated phase is validated against the result, so phases can be moved
+        together; the request is rejected with 422 for any value a single phase update
+        would reject (an end date before the start date, a start date before the previous
+        enabled phase's start, an end date after the next enabled phase's end), and
+        for an unknown kind. A rejected request changes no phase. Returns all updated
+        phases. A body without a `budget_phases` array returns 400. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -2019,6 +2045,24 @@ paths:
                   error:
                     type: object
                     properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '400':
+          description: budget_phases missing or not an array
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -2944,6 +2988,224 @@ paths:
               - comment
         description: Comment data with required body text and optional parent_id for
           nested replies
+  "/api/proposals/{proposal_id}/comments":
+    parameters:
+    - name: proposal_id
+      in: path
+      description: Proposal ID
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a comment on a proposal
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      description: "Create a comment on a proposal, shown in the proposal's discussion.
+        To reply, send the parent_id of a comment on the same proposal; a parent from
+        another resource returns 422. A body without a `comment` object returns 400.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '201':
+          description: comment created on the proposal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      comment:
+                        type: object
+                    required:
+                    - comment
+                required:
+                - data
+        '422':
+          description: parent comment belongs to a different resource
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '400':
+          description: comment object missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '404':
+          description: proposal not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+                      description: Text content of the comment
+                    parent_id:
+                      type: integer
+                      nullable: true
+                      description: 'Optional: ID of a comment on the same resource
+                        to reply to'
+                  required:
+                  - body
+              required:
+              - comment
+        description: Comment with its body and an optional parent_id for a reply
+  "/api/budget_investments/{budget_investment_id}/comments":
+    parameters:
+    - name: budget_investment_id
+      in: path
+      description: Budget investment ID
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a comment on a budget investment
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      description: "Create a comment on a budget investment, shown in the investment's
+        discussion. To reply, send the parent_id of a comment on the same investment;
+        a parent from another resource returns 422. A body without a `comment` object
+        returns 400. \n\n*Authorization: Requires `admin` access level. Requests with
+        `public_data` access level will receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '201':
+          description: comment created on the budget investment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      comment:
+                        type: object
+                    required:
+                    - comment
+                required:
+                - data
+        '404':
+          description: budget investment not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+                      description: Text content of the comment
+                    parent_id:
+                      type: integer
+                      nullable: true
+                      description: 'Optional: ID of a comment on the same resource
+                        to reply to'
+                  required:
+                  - body
+              required:
+              - comment
+        description: Comment with its body and an optional parent_id for a reply
   "/api/comments":
     get:
       summary: List all comments
@@ -3085,6 +3347,101 @@ paths:
                         type: array
                         items:
                           type: string
+    patch:
+      summary: Update a comment
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      description: "Change the body of a comment. Its place in the thread and the
+        resource it belongs to stay as they are. A body without a `comment` object
+        returns 400. \n\n*Authorization: Requires `admin` access level. Requests with
+        `public_data` access level will receive `403 Forbidden`.*"
+      parameters: []
+      responses:
+        '200':
+          description: comment updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      comment:
+                        type: object
+                    required:
+                    - comment
+                required:
+                - data
+        '422':
+          description: invalid comment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '404':
+          description: comment not found
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: object
+                  properties:
+                    body:
+                      type: string
+                      description: New text content of the comment
+                  required:
+                  - body
+              required:
+              - comment
+        description: New comment body
     delete:
       summary: Delete a comment
       tags:
@@ -3214,6 +3571,95 @@ paths:
                         type: array
                         items:
                           type: string
+  "/api/deficiency_report_intake_channels":
+    get:
+      summary: List deficiency report intake channels
+      tags:
+      - Deficiency Report Intake Channels
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve the intake channels a deficiency report can reach the municipality through (counter, phone, letter, ...), in the order configured in /adm. Send a channel's id as `deficiency_report_intake_channel_id` when creating or updating a deficiency report. The channel marked `default` is used when a report is created without one.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Pagination page number (**default:** 1)
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: 'Number of items per page (**default:** 500, max: 2000)'
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: deficiency report intake channels found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      deficiency_report_intake_channels:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 3
+                            name:
+                              type: string
+                              example: Counter
+                            default:
+                              type: boolean
+                              description: Whether reports created without a channel
+                                get this one
+                            given_order:
+                              type: integer
+                              nullable: true
+                              description: Position in the /adm ordering
+                          required:
+                          - id
+                          - name
+                          - default
+                    required:
+                    - deficiency_report_intake_channels
+                  pagination:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                      total_pages:
+                        type: integer
+                      total_count:
+                        type: integer
+                      per_page:
+                        type: integer
+                required:
+                - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/deficiency_reports":
     get:
       summary: List deficiency reports
@@ -3318,6 +3764,8 @@ paths:
                   error:
                     type: object
                     properties:
+                      type:
+                        type: string
                       messages:
                         type: array
                         items:
@@ -3393,6 +3841,47 @@ paths:
                       nullable: true
                       description: Name of the organization or group submitting on
                         behalf of
+                    deficiency_report_intake_channel_id:
+                      type: integer
+                      nullable: true
+                      description: ID of the intake channel the report reached the
+                        municipality through, as listed by GET /api/deficiency_report_intake_channels.
+                        Required for a report filed on_behalf_of a citizen when the
+                        setting "intake channel required for on-behalf-of reports"
+                        is on; otherwise the default channel is used. An id that does
+                        not exist is rejected with 422.
+                    documents_attributes:
+                      type: array
+                      nullable: true
+                      description: Document attachments (PDFs etc.). Upload each file
+                        as base64, bare or as a data URI (data:application/pdf;base64,...).
+                        Add new documents, or remove one by sending its id with _destroy=true.
+                        New documents are attributed to the content author of the
+                        API client. Returned documents carry a download url.
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: ID of an existing document; omit for new
+                              documents
+                          title:
+                            type: string
+                            nullable: true
+                            description: Document title; also used for the file name
+                          attachment:
+                            type: string
+                            nullable: true
+                            description: Base64-encoded file. Invalid base64 returns
+                              422.
+                          cached_attachment:
+                            type: string
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                            description: Set to true to remove this document
                     video_url:
                       type: string
                       nullable: true
@@ -3681,6 +4170,47 @@ paths:
                       nullable: true
                       description: Name of the organization or group submitting on
                         behalf of
+                    deficiency_report_intake_channel_id:
+                      type: integer
+                      nullable: true
+                      description: ID of the intake channel the report reached the
+                        municipality through, as listed by GET /api/deficiency_report_intake_channels.
+                        Required for a report filed on_behalf_of a citizen when the
+                        setting "intake channel required for on-behalf-of reports"
+                        is on; otherwise the default channel is used. An id that does
+                        not exist is rejected with 422.
+                    documents_attributes:
+                      type: array
+                      nullable: true
+                      description: Document attachments (PDFs etc.). Upload each file
+                        as base64, bare or as a data URI (data:application/pdf;base64,...).
+                        Add new documents, or remove one by sending its id with _destroy=true.
+                        New documents are attributed to the content author of the
+                        API client. Returned documents carry a download url.
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            nullable: true
+                            description: ID of an existing document; omit for new
+                              documents
+                          title:
+                            type: string
+                            nullable: true
+                            description: Document title; also used for the file name
+                          attachment:
+                            type: string
+                            nullable: true
+                            description: Base64-encoded file. Invalid base64 returns
+                              422.
+                          cached_attachment:
+                            type: string
+                            nullable: true
+                          _destroy:
+                            type: boolean
+                            nullable: true
+                            description: Set to true to remove this document
                     video_url:
                       type: string
                       nullable: true
@@ -4480,6 +5010,23 @@ paths:
                               description: Number of participant responses submitted
                                 to this formular
                               example: 45
+                            settings:
+                              type: object
+                              description: Settings of the formular phase that govern
+                                submissions, as shown in /adm
+                              properties:
+                                primary_cutoff_date:
+                                  type: string
+                                  nullable: true
+                                  description: Date (YYYY-MM-DD) after which the formular
+                                    takes no more submissions; empty when unset
+                                  example: '2026-12-31'
+                                submissions_limit:
+                                  type: string
+                                  nullable: true
+                                  description: How many times one user may submit
+                                    the formular
+                                  example: '1'
                             projekt_phase:
                               type: object
                               description: The projekt phase this formular belongs
@@ -4596,6 +5143,23 @@ paths:
                             description: Number of participant responses submitted
                               to this formular
                             example: 45
+                          settings:
+                            type: object
+                            description: Settings of the formular phase that govern
+                              submissions, as shown in /adm
+                            properties:
+                              primary_cutoff_date:
+                                type: string
+                                nullable: true
+                                description: Date (YYYY-MM-DD) after which the formular
+                                  takes no more submissions; empty when unset
+                                example: '2026-12-31'
+                              submissions_limit:
+                                type: string
+                                nullable: true
+                                description: How many times one user may submit the
+                                  formular
+                                example: '1'
                           projekt_phase:
                             type: object
                             description: The projekt phase this formular belongs to
@@ -4738,6 +5302,23 @@ paths:
                             description: Number of participant responses submitted
                               to this formular
                             example: 45
+                          settings:
+                            type: object
+                            description: Settings of the formular phase that govern
+                              submissions, as shown in /adm
+                            properties:
+                              primary_cutoff_date:
+                                type: string
+                                nullable: true
+                                description: Date (YYYY-MM-DD) after which the formular
+                                  takes no more submissions; empty when unset
+                                example: '2026-12-31'
+                              submissions_limit:
+                                type: string
+                                nullable: true
+                                description: How many times one user may submit the
+                                  formular
+                                example: '1'
                           projekt_phase:
                             type: object
                             description: The projekt phase this formular belongs to
@@ -4808,10 +5389,14 @@ paths:
       - Formulars
       security:
       - bearer_auth: []
-      description: "Update a formular. The formular has no editable attributes besides
-        its projekt phase association; this endpoint persists the record and returns
-        it. \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
-        access level will receive `403 Forbidden`.*"
+      description: "Update the submission settings of a formular: its cutoff date
+        and how many times one user may submit it. They are stored on the formular's
+        phase, the same values /adm edits. Send only the settings to change; an empty
+        `primary_cutoff_date` removes the cutoff. Invalid values return 422 and change
+        nothing; a body without a `formular` object returns 400. \n\n*Authorization:
+        Requires `admin` access level. Requests with `public_data` access level will
+        receive `403 Forbidden`.*"
+      parameters: []
       responses:
         '200':
           description: formular updated
@@ -4844,6 +5429,23 @@ paths:
                             description: Number of participant responses submitted
                               to this formular
                             example: 45
+                          settings:
+                            type: object
+                            description: Settings of the formular phase that govern
+                              submissions, as shown in /adm
+                            properties:
+                              primary_cutoff_date:
+                                type: string
+                                nullable: true
+                                description: Date (YYYY-MM-DD) after which the formular
+                                  takes no more submissions; empty when unset
+                                example: '2026-12-31'
+                              submissions_limit:
+                                type: string
+                                nullable: true
+                                description: How many times one user may submit the
+                                  formular
+                                example: '1'
                           projekt_phase:
                             type: object
                             description: The projekt phase this formular belongs to
@@ -4890,6 +5492,38 @@ paths:
                     - formular
                 required:
                 - data
+        '422':
+          description: invalid settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '400':
+          description: formular object missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
         '404':
           description: formular not found
         '401':
@@ -4924,6 +5558,29 @@ paths:
                         type: array
                         items:
                           type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                formular:
+                  type: object
+                  properties:
+                    primary_cutoff_date:
+                      type: string
+                      nullable: true
+                      description: ISO 8601 date (YYYY-MM-DD) after which no more
+                        submissions are accepted, or empty to remove the cutoff
+                      example: '2026-12-31'
+                    submissions_limit:
+                      type: integer
+                      description: How many times one user may submit the formular;
+                        a positive integer
+                      example: 3
+              required:
+              - formular
+        description: Formular settings to change
     delete:
       summary: Delete a formular
       tags:
@@ -5422,10 +6079,11 @@ paths:
       - Ideas
       security:
       - bearer_auth: []
-      description: "Retrieve a paginated list of citizen ideas and proposals. Ideas
-        are user-submitted suggestions for community improvements that may have been
-        reviewed and accepted by administrators. \n\n*Authorization: Available to
-        both `admin` and `public_data` access levels.*"
+      description: "Retrieve a paginated list of accepted citizen ideas. Ideas that
+        are still pending, including ideas created through the API without `accepted:
+        true`, are not listed until they are accepted. Filters and sorting apply to
+        the whole list before it is paginated. \n\n*Authorization: Available to both
+        `admin` and `public_data` access levels.*"
       parameters:
       - name: page
         in: query
@@ -5482,9 +6140,10 @@ paths:
       - Ideas
       security:
       - bearer_auth: []
-      description: "Submit a new citizen idea for community improvement. Ideas go
-        through an admin review process before being published. Supports categorization,
-        video attachments, location mapping, image attachments, and optional on-behalf-of
+      description: "Submit a new citizen idea for community improvement. A new idea
+        is pending and not listed until it is accepted, either here with `accepted:
+        true` or later through the update endpoint. Supports categorization, video
+        attachments, location mapping, image attachments, and optional on-behalf-of
         attribution. Requires acceptance of terms and conditions. \n\n*Authorization:
         Requires `admin` access level. Requests with `public_data` access level will
         receive `403 Forbidden`.*"
@@ -5576,6 +6235,12 @@ paths:
                       nullable: true
                     resource_terms:
                       type: boolean
+                    accepted:
+                      type: boolean
+                      nullable: true
+                      description: Set to true to accept the idea, which publishes
+                        it in the ideas list and starts its timeframe. Ideas created
+                        without it stay pending and are not listed.
                     map_location_attributes:
                       type: object
                       nullable: true
@@ -5661,10 +6326,12 @@ paths:
                       type: array
                       nullable: true
                       description: Array of document attachments (PDFs, Word docs,
-                        spreadsheets, etc.) to support the idea. Upload documents
-                        as base64-encoded data. New documents are attributed to the
-                        content author of the API client; the author cannot be set
-                        or changed via the API.
+                        spreadsheets, etc.) to support the idea. New documents are
+                        attributed to the content author of the API client; the author
+                        cannot be set or changed via the API. Upload each file as
+                        base64, bare or as a data URI (data:application/pdf;base64,...);
+                        invalid base64 returns 422. Returned documents carry a download
+                        url.
                       items:
                         type: object
                         properties:
@@ -5753,9 +6420,10 @@ paths:
       security:
       - bearer_auth: []
       description: "Update an existing idea with new content, category, location,
-        video, or image. Can add, replace, or remove the idea image. All fields are
-        optional - only provide fields to change. \n\n*Authorization: Requires `admin`
-        access level. Requests with `public_data` access level will receive `403 Forbidden`.*"
+        video, or image, or accept it with `accepted: true`. Can add, replace, or
+        remove the idea image. All fields are optional - only provide fields to change.
+        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
+        access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -5844,6 +6512,13 @@ paths:
                     idea_category_id:
                       type: integer
                       nullable: true
+                    accepted:
+                      type: boolean
+                      nullable: true
+                      description: true accepts the idea, so it appears in the ideas
+                        list and its timeframe starts; accepting an already accepted
+                        idea keeps the original acceptance date. false moves it back
+                        to pending, which removes it from the list.
                     image_attributes:
                       type: object
                       nullable: true
@@ -5895,7 +6570,9 @@ paths:
                         update existing ones (provide id), or remove documents (set
                         _destroy=true). New documents are attributed to the content
                         author of the API client; the author cannot be set or changed
-                        via the API.
+                        via the API. Upload each file as base64, bare or as a data
+                        URI (data:application/pdf;base64,...); invalid base64 returns
+                        422. Returned documents carry a download url.
                       items:
                         type: object
                         properties:
@@ -5937,7 +6614,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve a single iframe by ID.
+        Retrieve the iframe of an iframe phase: the URL, width and height the phase page embeds, as set in /adm or through this API.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       responses:
@@ -5992,7 +6669,9 @@ paths:
       - Iframes
       security:
       - bearer_auth: []
-      description: "Update an existing iframe. Allows modifying iframe URL and properties.
+      description: "Update the iframe of an iframe phase. The values are the ones
+        the phase page embeds and /adm edits. Send only the fields to change; an empty
+        string clears a value. A body without a `projekt_iframe` object returns 400.
         \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
         access level will receive `403 Forbidden`.*"
       parameters: []
@@ -6024,6 +6703,22 @@ paths:
                     - iframe
                 required:
                 - data
+        '400':
+          description: projekt_iframe object missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
         '404':
           description: iframe not found
         '403':
@@ -6089,7 +6784,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve all livestream events scheduled for a projekt phase. Livestreams are real-time video broadcasts used for Q&A sessions, town halls, and participation events. Includes video platform information and streaming URLs.
+        Retrieve all livestream events scheduled for a projekt phase. Livestreams are real-time video broadcasts used for Q&A sessions, town halls, and participation events. Includes video platform information and streaming URLs. Clients with `public_data` access get 403 for a phase that is inactive or hidden in the frontend.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -6135,6 +6830,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '403':
+          description: phase hidden from public_data clients
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
         '401':
           description: unauthorized - missing or invalid token
           content:
@@ -6267,7 +6978,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve a paginated list of all livestreams across all projekt phases.
+        Retrieve a paginated list of all livestreams across all projekt phases. Clients with `public_data` access only see livestreams of phases that are active and visible in the frontend.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -7571,7 +8282,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results.
+        Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results. Clients with `public_data` access get 403 for a phase that is inactive or hidden in the frontend.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -7617,6 +8328,22 @@ paths:
                         type: integer
                 required:
                 - data
+        '403':
+          description: phase hidden from public_data clients
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
         '401':
           description: unauthorized - missing or invalid token
           content:
@@ -7745,7 +8472,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve a paginated list of all notifications across all projekt phases.
+        Retrieve a paginated list of all notifications across all projekt phases. Clients with `public_data` access only see notifications of phases that are active and visible in the frontend.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -13248,7 +13975,10 @@ paths:
                       nullable: true
                       description: Array of document attachments. New documents are
                         attributed to the content author of the API client; the author
-                        cannot be set or changed via the API.
+                        cannot be set or changed via the API. Upload each file as
+                        base64, bare or as a data URI (data:application/pdf;base64,...);
+                        invalid base64 returns 422. Returned documents carry a download
+                        url.
                       items:
                         type: object
                         properties:
@@ -13258,9 +13988,11 @@ paths:
                           title:
                             type: string
                             nullable: true
+                            description: Document title; also used for the file name
                           attachment:
                             type: string
                             nullable: true
+                            description: Base64-encoded file
                           cached_attachment:
                             type: string
                             nullable: true
@@ -13673,7 +14405,10 @@ paths:
                       nullable: true
                       description: Array of document attachments. New documents are
                         attributed to the content author of the API client; the author
-                        cannot be set or changed via the API.
+                        cannot be set or changed via the API. Upload each file as
+                        base64, bare or as a data URI (data:application/pdf;base64,...);
+                        invalid base64 returns 422. Returned documents carry a download
+                        url.
                       items:
                         type: object
                         properties:
@@ -13683,9 +14418,11 @@ paths:
                           title:
                             type: string
                             nullable: true
+                            description: Document title; also used for the file name
                           attachment:
                             type: string
                             nullable: true
+                            description: Base64-encoded file
                           cached_attachment:
                             type: string
                             nullable: true
@@ -13974,8 +14711,9 @@ paths:
       - Question Options
       security:
       - bearer_auth: []
-      description: "Retrieve a single question option by ID. \n\n*Authorization: Available
-        to both `admin` and `public_data` access levels.*"
+      description: "Retrieve a single question option by ID. `answers_count` is the
+        number of answers given for this option. \n\n*Authorization: Available to
+        both `admin` and `public_data` access levels.*"
       responses:
         '200':
           description: question option found
@@ -14253,7 +14991,8 @@ paths:
       description: "Create a new projekt question in a specific phase. Questions can
         be created as: (1) root questions in a QuestionPhase, (2) livestream questions
         in a LivestreamPhase by specifying projekt_livestream_id. Questions support
-        multiple choice options via nested question_options_attributes. \n\n*Authorization:
+        multiple choice options via nested question_options_attributes. Projekt questions
+        have no description; a `description` field in the payload is ignored. \n\n*Authorization:
         Requires `admin` access level. Requests with `public_data` access level will
         receive `403 Forbidden`.*"
       parameters: []
@@ -14471,8 +15210,9 @@ paths:
       security:
       - bearer_auth: []
       description: "Update an existing projekt question. Allows modifying question
-        text and associated options. \n\n*Authorization: Requires `admin` access level.
-        Requests with `public_data` access level will receive `403 Forbidden`.*"
+        text and associated options. Projekt questions have no description; a `description`
+        field in the payload is ignored. \n\n*Authorization: Requires `admin` access
+        level. Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':

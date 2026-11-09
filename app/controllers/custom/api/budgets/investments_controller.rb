@@ -11,32 +11,18 @@ class Api::Budgets::InvestmentsController < Api::BaseController
 
   def index
     check_read_access!
-    budget_investments = if @budget.present?
-      @budget.investments.includes(
-        :heading,
-        :map_location,
-        author: :organization,
-        budget: {
-          projekt_phase: [:settings, :projekt],
-          group: :heading
-        }
-      )
-    else
-      Budget::Investment.includes(
-        :heading,
-        :map_location,
-        author: :organization,
-        budget: {
-          projekt_phase: [:settings, :projekt],
-          group: :heading
-        }
-      )
-    end
-
-    budget_investments = paginate(budget_investments.order(created_at: :asc))
-
-    budget_investments = apply_filters(budget_investments)
-    budget_investments = apply_sorting(budget_investments)
+    investment_scope = @budget.present? ? @budget.investments : Budget::Investment
+    budget_investments = investment_scope.includes(
+      :heading,
+      :map_location,
+      documents: { attachment_attachment: :blob },
+      author: :organization,
+      budget: {
+        projekt_phase: [:settings, :projekt],
+        group: :heading
+      }
+    )
+    budget_investments = paginate(apply_sorting(apply_filters(budget_investments)))
 
     serialized_budget_investments = BudgetInvestmentSerializer.serialize_collection(
       budget_investments,
@@ -111,22 +97,24 @@ class Api::Budgets::InvestmentsController < Api::BaseController
   private
 
   def budget_investment_params
-    params.require(:budget_investment).permit(
-      :title,
-      :description,
-      :heading_id,
-      :video_url,
-      :on_behalf_of,
-      :resource_terms,
-      :price,
-      :feasibility,
-      :valuator_explanation,
-      :valuation_finished,
-      :selected,
-      :visible_to_valuators,
-      map_location_attributes: map_location_attributes,
-      documents_attributes: document_attributes_api,
-      tag_list: []
+    @budget_investment_params ||= with_decoded_documents(
+      params.require(:budget_investment).permit(
+        :title,
+        :description,
+        :heading_id,
+        :video_url,
+        :on_behalf_of,
+        :resource_terms,
+        :price,
+        :feasibility,
+        :valuator_explanation,
+        :valuation_finished,
+        :selected,
+        :visible_to_valuators,
+        map_location_attributes: map_location_attributes,
+        documents_attributes: document_attributes_api,
+        tag_list: []
+      )
     )
   end
 
@@ -157,8 +145,13 @@ class Api::Budgets::InvestmentsController < Api::BaseController
       budget_investments = budget_investments.by_group(params[:group_id])
     end
 
-    if params[:feasibility].present? && params[:feasibility].in?(%w[feasible unfeasible undecided])
-      budget_investments = budget_investments.send(params[:feasibility])
+    case params[:feasibility]
+    when "feasible"
+      budget_investments = budget_investments.feasible
+    when "unfeasible"
+      budget_investments = budget_investments.unfeasible
+    when "undecided"
+      budget_investments = budget_investments.undecided
     end
 
     if params[:selected].present?
@@ -172,24 +165,22 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     budget_investments
   end
 
+  # Every sort is a reorder ending on id, so rows with equal values keep
+  # their place across pages.
   def apply_sorting(budget_investments)
-    order = params[:order] || 'id'
-
-    case order
-    when 'id'
-      budget_investments.sort_by_id
-    when 'supports'
-      budget_investments.sort_by_supports
-    when 'confidence_score'
+    case params[:order]
+    when "supports"
+      budget_investments.reorder(cached_votes_up: :desc, id: :desc)
+    when "confidence_score"
       budget_investments.sort_by_confidence_score
-    when 'price'
+    when "price"
       budget_investments.sort_by_price
-    when 'ballots'
+    when "ballots"
       budget_investments.sort_by_ballots
-    when 'newest'
-      budget_investments.sort_by_newest
+    when "newest"
+      budget_investments.sort_by_newest.order(id: :desc)
     else
-      budget_investments.sort_by_id
+      budget_investments.reorder(id: :desc)
     end
   end
 

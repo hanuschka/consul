@@ -11,34 +11,27 @@ class Api::IframesController < Api::BaseController
   def update
     check_admin_access!
 
-    if params[:projekt_iframe]
-      if params[:projekt_iframe][:url].present?
-        update_or_create_setting("option.iframe.url", params[:projekt_iframe][:url])
-      end
-
-      if params[:projekt_iframe][:width].present?
-        update_or_create_setting("option.iframe.width", params[:projekt_iframe][:width])
-      end
-
-      if params[:projekt_iframe][:height].present?
-        update_or_create_setting("option.iframe.height", params[:projekt_iframe][:height])
+    ProjektPhaseSetting.transaction do
+      iframe_params.each do |attribute, value|
+        setting = @projekt_phase.settings.find_or_initialize_by(
+          key: IframeSerializer::SETTING_KEYS.fetch(attribute.to_sym)
+        )
+        setting.update!(value: value.to_s)
       end
     end
 
-    serialized_iframe = IframeSerializer.new(@projekt_phase).serialize
+    serialized_iframe = IframeSerializer.new(@projekt_phase.reload).serialize
 
     render json: { data: { iframe: serialized_iframe } }
   end
 
   private
 
-  def find_projekt_phase
-    @projekt_phase = ProjektPhase::IframePhase.find(params[:projekt_phase_id])
+  def iframe_params
+    params.require(:projekt_iframe).permit(*IframeSerializer::SETTING_KEYS.keys)
   end
 
-  def update_or_create_setting(key, value)
-    setting = @projekt_phase.settings.find_or_initialize_by(key: key)
-    setting.value = value
-    setting.save
+  def find_projekt_phase
+    @projekt_phase = ProjektPhase::IframePhase.find(params[:projekt_phase_id])
   end
 end

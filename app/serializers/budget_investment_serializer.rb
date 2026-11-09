@@ -178,14 +178,7 @@ class BudgetInvestmentSerializer < BaseSerializer
 
     # Add documents
     if budget_investment.respond_to?(:documents) && budget_investment.documents.any?
-      investment_data[:documents] = budget_investment.documents.map do |doc|
-        {
-          id: doc.id,
-          title: doc.title,
-          attachment_file_name: doc.attachment_file_name,
-          attachment_file_size: doc.attachment_file_size
-        }
-      end
+      investment_data[:documents] = DocumentSerializer.serialize_collection(budget_investment.documents)
     end
 
     # Add tags

@@ -364,6 +364,9 @@ class Adm::Projekts::PhasesController < Adm::Projekts::BaseController
                              image: { attachment_attachment: :blob })
         )
         @similar_contributions_counts = ::SimilarContributions::StoredCounts.call(@investments)
+        if @budget.heading && policy([:adm, :projekts, @budget]).resolve_tie?
+          @budget_tie = ::Budget::Result.new(@budget, @budget.heading).pending_tie
+        end
 
         boolean_filter_options = [[true, t("shared.true")], [false, t("shared.false")]]
 

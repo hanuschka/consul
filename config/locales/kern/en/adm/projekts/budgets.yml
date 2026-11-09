@@ -3,6 +3,9 @@ en:
     projekts:
       budgets:
         calculate_winners:
-          notice: The top-rated proposals are being determined. This may take a moment.
+          notice: Winners were determined.
         recalculate_winners:
           notice: Winners were recalculated successfully.
+        resolve_tie:
+          notice: The tie was resolved.
+          alert: The selection could not be saved. Please check the free places and the remaining budget.

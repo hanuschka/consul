@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_28_200002) do
+ActiveRecord::Schema.define(version: 2026_11_09_131548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -674,6 +674,9 @@ ActiveRecord::Schema.define(version: 2026_10_28_200002) do
     t.boolean "show_percentage_values_only", default: false
     t.boolean "show_results_after_first_vote", default: false
     t.integer "max_preselected", default: 0
+    t.datetime "tie_resolved_at"
+    t.datetime "winners_calculated_at"
+    t.boolean "winners_tie_open", default: false, null: false
     t.index ["projekt_id"], name: "index_budgets_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_budgets_on_projekt_phase_id"
   end

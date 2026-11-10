@@ -1,5 +1,8 @@
 de:
   setting:
+    accessibility_report:
+      recipient_email: Empfänger-E-Mail-Adresse für Barrieremeldungen
+      recipient_email_description: "An diese Adresse werden alle Meldungen aus dem Formular „Barriere melden“ gesendet. Solange sie leer ist, gehen die Meldungen an alle Administratorinnen und Administratoren."
     handbook:
       url: Adresse des Nutzerhandbuchs
       url_description: "Legt die Adresse des Nutzerhandbuchs fest, das in allen Dashboards unter „Handbuch“ und in der Administration unter „Community“ angezeigt wird. Im Verwaltungsbereich erscheint in jedem Menü ganz unten der passende Eintrag, auf der Startseite der Administration zusätzlich eine Kachel. Die Adresse ist voreingestellt; lassen Sie das Feld leer, um Eintrag und Kachel auszublenden."

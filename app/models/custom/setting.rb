@@ -311,6 +311,7 @@ class Setting < ApplicationRecord
         "direct_message_max_per_day": 3,
         "mailer_from_deficiency_report_address": "noreply@consul.dev",
         "moderation.reports_notification_email": nil,
+        "accessibility_report.recipient_email": nil,
         "min_age_to_participate": 16,
         "hot_score_period_in_days": 31,
         "related_content_score_threshold": -0.3,

@@ -787,6 +787,10 @@ $phase-marker-border: #cbd5e1;
     }
   }
 
+  .accessibility-report-form textarea {
+    margin-bottom: $form-spacing;
+  }
+
   .content-blocks-container {
     .custom-content-block:first-child  {
       h1:first-child, h2:first-child, h3:first-child {

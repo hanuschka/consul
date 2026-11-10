@@ -281,6 +281,7 @@ class Setting < ApplicationRecord
         "proposals.poster_description": nil,
         "proposals.email_on_official_answer": nil,
         "email_templates.recipient_greeting": "username",
+        "email_templates.welcome_email": nil,
         # Images and Documents
         "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,

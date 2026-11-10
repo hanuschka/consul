@@ -129,6 +129,10 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       variables: %w[recipient_greeting new_password_url],
       hidden_variables: %w[username]
     },
+    "Mailer#welcome" => {
+      variables: %w[recipient_greeting org_name platform_url],
+      hidden_variables: %w[username]
+    },
     "Mailer#manual_verification_confirmation" => {
       variables: %w[recipient_greeting],
       hidden_variables: %w[username]

@@ -1,0 +1,37 @@
+<td style="<%= css_for_mailer_content %>">
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.shared.greeting_without_name") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("accessibility_report_mailer.report_submitted.body") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= AccessibilityReport.human_attribute_name(:location) %>:</strong>
+    <%= @report.location.presence || t("accessibility_report_mailer.report_submitted.not_given") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= AccessibilityReport.human_attribute_name(:description) %>:</strong>
+  </p>
+  <%= simple_format(h(@report.description), style: css_for_mailer_text) %>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= AccessibilityReport.human_attribute_name(:assistive_technology) %>:</strong>
+    <%= @report.assistive_technology.presence || t("accessibility_report_mailer.report_submitted.not_given") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <strong><%= AccessibilityReport.human_attribute_name(:email) %>:</strong>
+    <%= @report.email.presence || t("accessibility_report_mailer.report_submitted.not_given") %>
+  </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
+</td>

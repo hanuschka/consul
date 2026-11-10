@@ -55,7 +55,7 @@ include MachineTranslatable
   # Pages linked from the public footer. footer_key is the immutable identity
   # of a footer page (slug and title are admin-editable).
   FOOTER_KEYS = %w[privacy additional_privacy conditions accessibility impressum
-                   netiquette contact_us open_source].freeze
+                   netiquette contact_us open_source accessibility_report].freeze
 
   validates :footer_key, uniqueness: true, inclusion: { in: FOOTER_KEYS }, allow_nil: true
 

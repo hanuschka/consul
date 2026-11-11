@@ -2,3 +2,27 @@ de:
   sms_sign_in:
     message: "Ihr Anmeldecode für %{platform}: %{code}. Gültig für %{minutes} Minuten."
     username_prefix: Teilnehmer
+    code_sent: Wir haben Ihnen einen Code per SMS geschickt.
+    errors:
+      invalid_phone: Bitte geben Sie eine deutsche Mobilfunknummer ein, zum Beispiel 0171 1234567.
+      rate_limited: Sie haben zu viele Codes angefordert. Bitte warten Sie einen Moment und versuchen Sie es dann erneut.
+      delivery_failed: Die SMS konnte nicht versendet werden. Bitte versuchen Sie es später erneut.
+      invalid_code: Der Code ist nicht korrekt.
+      expired_code: Der Code ist nicht mehr gültig. Bitte fordern Sie einen neuen Code an.
+      account_blocked: Dieses Konto ist gesperrt.
+    new:
+      title: Mit SMS-Code teilnehmen
+      intro: Geben Sie Ihre Mobilfunknummer ein. Sie erhalten einen Code per SMS, mit dem Sie sich anmelden. Gibt es zu Ihrer Nummer noch kein Konto, wird eines angelegt.
+      phone_label: Mobilfunknummer
+      phone_hint: Nur deutsche Mobilfunknummern, zum Beispiel 0171 1234567
+      terms_html: Mit der Anmeldung akzeptieren Sie die %{terms_link} und die %{privacy_link}.
+      terms_link: Nutzungsbedingungen
+      privacy_link: Datenschutzerklärung
+      submit: Code anfordern
+    edit:
+      title: Code eingeben
+      intro: Wir haben Ihnen einen sechsstelligen Code per SMS geschickt. Er ist %{minutes} Minuten gültig.
+      code_label: Code
+      submit: Anmelden
+      resend: Code erneut senden
+      change_number: Andere Nummer verwenden

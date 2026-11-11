@@ -351,13 +351,9 @@ User.class_eval do
   end
 
   def public_name
-    return nil unless public_activity?
+    return nil if !public_activity? || guest?
 
-    if first_name.present? || last_name.present?
-      full_name
-    else
-      username
-    end
+    name
   end
 
   def first_letter_of_name
@@ -383,6 +379,10 @@ User.class_eval do
     when "formal" then formal_recipient_greeting
     else informal_recipient_greeting(username)
     end
+  end
+
+  def send_welcome_email
+    Mailer.welcome(self).deliver_later if Setting["email_templates.welcome_email"].present?
   end
 
   private

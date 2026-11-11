@@ -242,6 +242,10 @@ class DeficiencyReport < ApplicationRecord
     official_answer.present? || reporter_answer.present?
   end
 
+  def public_answer_same_as_reporter?
+    official_answer.presence == reporter_answer.presence
+  end
+
   def official_answer_for_reporter
     self.class.separate_reporter_answer? ? reporter_answer : official_answer
   end

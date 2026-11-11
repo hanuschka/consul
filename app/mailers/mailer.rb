@@ -280,6 +280,20 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def welcome(user)
+    @email_to = user.email
+    @user = user
+
+    I18n.with_locale(I18n.default_locale) do
+      mail_with_custom_template(nil, {
+        "username" => @user.username,
+        "recipient_greeting" => @user.recipient_greeting,
+        "org_name" => Setting["org_name"],
+        "platform_url" => root_url
+      }, to: @email_to, default_subject: t("mailers.welcome.subject", org_name: Setting["org_name"]))
+    end
+  end
+
   def manual_verification_confirmation(user)
     @email_to = user.email
     @user = user

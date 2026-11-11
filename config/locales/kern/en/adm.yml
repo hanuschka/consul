@@ -40,6 +40,7 @@ en:
           modal_notifications: Modal notifications
           newsletters: Newsletters
           email_templates: System emails
+          welcome_email: Welcome email
           recipient_groups: Recipient groups
           unregistered_newsletter_subscribers: Unregistered subscribers
         stats: Statistics

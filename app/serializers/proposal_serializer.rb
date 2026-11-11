@@ -1,8 +1,9 @@
 class ProposalSerializer < BaseSerializer
   attr_reader :proposal
 
-  def initialize(proposal, similar_contributions_count: nil)
+  def initialize(proposal, client: nil, similar_contributions_count: nil)
     @proposal = proposal
+    @client = client
     @similar_contributions_count = similar_contributions_count
   end
 
@@ -10,7 +11,6 @@ class ProposalSerializer < BaseSerializer
     proposal_data = proposal.as_json(
       only: [
         :id,
-        :author_id,
         :cached_votes_up,
         :cached_votes_down,
         :comments_count,
@@ -18,7 +18,6 @@ class ProposalSerializer < BaseSerializer
         :confidence_score,
         :created_at,
         :updated_at,
-        :responsible_name,
         :video_url,
         :geozone_id,
         :retired_at,
@@ -33,6 +32,13 @@ class ProposalSerializer < BaseSerializer
 
     proposal_data[:similar_contributions_count] = similar_contributions_count
 
+    if admin_client?
+      proposal_data.merge!(
+        author_id: proposal.author_id,
+        responsible_name: proposal.responsible_name
+      )
+    end
+
     proposal_data.merge!(
       title: proposal.title,
       description: proposal.description,
@@ -41,11 +47,7 @@ class ProposalSerializer < BaseSerializer
     )
 
     if proposal.author.present?
-      proposal_data[:author] = {
-        id: proposal.author.id,
-        username: proposal.author.username,
-        public_name: proposal.author.public_name
-      }
+      proposal_data[:author] = serialize_on_behalf_of_author(proposal)
     end
 
     # Add geozone
@@ -108,24 +110,21 @@ class ProposalSerializer < BaseSerializer
     end
 
     if proposal.respond_to?(:documents) && proposal.documents.any?
-      proposal_data[:documents] = proposal.documents.map do |doc|
-        {
-          id: doc.id,
-          title: doc.title,
-          attachment_file_name: doc.attachment_file_name,
-          attachment_file_size: doc.attachment_file_size
-        }
-      end
+      proposal_data[:documents] = DocumentSerializer.serialize_collection(proposal.documents)
     end
 
     proposal_data
   end
 
-  def self.serialize_collection(proposals)
+  def self.serialize_collection(proposals, client: nil)
     counts = SimilarContributions::StoredCounts.call(proposals)
 
     proposals.map do |proposal|
-      new(proposal, similar_contributions_count: counts.fetch(proposal.id, 0)).serialize
+      new(
+        proposal,
+        client: client,
+        similar_contributions_count: counts.fetch(proposal.id, 0)
+      ).serialize
     end
   end
 

@@ -1,0 +1,110 @@
+<div
+  class="<%= css_classes %>"
+  data-recent-limit="<%= RECENT_COLORS_LIMIT %>"
+  data-value=""
+>
+  <%= studio_rich_tooltip(title: label, delay: 600) do %>
+    <inline-popup
+      class="js-studio-color-picker-popup"
+      body-class="studio-color-picker--popup"
+      placement="bottom"
+      align="start"
+    >
+      <button
+        type="button"
+        class="studio-color-picker--trigger"
+        aria-label="<%= label %>"
+      >
+        <i class="fas fa-palette" aria-hidden="true"></i>
+      </button>
+
+      <template>
+        <p class="studio-color-picker--title"><%= label %></p>
+
+        <div class="studio-color-picker--section">
+          <p class="studio-color-picker--section-title">
+            <%= t("custom.projekts.page.studio_color_picker.presets_title") %>
+          </p>
+          <div
+            class="studio-color-picker--swatches js-studio-color-picker-presets"
+            role="group"
+            aria-label="<%= t("custom.projekts.page.studio_color_picker.presets_title") %>"
+          >
+            <% preset_colors.each do |preset| %>
+              <button
+                type="button"
+                class="studio-color-picker--swatch js-studio-color-picker-swatch"
+                style="--studio-color-picker-swatch-color: <%= preset[:color] %>;"
+                data-color="<%= preset[:color] %>"
+                aria-label="<%= preset[:name] %>"
+                aria-pressed="false"
+              ></button>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="studio-color-picker--section js-studio-color-picker-recent-section" hidden>
+          <p class="studio-color-picker--section-title">
+            <%= t("custom.projekts.page.studio_color_picker.recent_title") %>
+          </p>
+          <div
+            class="studio-color-picker--swatches js-studio-color-picker-recent-swatches"
+            role="group"
+            aria-label="<%= t("custom.projekts.page.studio_color_picker.recent_title") %>"
+          ></div>
+          <template class="js-studio-color-picker-recent-swatch-template">
+            <button
+              type="button"
+              class="studio-color-picker--swatch js-studio-color-picker-swatch"
+              aria-pressed="false"
+            ></button>
+          </template>
+        </div>
+
+        <div class="studio-color-picker--section">
+          <p class="studio-color-picker--section-title">
+            <%= t("custom.projekts.page.studio_color_picker.custom_title") %>
+          </p>
+          <div class="studio-color-picker--custom">
+            <input
+              type="color"
+              class="studio-color-picker--native js-studio-color-picker-native"
+              value="<%= default_custom_color %>"
+              aria-label="<%= t("custom.projekts.page.studio_color_picker.native_label") %>"
+            >
+            <input
+              type="text"
+              class="studio-color-picker--hex js-studio-color-picker-hex"
+              maxlength="7"
+              placeholder="<%= default_custom_color %>"
+              spellcheck="false"
+              autocomplete="off"
+              aria-label="<%= t("custom.projekts.page.studio_color_picker.hex_label") %>"
+            >
+          </div>
+          <p class="studio-color-picker--error js-studio-color-picker-error" role="alert" hidden>
+            <%= t("custom.projekts.page.studio_color_picker.hex_error") %>
+          </p>
+        </div>
+
+        <div class="studio-color-picker--actions">
+          <button
+            type="button"
+            class="studio-edit-button -green -with-background js-studio-color-picker-apply"
+          >
+            <i class="fas fa-check" aria-hidden="true"></i>
+            <%= t("custom.projekts.page.studio_color_picker.apply") %>
+          </button>
+          <button
+            type="button"
+            class="studio-edit-button -with-background"
+            data-inline-popup-close
+          >
+            <i class="fas fa-xmark" aria-hidden="true"></i>
+            <%= t("custom.projekts.page.studio_edit_popup.cancel") %>
+          </button>
+        </div>
+      </template>
+    </inline-popup>
+  <% end %>
+</div>

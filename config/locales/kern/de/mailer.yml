@@ -70,6 +70,10 @@ de:
     user_invite:
       title: Einladung zur Plattform
       description: Wird an eingeladene Personen gesendet, um sie zur Registrierung auf der Plattform einzuladen.
+    welcome:
+      title: Willkommensmail
+      description: Wird einmalig an neu registrierte Nutzer gesendet, sobald ihre E-Mail-Adresse bestätigt ist oder sie sich zum ersten Mal mit BundID oder einem anderen Login-Dienst angemeldet haben.
+      recipient: Der neu registrierte Nutzer.
     pending_role_invite:
       title: Rolleneinladung
       description: Wird an eingeladene Personen gesendet, wenn ihnen eine Rolle auf der Plattform zugewiesen wurde.
@@ -185,3 +189,8 @@ de:
       title: Feedback-Anfrage zur Mangelmeldung
       description: "Wird etwa 24 Stunden nach Abschluss einer Mangelmeldung (Statuswechsel in einen archivierenden Status) an den Verfasser gesendet und bittet um Feedback. Voraussetzung: Die Feedback-Funktion ist in den %{settings_link} aktiviert."
       recipient: Der Nutzer, der die Mangelmeldung eingereicht hat.
+  mailers:
+    welcome:
+      subject: "Willkommen bei %{org_name}"
+      body: "Ihr Konto ist jetzt aktiv. Auf der Beteiligungsplattform finden Sie alle laufenden Projekte und können sich direkt einbringen."
+      link: "Zur Beteiligungsplattform"

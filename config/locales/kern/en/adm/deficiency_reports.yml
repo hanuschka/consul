@@ -109,6 +109,7 @@ en:
           hidden_state:
             visible: Visible
             hidden: Hidden
+          untitled: Untitled
         tabs:
           show: Manage
           administer: Administer
@@ -151,7 +152,9 @@ en:
           official_answer: Official response
           reporter_answer: "Answer to the reporter (e-mail)"
           reporter_answer_hint: "Sent to the reporter by e-mail and not shown publicly."
+          reporter_answer_public_hint: "Sent to the reporter by e-mail and also shown publicly."
           public_answer: "Public answer (web)"
+          same_public_answer: "Public answer is the same as the answer to the reporter"
           official_answer_hint: "Enter the official response to this report here. Note: this text is publicly visible."
           official_answer_documents: Documents for the response
           official_answer_documents_hint: >-

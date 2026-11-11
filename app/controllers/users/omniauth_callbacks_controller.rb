@@ -179,8 +179,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user.assign_attributes(user_attributes_from(auth))
       end
 
+      new_user = @user.new_record?
+
       if save_user
         identity.update!(user: @user)
+        @user.send_welcome_email if new_user && @user.confirmed?
         preexisting_flash = flash[:notice]
         set_flash_message(:notice, :success, kind: provider_label(provider)) if is_navigational_format?
         flash[:notice] += " #{preexisting_flash}" if preexisting_flash

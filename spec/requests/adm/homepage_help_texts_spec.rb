@@ -35,10 +35,12 @@ describe "Help texts on adm > Startseite" do
     end
 
     it "recommends the header formats rendered on the homepage in #{locale}" do
-      desktop = [image_keys[0], video_keys[0]] + landing_keys.first(2)
+      desktop_images = [image_keys[0], landing_keys[0]]
+      desktop_videos = [video_keys[0], landing_keys[1]]
       mobile = [image_keys[1], video_keys[1]] + landing_keys.last(2)
 
-      desktop.each { |key| expect(text(key, locale)).to include "1920 × 700" }
+      desktop_images.each { |key| expect(text(key, locale)).to include "3840 × 1400" }
+      desktop_videos.each { |key| expect(text(key, locale)).to include "1920 × 700" }
       mobile.each { |key| expect(text(key, locale)).to include "1080 × 1450" }
     end
   end

@@ -40,6 +40,7 @@ de:
           modal_notifications: Popup-Benachrichtigungen
           newsletters: Newsletter
           email_templates: System-E-Mails
+          welcome_email: Willkommensmail
           recipient_groups: Empfängergruppen
           unregistered_newsletter_subscribers: Nicht registrierte Abonnenten
         stats: Statistiken

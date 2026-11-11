@@ -27,14 +27,19 @@ $_chat-warning-text: #6b4000;
   overflow: hidden;
   // max-width: 900px;
   margin: auto;
-}
 
-// The chat is centered within the content area, which is offset right by the
-// sidebar + icon-rail. Shift it left by half that nav width so it lands on the
-// true page center (only where the nav is shown, i.e. lg and up).
-@media (min-width: 1420px) {
-  .projekt-import-chat {
-    transform: translateX(calc(var(--adm-nav-total-width) / -2));
+  // The chat is centered within the content area, which is offset right by
+  // the sidebar + icon-rail. Shift it left by up to half that nav width so it
+  // lands on the true page center, but never by more than the free space
+  // beside the content column: past that, the column slides under the nav.
+  // In translateX, 100% is the chat's own width (the whole content area).
+  @media (min-width: 1420px) {
+    transform: translateX(
+      max(
+        calc(var(--adm-nav-total-width) / -2),
+        min(0px, calc((#{$_chat-content-max-width} - 100%) / 2))
+      )
+    );
   }
 }
 
@@ -43,12 +48,18 @@ $_chat-warning-text: #6b4000;
   align-items: flex-start;
   gap: 8px;
   flex-shrink: 0;
+  // Same width and inset as the messages column, so the banner lines up
+  // with the bubbles instead of spanning the whole shifted chat.
+  width: calc(100% - 40px);
+  max-width: $_chat-content-max-width - 40px;
+  margin: 0 auto 12px;
   padding: 12px 16px;
   font-size: 14px;
   line-height: 1.45;
   color: var(--banner-text);
   background: color-mix(in srgb, var(--banner-accent) 9%, white);
-  border-bottom: 1px solid color-mix(in srgb, var(--banner-accent) 26%, white);
+  border: 1px solid color-mix(in srgb, var(--banner-accent) 26%, white);
+  border-radius: $_chat-radius-sm;
 
   &.-error {
     --banner-accent: #{$_chat-error};

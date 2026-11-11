@@ -326,16 +326,20 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update or create a configuration setting for a projekt phase. Settings control behavior and features for the phase (e.g., feature.general.newest_first controls comment sorting). Returns the updated setting. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update one setting of a projekt phase. Only the keys the phase's type lists " \
+                  "(see `ProjektPhaseSettingsUpdate` for all keys and their types) can be changed; " \
+                  "unknown keys answer 404 and are never created. Switches take `true`/`false` " \
+                  "(the stored forms `\"active\"`/`\"\"` are accepted as well). Every change is " \
+                  "recorded in the audit trail. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_phase_setting, in: :body, description: 'Setting with required key and optional value to update or create', schema: {
+      parameter name: :projekt_phase_setting, in: :body, description: 'Setting key and its new value', schema: {
         type: :object,
         properties: {
           projekt_phase_setting: {
             type: :object,
             properties: {
               key: { type: :string },
-              value: { type: :string, nullable: true }
+              value: { nullable: true, description: 'New value, typed as `ProjektPhaseSettingsUpdate` lists for the key' }
             },
             required: ['key']
           }
@@ -345,10 +349,10 @@ end
 
       response '200', 'projekt phase setting updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Setting Update') }
-        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true) }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::DebatePhase', active: true) }
         let(:id) { phase.id }
         let(:projekt_phase_setting) do
-          { projekt_phase_setting: { key: 'feature.general.newest_first', value: 'active' } }
+          { projekt_phase_setting: { key: 'feature.general.only_admins_create_debates', value: true } }
         end
 
         schema type: :object,
@@ -363,7 +367,25 @@ end
                },
                required: ['data']
 
-        run_test!
+        run_test! do
+          stored_setting = phase.settings.find_by(key: 'feature.general.only_admins_create_debates')
+
+          expect(stored_setting.value).to eq('active')
+          expect(stored_setting.audits.last.comment).to eq("api_client:#{api_client.id}")
+        end
+      end
+
+      response '404', 'setting key the phase type does not have' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Setting Update') }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true) }
+        let(:id) { phase.id }
+        let(:projekt_phase_setting) do
+          { projekt_phase_setting: { key: 'feature.general.newest_first', value: true } }
+        end
+
+        run_test! do
+          expect(phase.settings.find_by(key: 'feature.general.newest_first')).to be_nil
+        end
       end
 
       response '422', 'invalid request' do
@@ -387,6 +409,19 @@ end
         run_test!
       end
 
+      response '422', 'value of the wrong type' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Setting Update') }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true) }
+        let(:id) { phase.id }
+        let(:projekt_phase_setting) do
+          { projekt_phase_setting: { key: 'option.form.description_max_length', value: 'long' } }
+        end
+
+        run_test! do
+          expect(phase.settings.find_by(key: 'option.form.description_max_length').value).to eq('6000')
+        end
+      end
+
       unauthorized_response { let(:id) { 1 } }
       forbidden_response { let(:id) { existing_projekt_phase.id } }
     end
@@ -400,27 +435,32 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Bulk-update several projekt phase settings in a single request. Provide a settings object mapping each setting key to its new value; missing keys are created. Returns the list of updated keys and a per-key errors map for any that failed. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Bulk-update several settings of a projekt phase. Every key must be one the " \
+                  "phase's type lists (`ProjektPhaseSettingsUpdate` shows all keys and their " \
+                  "types); unknown keys are never created. All or nothing: when one key is " \
+                  "rejected no setting is written, `updated` is empty and `errors` lists each " \
+                  "problem per key. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :settings, in: :body, description: 'Object whose keys are projekt phase setting keys and whose values are the new setting values', schema: {
         type: :object,
         properties: {
-          settings: {
-            type: :object,
-            description: 'Map of setting key => value (e.g. feature.general.newest_first).',
-            additionalProperties: { type: :string },
-            example: { 'feature.general.newest_first' => 'active' }
-          }
+          settings: { '$ref' => '#/components/schemas/ProjektPhaseSettingsUpdate' }
         },
         required: ['settings']
       }
 
       response '200', 'settings processed' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Settings Update') }
-        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true) }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true) }
         let(:id) { phase.id }
         let(:settings) do
-          { settings: { 'feature.general.newest_first' => 'active' } }
+          {
+            settings: {
+              'feature.form.show_map' => false,
+              'option.form.description_max_length' => 3000,
+              'selectable_setting.general.default_order' => 'created_at'
+            }
+          }
         end
 
         schema type: :object,
@@ -436,7 +476,28 @@ end
                },
                required: ['data']
 
-        run_test!
+        run_test! do |response|
+          expect(JSON.parse(response.body)['data']['updated']).to match_array(settings[:settings].keys)
+          expect(phase.settings.find_by(key: 'option.form.description_max_length').value).to eq('3000')
+        end
+      end
+
+      response '200', 'unknown key - nothing is written or created' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Settings Update') }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true) }
+        let(:id) { phase.id }
+        let(:settings) do
+          { settings: { 'feature.form.show_map' => false, 'feature.general.newest_first' => 'active' } }
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)['data']
+
+          expect(data['updated']).to eq([])
+          expect(data['errors'].keys).to eq(['feature.general.newest_first'])
+          expect(phase.settings.find_by(key: 'feature.general.newest_first')).to be_nil
+          expect(phase.settings.find_by(key: 'feature.form.show_map').value).to eq('active')
+        end
       end
 
       response '422', 'settings parameter missing' do
@@ -470,7 +531,7 @@ end
       tags 'Projekt Phases'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a single projekt phase by ID with all its configuration details. Returns the phase type, active status, dates, visibility settings, restrictions (geozone, age range, user status), and all settings. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a single projekt phase by ID with all its configuration details. Returns the phase type, active status, dates, visibility settings, restrictions (geozone, age range, user status), and all settings. The author_id of nested questions and pins is only returned to admin clients. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'projekt phase found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Show') }

@@ -1,28 +1,35 @@
-<div style="border: 1px solid #e6e9ed; border-radius: 14px; overflow: hidden; background: #ffffff;">
-  <div style="display: flex; flex-wrap: wrap;">
-    <div style="flex: 1 1 360px; padding: 28px;">
-      <div style="color: var(--brand-color, #1779ba); font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px;">Planungsgebiet auf einen Blick</div>
-      <h3 style="color: #1f2a37; font-size: 20px; font-weight: 700; line-height: 1.3; margin: 0 0 20px;">Klimaanpassungsplan 2040 — Eckdaten</h3>
-      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
-        <div style="flex: 1 1 140px; background: #f7f8fa; border: 1px solid #eef1f5; border-radius: 12px; padding: 16px;">
-          <div style="color: var(--brand-color, #1779ba); font-size: 26px; font-weight: 800; line-height: 1;">8,4 km²</div>
-          <div style="color: #6b7280; font-size: 14px; margin-top: 6px;">Planungsgebiet</div>
-        </div>
-        <div style="flex: 1 1 140px; background: #f7f8fa; border: 1px solid #eef1f5; border-radius: 12px; padding: 16px;">
-          <div style="color: #1f2a37; font-size: 26px; font-weight: 800; line-height: 1;">12.400</div>
-          <div style="color: #6b7280; font-size: 14px; margin-top: 6px;">Betroffene Adressen</div>
-        </div>
-        <div style="flex: 1 1 140px; background: #f7f8fa; border: 1px solid #eef1f5; border-radius: 12px; padding: 16px;">
-          <div style="color: #1f2a37; font-size: 26px; font-weight: 800; line-height: 1;">23 %</div>
-          <div style="color: #6b7280; font-size: 14px; margin-top: 6px;">Aktueller Grünanteil</div>
-        </div>
-        <div style="flex: 1 1 140px; background: #f7f8fa; border: 1px solid #eef1f5; border-radius: 12px; padding: 16px;">
-          <div style="color: #1f2a37; font-size: 26px; font-weight: 800; line-height: 1;">45 Tage</div>
-          <div style="color: #6b7280; font-size: 14px; margin-top: 6px;">Beteiligungszeitraum</div>
-        </div>
-      </div>
+<!-- BlockID: Projekt Karten - Kennzahlen mit Mini-Karte -->
+<!-- Geeignet für: Überblicks- oder Steckbrief-Block mit Eckdaten eines Planungsgebiets -->
+<!-- Der Kartenbereich wird auf der Projektseite zur echten interaktiven Karte; Platzhalter, Klassen und Kartenhöhe im Kartenbereich nicht ändern (die Höhe stellt der Editor ein). -->
+<!-- Editor: jede Kennzahl ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Kachel. -->
+<!-- Umbruch: Kennzahlen links und Karte rechts auf breiten Bildschirmen, unter etwa 600 px steht die Karte unter den Kennzahlen; die Kennzahlen stehen immer zu zweit nebeneinander. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H3, Kennzahl = Zahl-Ausnahme im abgesetzten Feld, Etikett und Beschriftungen 1rem -->
+
+<div style="position: relative; overflow: hidden; background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; padding: clamp(12px, 2.5vw, 20px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+  <div style="position: relative; z-index: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 16px; align-items: center;">
+    <div style="padding: 8px 4px; padding: clamp(4px, 1.5vw, 16px);">
+      <span style="display: inline-flex; align-items: center; gap: 8px; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 2px 14px; margin: 0 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-chart-bar" aria-hidden="true" style="font-size: 13px;"></i> Planungsgebiet auf einen Blick</span>
+      <h3 style="margin: 0 0 16px; hyphens: auto; overflow-wrap: break-word;">Klimaanpassungsplan 2040 – Eckdaten</h3>
+      <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+        <li style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 14px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+          <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: var(--brand-color, #1779ba); hyphens: auto; overflow-wrap: break-word;">8,4 km²</div>
+          <div style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 4px 0 0; hyphens: auto; overflow-wrap: break-word;">Planungsgebiet</div>
+        </li>
+        <li style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 14px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+          <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: var(--brand-color, #1779ba); hyphens: auto; overflow-wrap: break-word;">12.400</div>
+          <div style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 4px 0 0; hyphens: auto; overflow-wrap: break-word;">Betroffene Adressen</div>
+        </li>
+        <li style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 14px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+          <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: var(--brand-color, #1779ba); hyphens: auto; overflow-wrap: break-word;">23 %</div>
+          <div style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 4px 0 0; hyphens: auto; overflow-wrap: break-word;">Aktueller Grünanteil</div>
+        </li>
+        <li style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 14px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+          <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: var(--brand-color, #1779ba); hyphens: auto; overflow-wrap: break-word;">45 Tage</div>
+          <div style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 4px 0 0; hyphens: auto; overflow-wrap: break-word;">Beteiligungs&shy;zeitraum</div>
+        </li>
+      </ul>
     </div>
-    <div class="projekt-map-embed js-projekt-map-embed js-content-block-element-not-editable" data-controller="projekt-map-embed" style="flex: 1 1 300px; height: 340px; border-radius: 14px;">
+    <div class="projekt-map-embed js-projekt-map-embed js-content-block-element-not-editable" data-controller="projekt-map-embed" style="height: 340px; border-radius: 8px;">
       <span class="projekt-map-embed--placeholder" aria-hidden="true">
         <i class="fas fa-map-marker-alt projekt-map-embed--pin"></i>
         <span class="projekt-map-embed--label">Kartenansicht</span>

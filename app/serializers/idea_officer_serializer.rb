@@ -3,37 +3,33 @@
 class IdeaOfficerSerializer < BaseSerializer
   attr_reader :officer
 
-  def initialize(officer)
+  def initialize(officer, client: nil)
     @officer = officer
+    @client = client
   end
 
   def serialize
     officer_data = officer.as_json(
       only: [
         :id,
-        :user_id,
         :created_at,
         :updated_at
       ]
     )
 
-    if officer.user.present?
-      officer_data[:user] = {
-        id: officer.user.id,
-        name: officer.user.name,
-        email: officer.user.email,
-        username: officer.user.username
-      }
+    if admin_client?
+      officer_data.merge!(
+        user_id: officer.user_id,
+        name: officer.name
+      )
     end
 
-    officer_data[:name] = officer.name
-    officer_data[:email] = officer.email
     officer_data[:ideas_count] = officer.ideas.count
 
     officer_data
   end
 
-  def self.serialize_collection(officers)
-    officers.map { |officer| new(officer).serialize }
+  def self.serialize_collection(officers, client: nil)
+    officers.map { |officer| new(officer, client: client).serialize }
   end
 end

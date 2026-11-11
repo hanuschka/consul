@@ -71,4 +71,25 @@ describe Adm::DeficiencyReportsQuery do
       expect(result({ deficiency_report_subcategory_id: [] })).to contain_exactly(matching, other)
     end
   end
+
+  describe "hidden_state filter" do
+    let!(:visible) { create(:deficiency_report) }
+    let!(:hidden) { create(:deficiency_report).tap(&:destroy) }
+
+    it "excludes deleted reports when no visibility is selected" do
+      expect(result({ hidden_state: [""] })).to contain_exactly(visible)
+    end
+
+    it "excludes deleted reports when the param is missing" do
+      expect(result({})).to contain_exactly(visible)
+    end
+
+    it "returns only deleted reports for hidden" do
+      expect(result({ hidden_state: ["hidden"] })).to contain_exactly(hidden)
+    end
+
+    it "returns both for visible and hidden" do
+      expect(result({ hidden_state: %w[visible hidden] })).to contain_exactly(visible, hidden)
+    end
+  end
 end

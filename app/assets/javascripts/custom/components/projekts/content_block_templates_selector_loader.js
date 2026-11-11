@@ -8,11 +8,24 @@
     requests: {},
     activeSection: null,
     lastRequestedSection: null,
+    loadedPreviewIframes: new Set(),
+    boundDialogClose: null,
 
     initialize() {
       $(document).on("click", ".js-content-block-templates-retry", this.handleRetry.bind(this));
 
+      // "close" does not bubble, so the dialog's close is caught while it
+      // captures; the stored handler keeps re-initialization from stacking.
+      this.boundDialogClose = this.boundDialogClose || this.handleDialogClose.bind(this);
+      document.addEventListener("close", this.boundDialogClose, true);
+
       this.schedulePrefetch();
+    },
+
+    handleDialogClose(event) {
+      if (!event.target.contains(this.getContainer()[0])) return
+
+      this.unloadPreviewIframes(null);
     },
 
     getContainer() {
@@ -94,7 +107,10 @@
 
       this.lastRequestedSection = section;
 
-      if (this.activeSection === cacheKey) return
+      if (this.activeSection === cacheKey) {
+        this.hydrateActivePanel(this.getContainer());
+        return
+      }
 
       if (!this.isReady(cacheKey)) {
         this.showSpinner();
@@ -109,13 +125,14 @@
       this.hideSpinner();
 
       const $container = this.getContainer();
+      this.loadedPreviewIframes.clear();
       $container.html(html).show();
 
       this.reinitContentComponents($container);
 
       this.activeSection = cacheKey;
 
-      this.hydrateActivePanelMaps($container);
+      this.hydrateActivePanel($container);
     },
 
     reinitContentComponents($container) {
@@ -128,19 +145,55 @@
 
     handleTabsChanged($container) {
       this.restoreOrbitHeights($container);
-      this.hydrateActivePanelMaps($container);
+      this.hydrateActivePanel($container);
     },
 
     // Map templates mark their map region with a {{projekt_map}} placeholder.
     // Hydrate only the visible (active) tab panel so Leaflet initializes at the
     // real container size — a map built inside a hidden panel renders at 0x0.
     // Idempotent: embeds already hydrated (token gone) are skipped.
-    hydrateActivePanelMaps($container) {
+    // Preview iframes (videos, external pages) arrive with their src held
+    // back for the same reason: only the shown panel should load them.
+    hydrateActivePanel($container) {
       const activePanel = $container.find(".shared-tabs-panel.is-active")[0];
 
       if (!activePanel) return
 
       App.Studio.ContentBlocks.MapEmbed.hydrateIn(activePanel);
+      this.unloadPreviewIframes(activePanel);
+      this.loadPreviewIframes(activePanel);
+    },
+
+    loadPreviewIframes(panel) {
+      panel
+        .querySelectorAll(".js-template-preview-iframe")
+        .forEach((iframe) => this.loadPreviewIframe(iframe));
+    },
+
+    // Restores the template's own markup, since inserting or copying a
+    // template reads the preview's HTML.
+    loadPreviewIframe(iframe) {
+      iframe.src = iframe.dataset.previewSrc;
+      iframe.removeAttribute("data-preview-src");
+      iframe.removeAttribute("class");
+      this.loadedPreviewIframes.add(iframe);
+    },
+
+    // A started video keeps playing in a hidden panel or a closed dialog, so
+    // every loaded iframe outside the kept panel goes back to being held.
+    unloadPreviewIframes(keptPanel) {
+      this.loadedPreviewIframes.forEach((iframe) => {
+        if (keptPanel && keptPanel.contains(iframe)) return
+
+        this.unloadPreviewIframe(iframe);
+      });
+    },
+
+    unloadPreviewIframe(iframe) {
+      iframe.dataset.previewSrc = iframe.getAttribute("src");
+      iframe.removeAttribute("src");
+      iframe.className = "js-template-preview-iframe";
+      this.loadedPreviewIframes.delete(iframe);
     },
 
     storeOrbitHeights($container) {

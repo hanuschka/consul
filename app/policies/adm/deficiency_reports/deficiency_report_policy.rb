@@ -17,14 +17,20 @@ class Adm::DeficiencyReports::DeficiencyReportPolicy < ApplicationPolicy
   end
 
   def edit?
+    return false if @record.try(:hidden?)
+
     deficiency_report_manager? || assigned_officer?
   end
 
   def update?
+    return false if @record.try(:hidden?)
+
     deficiency_report_manager? || assigned_officer?
   end
 
   def destroy?
+    return false if @record.try(:hidden?)
+
     deficiency_report_manager?
   end
 
@@ -39,12 +45,16 @@ class Adm::DeficiencyReports::DeficiencyReportPolicy < ApplicationPolicy
   end
 
   def toggle_watch?
+    return false if @record.try(:hidden?)
+
     deficiency_report_manager? || readable_by_officer?
   end
 
   # Handing an Anliegen to a colleague is a reading-level act, not an editing one: it grants them the
   # same view you already have and does not change the Anliegen itself.
   def share?
+    return false if @record.try(:hidden?)
+
     deficiency_report_manager? || readable_by_officer?
   end
 
@@ -53,6 +63,8 @@ class Adm::DeficiencyReports::DeficiencyReportPolicy < ApplicationPolicy
   end
 
   def accept?
+    return false if @record.try(:hidden?)
+
     deficiency_report_manager?
   end
 

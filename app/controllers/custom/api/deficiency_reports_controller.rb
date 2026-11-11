@@ -4,27 +4,29 @@ class Api::DeficiencyReportsController < Api::BaseController
   include DocumentAttributes
   include MapLocationAttributes
 
+  ASSIGNABLE_RESPONSIBLE_TYPES = {
+    "DeficiencyReport::Officer" => DeficiencyReport::Officer,
+    "DeficiencyReport::OfficerGroup" => DeficiencyReport::OfficerGroup
+  }.freeze
+
   before_action :find_deficiency_report, only: [:show, :update]
 
   def index
     check_read_access!
-    deficiency_reports = paginate(
-      DeficiencyReport
-        .includes(
-          :author,
-          :tags,
-          :category,
-          :status,
-          :responsible,
-          :map_location
-        )
-        .admin_accepted
-    )
+    deficiency_reports = DeficiencyReport
+      .includes(
+        :tags,
+        :category,
+        :status,
+        :responsible,
+        :map_location,
+        documents: { attachment_attachment: :blob },
+        author: :organization
+      )
+      .admin_accepted
+    deficiency_reports = paginate(apply_sorting(apply_filters(deficiency_reports)))
 
-    deficiency_reports = apply_filters(deficiency_reports)
-    deficiency_reports = apply_sorting(deficiency_reports)
-
-    serialized_deficiency_reports = DeficiencyReportSerializer.serialize_collection(deficiency_reports, include_reporter_answer: admin_client?)
+    serialized_deficiency_reports = DeficiencyReportSerializer.serialize_collection(deficiency_reports, client: current_client)
 
     render json: {
       data: { deficiency_reports: serialized_deficiency_reports },
@@ -34,7 +36,12 @@ class Api::DeficiencyReportsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, include_reporter_answer: admin_client?).serialize
+
+    if !admin_client? && !@deficiency_report.publicly_visible?
+      return render_not_found
+    end
+
+    serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, client: current_client).serialize
 
     render json: { data: { deficiency_report: serialized_deficiency_report } }
   end
@@ -45,16 +52,21 @@ class Api::DeficiencyReportsController < Api::BaseController
     deficiency_report.author = @current_client.content_author
     deficiency_report.resource_terms = true
     deficiency_report.admin_accepted = true
+    assign_document_authors(deficiency_report)
 
-    if deficiency_report.save
+    if !assignable_responsible?(deficiency_report)
+      render_unassignable_responsible
+    elsif !assignable_intake_channel?(deficiency_report)
+      render_unassignable_intake_channel
+    elsif deficiency_report.save
       process_image_with_base64(deficiency_report, params[:deficiency_report][:image_attributes])
-      serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report, include_reporter_answer: admin_client?).serialize
+      serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report, client: current_client).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }, status: 201
     else
       render json: { error: { messages: deficiency_report.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -63,16 +75,21 @@ class Api::DeficiencyReportsController < Api::BaseController
   def update
     check_admin_access!
     @deficiency_report.assign_attributes(deficiency_report_params)
+    assign_document_authors(@deficiency_report)
 
-    if @deficiency_report.save
+    if !assignable_responsible?(@deficiency_report)
+      render_unassignable_responsible
+    elsif !assignable_intake_channel?(@deficiency_report)
+      render_unassignable_intake_channel
+    elsif @deficiency_report.save
       process_image_with_base64(@deficiency_report, params[:deficiency_report][:image_attributes]) if params[:deficiency_report]&.key?(:image_attributes)
-      serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, include_reporter_answer: admin_client?).serialize
+      serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, client: current_client).serialize
 
       render json: { data: { deficiency_report: serialized_deficiency_report } }
     else
       render json: { error: { messages: @deficiency_report.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -93,25 +110,66 @@ class Api::DeficiencyReportsController < Api::BaseController
       .find(params[:id])
   end
 
-  def admin_client?
-    internal_api_client? || current_client&.admin?
+  # Only staff can be made responsible: any other record type would let a
+  # client read back the name of whatever it points the report at.
+  def assignable_responsible?(deficiency_report)
+    responsible_type = deficiency_report.responsible_type
+    responsible_id = deficiency_report.responsible_id
+    responsible_class = ASSIGNABLE_RESPONSIBLE_TYPES[responsible_type]
+
+    if !deficiency_report.will_save_change_to_responsible_type? &&
+        !deficiency_report.will_save_change_to_responsible_id?
+      true
+    elsif responsible_type.blank? && responsible_id.blank?
+      true
+    else
+      responsible_class.present? && responsible_class.exists?(id: responsible_id)
+    end
+  end
+
+  def render_unassignable_responsible
+    message = "Responsible must be an existing " \
+      "#{ASSIGNABLE_RESPONSIBLE_TYPES.keys.join(" or ")}."
+
+    render json: { error: { messages: [message] } }, status: 422
+  end
+
+  def assignable_intake_channel?(deficiency_report)
+    intake_channel_id = deficiency_report.deficiency_report_intake_channel_id
+
+    if !deficiency_report.will_save_change_to_deficiency_report_intake_channel_id? ||
+        intake_channel_id.blank?
+      true
+    else
+      DeficiencyReport::IntakeChannel.exists?(id: intake_channel_id)
+    end
+  end
+
+  def render_unassignable_intake_channel
+    message = "deficiency_report_intake_channel_id must reference an existing intake channel."
+
+    render json: { error: { messages: [message] } }, status: 422
   end
 
   def deficiency_report_params
-    params.require(:deficiency_report).permit(
-      :title,
-      :description,
-      :summary,
-      :official_answer,
-      :reporter_answer,
-      :deficiency_report_category_id,
-      :deficiency_report_status_id,
-      :on_behalf_of,
-      :video_url,
-      :responsible_id,
-      :responsible_type,
-      :tag_list,
-      map_location_attributes: map_location_attributes
+    with_decoded_documents(
+      params.require(:deficiency_report).permit(
+        :title,
+        :description,
+        :summary,
+        :official_answer,
+        :reporter_answer,
+        :deficiency_report_category_id,
+        :deficiency_report_status_id,
+        :deficiency_report_intake_channel_id,
+        :on_behalf_of,
+        :video_url,
+        :responsible_id,
+        :responsible_type,
+        :tag_list,
+        map_location_attributes: map_location_attributes,
+        documents_attributes: document_attributes_api
+      )
     )
   end
 
@@ -127,7 +185,7 @@ class Api::DeficiencyReportsController < Api::BaseController
     end
 
     # Filter by author
-    if params[:author_id].present?
+    if admin_client? && params[:author_id].present?
       deficiency_reports = deficiency_reports.by_author(params[:author_id])
     end
 
@@ -161,16 +219,17 @@ class Api::DeficiencyReportsController < Api::BaseController
   end
 
   def apply_sorting(deficiency_reports)
-    case params[:order]
-    when "hot_score"
-      deficiency_reports.sort_by_hot_score
-    when "newest"
-      deficiency_reports.sort_by_newest
-    when "most_commented"
-      deficiency_reports.sort_by_most_commented
-    else
-      deficiency_reports.sort_by_newest
-    end
+    sorted_deficiency_reports =
+      case params[:order]
+      when "hot_score"
+        deficiency_reports.sort_by_hot_score
+      when "most_commented"
+        deficiency_reports.sort_by_most_commented
+      else
+        deficiency_reports.sort_by_newest
+      end
+
+    sorted_deficiency_reports.order(id: :desc)
   end
 end
 

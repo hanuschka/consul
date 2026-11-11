@@ -8,7 +8,7 @@ class ProjektSerializer < BaseSerializer
     @include_text = options.fetch(:include_text, true)
     @include_projekt_settings = options.fetch(:include_projekt_settings, true)
     @include_nested_fields = options.fetch(:include_nested_fields, false)
-    @current_api_client = options.fetch(:current_api_client, nil)
+    @client = options.fetch(:current_api_client, nil)
     @image_variant_versions = options.fetch(:image_variant_versions, nil)
   end
 
@@ -29,10 +29,13 @@ class ProjektSerializer < BaseSerializer
           :level,
           :show_start_date_in_frontend,
           :show_end_date_in_frontend,
-          :top_level_projekt_id,
-          :preview_code
+          :top_level_projekt_id
         ]
       )
+
+    if admin_client?
+      projekt_data[:preview_code] = projekt.preview_code
+    end
 
     serialized_image =
       if projekt&.page&.image.present?
@@ -96,14 +99,14 @@ class ProjektSerializer < BaseSerializer
   def projekt_phases
     phases = @projekt.projekt_phases
 
-    if @current_api_client&.public_data?
+    if client&.public_data?
       phases = phases.select { |phase| phase_visible_to_client?(phase) }
     end
 
     ProjektPhaseSerializer.serialize_collection(
       phases,
       include_nested_fields: @include_nested_fields,
-      current_api_client: @current_api_client
+      current_api_client: client
     )
   end
 

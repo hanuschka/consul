@@ -1,66 +1,51 @@
-<!-- BlockID: F06 -->
-<!-- K1: FAQ Accordion – Standard Foundation 6, clean -->
-<!-- VORAUSSETZUNG: Foundation 6 JS muss auf der Seite geladen sein (in Consul enthalten) -->
-<!-- Geeignet für: Standard-FAQ, häufige Fragen zur Beteiligung -->
+<!-- BlockID: F06 Häufige Fragen - aufklappbare Fragen mit Kontaktzeile -->
+<!-- Geeignet für: FAQ zum Verfahren, zur Teilnahme, zum Datenschutz -->
+<!-- Editor: jede Frage ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Frage samt Antwort. -->
+<!-- Umbruch: Fragen untereinander in voller Breite, Kontaktzeile bricht am Handy unter den Text. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Fragen und Antworten 1rem -->
 
-<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
-  <div style="display: flex; align-items: center; margin-bottom: 20px;">
-    <div style="width: 4px; height: 28px; background: var(--brand-color, #1779ba); border-radius: 2px; margin-right: 12px;"></div>
-    <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; letter-spacing: -0.3px; margin: 0;">Häufig gestellte Fragen</h3>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 16px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-question" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Häufige Fragen</h3>
   </div>
 
-  <ul class="accordion" data-accordion data-allow-all-closed="true" style="border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden; background: #ffffff; margin: 0; padding: 0; list-style: none;">
+  <ul class="accordion" data-accordion data-allow-all-closed="true" style="list-style: none; margin: 0; padding: 0; background: transparent; border: 0; display: flex; flex-direction: column; gap: 10px;">
 
-    <li class="accordion-item" data-accordion-item style="border-bottom: 1px solid rgba(0,0,0,0.06); transition: background 0.2s ease;">
-      <a href="#" class="accordion-title" style="display: block; padding: 18px 24px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-        Wer kann an der Beteiligung teilnehmen?
-      </a>
-      <div class="accordion-content" data-tab-content style="padding: 0 24px 18px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 16px 0 0 0;">Alle Bürger:innen, die in der Stadt wohnhaft, berufstätig oder in sonstiger Weise von der Planung betroffen sind, können sich beteiligen. Das Mindestalter beträgt 16 Jahre.</p>
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #f8fafc; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 14px 48px 14px 18px; min-height: 44px; border: 0; background: transparent;">Wer kann mitmachen?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 18px 16px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Alle Menschen, die in der Stadt wohnen, arbeiten oder zur Schule gehen. Ein Alter oder eine Staatsangehörigkeit setzen wir nicht voraus.</p>
       </div>
     </li>
 
-    <li class="accordion-item" data-accordion-item style="border-bottom: 1px solid rgba(0,0,0,0.06); transition: background 0.2s ease;">
-      <a href="#" class="accordion-title" style="display: block; padding: 18px 24px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-        Sind meine Daten sicher?
-      </a>
-      <div class="accordion-content" data-tab-content style="padding: 0 24px 18px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 16px 0 0 0;">Ja. Alle personenbezogenen Daten werden gemäß DSGVO verarbeitet. In öffentlichen Berichten erscheinen nur anonymisierte Auswertungen. Eine Löschung Ihrer Daten ist jederzeit möglich.</p>
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #f8fafc; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 14px 48px 14px 18px; min-height: 44px; border: 0; background: transparent;">Brauche ich ein Konto?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 18px 16px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Zum Lesen nicht. Um Ideen einzureichen oder abzustimmen, registrieren Sie sich einmal kostenlos mit Ihrer E-Mail-Adresse.</p>
       </div>
     </li>
 
-    <li class="accordion-item" data-accordion-item style="border-bottom: 1px solid rgba(0,0,0,0.06); transition: background 0.2s ease;">
-      <a href="#" class="accordion-title" style="display: block; padding: 18px 24px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-        Wie viele Ideen kann ich einreichen?
-      </a>
-      <div class="accordion-content" data-tab-content style="padding: 0 24px 18px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 16px 0 0 0;">Es gibt keine Begrenzung. Sie können so viele Beiträge einreichen, wie Sie möchten. Bitte beachten Sie, dass jeder Vorschlag separat und klar formuliert sein sollte.</p>
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #f8fafc; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 14px 48px 14px 18px; min-height: 44px; border: 0; background: transparent;">Was passiert mit meinen Daten?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 18px 16px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Ihre Angaben dienen nur der Beteiligung und werden nicht weitergegeben. Einzelheiten stehen in der Datenschutzerklärung.</p>
       </div>
     </li>
 
-    <li class="accordion-item" data-accordion-item style="border-bottom: 1px solid rgba(0,0,0,0.06); transition: background 0.2s ease;">
-      <a href="#" class="accordion-title" style="display: block; padding: 18px 24px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-        Was passiert mit meinen Ideen?
-      </a>
-      <div class="accordion-content" data-tab-content style="padding: 0 24px 18px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 16px 0 0 0;">Alle Beiträge werden gesichtet, kategorisiert und in einem Ergebnisbericht zusammengefasst. Dieser Bericht wird dem Stadtrat vorgelegt und ist öffentlich einsehbar.</p>
-      </div>
-    </li>
-
-    <li class="accordion-item" data-accordion-item style="transition: background 0.2s ease;">
-      <a href="#" class="accordion-title" style="display: block; padding: 18px 24px; font-size: 15px; font-weight: 700; color: #1a202c; text-decoration: none; min-height: 44px; background: #ffffff; line-height: 1.4; cursor: pointer;">
-        Bis wann kann ich mich beteiligen?
-      </a>
-      <div class="accordion-content" data-tab-content style="padding: 0 24px 18px 24px; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06);">
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.65; margin: 16px 0 0 0;">Die Einreichungsphase läuft bis zum <strong>30. September 2025 um 23:59 Uhr</strong>. Danach startet die Abstimmungsphase, in der Sie bis zum 31. Oktober abstimmen können.</p>
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #f8fafc; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 6px 16px -10px rgba(16,24,40,0.16);">
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; padding: 14px 48px 14px 18px; min-height: 44px; border: 0; background: transparent;">Wann erfahre ich, was aus den Ideen wird?</a>
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 18px 16px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Nach der Prüfung durch die Fachämter veröffentlichen wir hier das Ergebnis zu jeder Idee, voraussichtlich im Frühjahr.</p>
       </div>
     </li>
 
   </ul>
 
-  <!-- Optionaler CTA -->
-  <div style="margin-top: 20px; text-align: center;">
-    <a href="#" class="button" style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; padding: 12px 28px; text-decoration: none; font-size: 15px; font-weight: 700; height: 44px; box-sizing: border-box; border-radius: 8px;">Jetzt mitmachen</a>
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin: 16px 0 0; padding: 16px 18px; border-radius: 12px; background: #eef4fa; background: linear-gradient(100deg, #e3eef8 0%, #f5f8fb 75%); background: linear-gradient(100deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 4%, #ffffff) 75%); border: 1px solid #e3e8ef;">
+    <p style="flex: 999 1 16rem; font-size: 1rem; line-height: 1.6; margin: 0;"><strong>Ihre Frage ist nicht dabei?</strong> Schreiben Sie uns, wir antworten in der Regel innerhalb von zwei Werktagen.</p>
+    <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="mailto:beteiligung@stadt.example" class="button" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Frage stellen</a></div>
   </div>
 
 </div>

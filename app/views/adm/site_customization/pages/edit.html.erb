@@ -27,4 +27,8 @@
 
     <%= form_submit_button(text: t(".save")) %>
   <% end %>
+
+  <% if @page.footer_key == "accessibility_report" %>
+    <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "accessibility_report.recipient_email"), :value, :string) %>
+  <% end %>
 </div>

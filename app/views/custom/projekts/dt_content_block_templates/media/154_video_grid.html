@@ -1,0 +1,30 @@
+<!-- BlockID: N03 Video-Raster - mehrere Videos mit Titel -->
+<!-- Geeignet für: Videoreihe, Aufzeichnungen mehrerer Termine, Stimmen aus der Bürgerschaft -->
+<!-- Editor: jedes Video ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert das letzte; Video-ID in der Adresse des Iframes und den Titel des Iframes im Code-Modus anpassen. -->
+<!-- Umbruch: untereinander am Handy, höchstens zwei nebeneinander auf breiten Bildschirmen (schmaler wird der Einwilligungshinweis der 2-Klick-Lösung unlesbar). Eigene dunkle Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Videotitel = Theme-H4, aller Text 1rem -->
+
+<div style="position: relative; overflow: hidden; background: #1a2e44; background: linear-gradient(135deg, #1a2e44 0%, var(--brand-color, #1779ba) 140%); color: #ffffff; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.12), 0 18px 40px -14px rgba(26,46,68,0.55);">
+
+  <div style="position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; margin: 0 0 6px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: rgba(255,255,255,0.18); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);"><i class="fas fa-film" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; color: #ffffff; hyphens: auto; overflow-wrap: break-word;">Videos zum Projekt</h3>
+  </div>
+  <p style="position: relative; z-index: 1; font-size: 1rem; line-height: 1.6; color: #ffffff; margin: 0 0 20px;">Aufzeichnungen und Rundgänge zum Nachsehen, jederzeit und in Ruhe.</p>
+
+  <ul style="position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 12px; gap: clamp(12px, 2vw, 16px);">
+
+    <li style="margin: 0; padding: 12px; background: rgba(255,255,255,0.10); background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 100%); border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 12px 24px -12px rgba(0,0,0,0.55);">
+      <iframe src="https://www.youtube-nocookie.com/embed/VIDEO-ID-1" title="Video: Auftaktveranstaltung" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen="allowfullscreen" style="display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; min-height: 250px; border: 0; border-radius: 8px; background: #1a2e44;"></iframe>
+      <h4 style="margin: 12px 4px 2px; color: #ffffff; hyphens: auto; overflow-wrap: break-word;">Auftaktveranstaltung</h4>
+      <p style="font-size: 1rem; line-height: 1.6; color: #ffffff; margin: 0 4px 4px;">Aufzeichnung vom 12. März</p>
+    </li>
+
+    <li style="margin: 0; padding: 12px; background: rgba(255,255,255,0.10); background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 100%); border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 12px 24px -12px rgba(0,0,0,0.55);">
+      <iframe src="https://www.youtube-nocookie.com/embed/VIDEO-ID-2" title="Video: Rundgang durch das Quartier" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen="allowfullscreen" style="display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; min-height: 250px; border: 0; border-radius: 8px; background: #1a2e44;"></iframe>
+      <h4 style="margin: 12px 4px 2px; color: #ffffff; hyphens: auto; overflow-wrap: break-word;">Rundgang durch das Quartier</h4>
+      <p style="font-size: 1rem; line-height: 1.6; color: #ffffff; margin: 0 4px 4px;">Die Orte, um die es geht</p>
+    </li>
+
+  </ul>
+</div>

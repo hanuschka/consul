@@ -92,6 +92,10 @@ class PagesController < ApplicationController
 
     elsif @custom_page.present?
       @cards = @custom_page.cards
+      @accessibility_report = AccessibilityReport.new if @custom_page.footer_key == "accessibility_report"
+      if @custom_page.footer_key == "accessibility"
+        @accessibility_report_page = SiteCustomization::Page.find_by(footer_key: "accessibility_report", status: "published")
+      end
       render action: custom_page_name
 
     else

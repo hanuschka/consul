@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_28_200002) do
+ActiveRecord::Schema.define(version: 2026_11_09_131548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2026_10_28_200002) do
     t.datetime "created_at", null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index "lower((key)::text)", name: "index_active_storage_blobs_on_lower_key"
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
@@ -164,56 +165,6 @@ ActiveRecord::Schema.define(version: 2026_10_28_200002) do
     t.boolean "only_for_stats", default: false
   end
 
-  create_table "ahoy_events", force: :cascade do |t|
-    t.bigint "visit_id"
-    t.bigint "user_id"
-    t.string "name"
-    t.jsonb "properties"
-    t.datetime "time"
-    t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
-    t.index ["properties"], name: "index_ahoy_events_on_properties_jsonb_path_ops", opclass: :jsonb_path_ops, using: :gin
-    t.index ["user_id"], name: "index_ahoy_events_on_user_id"
-    t.index ["visit_id"], name: "index_ahoy_events_on_visit_id"
-  end
-
-  create_table "ahoy_events_old", id: :uuid, default: nil, force: :cascade do |t|
-    t.uuid "visit_id"
-    t.integer "user_id"
-    t.string "name"
-    t.jsonb "properties"
-    t.datetime "time"
-    t.string "ip"
-    t.index ["name", "time"], name: "index_ahoy_events_old_on_name_and_time"
-    t.index ["time"], name: "index_ahoy_events_old_on_time"
-    t.index ["user_id"], name: "index_ahoy_events_old_on_user_id"
-    t.index ["visit_id"], name: "index_ahoy_events_old_on_visit_id"
-  end
-
-  create_table "ahoy_visits", force: :cascade do |t|
-    t.string "visit_token"
-    t.string "visitor_token"
-    t.bigint "user_id"
-    t.string "ip"
-    t.text "user_agent"
-    t.text "referrer"
-    t.string "referring_domain"
-    t.text "landing_page"
-    t.string "browser"
-    t.string "os"
-    t.string "device_type"
-    t.string "country"
-    t.string "region"
-    t.string "city"
-    t.string "utm_source"
-    t.string "utm_medium"
-    t.string "utm_term"
-    t.string "utm_content"
-    t.string "utm_campaign"
-    t.datetime "started_at"
-    t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
-    t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
-  end
-
   create_table "ai_chat_messages", force: :cascade do |t|
     t.bigint "ai_chat_id", null: false
     t.string "role", null: false
@@ -276,6 +227,7 @@ ActiveRecord::Schema.define(version: 2026_10_28_200002) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "use_system_user", default: true, null: false
+    t.boolean "instance_configuration_access", default: false, null: false
   end
 
   create_table "api_request_logs", force: :cascade do |t|
@@ -674,6 +626,9 @@ ActiveRecord::Schema.define(version: 2026_10_28_200002) do
     t.boolean "show_percentage_values_only", default: false
     t.boolean "show_results_after_first_vote", default: false
     t.integer "max_preselected", default: 0
+    t.datetime "tie_resolved_at"
+    t.datetime "winners_calculated_at"
+    t.boolean "winners_tie_open", default: false, null: false
     t.index ["projekt_id"], name: "index_budgets_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_budgets_on_projekt_phase_id"
   end

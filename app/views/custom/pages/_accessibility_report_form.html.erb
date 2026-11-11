@@ -1,0 +1,45 @@
+<div class="accessibility-report-form" id="accessibility-report-form">
+  <%= form_with model: @accessibility_report, url: accessibility_reports_path, scope: :accessibility_report,
+        local: true, html: { novalidate: true } do |f| %>
+    <% if @accessibility_report.errors.any? %>
+      <div class="callout alert" id="accessibility-report-errors" tabindex="-1"
+           aria-labelledby="accessibility-report-errors-title">
+        <h2 id="accessibility-report-errors-title"><%= t("accessibility_reports.form.error_title") %></h2>
+        <ul>
+          <% @accessibility_report.errors.each do |error| %>
+            <li>
+              <%= link_to error.full_message, "#accessibility_report_#{error.attribute}" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <%= javascript_tag do %>
+        document.getElementById("accessibility-report-errors").focus();
+      <% end %>
+    <% end %>
+
+    <%= f.text_field :location,
+          maxlength: AccessibilityReport::MAX_SHORT_TEXT_LENGTH,
+          label: t("accessibility_reports.form.location"),
+          hint: t("accessibility_reports.form.location_hint") %>
+
+    <%= f.text_area :description, rows: 6, required: true,
+          maxlength: AccessibilityReport::MAX_DESCRIPTION_LENGTH,
+          label: t("accessibility_reports.form.description"),
+          hint: t("accessibility_reports.form.description_hint",
+                  max: AccessibilityReport::MAX_DESCRIPTION_LENGTH) %>
+
+    <%= f.text_field :assistive_technology,
+          maxlength: AccessibilityReport::MAX_SHORT_TEXT_LENGTH,
+          label: t("accessibility_reports.form.assistive_technology"),
+          hint: t("accessibility_reports.form.assistive_technology_hint") %>
+
+    <%= f.email_field :email, autocomplete: "email", maxlength: 255,
+          label: t("accessibility_reports.form.email"),
+          hint: t("accessibility_reports.form.email_hint") %>
+
+    <%= f.invisible_captcha :subtitle %>
+
+    <%= f.submit t("accessibility_reports.form.submit"), class: "button" %>
+  <% end %>
+</div>

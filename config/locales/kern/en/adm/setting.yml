@@ -1,5 +1,8 @@
 en:
   setting:
+    accessibility_report:
+      recipient_email: Recipient email address for barrier reports
+      recipient_email_description: "All reports from the \"Report a barrier\" form are sent to this address. While it is empty, reports go to all administrators."
     handbook:
       url: User manual address
       url_description: "Sets the address of the user manual shown under “Help” in every dashboard. In the administration area each menu ends with a “Help” entry that opens the matching section of the manual. The address is preset. Leave the field empty to hide the entry."
@@ -7,6 +10,8 @@ en:
       email_on_official_answer: "Email notification on official answer (proposals)"
       email_on_official_answer_description: "Sends an email to the submitting person as soon as an official answer to their proposal is saved or changed. The email contains the text of the official answer and a link to the proposal; on the proposal page itself the answer stays publicly visible as before. Enable this setting if submitters should be actively informed about the administration's response instead of having to return to the platform themselves."
     email_templates:
+      welcome_email: "Welcome email"
+      welcome_email_description: "Sends newly registered users a welcome email once they have confirmed their email address. You set the subject and text on this page; the email uses the usual system email design. Enable it if you want to greet new users personally and point them to their first steps on the platform."
       recipient_greeting: "Greeting in system emails"
       recipient_greeting_description: "Sets how the {{ recipient_greeting }} variable addresses the recipient in customized system emails. If the user account lacks the required details (first name, last name or gender), a suitable fallback is used, ending with the username. Templates without this variable stay unchanged."
       recipient_greeting_options:

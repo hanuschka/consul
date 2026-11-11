@@ -18,6 +18,7 @@
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "meta_keywords"), :value, :string) %>
 
   <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "apple-touch-icon-200"), :image, :image) %>
+  <%= render Adm::AttributeEditorComponent.new(SiteCustomization::Image.find_or_create_by!(name: "favicon"), :image, :image) %>
 
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "facebook_handle"), :value, :string) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "instagram_handle"), :value, :string) %>

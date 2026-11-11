@@ -30,7 +30,7 @@ class Api::ArgumentsController < Api::BaseController
     else
       render json: { error: { messages: projekt_argument.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -54,7 +54,7 @@ class Api::ArgumentsController < Api::BaseController
     else
       render json: { error: { messages: @projekt_argument.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422

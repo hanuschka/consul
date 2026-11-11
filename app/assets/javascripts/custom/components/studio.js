@@ -28,6 +28,7 @@
     App.Studio.ContentBlocks.EditModeSwitcher.initialize();
     App.Studio.ContentBlocks.EditModeButtons.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.EditPopup.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.TextFormat.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.HeaderEdit.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.LinkEdit.initialize();
@@ -37,6 +38,10 @@
     App.Studio.ContentBlocks.SimpleEditMode.MapEdit.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.MapSourceEdit.initialize();
     App.Studio.ContentBlocks.SimpleEditMode.ImageAltEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.IconEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit.initialize();
+    App.Studio.ContentBlocks.SimpleEditMode.ProgressBarEdit.initialize();
+    App.Studio.StudioColorPicker.initialize();
     App.Studio.ContentBlocks.AiEditMode.initialize();
     App.Studio.ContentBlocks.CodeEditMode.initialize();
     App.Studio.ContentBlocks.Copy.initialize();

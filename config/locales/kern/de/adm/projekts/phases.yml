@@ -510,9 +510,18 @@ de:
         budget_investments:
           title: Vorschläge
           calculate_winners: Gewinner ermitteln
-          calculate_winners_confirm: Bestbewertete Vorschläge werden im Hintergrund ermittelt. Fortfahren?
+          calculate_winners_confirm: Die bestbewerteten Vorschläge werden als Gewinner ermittelt. Fortfahren?
           recalculate_winners: Gewinner neu ermitteln
           recalculate_winners_confirm: Gewinner werden sofort neu berechnet. Fortfahren?
+          tie:
+            title: Gleichstand bei der Gewinnerermittlung
+            description: Die folgenden Vorschläge haben dieselbe Bewertung und konkurrieren um die verbleibenden Gewinnerplätze. Solange Sie keine Auswahl treffen, gilt keiner dieser Vorschläge als Gewinner.
+            free_places: "Freie Plätze: %{count}"
+            remaining_budget: "Restbudget: %{amount}"
+            pick_hint: Sie können auch weniger Vorschläge auswählen, als Plätze frei sind, oder keinen. Die Auswahl ist endgültig, bis die Gewinner neu ermittelt werden.
+            legend: Vorschläge mit Gleichstand
+            submit: Auswahl als Gewinner festlegen
+            submit_confirm: Die Auswahl ist endgültig, bis die Gewinner neu ermittelt werden. Fortfahren?
           download_csv: CSV herunterladen
           download_geojson: GeoJSON herunterladen
           columns: Spalten

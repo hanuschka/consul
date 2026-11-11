@@ -1,62 +1,54 @@
-<!-- BlockID: D04 Two-Column Split – Kennzahlen links, Erklärungstext rechts -->
+<!-- BlockID: D04 Kennzahlen und Text - Kennzahlen links, Erklärung rechts -->
 <!-- Geeignet für: Beteiligungsergebnisse, Projektfortschritt, Statistik-Übersichten -->
+<!-- Editor: jede Kennzahl ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Kachel; Listenpunkte rechts ebenfalls kopieren oder löschen. Icon über die Klasse fa-… tauschen, nur im Code-Modus. -->
+<!-- Umbruch: Kennzahlen über dem Text am Handy, nebeneinander ab etwa 600 px Breite; die Zahl steht immer neben ihrem Icon über der Bezeichnung. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Kartentitel = Theme-H4, Kennzahl = Zahl-Ausnahme, Bezeichnung, Text und Listenpunkte 1rem -->
 
-<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
-
-  <div style="margin-bottom: 24px;">
-    <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; margin: 0; letter-spacing: -0.3px;">Beteiligung in Zahlen</h3>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 6px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-chart-bar" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Beteiligung in Zahlen</h3>
   </div>
+  <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 20px;">Zwischenstand der ersten Beteiligungsphase, Stand 31. Oktober 2026.</p>
 
-  <div class="row">
+  <div style="display: flex; flex-wrap: wrap; gap: 12px; gap: clamp(12px, 2vw, 16px);">
 
-    <!-- Linke Spalte: Kennzahlen -->
-    <div class="column small-12 medium-5">
+    <ul style="flex: 5 1 14rem; min-width: 0; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px;">
 
-      <div style="background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 22px 24px; border: 1px solid rgba(255,255,255,0.9); margin-bottom: 10px; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="font-size: 36px; font-weight: 800; color: #1a202c; line-height: 1; letter-spacing: -1px; min-width: 90px;">1.247</div>
-          <div style="font-size: 13px; color: #6b7280; font-weight: 500; line-height: 1.3;">Beiträge<br>eingereicht</div>
+      <li style="margin: 0; display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; background: #dce8f4; background: linear-gradient(180deg, #eaf2f9 0%, #d9e6f2 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 9%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 18%, #ffffff) 100%); border: 1px solid #d3e0ee; box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 16px -10px rgba(16,24,40,0.3);">
+        <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-comment-dots" style="font-size: 18px;"></i></span>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <span style="display: block; font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; white-space: nowrap;">1.247</span>
+          <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 2px 0 0;">Beiträge eingereicht</span>
         </div>
-      </div>
+      </li>
 
-      <div style="background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 22px 24px; border: 1px solid rgba(255,255,255,0.9); margin-bottom: 10px; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="font-size: 36px; font-weight: 800; color: #1a202c; line-height: 1; letter-spacing: -1px; min-width: 90px;">89%</div>
-          <div style="font-size: 13px; color: #6b7280; font-weight: 500; line-height: 1.3;">Zufriedenheit der<br>Teilnehmenden</div>
+      <li style="margin: 0; display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; background: #dce8f4; background: linear-gradient(180deg, #eaf2f9 0%, #d9e6f2 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 9%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 18%, #ffffff) 100%); border: 1px solid #d3e0ee; box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 16px -10px rgba(16,24,40,0.3);">
+        <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-smile" style="font-size: 18px;"></i></span>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <span style="display: block; font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; white-space: nowrap;">89 %</span>
+          <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 2px 0 0;">Zufriedenheit der Teilnehmenden</span>
         </div>
-      </div>
+      </li>
 
-      <div style="background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 22px 24px; border: 1px solid rgba(255,255,255,0.9); margin-bottom: 16px; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="font-size: 36px; font-weight: 800; color: #1a202c; line-height: 1; letter-spacing: -1px; min-width: 90px;">12</div>
-          <div style="font-size: 13px; color: #6b7280; font-weight: 500; line-height: 1.3;">Stadtteile<br>beteiligt</div>
+      <li style="margin: 0; display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; background: #dce8f4; background: linear-gradient(180deg, #eaf2f9 0%, #d9e6f2 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 9%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 18%, #ffffff) 100%); border: 1px solid #d3e0ee; box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 6px 16px -10px rgba(16,24,40,0.3);">
+        <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-map-marked-alt" style="font-size: 18px;"></i></span>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <span style="display: block; font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; white-space: nowrap;">12</span>
+          <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700; margin: 2px 0 0;">Stadtteile beteiligt</span>
         </div>
-      </div>
+      </li>
 
-    </div>
+    </ul>
 
-    <!-- Rechte Spalte: Erklärungstext -->
-    <div class="column small-12 medium-7">
-      <div style="background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 28px; border: 1px solid rgba(255,255,255,0.9); margin-bottom: 16px;">
-        <h4 style="font-size: 16px; font-weight: 700; color: #1a202c; margin-bottom: 14px; margin-top: 0;">Was die Zahlen bedeuten</h4>
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.7; margin: 0 0 16px 0;">
-          Die bisherige Beteiligung zeigt ein starkes Engagement der Bürger:innen. Über alle Stadtteile hinweg wurden konstruktive Vorschläge eingereicht, die nun von der Verwaltung ausgewertet werden.
-        </p>
-        <ul style="display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none;">
-          <li style="display: flex; align-items: flex-start; font-size: 14px; color: #374151; line-height: 1.55;">
-            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 7px; margin-right: 12px; flex-shrink: 0;"></div>
-            Alle Beiträge werden dokumentiert und dem Stadtrat vorgelegt
-          </li>
-          <li style="display: flex; align-items: flex-start; font-size: 14px; color: #374151; line-height: 1.55;">
-            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 7px; margin-right: 12px; flex-shrink: 0;"></div>
-            Die meistunterstützten Vorschläge erhalten eine Stellungnahme der Fachämter
-          </li>
-          <li style="display: flex; align-items: flex-start; font-size: 14px; color: #374151; line-height: 1.55;">
-            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 7px; margin-right: 12px; flex-shrink: 0;"></div>
-            Ein Ergebnisbericht wird öffentlich auf dieser Plattform veröffentlicht
-          </li>
-        </ul>
-      </div>
+    <div style="flex: 7 1 18rem; min-width: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22); padding: 20px; padding: clamp(18px, 3vw, 24px);">
+      <h4 style="margin: 0 0 8px; hyphens: auto; overflow-wrap: break-word;">Was die Zahlen bedeuten</h4>
+      <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Die bisherige Beteiligung zeigt ein starkes Engagement der Bürger:innen. Über alle Stadtteile hinweg wurden konstruktive Vorschläge eingereicht, die nun von der Verwaltung ausgewertet werden.</p>
+      <ul style="display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none;">
+        <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;"><span aria-hidden="true" style="flex: 0 0 auto; width: 8px; height: 8px; margin: 9px 0 0; border-radius: 50%; background: var(--brand-color, #1779ba);"></span><span style="flex: 1 1 auto; min-width: 0;">Alle Beiträge werden dokumentiert und dem Stadtrat vorgelegt</span></li>
+        <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;"><span aria-hidden="true" style="flex: 0 0 auto; width: 8px; height: 8px; margin: 9px 0 0; border-radius: 50%; background: var(--brand-color, #1779ba);"></span><span style="flex: 1 1 auto; min-width: 0;">Die meistunterstützten Vorschläge erhalten eine Stellungnahme der Fachämter</span></li>
+        <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;"><span aria-hidden="true" style="flex: 0 0 auto; width: 8px; height: 8px; margin: 9px 0 0; border-radius: 50%; background: var(--brand-color, #1779ba);"></span><span style="flex: 1 1 auto; min-width: 0;">Ein Ergebnisbericht wird öffentlich auf dieser Plattform veröffentlicht</span></li>
+      </ul>
     </div>
 
   </div>

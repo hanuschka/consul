@@ -109,6 +109,7 @@ de:
           hidden_state:
             visible: Sichtbar
             hidden: Herausmoderiert
+          untitled: Ohne Titel
         tabs:
           show: Verwalten
           administer: Administrieren
@@ -151,7 +152,9 @@ de:
           official_answer: Offizielle Antwort
           reporter_answer: "Antwort an die meldende Person (E-Mail)"
           reporter_answer_hint: "Wird per E-Mail an die meldende Person gesendet und nicht öffentlich angezeigt."
+          reporter_answer_public_hint: "Wird per E-Mail an die meldende Person gesendet und zusätzlich öffentlich angezeigt."
           public_answer: "Öffentliche Antwort (Web)"
+          same_public_answer: "Öffentliche Antwort entspricht der Antwort an die meldende Person"
           official_answer_hint: "Geben Sie hier die offizielle Antwort zu diesem Anliegen ein. <strong>Wichtiger Hinweis:</strong> Dieser Text ist öffentlich sichtbar."
           official_answer_documents: Dokumente zur Antwort
           official_answer_documents_hint: >-

@@ -29,6 +29,9 @@
             individual_group_values: @projekt_phase&.individual_group_value_restriction_formatted
            )
         ) %>
+        <% if permission_problem_key.in?(%i[not_logged_in guest_not_logged_in]) %>
+          <%= link_to_sms_signin %>
+        <% end %>
 
       <% elsif @formular_fields.present? %>
         <div class="column medium-6">

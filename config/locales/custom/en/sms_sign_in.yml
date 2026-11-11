@@ -3,6 +3,9 @@ en:
     message: "Your sign-in code for %{platform}: %{code}. Valid for %{minutes} minutes."
     username_prefix: Participant
     code_sent: We have sent you a code by text message.
+    hint:
+      text_html: Or %{link}.
+      link: take part with an SMS code
     errors:
       invalid_phone: Please enter a German mobile number, for example 0171 1234567.
       rate_limited: You have requested too many codes. Please wait a moment and try again.

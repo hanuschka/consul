@@ -3,6 +3,9 @@ de:
     message: "Ihr Anmeldecode für %{platform}: %{code}. Gültig für %{minutes} Minuten."
     username_prefix: Teilnehmer
     code_sent: Wir haben Ihnen einen Code per SMS geschickt.
+    hint:
+      text_html: Oder %{link}.
+      link: mit SMS-Code teilnehmen
     errors:
       invalid_phone: Bitte geben Sie eine deutsche Mobilfunknummer ein, zum Beispiel 0171 1234567.
       rate_limited: Sie haben zu viele Codes angefordert. Bitte warten Sie einen Moment und versuchen Sie es dann erneut.

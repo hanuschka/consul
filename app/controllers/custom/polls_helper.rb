@@ -64,7 +64,7 @@ module PollsHelper
   def cannot_answer_callout_text(permission_problem_key, voting_phase)
     return nil if permission_problem_key.blank?
 
-    sanitize(t("custom.projekt_phases.permission_problem.poll_votes.#{permission_problem_key}",
+    message = sanitize(t("custom.projekt_phases.permission_problem.poll_votes.#{permission_problem_key}",
              sign_in: link_to_signin, sign_up: link_to_signup,
              guest_sign_in: link_to_guest_signin,
              enter_missing_user_data: link_to_enter_missing_user_data,
@@ -75,6 +75,9 @@ module PollsHelper
              restricted_streets: voting_phase.street_restrictions_formatted,
              individual_group_values: voting_phase.individual_group_value_restriction_formatted
             ))
+    return message unless permission_problem_key.in?(%i[not_logged_in guest_not_logged_in])
+
+    safe_join([message, link_to_sms_signin].compact, " ")
   end
 
   def cannot_answer_callout_class(permission_problem_key)

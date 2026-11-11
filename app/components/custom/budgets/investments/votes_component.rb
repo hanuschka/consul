@@ -2,7 +2,7 @@ load Rails.root.join("app", "components", "budgets", "investments", "votes_compo
 
 class Budgets::Investments::VotesComponent < ApplicationComponent
   delegate :link_to_signin, :link_to_signup, :link_to_verify_account, :link_to_guest_signin,
-           :link_to_enter_missing_user_data,
+           :link_to_sms_signin, :link_to_enter_missing_user_data,
            :projekt_feature?, :projekt_phase_feature?, to: :helpers
 
   private
@@ -13,11 +13,12 @@ class Budgets::Investments::VotesComponent < ApplicationComponent
       return if user_voted_for?
 
       if reason == :not_logged_in
-        t(path_to_key,
-          sign_in: link_to_signin, sign_up: link_to_signup)
+        safe_join([sanitize(t(path_to_key, sign_in: link_to_signin, sign_up: link_to_signup)),
+                   link_to_sms_signin].compact, " ")
 
       elsif reason.present?
-        t(path_to_key,
+        text = t(
+          path_to_key,
           sign_in: link_to_signin,
           sign_up: link_to_signup,
           guest_sign_in: link_to_guest_signin,
@@ -30,7 +31,10 @@ class Budgets::Investments::VotesComponent < ApplicationComponent
           restricted_streets: investment.budget.projekt_phase.street_restrictions_formatted,
           max_supports: investment.budget.projekt_phase.max_supports_per_user,
           individual_group_values: investment.budget.projekt_phase.individual_group_value_restriction_formatted
-         )
+        )
+        return text unless reason == :guest_not_logged_in
+
+        safe_join([sanitize(text), link_to_sms_signin].compact, " ")
       end
     end
 

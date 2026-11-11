@@ -1,7 +1,8 @@
 load Rails.root.join("app", "components", "budgets", "investments", "ballot_component.rb")
 
 class Budgets::Investments::BallotComponent < ApplicationComponent
-  delegate :link_to_signin, :link_to_signup, :link_to_verify_account, :link_to_enter_missing_user_data, :projekt_phase_feature?, to: :helpers
+  delegate :link_to_signin, :link_to_signup, :link_to_sms_signin, :link_to_verify_account,
+           :link_to_enter_missing_user_data, :projekt_phase_feature?, to: :helpers
 
   def initialize(investment:, investment_ids:, ballot:,
                  top_level_active_projekts:, top_level_archived_projekts:)
@@ -44,8 +45,8 @@ class Budgets::Investments::BallotComponent < ApplicationComponent
         @investment.permission_problem_keys_allowing_ballot_line_deletion.include?(reason)
 
       if reason == :not_logged_in
-        t(path_to_key,
-          sign_in: link_to_signin, sign_up: link_to_signup)
+        safe_join([sanitize(t(path_to_key, sign_in: link_to_signin, sign_up: link_to_signup)),
+                   link_to_sms_signin].compact, " ")
       elsif reason.present?
         t(path_to_key,
           verify: link_to_verify_account,

@@ -73,9 +73,20 @@ describe "Sign-in with SMS code", type: :request do
     expect([response.status, response.location]).to eq unknown_response
   end
 
-  it "returns to the page the visitor came from" do
+  it "returns to the intended path after passing through the code page" do
     get new_sms_sign_in_path, params: { intended_path: "/proposals" }
     request_code
+    follow_redirect!
+    enter_code
+
+    expect(response).to redirect_to("/proposals")
+  end
+
+  it "returns to the last visited page after passing through the code page" do
+    get "/proposals"
+    get new_sms_sign_in_path
+    request_code
+    follow_redirect!
     enter_code
 
     expect(response).to redirect_to("/proposals")

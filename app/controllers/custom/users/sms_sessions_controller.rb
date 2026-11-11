@@ -1,5 +1,6 @@
 class Users::SmsSessionsController < ApplicationController
   skip_authorization_check
+  skip_before_action :set_return_url
 
   before_action :ensure_sms_login_enabled
   before_action :redirect_signed_in_user

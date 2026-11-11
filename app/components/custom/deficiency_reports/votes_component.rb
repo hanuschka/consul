@@ -1,6 +1,7 @@
 class DeficiencyReports::VotesComponent < ApplicationComponent
   attr_reader :deficiency_report
-  delegate :current_user, :user_signed_in?, :link_to_signin, :link_to_signup, to: :helpers
+  delegate :current_user, :user_signed_in?, :link_to_signin, :link_to_signup, :link_to_sms_signin,
+           to: :helpers
 
   def initialize(deficiency_report)
     @deficiency_report = deficiency_report
@@ -16,7 +17,8 @@ class DeficiencyReports::VotesComponent < ApplicationComponent
       return if can_vote?
 
       if !user_signed_in?
-        sanitize(t("custom.users.login_to_vote", signin: link_to_signin, signup: link_to_signup))
+        safe_join([sanitize(t("custom.users.login_to_vote", signin: link_to_signin, signup: link_to_signup)),
+                   link_to_sms_signin].compact, " ")
 
       elsif current_user.organization?
         t("votes.organizations")

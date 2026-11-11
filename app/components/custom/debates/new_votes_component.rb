@@ -1,7 +1,7 @@
 class Debates::NewVotesComponent < ApplicationComponent
   attr_reader :debate
   delegate :current_user, :link_to_verify_account,
-           :link_to_signin, :link_to_signup, :link_to_guest_signin,
+           :link_to_signin, :link_to_signup, :link_to_guest_signin, :link_to_sms_signin,
            :link_to_verify_account, to: :helpers
 
   def initialize(debate)
@@ -22,17 +22,21 @@ class Debates::NewVotesComponent < ApplicationComponent
     def cannot_vote_text
       return nil if permission_problem_key.blank?
 
-      t(path_to_key,
-            sign_in: link_to_signin, sign_up: link_to_signup,
-            guest_sign_in: link_to_guest_signin,
-            verify: link_to_verify_account,
-            city: Setting["org_name"],
-            geozones: @debate_phase&.geozone_restrictions_formatted,
-            registered_address_groupings: @debate_phase&.registered_address_grouping_restriction_formatted,
-            age_restriction: @debate_phase&.age_restriction_formatted,
-            restricted_streets: @debate_phase&.street_restrictions_formatted,
-            individual_group_values: @debate_phase&.individual_group_value_restriction_formatted
+      text = t(
+        path_to_key,
+        sign_in: link_to_signin, sign_up: link_to_signup,
+        guest_sign_in: link_to_guest_signin,
+        verify: link_to_verify_account,
+        city: Setting["org_name"],
+        geozones: @debate_phase&.geozone_restrictions_formatted,
+        registered_address_groupings: @debate_phase&.registered_address_grouping_restriction_formatted,
+        age_restriction: @debate_phase&.age_restriction_formatted,
+        restricted_streets: @debate_phase&.street_restrictions_formatted,
+        individual_group_values: @debate_phase&.individual_group_value_restriction_formatted
       )
+      return text unless permission_problem_key.in?(%i[not_logged_in guest_not_logged_in])
+
+      safe_join([sanitize(text), link_to_sms_signin].compact, " ")
     end
 
     def path_to_key

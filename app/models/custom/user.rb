@@ -381,6 +381,10 @@ User.class_eval do
     end
   end
 
+  def send_welcome_email
+    Mailer.welcome(self).deliver_later if Setting["email_templates.welcome_email"].present?
+  end
+
   private
 
     def informal_recipient_greeting(name)

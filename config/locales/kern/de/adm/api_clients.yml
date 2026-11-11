@@ -64,6 +64,8 @@ de:
           updated: Service-Benutzer erfolgreich aktualisiert
           no_service_user: Dieser API-Client verwendet keinen eigenen Service-Benutzer.
       show:
+        instance_configuration_granted: Erteilt
+        instance_configuration_not_granted: Nicht erteilt
         auth_token_explanation_text: >
           Fügen Sie diesen Token im Authorization-Header Ihrer
           API-Anfragen ein. Verwenden Sie ihn als Bearer-Token
@@ -119,6 +121,14 @@ de:
           dargestellt.
         service_user_background_image_description: >
           Hintergrundbild für die öffentliche Profilseite des Service-Benutzers.
+        instance_configuration_access_label: Zugriff auf Instanz-Konfiguration
+        instance_configuration_access_description: >
+          Erlaubt diesem API-Client, Einstellungen, Logos, Seiten und Navigation
+          der Plattform über die Schnittstelle zu ändern. Im Frontend werden die
+          Änderungen sofort sichtbar, etwa ein neues Logo oder geänderte
+          Metadaten. Aktivieren Sie diese Berechtigung nur für Clients, die die
+          Plattform einrichten oder pflegen sollen. Nur für Clients mit
+          Admin-Zugriff verfügbar.
         use_system_user_label: Systembenutzer verwenden
         use_system_user_description: >
           Wenn aktiviert, werden über diesen API-Client erstellte Inhalte

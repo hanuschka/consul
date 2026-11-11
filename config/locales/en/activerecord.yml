@@ -528,6 +528,7 @@ en:
         access_level: Access level
         auth_token: Authentication token
         service_api_token: Service API token
+        instance_configuration_access: Instance configuration access
     errors:
       models:
         projekt:
@@ -585,6 +586,8 @@ en:
           attributes:
             domain:
               uniqueness: has already been taken
+            instance_configuration_access:
+              requires_admin_access_level: can only be granted to API clients with admin access
         proposal:
           attributes:
             tag_list:

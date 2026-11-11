@@ -49,6 +49,7 @@ to: :budget
       left_joins(budget_ballot_lines: :ballot)
         .group("budget_investments.id")
         .order(Arel.sql("COALESCE(SUM(CASE WHEN budget_ballots.conditional = false THEN budget_ballot_lines.line_weight ELSE 0 END), 0) DESC"))
+        .order(id: :desc)
     end
 
     def register_selection(user, vote_weight = 1)

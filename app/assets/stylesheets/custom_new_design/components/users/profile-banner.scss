@@ -109,7 +109,7 @@
     align-items: center;
     font-size: 72px;
     // background-color: black;
-    background-color: $brand;
+    background-color: var(--brand-color);
   }
 
   .users-profile-banner--name {

@@ -120,6 +120,8 @@ de:
         social_media_icon_description: "Dieses Bild wird als Vorschau angezeigt, wenn ein Link zur Plattform in sozialen Netzwerken oder Messengern geteilt wird. Verwenden Sie ein Querformat-Bild mit klarem, zentriertem Motiv, das auch in kleiner Darstellung erkennbar bleibt. Vermeiden Sie kleine Schrift. Erforderliche Größe: genau 470 × 246 Pixel. Erlaubte Formate: JPG oder PNG."
         social_media_icon_twitter_label: Vorschaubild für X (Twitter)
         social_media_icon_twitter_description: "Dieses Bild wird als Vorschau angezeigt, wenn ein Link zur Plattform auf X (vormals Twitter) geteilt wird. Verwenden Sie ein quadratisches Bild mit klarem, zentriertem Motiv. Erforderliche Größe: genau 246 × 246 Pixel. Erlaubte Formate: JPG oder PNG."
+        favicon_label: Favicon
+        favicon_description: "Das kleine Symbol im Browser-Tab und in Lesezeichen. Verwenden Sie ein quadratisches PNG ohne Text, mindestens 32 × 32 Pixel. Bleibt das Feld leer, wird das Standard-Favicon der Plattform verwendet."
         apple-touch-icon-200_label: App-Icon
         apple-touch-icon-200_description: "Dieses Icon wird verwendet, wenn Nutzer die Plattform auf dem Startbildschirm ihres Smartphones oder Tablets ablegen, und dient zusätzlich als Symbol im Browser-Tab. Verwenden Sie ein quadratisches Motiv ohne Text, das auch in kleiner Darstellung gut erkennbar ist. Erforderliche Größe: genau 200 × 200 Pixel. Erlaubte Formate: JPG oder PNG. Bleibt das Feld leer, wird das Standard-Icon der Plattform verwendet."
       site_customization/video:

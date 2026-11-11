@@ -3,6 +3,9 @@ de:
     projekts:
       budgets:
         calculate_winners:
-          notice: Die bestbewerteten Vorschläge werden ermittelt. Dies kann einen Moment dauern.
+          notice: Die Gewinner wurden ermittelt.
         recalculate_winners:
           notice: Gewinner wurden erfolgreich neu berechnet.
+        resolve_tie:
+          notice: Der Gleichstand wurde entschieden.
+          alert: Die Auswahl konnte nicht gespeichert werden. Bitte prüfen Sie die freien Plätze und das Restbudget.

@@ -13,6 +13,8 @@ class Setting < ApplicationRecord
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
+  audited only: :value, on: :update
+
   validate :validate_whatsapp_template_name
   validate :validate_whatsapp_template_language
   validate :validate_whatsapp_address_form
@@ -279,6 +281,7 @@ class Setting < ApplicationRecord
         "proposals.poster_description": nil,
         "proposals.email_on_official_answer": nil,
         "email_templates.recipient_greeting": "username",
+        "email_templates.welcome_email": nil,
         # Images and Documents
         "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,
@@ -311,6 +314,7 @@ class Setting < ApplicationRecord
         "direct_message_max_per_day": 3,
         "mailer_from_deficiency_report_address": "noreply@consul.dev",
         "moderation.reports_notification_email": nil,
+        "accessibility_report.recipient_email": nil,
         "min_age_to_participate": 16,
         "hot_score_period_in_days": 31,
         "related_content_score_threshold": -0.3,

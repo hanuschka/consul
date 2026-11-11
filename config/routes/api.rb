@@ -95,5 +95,28 @@
       resources :category_icons, only: [:create]
     end
 
+    namespace :configuration do
+      get "settings", to: "settings#index"
+      patch "settings", to: "settings#update"
+      get "texts", to: "texts#index"
+      patch "texts", to: "texts#update"
+
+      resources :images, only: [:index, :update, :destroy], param: :name
+      resources :videos, only: [:index, :update, :destroy], param: :name
+      resources :footer_pages, only: [:index, :show, :update]
+      resources :landing_pages, only: [:index, :show, :create, :update, :destroy]
+      resources :navbar_items, only: [:index, :show, :create, :update, :destroy]
+      resources :content_blocks, only: [:index, :show, :update], param: :key
+      resources :content_cards, only: [:index, :show, :update]
+      resources :banners, only: [:index, :show, :create, :update, :destroy]
+      resources :modal_notifications, only: [:index, :show, :create, :update, :destroy]
+      resources :email_templates, only: [:index, :show, :update], param: :key, constraints: { key: %r{[^/]+} }
+      resources :map_layers, only: [:index, :show, :create, :update, :destroy]
+      resources :geozones, only: [:index, :show, :create, :update, :destroy]
+      resources :tag_categories, only: [:index, :show, :create, :update, :destroy]
+      resources :age_ranges, only: [:index, :show, :create, :update, :destroy]
+      resources :individual_groups, only: [:index, :show, :create, :update]
+    end
+
     match '*path', to: 'not_found#index', via: [:get, :post, :patch, :put, :delete]
   end

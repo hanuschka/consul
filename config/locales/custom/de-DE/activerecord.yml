@@ -611,6 +611,7 @@ de:
         access_level: Zugriffsstufe
         auth_token: Authentifizierungstoken
         service_api_token: Service-API-Token
+        instance_configuration_access: Zugriff auf Instanz-Konfiguration
     errors:
       models:
         municipal_plan:
@@ -684,6 +685,8 @@ de:
           attributes:
             domain:
               uniqueness: wird bereits verwendet
+            instance_configuration_access:
+              requires_admin_access_level: kann nur für API-Clients mit Admin-Zugriff aktiviert werden
         proposal:
           attributes:
             tag_list:

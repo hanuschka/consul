@@ -57,7 +57,7 @@
       <div class="main-column">
         <%= render ResourcePage::BannerComponent.new(resource: @debate, heading_level: :h2) %>
 
-        <div class="resource-page--description new-card main-content-card">
+        <div class="resource-page--description new-card main-content-card -full-bleed-on-phone">
           <%= auto_link_already_sanitized_html wysiwyg(@debate.description) %>
         </div>
 

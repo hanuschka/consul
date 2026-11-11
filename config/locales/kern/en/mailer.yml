@@ -70,6 +70,10 @@ en:
     user_invite:
       title: Invitation to the platform
       description: Sent to invited people to invite them to register on the platform.
+    welcome:
+      title: Welcome email
+      description: Sent once to newly registered users as soon as their email address is confirmed or they first sign in with BundID or another login service.
+      recipient: The newly registered user.
     pending_role_invite:
       title: Role invitation
       description: Sent to invited people when a role has been assigned to them on the platform.
@@ -185,3 +189,8 @@ en:
       title: Deficiency report feedback request
       description: Sent to the author about 24 hours after their deficiency report is closed (status changed to an archiving status), asking for feedback. Requires the feedback feature to be enabled in the %{settings_link}.
       recipient: The user who submitted the deficiency report.
+  mailers:
+    welcome:
+      subject: "Welcome to %{org_name}"
+      body: "Your account is now active. On the participation platform you will find all current projects and can take part right away."
+      link: "Go to the participation platform"

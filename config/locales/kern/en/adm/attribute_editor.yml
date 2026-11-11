@@ -104,6 +104,8 @@ en:
         social_media_icon_description: "This image is shown as the preview when a link to the platform is shared in social networks or messengers. Use a landscape image with a clear, centered subject that stays recognizable at small sizes. Avoid small text. Required size: exactly 470 × 246 pixels. Allowed formats: JPG or PNG."
         social_media_icon_twitter_label: Preview image for X (Twitter)
         social_media_icon_twitter_description: "This image is shown as the preview when a link to the platform is shared on X (formerly Twitter). Use a square image with a clear, centered subject. Required size: exactly 246 × 246 pixels. Allowed formats: JPG or PNG."
+        favicon_label: Favicon
+        favicon_description: "The small icon in the browser tab and in bookmarks. Use a square PNG without text, at least 32 × 32 pixels. Leave empty to use the platform's default favicon."
         apple-touch-icon-200_label: App icon
         apple-touch-icon-200_description: "This icon is used when people add the platform to the home screen of their phone or tablet, and additionally as the browser-tab icon. Use a square subject without text that stays recognizable at small sizes. Required size: exactly 200 × 200 pixels. Allowed formats: JPG or PNG. Leave empty to use the platform's default icon."
       site_customization/video:

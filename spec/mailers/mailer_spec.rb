@@ -162,4 +162,34 @@ describe Mailer do
       expect(body).not_to include "/valuation/budgets/"
     end
   end
+
+  describe "#welcome" do
+    let(:user) { create(:user, username: "lena84") }
+
+    def customize(subject:, body:)
+      SiteCustomization::EmailTemplate.create!(
+        projekt_phase: nil, mailer_class: "Mailer", mailer_action: "welcome",
+        locale: I18n.default_locale, subject: subject, body: body
+      )
+    end
+
+    it "uses the administrators' subject and body with the variables filled in" do
+      customize(subject: "Willkommen, {{ username }}", body: "<p>{{ recipient_greeting }}, schön dass Sie da sind.</p>")
+
+      email = Mailer.welcome(user)
+
+      expect(email.subject).to eq "Willkommen, lena84"
+      expect(email.body.encoded).to include(user.recipient_greeting)
+    end
+
+    it "falls back to the default copy while the template is empty" do
+      customize(subject: "", body: "")
+
+      email = Mailer.welcome(user)
+
+      expect(email.subject).to eq I18n.t("mailers.welcome.subject", org_name: Setting["org_name"],
+                                                                    locale: I18n.default_locale)
+      expect(email.body.encoded).to include(I18n.t("mailers.welcome.body", locale: I18n.default_locale))
+    end
+  end
 end

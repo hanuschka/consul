@@ -8,7 +8,7 @@
 <% end %>
 
 <%= csrf_meta_tags %>
-<%= favicon_link_tag "favicon.ico" %>
+<%= site_favicon_link_tag %>
 <script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
 
 <%= content_for :additional_plugin_styles %>

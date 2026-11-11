@@ -6,6 +6,8 @@ class NavbarItem < ApplicationRecord
   # custom_title is set.
   PRESETS_WITH_FEATURE_NAME = %w[deficiency_reports ideas].freeze
 
+  audited
+
   alias_method :consul_title, :title
 
   def title

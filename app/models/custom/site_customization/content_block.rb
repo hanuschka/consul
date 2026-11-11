@@ -14,6 +14,20 @@ class SiteCustomization::ContentBlock < ApplicationRecord
   translates :body, touch: true
   include MachineTranslatable
 
+  # Only the instance-wide blocks (homepage, footer, layout) are configuration;
+  # projekt and newsletter blocks are content and change far too often to audit.
+  audited only: %i[visible visible_from visible_until margin_bottom], if: :global_block?
+  has_associated_audits
+  translation_class.class_eval do
+    audited(
+      associated_with: :globalized_model,
+      only: %w[body],
+      if: lambda do |translation|
+        translation.globalized_model&.global_block? && Audit.translation_write_audited?
+      end
+    )
+  end
+
   def _assign_attributes(new_attributes)
     super
 
@@ -139,6 +153,10 @@ class SiteCustomization::ContentBlock < ApplicationRecord
 
   def custom?
     name == 'custom'
+  end
+
+  def global_block?
+    projekt_id.nil? && newsletter_id.nil?
   end
 
   # The editor works in whole minutes, so both ends of the period cover their

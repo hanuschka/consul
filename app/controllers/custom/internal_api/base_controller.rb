@@ -29,6 +29,25 @@ class InternalApi::BaseController < ActionController::API
     @api_client
   end
 
+  # Audit rows written during the action name the system user and carry the
+  # internal client in their comment.
+  def audit_changes_as_internal_client(&)
+    Current.api_client = current_api_client
+
+    ::Audit.as_user(User.system, &)
+  ensure
+    Current.api_client = nil
+  end
+
+  def render_setting_errors(errors)
+    render json: {
+      error: {
+        messages: errors.map { |key, messages| "#{key} #{Array(messages).to_sentence}" },
+        details: errors
+      }
+    }, status: :unprocessable_entity
+  end
+
    def render_unauthentificated
     render json: {
       error: 'You need to log in to access this resource'

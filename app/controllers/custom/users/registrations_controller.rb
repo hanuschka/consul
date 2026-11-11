@@ -3,6 +3,10 @@ load Rails.root.join("app", "controllers", "users", "registrations_controller.rb
 class Users::RegistrationsController < Devise::RegistrationsController
   include HasRegisteredAddress
 
+  before_action only: [:edit, :update] do
+    redirect_to account_path if current_user.phone_account?
+  end
+
   def create
     build_resource(sign_up_params)
     resource.registering_from_web = true

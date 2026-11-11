@@ -1,0 +1,32 @@
+<% provide :title do %><%= t("sms_sign_in.edit.title") %><% end %>
+
+<%= render Auth::AuthPageTemplateComponent.new do |c| %>
+  <% c.with_form do %>
+    <h2><%= t("sms_sign_in.edit.title") %></h2>
+    <p><%= t("sms_sign_in.edit.intro", minutes: PhoneSignInCode::VALIDITY.in_minutes.to_i) %></p>
+
+    <div class="auth-page-template--divider"></div>
+
+    <%= form_with url: sms_sign_in_code_path, method: :post, local: true do %>
+      <%= label_tag :code, t("sms_sign_in.edit.code_label"), class: "auth-page-template--field-label" %>
+      <%= text_field_tag :code,
+                         nil,
+                         autocomplete: "one-time-code",
+                         inputmode: "numeric",
+                         pattern: "[0-9 ]*",
+                         maxlength: 7,
+                         required: true,
+                         autofocus: true,
+                         aria: { invalid: @code_invalid || nil } %>
+
+      <%= submit_tag t("sms_sign_in.edit.submit"), class: "button expanded" %>
+    <% end %>
+
+    <div class="sign-in--links">
+      <%= button_to resend_sms_sign_in_path, class: "link-button", form_class: "text-center" do %>
+        <%= t("sms_sign_in.edit.resend") %>
+      <% end %>
+      <%= link_to t("sms_sign_in.edit.change_number"), new_sms_sign_in_path %>
+    </div>
+  <% end %>
+<% end %>

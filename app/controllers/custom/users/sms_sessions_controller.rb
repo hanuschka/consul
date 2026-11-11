@@ -14,6 +14,7 @@ class Users::SmsSessionsController < ApplicationController
     @phone_input = params[:phone]
 
     if phone.nil?
+      @phone_invalid = true
       flash.now[:alert] = t("sms_sign_in.errors.invalid_phone")
       return render :new, status: :unprocessable_entity
     end
@@ -29,9 +30,11 @@ class Users::SmsSessionsController < ApplicationController
     when :verified
       sign_in_phone_user
     when :invalid
+      @code_invalid = true
       flash.now[:alert] = t("sms_sign_in.errors.invalid_code")
       render :edit, status: :unprocessable_entity
     else
+      @code_invalid = true
       flash.now[:alert] = t("sms_sign_in.errors.expired_code")
       render :edit, status: :unprocessable_entity
     end

@@ -96,6 +96,10 @@ App.Studio.ContentBlocks.SimpleEditMode = {
 
     if (enabled) {
       setTimeout(() => {
+        // Before other modules add their controls, whose icons stay unpickable
+        App.Studio.ContentBlocks.SimpleEditMode.IconEdit.toggleIconControls(
+          contentBlock, enabled
+        )
         this.toggleLinksInteration(contentBlock, enabled)
         this.toggleGlighboxGallery(contentBlock, enabled)
 
@@ -114,12 +118,21 @@ App.Studio.ContentBlocks.SimpleEditMode = {
         App.Studio.ContentBlocks.SimpleEditMode.LinkEdit.toggleLinkControls(
           contentBlock, enabled
         )
+        App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit.toggleYoutubeControls(
+          contentBlock, enabled
+        )
+        App.Studio.ContentBlocks.SimpleEditMode.ProgressBarEdit.toggleProgressBarControls(
+          contentBlock, enabled
+        )
 
         if (endCallback) {
           endCallback()
         }
       }, 10)
     } else {
+      App.Studio.ContentBlocks.SimpleEditMode.IconEdit.toggleIconControls(
+        contentBlock, enabled
+      )
       this.toggleLinksInteration(contentBlock, enabled)
       this.toggleGlighboxGallery(contentBlock, enabled)
 
@@ -136,6 +149,12 @@ App.Studio.ContentBlocks.SimpleEditMode = {
         contentBlock, enabled
       )
       App.Studio.ContentBlocks.SimpleEditMode.LinkEdit.toggleLinkControls(
+        contentBlock, enabled
+      )
+      App.Studio.ContentBlocks.SimpleEditMode.YoutubeEdit.toggleYoutubeControls(
+        contentBlock, enabled
+      )
+      App.Studio.ContentBlocks.SimpleEditMode.ProgressBarEdit.toggleProgressBarControls(
         contentBlock, enabled
       )
 

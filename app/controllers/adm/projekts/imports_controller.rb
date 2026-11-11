@@ -17,7 +17,7 @@ class Adm::Projekts::ImportsController < Adm::Projekts::BaseController
   end
 
   def show
-    if @projekt_import.chatting? || @projekt_import.submitting? || @projekt_import.completed?
+    if followed_on_review_step?
       redirect_to helpers.import_review_path(@projekt_import)
       return
     end
@@ -102,6 +102,17 @@ class Adm::Projekts::ImportsController < Adm::Projekts::BaseController
 
     def find_projekt_import
       @projekt_import = visible_projekt_imports.find(params[:id])
+    end
+
+    # The chat shows the final import's progress over the conversation; the
+    # plain review form has nowhere to show it, so a copied projekt being built
+    # is followed on this page instead.
+    def followed_on_review_step?
+      if @projekt_import.submitting?
+        return @projekt_import.ai_negotiated?
+      end
+
+      @projekt_import.chatting? || @projekt_import.completed?
     end
 
     def status_payload

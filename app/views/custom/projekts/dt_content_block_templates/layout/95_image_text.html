@@ -1,46 +1,25 @@
-<!-- BlockID: D02 Two-Column Split – Bild links, redaktioneller Text rechts -->
+<!-- BlockID: D02 Bild und Text - Bild links, redaktioneller Text rechts -->
 <!-- Geeignet für: Projektvorstellung mit visuellem Kontext, Orte und Themen -->
-<!-- ANPASSEN: src-Attribut im img-Tag ersetzen -->
+<!-- Editor: Bild über das Bild-Werkzeug austauschen (Alternativtext setzen). Eckdaten sind Listenelemente, „Weiteres Element hinzufügen“ kopiert das letzte; Icon über die Klasse fa-… tauschen, nur im Code-Modus. -->
+<!-- Umbruch: Bild über dem Text am Handy, nebeneinander ab etwa 600 px Breite; Eckdaten brechen in Zeilen um. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H3, Etikett, Text und Eckdaten 1rem -->
 
-<div style="background: #ffffff; border-radius: 16px; overflow: hidden; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));">
 
-  <div class="row" style="min-height: 340px;">
+  <div style="position: relative; background: #ffffff;">
+    <img src="https://placehold.co/800x600/0d7e6d/ffffff?text=Karte+%2F+Foto" alt="Karte oder Foto des Planungsgebiets" style="display: block; width: 100%; height: 240px; height: clamp(220px, 45vw, 360px); min-height: 100%; object-fit: cover; margin: 0;">
+  </div>
 
-    <!-- Linke Spalte: Bild mit Overlay-Gradient -->
-    <div class="column small-12 medium-6">
-      <div style="min-height: 300px; height: 100%; position: relative; overflow: hidden;">
-        <img src="https://placehold.co/600x400/0d7e6d/ffffff?text=Karte+%2F+Foto" alt="Karte oder Foto des Planungsgebiets" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
-        <!-- Subtle bottom gradient overlay -->
-        <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(to top, rgba(0,0,0,0.3), transparent); pointer-events: none;"></div>
-      </div>
-    </div>
-
-    <!-- Rechte Spalte: Redaktioneller Text -->
-    <div class="column small-12 medium-6">
-      <div style="padding: 36px 32px; display: flex; flex-wrap: wrap; flex-direction: column; justify-content: center; height: 100%;">
-
-        <div style="background: linear-gradient(135deg, rgba(23,121,186,0.08), rgba(23,121,186,0.04)); border: 1px solid rgba(23,121,186,0.12); border-radius: 4px; padding: 5px 12px; font-size: 11px; color: var(--brand-color, #1779ba); font-weight: 600; letter-spacing: 0.04em; display: inline-block; margin-bottom: 16px; align-self: flex-start;">Planungsgebiet Mitte</div>
-
-        <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; margin-bottom: 14px; margin-top: 0; line-height: 1.3; letter-spacing: -0.3px;">Das Planungsgebiet: Rund um den Marktplatz</h3>
-
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.7; margin-bottom: 16px; margin-top: 0;">
-          Das Beteiligungsverfahren bezieht sich auf den Bereich innerhalb des historischen Stadtkerns – zwischen Rathausplatz, Postgasse und Lindenring. Insgesamt ca. 4,2 ha werden neu gestaltet.
-        </p>
-
-        <p style="font-size: 14px; color: #6b7280; line-height: 1.65; margin-bottom: 20px; margin-top: 0;">
-          Die linke Karte zeigt den aktuellen Zustand. Ihre Hinweise und Ideen können gezielt Bereiche auf der Karte adressieren.
-        </p>
-
-        <!-- Metadata strip -->
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
-          <span style="font-size: 12px; color: #6b7280; font-weight: 500;">ca. 4,2 Hektar</span>
-          <span style="font-size: 12px; color: #d1d5db;">|</span>
-          <span style="font-size: 12px; color: #6b7280; font-weight: 500;">Stadtteil Mitte</span>
-          <span style="font-size: 12px; color: #d1d5db;">|</span>
-          <span style="font-size: 12px; color: #6b7280; font-weight: 500;">Alle Zonen betroffen</span>
-        </div>
-
-      </div>
-    </div>
+  <div style="position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 24px; padding: clamp(20px, 4vw, 32px);">
+    <div aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; top: 0; bottom: 0; left: -80px; width: 80px; background: linear-gradient(to right, rgba(255,255,255,0) 0%, #ffffff 100%); pointer-events: none;"></div><div aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; left: 0; right: 0; top: -56px; height: 56px; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #ffffff 100%); pointer-events: none;"></div>
+    <span style="display: inline-flex; align-items: center; gap: 8px; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 2px 12px; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3); margin: 0 0 12px;"><i class="fas fa-map-marker-alt" aria-hidden="true" style="font-size: 14px;"></i> Planungsgebiet Mitte</span>
+    <h3 style="margin: 0 0 12px; hyphens: auto; overflow-wrap: break-word;">Das Planungsgebiet: Rund um den Marktplatz</h3>
+    <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Das Beteiligungsverfahren bezieht sich auf den Bereich innerhalb des historischen Stadtkerns – zwischen Rathausplatz, Postgasse und Lindenring. Insgesamt ca. 4,2 ha werden neu gestaltet.</p>
+    <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 16px;">Die Karte zeigt den aktuellen Zustand. Ihre Hinweise und Ideen können gezielt Bereiche auf der Karte adressieren.</p>
+    <ul style="align-self: stretch; list-style: none; margin: 0; padding: 14px 0 0; border-top: 1px solid #e8edf3; display: flex; flex-wrap: wrap; gap: 10px 20px;">
+      <li style="display: flex; align-items: center; gap: 10px; margin: 0; font-size: 1rem; line-height: 1.6; font-weight: 700;"><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 10px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-ruler-combined" style="font-size: 14px;"></i></span><span style="flex: 1 1 auto; min-width: 0;">ca. 4,2 Hektar</span></li>
+      <li style="display: flex; align-items: center; gap: 10px; margin: 0; font-size: 1rem; line-height: 1.6; font-weight: 700;"><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 10px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-city" style="font-size: 14px;"></i></span><span style="flex: 1 1 auto; min-width: 0;">Stadtteil Mitte</span></li>
+      <li style="display: flex; align-items: center; gap: 10px; margin: 0; font-size: 1rem; line-height: 1.6; font-weight: 700;"><span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 10px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-th-large" style="font-size: 14px;"></i></span><span style="flex: 1 1 auto; min-width: 0;">Alle Zonen betroffen</span></li>
+    </ul>
   </div>
 </div>

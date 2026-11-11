@@ -1,4 +1,8 @@
 module ApiClientHelper
+  def create_configuration_api_client(attributes = {})
+    create_api_client({ instance_configuration_access: true }.merge(attributes))
+  end
+
   def create_api_client(attributes = {})
     default_attributes = {
       name: 'Test Client',

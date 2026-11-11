@@ -1,6 +1,8 @@
 require "numeric"
 
 class Debate < ApplicationRecord
+  self.ignored_columns += ["visit_id"]
+
   include Flaggable
   include Taggable
   include Conflictable
@@ -47,9 +49,6 @@ class Debate < ApplicationRecord
   scope :last_week,                -> { where("created_at >= ?", 7.days.ago) }
   scope :featured,                 -> { where.not(featured_at: nil) }
   scope :public_for_api,           -> { all }
-
-  # visitable class_name: "Visit"
-  visitable #stick to the Ahoy way of naming models (Ahoy::Visit instead of Visit)
 
   attr_accessor :link_required
 

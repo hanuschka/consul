@@ -1,0 +1,62 @@
+<%= render Projekts::StudioEditPopupComponent.new(
+  popup_classes: "js-content-block-icon-popup studio-content-block-icon-picker",
+  accept_button_class: "js-content-block-accept-icon-edit",
+  cancel_button_class: "js-content-block-cancel-icon-edit"
+) do %>
+  <p class="studio-content-block-icon-picker--title">
+    <%= t("custom.projekts.page.content_block_icon_picker.title") %>
+  </p>
+
+  <div class="studio-content-block-icon-picker--search">
+    <i class="fas fa-search studio-content-block-icon-picker--search-icon" aria-hidden="true"></i>
+    <input
+      type="search"
+      class="studio-content-block-icon-picker--search-input js-content-block-icon-search"
+      aria-label="<%= t("custom.projekts.page.content_block_icon_picker.search_label") %>"
+      placeholder="<%= t("custom.projekts.page.content_block_icon_picker.search_placeholder") %>"
+      autocomplete="off"
+      spellcheck="false"
+    >
+  </div>
+
+  <p class="studio-content-block-icon-picker--name js-content-block-icon-name" aria-hidden="true"></p>
+
+  <div class="studio-content-block-icon-picker--groups js-content-block-icon-groups">
+    <p
+      class="studio-content-block-icon-picker--status js-content-block-icon-search-status"
+      role="status"
+      data-no-results-text="<%= t("custom.projekts.page.content_block_icon_picker.no_results") %>"
+    ></p>
+
+    <% icon_groups.each do |group| %>
+      <div
+        class="studio-content-block-icon-picker--group js-content-block-icon-group"
+        role="group"
+        aria-labelledby="studio-content-block-icon-picker-group-<%= group[:key] %>"
+      >
+        <p
+          id="studio-content-block-icon-picker-group-<%= group[:key] %>"
+          class="studio-content-block-icon-picker--group-title"
+        >
+          <%= group[:title] %>
+        </p>
+
+        <div class="studio-content-block-icon-picker--options">
+          <% group[:icons].each do |icon| %>
+            <button
+              type="button"
+              class="studio-content-block-icon-picker--option js-content-block-icon-option"
+              data-icon-style="<%= icon[:style] %>"
+              data-icon-name="<%= icon[:name] %>"
+              data-search-terms="<%= icon[:search_terms] %>"
+              aria-label="<%= icon[:label] %>"
+              aria-pressed="false"
+            >
+              <i class="<%= icon[:style] %> fa-<%= icon[:name] %>" aria-hidden="true"></i>
+            </button>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -24,6 +24,10 @@ FactoryBot.define do
     type { "ProjektPhase::BudgetPhase" }
   end
 
+  factory :voting_phase, parent: :projekt_phase, class: "ProjektPhase::VotingPhase" do
+    type { "ProjektPhase::VotingPhase" }
+  end
+
   factory :point_of_interest_phase, parent: :projekt_phase, class: "ProjektPhase::PointOfInterestPhase" do
     type { "ProjektPhase::PointOfInterestPhase" }
   end

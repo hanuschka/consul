@@ -8,10 +8,8 @@ class Api::PollsController < Api::BaseController
     check_read_access!
 
     if @projekt_phase.present?
-      if current_client.public_data?
-        unless @projekt_phase.frontend_visibility && @projekt_phase.active?
-          return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
-        end
+      if phase_hidden_from_client?(@projekt_phase)
+        raise ForbiddenError, "Access denied"
       end
 
       polls = @projekt_phase.polls
@@ -20,9 +18,7 @@ class Api::PollsController < Api::BaseController
       polls = Poll.includes(:projekt_phase, projekt_phase: :projekt)
 
       if current_client.public_data?
-        polls = polls.joins(:projekt_phase)
-          .where(projekt_phases: { frontend_visibility: true, active: true })
-          .distinct
+        polls = restrict_to_public_phases(polls)
       end
     end
 

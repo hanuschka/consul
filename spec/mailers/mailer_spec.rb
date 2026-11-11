@@ -83,11 +83,36 @@ describe Mailer do
       expect(email.body.encoded).to include("Guten Tag Anna, Mehr Bänke im Park")
     end
 
+    it "fills the recipient greeting in the customized template" do
+      author.update!(first_name: "Anna", last_name: "Muster")
+      set_setting("email_templates.recipient_greeting", "full_name")
+      SiteCustomization::EmailTemplate.create!(
+        mailer_class: "Mailer",
+        mailer_action: "resource_hidden",
+        locale: "de",
+        body: "<p>{{ recipient_greeting }}, {{ username }}</p>"
+      )
+
+      email = Mailer.resource_hidden(proposal)
+
+      expect(email.body.encoded).to include("Hallo Anna Muster, Anna")
+    end
+
     it "uses the default text otherwise" do
       email = Mailer.resource_hidden(proposal)
 
       expect(email.subject).to eq I18n.t("mailers.resource_hidden.subject", locale: :de)
       expect(email.body.encoded).to include("Hallo Anna,")
+    end
+
+    it "uses the configured greeting in the default text" do
+      author.update!(first_name: "Anna", last_name: "Muster", gender: "female")
+      set_setting("email_templates.recipient_greeting", "formal")
+
+      email = Mailer.resource_hidden(proposal)
+
+      expect(email.body.encoded).to include("Sehr geehrte Frau Muster,")
+      expect(email.body.encoded).not_to include("Hallo Anna")
     end
   end
 
@@ -135,6 +160,36 @@ describe Mailer do
 
       expect(body).to include "/adm/valuation/investments/#{investment.id}/edit"
       expect(body).not_to include "/valuation/budgets/"
+    end
+  end
+
+  describe "#welcome" do
+    let(:user) { create(:user, username: "lena84") }
+
+    def customize(subject:, body:)
+      SiteCustomization::EmailTemplate.create!(
+        projekt_phase: nil, mailer_class: "Mailer", mailer_action: "welcome",
+        locale: I18n.default_locale, subject: subject, body: body
+      )
+    end
+
+    it "uses the administrators' subject and body with the variables filled in" do
+      customize(subject: "Willkommen, {{ username }}", body: "<p>{{ recipient_greeting }}, schön dass Sie da sind.</p>")
+
+      email = Mailer.welcome(user)
+
+      expect(email.subject).to eq "Willkommen, lena84"
+      expect(email.body.encoded).to include(user.recipient_greeting)
+    end
+
+    it "falls back to the default copy while the template is empty" do
+      customize(subject: "", body: "")
+
+      email = Mailer.welcome(user)
+
+      expect(email.subject).to eq I18n.t("mailers.welcome.subject", org_name: Setting["org_name"],
+                                                                    locale: I18n.default_locale)
+      expect(email.body.encoded).to include(I18n.t("mailers.welcome.body", locale: I18n.default_locale))
     end
   end
 end

@@ -109,6 +109,7 @@ en:
           hidden_state:
             visible: Visible
             hidden: Hidden
+          untitled: Untitled
         tabs:
           show: Manage
           administer: Administer

@@ -92,6 +92,17 @@ $homepage-image-header-max-width: 1920px;
     pointer-events: none;
   }
 
+  .homepage-image-header--image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    z-index: 0;
+    pointer-events: none;
+  }
+
   .homepage-image-header--video--desktop {
     @media (max-width: $small-tablet-viewport-start) {
       display: none;

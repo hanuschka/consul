@@ -145,6 +145,7 @@ namespace :adm do
     post :send_test, on: :member
   end
   resources :global_email_templates, only: [:index]
+  resources :welcome_emails, only: [:index]
 
   resource :statistics, controller: "statistics", only: [:show]
   resource :matomo, controller: "matomo", only: [:show]

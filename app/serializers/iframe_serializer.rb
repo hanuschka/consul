@@ -1,4 +1,10 @@
 class IframeSerializer < BaseSerializer
+  SETTING_KEYS = {
+    url: "option.general.iframe_url",
+    width: "option.general.iframe_width",
+    height: "option.general.iframe_height"
+  }.freeze
+
   attr_reader :projekt_phase
 
   def initialize(projekt_phase)
@@ -6,16 +12,15 @@ class IframeSerializer < BaseSerializer
   end
 
   def serialize
+    setting_values = projekt_phase.settings
+      .where(key: SETTING_KEYS.values)
+      .pluck(:key, :value)
+      .to_h
     iframe_data = {}
 
-    url_setting = projekt_phase.settings.find_by(key: "option.iframe.url")
-    iframe_data[:url] = url_setting&.value if url_setting
-
-    width_setting = projekt_phase.settings.find_by(key: "option.iframe.width")
-    iframe_data[:width] = width_setting&.value if width_setting
-
-    height_setting = projekt_phase.settings.find_by(key: "option.iframe.height")
-    iframe_data[:height] = height_setting&.value if height_setting
+    SETTING_KEYS.each do |attribute, key|
+      iframe_data[attribute] = setting_values[key] if setting_values.key?(key)
+    end
 
     projekt_phase_data = {
       id: projekt_phase.id,

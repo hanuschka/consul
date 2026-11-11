@@ -22,7 +22,6 @@ en:
         signature: Your participation team
         account_created:
           subject: Your account has been created
-          hi: "Hello %{username},"
           p1: >
             an account has been created for you with the email address %{email}, because a
             contribution was submitted on your behalf. The account is already activated.

@@ -1,8 +1,9 @@
 class DeficiencyReportCategorySerializer < BaseSerializer
   attr_reader :category
 
-  def initialize(category)
+  def initialize(category, client: nil)
     @category = category
+    @client = client
   end
 
   def serialize
@@ -21,7 +22,7 @@ class DeficiencyReportCategorySerializer < BaseSerializer
       name: category.name
     )
 
-    if category.default_responsible.present?
+    if admin_client? && category.default_responsible.present?
       category_data[:default_responsible] = {
         id: category.default_responsible.id,
         type: category.default_responsible_type,
@@ -34,7 +35,7 @@ class DeficiencyReportCategorySerializer < BaseSerializer
     category_data
   end
 
-  def self.serialize_collection(categories)
-    categories.map { |category| new(category).serialize }
+  def self.serialize_collection(categories, client: nil)
+    categories.map { |category| new(category, client: client).serialize }
   end
 end

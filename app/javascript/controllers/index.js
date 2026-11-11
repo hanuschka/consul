@@ -303,3 +303,6 @@ application.register("adm--handbook-embed", AdmHandbookEmbedController)
 
 import AdmMunicipalPlanCityWideController from "./adm/municipal_plan_city_wide_controller"
 application.register("adm--municipal-plan-city-wide", AdmMunicipalPlanCityWideController)
+
+import AdmBudgetTieController from "./adm/budget_tie_controller"
+application.register("adm--budget-tie", AdmBudgetTieController)

@@ -156,3 +156,5 @@ namespace :api do
     resources :category_icons, only: [:create]
   end
 end
+
+resources :accessibility_reports, only: :create

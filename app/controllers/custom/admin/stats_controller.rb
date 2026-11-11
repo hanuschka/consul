@@ -2,9 +2,6 @@ load Rails.root.join("app", "controllers", "admin", "stats_controller.rb")
 
 class Admin::StatsController < Admin::BaseController
   def show
-    @event_types = Ahoy::Event.distinct.order(:name).pluck(:name)
-
-    @visits    = Ahoy::Visit.count
     @debates   = Debate.with_hidden.count
     @proposals = Proposal.with_hidden.count
     @comments  = Comment.not_valuations.with_hidden.count

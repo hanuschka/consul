@@ -6,6 +6,8 @@ class DowncaseRoute
     /rails/active_storage
     /rails/blob
     /rails/disk
+    /blobs/
+    /ckeditor/assets/
     /cable
     /vcmap
     /admin
@@ -13,6 +15,8 @@ class DowncaseRoute
     /unregistered_newsletter_subscribers
     /sp/SAML2
   ].freeze
+
+  REDIRECT_CACHE_CONTROL = "max-age=3600".freeze
 
   LEADING_SLASHES_PATTERN = %r{\A[/\\]+}
 
@@ -28,7 +32,7 @@ class DowncaseRoute
       query = env["QUERY_STRING"]
       location = !query.to_s.empty? ? "#{lowered}?#{query}" : lowered
 
-      [301, { "Location" => location }, []]
+      [301, { "Location" => location, "Cache-Control" => REDIRECT_CACHE_CONTROL }, []]
     else
       @app.call(env)
     end

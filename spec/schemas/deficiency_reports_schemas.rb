@@ -10,7 +10,8 @@ module Schemas
         description: { type: :string, nullable: true, description: 'Detailed description of the deficiency', example: 'Large pothole causing safety concerns near intersection' },
         official_answer: { type: :string, nullable: true, description: 'Official answer shown publicly above the report' },
         reporter_answer: { type: :string, nullable: true, description: 'Answer e-mailed to the reporter and not shown publicly; only returned to admin clients' },
-        author_id: { type: :integer, nullable: true, description: 'ID of the user who reported the deficiency', example: 18 },
+        author_id: { type: :integer, nullable: true, description: 'ID of the user who reported the deficiency. Only returned to admin clients.', example: 18 },
+        author: { '$ref' => '#/components/schemas/Author' },
         category_id: { type: :integer, nullable: true, description: 'ID of the deficiency report category', example: 3 },
         status_id: { type: :integer, nullable: true, description: 'ID of the current status (open, in_progress, resolved, etc.)', example: 1 },
         location: { type: :string, nullable: true, description: 'Physical location or address of the deficiency', example: 'Main Street at 5th Avenue' },
@@ -45,6 +46,16 @@ module Schemas
         id: { type: :integer, description: 'Unique identifier for the category', example: 1 },
         name: { type: :string, description: 'The name of the deficiency report category', example: 'Infrastructure' },
         description: { type: :string, nullable: true, description: 'Description of what types of reports fit in this category', example: 'Reports about roads, bridges, utilities' },
+        default_responsible: {
+          type: :object,
+          nullable: true,
+          description: 'Officer or officer group new reports in this category are assigned to. Only returned to admin clients.',
+          properties: {
+            id: { type: :integer },
+            type: { type: :string, enum: ['DeficiencyReport::Officer', 'DeficiencyReport::OfficerGroup'] },
+            name: { type: :string }
+          }
+        },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the category was created', example: '2024-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the category was last modified', example: '2024-01-01T00:00:00Z' }
       },

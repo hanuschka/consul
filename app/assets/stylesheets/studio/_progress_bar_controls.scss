@@ -1,0 +1,98 @@
+// Layer that simple edit mode lays over a content block to carry a slider and
+// a color button per progress bar
+// (App.Studio.ContentBlocks.SimpleEditMode.ProgressBarEdit). Same stacking as
+// .studio-youtube-controls: in the block wrapper, above .custom-content-block.
+.studio-progress-bar-controls {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+// Sized to the bar's track by the editor.
+.studio-progress-bar-controls--control {
+  position: absolute;
+}
+
+// Half a thumb wider than the track on each side, so the thumb's center sits
+// on the end of the fill at every value. The track stays transparent: the
+// bar itself shows through.
+.studio-progress-bar-controls--slider {
+  --slider-height: 24px;
+  --thumb-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: calc(var(--thumb-size) / -2);
+  width: calc(100% + var(--thumb-size));
+  height: var(--slider-height);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-appearance: none;
+  appearance: none;
+
+  &::-webkit-slider-runnable-track {
+    height: var(--slider-height);
+    background: transparent;
+  }
+
+  &::-moz-range-track {
+    height: var(--slider-height);
+    background: transparent;
+  }
+
+  &::-webkit-slider-thumb {
+    width: var(--thumb-size);
+    height: var(--thumb-size);
+    margin-top: calc((var(--slider-height) - var(--thumb-size)) / 2);
+    background: #fff;
+    border: 2px solid var(--brand-color);
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.35);
+    transition: background-color 120ms ease-out;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  &::-moz-range-thumb {
+    box-sizing: border-box;
+    width: var(--thumb-size);
+    height: var(--thumb-size);
+    background: #fff;
+    border: 2px solid var(--brand-color);
+    border-radius: 50%;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.35);
+    transition: background-color 120ms ease-out;
+  }
+
+  &:hover::-webkit-slider-thumb {
+    background: #e8edf3;
+  }
+
+  &:hover::-moz-range-thumb {
+    background: #e8edf3;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: 2px;
+  }
+}
+
+// Below the bar's left end: the bottom right of a list row belongs to the
+// list editor's drag handle.
+.studio-progress-bar-controls--color {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  pointer-events: auto;
+}

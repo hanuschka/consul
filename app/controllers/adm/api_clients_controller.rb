@@ -151,7 +151,10 @@ class Adm::ApiClientsController < Adm::BaseController
     end
 
     def api_client_params
-      params.require(:api_client).permit(:name, :domain, :access_level, :service_user_email, :use_system_user)
+      params.require(:api_client).permit(
+        :name, :domain, :access_level, :service_user_email, :use_system_user,
+        :instance_configuration_access
+      )
     end
 
     def service_user_attributes

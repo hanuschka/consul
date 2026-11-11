@@ -142,7 +142,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       return unless user.last_stork_level.in?(VERIFYING_STORK_LEVELS)
 
       user.assign_attributes(attributes)
-      user.registered_address_id = attributes[:registered_address_id]
       unique_stamp = user.prepare_unique_stamp
 
       if unique_stamp.present? && user.stamp_unique?
@@ -180,8 +179,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user.assign_attributes(user_attributes_from(auth))
       end
 
+      new_user = @user.new_record?
+
       if save_user
         identity.update!(user: @user)
+        @user.send_welcome_email if new_user && @user.confirmed?
         preexisting_flash = flash[:notice]
         set_flash_message(:notice, :success, kind: provider_label(provider)) if is_navigational_format?
         flash[:notice] += " #{preexisting_flash}" if preexisting_flash
@@ -211,52 +213,19 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     def user_attributes_from(auth_data)
       return kobil_user_attributes_from(auth_data) if auth_data.try(:provider).to_s == "kobil"
 
+      raw_info = auth_data.extra&.raw_info
+
       user_attributes = {
-        first_name:              auth_data.info&.first_name&.capitalize,
-        last_name:               auth_data.info&.last_name&.capitalize,
-        gender:                  auth_data.extra&.raw_info&.gender,
-        date_of_birth:           (Date.parse(auth_data.extra.raw_info&.date_of_birth) rescue nil),
-        last_stork_level:        auth_data.extra&.raw_info&.verification_level,
-        city_name: auth_data.extra.raw_info.locality_name&.capitalize,
-        plz: auth_data.extra.raw_info.postal_code
-      }
+        first_name:       auth_data.info&.first_name&.capitalize,
+        last_name:        auth_data.info&.last_name&.capitalize,
+        gender:           raw_info&.gender,
+        date_of_birth:    (Date.parse(raw_info&.date_of_birth) rescue nil),
+        last_stork_level: raw_info&.verification_level
+      }.reject { |_, v| v.blank? }
 
-      full_street_address = auth_data.extra.raw_info.street_address
-      regex = /(?<street_name>[\p{L}\d\s,.-]+?)\s*(?<street_number>\d+)\s*(?<street_number_extension>[a-zA-Z\s]*)/
-      match = full_street_address&.match(regex)
-      registered_address = nil
-
-      if match
-        registered_address_city = RegisteredAddress::City.where(
-          "LOWER(name) = ?", auth_data.extra.raw_info.locality_name.downcase
-        ).first
-
-        registered_address_street = RegisteredAddress::Street.where(
-          "LOWER(name) = ? AND plz = ?",
-          match[:street_name].downcase.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
-          auth_data.extra.raw_info.postal_code
-        ).first
-
-        if registered_address_city && registered_address_street
-          registered_address = RegisteredAddress.find_by(
-            registered_address_city: registered_address_city.id,
-            registered_address_street: registered_address_street.id,
-            street_number: match[:street_number].strip,
-            street_number_extension: match[:street_number_extension].strip.presence
-          )
-        end
-
-        user_attributes.merge!(
-          {
-            registered_address_id: registered_address&.id,
-            street_name: match[:street_name].capitalize.gsub(/[,\s]+$/, "").gsub("ss", "ß"),
-            street_number: match[:street_number].strip,
-            street_number_extension: match[:street_number_extension].strip.presence,
-          }
-        )
-      end
-
-      user_attributes.reject { |_, v| v.blank? }
+      user_attributes.merge(
+        address_attributes_from(raw_info&.street_address, raw_info&.postal_code, raw_info&.locality_name)
+      )
     end
 
     def kobil_user_attributes_from(auth_data)
@@ -266,23 +235,19 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         first_name:    auth_data.info&.first_name&.capitalize,
         last_name:     auth_data.info&.last_name&.capitalize,
         date_of_birth: (Date.parse(raw_info&.birthdate.to_s) rescue nil)
-      }
+      }.reject { |_, v| v.blank? }
 
-      if Setting["feature.kobil_address_verification"].present?
-        user_attributes.merge!(kobil_address_attributes_from(raw_info))
-      end
+      return user_attributes if Setting["feature.kobil_address_verification"].blank?
 
-      user_attributes.reject { |_, v| v.blank? }
+      address = raw_info&.address || {}
+      user_attributes.merge(
+        address_attributes_from(address["street_address"], address["postal_code"], address["locality"])
+      )
     end
 
-    def kobil_address_attributes_from(raw_info)
-      address = raw_info&.address
-      return {} if address.blank?
+    def address_attributes_from(street_address, plz, city_name)
+      return {} if street_address.blank?
 
-      {
-        street_name: address["street_address"].presence&.capitalize,
-        plz:         address["postal_code"].presence,
-        city_name:   address["locality"].presence&.capitalize
-      }
+      RegisteredAddressServices::Matcher.call(street_address: street_address, plz: plz, city_name: city_name)
     end
 end

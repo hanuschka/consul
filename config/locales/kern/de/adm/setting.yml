@@ -1,11 +1,24 @@
 de:
   setting:
+    accessibility_report:
+      recipient_email: Empfänger-E-Mail-Adresse für Barrieremeldungen
+      recipient_email_description: "An diese Adresse werden alle Meldungen aus dem Formular „Barriere melden“ gesendet. Solange sie leer ist, gehen die Meldungen an alle Administratorinnen und Administratoren."
     handbook:
       url: Adresse des Nutzerhandbuchs
       url_description: "Legt die Adresse des Nutzerhandbuchs fest, das in allen Dashboards unter „Handbuch“ und in der Administration unter „Community“ angezeigt wird. Im Verwaltungsbereich erscheint in jedem Menü ganz unten der passende Eintrag, auf der Startseite der Administration zusätzlich eine Kachel. Die Adresse ist voreingestellt; lassen Sie das Feld leer, um Eintrag und Kachel auszublenden."
     proposals:
       email_on_official_answer: "E-Mail-Benachrichtigung bei offizieller Antwort (Vorschläge)"
       email_on_official_answer_description: "Versendet eine E-Mail an die einreichende Person, sobald zu ihrem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Die E-Mail enthält den Text der offiziellen Antwort sowie einen Link zum Vorschlag, auf der Vorschlagsseite selbst bleibt die Antwort wie bisher öffentlich sichtbar. Aktivieren Sie diese Einstellung, wenn Einreichende aktiv über die Rückmeldung der Verwaltung informiert werden sollen und nicht selbst auf die Plattform zurückkehren müssen."
+    email_templates:
+      welcome_email: "Willkommensmail"
+      welcome_email_description: "Sendet neu registrierten Nutzern nach der Bestätigung ihrer E-Mail-Adresse eine Willkommensmail. Betreff und Text legen Sie auf dieser Seite fest, die Mail erscheint in der üblichen Gestaltung der Systemmails. Aktivieren Sie die Funktion, wenn Sie neue Nutzer persönlich begrüßen und auf erste Schritte auf der Plattform hinweisen möchten."
+      recipient_greeting: "Anrede in System-E-Mails"
+      recipient_greeting_description: "Legt fest, wie die Variable {{ recipient_greeting }} die empfangende Person in angepassten System-E-Mails anspricht. Fehlen dafür Angaben im Nutzerkonto (Vorname, Nachname oder Geschlecht), wird automatisch eine passende Ersatzform verwendet, zuletzt der Nutzername. Vorlagen ohne diese Variable bleiben unverändert."
+      recipient_greeting_options:
+        username: "Nutzername (Hallo maxi84)"
+        first_name: "Vorname (Hallo Max)"
+        full_name: "Vor- und Nachname (Hallo Max Mustermann)"
+        formal: "Förmlich (Sehr geehrte Frau Mustermann)"
     feature:
       bund_id_login: "BundID-Anmeldung aktivieren"
       bund_id_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine BundID-Schaltfläche zur Anmeldung mit BundID-Konto. Die Wohnsitz-Verifizierung ist davon unabhängig. Aktivieren Sie es für Verwaltungskonten. Erfordert Zugangsdaten in der Serverkonfiguration."

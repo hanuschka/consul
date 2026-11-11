@@ -1,78 +1,49 @@
-<!-- BlockID: D03 Two-Column Split – Nummerierte Liste links, Erklärungen rechts -->
-<!-- Geeignet für: Kriterien mit Erläuterungen, Bewertungsgrundlagen, Regeln -->
+<!-- BlockID: D03 Liste mit Erklärungen - nummerierte Kriterien links, Erläuterungen rechts -->
+<!-- Geeignet für: Kriterien mit Erläuterungen, Bewertungsgrundlagen, Regeln, Glossar -->
+<!-- Editor: jedes Kriterium ist ein Listenelement mit Nummer, Titel und Erläuterung in einer Zeile, „Weiteres Element hinzufügen“ kopiert das letzte; die Nummer in der Kachel ist gesperrt und wird im Code-Modus geändert. -->
+<!-- Umbruch: am Handy steht die Erläuterung unter Nummer und Titel, ab etwa 600 px Breite Titel schmal links und Erläuterung breit rechts. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Kriterientitel = Theme-H4, Nummer, Einleitung und Text 1rem -->
 
-<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; padding: 32px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
-
-  <div style="font-size: 11px; font-weight: 600; color: var(--brand-color, #1779ba); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Bewertungskriterien</div>
-  <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; margin: 0 0 24px 0; letter-spacing: -0.3px;">So werden Vorschläge bewertet</h3>
-
-  <div class="row">
-
-    <!-- Linke Spalte: Nummerierte Kriterien -->
-    <div class="column small-12 medium-4">
-      <ol style="display: flex; flex-direction: column; gap: 8px; margin: 0 0 16px 0; padding: 0; list-style: none;">
-
-        <li style="display: flex; align-items: center; padding: 14px 16px; background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 10px; border: 1px solid rgba(255,255,255,0.85); font-size: 15px; color: #1a202c; font-weight: 600; transition: transform 0.2s ease;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='none'">
-          <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">1</div>
-          Umsetzbarkeit
-        </li>
-
-        <li style="display: flex; align-items: center; padding: 14px 16px; background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 10px; border: 1px solid rgba(255,255,255,0.85); font-size: 15px; color: #1a202c; font-weight: 600; transition: transform 0.2s ease;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='none'">
-          <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">2</div>
-          Bürgerwirkung
-        </li>
-
-        <li style="display: flex; align-items: center; padding: 14px 16px; background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 10px; border: 1px solid rgba(255,255,255,0.85); font-size: 15px; color: #1a202c; font-weight: 600; transition: transform 0.2s ease;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='none'">
-          <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">3</div>
-          Kosten &amp; Nutzen
-        </li>
-
-        <li style="display: flex; align-items: center; padding: 14px 16px; background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 10px; border: 1px solid rgba(255,255,255,0.85); font-size: 15px; color: #1a202c; font-weight: 600; transition: transform 0.2s ease;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='none'">
-          <div style="width: 28px; height: 28px; border-radius: 8px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0;">4</div>
-          Nachhaltigkeit
-        </li>
-
-      </ol>
-    </div>
-
-    <!-- Rechte Spalte: Erklärungen -->
-    <div class="column small-12 medium-8">
-      <div style="padding: 24px 28px; background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.9); margin-bottom: 16px;">
-
-        <div style="margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid #f0f1f3;">
-          <div style="display: flex; align-items: baseline; margin-bottom: 6px;">
-            <span style="font-size: 12px; font-weight: 700; color: var(--brand-color, #1779ba); margin-right: 8px;">01</span>
-            <h4 style="font-size: 15px; font-weight: 700; color: #1a202c; margin: 0;">Umsetzbarkeit</h4>
-          </div>
-          <p style="font-size: 14px; color: #6b7280; margin: 0; line-height: 1.6;">Ist der Vorschlag rechtlich, technisch und finanziell im Rahmen städtischer Möglichkeiten realisierbar?</p>
-        </div>
-
-        <div style="margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid #f0f1f3;">
-          <div style="display: flex; align-items: baseline; margin-bottom: 6px;">
-            <span style="font-size: 12px; font-weight: 700; color: var(--brand-color, #1779ba); margin-right: 8px;">02</span>
-            <h4 style="font-size: 15px; font-weight: 700; color: #1a202c; margin: 0;">Bürgerwirkung</h4>
-          </div>
-          <p style="font-size: 14px; color: #6b7280; margin: 0; line-height: 1.6;">Wie viele Menschen profitieren direkt? Wie stark verbessert sich die Lebensqualität?</p>
-        </div>
-
-        <div style="margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid #f0f1f3;">
-          <div style="display: flex; align-items: baseline; margin-bottom: 6px;">
-            <span style="font-size: 12px; font-weight: 700; color: var(--brand-color, #1779ba); margin-right: 8px;">03</span>
-            <h4 style="font-size: 15px; font-weight: 700; color: #1a202c; margin: 0;">Kosten &amp; Nutzen</h4>
-          </div>
-          <p style="font-size: 14px; color: #6b7280; margin: 0; line-height: 1.6;">Steht der Aufwand im angemessenen Verhältnis zum gesellschaftlichen Nutzen?</p>
-        </div>
-
-        <div>
-          <div style="display: flex; align-items: baseline; margin-bottom: 6px;">
-            <span style="font-size: 12px; font-weight: 700; color: var(--brand-color, #1779ba); margin-right: 8px;">04</span>
-            <h4 style="font-size: 15px; font-weight: 700; color: #1a202c; margin: 0;">Nachhaltigkeit</h4>
-          </div>
-          <p style="font-size: 14px; color: #6b7280; margin: 0; line-height: 1.6;">Trägt der Vorschlag zu Klimaschutz, sozialer Gerechtigkeit oder Ressourcenschonung bei?</p>
-        </div>
-
-      </div>
-    </div>
-
+<div style="background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 6px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-balance-scale" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">So werden Vorschläge bewertet</h3>
   </div>
+  <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 20px;">Vier Kriterien, nach denen die Fachämter jeden Vorschlag prüfen.</p>
+
+  <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+
+    <li style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22); padding: 16px 18px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 24px;">
+      <div style="flex: 1 1 11rem; min-width: 0; display: flex; align-items: center; gap: 12px;">
+        <span style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">1</span>
+        <h4 style="flex: 1 1 auto; min-width: 0; margin: 0; hyphens: auto; overflow-wrap: break-word;">Umsetzbarkeit</h4>
+      </div>
+      <p style="flex: 2 1 18rem; min-width: 0; font-size: 1rem; line-height: 1.6; margin: 0;">Ist der Vorschlag rechtlich, technisch und finanziell im Rahmen städtischer Möglichkeiten realisierbar?</p>
+    </li>
+
+    <li style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22); padding: 16px 18px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 24px;">
+      <div style="flex: 1 1 11rem; min-width: 0; display: flex; align-items: center; gap: 12px;">
+        <span style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">2</span>
+        <h4 style="flex: 1 1 auto; min-width: 0; margin: 0; hyphens: auto; overflow-wrap: break-word;">Bürgerwirkung</h4>
+      </div>
+      <p style="flex: 2 1 18rem; min-width: 0; font-size: 1rem; line-height: 1.6; margin: 0;">Wie viele Menschen profitieren direkt? Wie stark verbessert sich die Lebensqualität?</p>
+    </li>
+
+    <li style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22); padding: 16px 18px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 24px;">
+      <div style="flex: 1 1 11rem; min-width: 0; display: flex; align-items: center; gap: 12px;">
+        <span style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">3</span>
+        <h4 style="flex: 1 1 auto; min-width: 0; margin: 0; hyphens: auto; overflow-wrap: break-word;">Kosten &amp; Nutzen</h4>
+      </div>
+      <p style="flex: 2 1 18rem; min-width: 0; font-size: 1rem; line-height: 1.6; margin: 0;">Steht der Aufwand im angemessenen Verhältnis zum gesellschaftlichen Nutzen?</p>
+    </li>
+
+    <li style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22); padding: 16px 18px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 24px;">
+      <div style="flex: 1 1 11rem; min-width: 0; display: flex; align-items: center; gap: 12px;">
+        <span style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">4</span>
+        <h4 style="flex: 1 1 auto; min-width: 0; margin: 0; hyphens: auto; overflow-wrap: break-word;">Nachhaltigkeit</h4>
+      </div>
+      <p style="flex: 2 1 18rem; min-width: 0; font-size: 1rem; line-height: 1.6; margin: 0;">Trägt der Vorschlag zu Klimaschutz, sozialer Gerechtigkeit oder Ressourcenschonung bei?</p>
+    </li>
+
+  </ol>
 </div>

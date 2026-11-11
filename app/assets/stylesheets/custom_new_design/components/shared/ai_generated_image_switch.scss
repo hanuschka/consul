@@ -11,18 +11,21 @@
   gap: 8px;
 }
 
-// Inside the upload bar the switch becomes its left segment, divided from the
-// caption field by a hairline.
+// Inside the upload bar the switch becomes a segment of its own: a full-width
+// line above the caption field on a narrow bar, its left segment once both fit
+// on one line. The caption field draws the hairline between them.
 .image-upload-meta-row .ai-generated-image-switch {
-  flex: 0 0 auto;
+  flex: 1 1 100%;
   padding: 8px 14px;
-  border-right: 1px solid #d5d5d5;
   background: #f4f4f4;
+
+  @container image-upload-meta-row (min-width: 28rem) {
+    flex: 0 0 auto;
+  }
 }
 
 // A bar with no caption field (the deficiency report form) is the segment alone,
-// so it drops the divider and the segment tint.
+// so it drops the segment tint.
 .image-upload-meta-row:not(:has(.image-upload-credits-input)) .ai-generated-image-switch {
-  border-right: 0;
   background: transparent;
 }

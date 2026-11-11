@@ -61,7 +61,7 @@ end
       tags 'Livestreams'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve all livestream events scheduled for a projekt phase. Livestreams are real-time video broadcasts used for Q&A sessions, town halls, and participation events. Includes video platform information and streaming URLs.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve all livestream events scheduled for a projekt phase. Livestreams are real-time video broadcasts used for Q&A sessions, town halls, and participation events. Includes video platform information and streaming URLs. Clients with `public_data` access get 403 for a phase that is inactive or hidden in the frontend.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
@@ -98,6 +98,20 @@ end
                  pagination: Schemas::Miscellaneous::PAGINATION_RESPONSE_SCHEMA
                },
                required: ['data']
+
+        run_test!
+      end
+
+      response '403', 'phase hidden from public_data clients' do
+        let(:projekt_phase_id) do
+          Projekt.create!(name: 'Hidden').projekt_phases.create!(
+            type: 'ProjektPhase::LivestreamPhase', active: true, frontend_visibility: false
+          ).id
+        end
+
+        before { api_client.update!(access_level: :public_data) }
+
+        schema ApiResponseExamples::ERROR_SCHEMA
 
         run_test!
       end
@@ -187,9 +201,37 @@ end
       tags 'Livestreams'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a paginated list of all livestreams across all projekt phases.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a paginated list of all livestreams across all projekt phases. Clients with `public_data` access only see livestreams of phases that are active and visible in the frontend.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
+
+      response '200', 'livestreams of hidden or inactive phases left out for public_data clients' do
+        let(:visible_phase) do
+          Projekt.create!(name: 'Visible').projekt_phases.create!(type: 'ProjektPhase::LivestreamPhase', active: true)
+        end
+        let(:hidden_phase) do
+          Projekt.create!(name: 'Hidden').projekt_phases.create!(
+            type: 'ProjektPhase::LivestreamPhase', active: true, frontend_visibility: false
+          )
+        end
+        let(:inactive_phase) do
+          Projekt.create!(name: 'Inactive').projekt_phases.create!(type: 'ProjektPhase::LivestreamPhase', active: false)
+        end
+
+        before do
+          api_client.update!(access_level: :public_data)
+
+          [[visible_phase, 'Visible'], [hidden_phase, 'Hidden'], [inactive_phase, 'Inactive']].each do |phase, title|
+            phase.projekt_livestreams.create!(url: 'https://example.com/live', title: title, video_platform: 'youtube')
+          end
+        end
+
+        run_test! do |response|
+          titles = JSON.parse(response.body)['data']['projekt_livestreams'].map { |livestream| livestream['title'] }
+
+          expect(titles).to eq(['Visible'])
+        end
+      end
 
       response '200', 'projekt livestreams found' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }

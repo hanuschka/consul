@@ -24,6 +24,8 @@ module Schemas
         longitude: { type: :number, description: 'Geographic longitude coordinate', example: -74.0060 },
         category_id: { type: :integer, nullable: true, description: 'ID of the point of interest category', example: 5 },
         projekt_phase_id: { type: :integer, description: 'ID of the projekt phase this pin belongs to', example: 12 },
+        author_id: { type: :integer, nullable: true, description: 'ID of the user who created the pin. Only returned to admin clients.', example: 15 },
+        author: { '$ref' => '#/components/schemas/Author' },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the pin was created', example: '2024-01-05T10:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the pin was last modified', example: '2024-01-12T11:30:00Z' },
         category: {

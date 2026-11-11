@@ -1,27 +1,34 @@
-<div style="border: 1px solid #e6e9ed; border-radius: 14px; overflow: hidden; background: #ffffff;">
-  <div style="display: flex; flex-wrap: wrap;">
-    <div class="projekt-map-embed js-projekt-map-embed js-content-block-element-not-editable" data-controller="projekt-map-embed" style="flex: 1 1 320px; height: 380px; border-radius: 14px 0 0 14px;">
+<!-- BlockID: Projekt Karten - Karte und Text (Split) mit Eckdaten und Button -->
+<!-- Geeignet für: Karte mit Erklärung, Steckbrief eines Gebiets, Einstieg in eine Kartenbeteiligung -->
+<!-- Der Kartenbereich wird auf der Projektseite zur echten interaktiven Karte; Platzhalter, Klassen und Kartenhöhe im Kartenbereich nicht ändern (die Höhe stellt der Editor ein). -->
+<!-- Editor: die Eckdaten sind Listenelemente, „Weiteres Element hinzufügen“ kopiert das letzte; Symbol über die Klasse fa-… tauschen, nur im Code-Modus. -->
+<!-- Umbruch: Karte links und Text rechts auf breiten Bildschirmen, unter etwa 600 px steht die Karte über dem Text. Die Karte sitzt mit Innenabstand im Rahmen, damit ihre Ecken in beiden Anordnungen passen. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H3, Etikett, Text, Eckdaten und Button 1rem, Eckdaten über Gewicht -->
+
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; padding: clamp(12px, 2.5vw, 20px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 16px; align-items: center;">
+    <div class="projekt-map-embed js-projekt-map-embed js-content-block-element-not-editable" data-controller="projekt-map-embed" style="height: 380px; border-radius: 8px;">
       <span class="projekt-map-embed--placeholder" aria-hidden="true">
         <i class="fas fa-map-marker-alt projekt-map-embed--pin"></i>
         <span class="projekt-map-embed--label">Kartenansicht</span>
       </span>
       {{projekt_map}}
     </div>
-    <div style="flex: 1 1 360px; padding: 28px; display: flex; flex-direction: column; justify-content: center;">
-      <div style="color: var(--brand-color, #1779ba); font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px;">Planungsgebiet Innenstadt</div>
-      <h3 style="color: #1f2a37; font-size: 21px; font-weight: 700; line-height: 1.3; margin: 0 0 12px;">So verändert sich Ihr Stadtviertel</h3>
-      <p style="color: #5b6573; font-size: 16px; line-height: 1.6; margin: 0 0 20px;">Die Karte zeigt geplante Maßnahmen zu Überflutungsschutz, Begrünung und Hitzeentlastung — und wo Ihre Anregungen besonders gefragt sind.</p>
-      <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 22px; padding-top: 16px; border-top: 1px solid #eef1f5;">
-        <div>
-          <div style="color: #1f2a37; font-size: 18px; font-weight: 700; line-height: 1;">8,4 km²</div>
-          <div style="color: #8a94a6; font-size: 14px; margin-top: 4px;">Planungsgebiet</div>
-        </div>
-        <div>
-          <div style="color: #1f2a37; font-size: 18px; font-weight: 700; line-height: 1;">12.400</div>
-          <div style="color: #8a94a6; font-size: 14px; margin-top: 4px;">Betroffene Adressen</div>
-        </div>
-      </div>
-      <a href="#" class="button" style="margin: 0; align-self: flex-start; min-height: 44px; display: inline-flex; align-items: center; gap: 8px;">Karte erkunden</a>
+    <div style="padding: 8px 4px; padding: clamp(4px, 1.5vw, 16px);">
+      <span style="display: inline-flex; align-items: center; gap: 8px; background: #dce8f4; background: color-mix(in srgb, var(--brand-color, #1779ba) 16%, #ffffff); color: var(--brand-color, #1779ba); border-radius: 999px; padding: 2px 14px; margin: 0 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 700;"><i class="fas fa-map-marker-alt" aria-hidden="true" style="font-size: 13px;"></i> Planungsgebiet Innenstadt</span>
+      <h3 style="margin: 0 0 8px; hyphens: auto; overflow-wrap: break-word;">So verändert sich Ihr Stadtviertel</h3>
+      <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 16px;">Die Karte zeigt geplante Maßnahmen zu Überflutungsschutz, Begrünung und Hitzeentlastung – und wo Ihre Anregungen besonders gefragt sind.</p>
+      <ul style="list-style: none; margin: 0 0 18px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: 10px;">
+        <li style="display: flex; align-items: center; gap: 12px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 12px 14px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+          <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-draw-polygon" style="font-size: 16px;"></i></span>
+          <div style="flex: 1 1 auto; min-width: 0;"><span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">8,4 km²</span><span style="display: block; font-size: 1rem; line-height: 1.6;">Planungsgebiet</span></div>
+        </li>
+        <li style="display: flex; align-items: center; gap: 12px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 12px 14px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+          <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-home" style="font-size: 16px;"></i></span>
+          <div style="flex: 1 1 auto; min-width: 0;"><span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">12.400</span><span style="display: block; font-size: 1rem; line-height: 1.6;">Betroffene Adressen</span></div>
+        </li>
+      </ul>
+      <a href="#" class="button" style="text-decoration: none; width: 100%; max-width: 18rem; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Karte erkunden</a>
     </div>
   </div>
 </div>

@@ -257,7 +257,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   end
 
   def audits
-    @deficiency_report = DeficiencyReport.find(params[:id])
+    @deficiency_report = DeficiencyReport.with_hidden.find(params[:id])
     authorize @deficiency_report, :show?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     @breadcrumbs = [
@@ -283,7 +283,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   end
 
   def feedback_form
-    @deficiency_report = DeficiencyReport.find(params[:id])
+    @deficiency_report = DeficiencyReport.with_hidden.find(params[:id])
     authorize @deficiency_report, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     @feedback_form = @deficiency_report.feedback_form

@@ -106,4 +106,23 @@ describe DeficiencyReportMailer do
       )
     end
   end
+
+  describe "officer notification greeting" do
+    it "greets the officer personally" do
+      officer = create(:deficiency_report_officer)
+
+      body = DeficiencyReportMailer.notify_officer(report, officer).body.encoded
+
+      expect(body).to include("#{officer.user.recipient_greeting},")
+    end
+
+    it "greets the group mailbox without a name" do
+      group = create(:deficiency_report_officer_group, default_email: "gruenflaechen@example.org")
+      report.update!(responsible: group)
+
+      body = DeficiencyReportMailer.notify_default_officer_group_email(report).body.encoded
+
+      expect(body).to include("#{I18n.t("mailer.recipient_greeting.without_name", locale: :de)},")
+    end
+  end
 end

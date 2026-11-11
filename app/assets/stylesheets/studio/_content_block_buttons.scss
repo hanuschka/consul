@@ -125,6 +125,22 @@
   }
 }
 
+// Destructive action shown as such at rest (remove link, reset period):
+// red tint instead of the grey default the plain -red variant keeps.
+.studio-edit-button.-red.-with-background {
+  color: #b91c1c;
+  background-color: #fee2e2;
+
+  &:hover {
+    color: #991b1b;
+    background-color: #fecaca;
+  }
+
+  &:active {
+    background-color: #fdb4b4;
+  }
+}
+
 // =============================================================================
 // Icon-Only-Buttons (Mode-Switch, Format-Tools, Block-Actions) — 32x32
 // =============================================================================

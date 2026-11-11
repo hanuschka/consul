@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import AjaxFetch from "../../shared/ajax_fetch"
+import SUBMIT_STAGE_PERCENTS from "./submit_stage_percents"
 
 const INITIAL_PROGRESS_DELAY = 1200
 const INITIAL_PROGRESS_PERCENT = 20
@@ -7,8 +8,10 @@ const INITIAL_PROGRESS_PERCENT = 20
 // Polls a projekt-import's status endpoint and advances the analysis progress UI,
 // redirecting to the chat once analysis is ready. Drives the dedicated loading
 // screen used both right after upload and when resuming an in-flight import, so a
-// page reload never loses analysis progress. On failure it reloads to let the
-// server render the failed/stalled detail screen.
+// page reload never loses analysis progress. A copied Consul projekt has no chat
+// to show its final import over, so this screen follows that import too and
+// reloads once it is done, letting the server send the admin on to the projekt.
+// On failure it reloads to let the server render the failed/stalled detail screen.
 export default class extends Controller {
   static targets = ["progressLabel", "progressFill"]
 
@@ -18,7 +21,8 @@ export default class extends Controller {
     pollInterval: { type: Number, default: 2000 },
     progressExtracting: String,
     progressProcessing: String,
-    progressChatting: String
+    progressChatting: String,
+    submitProgressLabels: { type: Object, default: {} }
   }
 
   connect() {
@@ -83,6 +87,15 @@ export default class extends Controller {
         this.advance(this.progressChattingValue, 100)
         window.location.href = data.review_url || this.reviewUrlValue
         break
+      case "submitting":
+        this.advanceSubmitStage(data.submit_stage)
+        this.schedulePoll()
+        break
+      case "completed":
+        this.clearPollTimer()
+        this.setProgress(100)
+        window.location.reload()
+        break
       case "failed":
         this.clearPollTimer()
         window.location.reload()
@@ -92,13 +105,28 @@ export default class extends Controller {
     }
   }
 
+  // A stage that is not known here (a poll that raced ahead of a deploy) keeps
+  // whatever the bar last showed rather than blanking it.
+  advanceSubmitStage(stage) {
+    const stageKey = stage || "queued"
+    const percent = SUBMIT_STAGE_PERCENTS[stageKey]
+
+    if (percent === undefined) return
+
+    this.advance(this.submitProgressLabelsValue[stageKey] || "", percent)
+  }
+
+  // The bar only moves forward: the opening step already sits past the
+  // final import's "queued" position.
   advance(label, percent) {
     if (this.hasProgressLabelTarget) this.progressLabelTarget.textContent = label
 
-    this.setProgress(percent)
+    this.setProgress(Math.max(percent, this.progressPercent))
   }
 
   setProgress(percent) {
+    this.progressPercent = percent
+
     if (this.hasProgressFillTarget) {
       this.progressFillTarget.style.width = `${Math.max(0, Math.min(100, percent))}%`
     }

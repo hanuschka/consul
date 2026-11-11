@@ -143,11 +143,11 @@ describe NotificationServiceMailer do
       registered = SiteCustomization::EmailTemplate::EMAIL_TEMPLATES
                      .dig("NotificationServiceMailer#overdue_deficiency_reports_overview", :variables)
 
-      expect(registered).to match_array %w[officer_name overdue_count fresh_count]
+      expect(registered).to match_array %w[recipient_greeting overdue_count fresh_count]
     end
 
     it "has its copy translated in every locale the email is sent in" do
-      keys = %i[subject hi p1_s p1_p fresh_badge fresh_hint no_responsible]
+      keys = %i[subject p1_s p1_p fresh_badge fresh_hint no_responsible]
 
       %i[en de].each do |locale|
         keys.each do |key|
@@ -229,6 +229,33 @@ describe NotificationServiceMailer do
 
       expect(body).to include "/adm/users"
       expect(body).not_to include "/admin/users"
+    end
+  end
+
+  describe "#new_contribution_comment" do
+    let(:admin) { create(:administrator).user }
+    let(:comment) { create(:comment, commentable: create(:proposal), body: "Tolle Idee") }
+
+    it "uses the default text" do
+      mail = described_class.new_contribution_comment(admin.id, comment.id)
+
+      expect(mail.subject).to eq I18n.t("custom.notification_service_mailers.new_contribution_comment.subject")
+      expect(mail.body.encoded).to include("Tolle Idee")
+    end
+
+    it "uses the global template" do
+      SiteCustomization::EmailTemplate.create!(
+        mailer_class: "NotificationServiceMailer",
+        mailer_action: "new_contribution_comment",
+        locale: admin.locale,
+        subject: "Neuer Kommentar",
+        body: "<p>Kommentar: {{ comment_body }}</p>"
+      )
+
+      mail = described_class.new_contribution_comment(admin.id, comment.id)
+
+      expect(mail.subject).to eq "Neuer Kommentar"
+      expect(mail.body.encoded).to include("Kommentar: Tolle Idee")
     end
   end
 end

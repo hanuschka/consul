@@ -122,6 +122,7 @@ end
 
 every 1.day, at: "4:45 am", roles: [:cron] do
   rake "machine_translation:setting_cleanup"
+  rake "machine_translation:chrome_cleanup"
 end
 
 every 1.day, at: "3:00 am", roles: [:cron] do

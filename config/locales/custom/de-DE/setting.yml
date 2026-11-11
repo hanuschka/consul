@@ -55,6 +55,8 @@ de:
           enable_google_translate_description: "Bevor Sie Google Translate aktivieren, stimmen Sie bitte den Nutzungsbedingungen unter folgendem Link zu: https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform"
           show_guest_login_links: Zeige Gast-Login an
           show_guest_login_links_description: Zeigt den Gast-Login-Link in der Fußzeile
+          sms_login: Teilnahme per SMS-Code
+          sms_login_description: Bietet abgemeldeten Besuchern an Beteiligungsaktionen die Anmeldung per SMS-Code an
         gdpr:
           gdpr_conformity: DSGVO-konforme Voreinstellungen
           gdpr_conformity_description: "Aktivieren Sie die DSGVO-konforme Voreinstellungen, um \"privacy by design\" zu gewähren"

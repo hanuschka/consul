@@ -421,6 +421,7 @@ class Setting < ApplicationRecord
         # "extended_feature.general.enable_old_design": true,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
+        "extended_feature.general.sms_login": false,
         # "extended_feature.general.homepage_projekt_search": false,
 
         "extended_option.general.launch_date": "",

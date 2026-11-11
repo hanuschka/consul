@@ -1,0 +1,4 @@
+en:
+  sms_sign_in:
+    message: "Your sign-in code for %{platform}: %{code}. Valid for %{minutes} minutes."
+    username_prefix: Participant

@@ -1,0 +1,4 @@
+de:
+  sms_sign_in:
+    message: "Ihr Anmeldecode für %{platform}: %{code}. Gültig für %{minutes} Minuten."
+    username_prefix: Teilnehmer

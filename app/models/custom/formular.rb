@@ -11,7 +11,9 @@ class Formular < ApplicationRecord
   end
 
   def submissions_limit_reached_for?(user)
-    limit = projekt_phase.settings.find_by(key: "option.general.submissions_limit").value.to_i
+    limit = projekt_phase.settings.find_by(key: "option.general.submissions_limit")&.value.to_i
+    return false if limit < 1
+
     formular_answers.where(submitter_id: user.id).count >= limit
   end
 end

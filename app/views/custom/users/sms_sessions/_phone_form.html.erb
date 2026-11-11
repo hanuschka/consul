@@ -1,0 +1,38 @@
+<% id_prefix = remote ? "sms-sign-in-modal-" : "" %>
+<% help_text_id = "#{id_prefix}phone-help-text" %>
+<% has_message = flash[:alert].present? || flash[:notice].present? %>
+<% message_id = "sms-sign-in-modal-message" if remote && has_message %>
+
+<h2 id="sms-sign-in-title"><%= t("sms_sign_in.new.title") %></h2>
+<p><%= t("sms_sign_in.new.intro") %></p>
+
+<div class="auth-page-template--divider"></div>
+
+<%= render "users/sms_sessions/modal_messages" if remote %>
+
+<%= form_with url: sms_sign_in_path, method: :post, local: !remote do %>
+  <%= label_tag :phone, t("sms_sign_in.new.phone_label"),
+                for: "#{id_prefix}phone", class: "auth-page-template--field-label" %>
+  <span class="help-text" id="<%= help_text_id %>"><%= t("sms_sign_in.new.phone_hint") %></span>
+  <%= telephone_field_tag :phone,
+                          @phone_input,
+                          id: "#{id_prefix}phone",
+                          autocomplete: "tel",
+                          inputmode: "tel",
+                          required: true,
+                          autofocus: !remote,
+                          aria: { describedby: [help_text_id, message_id].compact.join(" "),
+                                  invalid: @phone_invalid || nil } %>
+
+  <p>
+    <small>
+      <%= t("sms_sign_in.new.terms_html",
+            terms_link: link_to(t("sms_sign_in.new.terms_link"), "/conditions",
+                                target: "_blank", rel: "noopener"),
+            privacy_link: link_to(t("sms_sign_in.new.privacy_link"), "/privacy",
+                                  target: "_blank", rel: "noopener")) %>
+    </small>
+  </p>
+
+  <%= submit_tag t("sms_sign_in.new.submit"), class: "button expanded" %>
+<% end %>

@@ -185,4 +185,84 @@ describe "Sign-in with SMS code", type: :request do
 
     expect(response).to redirect_to(root_path)
   end
+
+  describe "in the modal" do
+    def js_get(path, params = {})
+      get path, params: params, xhr: true, headers: { "Accept" => "text/javascript" }
+    end
+
+    def js_post(path, params = {})
+      post path, params: params, xhr: true, headers: { "Accept" => "text/javascript" }
+    end
+
+    it "opens the number form" do
+      js_get new_sms_sign_in_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.media_type).to eq "text/javascript"
+      expect(response.body).to include("sms-sign-in-modal")
+      expect(response.body).to include("phone")
+    end
+
+    it "shows the number error in the modal" do
+      js_post sms_sign_in_path, phone: "+34 612345678"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("sms_sign_in.errors.invalid_phone"))
+      expect(Sms::Adapters::Log.deliveries).to be_empty
+    end
+
+    it "switches to the code form once the code is sent" do
+      js_post sms_sign_in_path, phone: "0171 1234567"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("one-time-code")
+      expect(Sms::Adapters::Log.deliveries.size).to eq 1
+    end
+
+    it "shows a wrong code in the modal" do
+      js_post sms_sign_in_path, phone: "0171 1234567"
+      js_post sms_sign_in_code_path, code: "000000"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(I18n.t("sms_sign_in.errors.invalid_code"))
+      expect(signed_in?).to be false
+    end
+
+    it "signs in and reloads the page" do
+      js_post sms_sign_in_path, phone: "0171 1234567"
+      js_post sms_sign_in_code_path, code: sent_code
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("window.location.reload()")
+      expect(signed_in?).to be true
+    end
+
+    it "signs in and goes to the intended path" do
+      js_get new_sms_sign_in_path, intended_path: CGI.escape("/proposals/new")
+      js_post sms_sign_in_path, phone: "0171 1234567"
+      js_post sms_sign_in_code_path, code: sent_code
+
+      expect(response.body).to include("/proposals/new")
+      expect(response.body).not_to include("window.location.reload()")
+      expect(session["user_return_to"]).to be_nil
+    end
+
+    it "does not redirect to another host" do
+      js_get new_sms_sign_in_path, intended_path: CGI.escape("//evil.example/path")
+      js_post sms_sign_in_path, phone: "0171 1234567"
+      js_post sms_sign_in_code_path, code: sent_code
+
+      expect(response.body).not_to include("evil.example")
+    end
+
+    it "does not carry an intended path over to a later sign-in" do
+      js_get new_sms_sign_in_path, intended_path: CGI.escape("/proposals/new")
+      js_get new_sms_sign_in_path
+      js_post sms_sign_in_path, phone: "0171 1234567"
+      js_post sms_sign_in_code_path, code: sent_code
+
+      expect(response.body).to include("window.location.reload()")
+    end
+  end
 end

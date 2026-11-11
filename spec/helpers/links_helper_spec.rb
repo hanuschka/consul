@@ -20,7 +20,7 @@ describe LinksHelper do
       link = helper.link_to_sms_signin(intended_path: "/proposals/new", class: "probe")
 
       expect(link).to include(new_sms_sign_in_path(intended_path: "/proposals/new"))
-      expect(link).to include('class="probe"')
+      expect(link).to include('class="probe js-sms-sign-in"')
     end
   end
 end

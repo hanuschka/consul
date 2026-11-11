@@ -32,6 +32,7 @@ module LinksHelper
 
     query_params = options.slice(*query_params_keys)
     options = options.delete_if { |key, _| query_params_keys.include?(key) }
+    options[:class] = [options[:class], "js-sms-sign-in"].compact.join(" ")
     t("sms_sign_in.hint.text_html",
       link: link_to(t("sms_sign_in.hint.link"), new_sms_sign_in_path(query_params), options))
   end

@@ -2,31 +2,6 @@
 
 <%= render Auth::AuthPageTemplateComponent.new do |c| %>
   <% c.with_form do %>
-    <h2><%= t("sms_sign_in.new.title") %></h2>
-    <p><%= t("sms_sign_in.new.intro") %></p>
-
-    <div class="auth-page-template--divider"></div>
-
-    <%= form_with url: sms_sign_in_path, method: :post, local: true do %>
-      <%= label_tag :phone, t("sms_sign_in.new.phone_label"), class: "auth-page-template--field-label" %>
-      <span class="help-text" id="phone-help-text"><%= t("sms_sign_in.new.phone_hint") %></span>
-      <%= telephone_field_tag :phone,
-                              @phone_input,
-                              autocomplete: "tel",
-                              inputmode: "tel",
-                              required: true,
-                              autofocus: true,
-                              aria: { describedby: "phone-help-text", invalid: @phone_invalid || nil } %>
-
-      <p>
-        <small>
-          <%= t("sms_sign_in.new.terms_html",
-                terms_link: link_to(t("sms_sign_in.new.terms_link"), "/conditions", target: "_blank", rel: "noopener"),
-                privacy_link: link_to(t("sms_sign_in.new.privacy_link"), "/privacy", target: "_blank", rel: "noopener")) %>
-        </small>
-      </p>
-
-      <%= submit_tag t("sms_sign_in.new.submit"), class: "button expanded" %>
-    <% end %>
+    <%= render "users/sms_sessions/phone_form", remote: false %>
   <% end %>
 <% end %>

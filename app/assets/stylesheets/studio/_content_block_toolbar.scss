@@ -156,6 +156,12 @@
     .custom-content-block--toolbar {
       display: flex;
       outline: 1px solid #c9dced;
+
+      // Always shown here, so the hover bridge would only swallow clicks on
+      // the controls floating just above the block (the link pencil).
+      &::after {
+        display: none;
+      }
     }
 
     .custom-content-block--toolbar-row {

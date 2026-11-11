@@ -54,15 +54,16 @@
   margin-bottom: 0;
 }
 
-// While a block is empty, at rest and in simple edit mode (the pencil), the hint
-// and the editable body share one grid cell: the block is as tall as the taller
-// of the two. The pencil only makes the hint invisible (its box stays) and the
-// stretched body lies over its area, so the block keeps its height without
-// measuring anything, at any width. AI and code edit modes add their own panel
-// to the block, so they keep the plain flow and drop the hint as before. The
-// empty marker sits on a `.content-block-empty-hint-wrap` (site blocks), on the
-// wrapper itself (projekt-page blocks, below) or on a `.sidebar-card` whose hint
-// `moveEmptyHintIntoWrapper` moved into the block (sidebar_card.scss).
+// While a block is empty, at rest and in simple edit mode (the pencil), the
+// hint and the editable body share one grid cell: the block is as tall as the
+// taller of the two. The pencil only makes the hint invisible (its box stays)
+// and the stretched body lies over its area, so the block keeps its height
+// without measuring anything, at any width. AI and code edit modes add their
+// own panel to the block, so they keep the plain flow and drop the hint as
+// before. The empty marker sits on a `.content-block-empty-hint-wrap` (site
+// blocks), on the wrapper itself (projekt-page blocks, below) or on a
+// `.sidebar-card` whose hint `moveEmptyHintIntoWrapper` moved into the block
+// (sidebar_card.scss).
 .content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper:not(.-in-edit-mode) > .custom-content-block-wrapper--inner,
 .content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper.-simple-edit-mode > .custom-content-block-wrapper--inner,
 .custom-content-block-wrapper.is-content-empty:not(.-in-edit-mode) > .custom-content-block-wrapper--inner,

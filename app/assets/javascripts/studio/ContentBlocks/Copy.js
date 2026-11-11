@@ -31,9 +31,7 @@ App.Studio.ContentBlocks.Copy = {
     clone.querySelectorAll(".js-content-block--list-control").forEach((el) => el.remove());
 
     clone.querySelectorAll(".js-content-block-link-wrapper").forEach((wrapper) => {
-      const link = wrapper.querySelector("a");
-      if (link) wrapper.parentNode.insertBefore(link, wrapper);
-      wrapper.remove();
+      App.Studio.ContentBlocks.SimpleEditMode.LinkEdit.removeLinkControls(wrapper)
     });
 
     clone.querySelectorAll("a.js-content-block-disable-link-click").forEach((a) => {

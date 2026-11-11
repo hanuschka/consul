@@ -1,5 +1,6 @@
 App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
   PAN_MIN_OVERFLOW: 1,
+  RESIZE_MIN_DRAG: 3,
 
   contentBlockImageLoadingState: {},
   activeImg: null,
@@ -444,6 +445,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
       corner: e.currentTarget.dataset.corner,
       startY: e.clientY,
       originalHeight: rect.height,
+      hasMoved: false,
     }
 
     document.body.style.cursor = this.getCursorForCorner(e.currentTarget.dataset.corner)
@@ -455,6 +457,13 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
 
     const { corner, startY, originalHeight } = this.dragState
     const deltaY = e.clientY - startY
+
+    if (Math.abs(deltaY) >= this.RESIZE_MIN_DRAG) {
+      this.dragState.hasMoved = true
+    }
+
+    if (!this.dragState.hasMoved) return
+
     let newHeight
 
     if (corner === "bottom-right" || corner === "bottom-left") {
@@ -634,19 +643,16 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
   },
 
   finishImageLoading(img, contentBlockWrapper, contentBlockId) {
-    img.style.objectFit = "cover"
+    this.preventImageStretch(img)
     img.style.objectPosition = ""
 
-    img.style.height = ""
-    img.removeAttribute("height")
-
-    const newHeight = img.clientHeight || img.naturalHeight
-
-    img.height = newHeight
-    img.dataset.originalThumbHeight = newHeight
-    img.style.height = `${newHeight}px`
-
     this.releaseImageLoading(contentBlockWrapper, contentBlockId)
+  },
+
+  preventImageStretch(img) {
+    if (getComputedStyle(img).objectFit !== "fill") return
+
+    img.style.objectFit = "cover"
   },
 
   releaseImageLoading(contentBlockWrapper, contentBlockId) {

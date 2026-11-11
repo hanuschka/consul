@@ -47,6 +47,7 @@
     App.Studio.ContentBlocks.Copy.initialize();
     App.Studio.ContentBlocks.EmptyHintToggle.initialize();
     App.Studio.ContentBlocks.Visibility.initialize();
+    App.Studio.ContentBlocks.ToolbarViewportClamp.initialize();
 
     window.studioContentBlockModulesInitialized = true;
   };

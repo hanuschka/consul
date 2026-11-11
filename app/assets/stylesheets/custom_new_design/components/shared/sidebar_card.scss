@@ -288,6 +288,14 @@ $brand-tint-24: color-mix(in srgb, var(--brand-color) 24%, transparent);
   display: flex;
 }
 
+// For admins the studio moves the hint into the block wrapper
+// (`moveEmptyHintIntoWrapper`), where it shares a grid cell with the editable
+// body (_content_block_empty_hint.scss): in simple edit mode it only turns
+// invisible, so the card keeps its height.
+.sidebar-card.is-content-empty .custom-content-block-wrapper.-simple-edit-mode .sidebar-card--admin-empty-hint {
+  visibility: hidden;
+}
+
 // When empty, the admin hint stands in for the content, so collapse the empty
 // editable body — otherwise it keeps its studio min-height and leaves a gap
 // below the hint, splitting the hint and the block apart. Mirrors the studio

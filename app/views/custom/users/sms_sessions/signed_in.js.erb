@@ -1,0 +1,5 @@
+<% if @redirect_path.present? && @redirect_path.match?(%r{\A/(?![/\\])}) %>
+window.location.href = <%= raw @redirect_path.to_json %>;
+<% else %>
+window.location.reload();
+<% end %>

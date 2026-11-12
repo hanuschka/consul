@@ -71,9 +71,13 @@ de:
         resend_sms_text: Haben Sie keine Nachricht mit einem Bestätigungscode erhalten?
         submit_button: Senden
         title: Sicherheitscode bestätigen
+      errors:
+        delivery_failed: Die SMS konnte nicht versendet werden. Bitte versuchen Sie es später erneut.
+        not_german_mobile: Bitte geben Sie eine deutsche Handynummer ein, zum Beispiel 0171 1234567 oder +49 171 1234567.
+      message: "Ihr Bestätigungscode lautet: %{code}"
       new:
         phone: Geben Sie Ihre Handynummer ein, um den Code zu erhalten
-        phone_format: "<strong>-<em>(Beispiel: 612345678 oder +34612345678)</em></strong>"
+        phone_format: "<strong>-<em>(Beispiel: 0171 1234567 oder +49 171 1234567)</em></strong>"
         phone_note: Wir verwenden Ihre Telefonnummer ausschließlich dafür Ihnen einen Code zu schicken, niemals um Sie zu kontaktieren.
         submit_button: Senden
         title: Bestätigungscode senden

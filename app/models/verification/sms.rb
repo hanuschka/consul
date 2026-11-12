@@ -4,27 +4,37 @@ class Verification::Sms
   attr_accessor :user, :phone, :confirmation_code
 
   validates :phone, presence: true
-  validates :phone, format: { with: /\A[\d \+]+\z/ }
+  validate :german_mobile_phone
   validate :uniqness_phone
 
+  def german_mobile_phone
+    return if phone.blank? || normalized_phone.present?
+
+    errors.add(:base, I18n.t("verification.sms.errors.not_german_mobile"))
+  end
+
   def uniqness_phone
-    errors.add(:phone, :taken) if User.where(confirmed_phone: phone).any?
+    errors.add(:phone, :taken) if normalized_phone && User.where(confirmed_phone: normalized_phone).any?
   end
 
   def save
     return false unless valid?
 
     update_user_phone_information
-    send_sms
+    return false unless send_sms
+
     Lock.increase_tries(user)
   end
 
   def update_user_phone_information
-    user.update(unconfirmed_phone: phone, sms_confirmation_code: generate_confirmation_code)
+    user.update(unconfirmed_phone: normalized_phone, sms_confirmation_code: generate_confirmation_code)
   end
 
   def send_sms
-    SmsApi.new.sms_deliver(user.unconfirmed_phone, user.sms_confirmation_code)
+    text = I18n.t("verification.sms.message", code: user.sms_confirmation_code)
+    result = Sms::Gateway.deliver(to: user.unconfirmed_phone, text: text)
+    errors.add(:base, I18n.t("verification.sms.errors.delivery_failed")) unless result.success?
+    result.success?
   end
 
   def verified?
@@ -32,6 +42,10 @@ class Verification::Sms
   end
 
   private
+
+    def normalized_phone
+      Sms::PhoneNumber.normalize(phone)
+    end
 
     def generate_confirmation_code
       rand.to_s[2..5]

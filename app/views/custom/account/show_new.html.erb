@@ -30,9 +30,11 @@
     <aside class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.users.settings"), icon_name: "cog") do |c| %>
         <ul class="account-settings-actions">
-          <li>
-            <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow expanded" %>
-          </li>
+          <% unless current_user.phone_account? %>
+            <li>
+              <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow expanded" %>
+            </li>
+          <% end %>
           <li>
             <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow expanded delete alert" %>
           </li>

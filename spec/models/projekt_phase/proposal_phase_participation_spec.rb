@@ -53,6 +53,24 @@ describe ProjektPhase::ProposalPhase, "participation" do
         .to eq(:submissions_limit_exceeded)
     end
 
+    it "applies the per-user limit to guests in guest phases" do
+      guest_phase = create(:proposal_phase, projekt: projekt, active: true, user_status: "guest")
+      limited = with_setting(guest_phase, "option.resource.max_submissions_per_user", "1")
+      guest = create(:user, guest: true, email: "guest-key@example.com")
+      create(:proposal, projekt_phase: limited, author: guest)
+
+      expect(limited.permission_problem(guest, location: :new_button_component))
+        .to eq(:submissions_limit_exceeded)
+    end
+
+    it "lets guests submit in guest phases below the per-user limit" do
+      guest_phase = create(:proposal_phase, projekt: projekt, active: true, user_status: "guest")
+      limited = with_setting(guest_phase, "option.resource.max_submissions_per_user", "1")
+      guest = create(:user, guest: true, email: "guest-key@example.com")
+
+      expect(limited.permission_problem(guest, location: :new_button_component)).to be_nil
+    end
+
     it "has no limit when the per-user limit is empty" do
       create_list(:proposal, 3, projekt_phase: phase, author: citizen)
 

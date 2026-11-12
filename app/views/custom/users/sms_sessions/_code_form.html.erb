@@ -1,0 +1,37 @@
+<% id_prefix = remote ? "sms-sign-in-modal-" : "" %>
+<% has_message = flash[:alert].present? || flash[:notice].present? %>
+<% message_id = "sms-sign-in-modal-message" if remote && has_message %>
+
+<h2 id="sms-sign-in-title"><%= t("sms_sign_in.edit.title") %></h2>
+<p><%= t("sms_sign_in.edit.intro", minutes: PhoneSignInCode::VALIDITY.in_minutes.to_i) %></p>
+
+<div class="auth-page-template--divider"></div>
+
+<%= render "users/sms_sessions/modal_messages" if remote %>
+
+<%= form_with url: sms_sign_in_code_path, method: :post, local: !remote do %>
+  <%= label_tag :code, t("sms_sign_in.edit.code_label"),
+                for: "#{id_prefix}code", class: "auth-page-template--field-label" %>
+  <%= text_field_tag :code,
+                     nil,
+                     id: "#{id_prefix}code",
+                     autocomplete: "one-time-code",
+                     inputmode: "numeric",
+                     pattern: "[0-9 ]*",
+                     maxlength: 7,
+                     required: true,
+                     autofocus: !remote,
+                     aria: { describedby: message_id, invalid: @code_invalid || nil } %>
+
+  <%= submit_tag t("sms_sign_in.edit.submit"), class: "button expanded" %>
+<% end %>
+
+<div class="sign-in--links">
+  <%= button_to resend_sms_sign_in_path, remote: remote, class: "link-button", form_class: "text-center" do %>
+    <%= t("sms_sign_in.edit.resend") %>
+  <% end %>
+  <% intended_path = session[:sms_sign_in_intended_path] if remote %>
+  <%= link_to t("sms_sign_in.edit.change_number"),
+              new_sms_sign_in_path(intended_path: (CGI.escape(intended_path) if intended_path.present?)),
+              class: ("js-sms-sign-in" if remote) %>
+</div>

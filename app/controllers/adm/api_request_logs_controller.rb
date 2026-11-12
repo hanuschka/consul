@@ -3,7 +3,7 @@ class Adm::ApiRequestLogsController < Adm::BaseController
     scope = policy_scope(ApiRequestLog, policy_scope_class: Adm::ApiRequestLogPolicy::Scope)
     filtered = Adm::ApiRequestLogsQuery.call(scope.includes(:api_client), params)
 
-    @pagy, @api_request_logs = pagy(filtered.order(created_at: :desc), items: 50)
+    @pagy, @api_request_logs = pagy(filtered.order(created_at: :desc), limit: 50)
 
     @logs_present = ApiRequestLog.exists?
     assign_filter_options

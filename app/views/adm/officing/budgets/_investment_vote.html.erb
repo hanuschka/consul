@@ -1,4 +1,5 @@
-<% voted = offline_user.voted_for?(investment) %>
+<% vote = votes_by_investment_id[investment.id] %>
+<% voted = vote.present? %>
 <% label = "#{investment.title} ##{investment.id}" %>
 <% label += " — #{investment.formatted_price}" if investment.formatted_price.present? %>
 
@@ -9,7 +10,6 @@
 
   <% if voted %>
     <% if budget.distributed_voting? %>
-      <% vote = investment.votes_for.where(voter: offline_user).first %>
       <p class="mb-2"><%= t(".weight", count: vote&.vote_weight || 1) %></p>
     <% end %>
     <%= form_with(url: adm_officing_budget_investment_vote_path(budget, investment, offline_user_id: offline_user.id), method: :delete) do %>

@@ -52,6 +52,14 @@ describe "Sign-in with SMS code", type: :request do
     expect(signed_in?).to be true
   end
 
+  it "sends nothing when the honeypot is filled in" do
+    expect do
+      post sms_sign_in_path, params: { phone: "0171 1234567", subtitle: "bot" }
+    end.not_to change(PhoneSignInCode, :count)
+
+    expect(Sms::Adapters::Log.deliveries).to be_empty
+  end
+
   it "signs in the existing account for a known number" do
     existing = create(:user, confirmed_phone: phone)
 

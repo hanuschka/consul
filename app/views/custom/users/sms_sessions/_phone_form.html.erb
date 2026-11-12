@@ -23,6 +23,7 @@
                           autofocus: !remote,
                           aria: { describedby: [help_text_id, message_id].compact.join(" "),
                                   invalid: @phone_invalid || nil } %>
+  <%= invisible_captcha :subtitle %>
 
   <p>
     <small>

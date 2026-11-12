@@ -6,6 +6,8 @@ class Users::SmsSessionsController < ApplicationController
   before_action :redirect_signed_in_user
   before_action :require_phone_in_session, only: [:edit, :update, :resend]
 
+  invisible_captcha only: [:create], honeypot: :subtitle, timestamp_enabled: false
+
   def new
     session.delete(:sms_sign_in_intended_path)
 

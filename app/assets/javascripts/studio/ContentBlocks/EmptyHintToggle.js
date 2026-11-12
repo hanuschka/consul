@@ -75,10 +75,6 @@ App.Studio.ContentBlocks.EmptyHintToggle = {
     const isEmpty = !body || this.isBodyEmpty(body);
 
     container.classList.toggle(this.markerClass, isEmpty);
-
-    if (isEmpty) {
-      this.reserveHintHeight(container);
-    }
   },
 
   // True while any edit mode (simple/ai/code/html) is active on the wrapped
@@ -93,19 +89,6 @@ App.Studio.ContentBlocks.EmptyHintToggle = {
     if (!wrapper) return false
 
     return wrapper.classList.contains("-in-edit-mode") || !!wrapper.dataset.editMode;
-  },
-
-  // Stash the visible hint's height as --empty-hint-height so the CSS can give
-  // the editable body that same min-height in edit mode (when the hint is
-  // hidden). Only update while the hint is actually visible (offsetHeight > 0);
-  // once edit mode hides it the last good value is kept, avoiding a clobber.
-  reserveHintHeight(container) {
-    const hint = container.querySelector(".js-content-block-empty-hint");
-
-    if (!hint) return
-    if (hint.offsetHeight === 0) return
-
-    container.style.setProperty("--empty-hint-height", `${hint.offsetHeight}px`);
   },
 
   // Locate the actual content body inside the container. Prefer the

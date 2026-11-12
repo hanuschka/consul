@@ -38,4 +38,28 @@ describe MachineTranslation::I18nBackend do
 
     expect(I18n.t(key, count: 3, locale: locale)).to eq("Hallo")
   end
+
+  describe "stored translation whose placeholders the source text no longer has" do
+    let(:source_key) { "mailers.user_verification_failed.b2_item1" }
+
+    def store_for_source_key(value)
+      content = I18nContent.create!(key: source_key)
+      Globalize.with_locale(locale) { content.update!(value: value) }
+      MachineTranslation::ChromeStore.reset!
+    end
+
+    it "falls back to the locale files instead of failing on the missing argument" do
+      expected = I18n.t(source_key, verification_url: "https://example.org", locale: locale)
+      store_for_source_key("Relancez votre vérification : %{link}")
+
+      expect(I18n.t(source_key, verification_url: "https://example.org", locale: locale)).to eq(expected)
+    end
+
+    it "still uses a stored translation that leaves a placeholder out" do
+      store_for_source_key("Relancez votre vérification.")
+
+      expect(I18n.t(source_key, verification_url: "https://example.org", locale: locale))
+        .to eq("Relancez votre vérification.")
+    end
+  end
 end

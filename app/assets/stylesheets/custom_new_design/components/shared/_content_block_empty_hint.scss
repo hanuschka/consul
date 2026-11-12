@@ -54,18 +54,38 @@
   margin-bottom: 0;
 }
 
-// Hide the hint while any edit mode is active so the editable body is free.
-.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper.-in-edit-mode .content-block-empty-hint {
-  display: none;
+// While a block is empty, at rest and in simple edit mode (the pencil), the hint
+// and the editable body share one grid cell: the block is as tall as the taller
+// of the two. The pencil only makes the hint invisible (its box stays) and the
+// stretched body lies over its area, so the block keeps its height without
+// measuring anything, at any width. AI and code edit modes add their own panel
+// to the block, so they keep the plain flow and drop the hint as before. The
+// empty marker sits on a `.content-block-empty-hint-wrap` (site blocks), on the
+// wrapper itself (projekt-page blocks, below) or on a `.sidebar-card` whose hint
+// `moveEmptyHintIntoWrapper` moved into the block (sidebar_card.scss).
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper:not(.-in-edit-mode) > .custom-content-block-wrapper--inner,
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper.-simple-edit-mode > .custom-content-block-wrapper--inner,
+.custom-content-block-wrapper.is-content-empty:not(.-in-edit-mode) > .custom-content-block-wrapper--inner,
+.custom-content-block-wrapper.is-content-empty.-simple-edit-mode > .custom-content-block-wrapper--inner,
+.sidebar-card.is-content-empty .custom-content-block-wrapper:not(.-in-edit-mode) > .custom-content-block-wrapper--inner,
+.sidebar-card.is-content-empty .custom-content-block-wrapper.-simple-edit-mode > .custom-content-block-wrapper--inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
-// With the hint hidden in edit mode, reserve its measured height on the
-// now-editable body so the block keeps the same height it had as the empty
-// placeholder — no shrink/jump when entering any edit mode. The
-// --empty-hint-height var is set live by App.ContentBlockEditor.EmptyHintToggle
-// while the hint is visible; falls back to the studio min-height.
-.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper.-in-edit-mode .custom-content-block {
-  min-height: var(--empty-hint-height, 55px);
+.custom-content-block-wrapper--inner > .content-block-empty-hint,
+.custom-content-block-wrapper--inner > .sidebar-card--admin-empty-hint,
+.custom-content-block-wrapper--inner > .custom-content-block {
+  grid-area: 1 / 1;
+}
+
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper.-simple-edit-mode .content-block-empty-hint {
+  visibility: hidden;
+}
+
+// Hide the hint in the other edit modes so their panel takes its place.
+.content-block-empty-hint-wrap.is-content-empty .custom-content-block-wrapper.-in-edit-mode:not(.-simple-edit-mode) .content-block-empty-hint {
+  display: none;
 }
 
 .content-block-empty-hint--icon {
@@ -111,10 +131,10 @@
   margin-bottom: 0;
 }
 
-.custom-content-block-wrapper.is-content-empty.-in-edit-mode .content-block-empty-hint {
-  display: none;
+.custom-content-block-wrapper.is-content-empty.-simple-edit-mode .content-block-empty-hint {
+  visibility: hidden;
 }
 
-.custom-content-block-wrapper.is-content-empty.-in-edit-mode .custom-content-block {
-  min-height: var(--empty-hint-height, 55px);
+.custom-content-block-wrapper.is-content-empty.-in-edit-mode:not(.-simple-edit-mode) .content-block-empty-hint {
+  display: none;
 }

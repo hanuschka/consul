@@ -108,29 +108,56 @@
   }
 }
 
-.content-block-edit-link-button {
-  display: none;
+// Pencil for the hovered link. LinkEdit appends it to the block wrapper's
+// `--inner` layer and sets left/top over the link's first line, so the link
+// is never wrapped and keeps its box while edit mode is on.
+.studio-content-block-link-edit-button {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: -1.5em;
-  gap: 3px;
-  width: 1.8em;
-  height: 1.8em;
+  z-index: 4;
+  display: flex;
   justify-content: center;
   align-items: center;
-  margin: auto;
-  cursor: pointer;
-  color: black;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  color: #1f2a37;
+  font-size: 14px;
   background-color: #bedced;
+  border: none;
   border-radius: 50%;
-  transition: color 0.2s;
-  z-index: 10;
+  cursor: pointer;
+  user-select: none;
+  transform: translateX(-50%);
+  transition: background-color 150ms ease-out;
 
   &:hover {
-    color: #000;
     background-color: #aacde0;
   }
+
+  &:active {
+    background-color: #96bfd6;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $dt-base;
+    outline-offset: 2px;
+  }
+}
+
+// Tint over one line box of the hovered link; `-active` while its popup is
+// open. Drawn beside the editable body, so it never changes the link.
+.studio-content-block-link-highlight {
+  position: absolute;
+  z-index: 3;
+  background-color: #10a6ff24;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.studio-content-block-link-highlight.-active {
+  background-color: #10a6ff4d;
+  animation: content-block-link-blink 1.8s infinite;
 }
 
 
@@ -191,16 +218,6 @@
       animation: content-block-link-blink 1.8s infinite;
     }
   }
-
-  &:hover {
-    .content-block-edit-link-button {
-      display: flex;
-    }
-  }
-}
-
-.column > .content-block-link-wrapper {
-  display: block;
 }
 
 div[contenteditable] {

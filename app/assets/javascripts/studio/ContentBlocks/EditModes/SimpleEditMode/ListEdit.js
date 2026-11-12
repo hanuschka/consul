@@ -1,6 +1,9 @@
 App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
   listControlClass: "js-content-block--list-control",
   sortableInstances: new Map(),
+  addItemButtonStates: new WeakMap(),
+  addItemButtonLists: new WeakMap(),
+  addItemButtonGap: 4,
 
   initialize() {
     this.initEventListeners()
@@ -15,23 +18,6 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
   toggleListControls(contentBlock, enabled) {
     if (enabled) {
       contentBlock
-        .querySelectorAll("ul, ol")
-        .forEach((ul) => {
-          if (this.isFollowerList(ul)) return;
-          if (ul.closest(".js-content-block-element-not-editable")) return;
-
-          const foundationSlider = ul.closest(".orbit")
-
-          if (foundationSlider) {
-            this.addNewSliderItemButton(ul)
-          } else if (ul.hasAttribute("data-list-edit-add-outside")) {
-            this.addNewOutsideItemButton(ul)
-          } else {
-            this.addNewItemButton(ul)
-          }
-        })
-
-      contentBlock
         .querySelectorAll(`li:not(.${this.listControlClass})`)
         .forEach((li) => {
           if (this.isInsideFollowerList(li)) return;
@@ -40,6 +26,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
           this.addItemControlls(li)
         })
 
+      this.showAddItemButtons(contentBlock)
       this.initSortableForContentBlock(contentBlock)
     }
     else {
@@ -47,8 +34,193 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
         .querySelectorAll(`.${this.listControlClass}`)
         .forEach((e) => e.remove())
 
+      this.hideAddItemButtons(contentBlock)
       this.cleanupSortableForContentBlock(contentBlock)
     }
+  },
+
+  getEditableLists(contentBlock) {
+    return Array.from(contentBlock.querySelectorAll("ul, ol")).filter((list) => {
+      return !this.isFollowerList(list) &&
+        !list.closest(".js-content-block-element-not-editable")
+    })
+  },
+
+  getAddItemAnchor(list) {
+    const foundationSlider = list.closest(".orbit")
+
+    if (foundationSlider) return foundationSlider
+
+    const outsideOfSelector = list.dataset.listEditAddOutsideOf
+
+    if (list.hasAttribute("data-list-edit-add-outside") && outsideOfSelector) {
+      return list.closest(outsideOfSelector) || list
+    }
+
+    return list
+  },
+
+  showAddItemButtons(contentBlock) {
+    const layer = this.getAddItemButtonLayer(contentBlock)
+
+    if (!layer) return
+
+    this.hideAddItemButtons(contentBlock)
+
+    const entries = this.getEditableLists(contentBlock).map((list) => {
+      const button = this.buildAddItemButton()
+
+      layer.appendChild(button)
+      this.addItemButtonLists.set(button, list)
+
+      return { button, list, anchor: this.getAddItemAnchor(list) }
+    })
+
+    const state = { layer, entries, frameRequest: null }
+    const scheduleUpdate = () => this.scheduleAddItemButtonsUpdate(contentBlock)
+
+    state.resizeObserver = new ResizeObserver(scheduleUpdate)
+    state.resizeObserver.observe(contentBlock)
+    entries.forEach(({ anchor }) => state.resizeObserver.observe(anchor))
+
+    state.mutationObserver = new MutationObserver(scheduleUpdate)
+    state.mutationObserver.observe(contentBlock, { childList: true, subtree: true, characterData: true })
+
+    this.addItemButtonStates.set(contentBlock, state)
+    this.positionAddItemButtons(state)
+  },
+
+  hideAddItemButtons(contentBlock) {
+    const state = this.addItemButtonStates.get(contentBlock)
+
+    if (!state) return
+
+    state.resizeObserver.disconnect()
+    state.mutationObserver.disconnect()
+    cancelAnimationFrame(state.frameRequest)
+    state.entries.forEach(({ button }) => button.remove())
+
+    this.addItemButtonStates.delete(contentBlock)
+  },
+
+  getAddItemButtonLayer(contentBlock) {
+    return contentBlock.closest(".custom-content-block-wrapper--inner")
+  },
+
+  scheduleAddItemButtonsUpdate(contentBlock) {
+    const state = this.addItemButtonStates.get(contentBlock)
+
+    if (!state || state.frameRequest) return
+
+    state.frameRequest = requestAnimationFrame(() => {
+      state.frameRequest = null
+      this.updateAddItemButtons(contentBlock, state)
+    })
+  },
+
+  updateAddItemButtons(contentBlock, state) {
+    if (this.addItemButtonStates.get(contentBlock) !== state) return
+
+    if (!contentBlock.isConnected) {
+      this.hideAddItemButtons(contentBlock)
+      return
+    }
+
+    const isStale = state.entries.some(({ list }) => !list.isConnected)
+
+    if (isStale) {
+      this.showAddItemButtons(contentBlock)
+      return
+    }
+
+    this.positionAddItemButtons(state)
+  },
+
+  positionAddItemButtons({ layer, entries }) {
+    const layerRect = layer.getBoundingClientRect()
+    const measuredEntries = this.sortByListNestingDepth(entries).map((entry) => {
+      const anchorRect = entry.anchor.getBoundingClientRect()
+
+      return { ...entry, anchorRect, isAnchorRendered: anchorRect.width > 0 || anchorRect.height > 0 }
+    })
+
+    measuredEntries.forEach(({ button, isAnchorRendered }) => {
+      button.classList.toggle("-hidden", !isAnchorRendered)
+    })
+
+    const renderedEntries = measuredEntries
+      .filter(({ isAnchorRendered }) => isAnchorRendered)
+      .map((entry) => ({ ...entry, width: entry.button.offsetWidth, height: entry.button.offsetHeight }))
+    const placedBoxes = []
+
+    renderedEntries.forEach((entry) => {
+      const halfButtonWidth = entry.width / 2
+      const anchorCenter = entry.anchorRect.left - layerRect.left + entry.anchorRect.width / 2
+      const maxCenter = Math.max(halfButtonWidth, layerRect.width - halfButtonWidth)
+      const center = Math.min(Math.max(anchorCenter, halfButtonWidth), maxCenter)
+      const edge = entry.anchorRect.bottom - layerRect.top
+      const box = this.findFreeAddItemButtonBox(placedBoxes, {
+        left: center - halfButtonWidth,
+        right: center + halfButtonWidth,
+        top: edge - entry.height / 2,
+        bottom: edge + entry.height / 2
+      })
+
+      placedBoxes.push(box)
+      entry.center = center
+      entry.middle = (box.top + box.bottom) / 2
+    })
+
+    renderedEntries.forEach(({ button, center, middle }) => {
+      button.style.left = `${center}px`
+      button.style.top = `${middle}px`
+    })
+  },
+
+  findFreeAddItemButtonBox(placedBoxes, box) {
+    const overlaps = (placed) => placed.left < box.right && box.left < placed.right &&
+      placed.top < box.bottom && box.top < placed.bottom
+    let coveredBox = placedBoxes.find(overlaps)
+
+    while (coveredBox) {
+      const shift = coveredBox.bottom + this.addItemButtonGap - box.top
+
+      box = { ...box, top: box.top + shift, bottom: box.bottom + shift }
+      coveredBox = placedBoxes.find(overlaps)
+    }
+
+    return box
+  },
+
+  sortByListNestingDepth(entries) {
+    const depth = ({ list }) => {
+      let count = 0
+      let ancestor = list.parentElement.closest("ul, ol")
+
+      while (ancestor) {
+        count += 1
+        ancestor = ancestor.parentElement.closest("ul, ol")
+      }
+
+      return count
+    }
+
+    return entries
+      .map((entry) => ({ entry, depth: depth(entry) }))
+      .sort((a, b) => b.depth - a.depth)
+      .map(({ entry }) => entry)
+  },
+
+  buildAddItemButton() {
+    return App.Studio.utils.htmlToSingleDomElement(`
+      <button
+        type="button"
+        class="studio-content-block-list-add-button js-content-block--add-item js-studio-hide-on-preview"
+      >
+        <i class="fas fa-plus" aria-hidden="true"></i>
+        Weiteres Element hinzufügen
+      </button>
+    `)
   },
 
   isFollowerList(ul) {
@@ -101,26 +273,22 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
 
 
   addItem(e) {
-    const wrapper = e.currentTarget.closest(`.${this.listControlClass}`)
-    const isOutsideList = wrapper.dataset.outsideList === "true";
-    let ul = null;
-    let lastLi;
+    const ul = this.addItemButtonLists.get(e.currentTarget)
+    const contentBlock = ul.closest(".js-content-block")
+    const realListItems = this.getRealListItems(ul)
+    const lastLi = realListItems[realListItems.length - 1]
 
-    if (isOutsideList) {
-      const prev = wrapper.previousElementSibling;
-      ul = prev.matches("ul, ol") ? prev : prev.querySelector("ul, ol");
-      lastLi = ul.querySelector(`li:last-child:not(.${this.listControlClass})`)
-    }
-    else {
-      ul = e.currentTarget.closest("ul, ol")
-      lastLi = ul.querySelector(`li:nth-last-child(2):not(.${this.listControlClass})`)
-    }
+    if (!lastLi) return
 
     const isSlider = ul.classList.contains("orbit-container")
     const isAccordion = ul.classList.contains("accordion")
 
     App.Studio.utils.resetFoundationAccordionStateFor(ul)
     const clonedLi = lastLi.cloneNode(true);
+
+    clonedLi
+      .querySelectorAll(`.${this.listControlClass}`)
+      .forEach((control) => control.remove())
 
     App.Studio.utils.removeChildHtmlAttributes(
       clonedLi,
@@ -142,18 +310,12 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
     const newElementToReinitialize = elementToReinitializeParent.querySelector(`[data-content-block-list-item-copy-id="${copyId}"]`)
     newElementToReinitialize.removeAttribute("data-content-block-list-item-copy-id")
 
-    const newUl = isSlider ? elementToReinitializeParent.querySelector('ul') : newElementToReinitialize;
+    const newUl = isSlider ? newElementToReinitialize.querySelector(".orbit-container") : newElementToReinitialize;
+
+    newUl.appendChild(clonedLi);
 
     if (isSlider) {
-      newUl.append(clonedLi);
-
       this.updateSliderItemAttributes(lastLi, clonedLi)
-    }
-    else if (isOutsideList) {
-      newUl.appendChild(clonedLi);
-    }
-    else {
-      newUl.insertBefore(clonedLi, newUl.lastElementChild);
     }
 
     App.Studio.ContentBlocks.DomHelpers.reinitFoundationWidgets(newElementToReinitialize)
@@ -168,6 +330,8 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
     this.initSortableForContentBlock(newUl.parentElement)
 
     this.mirrorAddToFollower(newUl, clonedLi)
+
+    this.showAddItemButtons(contentBlock)
   },
 
   updateSliderItemAttributes(lastLi, clonedLi) {
@@ -227,72 +391,6 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
 
     const newBullet = App.Studio.utils.htmlToSingleDomElement(newBulletHTML)
     bulletsElement.append(newBullet)
-  },
-
-  addNewItemButton(ul) {
-    const buttonWrapper = this.buildItemManagmentControls(ul, { elementType: "li", copyStyles: true})
-
-    ul.appendChild(buttonWrapper);
-  },
-
-  addNewSliderItemButton(ul) {
-    const buttonWrapper = this.buildItemManagmentControls(ul, { elementType: "div", copyStyles: false })
-
-    const foundationSlider = ul.closest(".orbit")
-    buttonWrapper.dataset.outsideList = true
-    foundationSlider.after(buttonWrapper);
-  },
-
-  addNewOutsideItemButton(ul) {
-    const buttonWrapper = this.buildItemManagmentControls(ul, { elementType: "div", copyStyles: false })
-    buttonWrapper.dataset.outsideList = true
-
-    const outsideOfSelector = ul.dataset.listEditAddOutsideOf;
-    const anchor = outsideOfSelector ? ul.closest(outsideOfSelector) : ul;
-
-    (anchor || ul).after(buttonWrapper);
-  },
-
-  buildItemManagmentControls(ul, { elementType, copyStyles = false } ) {
-    const buttonWrapper = document.createElement(elementType);
-    buttonWrapper.className = `content-block--item-action-wrapper ${this.listControlClass} js-content-block-element-not-editable`;
-    buttonWrapper.style.listStyle = "none";
-
-    const lastLi = ul.querySelector("li:last-child")
-
-    if (copyStyles && lastLi.classList.value !== "") {
-      const gridPattern = /^(grid-[xy]|grid-(margin|padding)-[xy]|cell|column|columns|small-\d+|medium-\d+|large-\d+)$/;
-      const filtered = Array.from(lastLi.classList).filter(cls =>
-        gridPattern.test(cls)
-      );
-
-      buttonWrapper.className = `${filtered.join(' ')} ${buttonWrapper.className}`;
-    }
-
-    buttonWrapper.innerHTML = `
-      <div class="content-block--item-action-wrapper--inner js-studio-hide-on-preview">
-          <button class="content-block--item-action js-content-block--add-item js-content-block-element-not-editable">
-          <i class="fa fas fa-plus"></i>
-          Weiteres Element hinzufügen
-        </button>
-      </div>
-    `
-
-    if (copyStyles) {
-      if (lastLi) {
-        const lastStyles = getComputedStyle(lastLi)
-        const props = ["width", "max-width"];
-
-        props.forEach(prop => {
-          const value = lastStyles.getPropertyValue(prop);
-          if (value && value !== "auto" && value !== "0px") {
-            buttonWrapper.style.setProperty(prop, value);
-          }
-        });
-      }
-    }
-
-    return buttonWrapper
   },
 
   initSortableForContentBlock(contentBlock) {

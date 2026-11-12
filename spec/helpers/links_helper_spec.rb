@@ -22,5 +22,22 @@ describe LinksHelper do
       expect(link).to include(new_sms_sign_in_path(intended_path: "/proposals/new"))
       expect(link).to include('class="probe js-sms-sign-in"')
     end
+
+    it "returns nothing for a phase that requires verified users" do
+      set_setting("extended_feature.general.sms_login", true)
+      phase = build(:projekt_phase, user_status: "verified")
+
+      expect(helper.link_to_sms_signin(projekt_phase: phase)).to be_nil
+    end
+
+    it "links for a phase open to registered users" do
+      set_setting("extended_feature.general.sms_login", true)
+      phase = build(:projekt_phase, user_status: "registered")
+
+      link = helper.link_to_sms_signin(projekt_phase: phase)
+
+      expect(link).to include(%(href="#{new_sms_sign_in_path}"))
+      expect(link).not_to include("projekt_phase")
+    end
   end
 end

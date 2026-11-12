@@ -14,7 +14,7 @@ class Budgets::Investments::VotesComponent < ApplicationComponent
 
       if reason == :not_logged_in
         safe_join([sanitize(t(path_to_key, sign_in: link_to_signin, sign_up: link_to_signup)),
-                   link_to_sms_signin].compact, " ")
+                   link_to_sms_signin(projekt_phase: investment.budget.projekt_phase)].compact, " ")
 
       elsif reason.present?
         text = t(
@@ -34,7 +34,8 @@ class Budgets::Investments::VotesComponent < ApplicationComponent
         )
         return text unless reason == :guest_not_logged_in
 
-        safe_join([sanitize(text), link_to_sms_signin].compact, " ")
+        safe_join([sanitize(text),
+                   link_to_sms_signin(projekt_phase: investment.budget.projekt_phase)].compact, " ")
       end
     end
 

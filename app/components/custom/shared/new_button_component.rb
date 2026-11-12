@@ -54,7 +54,8 @@ class Shared::NewButtonComponent < ApplicationComponent
       )
       return message unless permission_problem_key.in?(%i[not_logged_in guest_not_logged_in])
 
-      safe_join([message, link_to_sms_signin(intended_path: CGI::escape(link_path))].compact, " ")
+      safe_join([message, link_to_sms_signin(intended_path: CGI::escape(link_path),
+                                             projekt_phase: @projekt_phase)].compact, " ")
     end
 
     def path_to_key(permission_problem_key)

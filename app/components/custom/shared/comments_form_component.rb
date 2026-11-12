@@ -53,7 +53,7 @@ class Shared::CommentsFormComponent < ApplicationComponent
       ))
       return message unless permission_problem_key.in?(%i[not_logged_in guest_not_logged_in])
 
-      safe_join([message, link_to_sms_signin].compact, " ")
+      safe_join([message, link_to_sms_signin(projekt_phase: projekt_phase)].compact, " ")
     end
 
     def path_to_key

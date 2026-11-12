@@ -15,7 +15,7 @@ class Debates::VotesComponent < ApplicationComponent
 
       if permission_problem_key == :not_logged_in
         safe_join([sanitize(t(path_to_key, sign_in: link_to_signin, sign_up: link_to_signup)),
-                   link_to_sms_signin].compact, " ")
+                   link_to_sms_signin(projekt_phase: @projekt_phase)].compact, " ")
 
       else
         t(path_to_key,

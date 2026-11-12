@@ -30,6 +30,9 @@ module LinksHelper
   def link_to_sms_signin(options = {})
     return if Setting["extended_feature.general.sms_login"].blank?
 
+    options = options.dup
+    return if options.delete(:projekt_phase)&.user_status == "verified"
+
     query_params = options.slice(*query_params_keys)
     options = options.delete_if { |key, _| query_params_keys.include?(key) }
     options[:class] = [options[:class], "js-sms-sign-in"].compact.join(" ")

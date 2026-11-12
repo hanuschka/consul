@@ -186,22 +186,30 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
   },
 
   refreshLinkHighlight() {
-    const activeLink = this.getActiveLink()
-    const link = activeLink || this.hoveredLink
+    const editedTarget = this.getEditedLinkTarget()
+    const target = editedTarget || this.hoveredLink
 
-    if (!link) {
+    if (!target) {
       this.renderLinkHighlightFrames(null, [])
       return
     }
 
-    this.renderLinkHighlightFrames(this.getLinkControlsLayer(link), Array.from(link.getClientRects()))
-    this.linkHighlightFrames.forEach((frame) => frame.classList.toggle("-active", Boolean(activeLink)))
+    this.renderLinkHighlightFrames(this.getLinkControlsLayer(target), Array.from(target.getClientRects()))
+    this.linkHighlightFrames.forEach((frame) => frame.classList.toggle("-active", Boolean(editedTarget)))
+  },
+
+  getEditedLinkTarget() {
+    const target = this.currentLinkTarget
+
+    if (target && target.isConnected) return target
+
+    return null
   },
 
   getActiveLink() {
-    const target = this.currentLinkTarget
+    const target = this.getEditedLinkTarget()
 
-    if (target && target.matches("a") && target.isConnected) return target
+    if (target && target.matches("a")) return target
 
     return null
   },
@@ -256,10 +264,17 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     return frame
   },
 
-  buildLinkWrapper() {
-    const linkWrapper = document.createElement("div")
-    linkWrapper.classList.add("content-block-link-wrapper", "js-content-block-link-wrapper")
-    linkWrapper.contentEditable = false;
+  wrapRangeInDraftLink(range) {
+    const linkWrapper = document.createElement("span")
+    linkWrapper.classList.add("js-content-block-link-wrapper", "-js-draft-link")
+    linkWrapper.contentEditable = false
+
+    const linkContentElement = document.createElement("span")
+    linkContentElement.classList.add("js-link-wrapper-content")
+    linkContentElement.appendChild(range.extractContents())
+    linkWrapper.appendChild(linkContentElement)
+
+    range.insertNode(linkWrapper)
 
     return linkWrapper
   },
@@ -381,15 +396,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     this.saveSelection();
     this.currentContentBlockWrapper = contentBlockWrapper;
 
-    const linkWrapper = this.buildLinkWrapper()
-    linkWrapper.classList.add("-js-draft-link")
-
-    const linkContentElement = document.createElement("span")
-    linkContentElement.classList.add("js-link-wrapper-content")
-    linkContentElement.appendChild(range.extractContents())
-    linkWrapper.appendChild(linkContentElement)
-
-    range.insertNode(linkWrapper);
+    const linkWrapper = this.wrapRangeInDraftLink(range)
 
     this.currentLinkTarget = linkWrapper
     this.showEditLinkPopup(linkWrapper);
@@ -414,17 +421,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
 
     this.saveSelection();
     this.currentContentBlockWrapper = contentBlockWrapper;
-
-    const linkWrapper = this.buildLinkWrapper();
-    linkWrapper.classList.add("-js-draft-link");
-
-    const linkContentElement = document.createElement("span");
-    linkContentElement.classList.add("js-link-wrapper-content");
-    linkContentElement.appendChild(range.extractContents());
-    linkWrapper.appendChild(linkContentElement);
-    range.insertNode(linkWrapper);
-
-    this.currentLinkTarget = linkWrapper;
+    this.currentLinkTarget = this.wrapRangeInDraftLink(range);
 
     App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog.openForDocuments(
       (selectedFile) => {
@@ -464,10 +461,6 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
 
   showEditLinkPopup(target) {
     // window.getSelection().removeAllRanges();
-    if (target.classList.contains("js-content-block-link-wrapper")) {
-      target.classList.add("-highlight-active")
-    }
-
     this.refreshLinkHighlight()
 
     App.Studio.ContentBlocks.SimpleEditMode.EditPopup.show(
@@ -645,10 +638,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
       .parent()
       .hide()
 
-    if (this.currentLinkTarget) {
-      this.currentLinkTarget.classList.remove("-highlight-active")
-      this.currentLinkTarget = null;
-    }
+    this.currentLinkTarget = null;
 
     this.refreshLinkHighlight()
 

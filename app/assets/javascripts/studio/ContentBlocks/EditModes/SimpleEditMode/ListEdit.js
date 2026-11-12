@@ -1,5 +1,6 @@
 App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
   listControlClass: "js-content-block--list-control",
+  listItemAnchorClass: "studio-content-block-list-item-anchor",
   sortableInstances: new Map(),
   addItemButtonStates: new WeakMap(),
   addItemButtonLists: new WeakMap(),
@@ -34,6 +35,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
         .querySelectorAll(`.${this.listControlClass}`)
         .forEach((e) => e.remove())
 
+      this.removeListItemAnchors(contentBlock)
       this.hideAddItemButtons(contentBlock)
       this.cleanupSortableForContentBlock(contentBlock)
     }
@@ -230,10 +232,16 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
     return parentList && this.isFollowerList(parentList);
   },
 
+  removeListItemAnchors(element) {
+    element
+      .querySelectorAll(`.${this.listItemAnchorClass}`)
+      .forEach((li) => App.Studio.utils.removeClasses(li, [this.listItemAnchorClass]))
+  },
+
   addItemControlls(li) {
     const elementStyle = getComputedStyle(li);
     if (elementStyle.position === "static") {
-      li.style.position = "relative"
+      li.classList.add(this.listItemAnchorClass)
     }
 
     let baseClass = "content-block--item-button"

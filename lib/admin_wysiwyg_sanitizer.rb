@@ -49,6 +49,7 @@ class AdminWYSIWYGSanitizer < WYSIWYGSanitizer
       data-box-shadow
       data-glightbox
       data-list-edit-add-outside data-list-edit-add-outside-of data-list-edit-follower data-paired-list
+      data-template-height
       url
     ]
   end

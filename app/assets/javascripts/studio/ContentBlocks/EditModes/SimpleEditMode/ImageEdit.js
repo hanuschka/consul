@@ -40,6 +40,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
     $document.on("input", ".js-img-overlay-height-input", this.handleHeightInput.bind(this))
     $document.on("click", ".js-img-overlay-height-decrease", this.handleHeightDecrease.bind(this))
     $document.on("click", ".js-img-overlay-height-increase", this.handleHeightIncrease.bind(this))
+    $document.on("click", ".js-img-overlay-height-reset", this.handleHeightReset.bind(this))
 
     $document.on(
       "mousedown",
@@ -63,18 +64,30 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
     overlay.className = "js-image-edit-overlay image-edit-overlay js-studio-hide-on-preview"
     overlay.style.display = "none"
     overlay.innerHTML = `
-      <div class="image-edit-overlay--height-control">
-        <button type="button" class="js-img-overlay-height-decrease" tabindex="-1">
-          <i class="fa fas fa-minus"></i>
-        </button>
-        <input
-          type="number"
-          class="js-img-overlay-height-input"
-          min="30"
-        >
-        <button type="button" class="js-img-overlay-height-increase" tabindex="-1">
-          <i class="fa fas fa-plus"></i>
-        </button>
+      <div class="image-edit-overlay--height-bar">
+        <div class="image-edit-overlay--height-control">
+          <button type="button" class="js-img-overlay-height-decrease" tabindex="-1">
+            <i class="fa fas fa-minus"></i>
+          </button>
+          <input
+            type="number"
+            class="js-img-overlay-height-input"
+            min="30"
+          >
+          <button type="button" class="js-img-overlay-height-increase" tabindex="-1">
+            <i class="fa fas fa-plus"></i>
+          </button>
+        </div>
+
+        ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
+          <button type="button" class="image-edit-overlay--height-reset js-img-overlay-height-reset" tabindex="-1">
+            <i class="fa fas fa-arrow-rotate-left fa-undo"></i>
+          </button>
+        `, {
+          title: "Höhe zurücksetzen",
+          text: "Stellt die Höhe vor der Anpassung wieder her. Vorlagenhöhen passen sich dann wieder der Bildschirmbreite an.",
+          delay: 600
+        })}
       </div>
 
       <div class="image-edit-overlay--handle -top-left js-img-resize-handle" data-corner="top-left"></div>
@@ -226,6 +239,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
 
     this.updateCropButtonState(img)
     this.updateMoveControlsState(img)
+    this.updateHeightResetState(img)
     App.Studio.ContentBlocks.SimpleEditMode.ImageAltEdit.updateAltButtonState(img)
   },
 
@@ -544,10 +558,47 @@ App.Studio.ContentBlocks.SimpleEditMode.ImageEdit = {
     this.showOverlayForImage(this.activeImg)
   },
 
+  handleHeightReset(e) {
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    e.preventDefault()
+
+    if (!this.activeImg) return
+
+    this.resetHeight(this.activeImg)
+    this.showOverlayForImage(this.activeImg)
+  },
+
   applyHeight(img, height) {
+    this.rememberTemplateHeight(img)
+
     img.style.height = `${height}px`
-    img.dataset.originalThumbHeight = height
     img.height = height
+  },
+
+  updateHeightResetState(img) {
+    this.overlayEl.classList.toggle("-custom-height", this.hasCustomHeight(img))
+  },
+
+  hasCustomHeight(img) {
+    return img.hasAttribute("data-template-height")
+  },
+
+  rememberTemplateHeight(img) {
+    if (this.hasCustomHeight(img)) return
+
+    const height = img.style.getPropertyValue("height")
+    const priority = img.style.getPropertyPriority("height")
+
+    img.dataset.templateHeight = priority ? `${height} !${priority}` : height
+  },
+
+  resetHeight(img) {
+    const [height, priority] = img.dataset.templateHeight.split(" !")
+
+    img.style.setProperty("height", height, priority || "")
+    img.removeAttribute("height")
+    img.removeAttribute("data-template-height")
   },
 
   // --- Image replacement ---

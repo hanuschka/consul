@@ -1,0 +1,37 @@
+<tr id="<%= dom_id(offer) %>" class="kern-table__row">
+  <td class="kern-table__cell"><%= offer.id %></td>
+  <th scope="row" class="kern-table__header" data-field="title">
+    <%= link_to offer.title, edit_adm_offers_offer_path(offer), class: "kern-link", data: { turbo_frame: "_top" } %>
+  </th>
+  <td class="kern-table__cell" data-field="offer_type">
+    <%= offer.categories_of(:offer_type).map(&:name).join(", ") %>
+  </td>
+  <td class="kern-table__cell" data-field="social_area">
+    <%= offer.categories_of(:social_area).map(&:name).join(", ") %>
+  </td>
+  <td class="kern-table__cell" data-field="author"><%= offer.author&.name %></td>
+  <td class="kern-table__cell" data-field="updated_at">
+    <%= l(offer.updated_at, format: "%d.%m.%Y") %>
+  </td>
+  <td class="kern-table__cell">
+    <% policy = Adm::Offers::OfferPolicy.new(current_user, offer) %>
+    <%= render Kern::Table::ActionsComponent.new do |actions| %>
+      <% actions.with_action(
+        label: t("shared.edit"),
+        url: edit_adm_offers_offer_path(offer),
+        icon: "edit",
+        style: :edit,
+        data: { turbo_frame: "_top" },
+        show: policy.edit?
+      ) %>
+      <% actions.with_action(
+        label: t("shared.delete"),
+        url: adm_offers_offer_path(offer),
+        icon: "delete",
+        style: :delete,
+        data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete"), turbo_frame: "_top" },
+        show: policy.destroy?
+      ) %>
+    <% end %>
+  </td>
+</tr>

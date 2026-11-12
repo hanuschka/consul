@@ -415,6 +415,9 @@ en:
       municipal_plans: Municipal plans
       municipal_plans_description: >
         Makes the municipal plan list publicly available: the overview of published plans, the archive, the detail pages and the notice form. While disabled, these pages are unreachable and the menu entry is hidden. The administration area of the plan list stays usable either way, so plans can be prepared before launch.
+      offers: Offers
+      offers_description: >
+        Makes the "Offers" module publicly available: the overview of offers, the detail pages and the entry form for authorized providers. While disabled, these pages are unreachable and the menu entry is hidden. The administration area of the offers stays usable either way, so categories and providers can be set up before launch.
       deficiency_reports: Deficiency reporter
       deficiency_reports_description: >
         Enables the deficiency reporter, through which citizens can report damage, pollution, or other deficiencies in public space. Reports are captured with location, category, and description, and can be processed and responded to by officers.

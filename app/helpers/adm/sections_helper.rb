@@ -9,6 +9,7 @@ module Adm::SectionsHelper
       "moderation" => adm_moderation_root_path,
       "deficiency_reports" => adm_deficiency_reports_root_path,
       "municipal_plans" => adm_municipal_plans_root_path,
+      "offers" => adm_offers_root_path,
       "ideas" => adm_ideas_root_path,
       "valuation" => adm_valuation_root_path,
       "officing" => adm_officing_root_path

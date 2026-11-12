@@ -418,6 +418,9 @@ de:
       municipal_plans: Vorhabenliste
       municipal_plans_description: >
         Macht die Vorhabenliste öffentlich zugänglich: die Übersicht der veröffentlichten Vorhaben, das Archiv, die Detailseiten und das Hinweisformular. Ist die Einstellung deaktiviert, sind diese Seiten nicht erreichbar, und der Menüeintrag entfällt. Der Verwaltungsbereich der Vorhabenliste bleibt unabhängig davon nutzbar, sodass Vorhaben schon vor dem Start gepflegt werden können.
+      offers: Angebote
+      offers_description: >
+        Macht das Modul „Angebote“ öffentlich zugänglich: die Übersicht der Angebote, die Detailseiten und das Eingabeformular für berechtigte Träger. Ist die Einstellung deaktiviert, sind diese Seiten nicht erreichbar, und der Menüeintrag entfällt. Der Verwaltungsbereich der Angebote bleibt unabhängig davon nutzbar, sodass Kategorien und Träger schon vor dem Start angelegt werden können.
       deficiency_reports: Mängelmelder
       deficiency_reports_description: >
         Aktiviert den Mängelmelder, über den Bürger Schäden, Verschmutzungen oder andere Mängel im öffentlichen Raum melden können. Meldungen werden mit Standort, Kategorie und Beschreibung erfasst und können von Sachbearbeitern bearbeitet und beantwortet werden.

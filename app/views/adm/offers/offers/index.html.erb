@@ -1,0 +1,71 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
+
+<%
+  headers = {
+    id:          Kern::Table::HeaderComponent.new(:id, t(".table.id"),
+                   **@id_header_options),
+    title:       Kern::Table::HeaderComponent.new(:title, t(".table.title"),
+                   **@title_header_options.merge(data_field: "title")),
+    offer_type:  Kern::Table::HeaderComponent.new(:offer_type, t(".table.offer_type"),
+                   data_field: "offer_type"),
+    social_area: Kern::Table::HeaderComponent.new(:social_area, t(".table.social_area"),
+                   data_field: "social_area"),
+    author:      Kern::Table::HeaderComponent.new(:author, t(".table.author"),
+                   data_field: "author"),
+    updated_at:  Kern::Table::HeaderComponent.new(:updated_at, t(".table.updated_at"),
+                   **@updated_at_header_options.merge(data_field: "updated_at"))
+  }
+%>
+
+<div class="kern-container my-5">
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "offers_table",
+        records: @offers,
+        pagy: @pagy,
+        headers: headers,
+        column_count: 7,
+        column_selector: {
+          storage_key: "adm-offers-columns-v2",
+          defaults: "title,offer_type,social_area,author,updated_at"
+        },
+        empty_state: {
+          title: t(".no_items_title"),
+          description: t(".no_items_description"),
+          icon: "volunteer_activism"
+        },
+        empty_state_filtered: {
+          title: t(".no_results_filtered_title"),
+          description: t(".no_results_filtered_description"),
+          icon: "filter_alt_off"
+        }
+      ) do |c| %>
+    <% c.with_toolbar_meta do %>
+      <span class="adm-table-count" title="<%= t(".total_hint") %>">
+        <span class="adm-table-count__value"><%= number_with_delimiter(@pagy.count) %></span>
+        <span class="adm-table-count__label"><%= t(".total_label", count: @pagy.count) %></span>
+      </span>
+    <% end %>
+
+    <% c.with_header_row do %>
+      <%= render headers[:id] %>
+      <%= render headers[:title] %>
+      <%= render headers[:offer_type] %>
+      <%= render headers[:social_area] %>
+      <%= render headers[:author] %>
+      <%= render headers[:updated_at] %>
+      <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @offers.each do |offer| %>
+        <%= render "offer_row", offer: offer %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

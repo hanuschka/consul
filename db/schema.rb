@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_11_090245) do
+ActiveRecord::Schema.define(version: 2026_11_12_150727) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2110,6 +2110,60 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "offer_categories", force: :cascade do |t|
+    t.string "kind", null: false
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["kind", "given_order"], name: "index_offer_categories_on_kind_and_given_order"
+  end
+
+  create_table "offer_category_assignments", force: :cascade do |t|
+    t.bigint "offer_id", null: false
+    t.bigint "offer_category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["offer_category_id"], name: "index_offer_category_assignments_on_offer_category_id"
+    t.index ["offer_id", "offer_category_id"], name: "index_offer_category_assignments_unique", unique: true
+    t.index ["offer_id"], name: "index_offer_category_assignments_on_offer_id"
+  end
+
+  create_table "offer_category_translations", force: :cascade do |t|
+    t.bigint "offer_category_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_offer_category_translations_on_locale"
+    t.index ["offer_category_id"], name: "index_offer_category_translations_on_offer_category_id"
+  end
+
+  create_table "offer_translations", force: :cascade do |t|
+    t.bigint "offer_id", null: false
+    t.string "locale", null: false
+    t.string "title"
+    t.text "short_description"
+    t.text "times"
+    t.text "costs"
+    t.text "registration"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_offer_translations_on_locale"
+    t.index ["offer_id"], name: "index_offer_translations_on_offer_id"
+  end
+
+  create_table "offers", force: :cascade do |t|
+    t.string "address"
+    t.string "contact_name"
+    t.string "contact_phone"
+    t.string "contact_email"
+    t.string "contact_website"
+    t.bigint "author_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["author_id"], name: "index_offers_on_author_id"
+  end
+
   create_table "officing_manager_assignments", force: :cascade do |t|
     t.bigint "officing_manager_id", null: false
     t.bigint "projekt_phase_id", null: false
@@ -4135,6 +4189,9 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
   add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
+  add_foreign_key "offer_category_assignments", "offer_categories"
+  add_foreign_key "offer_category_assignments", "offers"
+  add_foreign_key "offers", "users", column: "author_id", on_delete: :nullify
   add_foreign_key "officing_manager_assignments", "officing_managers"
   add_foreign_key "officing_manager_assignments", "projekt_phases"
   add_foreign_key "officing_managers", "users"

@@ -1,0 +1,11 @@
+<% url = @category.persisted? ? adm_offers_category_path(@category) : adm_offers_categories_path(kind: @kind) %>
+
+<%= form_with model: @category, scope: :offer_category, url: url do |f| %>
+  <p class="kern-body mb-4">
+    <%= t(".kind_label") %>: <strong><%= t("activerecord.attributes.offer/category.kinds.#{@kind}") %></strong>
+  </p>
+
+  <%= f.text_field :name, label: t(".name_label"), hint: t(".name_hint") %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

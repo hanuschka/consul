@@ -1,0 +1,85 @@
+de:
+  adm:
+    offers:
+      title: Angebote
+      menu:
+        aria_label: Angebote Navigation
+        items:
+          offers: Angebote
+          categories: Kategorien
+          settings: Konfiguration
+      settings:
+        title: Konfiguration
+      offers:
+        index:
+          title: Angebote
+          page_hint: "Hier sehen Sie alle Angebote der Träger. Angebote werden über das Eingabeformular im öffentlichen Bereich angelegt. Sie können Angebote nach Titel suchen, sortieren und löschen."
+          total_label:
+            one: Angebot
+            other: Angebote
+          total_hint: Anzahl der Angebote, die den aktuellen Suchkriterien entsprechen
+          no_items_title: Keine Angebote vorhanden
+          no_items_description: Sobald Träger Angebote einstellen, erscheinen sie hier.
+          no_results_filtered_title: Keine Treffer
+          no_results_filtered_description: Für die Suche wurden keine Angebote gefunden. Passen Sie die Suche an oder setzen Sie sie zurück.
+          table:
+            id: ID
+            title: Titel
+            offer_type: Angebotsart
+            social_area: Sozialraum
+            author: Erstellt von
+            updated_at: Aktualisiert am
+        edit:
+          title: Angebot bearbeiten
+        update:
+          success: Das Angebot wurde gespeichert.
+        destroy:
+          success: Das Angebot wurde gelöscht.
+        form:
+          errors_title: Das Angebot konnte nicht gespeichert werden
+          image_label: Bild
+          sections:
+            basics: Grunddaten
+            categories: Kategorien
+            location: Ort
+            details: Details
+            contact: Kontakt
+          hints:
+            title: Kurzer, aussagekräftiger Titel des Angebots.
+            short_description: Beschreiben Sie das Angebot in wenigen Sätzen.
+            image: Optionales Bild, das auf der Detailseite und in der Übersicht erscheint.
+            categories: Wählen Sie je Kategorie alle passenden Werte aus. Angebotsart und Sozialraum sind Pflicht.
+            no_categories: Für diese Kategorie sind noch keine Werte angelegt.
+            address: Adresse, unter der das Angebot stattfindet.
+            map_location: Optional. Setzen Sie eine Markierung, damit das Angebot auf der Karte erscheint.
+            times: "Zum Beispiel: dienstags 15–17 Uhr, außer in den Schulferien."
+            costs: "Optionale Angaben zu den Kosten, zum Beispiel: 5 €, ermäßigt 3 €."
+            registration: "Ob und wie man sich anmelden muss, zum Beispiel: Anmeldung bis Freitag unter 03641 123456."
+            contact_website: Vollständige Adresse beginnend mit https://
+          submit: Speichern
+      categories:
+        index:
+          title: Kategorien
+          page_hint: "Hier verwalten Sie die Werte der fünf Kategorien, nach denen Angebote eingeordnet und gefiltert werden. Wählen Sie oben die Kategorie aus. Neue Werte stehen sofort im Eingabeformular der Träger zur Auswahl. Per Drag & Drop legen Sie die Reihenfolge fest. Werte, die noch einem Angebot zugeordnet sind, können nicht gelöscht werden."
+          new_category: Neuer Wert
+          no_items_title: Keine Werte vorhanden
+          no_items_description: Legen Sie einen Wert an, damit Träger ihn ihren Angeboten zuordnen können.
+          table:
+            order: Reihenfolge
+            name: Name
+        new:
+          title: Neuer Wert
+        edit:
+          title: Wert bearbeiten
+        create:
+          success: Der Wert wurde erstellt.
+        update:
+          success: Der Wert wurde aktualisiert.
+        destroy:
+          success: Der Wert wurde gelöscht.
+          cannot_destroy: Der Wert kann nicht gelöscht werden, da ihm noch Angebote zugeordnet sind.
+        form:
+          kind_label: Kategorie
+          name_label: Name
+          name_hint: Der Name erscheint im Eingabeformular, als Filter in der Angebotsübersicht und bei jedem Angebot, dem der Wert zugeordnet ist. Wählen Sie einen kurzen, allgemein verständlichen Begriff.
+          submit: Speichern

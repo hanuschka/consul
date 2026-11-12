@@ -10,6 +10,12 @@ en:
       municipal_plan/procedure_step:
         one: "Procedure step"
         other: "Procedure steps"
+      offer:
+        one: "Offer"
+        other: "Offers"
+      offer/category:
+        one: "Category"
+        other: "Categories"
     attributes:
       municipal_plan:
         status: "Status"
@@ -61,6 +67,34 @@ en:
         name: "Name"
       municipal_plan/officer_group:
         name: "Name"
+      offer:
+        title: "Title"
+        short_description: "Short description"
+        times: "Times"
+        costs: "Costs (details)"
+        registration: "Registration"
+        address: "Address"
+        map_location: "Map position"
+        categories: "Categories"
+        contact_name: "Contact name"
+        contact_phone: "Phone"
+        contact_email: "E-mail"
+        contact_website: "Website"
+        author: "Created by"
+      offer/translation:
+        title: "Title"
+        short_description: "Short description"
+      offer/category:
+        name: "Name"
+        kind: "Category"
+        kinds:
+          offer_type: "Offer type"
+          target_group: "Target group"
+          costs: "Costs"
+          accessibility: "Accessibility"
+          social_area: "Social area"
+      offer/category/translation:
+        name: "Name"
     errors:
       models:
         municipal_plan:
@@ -70,6 +104,8 @@ en:
           topics_required: "Please select at least one topic."
           release_required: "Please fill in “%{field}” before publishing the plan."
           nested_working_copy: "A working copy cannot carry a working copy of its own."
+        offer:
+          category_required: "Please select at least one value for “%{category}”."
   deficiency_reports:
     official_answer_documents:
       too_many: "At most %{count} documents can be attached to the official response."

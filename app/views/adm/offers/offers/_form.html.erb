@@ -1,0 +1,129 @@
+<% if form.object.errors[:base].any? %>
+  <div class="mb-5">
+    <%= kern_alert(title: t(".errors_title"), style: :danger) do %>
+      <ul class="mb-0">
+        <% form.object.errors[:base].each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+<% end %>
+
+<% open_all = form.object.errors.any? %>
+
+<%= tag.details class: "kern-accordion", name: ("offer-form" unless open_all), open: true do %>
+  <summary class="kern-accordion__header"><span class="kern-title"><%= t(".sections.basics") %></span></summary>
+  <section class="kern-accordion__body">
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-10">
+        <%= form.text_field :title, label: "#{Offer.human_attribute_name(:title)} *", hint: t(".hints.title") %>
+
+        <%= form.rich_text_area :short_description, label: "#{Offer.human_attribute_name(:short_description)} *",
+              hint: t(".hints.short_description") %>
+
+        <%= render Kern::FormFieldComponent.new(divider: false, label: t(".image_label"), hint: t(".hints.image"),
+                                                stacked: true) do %>
+          <%= render Kern::Form::ImageableImageComponent.new(form: form) %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<%= tag.details class: "kern-accordion", name: ("offer-form" unless open_all), open: open_all do %>
+  <summary class="kern-accordion__header"><span class="kern-title"><%= t(".sections.categories") %></span></summary>
+  <section class="kern-accordion__body">
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-10">
+        <p class="kern-body mb-4"><%= t(".hints.categories") %></p>
+
+        <%= hidden_field_tag "offer[category_ids][]", "", id: nil %>
+
+        <% Offer::Category::KINDS.each do |kind| %>
+          <% categories = @categories_by_kind.fetch(kind, []) %>
+          <% kind_label = t("activerecord.attributes.offer/category.kinds.#{kind}") %>
+          <% legend = Offer::REQUIRED_CATEGORY_KINDS.include?(kind) ? safe_join([kind_label, " *"]) : kind_label %>
+
+          <div class="mb-4">
+            <% if categories.any? %>
+              <%= form.collection_check_boxes :category_ids, categories, :id, :name,
+                    { legend: legend, include_hidden: false } %>
+            <% else %>
+              <fieldset class="kern-fieldset">
+                <legend class="kern-label"><%= legend %></legend>
+                <div class="kern-fieldset__body">
+                  <p class="kern-body mb-0"><%= t(".hints.no_categories") %></p>
+                </div>
+              </fieldset>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<%= tag.details class: "kern-accordion", name: ("offer-form" unless open_all), open: open_all do %>
+  <summary class="kern-accordion__header"><span class="kern-title"><%= t(".sections.location") %></span></summary>
+  <section class="kern-accordion__body">
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-10">
+        <%= form.text_field :address, label: Offer.human_attribute_name(:address), hint: t(".hints.address") %>
+
+        <%= render Kern::FormFieldComponent.new(divider: false, label: Offer.human_attribute_name(:map_location),
+                                                hint: t(".hints.map_location"), stacked: true) do %>
+          <%= form.fields_for :map_location do |map_form| %>
+            <%= render Kern::MapComponent.new(
+              map_location: form.object.map_location,
+              form: map_form,
+              editable: true,
+              admin_editor: false,
+              height: 500,
+              error: form.object.errors[:map_location].to_sentence.presence
+            ) %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<%= tag.details class: "kern-accordion", name: ("offer-form" unless open_all), open: open_all do %>
+  <summary class="kern-accordion__header"><span class="kern-title"><%= t(".sections.details") %></span></summary>
+  <section class="kern-accordion__body">
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-10">
+        <%= form.text_area :times, label: Offer.human_attribute_name(:times), hint: t(".hints.times"), rows: 3 %>
+
+        <%= form.text_area :costs, label: Offer.human_attribute_name(:costs), hint: t(".hints.costs"), rows: 3 %>
+
+        <%= form.text_area :registration, label: Offer.human_attribute_name(:registration),
+              hint: t(".hints.registration"), rows: 3 %>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<%= tag.details class: "kern-accordion", name: ("offer-form" unless open_all), open: open_all do %>
+  <summary class="kern-accordion__header"><span class="kern-title"><%= t(".sections.contact") %></span></summary>
+  <section class="kern-accordion__body">
+    <div class="kern-row">
+      <div class="kern-col-12 kern-col-md-10">
+        <%= form.text_field :contact_name, label: Offer.human_attribute_name(:contact_name) %>
+
+        <%= form.telephone_field :contact_phone, label: Offer.human_attribute_name(:contact_phone) %>
+
+        <%= form.email_field :contact_email, label: Offer.human_attribute_name(:contact_email) %>
+
+        <%= form.url_field :contact_website, label: Offer.human_attribute_name(:contact_website),
+              hint: t(".hints.contact_website") %>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<div class="d-flex gap-2 mb-4 mt-5">
+  <%= kern_button(text: t(".submit"), icon: "save", type: "submit") %>
+  <%= kern_link_button(adm_offers_root_path, text: t("shared.cancel"), style: :secondary) %>
+</div>

@@ -22,6 +22,12 @@ de:
       municipal_plan/procedure_step:
         one: "Verfahrensschritt"
         other: "Verfahrensschritte"
+      offer:
+        one: "Angebot"
+        other: "Angebote"
+      offer/category:
+        one: "Kategorie"
+        other: "Kategorien"
       activity:
         one: "Aktivität"
         other: "Aktivitäten"
@@ -207,6 +213,34 @@ de:
       municipal_plan/procedure_step/translation:
         name: "Name"
       municipal_plan/officer_group:
+        name: "Name"
+      offer:
+        title: "Titel"
+        short_description: "Kurzbeschreibung"
+        times: "Zeiten"
+        costs: "Kosten (Details)"
+        registration: "Anmeldung"
+        address: "Adresse"
+        map_location: "Kartenposition"
+        categories: "Kategorien"
+        contact_name: "Name der Ansprechperson"
+        contact_phone: "Telefon"
+        contact_email: "E-Mail"
+        contact_website: "Website"
+        author: "Erstellt von"
+      offer/translation:
+        title: "Titel"
+        short_description: "Kurzbeschreibung"
+      offer/category:
+        name: "Name"
+        kind: "Kategorie"
+        kinds:
+          offer_type: "Angebotsart"
+          target_group: "Zielgruppe"
+          costs: "Kosten"
+          accessibility: "Barrierefreiheit"
+          social_area: "Sozialraum"
+      offer/category/translation:
         name: "Name"
       deficiency_report:
         admin_accepted: "Sichtbarkeit"
@@ -621,6 +655,8 @@ de:
           topics_required: "Bitte wählen Sie mindestens eine Kategorie aus."
           release_required: "Bitte füllen Sie das Feld „%{field}“ aus, bevor Sie das Vorhaben veröffentlichen."
           nested_working_copy: "Zu einer Bearbeitungsfassung kann keine weitere Bearbeitungsfassung angelegt werden."
+        offer:
+          category_required: "Bitte wählen Sie mindestens einen Wert für „%{category}“ aus."
         projekt:
           attributes:
             parent_id:

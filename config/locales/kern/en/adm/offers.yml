@@ -1,0 +1,85 @@
+en:
+  adm:
+    offers:
+      title: Offers
+      menu:
+        aria_label: Offers navigation
+        items:
+          offers: Offers
+          categories: Categories
+          settings: Configuration
+      settings:
+        title: Configuration
+      offers:
+        index:
+          title: Offers
+          page_hint: "All offers from providers. Offers are created through the entry form in the public area. You can search offers by title, sort them and delete them."
+          total_label:
+            one: offer
+            other: offers
+          total_hint: Number of offers matching the current search
+          no_items_title: No offers yet
+          no_items_description: Offers appear here as soon as providers publish them.
+          no_results_filtered_title: No results
+          no_results_filtered_description: No offers match the search. Adjust or reset the search.
+          table:
+            id: ID
+            title: Title
+            offer_type: Offer type
+            social_area: Social area
+            author: Created by
+            updated_at: Updated on
+        edit:
+          title: Edit offer
+        update:
+          success: The offer was saved.
+        destroy:
+          success: The offer was deleted.
+        form:
+          errors_title: The offer could not be saved
+          image_label: Image
+          sections:
+            basics: Basics
+            categories: Categories
+            location: Location
+            details: Details
+            contact: Contact
+          hints:
+            title: Short, meaningful title of the offer.
+            short_description: Describe the offer in a few sentences.
+            image: Optional image shown on the detail page and in the overview.
+            categories: Select all matching values per category. Offer type and social area are required.
+            no_categories: No values have been created for this category yet.
+            address: Address where the offer takes place.
+            map_location: Optional. Set a marker so the offer appears on the map.
+            times: "For example: Tuesdays 3–5 pm, except during school holidays."
+            costs: "Optional cost details, for example: €5, reduced €3."
+            registration: "Whether and how to register, for example: register by Friday on 03641 123456."
+            contact_website: Full address starting with https://
+          submit: Save
+      categories:
+        index:
+          title: Categories
+          page_hint: "Manage the values of the five categories used to classify and filter offers. Choose the category above. New values are available in the providers' entry form right away. Use drag and drop to set the order. Values still assigned to an offer cannot be deleted."
+          new_category: New value
+          no_items_title: No values yet
+          no_items_description: Create a value so providers can assign it to their offers.
+          table:
+            order: Order
+            name: Name
+        new:
+          title: New value
+        edit:
+          title: Edit value
+        create:
+          success: The value was created.
+        update:
+          success: The value was updated.
+        destroy:
+          success: The value was deleted.
+          cannot_destroy: The value cannot be deleted because offers are still assigned to it.
+        form:
+          kind_label: Category
+          name_label: Name
+          name_hint: The name appears in the entry form, as a filter in the offers overview and on every offer it is assigned to. Use a short, generally understandable term.
+          submit: Save

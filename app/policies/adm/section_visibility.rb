@@ -6,6 +6,7 @@ module Adm::SectionVisibility
     "moderation"         => [Adm::Moderation::ProposalPolicy,                :index?],
     "deficiency_reports" => [Adm::DeficiencyReports::DeficiencyReportPolicy, :index?],
     "municipal_plans"    => [Adm::MunicipalPlans::MunicipalPlanPolicy,       :index?],
+    "offers"             => [Adm::Offers::OfferPolicy,                       :index?],
     "ideas"              => [Adm::Ideas::IdeaPolicy,                         :index?],
     "valuation"          => [Adm::Valuation::BudgetInvestmentPolicy,         :index?],
     "officing"           => [Adm::Officing::BasePolicy,                      :index?]

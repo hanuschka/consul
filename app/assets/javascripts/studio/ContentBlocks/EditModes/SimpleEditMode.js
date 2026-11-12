@@ -181,7 +181,7 @@ App.Studio.ContentBlocks.SimpleEditMode = {
       $contentBlock
         .find("a.glightbox-disabled")
         .addClass("glightbox")
-        .removeClass("glightbox-disabled")
+        .removeClass("glightbox-disabled glightbox-link")
 
       setTimeout(() => {
         App.ImageGallery.initialize();
@@ -190,7 +190,13 @@ App.Studio.ContentBlocks.SimpleEditMode = {
   },
 
   toggleLinksInteration(contentBlock, state) {
-    $(contentBlock).find("a").toggleClass("js-content-block-disable-link-click", state)
+    const links = contentBlock.querySelectorAll("a")
+
+    if (state) {
+      links.forEach((link) => link.classList.add("js-content-block-disable-link-click"))
+    } else {
+      links.forEach((link) => App.Studio.utils.removeClasses(link, ["js-content-block-disable-link-click"]))
+    }
   },
 
   toggleContentEditableFor(contentBlock, contentEditable) {

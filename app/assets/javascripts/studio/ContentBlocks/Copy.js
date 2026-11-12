@@ -29,15 +29,14 @@ App.Studio.ContentBlocks.Copy = {
 
   stripSimpleEditModeControls(clone) {
     clone.querySelectorAll(".js-content-block--list-control").forEach((el) => el.remove());
+    App.Studio.ContentBlocks.SimpleEditMode.ListEdit.removeListItemAnchors(clone)
 
     clone.querySelectorAll(".js-content-block-link-wrapper").forEach((wrapper) => {
-      const link = wrapper.querySelector("a");
-      if (link) wrapper.parentNode.insertBefore(link, wrapper);
-      wrapper.remove();
+      App.Studio.ContentBlocks.SimpleEditMode.LinkEdit.removeLinkControls(wrapper)
     });
 
     clone.querySelectorAll("a.js-content-block-disable-link-click").forEach((a) => {
-      a.classList.remove("js-content-block-disable-link-click");
+      App.Studio.utils.removeClasses(a, ["js-content-block-disable-link-click"]);
     });
 
     clone.querySelectorAll("a.glightbox-disabled").forEach((a) => {

@@ -163,6 +163,9 @@ application.register("adm-projekts--import-review-autosave", AdmProjektsImportRe
 import AdmBudgetInvestmentsPhasesAccordionController from "./adm/budget_investments/phases_accordion_controller"
 application.register("adm-budget-investments--phases-accordion", AdmBudgetInvestmentsPhasesAccordionController)
 
+import AdmDeficiencyReportsSameAnswerController from "./adm/deficiency_reports/same_answer_controller"
+application.register("adm-deficiency-reports--same-answer", AdmDeficiencyReportsSameAnswerController)
+
 import ClipboardController from "./clipboard_controller"
 application.register("clipboard", ClipboardController)
 

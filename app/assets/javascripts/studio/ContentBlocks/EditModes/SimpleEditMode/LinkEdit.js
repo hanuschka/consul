@@ -157,8 +157,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     const buttonHeight = editButton.offsetHeight
     const halfButtonWidth = editButton.offsetWidth / 2
     const linkCenter = firstRect.left - layerRect.left + firstRect.width / 2
-    const maxCenter = Math.max(halfButtonWidth, layerRect.width - halfButtonWidth)
-    const center = Math.min(Math.max(linkCenter, halfButtonWidth), maxCenter)
+    const center = App.Studio.utils.clampCenterInside(linkCenter, halfButtonWidth, layerRect.width)
     let top = firstRect.top - layerRect.top - this.linkEditButtonOffset
 
     const aboveBox = {
@@ -168,7 +167,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
       bottom: layerRect.top + top + buttonHeight
     }
 
-    if (this.coversListAddButton(layer, aboveBox)) {
+    if (this.coversBlockControls(layer, aboveBox)) {
       top = lastRect.bottom - layerRect.top - (buttonHeight - this.linkEditButtonOffset)
     }
 
@@ -176,33 +175,41 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     editButton.style.top = `${top}px`
   },
 
-  coversListAddButton(layer, box) {
-    return Array.from(layer.querySelectorAll(".js-content-block--add-item")).some((addButton) => {
-      const rect = addButton.getBoundingClientRect()
+  coversBlockControls(layer, box) {
+    const controls = layer.querySelectorAll(".js-content-block--add-item, .js-content-block-toolbar")
 
-      return rect.width > 0 &&
-        rect.left < box.right && box.left < rect.right &&
-        rect.top < box.bottom && box.top < rect.bottom
+    return Array.from(controls).some((control) => {
+      const rect = control.getBoundingClientRect()
+
+      return rect.width > 0 && App.Studio.utils.boxesOverlap(rect, box)
     })
   },
 
   refreshLinkHighlight() {
-    const activeLink = this.getActiveLink()
-    const link = activeLink || this.hoveredLink
+    const editedTarget = this.getEditedLinkTarget()
+    const target = editedTarget || this.hoveredLink
 
-    if (!link) {
+    if (!target) {
       this.renderLinkHighlightFrames(null, [])
       return
     }
 
-    this.renderLinkHighlightFrames(this.getLinkControlsLayer(link), Array.from(link.getClientRects()))
-    this.linkHighlightFrames.forEach((frame) => frame.classList.toggle("-active", Boolean(activeLink)))
+    this.renderLinkHighlightFrames(this.getLinkControlsLayer(target), Array.from(target.getClientRects()))
+    this.linkHighlightFrames.forEach((frame) => frame.classList.toggle("-active", Boolean(editedTarget)))
+  },
+
+  getEditedLinkTarget() {
+    const target = this.currentLinkTarget
+
+    if (target && target.isConnected) return target
+
+    return null
   },
 
   getActiveLink() {
-    const target = this.currentLinkTarget
+    const target = this.getEditedLinkTarget()
 
-    if (target && target.matches("a") && target.isConnected) return target
+    if (target && target.matches("a")) return target
 
     return null
   },
@@ -257,22 +264,33 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     return frame
   },
 
-  buildLinkWrapper() {
-    const linkWrapper = document.createElement("div")
-    linkWrapper.classList.add("content-block-link-wrapper", "js-content-block-link-wrapper")
-    linkWrapper.contentEditable = false;
+  wrapRangeInDraftLink(range) {
+    const linkWrapper = document.createElement("span")
+    linkWrapper.classList.add("js-content-block-link-wrapper", "-js-draft-link")
+    linkWrapper.contentEditable = false
+
+    const linkContentElement = document.createElement("span")
+    linkContentElement.classList.add("js-link-wrapper-content")
+    linkContentElement.appendChild(range.extractContents())
+    linkWrapper.appendChild(linkContentElement)
+
+    range.insertNode(linkWrapper)
 
     return linkWrapper
   },
 
   removeLinkControls(linkWrapper) {
     const linkContentElement = linkWrapper.querySelector(".js-link-wrapper-content");
+    const link = linkWrapper.querySelector("a")
 
     if (linkContentElement) {
       const childNodes = Array.from(linkContentElement.childNodes);
       childNodes.forEach(child => {
         linkWrapper.parentNode.insertBefore(child, linkWrapper);
       });
+    }
+    else if (link) {
+      linkWrapper.parentNode.insertBefore(link, linkWrapper)
     }
 
     linkWrapper.remove();
@@ -378,15 +396,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     this.saveSelection();
     this.currentContentBlockWrapper = contentBlockWrapper;
 
-    const linkWrapper = this.buildLinkWrapper()
-    linkWrapper.classList.add("-js-draft-link")
-
-    const linkContentElement = document.createElement("span")
-    linkContentElement.classList.add("js-link-wrapper-content")
-    linkContentElement.appendChild(range.extractContents())
-    linkWrapper.appendChild(linkContentElement)
-
-    range.insertNode(linkWrapper);
+    const linkWrapper = this.wrapRangeInDraftLink(range)
 
     this.currentLinkTarget = linkWrapper
     this.showEditLinkPopup(linkWrapper);
@@ -411,17 +421,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
 
     this.saveSelection();
     this.currentContentBlockWrapper = contentBlockWrapper;
-
-    const linkWrapper = this.buildLinkWrapper();
-    linkWrapper.classList.add("-js-draft-link");
-
-    const linkContentElement = document.createElement("span");
-    linkContentElement.classList.add("js-link-wrapper-content");
-    linkContentElement.appendChild(range.extractContents());
-    linkWrapper.appendChild(linkContentElement);
-    range.insertNode(linkWrapper);
-
-    this.currentLinkTarget = linkWrapper;
+    this.currentLinkTarget = this.wrapRangeInDraftLink(range);
 
     App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog.openForDocuments(
       (selectedFile) => {
@@ -461,10 +461,6 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
 
   showEditLinkPopup(target) {
     // window.getSelection().removeAllRanges();
-    if (target.classList.contains("js-content-block-link-wrapper")) {
-      target.classList.add("-highlight-active")
-    }
-
     this.refreshLinkHighlight()
 
     App.Studio.ContentBlocks.SimpleEditMode.EditPopup.show(
@@ -642,10 +638,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
       .parent()
       .hide()
 
-    if (this.currentLinkTarget) {
-      this.currentLinkTarget.classList.remove("-highlight-active")
-      this.currentLinkTarget = null;
-    }
+    this.currentLinkTarget = null;
 
     this.refreshLinkHighlight()
 

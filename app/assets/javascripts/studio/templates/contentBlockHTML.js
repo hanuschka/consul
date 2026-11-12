@@ -133,7 +133,7 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
       <div class="custom-content-block-wrapper--inner">
         <div class="custom-content-block--toolbar-zone js-studio-hide-on-preview">
         <div class="custom-content-block--toolbar-row">
-        <div class="custom-content-block--toolbar">
+        <div class="custom-content-block--toolbar js-content-block-toolbar">
 
             <div class="custom-content-block-edit--buttons-wrapper">
               ${App.Studio.Projekt.templateFunctions.studioControlTooltip(`
@@ -396,7 +396,7 @@ App.Studio.Projekt.templateFunctions.addStudioControlsToContentBlock = function(
             </div>
         </div>
 
-          <div class="custom-content-block--toolbar -start">
+          <div class="custom-content-block--toolbar -start js-content-block-toolbar">
             <div class="custom-content-block-start-controls">
               ${showVisibility ? `
               ${App.Studio.Projekt.templateFunctions.contentBlockVisibilityControlsHtml(visibilityState)}

@@ -49,3 +49,10 @@
 .studio-content-block-list-add-button.-hidden {
   display: none;
 }
+
+// Anchors an item's drag and delete buttons in simple edit mode. ListEdit
+// adds it only to statically positioned items and removes it on exit, so the
+// saved markup keeps the item's own positioning.
+.studio-content-block-list-item-anchor {
+  position: relative;
+}

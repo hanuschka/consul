@@ -88,8 +88,6 @@ App.Studio.ContentBlocks.ToolbarViewportClamp = {
   },
 
   getToolbars(wrapper) {
-    return Array.from(
-      wrapper.querySelectorAll(".custom-content-block--toolbar-row > .custom-content-block--toolbar")
-    )
+    return Array.from(wrapper.querySelectorAll(".js-content-block-toolbar"))
   }
 };

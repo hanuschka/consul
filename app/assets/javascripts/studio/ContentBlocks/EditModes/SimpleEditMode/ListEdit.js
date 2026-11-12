@@ -1,5 +1,6 @@
 App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
   listControlClass: "js-content-block--list-control",
+  listItemAnchorClass: "studio-content-block-list-item-anchor",
   sortableInstances: new Map(),
   addItemButtonStates: new WeakMap(),
   addItemButtonLists: new WeakMap(),
@@ -34,6 +35,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
         .querySelectorAll(`.${this.listControlClass}`)
         .forEach((e) => e.remove())
 
+      this.removeListItemAnchors(contentBlock)
       this.hideAddItemButtons(contentBlock)
       this.cleanupSortableForContentBlock(contentBlock)
     }
@@ -67,14 +69,14 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
 
     this.hideAddItemButtons(contentBlock)
 
-    const entries = this.getEditableLists(contentBlock).map((list) => {
+    const entries = this.sortByListNestingDepth(this.getEditableLists(contentBlock).map((list) => {
       const button = this.buildAddItemButton()
 
       layer.appendChild(button)
       this.addItemButtonLists.set(button, list)
 
       return { button, list, anchor: this.getAddItemAnchor(list) }
-    })
+    }))
 
     const state = { layer, entries, frameRequest: null }
     const scheduleUpdate = () => this.scheduleAddItemButtonsUpdate(contentBlock)
@@ -84,7 +86,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
     entries.forEach(({ anchor }) => state.resizeObserver.observe(anchor))
 
     state.mutationObserver = new MutationObserver(scheduleUpdate)
-    state.mutationObserver.observe(contentBlock, { childList: true, subtree: true, characterData: true })
+    state.mutationObserver.observe(contentBlock, { childList: true, subtree: true })
 
     this.addItemButtonStates.set(contentBlock, state)
     this.positionAddItemButtons(state)
@@ -138,7 +140,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
 
   positionAddItemButtons({ layer, entries }) {
     const layerRect = layer.getBoundingClientRect()
-    const measuredEntries = this.sortByListNestingDepth(entries).map((entry) => {
+    const measuredEntries = entries.map((entry) => {
       const anchorRect = entry.anchor.getBoundingClientRect()
 
       return { ...entry, anchorRect, isAnchorRendered: anchorRect.width > 0 || anchorRect.height > 0 }
@@ -156,8 +158,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
     renderedEntries.forEach((entry) => {
       const halfButtonWidth = entry.width / 2
       const anchorCenter = entry.anchorRect.left - layerRect.left + entry.anchorRect.width / 2
-      const maxCenter = Math.max(halfButtonWidth, layerRect.width - halfButtonWidth)
-      const center = Math.min(Math.max(anchorCenter, halfButtonWidth), maxCenter)
+      const center = App.Studio.utils.clampCenterInside(anchorCenter, halfButtonWidth, layerRect.width)
       const edge = entry.anchorRect.bottom - layerRect.top
       const box = this.findFreeAddItemButtonBox(placedBoxes, {
         left: center - halfButtonWidth,
@@ -178,8 +179,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
   },
 
   findFreeAddItemButtonBox(placedBoxes, box) {
-    const overlaps = (placed) => placed.left < box.right && box.left < placed.right &&
-      placed.top < box.bottom && box.top < placed.bottom
+    const overlaps = (placedBox) => App.Studio.utils.boxesOverlap(placedBox, box)
     let coveredBox = placedBoxes.find(overlaps)
 
     while (coveredBox) {
@@ -232,10 +232,16 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
     return parentList && this.isFollowerList(parentList);
   },
 
+  removeListItemAnchors(element) {
+    element
+      .querySelectorAll(`.${this.listItemAnchorClass}`)
+      .forEach((li) => App.Studio.utils.removeClasses(li, [this.listItemAnchorClass]))
+  },
+
   addItemControlls(li) {
     const elementStyle = getComputedStyle(li);
     if (elementStyle.position === "static") {
-      li.style.position = "relative"
+      li.classList.add(this.listItemAnchorClass)
     }
 
     let baseClass = "content-block--item-button"
@@ -273,7 +279,9 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
 
 
   addItem(e) {
-    const ul = this.addItemButtonLists.get(e.currentTarget)
+    const addButton = e.currentTarget
+    const isAddButtonFocused = document.activeElement === addButton
+    const ul = this.addItemButtonLists.get(addButton)
     const contentBlock = ul.closest(".js-content-block")
     const realListItems = this.getRealListItems(ul)
     const lastLi = realListItems[realListItems.length - 1]
@@ -287,7 +295,7 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
     const clonedLi = lastLi.cloneNode(true);
 
     clonedLi
-      .querySelectorAll(`.${this.listControlClass}`)
+      .querySelectorAll(`:scope > .${this.listControlClass}`)
       .forEach((control) => control.remove())
 
     App.Studio.utils.removeChildHtmlAttributes(
@@ -332,6 +340,17 @@ App.Studio.ContentBlocks.SimpleEditMode.ListEdit = {
     this.mirrorAddToFollower(newUl, clonedLi)
 
     this.showAddItemButtons(contentBlock)
+
+    if (isAddButtonFocused) {
+      this.focusAddItemButton(contentBlock, newUl)
+    }
+  },
+
+  focusAddItemButton(contentBlock, list) {
+    const { entries } = this.addItemButtonStates.get(contentBlock)
+    const { button } = entries.find((entry) => entry.list === list)
+
+    button.focus({ preventScroll: true })
   },
 
   updateSliderItemAttributes(lastLi, clonedLi) {

@@ -296,6 +296,11 @@ $brand-tint-24: color-mix(in srgb, var(--brand-color) 24%, transparent);
   visibility: hidden;
 }
 
+// The other edit modes add their own panel, which takes the hint's place.
+.sidebar-card.is-content-empty .custom-content-block-wrapper.-in-edit-mode:not(.-simple-edit-mode) .sidebar-card--admin-empty-hint {
+  display: none;
+}
+
 // When empty, the admin hint stands in for the content, so collapse the empty
 // editable body — otherwise it keeps its studio min-height and leaves a gap
 // below the hint, splitting the hint and the block apart. Mirrors the studio

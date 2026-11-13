@@ -5,6 +5,8 @@ de:
       activity: Aktivität
       my_activity: Meine Aktivität
       contact: Kontakt
+      direct_messages:
+        own_reception_required: "Um anderen Nutzer*innen private Nachrichten zu schreiben, müssen Sie selbst private Nachrichten zulassen. Sie können das in Ihren %{settings_link} einschalten."
       banner:
         registered_at: "Beigetreten am: %{date}"
       index:

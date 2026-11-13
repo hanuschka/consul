@@ -406,6 +406,14 @@ User.class_eval do
     idea_manager.present?
   end
 
+  def bypasses_direct_message_reception?
+    administrator? || deficiency_report_manager? || deficiency_report_officer?
+  end
+
+  def may_send_direct_messages?
+    email_on_direct_message? || bypasses_direct_message_reception?
+  end
+
   def recipient_greeting
     case Setting["email_templates.recipient_greeting"]
     when "first_name" then informal_recipient_greeting(first_name)

@@ -65,10 +65,14 @@
       <% end %>
 
       <div>
-        <%= link_to t("users.show.send_private_message"),
-          new_user_direct_message_path(@idea.author),
-          target: "_blank",
-          class: "button" %>
+        <% if current_user.may_send_direct_messages? %>
+          <%= link_to t("users.show.send_private_message"),
+            new_user_direct_message_path(@idea.author),
+            target: "_blank",
+            class: "button" %>
+        <% else %>
+          <%= render "direct_messages/own_reception_required" %>
+        <% end %>
       </div>
     </div>
   </div>

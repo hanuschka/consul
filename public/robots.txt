@@ -18,7 +18,13 @@ Disallow: /*?*filter
 Disallow: /*?*page
 Disallow: /*?*page_a
 Disallow: /*?*tags
-Disallow: user_id
+Disallow: /*?*projekt_label_ids
+Disallow: /*?*sentiment_id
+Disallow: /*?*category_ids
+Disallow: /*?*sdg_goals
+Disallow: /*?*sdg_targets
+Disallow: /*/projekt_phase_footer_tab/
+Disallow: /*?*user_id
 
 User-agent: Bingbot
 Disallow: /users/
@@ -33,7 +39,13 @@ Disallow: /*?*filter
 Disallow: /*?*page
 Disallow: /*?*page_a
 Disallow: /*?*tags
-Disallow: user_id
+Disallow: /*?*projekt_label_ids
+Disallow: /*?*sentiment_id
+Disallow: /*?*category_ids
+Disallow: /*?*sdg_goals
+Disallow: /*?*sdg_targets
+Disallow: /*/projekt_phase_footer_tab/
+Disallow: /*?*user_id
 
 User-agent: facebookexternalhit
 User-agent: meta-webindexer
@@ -49,7 +61,13 @@ Disallow: /*?*filter
 Disallow: /*?*page
 Disallow: /*?*page_a
 Disallow: /*?*tags
-Disallow: user_id
+Disallow: /*?*projekt_label_ids
+Disallow: /*?*sentiment_id
+Disallow: /*?*category_ids
+Disallow: /*?*sdg_goals
+Disallow: /*?*sdg_targets
+Disallow: /*/projekt_phase_footer_tab/
+Disallow: /*?*user_id
 
 # Block AI training crawlers
 User-agent: GPTBot
@@ -130,6 +148,12 @@ Disallow: /users/
 Disallow: /comments/
 Disallow: /ahoy/
 Disallow: /*?*tags
+Disallow: /*?*projekt_label_ids
+Disallow: /*?*sentiment_id
+Disallow: /*?*category_ids
+Disallow: /*?*sdg_goals
+Disallow: /*?*sdg_targets
+Disallow: /*/projekt_phase_footer_tab/
 
 # Block everything else
 User-agent: *

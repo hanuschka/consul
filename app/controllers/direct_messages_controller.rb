@@ -11,7 +11,10 @@ class DirectMessagesController < ApplicationController
     @receiver = User.find(params[:user_id])
 
     @direct_message = DirectMessage.new(parsed_params)
-    if @direct_message.save
+
+    if !@receiver.accepts_direct_messages_from?(@sender)
+      render :new, status: :forbidden
+    elsif @direct_message.save
       Notification.add(@receiver, @direct_message)
       Mailer.direct_message_for_receiver(@direct_message).deliver_later
       Mailer.direct_message_for_sender(@direct_message).deliver_later

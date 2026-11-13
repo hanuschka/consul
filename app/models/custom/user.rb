@@ -414,6 +414,10 @@ User.class_eval do
     email_on_direct_message? || bypasses_direct_message_reception?
   end
 
+  def accepts_direct_messages_from?(sender)
+    email_on_direct_message? || sender.bypasses_direct_message_reception?
+  end
+
   def recipient_greeting
     case Setting["email_templates.recipient_greeting"]
     when "first_name" then informal_recipient_greeting(first_name)

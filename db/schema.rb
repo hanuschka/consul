@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_09_131548) do
+ActiveRecord::Schema.define(version: 2026_11_11_090245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2148,6 +2148,20 @@ ActiveRecord::Schema.define(version: 2026_11_09_131548) do
     t.index ["email"], name: "index_pending_role_assignments_on_email"
     t.index ["invitation_token"], name: "index_pending_role_assignments_on_invitation_token", unique: true, where: "(invitation_token IS NOT NULL)"
     t.index ["role_type"], name: "index_pending_role_assignments_on_role_type"
+  end
+
+  create_table "phone_sign_in_codes", force: :cascade do |t|
+    t.string "phone_digest", null: false
+    t.string "code_digest", null: false
+    t.string "ip_digest"
+    t.integer "attempts", default: 0, null: false
+    t.datetime "expires_at", null: false
+    t.datetime "consumed_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["created_at"], name: "index_phone_sign_in_codes_on_created_at"
+    t.index ["ip_digest", "created_at"], name: "index_phone_sign_in_codes_on_ip_digest_and_created_at"
+    t.index ["phone_digest", "created_at"], name: "index_phone_sign_in_codes_on_phone_digest_and_created_at"
   end
 
   create_table "poll_answer_map_points", force: :cascade do |t|

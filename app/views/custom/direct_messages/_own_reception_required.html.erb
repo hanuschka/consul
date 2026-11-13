@@ -1,0 +1,11 @@
+<div class="callout primary">
+  <p>
+    <%= sanitize(t(
+      "custom.users.direct_messages.own_reception_required",
+      settings_link: link_to(
+        t("custom.users.settings"),
+        account_path(anchor: "account_email_on_direct_message")
+      )
+    )) %>
+  </p>
+</div>

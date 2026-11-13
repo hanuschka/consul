@@ -136,6 +136,36 @@ User.class_eval do
     def system
       @system_user ||= Users::SystemUserService.call
     end
+
+    def find_or_create_by_phone!(phone)
+      User.with_hidden.find_by(confirmed_phone: phone) || create_phone_account!(phone)
+    end
+
+    def create_phone_account!(phone)
+      User.create!(
+        username: generate_phone_username,
+        email: nil,
+        confirmed_phone: phone,
+        confirmed_at: Time.current,
+        locale: I18n.locale.to_s,
+        terms_general: true,
+        terms_data_protection: true,
+        terms_data_storage: true,
+        skip_password_validation: true,
+        email_digest: false,
+        email_on_direct_message: false,
+        email_on_proposal_notification: false
+      )
+    end
+
+    def generate_phone_username
+      prefix = I18n.t("sms_sign_in.username_prefix")
+
+      loop do
+        username = "#{prefix}-#{SecureRandom.random_number(1_000_000).to_s.rjust(6, "0")}"
+        break username unless User.with_hidden.exists?(username: username)
+      end
+    end
   end
 
   def actual?
@@ -284,14 +314,18 @@ User.class_eval do
     officing_manager.present?
   end
 
+  def phone_account?
+    email.blank? && confirmed_phone.present?
+  end
+
   def extended_registration?
-    return false if created_on_behalf_of
+    return false if created_on_behalf_of || phone_account?
 
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.extended"].present?
   end
 
   def document_required?
-    return false if created_on_behalf_of
+    return false if created_on_behalf_of || phone_account?
 
     !organization? && !erased? && !guest? && Setting["extra_fields.registration.check_documents"].present?
   end
@@ -370,6 +404,14 @@ User.class_eval do
 
   def idea_manager?
     idea_manager.present?
+  end
+
+  def bypasses_direct_message_reception?
+    administrator? || deficiency_report_manager? || deficiency_report_officer?
+  end
+
+  def may_send_direct_messages?
+    email_on_direct_message? || bypasses_direct_message_reception?
   end
 
   def recipient_greeting

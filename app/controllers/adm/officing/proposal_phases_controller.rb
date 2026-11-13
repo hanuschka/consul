@@ -18,9 +18,9 @@ class Adm::Officing::ProposalPhasesController < Adm::Officing::BaseController
     proposals = @proposal_phase.proposals
                                .includes(:translations)
                                .for_public_render
-                               .order(created_at: :desc)
+                               .order(:id)
 
-    @pagy, @proposals = pagy(proposals, items: 50)
+    @proposals = proposals
 
     @votes_by_proposal_id = ActsAsVotable::Vote
       .where(voter: @offline_user, votable_type: "Proposal", votable_id: @proposals.map(&:id))
@@ -34,9 +34,9 @@ class Adm::Officing::ProposalPhasesController < Adm::Officing::BaseController
                                .select(:id, :officing_bulk_votes, :projekt_phase_id, :draft, :retired_at, :published_at, :created_at, :hidden_at)
                                .includes(:translations)
                                .for_public_render
-                               .order(created_at: :desc)
+                               .order(:id)
 
-    @pagy, @proposals = pagy(proposals, items: 50)
+    @proposals = proposals
   end
 
   def update_bulk_votes

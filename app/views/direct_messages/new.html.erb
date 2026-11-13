@@ -27,7 +27,7 @@
             signin: link_to_signin, signup: link_to_signup)) %>
         </p>
       </div>
-    <% elsif current_user.administrator? || current_user.deficiency_report_manager? || current_user.deficiency_report_officer? %>
+    <% elsif current_user.bypasses_direct_message_reception? %>
       <%= form_html %>
     <% elsif not @receiver.email_on_direct_message? %>
       <div class="callout primary">
@@ -35,6 +35,8 @@
           <%= t("users.direct_messages.new.direct_messages_bloqued") %>
         </p>
       </div>
+    <% elsif not current_user.may_send_direct_messages? %>
+      <%= render "direct_messages/own_reception_required" %>
     <% elsif can? :create, @direct_message %>
       <%= form_html %>
     <% else %>

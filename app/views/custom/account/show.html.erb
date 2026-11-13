@@ -4,9 +4,11 @@
   <div class="row account">
     <div class="small-12 column">
       <ul class="account-settings-actions float-right text-right">
-        <li>
-          <%= link_to t("account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow" %>
-        </li>
+        <% unless @account.phone_account? %>
+          <li>
+            <%= link_to t("account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow" %>
+          </li>
+        <% end %>
         <li>
           <%= link_to t("account.show.erase_account_link"), users_registrations_delete_form_path, class: "delete" %>
         </li>

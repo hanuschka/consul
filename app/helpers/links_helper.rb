@@ -27,6 +27,19 @@ module LinksHelper
     link_to t("custom.shared.participate_as_guest"), new_guest_user_registration_path(query_params), options
   end
 
+  def link_to_sms_signin(options = {})
+    return if Setting["extended_feature.general.sms_login"].blank?
+
+    options = options.dup
+    return if options.delete(:projekt_phase)&.user_status == "verified"
+
+    query_params = options.slice(*query_params_keys)
+    options = options.delete_if { |key, _| query_params_keys.include?(key) }
+    options[:class] = [options[:class], "js-sms-sign-in"].compact.join(" ")
+    t("sms_sign_in.hint.text_html",
+      link: link_to(t("sms_sign_in.hint.link"), new_sms_sign_in_path(query_params), options))
+  end
+
   def link_to_enter_missing_user_data
     link_to t("custom.shared.enter_missing_user_data"), verification_path
   end

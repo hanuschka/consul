@@ -5,6 +5,8 @@ en:
       activity: Activity
       my_activity: My activity
       contact: Contact
+      direct_messages:
+        own_reception_required: "To write private messages to other users, you need to allow private messages yourself. You can switch this on in your %{settings_link}."
       banner:
         registered_at: "Entered at: %{date}"
       index:

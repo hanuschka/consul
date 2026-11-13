@@ -86,7 +86,7 @@ en:
       option:
         general:
           submissions_limit: Maximum submissions per user
-          submissions_limit_description: "Limits the number of form submissions a single user may submit. Once the limit is reached, the Submit button is disabled on the frontend and a notice appears. Use this value to prevent multiple submissions and ensure data quality. A value of one ensures each user can only submit once."
+          submissions_limit_description: "Limits the number of form submissions a single user may submit. Once the limit is reached, the Submit button is disabled on the frontend and a notice appears. Use this value to prevent multiple submissions and ensure data quality. A value of one ensures each user can only submit once. 0 or empty means unlimited."
           primary_formular_cutoff_date: End of phase 1
           primary_formular_cutoff_date_description: "Sets the end date of the first form phase, after which no new submissions are possible. The form consists of two phases: In phase 1 users fill in the primary fields. After this date, the follow-up phase begins in which users can only fill in supplementary follow-up fields on existing submissions. If you don't plan follow-up fields, simply leave this field empty."
     iframe_phase:

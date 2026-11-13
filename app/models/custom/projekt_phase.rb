@@ -781,7 +781,9 @@ class ProjektPhase < ApplicationRecord
       return phase_state_problem if phase_state_problem.present?
 
       return :guest_not_logged_in if guest_participation? && !user
-      return if guest_participation? && !GUEST_WAIVER_EXEMPT_LOCATIONS.include?(location)
+      if guest_participation? && !GUEST_WAIVER_EXEMPT_LOCATIONS.include?(location)
+        return user.persisted? ? phase_specific_permission_problems(user, location) : nil
+      end
       return :not_logged_in if user.blank? || (user.guest? && !guest_participation?)
       return :not_verified if user_status == "verified" && !user.level_three_verified?
 

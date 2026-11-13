@@ -4,6 +4,7 @@ module Adm
       extended_feature.general.language_switcher_in_menu
       extended_feature.general.enable_google_translate
       extended_feature.general.show_guest_login_links
+      extended_feature.general.sms_login
     ].freeze
 
     GENERAL_TEXT_SETTING_KEYS = %w[

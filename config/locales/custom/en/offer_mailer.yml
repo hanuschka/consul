@@ -7,7 +7,7 @@ en:
         offers_title: "Your offers:"
         edit_link: "Edit “%{title}”"
         states:
-          hidden: "Hidden"
+          suspended: "Hidden"
           deactivated: "Deactivated"
           expired: "Expired on %{date}"
         closing: "Please update anything that is out of date. You can deactivate offers that no longer take place or give them an expiry date."

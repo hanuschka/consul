@@ -2,7 +2,7 @@ class Adm::Offers::OffersController < Adm::Offers::BaseController
   include MapLocationAttributes
   include ImageAttributes
 
-  before_action :set_offer, only: [:edit, :update, :destroy, :mark_checked, :hide, :unhide]
+  before_action :set_offer, only: [:edit, :update, :destroy, :mark_checked, :suspend, :unsuspend]
 
   def index
     authorize Offer, :index?, policy_class: Adm::Offers::OfferPolicy
@@ -51,13 +51,13 @@ class Adm::Offers::OffersController < Adm::Offers::BaseController
     redirect_back fallback_location: adm_offers_root_path, notice: t(".success")
   end
 
-  def hide
-    @offer.hide!
+  def suspend
+    @offer.suspend!
     redirect_back fallback_location: adm_offers_root_path, notice: t(".success")
   end
 
-  def unhide
-    @offer.unhide!
+  def unsuspend
+    @offer.unsuspend!
     redirect_back fallback_location: adm_offers_root_path, notice: t(".success")
   end
 

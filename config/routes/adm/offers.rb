@@ -13,8 +13,8 @@ namespace :adm do
     resources :offers, only: [:edit, :update, :destroy], path: "" do
       member do
         patch :mark_checked
-        patch :hide
-        patch :unhide
+        patch :suspend
+        patch :unsuspend
       end
     end
   end

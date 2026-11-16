@@ -20,7 +20,7 @@ de:
             checked: Geprüft
           visibility:
             visible: Sichtbar
-            hidden: Ausgeblendet
+            suspended: Ausgeblendet
             deactivated: Deaktiviert
             expired: Abgelaufen
           page_hint: "Hier sehen Sie alle Angebote der Träger. Angebote werden über das Eingabeformular im öffentlichen Bereich angelegt und sind sofort online. Neue und geänderte Angebote bleiben gekennzeichnet, bis Sie sie als geprüft markieren. Sie können Angebote nach Titel suchen, sortieren, nach Prüfstatus und Sichtbarkeit filtern, ausblenden und löschen."
@@ -43,8 +43,8 @@ de:
             visibility: Sichtbarkeit
         actions:
           mark_checked: Als geprüft markieren
-          hide: Ausblenden
-          unhide: Einblenden
+          suspend: Ausblenden
+          unsuspend: Einblenden
         edit:
           title: Angebot bearbeiten
         update:
@@ -53,9 +53,9 @@ de:
           success: Das Angebot wurde gelöscht.
         mark_checked:
           success: Das Angebot wurde als geprüft markiert.
-        hide:
+        suspend:
           success: Das Angebot wurde ausgeblendet.
-        unhide:
+        unsuspend:
           success: Das Angebot wird wieder angezeigt.
         form:
           errors_title: Das Angebot konnte nicht gespeichert werden

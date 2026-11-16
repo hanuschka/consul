@@ -5,7 +5,7 @@
 
 <%= t("#{scope}.offers_title") %>
 <% @offers.each do |offer| %>
-<% state = (:hidden if offer.hidden?) || (:deactivated if offer.deactivated?) || (:expired if offer.expired?) %>
+<% state = (:suspended if offer.suspended?) || (:deactivated if offer.deactivated?) || (:expired if offer.expired?) %>
 
 - <%= t("#{scope}.edit_link", title: offer.title) %><%= " (#{t("#{scope}.states.#{state}", date: offer.expires_on && l(offer.expires_on, format: "%d.%m.%Y"))})" if state %>
   <%= edit_offer_url(offer) %>

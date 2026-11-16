@@ -1,7 +1,7 @@
 class Adm::OffersQuery < ApplicationQuery
   SORTABLE_FIELDS = %i[id title updated_at].freeze
   FILTERABLE_FIELDS = %i[review_status visibility].freeze
-  VISIBILITY_STATES = %w[visible hidden deactivated expired].freeze
+  VISIBILITY_STATES = %w[visible suspended deactivated expired].freeze
 
   def initialize(base_scope, params = {})
     @base_scope = base_scope
@@ -46,7 +46,7 @@ class Adm::OffersQuery < ApplicationQuery
     def visibility_scope(scope, state)
       case state
       when "visible" then scope.published
-      when "hidden" then scope.hidden
+      when "suspended" then scope.suspended
       when "deactivated" then scope.deactivated
       when "expired" then scope.expired
       end

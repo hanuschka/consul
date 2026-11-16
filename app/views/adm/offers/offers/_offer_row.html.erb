@@ -37,21 +37,21 @@
         data: { turbo_method: :patch, turbo_frame: "_top" },
         show: !offer.review_checked? && policy.mark_checked?
       ) %>
-      <% if offer.hidden? %>
+      <% if offer.suspended? %>
         <% actions.with_action(
-          label: t("adm.offers.offers.actions.unhide"),
-          url: unhide_adm_offers_offer_path(offer),
+          label: t("adm.offers.offers.actions.unsuspend"),
+          url: unsuspend_adm_offers_offer_path(offer),
           icon: "visibility",
           data: { turbo_method: :patch, turbo_frame: "_top" },
-          show: policy.unhide?
+          show: policy.unsuspend?
         ) %>
       <% else %>
         <% actions.with_action(
-          label: t("adm.offers.offers.actions.hide"),
-          url: hide_adm_offers_offer_path(offer),
+          label: t("adm.offers.offers.actions.suspend"),
+          url: suspend_adm_offers_offer_path(offer),
           icon: "visibility_off",
           data: { turbo_method: :patch, turbo_frame: "_top" },
-          show: policy.hide?
+          show: policy.suspend?
         ) %>
       <% end %>
       <% actions.with_action(

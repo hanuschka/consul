@@ -29,7 +29,7 @@
               <% offer_types = offer.categories_of(:offer_type).map(&:name).select(&:present?) %>
               <% social_areas = offer.categories_of(:social_area).map(&:name).select(&:present?) %>
               <% unpublished_states = {
-                hidden: ["eye-slash", offer.hidden?],
+                suspended: ["eye-slash", offer.suspended?],
                 deactivated: ["power-off", offer.deactivated?],
                 expired: ["calendar-times", offer.expired?]
               }.select { |_, (_, active)| active } %>

@@ -31,9 +31,9 @@
           <%= back_link_to(offers_path, t("custom.offers.show.back")) %>
         <% end %>
 
-        <% if @offer.hidden? %>
+        <% if @offer.suspended? %>
           <div class="callout warning margin-top">
-            <strong><%= t("custom.offers.show.hidden_notice") %></strong>
+            <strong><%= t("custom.offers.show.suspended_notice") %></strong>
           </div>
         <% end %>
 

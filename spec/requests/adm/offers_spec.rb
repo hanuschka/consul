@@ -50,13 +50,13 @@ describe "Angebote list in /adm", type: :request do
 
     it "filters by check status and visibility" do
       create(:offer, title: "Atelier", review_status: :added)
-      create(:offer, title: "Bewegung", review_status: :changed).hide!
+      create(:offer, title: "Bewegung", review_status: :changed).suspend!
       create(:offer, title: "Chor")
 
       get adm_offers_root_path, params: { review_status: %w[added changed], sort_by: "title" }
       expect(listed_titles).to eq %w[Atelier Bewegung]
 
-      get adm_offers_root_path, params: { visibility: ["hidden"] }
+      get adm_offers_root_path, params: { visibility: ["suspended"] }
       expect(listed_titles).to eq ["Bewegung"]
 
       get adm_offers_root_path, params: { visibility: ["visible"], sort_by: "title" }
@@ -167,11 +167,11 @@ describe "Angebote list in /adm", type: :request do
     it "hides an offer and shows it again" do
       offer = create(:offer)
 
-      patch hide_adm_offers_offer_path(offer)
-      expect(offer.reload).to be_hidden
+      patch suspend_adm_offers_offer_path(offer)
+      expect(offer.reload).to be_suspended
 
-      patch unhide_adm_offers_offer_path(offer)
-      expect(offer.reload).not_to be_hidden
+      patch unsuspend_adm_offers_offer_path(offer)
+      expect(offer.reload).not_to be_suspended
     end
   end
 
@@ -203,10 +203,10 @@ describe "Angebote list in /adm", type: :request do
     it "cannot hide or check an offer" do
       offer = create(:offer, review_status: :added)
 
-      patch hide_adm_offers_offer_path(offer)
+      patch suspend_adm_offers_offer_path(offer)
       patch mark_checked_adm_offers_offer_path(offer)
 
-      expect(offer.reload).not_to be_hidden
+      expect(offer.reload).not_to be_suspended
       expect(offer).to be_review_added
     end
   end

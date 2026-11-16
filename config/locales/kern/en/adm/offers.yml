@@ -20,7 +20,7 @@ en:
             checked: Checked
           visibility:
             visible: Visible
-            hidden: Hidden
+            suspended: Hidden
             deactivated: Deactivated
             expired: Expired
           page_hint: "All offers from providers. Offers are created through the entry form in the public area and go online immediately. New and changed offers stay flagged until you mark them as checked. You can search offers by title, sort them, filter them by check status and visibility, hide them and delete them."
@@ -43,8 +43,8 @@ en:
             visibility: Visibility
         actions:
           mark_checked: Mark as checked
-          hide: Hide
-          unhide: Unhide
+          suspend: Hide
+          unsuspend: Unhide
         edit:
           title: Edit offer
         update:
@@ -53,9 +53,9 @@ en:
           success: The offer was deleted.
         mark_checked:
           success: The offer was marked as checked.
-        hide:
+        suspend:
           success: The offer was hidden.
-        unhide:
+        unsuspend:
           success: The offer is shown again.
         form:
           errors_title: The offer could not be saved

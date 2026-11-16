@@ -14,7 +14,7 @@
 
   <ul style="<%= css_for_mailer_text %>">
     <% @offers.each do |offer| %>
-      <% state = (:hidden if offer.hidden?) || (:deactivated if offer.deactivated?) || (:expired if offer.expired?) %>
+      <% state = (:suspended if offer.suspended?) || (:deactivated if offer.deactivated?) || (:expired if offer.expired?) %>
       <li>
         <%= link_to t("#{scope}.edit_link", title: offer.title), edit_offer_url(offer), style: "color: #004a83;" %>
         <% if state %>

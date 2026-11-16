@@ -83,6 +83,52 @@ describe Offer do
   end
 end
 
+
+describe "Machine translation of offers" do
+  let(:source) { MachineTranslation.source_locale }
+  let(:foreign) { (MachineTranslation.translatable_locales - [source]).first }
+
+  before do
+    allow(Deepl).to receive(:configured?).and_return(true)
+    allow_any_instance_of(RemoteTranslation).to receive(:enqueue_remote_translation)
+  end
+
+  def queued_locales(record)
+    RemoteTranslation.where(remote_translatable: record).pluck(:locale)
+  end
+
+  it "queues a new offer for translation" do
+    offer = Globalize.with_locale(source) { create(:offer) }
+
+    expect(queued_locales(offer)).to include foreign.to_s
+  end
+
+  it "queues an edited offer again once the earlier translation is done" do
+    offer = Globalize.with_locale(source) { create(:offer) }
+    RemoteTranslation.where(remote_translatable: offer).delete_all
+
+    Globalize.with_locale(source) { offer.update!(title: "Neuer Titel") }
+
+    expect(queued_locales(offer)).to include foreign.to_s
+  end
+
+  it "queues category values for translation" do
+    category = Globalize.with_locale(source) { create(:offer_category) }
+
+    expect(queued_locales(category)).to include foreign.to_s
+  end
+
+  it "translates edits to an offer the administration has suspended" do
+    offer = Globalize.with_locale(source) { create(:offer) }
+    offer.suspend!
+    RemoteTranslation.where(remote_translatable: offer).delete_all
+
+    Globalize.with_locale(source) { offer.update!(title: "Neuer Titel") }
+
+    expect(queued_locales(offer)).to include foreign.to_s
+  end
+end
+
 describe Offer::Category do
   it "only accepts the known kinds" do
     expect(build(:offer_category, kind: "colour")).not_to be_valid

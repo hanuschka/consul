@@ -25,16 +25,16 @@
       <% end %>
     <% end %>
 
-    <% if @offer.hidden? %>
-      <% if policy.unhide? %>
-        <%= form_with url: unhide_adm_offers_offer_path(@offer), method: :patch, class: "d-flex" do %>
-          <%= kern_button(type: :submit, text: t("adm.offers.offers.actions.unhide"),
+    <% if @offer.suspended? %>
+      <% if policy.unsuspend? %>
+        <%= form_with url: unsuspend_adm_offers_offer_path(@offer), method: :patch, class: "d-flex" do %>
+          <%= kern_button(type: :submit, text: t("adm.offers.offers.actions.unsuspend"),
                           icon: "visibility", style: :secondary) %>
         <% end %>
       <% end %>
-    <% elsif policy.hide? %>
-      <%= form_with url: hide_adm_offers_offer_path(@offer), method: :patch, class: "d-flex" do %>
-        <%= kern_button(type: :submit, text: t("adm.offers.offers.actions.hide"),
+    <% elsif policy.suspend? %>
+      <%= form_with url: suspend_adm_offers_offer_path(@offer), method: :patch, class: "d-flex" do %>
+        <%= kern_button(type: :submit, text: t("adm.offers.offers.actions.suspend"),
                         icon: "visibility_off", style: :secondary) %>
       <% end %>
     <% end %>

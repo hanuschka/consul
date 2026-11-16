@@ -7,7 +7,7 @@ de:
         offers_title: "Ihre Angebote:"
         edit_link: "„%{title}“ bearbeiten"
         states:
-          hidden: "Ausgeblendet"
+          suspended: "Ausgeblendet"
           deactivated: "Deaktiviert"
           expired: "Abgelaufen am %{date}"
         closing: "Bitte aktualisieren Sie veraltete Angaben. Angebote, die nicht mehr stattfinden, können Sie deaktivieren oder mit einem Ablaufdatum versehen."

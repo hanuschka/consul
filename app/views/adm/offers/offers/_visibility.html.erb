@@ -2,8 +2,8 @@
   <%= t("adm.offers.offers.index.visibility.visible") %>
 <% else %>
   <span class="d-flex flex-wrap gap-1">
-    <% if offer.hidden? %>
-      <span class="kern-badge kern-badge--danger kern-badge--small"><%= t("adm.offers.offers.index.visibility.hidden") %></span>
+    <% if offer.suspended? %>
+      <span class="kern-badge kern-badge--danger kern-badge--small"><%= t("adm.offers.offers.index.visibility.suspended") %></span>
     <% end %>
     <% if offer.deactivated? %>
       <span class="kern-badge kern-badge--info kern-badge--small"><%= t("adm.offers.offers.index.visibility.deactivated") %></span>

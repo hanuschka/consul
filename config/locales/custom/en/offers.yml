@@ -7,14 +7,14 @@ en:
         intro_text: Find offers near you. Select an offer to see all details.
         empty_list_text: There are no offers at the moment.
         to_offer: View offer
-        hidden_label: Hidden
+        suspended_label: Hidden
         deactivated_label: Deactivated
         expired_label: Expired
       show:
         back: Back to the overview
         edit: Edit
         opens_in_new_tab: (opens in a new tab)
-        hidden_notice: The administration has hidden this offer, so it is not publicly visible. You can still edit it.
+        suspended_notice: The administration has hidden this offer, so it is not publicly visible. You can still edit it.
         deactivated_notice: This offer is deactivated. It is not publicly visible until it is activated again.
         expired_notice: This offer has passed its expiry date. It is not publicly visible until the expiry date is changed.
         deactivate: Deactivate

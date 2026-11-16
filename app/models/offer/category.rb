@@ -3,6 +3,7 @@ class Offer::Category < ApplicationRecord
 
   translates :name, touch: true
   include Globalizable
+  include MachineTranslatable
 
   has_many :category_assignments, class_name: "Offer::CategoryAssignment",
     foreign_key: :offer_category_id, dependent: :destroy, inverse_of: :category

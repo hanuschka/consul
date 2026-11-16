@@ -19,11 +19,11 @@ class Adm::Offers::OfferPolicy < ApplicationPolicy
     index?
   end
 
-  def hide?
+  def suspend?
     index?
   end
 
-  def unhide?
+  def unsuspend?
     index?
   end
 

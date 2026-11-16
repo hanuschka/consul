@@ -381,7 +381,7 @@ describe "Angebote provider form", type: :request do
 
     it "takes a hidden offer off the list and its detail page" do
       offer = create(:offer, title: "Lesecafé", provider: provider)
-      offer.hide!
+      offer.suspend!
       login_as(create(:user))
 
       get offers_path
@@ -393,7 +393,7 @@ describe "Angebote provider form", type: :request do
     it "keeps showing a hidden offer to its own provider only" do
       own = create(:offer, title: "Lesecafé", provider: provider)
       foreign = create(:offer, title: "Chor", provider: create(:offer_provider))
-      [own, foreign].each(&:hide!)
+      [own, foreign].each(&:suspend!)
       login_as(member)
 
       get offers_path
@@ -405,17 +405,17 @@ describe "Angebote provider form", type: :request do
     end
 
     it "tells a provider that its offer is hidden" do
-      hidden = create(:offer, title: "Lesecafé", provider: provider)
-      hidden.hide!
+      suspended = create(:offer, title: "Lesecafé", provider: provider)
+      suspended.suspend!
       login_as(member)
 
       get offers_path
-      expect(response.body).to include(I18n.t("custom.offers.index.hidden_label"))
+      expect(response.body).to include(I18n.t("custom.offers.index.suspended_label"))
 
-      get offer_path(hidden)
-      expect(response.body).to include(I18n.t("custom.offers.show.hidden_notice"))
+      get offer_path(suspended)
+      expect(response.body).to include(I18n.t("custom.offers.show.suspended_notice"))
 
-      hidden.unhide!
+      suspended.unsuspend!
 
       get offers_path
       expect(response.body).to include("Lesecafé")
@@ -424,12 +424,12 @@ describe "Angebote provider form", type: :request do
 
     it "keeps an offer hidden when its provider edits it" do
       offer = create(:offer, provider: provider)
-      offer.hide!
+      offer.suspend!
       login_as(member)
 
       patch offer_path(offer), params: { offer: { contact_email: "neu@traeger.example" } }
 
-      expect(offer.reload).to be_hidden
+      expect(offer.reload).to be_suspended
     end
   end
 
@@ -489,9 +489,9 @@ describe "Angebote provider form", type: :request do
       expect(response.body).to include("Lesecafé")
     end
 
-    it "keeps an offer hidden by the city hidden when its provider reactivates it" do
+    it "keeps an offer suspended by the administration suspended when its provider reactivates it" do
       offer = create(:offer, provider: provider)
-      offer.hide!
+      offer.suspend!
       offer.deactivate!
       login_as(member)
 

@@ -1,0 +1,49 @@
+de:
+  custom:
+    offers:
+      new:
+        title: Angebot erfassen
+      edit:
+        title: Angebot bearbeiten
+      create:
+        success: Das Angebot wurde gespeichert.
+      update:
+        success: Die Änderungen wurden gespeichert.
+      form:
+        page_description: "Stellen Sie Ihr Angebot vor: Worum geht es, für wen ist es gedacht und wie kann man teilnehmen? Mit Ihren Angaben finden Interessierte Ihr Angebot in der Übersicht und auf der Karte."
+        required: (Pflichtfeld)
+        no_categories: Für diese Kategorie stehen derzeit keine Werte zur Auswahl.
+        sections:
+          categories: Kategorien
+          location: Ort
+          details: Details
+          contact: Kontakt
+        submit:
+          new: Angebot speichern
+          edit: Änderungen speichern
+        hints:
+          category_kinds:
+            offer_type: Um welche Art von Angebot handelt es sich? Wählen Sie alle passenden Werte aus.
+            target_group: Für wen ist das Angebot gedacht? Wählen Sie alle passenden Werte aus.
+            costs: Fällt für das Angebot ein Beitrag an? Wählen Sie alle passenden Werte aus.
+            accessibility: Welche Merkmale der Barrierefreiheit erfüllt das Angebot?
+            social_area: In welchem Sozialraum findet das Angebot statt? Wählen Sie alle passenden Werte aus.
+          address: Adresse, unter der das Angebot stattfindet.
+          map_location: Optional. Setzen Sie eine Markierung, damit Ihr Angebot auf der Karte erscheint.
+          times: Wann findet das Angebot statt?
+          costs: Optionale Angaben zu den Kosten, zum Beispiel zu Ermäßigungen.
+          registration: Ob und wie man sich für das Angebot anmelden muss.
+          contact_website: Vollständige Adresse beginnend mit https://
+        image_upload:
+          top_line: Wählen Sie ein passendes Bild für Ihr Angebot.
+        placeholders:
+          title: z. B. Schwimmkurs für Kinder
+          short_description: z. B. Kinder ab 6 Jahren lernen in kleinen Gruppen im Hallenbad schwimmen.
+          address: z. B. Marktplatz 1, 12345 Musterstadt
+          times: z. B. dienstags 15–17 Uhr, außer in den Schulferien
+          costs: z. B. 5 €, ermäßigt 3 €
+          registration: z. B. Anmeldung bis Freitag unter 03641 123456
+          contact_name: z. B. Maria Muster
+          contact_phone: z. B. 03641 49-0
+          contact_email: z. B. angebote@example.org
+          contact_website: https://

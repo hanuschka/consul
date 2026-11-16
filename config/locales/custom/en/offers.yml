@@ -1,0 +1,49 @@
+en:
+  custom:
+    offers:
+      new:
+        title: Add offer
+      edit:
+        title: Edit offer
+      create:
+        success: The offer has been saved.
+      update:
+        success: Your changes have been saved.
+      form:
+        page_description: "Introduce your offer: what it is about, who it is for and how people can take part. Your details help people find your offer in the overview and on the map."
+        required: (required)
+        no_categories: There are no values to choose from for this category yet.
+        sections:
+          categories: Categories
+          location: Location
+          details: Details
+          contact: Contact
+        submit:
+          new: Save offer
+          edit: Save changes
+        hints:
+          category_kinds:
+            offer_type: What kind of offer is it? Select all that apply.
+            target_group: Who is the offer for? Select all that apply.
+            costs: Is there a fee for the offer? Select all that apply.
+            accessibility: Which accessibility features does the offer provide?
+            social_area: In which social area does the offer take place? Select all that apply.
+          address: Address where the offer takes place.
+          map_location: Optional. Place a pin so your offer appears on the map.
+          times: When does the offer take place?
+          costs: Optional details on costs, such as reduced rates.
+          registration: Whether and how people need to register.
+          contact_website: Full address starting with https://
+        image_upload:
+          top_line: Choose a suitable image for your offer.
+        placeholders:
+          title: e.g. Swimming lessons for children
+          short_description: e.g. Children aged 6 and over learn to swim in small groups at the indoor pool.
+          address: e.g. 1 Market Square, 12345 Sampletown
+          times: e.g. Tuesdays 3–5 pm, except during school holidays
+          costs: e.g. €5, reduced €3
+          registration: e.g. Register by Friday on 03641 123456
+          contact_name: e.g. Maria Muster
+          contact_phone: e.g. 03641 49-0
+          contact_email: e.g. offers@example.org
+          contact_website: https://

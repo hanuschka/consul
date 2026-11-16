@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   draw :projekt
   draw :ideas
   draw :municipal_plans
+  draw :offers
   draw :projekt_management
   draw :deficiency_report_management
   draw :idea_management

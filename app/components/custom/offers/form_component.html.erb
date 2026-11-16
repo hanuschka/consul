@@ -1,0 +1,154 @@
+<main class="user-resources-form">
+  <%= translatable_form_for(offer, html: { class: "js-rich-text-form offer-form", id: dom_id(offer, :form) }) do |f| %>
+    <%= back_link_to %>
+
+    <div class="flex-layout">
+      <div class="main-column">
+        <h1 class="user-resources-form--title"><%= title %></h1>
+
+        <div class="user-resources-form--description">
+          <p><%= t("custom.offers.form.page_description") %></p>
+        </div>
+
+        <%= render "shared/errors", resource: offer %>
+      </div>
+    </div>
+
+    <div class="flex-layout">
+      <div class="main-column">
+        <%= f.translatable_fields do |translations_form| %>
+          <div class="user-resources-form--banner-editor">
+            <div class="user-resources-form--title-wrapper">
+              <%= translations_form.text_area :title,
+                label: required_label(Offer.human_attribute_name(:title)),
+                label_options: { class: "show-for-sr" },
+                class: "user-resources-form--banner-editor-title",
+                placeholder: t("custom.offers.form.placeholders.title"),
+                autocomplete: "off" %>
+            </div>
+
+            <div class="banner-editor-image-attachment">
+              <%= f.fields_for :image do |image_builder| %>
+                <%= render UserResources::ImageUploadComponent.new(image_builder, imageable: f.object) %>
+                <div class="image-upload-meta-row">
+                  <%= render Images::AiGeneratedFieldComponent.new(image_builder) %>
+                  <%= image_builder.text_field :credits,
+                    label: t("custom.user_resources.image_upload.credits_field_placeholder"),
+                    label_options: { class: "show-for-sr" },
+                    placeholder: t("custom.user_resources.image_upload.credits_field_placeholder"),
+                    class: "light-input image-upload-credits-input" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <%= translations_form.text_area :short_description,
+            label: required_label(Offer.human_attribute_name(:short_description)),
+            label_options: { class: "show-for-sr" },
+            value: AdminWYSIWYGSanitizer.new.sanitize(offer.short_description),
+            placeholder: t("custom.offers.form.placeholders.short_description"),
+            class: "html-area #{ck_editor_class(current_user)}" %>
+
+          <div class="new-card">
+            <h2 class="rich-form-label">
+              <i class="fas fa-th-large" aria-hidden="true"></i>
+              <%= t("custom.offers.form.sections.categories") %>
+            </h2>
+
+            <%= hidden_field_tag "offer[category_ids][]", "", id: nil %>
+
+            <% Offer::Category::KINDS.each do |kind| %>
+              <fieldset class="margin-top">
+                <legend class="rich-form-label">
+                  <%= t("activerecord.attributes.offer/category.kinds.#{kind}") %>
+                  <span class="small" aria-hidden="true">&nbsp;|&nbsp;</span>
+                  <span class="small">
+                    <%= t("custom.offers.form.hints.category_kinds.#{kind}") %>
+                    <%= t("custom.offers.form.required") if required_kind?(kind) %>
+                  </span>
+                </legend>
+
+                <% if categories_for(kind).any? %>
+                  <%= f.collection_check_boxes :category_ids, categories_for(kind), :id, :name, { include_hidden: false } do |cb| %>
+                    <%= cb.label(class: "checkbox-label checkbox-label--aligned") { cb.check_box + tag.span(cb.text, class: "checkbox") } %>
+                  <% end %>
+                <% else %>
+                  <p class="help-text"><%= t("custom.offers.form.no_categories") %></p>
+                <% end %>
+              </fieldset>
+            <% end %>
+          </div>
+
+          <div class="new-card" id="map-container">
+            <h2 class="rich-form-label">
+              <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+              <%= t("custom.offers.form.sections.location") %>
+            </h2>
+
+            <%= f.text_field :address,
+              label: Offer.human_attribute_name(:address),
+              hint: t("custom.offers.form.hints.address"),
+              placeholder: t("custom.offers.form.placeholders.address") %>
+
+            <h3 class="rich-form-label">
+              <i class="fas fa-map" aria-hidden="true"></i>
+              <%= t("custom.user_resources.form.map_location_label") %>
+              <span class="small" style="margin-left:0.25rem;margin-right:0.25rem" aria-hidden="true">|</span>
+              <span class="small"><%= t("custom.offers.form.hints.map_location") %></span>
+            </h3>
+
+            <%= render "map_locations/form_fields",
+              form:           f,
+              mappable:       offer,
+              nesting_prefix: "offer" %>
+          </div>
+
+          <div class="new-card">
+            <h2 class="rich-form-label">
+              <i class="fas fa-info-circle" aria-hidden="true"></i>
+              <%= t("custom.offers.form.sections.details") %>
+            </h2>
+
+            <% %i[times costs registration].each do |attribute| %>
+              <%= translations_form.text_area attribute,
+                label: Offer.human_attribute_name(attribute),
+                hint: t("custom.offers.form.hints.#{attribute}"),
+                placeholder: t("custom.offers.form.placeholders.#{attribute}"),
+                rows: 4 %>
+            <% end %>
+          </div>
+
+          <div class="new-card">
+            <h2 class="rich-form-label">
+              <i class="fas fa-address-card" aria-hidden="true"></i>
+              <%= t("custom.offers.form.sections.contact") %>
+            </h2>
+
+            <%= f.text_field :contact_name,
+              label: Offer.human_attribute_name(:contact_name),
+              placeholder: t("custom.offers.form.placeholders.contact_name") %>
+
+            <%= f.text_field :contact_phone,
+              type: "tel",
+              label: Offer.human_attribute_name(:contact_phone),
+              placeholder: t("custom.offers.form.placeholders.contact_phone") %>
+
+            <%= f.email_field :contact_email,
+              label: Offer.human_attribute_name(:contact_email),
+              placeholder: t("custom.offers.form.placeholders.contact_email") %>
+
+            <%= f.text_field :contact_website,
+              type: "url",
+              label: Offer.human_attribute_name(:contact_website),
+              hint: t("custom.offers.form.hints.contact_website"),
+              placeholder: t("custom.offers.form.placeholders.contact_website") %>
+          </div>
+        <% end %>
+
+        <div class="user-resources-form--submit-section">
+          <%= f.submit(class: "button", value: submit_text) %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</main>

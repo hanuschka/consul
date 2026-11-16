@@ -11,10 +11,11 @@ class OffersController < ApplicationController
   def index
     authorize! :index, Offer
 
-    @offers = Offer.listed_for(current_user)
-                   .includes(:translations, :image, categories: :translations)
-                   .sort_by_title
-                   .page(params[:page])
+    @categories_by_kind = Offer::Category.includes(:translations).group_by(&:kind)
+    @filtered_offers = OffersQuery.new(Offer.listed_for(current_user), filter_params).call
+    @offers = @filtered_offers.includes(:translations, :image, categories: :translations)
+                              .sort_by_title
+                              .page(params[:page])
   end
 
   def show
@@ -114,6 +115,10 @@ class OffersController < ApplicationController
         @offer.provider_required = true
         @offer.provider = chosen_provider || (available_providers.first if available_providers.one?)
       end
+    end
+
+    def filter_params
+      params.permit(:search, **Offer::Category::KINDS.to_h { |kind| [kind.to_sym, []] }).to_h.symbolize_keys
     end
 
     def offer_params

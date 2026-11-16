@@ -307,6 +307,19 @@ describe "Angebote provider form", type: :request do
     context "while the module is switched on" do
       before { enable_module }
 
+      it "filters the list by keyword and category" do
+        north = create(:offer_category, :social_area, name: "Nord")
+        south = create(:offer_category, :social_area, name: "Süd")
+        create(:offer, title: "Schwimmen im Norden", categories: [offer_type, north])
+        create(:offer, title: "Schwimmen im Süden", categories: [offer_type, south])
+        create(:offer, title: "Lesecafé", categories: [offer_type, north])
+
+        get offers_path, params: { search: "schwimmen", social_area: [north.id] }
+
+        expect(response.body).to include("Schwimmen im Norden")
+        expect(response.body).not_to include("Schwimmen im Süden", "Lesecafé")
+      end
+
       it "lists the offers sorted by title" do
         create(:offer, title: "Schwimmen für Kinder")
         create(:offer, title: "Lesecafé")
@@ -420,6 +433,20 @@ describe "Angebote provider form", type: :request do
       get offers_path
       expect(response.body).to include("Lesecafé")
       expect(Nokogiri::HTML(response.body).css(".resource-item--header")).to be_empty
+    end
+
+    it "filters the list of a provider account, including its own suspended offers" do
+      swimming = create(:offer, title: "Schwimmen", provider: provider)
+      swimming.suspend!
+      create(:offer, title: "Lesecafé", provider: provider).suspend!
+      create(:offer, title: "Schwimmen im Freibad")
+      create(:offer, title: "Schwimmen privat", provider: create(:offer_provider)).suspend!
+      login_as(member)
+
+      get offers_path, params: { search: "schwimmen" }
+
+      expect(response.body).to include("Schwimmen", "Schwimmen im Freibad")
+      expect(response.body).not_to include("Lesecafé", "Schwimmen privat")
     end
 
     it "keeps an offer hidden when its provider edits it" do

@@ -3,8 +3,8 @@
 <main>
   <h1 class="padding-on-mobile"><%= t("custom.offers.index.title") %></h1>
 
-  <div class="flex-layout padding-on-mobile">
-    <div class="main-column">
+  <div class="padding-on-mobile">
+    <div class="full-width-column">
       <div class="resource-page--intro-text">
         <% if (intro_text = setting_text("offers.intro_text")) %>
           <%= simple_format(h(intro_text)) %>
@@ -19,13 +19,19 @@
             class: "button -orange", data: { turbolinks: false } %>
         </div>
       <% end %>
+
+      <%= render "offers/filters" %>
     </div>
   </div>
 
-  <div class="flex-layout padding-on-mobile">
-    <div class="main-column">
+  <%= render Offers::OverviewMapComponent.new(overview_map: @overview_map) %>
+
+  <div class="padding-on-mobile">
+    <div class="full-width-column">
+      <p><strong><%= t("custom.offers.index.count", count: @offers.total_count) %></strong></p>
+
       <%= render Resources::List::BaseComponent.new(
-        empty_text: @offers.empty? ? t("custom.offers.index.empty_list_text") : nil
+        empty_text: (t("custom.offers.index.#{@filters_active ? "no_matches_text" : "empty_list_text"}") if @offers.empty?)
       ) do |c| %>
         <% if @offers.present? %>
           <% c.with_items do %>

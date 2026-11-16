@@ -12,7 +12,9 @@ class OffersController < ApplicationController
     authorize! :index, Offer
 
     @categories_by_kind = Offer::Category.includes(:translations).group_by(&:kind)
+    @filters_active = filter_params.values.any?(&:present?)
     @filtered_offers = OffersQuery.new(Offer.listed_for(current_user), filter_params).call
+    @overview_map = Offers::OverviewMapService.new(@filtered_offers)
     @offers = @filtered_offers.includes(:translations, :image, categories: :translations)
                               .sort_by_title
                               .page(params[:page])

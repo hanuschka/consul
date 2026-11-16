@@ -317,6 +317,15 @@ describe "Angebote provider form", type: :request do
         expect(response.body).not_to include(I18n.t("custom.offers.index.intro_text"))
       end
 
+      it "says when no offer matches the filters" do
+        create(:offer, title: "Lesecafé")
+
+        get offers_path, params: { search: "schwimmen" }
+
+        expect(response.body).to include(I18n.t("custom.offers.index.no_matches_text"))
+        expect(response.body).not_to include(I18n.t("custom.offers.index.empty_list_text"))
+      end
+
       it "filters the list by keyword and category" do
         north = create(:offer_category, :social_area, name: "Nord")
         south = create(:offer_category, :social_area, name: "Süd")
@@ -328,6 +337,58 @@ describe "Angebote provider form", type: :request do
 
         expect(response.body).to include("Schwimmen im Norden")
         expect(response.body).not_to include("Schwimmen im Süden", "Lesecafé")
+      end
+
+      it "renders a filter checkbox per category and keeps the selected ones checked" do
+        north = create(:offer_category, :social_area, name: "Nord")
+        south = create(:offer_category, :social_area, name: "Süd")
+        create(:offer, categories: [offer_type, north])
+
+        get offers_path, params: { search: "schwimmen", social_area: [north.id] }
+
+        page = Nokogiri::HTML(response.body)
+        form = page.at_css("form[action='#{offers_path}'][method='get']")
+        expect(form.at_css("input[name='search']")["value"]).to eq "schwimmen"
+        expect(form.css("input[type='checkbox'][name='offer_type[]']").map { |box| box["value"] })
+          .to include(offer_type.id.to_s)
+        expect(form.at_css("input[name='social_area[]'][value='#{north.id}']")["checked"]).to be_present
+        expect(form.at_css("input[name='social_area[]'][value='#{south.id}']")["checked"]).to be_nil
+        expect(page.css("a[href='#{offers_path}']").map(&:text)).to include(I18n.t("custom.offers.index.filters.reset"))
+      end
+
+      it "shows the map with the pinned offers of the filtered result only" do
+        pinned = create(:offer, title: "Lesecafé")
+        pinned.create_map_location!(
+          latitude: 1.0, longitude: 1.0, zoom: 10, skip_masterportal_geocoding: true,
+          features: { type: "FeatureCollection",
+                      features: [{ type: "Feature", geometry: { type: "Point", coordinates: [11.6, 50.9] },
+                                   properties: {} }] }
+        )
+        create(:offer, title: "Online-Kurs")
+
+        get offers_path
+
+        container = Nokogiri::HTML(response.body).at_css(".js-offers-map-container")
+        markers = JSON.parse(container["data-markers"])
+        expect(markers["features"].map { |feature| feature["properties"]["title"] }).to eq ["Lesecafé"]
+        expect(markers["features"].first["geometry"]["coordinates"]).to eq [11.6, 50.9]
+
+        get offers_path, params: { search: "online" }
+
+        expect(Nokogiri::HTML(response.body).at_css(".js-offers-map-container")).to be_nil
+      end
+
+      it "keeps the filter params in the pagination links" do
+        allow(Offer).to receive(:default_per_page).and_return(1)
+        create(:offer, title: "Schwimmen für Kinder", categories: [offer_type, social_area])
+        create(:offer, title: "Schwimmen für Erwachsene", categories: [offer_type, social_area])
+
+        get offers_path, params: { search: "schwimmen", social_area: [social_area.id] }
+
+        expect(response.body).to include(I18n.t("custom.offers.index.count", count: 2))
+        link = Nokogiri::HTML(response.body).css(".pagination a").find { |a| a["href"].include?("page=2") }
+        query = Rack::Utils.parse_nested_query(URI.parse(link["href"]).query)
+        expect(query).to include("search" => "schwimmen", "social_area" => [social_area.id.to_s], "page" => "2")
       end
 
       it "lists the offers sorted by title" do

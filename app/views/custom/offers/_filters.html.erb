@@ -1,0 +1,53 @@
+<%= form_with url: offers_path, method: :get, local: true, skip_enforcing_utf8: true,
+      class: "offers-filter new-card", role: "search",
+      aria: { label: t("custom.offers.index.filters.region_label") },
+      data: { turbolinks: false } do %>
+  <div class="margin-bottom">
+    <%= label_tag "offers_filter_search", t("custom.offers.index.filters.search_label") %>
+    <%= search_field_tag :search, params[:search], id: "offers_filter_search" %>
+  </div>
+
+  <div class="grid-x grid-margin-x small-up-1 medium-up-2 large-up-3">
+    <% Offer::Category::KINDS.each do |kind| %>
+      <% categories = @categories_by_kind[kind] %>
+      <% next if categories.blank? %>
+      <% kind_label = t("activerecord.attributes.offer/category.kinds.#{kind}") %>
+      <% selected = Array(params[kind]).map(&:to_s) & categories.map { |category| category.id.to_s } %>
+
+      <div class="cell">
+        <%= render Shared::AccordionComponent.new(opened_by_default: selected.any?, root_class: "offers-filter--group") do |accordion| %>
+          <% accordion.with_head do %>
+            <%= kind_label %>
+            <% if selected.any? %>
+              <span class="offers-filter--selected-count">
+                (<%= t("custom.offers.index.filters.selected_count", count: selected.size) %>)
+              </span>
+            <% end %>
+          <% end %>
+
+          <% accordion.with_body do %>
+            <fieldset>
+              <legend class="show-for-sr"><%= kind_label %></legend>
+
+              <% categories.each do |category| %>
+                <label class="checkbox-label checkbox-label--aligned">
+                  <%= check_box_tag "#{kind}[]", category.id, selected.include?(category.id.to_s),
+                        id: "offers_filter_#{kind}_#{category.id}" %>
+                  <span class="checkbox"><%= category.name %></span>
+                </label>
+              <% end %>
+            </fieldset>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="u-flex wrap u-align-center gap-20">
+    <%= submit_tag t("custom.offers.index.filters.submit"), name: nil, class: "button -no-margin" %>
+
+    <% if @filters_active %>
+      <%= link_to t("custom.offers.index.filters.reset"), offers_path, data: { turbolinks: false } %>
+    <% end %>
+  </div>
+<% end %>

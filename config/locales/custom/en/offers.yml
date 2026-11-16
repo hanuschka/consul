@@ -6,10 +6,25 @@ en:
         title: Offers
         intro_text: Find offers near you. Select an offer to see all details.
         empty_list_text: There are no offers at the moment.
+        no_matches_text: No offers match your selection. Change the filters or reset them.
         to_offer: View offer
         suspended_label: Hidden
         deactivated_label: Deactivated
         expired_label: Expired
+        count:
+          one: 1 offer
+          other: "%{count} offers"
+        filters:
+          region_label: Filter offers
+          search_label: Keyword
+          selected_count:
+            one: 1 selected
+            other: "%{count} selected"
+          submit: Filter offers
+          reset: Reset filters
+        overview_map:
+          region_label: Map of offers
+          note: The map shows offers that have a location. All offers are also listed below the map.
       show:
         back: Back to the overview
         edit: Edit

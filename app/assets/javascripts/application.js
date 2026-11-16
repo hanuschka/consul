@@ -181,6 +181,7 @@ var initialize_modules = function() {
   App.PollMapPoints.initialize();
   App.PollMapResults.initialize();
   App.MunicipalPlansMap.initialize();
+  App.OffersMap.initialize();
   App.Polls.initialize();
   App.Sortable.initialize();
   App.TableSortable.initialize();
@@ -244,6 +245,7 @@ var destroy_non_idempotent_modules = function() {
   App.LegislationAnnotatable.destroy();
   App.Map.destroy();
   App.MunicipalPlansMap.destroy();
+  App.OffersMap.destroy();
   App.SocialShare.destroy();
   App.StikyHeader.destroy();
   App.PollsCustom.destroy();

@@ -6,10 +6,25 @@ de:
         title: Angebote
         intro_text: Hier finden Sie Angebote vor Ort. Wählen Sie ein Angebot aus, um alle Details zu sehen.
         empty_list_text: Zurzeit gibt es keine Angebote.
+        no_matches_text: Keine Angebote passen zu Ihrer Auswahl. Ändern Sie die Filter oder setzen Sie sie zurück.
         to_offer: Zum Angebot
         suspended_label: Ausgeblendet
         deactivated_label: Deaktiviert
         expired_label: Abgelaufen
+        count:
+          one: 1 Angebot
+          other: "%{count} Angebote"
+        filters:
+          region_label: Angebote filtern
+          search_label: Suchbegriff
+          selected_count:
+            one: 1 ausgewählt
+            other: "%{count} ausgewählt"
+          submit: Angebote filtern
+          reset: Filter zurücksetzen
+        overview_map:
+          region_label: Karte der Angebote
+          note: Die Karte zeigt die Angebote mit Ortsangabe. Alle Angebote sind auch in der Liste unter der Karte aufgeführt.
       show:
         back: Zurück zur Übersicht
         edit: Bearbeiten

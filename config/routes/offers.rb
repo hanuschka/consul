@@ -1,1 +1,1 @@
-resources :offers, path: "angebote", only: [:new, :create, :edit, :update]
+resources :offers, path: "angebote", only: [:index, :show, :new, :create, :edit, :update]

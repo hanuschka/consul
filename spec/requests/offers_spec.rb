@@ -45,13 +45,13 @@ describe "Angebote provider form", type: :request do
       expect(response.body).to include("Lesecafé")
     end
 
-    it "creates an offer while the module is switched off and returns to its edit page" do
+    it "creates an offer while the module is switched off and shows it" do
       expect do
         post offers_path, params: { offer: offer_attributes }
       end.to change(Offer, :count).by(1)
 
       offer = Offer.last
-      expect(response).to redirect_to(edit_offer_path(offer))
+      expect(response).to redirect_to(offer_path(offer))
       expect(offer.author).to eq admin
       expect(offer.title).to eq "Schwimmen für Kinder"
       expect(offer.categories).to contain_exactly(offer_type, social_area)
@@ -71,7 +71,7 @@ describe "Angebote provider form", type: :request do
 
       patch offer_path(offer), params: { offer: { category_ids: ["", offer_type.id, other_area.id] } }
 
-      expect(response).to redirect_to(edit_offer_path(offer))
+      expect(response).to redirect_to(offer_path(offer))
       expect(offer.reload.categories).to contain_exactly(offer_type, other_area)
     end
 
@@ -117,6 +117,80 @@ describe "Angebote provider form", type: :request do
       get new_offer_path
 
       expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+
+  describe "public pages" do
+    before do
+      allow_any_instance_of(ActionView::Base).to receive(:stylesheet_link_tag).and_return("".html_safe)
+      allow_any_instance_of(ActionView::Base).to receive(:javascript_include_tag).and_return("".html_safe)
+    end
+
+    def enable_module
+      allow(Setting).to receive(:[]).with("process.offers").and_return(true)
+    end
+
+    context "while the module is switched off" do
+      it "hides the list" do
+        expect { get offers_path }.to raise_error(FeatureFlags::FeatureDisabled)
+      end
+
+      it "hides an offer from visitors" do
+        offer = create(:offer)
+
+        expect { get offer_path(offer) }.to raise_error(FeatureFlags::FeatureDisabled)
+      end
+
+      it "hides an offer from regular users" do
+        offer = create(:offer)
+        login_as(create(:user))
+
+        expect { get offer_path(offer) }.to raise_error(FeatureFlags::FeatureDisabled)
+      end
+
+      it "lets editors preview an offer" do
+        offer = create(:offer, title: "Lesecafé")
+        login_as(admin)
+
+        get offer_path(offer)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Lesecafé")
+      end
+    end
+
+    context "while the module is switched on" do
+      before { enable_module }
+
+      it "lists the offers sorted by title" do
+        create(:offer, title: "Schwimmen für Kinder")
+        create(:offer, title: "Lesecafé")
+
+        get offers_path
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body.index("Lesecafé")).to be < response.body.index("Schwimmen für Kinder")
+      end
+
+      it "shows an offer to visitors" do
+        offer_type
+        offer = create(:offer, title: "Lesecafé", times: "dienstags 15–17 Uhr",
+                               categories: [offer_type, social_area])
+
+        get offer_path(offer)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Lesecafé", "dienstags 15–17 Uhr", "Sportkurs", "Nord")
+      end
+
+      it "strips unsafe markup from the short description" do
+        offer = create(:offer, short_description: "<p>Im Hallenbad</p><script>alert('x')</script>")
+
+        get offer_path(offer)
+
+        expect(response.body).to include("Im Hallenbad")
+        expect(response.body).not_to include("alert('x')")
+      end
     end
   end
 end

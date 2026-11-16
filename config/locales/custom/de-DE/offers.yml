@@ -1,6 +1,24 @@
 de:
   custom:
     offers:
+      index:
+        title: Angebote
+        intro_text: Hier finden Sie Angebote in Ihrer Stadt. Wählen Sie ein Angebot aus, um alle Details zu sehen.
+        empty_list_text: Zurzeit gibt es keine Angebote.
+        to_offer: Zum Angebot
+      show:
+        back: Zurück zur Übersicht
+        edit: Bearbeiten
+        opens_in_new_tab: (öffnet in einem neuen Tab)
+        intro:
+          title: Über das Angebot
+        details:
+          title: Details
+        location:
+          title: Ort
+        contact:
+          title: Kontakt
+          name: Ansprechperson
       new:
         title: Angebot erfassen
       edit:

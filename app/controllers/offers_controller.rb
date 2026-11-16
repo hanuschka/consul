@@ -1,9 +1,26 @@
 class OffersController < ApplicationController
+  include FeatureFlags
   include Translatable
   include MapLocationAttributes
   include ImageAttributes
 
-  before_action :authenticate_user!
+  feature_flag :offers, only: :index
+
+  before_action :authenticate_user!, except: [:index, :show]
+
+  def index
+    authorize! :index, Offer
+
+    @offers = Offer.includes(:translations, :image, categories: :translations)
+                   .sort_by_title
+                   .page(params[:page])
+  end
+
+  def show
+    @offer = Offer.find(params[:id])
+    authorize! :show, @offer
+    check_feature_flag(:offers) unless can?(:update, @offer)
+  end
 
   def new
     @offer = Offer.new
@@ -16,7 +33,7 @@ class OffersController < ApplicationController
     authorize! :create, @offer
 
     if @offer.save
-      redirect_to edit_offer_path(@offer), notice: t("custom.offers.create.success")
+      redirect_to offer_path(@offer), notice: t("custom.offers.create.success")
     else
       prepare_form
       render :new, status: :unprocessable_entity
@@ -38,7 +55,7 @@ class OffersController < ApplicationController
     end
 
     if saved
-      redirect_to edit_offer_path(@offer), notice: t("custom.offers.update.success")
+      redirect_to offer_path(@offer), notice: t("custom.offers.update.success")
     else
       prepare_form
       render :edit, status: :unprocessable_entity

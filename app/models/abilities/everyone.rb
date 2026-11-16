@@ -133,6 +133,8 @@ module Abilities
       can :read_stats, ProjektPhase
 
       can [:index, :show, :json_data], Idea, admin_accepted_at: (Time.zone.at(0)..)
+
+      can :read, Offer
     end
   end
 end

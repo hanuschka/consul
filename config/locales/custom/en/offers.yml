@@ -1,6 +1,24 @@
 en:
   custom:
     offers:
+      index:
+        title: Offers
+        intro_text: Find offers in your city. Select an offer to see all details.
+        empty_list_text: There are no offers at the moment.
+        to_offer: View offer
+      show:
+        back: Back to the overview
+        edit: Edit
+        opens_in_new_tab: (opens in a new tab)
+        intro:
+          title: About this offer
+        details:
+          title: Details
+        location:
+          title: Location
+        contact:
+          title: Contact
+          name: Contact person
       new:
         title: Add offer
       edit:

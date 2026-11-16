@@ -1,0 +1,65 @@
+<% provide :title do %><%= t("custom.offers.index.title") %><% end %>
+
+<main>
+  <h1 class="padding-on-mobile"><%= t("custom.offers.index.title") %></h1>
+
+  <div class="flex-layout padding-on-mobile">
+    <div class="main-column">
+      <div class="resource-page--intro-text">
+        <p><%= t("custom.offers.index.intro_text") %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-layout padding-on-mobile">
+    <div class="main-column">
+      <%= render Resources::List::BaseComponent.new(
+        empty_text: @offers.empty? ? t("custom.offers.index.empty_list_text") : nil
+      ) do |c| %>
+        <% if @offers.present? %>
+          <% c.with_items do %>
+            <% @offers.each do |offer| %>
+              <% offer_types = offer.categories_of(:offer_type).map(&:name).select(&:present?) %>
+              <% social_areas = offer.categories_of(:social_area).map(&:name).select(&:present?) %>
+              <%= render Resources::ListItemComponent.new(
+                resource: offer,
+                title: offer.title,
+                description: offer.short_description,
+                url: offer_path(offer),
+                title_heading_level: 2
+              ) do |item| %>
+                <% item.with_image(image: offer.image, image_placeholder_icon_class: "fa-hands-helping", resource: offer) %>
+
+                <% if offer_types.any? %>
+                  <% item.with_subheading do %>
+                    <span class="show-for-sr"><%= t("activerecord.attributes.offer/category.kinds.offer_type") %>:</span>
+                    <div class="resource-item--tags">
+                      <% offer_types.each do |name| %>
+                        <span class="resource-item--tag"><%= name %></span>
+                      <% end %>
+                    </div>
+                  <% end %>
+                <% end %>
+
+                <% if social_areas.any? %>
+                  <% item.with_additional_body_section do %>
+                    <span>
+                      <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                      <span class="show-for-sr"><%= t("activerecord.attributes.offer/category.kinds.social_area") %>:</span>
+                      <%= social_areas.to_sentence %>
+                    </span>
+                  <% end %>
+                <% end %>
+
+                <% item.with_footer_section do %>
+                  <%= link_to t("custom.offers.index.to_offer"), offer_path(offer), class: "button -grey", tabindex: "-1", data: { turbolinks: false }, aria: { hidden: true } %>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+      <%= paginate @offers %>
+    </div>
+  </div>
+</main>

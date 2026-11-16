@@ -38,6 +38,8 @@ de:
         form:
           errors_title: Das Angebot konnte nicht gespeichert werden
           image_label: Bild
+          no_categories_title: Keine Werte vorhanden
+          no_categories_description: Legen Sie zunächst unter „Kategorien" Werte für diese Kategorie an.
           sections:
             basics: Grunddaten
             categories: Kategorien
@@ -48,15 +50,29 @@ de:
             title: Kurzer, aussagekräftiger Titel des Angebots.
             short_description: Beschreiben Sie das Angebot in wenigen Sätzen.
             image: Optionales Bild, das auf der Detailseite und in der Übersicht erscheint.
-            categories: Wählen Sie je Kategorie alle passenden Werte aus. Angebotsart und Sozialraum sind Pflicht.
-            no_categories: Für diese Kategorie sind noch keine Werte angelegt.
+            category_kinds:
+              offer_type: Um welche Art von Angebot handelt es sich? Wählen Sie alle passenden Werte aus.
+              target_group: Für wen ist das Angebot gedacht? Wählen Sie alle passenden Werte aus.
+              costs: Fällt für das Angebot ein Beitrag an? Wählen Sie alle passenden Werte aus.
+              accessibility: Welche Merkmale der Barrierefreiheit erfüllt das Angebot?
+              social_area: In welchem Sozialraum findet das Angebot statt? Wählen Sie alle passenden Werte aus.
             address: Adresse, unter der das Angebot stattfindet.
             map_location: Optional. Setzen Sie eine Markierung, damit das Angebot auf der Karte erscheint.
-            times: "Zum Beispiel: dienstags 15–17 Uhr, außer in den Schulferien."
-            costs: "Optionale Angaben zu den Kosten, zum Beispiel: 5 €, ermäßigt 3 €."
-            registration: "Ob und wie man sich anmelden muss, zum Beispiel: Anmeldung bis Freitag unter 03641 123456."
+            times: Wann findet das Angebot statt?
+            costs: Optionale Angaben zu den Kosten des Angebots.
+            registration: Ob und wie man sich für das Angebot anmelden muss.
             contact_website: Vollständige Adresse beginnend mit https://
-          submit: Speichern
+          placeholders:
+            title: z. B. Schwimmkurs für Kinder
+            short_description: z. B. Kinder ab 6 Jahren lernen in kleinen Gruppen im Hallenbad schwimmen.
+            address: z. B. Marktplatz 1, 12345 Musterstadt
+            times: z. B. dienstags 15–17 Uhr, außer in den Schulferien
+            costs: z. B. 5 €, ermäßigt 3 €
+            registration: z. B. Anmeldung bis Freitag unter 03641 123456
+            contact_name: z. B. Maria Muster
+            contact_phone: z. B. 03641 49-0
+            contact_email: z. B. angebote@example.org
+            contact_website: https://
       categories:
         index:
           title: Kategorien

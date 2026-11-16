@@ -38,6 +38,8 @@ en:
         form:
           errors_title: The offer could not be saved
           image_label: Image
+          no_categories_title: No values yet
+          no_categories_description: Create values for this category under "Categories" first.
           sections:
             basics: Basics
             categories: Categories
@@ -48,15 +50,29 @@ en:
             title: Short, meaningful title of the offer.
             short_description: Describe the offer in a few sentences.
             image: Optional image shown on the detail page and in the overview.
-            categories: Select all matching values per category. Offer type and social area are required.
-            no_categories: No values have been created for this category yet.
+            category_kinds:
+              offer_type: What kind of offer is it? Select all matching values.
+              target_group: Who is the offer for? Select all matching values.
+              costs: Is there a fee for the offer? Select all matching values.
+              accessibility: Which accessibility features does the offer provide?
+              social_area: In which social area does the offer take place? Select all matching values.
             address: Address where the offer takes place.
             map_location: Optional. Set a marker so the offer appears on the map.
-            times: "For example: Tuesdays 3–5 pm, except during school holidays."
-            costs: "Optional cost details, for example: €5, reduced €3."
-            registration: "Whether and how to register, for example: register by Friday on 03641 123456."
+            times: When does the offer take place?
+            costs: Optional details on the costs of the offer.
+            registration: Whether and how to register for the offer.
             contact_website: Full address starting with https://
-          submit: Save
+          placeholders:
+            title: e.g. Swimming course for children
+            short_description: e.g. Children aged 6 and over learn to swim in small groups at the indoor pool.
+            address: e.g. 1 Market Square, 12345 Sample Town
+            times: e.g. Tuesdays 3–5 pm, except during school holidays
+            costs: e.g. €5, reduced €3
+            registration: e.g. register by Friday on 03641 123456
+            contact_name: e.g. Maria Muster
+            contact_phone: e.g. +49 3641 49-0
+            contact_email: e.g. offers@provider.example
+            contact_website: https://
       categories:
         index:
           title: Categories

@@ -5,7 +5,9 @@
     <%= t(".kind_label") %>: <strong><%= t("activerecord.attributes.offer/category.kinds.#{@kind}") %></strong>
   </p>
 
-  <%= f.text_field :name, label: t(".name_label"), hint: t(".name_hint") %>
+  <%= render Kern::FormFieldComponent.new(label: t(".name_label"), hint: t(".name_hint"), form: f, attribute: :name) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".name_label") %>
+  <% end %>
 
   <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
 <% end %>

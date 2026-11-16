@@ -10,6 +10,12 @@ namespace :adm do
 
     resource :settings, only: :show, controller: "settings"
 
-    resources :offers, only: [:edit, :update, :destroy], path: ""
+    resources :offers, only: [:edit, :update, :destroy], path: "" do
+      member do
+        patch :mark_checked
+        patch :hide
+        patch :unhide
+      end
+    end
   end
 end

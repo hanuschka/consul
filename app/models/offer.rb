@@ -18,6 +18,11 @@ class Offer < ApplicationRecord
     inverse_of: :offer
   has_many :categories, through: :category_assignments, source: :category
 
+  enum :review_status, { checked: 0, added: 1, changed: 2 }, prefix: :review
+
+  scope :visible, -> { where(hidden_at: nil) }
+  scope :hidden, -> { where.not(hidden_at: nil) }
+
   scope :sort_by_title, ->(direction = :asc) {
     locale = connection.quote(I18n.locale.to_s)
     direction = direction.to_s.casecmp?("desc") ? "DESC" : "ASC"
@@ -38,6 +43,33 @@ class Offer < ApplicationRecord
   validates :contact_email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   validates :contact_website, format: { with: %r{\Ahttps?://[^\s]+\z}i }, allow_blank: true
   validate :required_categories_present
+
+  def self.listed_for(user)
+    return visible if user.blank?
+    return all if user.administrator?
+
+    visible.or(where(provider_id: Offer::Provider.for_user(user).select(:id)))
+  end
+
+  def hidden?
+    hidden_at.present?
+  end
+
+  def mark_for_review
+    self.review_status = new_record? || review_added? ? :added : :changed
+  end
+
+  def mark_checked!
+    update_column(:review_status, :checked)
+  end
+
+  def hide!
+    update_column(:hidden_at, Time.current)
+  end
+
+  def unhide!
+    update_column(:hidden_at, nil)
+  end
 
   def categories_of(kind)
     categories.select { |category| category.kind == kind.to_s }

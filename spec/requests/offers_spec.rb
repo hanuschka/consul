@@ -338,4 +338,98 @@ describe "Angebote provider form", type: :request do
       end
     end
   end
+
+  describe "city check and hiding" do
+    let(:provider) { create(:offer_provider, name: "Träger X") }
+    let(:member) { create(:user).tap { |user| provider.add_email(user.email) } }
+
+    before do
+      allow_any_instance_of(ActionView::Base).to receive(:stylesheet_link_tag).and_return("".html_safe)
+      allow_any_instance_of(ActionView::Base).to receive(:javascript_include_tag).and_return("".html_safe)
+      allow(Setting).to receive(:[]).with("process.offers").and_return(true)
+    end
+
+    it "publishes a provider's new offer right away and marks it for the city" do
+      login_as(member)
+      post offers_path, params: { offer: offer_attributes }
+      expect(Offer.last).to be_review_added
+
+      logout
+      get offers_path
+      expect(response.body).to include("Schwimmen für Kinder")
+    end
+
+    it "marks a provider's change to a checked offer as changed" do
+      offer = create(:offer, provider: provider)
+      offer.mark_checked!
+      login_as(member)
+
+      patch offer_path(offer), params: { offer: { contact_email: "neu@traeger.example" } }
+
+      expect(offer.reload).to be_review_changed
+    end
+
+    it "leaves the check status alone when the city edits an offer" do
+      offer = create(:offer, provider: provider)
+      offer.mark_checked!
+      login_as(admin)
+
+      patch offer_path(offer), params: { offer: { contact_email: "stadt@example.org" } }
+
+      expect(offer.reload).to be_review_checked
+    end
+
+    it "takes a hidden offer off the list and its detail page" do
+      offer = create(:offer, title: "Lesecafé", provider: provider)
+      offer.hide!
+      login_as(create(:user))
+
+      get offers_path
+      expect(response.body).not_to include("Lesecafé")
+
+      expect { get offer_path(offer) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "keeps showing a hidden offer to its own provider only" do
+      own = create(:offer, title: "Lesecafé", provider: provider)
+      foreign = create(:offer, title: "Chor", provider: create(:offer_provider))
+      [own, foreign].each(&:hide!)
+      login_as(member)
+
+      get offers_path
+      expect(response.body).to include("Lesecafé")
+      expect(response.body).not_to include("Chor")
+
+      get offer_path(own)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "tells a provider that its offer is hidden" do
+      hidden = create(:offer, title: "Lesecafé", provider: provider)
+      hidden.hide!
+      login_as(member)
+
+      get offers_path
+      expect(response.body).to include(I18n.t("custom.offers.index.hidden_label"))
+
+      get offer_path(hidden)
+      expect(response.body).to include(I18n.t("custom.offers.show.hidden_notice"))
+
+      hidden.unhide!
+
+      get offers_path
+      expect(response.body).to include("Lesecafé")
+      expect(Nokogiri::HTML(response.body).css(".resource-item--header")).to be_empty
+    end
+
+    it "keeps an offer hidden when its provider edits it" do
+      offer = create(:offer, provider: provider)
+      offer.hide!
+      login_as(member)
+
+      patch offer_path(offer), params: { offer: { contact_email: "neu@traeger.example" } }
+
+      expect(offer.reload).to be_hidden
+    end
+  end
 end

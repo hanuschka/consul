@@ -33,8 +33,18 @@
                 title: offer.title,
                 description: offer.short_description,
                 url: offer_path(offer),
+                header_style: (offer.hidden? ? "background-color: var(--medium-gray-3);" : nil),
                 title_heading_level: 2
               ) do |item| %>
+                <% if offer.hidden? %>
+                  <% item.with_header do %>
+                    <div>
+                      <i class="fas fa-eye-slash" aria-hidden="true"></i>
+                      <%= t("custom.offers.index.hidden_label") %>
+                    </div>
+                  <% end %>
+                <% end %>
+
                 <% item.with_image(image: offer.image, image_placeholder_icon_class: "fa-hands-helping", resource: offer) %>
 
                 <% if offer_types.any? %>

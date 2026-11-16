@@ -14,7 +14,14 @@ de:
       offers:
         index:
           title: Angebote
-          page_hint: "Hier sehen Sie alle Angebote der Träger. Angebote werden über das Eingabeformular im öffentlichen Bereich angelegt. Sie können Angebote nach Titel suchen, sortieren und löschen."
+          review_status:
+            added: Neu
+            changed: Geändert
+            checked: Geprüft
+          visibility:
+            visible: Sichtbar
+            hidden: Ausgeblendet
+          page_hint: "Hier sehen Sie alle Angebote der Träger. Angebote werden über das Eingabeformular im öffentlichen Bereich angelegt und sind sofort online. Neue und geänderte Angebote bleiben gekennzeichnet, bis Sie sie als geprüft markieren. Sie können Angebote nach Titel suchen, sortieren, nach Prüfstatus und Sichtbarkeit filtern, ausblenden und löschen."
           total_label:
             one: Angebot
             other: Angebote
@@ -30,12 +37,24 @@ de:
             social_area: Sozialraum
             author: Erstellt von
             updated_at: Aktualisiert am
+            review_status: Prüfstatus
+            visibility: Sichtbarkeit
+        actions:
+          mark_checked: Als geprüft markieren
+          hide: Ausblenden
+          unhide: Einblenden
         edit:
           title: Angebot bearbeiten
         update:
           success: Das Angebot wurde gespeichert.
         destroy:
           success: Das Angebot wurde gelöscht.
+        mark_checked:
+          success: Das Angebot wurde als geprüft markiert.
+        hide:
+          success: Das Angebot wurde ausgeblendet.
+        unhide:
+          success: Das Angebot wird wieder angezeigt.
         form:
           errors_title: Das Angebot konnte nicht gespeichert werden
           image_label: Bild

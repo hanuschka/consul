@@ -1,5 +1,6 @@
 class Adm::OffersQuery < ApplicationQuery
   SORTABLE_FIELDS = %i[id title updated_at].freeze
+  FILTERABLE_FIELDS = %i[review_status visibility].freeze
 
   def initialize(base_scope, params = {})
     @base_scope = base_scope
@@ -9,6 +10,8 @@ class Adm::OffersQuery < ApplicationQuery
   def call
     base_scope
       .then { |r| apply_title_search(r) }
+      .then { |r| apply_review_status_filter(r) }
+      .then { |r| apply_visibility_filter(r) }
       .then { |r| apply_sorting(r) }
   end
 
@@ -23,6 +26,28 @@ class Adm::OffersQuery < ApplicationQuery
       scope.where(id: Offer.translation_class
                         .where("title ILIKE ?", "%#{escape_like(value)}%")
                         .select(:offer_id))
+    end
+
+    def apply_review_status_filter(scope)
+      values = filter_values(:review_status) & Offer.review_statuses.keys
+      return scope if values.empty?
+
+      scope.where(review_status: values)
+    end
+
+    def apply_visibility_filter(scope)
+      values = filter_values(:visibility)
+      return scope if values.empty? || values.include?("visible") == values.include?("hidden")
+
+      values.include?("hidden") ? scope.hidden : scope.visible
+    end
+
+    def filter_values(field)
+      filterable_params.fetch(field, []).compact_blank.map(&:to_s)
+    end
+
+    def filterable_fields
+      FILTERABLE_FIELDS
     end
 
     def apply_sorting(scope)

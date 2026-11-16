@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_16_112258) do
+ActiveRecord::Schema.define(version: 2026_11_16_135403) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2179,8 +2179,11 @@ ActiveRecord::Schema.define(version: 2026_11_16_112258) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "provider_id"
+    t.integer "review_status", default: 0, null: false
+    t.datetime "hidden_at"
     t.index ["author_id"], name: "index_offers_on_author_id"
     t.index ["provider_id"], name: "index_offers_on_provider_id"
+    t.index ["review_status"], name: "index_offers_on_review_status"
   end
 
   create_table "officing_manager_assignments", force: :cascade do |t|

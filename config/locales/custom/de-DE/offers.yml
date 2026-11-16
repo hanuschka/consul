@@ -7,10 +7,12 @@ de:
         intro_text: Hier finden Sie Angebote in Ihrer Stadt. Wählen Sie ein Angebot aus, um alle Details zu sehen.
         empty_list_text: Zurzeit gibt es keine Angebote.
         to_offer: Zum Angebot
+        hidden_label: Ausgeblendet
       show:
         back: Zurück zur Übersicht
         edit: Bearbeiten
         opens_in_new_tab: (öffnet in einem neuen Tab)
+        hidden_notice: Dieses Angebot wurde von der Stadt ausgeblendet und ist öffentlich nicht sichtbar. Sie können es weiterhin bearbeiten.
         intro:
           title: Über das Angebot
         details:

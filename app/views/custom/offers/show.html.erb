@@ -30,6 +30,12 @@
         <% if Setting["process.offers"].present? %>
           <%= back_link_to(offers_path, t("custom.offers.show.back")) %>
         <% end %>
+
+        <% if @offer.hidden? %>
+          <div class="callout warning margin-top">
+            <strong><%= t("custom.offers.show.hidden_notice") %></strong>
+          </div>
+        <% end %>
       </div>
       <div class="sidebar-placeholder"></div>
     </div>

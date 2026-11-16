@@ -11,7 +11,8 @@ class OffersController < ApplicationController
   def index
     authorize! :index, Offer
 
-    @offers = Offer.includes(:translations, :image, categories: :translations)
+    @offers = Offer.listed_for(current_user)
+                   .includes(:translations, :image, categories: :translations)
                    .sort_by_title
                    .page(params[:page])
   end
@@ -19,7 +20,11 @@ class OffersController < ApplicationController
   def show
     @offer = Offer.find(params[:id])
     authorize! :show, @offer
-    check_feature_flag(:offers) unless can?(:update, @offer)
+
+    unless can?(:update, @offer)
+      check_feature_flag(:offers)
+      raise ActiveRecord::RecordNotFound if @offer.hidden?
+    end
   end
 
   def new
@@ -32,6 +37,7 @@ class OffersController < ApplicationController
     @offer = Offer.new(offer_params.merge(author: current_user))
     assign_provider_on_create
     authorize! :create, @offer
+    @offer.mark_for_review unless current_user.administrator?
 
     if @offer.save
       redirect_to offer_path(@offer), notice: t("custom.offers.create.success")
@@ -51,6 +57,7 @@ class OffersController < ApplicationController
     @offer = Offer.find(params[:id])
     authorize! :update, @offer
     @offer.provider = chosen_provider if current_user.administrator? && params[:offer].key?(:provider_id)
+    @offer.mark_for_review unless current_user.administrator?
 
     saved = Offer.transaction do
       @offer.update(offer_params) || raise(ActiveRecord::Rollback)

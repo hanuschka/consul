@@ -60,6 +60,27 @@ describe Offer do
 
     expect(offer).not_to be_valid
   end
+
+  describe "#mark_for_review" do
+    it "marks a new offer as added and keeps it added until the city checks it" do
+      offer = build(:offer)
+
+      offer.mark_for_review
+      expect(offer).to be_review_added
+
+      offer.save!
+      offer.mark_for_review
+      expect(offer).to be_review_added
+    end
+
+    it "marks a checked offer as changed" do
+      offer = create(:offer)
+
+      offer.mark_for_review
+
+      expect(offer).to be_review_changed
+    end
+  end
 end
 
 describe Offer::Category do
@@ -81,4 +102,5 @@ describe Offer::Category do
 
     expect { category.destroy }.to change(Offer::Category, :count).by(-1)
   end
+
 end

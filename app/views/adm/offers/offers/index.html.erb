@@ -19,7 +19,11 @@
     author:      Kern::Table::HeaderComponent.new(:author, t(".table.author"),
                    data_field: "author"),
     updated_at:  Kern::Table::HeaderComponent.new(:updated_at, t(".table.updated_at"),
-                   **@updated_at_header_options.merge(data_field: "updated_at"))
+                   **@updated_at_header_options.merge(data_field: "updated_at")),
+    review_status: Kern::Table::HeaderComponent.new(:review_status, t(".table.review_status"),
+                     **@review_status_header_options.merge(data_field: "review_status")),
+    visibility:  Kern::Table::HeaderComponent.new(:visibility, t(".table.visibility"),
+                   **@visibility_header_options.merge(data_field: "visibility"))
   }
 %>
 
@@ -29,10 +33,10 @@
         records: @offers,
         pagy: @pagy,
         headers: headers,
-        column_count: 7,
+        column_count: 9,
         column_selector: {
           storage_key: "adm-offers-columns-v2",
-          defaults: "title,offer_type,social_area,author,updated_at"
+          defaults: "title,offer_type,social_area,author,updated_at,review_status,visibility"
         },
         empty_state: {
           title: t(".no_items_title"),
@@ -59,6 +63,8 @@
       <%= render headers[:social_area] %>
       <%= render headers[:author] %>
       <%= render headers[:updated_at] %>
+      <%= render headers[:review_status] %>
+      <%= render headers[:visibility] %>
       <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
     <% end %>
 

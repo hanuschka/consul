@@ -48,6 +48,21 @@ describe "Angebote list in /adm", type: :request do
       expect(listed_titles).to eq %w[Chor Bewegung Atelier]
     end
 
+    it "filters by check status and visibility" do
+      create(:offer, title: "Atelier", review_status: :added)
+      create(:offer, title: "Bewegung", review_status: :changed).hide!
+      create(:offer, title: "Chor")
+
+      get adm_offers_root_path, params: { review_status: %w[added changed], sort_by: "title" }
+      expect(listed_titles).to eq %w[Atelier Bewegung]
+
+      get adm_offers_root_path, params: { visibility: ["hidden"] }
+      expect(listed_titles).to eq ["Bewegung"]
+
+      get adm_offers_root_path, params: { visibility: ["visible"], sort_by: "title" }
+      expect(listed_titles).to eq %w[Atelier Chor]
+    end
+
     describe "editing" do
       let(:sport) { create(:offer_category, :offer_type, name: "Sportkurs") }
       let(:north) { create(:offer_category, :social_area, name: "Nord") }
@@ -124,6 +139,25 @@ describe "Angebote list in /adm", type: :request do
       expect(Offer.exists?(offer.id)).to be false
       expect(response).to redirect_to(adm_offers_root_path)
     end
+
+    it "marks an offer as checked" do
+      offer = create(:offer, review_status: :changed)
+
+      patch mark_checked_adm_offers_offer_path(offer)
+
+      expect(offer.reload).to be_review_checked
+      expect(response).to redirect_to(adm_offers_root_path)
+    end
+
+    it "hides an offer and shows it again" do
+      offer = create(:offer)
+
+      patch hide_adm_offers_offer_path(offer)
+      expect(offer.reload).to be_hidden
+
+      patch unhide_adm_offers_offer_path(offer)
+      expect(offer.reload).not_to be_hidden
+    end
   end
 
   context "as another user" do
@@ -149,6 +183,16 @@ describe "Angebote list in /adm", type: :request do
       delete adm_offers_offer_path(offer)
 
       expect(Offer.exists?(offer.id)).to be true
+    end
+
+    it "cannot hide or check an offer" do
+      offer = create(:offer, review_status: :added)
+
+      patch hide_adm_offers_offer_path(offer)
+      patch mark_checked_adm_offers_offer_path(offer)
+
+      expect(offer.reload).not_to be_hidden
+      expect(offer).to be_review_added
     end
   end
 end

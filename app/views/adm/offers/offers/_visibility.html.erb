@@ -1,0 +1,5 @@
+<% if offer.hidden? %>
+  <span class="kern-badge kern-badge--danger kern-badge--small"><%= t("adm.offers.offers.index.visibility.hidden") %></span>
+<% else %>
+  <%= t("adm.offers.offers.index.visibility.visible") %>
+<% end %>

@@ -7,10 +7,12 @@ en:
         intro_text: Find offers in your city. Select an offer to see all details.
         empty_list_text: There are no offers at the moment.
         to_offer: View offer
+        hidden_label: Hidden
       show:
         back: Back to the overview
         edit: Edit
         opens_in_new_tab: (opens in a new tab)
+        hidden_notice: The city has hidden this offer, so it is not publicly visible. You can still edit it.
         intro:
           title: About this offer
         details:

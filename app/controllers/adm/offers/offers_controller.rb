@@ -2,7 +2,7 @@ class Adm::Offers::OffersController < Adm::Offers::BaseController
   include MapLocationAttributes
   include ImageAttributes
 
-  before_action :set_offer, only: [:edit, :update, :destroy]
+  before_action :set_offer, only: [:edit, :update, :destroy, :mark_checked, :hide, :unhide]
 
   def index
     authorize Offer, :index?, policy_class: Adm::Offers::OfferPolicy
@@ -10,6 +10,8 @@ class Adm::Offers::OffersController < Adm::Offers::BaseController
     @id_header_options = { sort: true }
     @title_header_options = { sort: true, search: true }
     @updated_at_header_options = { sort: true }
+    @review_status_header_options = { filter_options: review_status_filter_options }
+    @visibility_header_options = { filter_options: visibility_filter_options }
 
     @pagy, @offers = pagy(
       Adm::OffersQuery.new(
@@ -44,11 +46,34 @@ class Adm::Offers::OffersController < Adm::Offers::BaseController
     redirect_to adm_offers_root_path, notice: t(".success")
   end
 
+  def mark_checked
+    @offer.mark_checked!
+    redirect_back fallback_location: adm_offers_root_path, notice: t(".success")
+  end
+
+  def hide
+    @offer.hide!
+    redirect_back fallback_location: adm_offers_root_path, notice: t(".success")
+  end
+
+  def unhide
+    @offer.unhide!
+    redirect_back fallback_location: adm_offers_root_path, notice: t(".success")
+  end
+
   private
 
     def set_offer
       @offer = Offer.find(params[:id])
       authorize @offer, policy_class: Adm::Offers::OfferPolicy
+    end
+
+    def review_status_filter_options
+      %w[added changed checked].map { |status| [status, t("adm.offers.offers.index.review_status.#{status}")] }
+    end
+
+    def visibility_filter_options
+      %w[visible hidden].map { |state| [state, t("adm.offers.offers.index.visibility.#{state}")] }
     end
 
     def prepare_form

@@ -1,0 +1,8 @@
+<% label = t("adm.offers.offers.index.review_status.#{offer.review_status}") %>
+<% if offer.review_added? %>
+  <span class="kern-badge kern-badge--info kern-badge--small"><%= label %></span>
+<% elsif offer.review_changed? %>
+  <span class="kern-badge kern-badge--warning kern-badge--small"><%= label %></span>
+<% else %>
+  <%= label %>
+<% end %>

@@ -15,6 +15,18 @@ class Adm::Offers::OfferPolicy < ApplicationPolicy
     index?
   end
 
+  def mark_checked?
+    index?
+  end
+
+  def hide?
+    index?
+  end
+
+  def unhide?
+    index?
+  end
+
   class Scope < Scope
     def resolve
       return scope.all if user&.administrator?

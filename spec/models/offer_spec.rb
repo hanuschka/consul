@@ -51,7 +51,7 @@ describe Offer do
     offer.contact_website = "javascript:alert(1)"
     expect(offer).not_to be_valid
 
-    offer.contact_website = "https://www.jena.de"
+    offer.contact_website = "https://www.example.org"
     expect(offer).to be_valid
   end
 

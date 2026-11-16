@@ -60,6 +60,7 @@
     resources :idea_officers, only: [:index]
     resources :municipal_plans, only: [:index, :show]
     resources :municipal_plan_topics, only: [:index]
+    resources :offers, only: [:index, :show]
     resources :polls, only: [:index, :show] do
       resources :poll_questions, only: [:index, :create], path: "questions", as: :questions
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_12_150727) do
+ActiveRecord::Schema.define(version: 2026_11_16_112258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2138,6 +2138,23 @@ ActiveRecord::Schema.define(version: 2026_11_12_150727) do
     t.index ["offer_category_id"], name: "index_offer_category_translations_on_offer_category_id"
   end
 
+  create_table "offer_provider_users", force: :cascade do |t|
+    t.bigint "offer_provider_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["offer_provider_id", "user_id"], name: "index_offer_provider_users_unique", unique: true
+    t.index ["offer_provider_id"], name: "index_offer_provider_users_on_offer_provider_id"
+    t.index ["user_id"], name: "index_offer_provider_users_on_user_id"
+  end
+
+  create_table "offer_providers", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "auto_join_emails", default: [], null: false, array: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "offer_translations", force: :cascade do |t|
     t.bigint "offer_id", null: false
     t.string "locale", null: false
@@ -2161,7 +2178,9 @@ ActiveRecord::Schema.define(version: 2026_11_12_150727) do
     t.bigint "author_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "provider_id"
     t.index ["author_id"], name: "index_offers_on_author_id"
+    t.index ["provider_id"], name: "index_offers_on_provider_id"
   end
 
   create_table "officing_manager_assignments", force: :cascade do |t|
@@ -4191,6 +4210,9 @@ ActiveRecord::Schema.define(version: 2026_11_12_150727) do
   add_foreign_key "notifications", "users"
   add_foreign_key "offer_category_assignments", "offer_categories"
   add_foreign_key "offer_category_assignments", "offers"
+  add_foreign_key "offer_provider_users", "offer_providers"
+  add_foreign_key "offer_provider_users", "users"
+  add_foreign_key "offers", "offer_providers", column: "provider_id"
   add_foreign_key "offers", "users", column: "author_id", on_delete: :nullify
   add_foreign_key "officing_manager_assignments", "officing_managers"
   add_foreign_key "officing_manager_assignments", "projekt_phases"

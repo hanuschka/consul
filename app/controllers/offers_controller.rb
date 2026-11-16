@@ -30,6 +30,7 @@ class OffersController < ApplicationController
 
   def create
     @offer = Offer.new(offer_params.merge(author: current_user))
+    assign_provider_on_create
     authorize! :create, @offer
 
     if @offer.save
@@ -49,6 +50,7 @@ class OffersController < ApplicationController
   def update
     @offer = Offer.find(params[:id])
     authorize! :update, @offer
+    @offer.provider = chosen_provider if current_user.administrator? && params[:offer].key?(:provider_id)
 
     saved = Offer.transaction do
       @offer.update(offer_params) || raise(ActiveRecord::Rollback)
@@ -68,6 +70,29 @@ class OffersController < ApplicationController
       @offer.build_image(user: current_user) unless @offer.image
       @offer.build_map_location unless @offer.map_location
       @categories_by_kind = Offer::Category.includes(:translations).group_by(&:kind)
+      @providers = available_providers
+    end
+
+    def available_providers
+      @available_providers ||= if current_user.administrator?
+                                 Offer::Provider.order(:name)
+                               else
+                                 Offer::Provider.for_user(current_user).order(:name)
+                               end
+    end
+
+    def chosen_provider
+      provider_id = params.dig(:offer, :provider_id).presence
+      available_providers.find_by(id: provider_id) if provider_id
+    end
+
+    def assign_provider_on_create
+      if current_user.administrator?
+        @offer.provider = chosen_provider
+      else
+        @offer.provider_required = true
+        @offer.provider = chosen_provider || (available_providers.first if available_providers.one?)
+      end
     end
 
     def offer_params

@@ -16,6 +16,9 @@ en:
       offer/category:
         one: "Category"
         other: "Categories"
+      offer/provider:
+        one: "Provider"
+        other: "Providers"
     attributes:
       municipal_plan:
         status: "Status"
@@ -81,6 +84,10 @@ en:
         contact_email: "E-mail"
         contact_website: "Website"
         author: "Created by"
+        provider: "Provider"
+      offer/provider:
+        name: "Name"
+        email_list: "E-mail addresses"
       offer/translation:
         title: "Title"
         short_description: "Short description"
@@ -106,6 +113,8 @@ en:
           nested_working_copy: "A working copy cannot carry a working copy of its own."
         offer:
           category_required: "Please select at least one value for “%{category}”."
+        offer/provider:
+          invalid_emails: "These e-mail addresses are invalid: %{emails}"
   deficiency_reports:
     official_answer_documents:
       too_many: "At most %{count} documents can be attached to the official response."

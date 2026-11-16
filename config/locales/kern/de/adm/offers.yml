@@ -7,6 +7,7 @@ de:
         items:
           offers: Angebote
           categories: Kategorien
+          providers: Träger
           settings: Konfiguration
       settings:
         title: Konfiguration
@@ -99,3 +100,41 @@ de:
           name_label: Name
           name_hint: Der Name erscheint im Eingabeformular, als Filter in der Angebotsübersicht und bei jedem Angebot, dem der Wert zugeordnet ist. Wählen Sie einen kurzen, allgemein verständlichen Begriff.
           submit: Speichern
+      providers:
+        index:
+          title: Träger
+          page_hint: "Legt fest, welche Träger mit welchen E-Mail-Adressen Angebote im Modul „Angebote“ einstellen dürfen. Nur Nutzer mit einer hinterlegten Adresse sehen im Frontend die Schaltfläche „Angebot hinzufügen“. Hinterlegen Sie hier alle Träger, die ihre Angebote selbst pflegen sollen."
+          new_provider: Neuer Träger
+          total_label:
+            one: Träger
+            other: Träger
+          total_hint: Anzahl der Träger, die den aktuellen Suchkriterien entsprechen
+          no_items_title: Keine Träger vorhanden
+          no_items_description: Legen Sie einen Träger an, damit dessen Mitarbeitende Angebote einstellen können.
+          no_results_filtered_title: Keine Treffer
+          no_results_filtered_description: Für die Suche wurden keine Träger gefunden. Passen Sie die Suche an oder setzen Sie sie zurück.
+          table:
+            offers: Angebote
+        provider_row:
+          addresses_summary: "%{registered} registriert, %{pending} ausstehend"
+          no_addresses: Keine
+        new:
+          title: Neuer Träger
+        edit:
+          title: Träger bearbeiten
+        create:
+          success: Der Träger wurde angelegt.
+        update:
+          success: Der Träger wurde gespeichert.
+        destroy:
+          success: Der Träger wurde gelöscht.
+          cannot_destroy: Der Träger kann nicht gelöscht werden, da ihm noch Angebote zugeordnet sind.
+        form:
+          hints:
+            name: Der Name erscheint bei den Angeboten dieses Trägers.
+            email_list: Eine E-Mail-Adresse pro Zeile. Adressen von Personen, die noch nicht registriert sind, bleiben gespeichert und gelten automatisch, sobald sich die Person registriert und ihr Konto bestätigt.
+          placeholders:
+            name: z. B. Jugendzentrum Nord
+            email_list: |-
+              anna.muster@traeger.example
+              ben.beispiel@traeger.example

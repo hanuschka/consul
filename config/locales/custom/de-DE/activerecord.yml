@@ -28,6 +28,9 @@ de:
       offer/category:
         one: "Kategorie"
         other: "Kategorien"
+      offer/provider:
+        one: "Träger"
+        other: "Träger"
       activity:
         one: "Aktivität"
         other: "Aktivitäten"
@@ -228,6 +231,10 @@ de:
         contact_email: "E-Mail"
         contact_website: "Website"
         author: "Erstellt von"
+        provider: "Träger"
+      offer/provider:
+        name: "Name"
+        email_list: "E-Mail-Adressen"
       offer/translation:
         title: "Titel"
         short_description: "Kurzbeschreibung"
@@ -657,6 +664,8 @@ de:
           nested_working_copy: "Zu einer Bearbeitungsfassung kann keine weitere Bearbeitungsfassung angelegt werden."
         offer:
           category_required: "Bitte wählen Sie mindestens einen Wert für „%{category}“ aus."
+        offer/provider:
+          invalid_emails: "Diese E-Mail-Adressen sind ungültig: %{emails}"
         projekt:
           attributes:
             parent_id:

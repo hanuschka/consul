@@ -12,6 +12,7 @@ class Offer < ApplicationRecord
   include Globalizable
 
   belongs_to :author, class_name: "User", optional: true
+  belongs_to :provider, class_name: "Offer::Provider", optional: true, inverse_of: :offers
 
   has_many :category_assignments, class_name: "Offer::CategoryAssignment", dependent: :destroy,
     inverse_of: :offer
@@ -29,6 +30,9 @@ class Offer < ApplicationRecord
     SQL
   }
 
+  attr_accessor :provider_required
+
+  validates :provider, presence: true, if: :provider_required
   validates_translation :title, presence: true
   validate :short_description_present
   validates :contact_email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true

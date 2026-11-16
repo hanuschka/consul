@@ -120,6 +120,123 @@ describe "Angebote provider form", type: :request do
     end
   end
 
+  describe "authorized providers" do
+    let(:provider_x) { create(:offer_provider, name: "Träger X") }
+    let(:provider_y) { create(:offer_provider, name: "Träger Y") }
+
+    before do
+      allow_any_instance_of(ActionView::Base).to receive(:stylesheet_link_tag).and_return("".html_safe)
+      allow_any_instance_of(ActionView::Base).to receive(:javascript_include_tag).and_return("".html_safe)
+    end
+
+    def member_of(provider, email: nil)
+      create(:user, **{ email: email }.compact).tap { |user| provider.add_email(user.email) }
+    end
+
+    it "lets a user registered with a listed address in once the account is confirmed" do
+      provider_x.add_email("anna@traeger.example")
+      user = create(:user, :unconfirmed, email: "anna@traeger.example")
+      login_as(user)
+
+      get new_offer_path
+      expect(response).to redirect_to(new_user_session_path)
+
+      user.confirm
+      login_as(user)
+      get new_offer_path
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "refuses users with any other address, also when they post directly" do
+      provider_x.add_email("anna@traeger.example")
+      login_as(create(:user, email: "fremd@example.org"))
+
+      get new_offer_path
+      expect(response).to redirect_to(root_path)
+
+      expect do
+        post offers_path, params: { offer: offer_attributes }
+      end.not_to change(Offer, :count)
+    end
+
+    it "assigns the offer to the provider of the account" do
+      login_as(member_of(provider_x))
+
+      post offers_path, params: { offer: offer_attributes }
+
+      expect(Offer.last.provider).to eq provider_x
+    end
+
+    it "asks accounts of several providers to choose one" do
+      user = member_of(provider_x)
+      provider_y.add_email(user.email)
+      login_as(user)
+
+      expect do
+        post offers_path, params: { offer: offer_attributes }
+      end.not_to change(Offer, :count)
+      expect(response).to have_http_status(:unprocessable_entity)
+
+      post offers_path, params: { offer: offer_attributes(provider_id: provider_y.id) }
+      expect(Offer.last.provider).to eq provider_y
+    end
+
+    it "does not let an account create offers for a provider it does not belong to" do
+      login_as(member_of(provider_x))
+      provider_y
+
+      post offers_path, params: { offer: offer_attributes(provider_id: provider_y.id) }
+
+      expect(Offer.last.provider).to eq provider_x
+    end
+
+    it "lets every account of a provider edit the provider's offers" do
+      account_a = member_of(provider_x)
+      account_b = member_of(provider_x)
+      offer = create(:offer, provider: provider_x, author: account_a)
+      login_as(account_b)
+
+      get edit_offer_path(offer)
+      expect(response).to have_http_status(:ok)
+
+      patch offer_path(offer), params: { offer: { contact_email: "b@traeger.example" } }
+      expect(offer.reload.contact_email).to eq "b@traeger.example"
+    end
+
+    it "keeps accounts of other providers away from an offer" do
+      offer = create(:offer, provider: provider_x)
+      login_as(member_of(provider_y))
+
+      get edit_offer_path(offer)
+      expect(response).to redirect_to(root_path)
+
+      patch offer_path(offer), params: { offer: { contact_email: "y@traeger.example" } }
+      expect(response).to redirect_to(root_path)
+      expect(offer.reload.contact_email).to be_nil
+    end
+
+    it "does not let providers move an offer to another provider" do
+      user = member_of(provider_x)
+      provider_y.add_email(user.email)
+      offer = create(:offer, provider: provider_x)
+      login_as(user)
+
+      patch offer_path(offer), params: { offer: { provider_id: provider_y.id } }
+
+      expect(offer.reload.provider).to eq provider_x
+    end
+
+    it "lets administrators create offers with or without a provider" do
+      login_as(admin)
+
+      post offers_path, params: { offer: offer_attributes }
+      expect(Offer.last.provider).to be_nil
+
+      post offers_path, params: { offer: offer_attributes(provider_id: provider_y.id) }
+      expect(Offer.last.provider).to eq provider_y
+    end
+  end
+
   describe "public pages" do
     before do
       allow_any_instance_of(ActionView::Base).to receive(:stylesheet_link_tag).and_return("".html_safe)

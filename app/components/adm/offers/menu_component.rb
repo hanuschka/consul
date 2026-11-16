@@ -4,7 +4,7 @@ class Adm::Offers::MenuComponent < Adm::BaseMenuComponent
   end
 
   def menu_items
-    [offers_item, categories_item, settings_item].compact
+    [offers_item, categories_item, providers_item, settings_item].compact
   end
 
   private
@@ -28,6 +28,17 @@ class Adm::Offers::MenuComponent < Adm::BaseMenuComponent
         icon: "category",
         path: adm_offers_categories_path,
         active_prefix: "/adm/offers/categories"
+      }
+    end
+
+    def providers_item
+      return unless Adm::Offers::ProviderPolicy.new(current_user, nil).index?
+
+      {
+        label: t("adm.offers.menu.items.providers"),
+        icon: "badge",
+        path: adm_offers_providers_path,
+        active_prefix: "/adm/offers/providers"
       }
     end
 

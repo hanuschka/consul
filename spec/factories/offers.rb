@@ -10,6 +10,10 @@ FactoryBot.define do
     end
   end
 
+  factory :offer_provider, class: "Offer::Provider" do
+    sequence(:name) { |n| "Träger #{n}" }
+  end
+
   factory :offer do
     sequence(:title) { |n| "Angebot #{n}" }
     short_description { "<p>Kurzbeschreibung</p>" }

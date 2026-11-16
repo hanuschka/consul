@@ -7,6 +7,7 @@ en:
         items:
           offers: Offers
           categories: Categories
+          providers: Providers
           settings: Configuration
       settings:
         title: Configuration
@@ -99,3 +100,41 @@ en:
           name_label: Name
           name_hint: The name appears in the entry form, as a filter in the offers overview and on every offer it is assigned to. Use a short, generally understandable term.
           submit: Save
+      providers:
+        index:
+          title: Providers
+          page_hint: "Defines which providers may add offers to the “Offers” module, using which e-mail addresses. Only users with a listed address see the “Add offer” button on the website. List every provider that should maintain its own offers here."
+          new_provider: New provider
+          total_label:
+            one: provider
+            other: providers
+          total_hint: Number of providers matching the current search
+          no_items_title: No providers yet
+          no_items_description: Create a provider so its staff can add offers.
+          no_results_filtered_title: No results
+          no_results_filtered_description: No providers match the search. Adjust or reset the search.
+          table:
+            offers: Offers
+        provider_row:
+          addresses_summary: "%{registered} registered, %{pending} pending"
+          no_addresses: None
+        new:
+          title: New provider
+        edit:
+          title: Edit provider
+        create:
+          success: The provider was created.
+        update:
+          success: The provider was saved.
+        destroy:
+          success: The provider was deleted.
+          cannot_destroy: The provider cannot be deleted because offers are still assigned to it.
+        form:
+          hints:
+            name: The name appears on this provider's offers.
+            email_list: One e-mail address per line. Addresses of people who have not registered yet are kept and apply automatically once they register and confirm their account.
+          placeholders:
+            name: e.g. Youth centre North
+            email_list: |-
+              anna.muster@provider.example
+              ben.example@provider.example

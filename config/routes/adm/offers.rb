@@ -6,6 +6,8 @@ namespace :adm do
       patch :order_categories, on: :collection
     end
 
+    resources :providers, except: :show
+
     resource :settings, only: :show, controller: "settings"
 
     resources :offers, only: [:edit, :update, :destroy], path: ""

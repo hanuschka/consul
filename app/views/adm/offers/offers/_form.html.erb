@@ -15,6 +15,13 @@
 <%= tag.details class: "kern-accordion", name: ("offer-form" unless open_all), open: true do %>
   <summary class="kern-accordion__header"><span class="kern-title"><%= t(".sections.basics") %></span></summary>
   <section class="kern-accordion__body">
+    <%= render Kern::FormFieldComponent.new(divider: false, label: Offer.human_attribute_name(:provider),
+                                            hint: t(".hints.provider"),
+                                            form: form, attribute: :provider_id) do %>
+      <%= form.select :provider_id, @providers.map { |provider| [provider.name, provider.id] },
+                      { include_blank: t(".provider_blank") }, { label: false } %>
+    <% end %>
+
     <%= render Kern::FormFieldComponent.new(divider: false, label: Offer.human_attribute_name(:title),
                                             hint: t(".hints.title"), required: true,
                                             form: form, attribute: :title) do %>

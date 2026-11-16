@@ -39,6 +39,7 @@ en:
         form:
           errors_title: The offer could not be saved
           image_label: Image
+          provider_blank: No provider
           no_categories_title: No values yet
           no_categories_description: Create values for this category under "Categories" first.
           sections:
@@ -48,6 +49,7 @@ en:
             details: Details
             contact: Contact
           hints:
+            provider: Optional. The provider this offer belongs to. All accounts of this provider can edit the offer.
             title: Short, meaningful title of the offer.
             short_description: Describe the offer in a few sentences.
             image: Optional image shown on the detail page and in the overview.

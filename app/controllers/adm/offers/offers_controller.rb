@@ -55,6 +55,7 @@ class Adm::Offers::OffersController < Adm::Offers::BaseController
       @offer.build_image(user: current_user) unless @offer.image
       @offer.build_map_location unless @offer.map_location
       @categories_by_kind = Offer::Category.includes(:translations).group_by(&:kind)
+      @providers = Offer::Provider.order(:name)
 
       @breadcrumbs = [
         { name: t("adm.offers.menu.items.offers"), url: adm_offers_root_path,
@@ -66,7 +67,7 @@ class Adm::Offers::OffersController < Adm::Offers::BaseController
     def offer_params
       params.require(:offer).permit(
         :title, :short_description, :times, :costs, :registration,
-        :address, :contact_name, :contact_phone, :contact_email, :contact_website,
+        :address, :contact_name, :contact_phone, :contact_email, :contact_website, :provider_id,
         category_ids: [],
         map_location_attributes: map_location_attributes,
         image_attributes: image_attributes

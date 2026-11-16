@@ -232,6 +232,7 @@ de:
         contact_website: "Website"
         author: "Erstellt von"
         provider: "Träger"
+        provider_id: "Träger"
       offer/provider:
         name: "Name"
         email_list: "E-Mail-Adressen"

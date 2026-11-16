@@ -1,6 +1,7 @@
 de:
   custom:
     offers:
+      add_offer: Angebot hinzufügen
       index:
         title: Angebote
         intro_text: Hier finden Sie Angebote in Ihrer Stadt. Wählen Sie ein Angebot aus, um alle Details zu sehen.
@@ -30,6 +31,8 @@ de:
       form:
         page_description: "Stellen Sie Ihr Angebot vor: Worum geht es, für wen ist es gedacht und wie kann man teilnehmen? Mit Ihren Angaben finden Interessierte Ihr Angebot in der Übersicht und auf der Karte."
         required: (Pflichtfeld)
+        provider_prompt: Bitte wählen
+        provider_blank: Kein Träger
         no_categories: Für diese Kategorie stehen derzeit keine Werte zur Auswahl.
         sections:
           categories: Kategorien
@@ -40,6 +43,7 @@ de:
           new: Angebot speichern
           edit: Änderungen speichern
         hints:
+          provider: Wählen Sie den Träger, zu dem das Angebot gehört.
           category_kinds:
             offer_type: Um welche Art von Angebot handelt es sich? Wählen Sie alle passenden Werte aus.
             target_group: Für wen ist das Angebot gedacht? Wählen Sie alle passenden Werte aus.

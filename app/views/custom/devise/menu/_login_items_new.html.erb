@@ -8,6 +8,15 @@
     <% end %>
   </li>
 
+  <% if can?(:create, Offer.new) %>
+    <li class="nav-element flyout-item js-access-flyout-menu-item focusable">
+      <%= link_to new_offer_path, class: "flyout-item--link" do %>
+        <%= flyout_item_icon(icon_set: icon_set, material: "add_circle", font_awesome: "fa-plus-circle") %>
+        <%= t("custom.offers.add_offer") %>
+      <% end %>
+    </li>
+  <% end %>
+
   <% admin_links = !local_assigns[:compact] && (
        current_user.administrator? ||
        current_user.projekt_manager? ||

@@ -39,6 +39,7 @@ de:
         form:
           errors_title: Das Angebot konnte nicht gespeichert werden
           image_label: Bild
+          provider_blank: Kein Träger
           no_categories_title: Keine Werte vorhanden
           no_categories_description: Legen Sie zunächst unter „Kategorien" Werte für diese Kategorie an.
           sections:
@@ -48,6 +49,7 @@ de:
             details: Details
             contact: Kontakt
           hints:
+            provider: Optional. Der Träger, zu dem das Angebot gehört. Alle Konten dieses Trägers können das Angebot bearbeiten.
             title: Kurzer, aussagekräftiger Titel des Angebots.
             short_description: Beschreiben Sie das Angebot in wenigen Sätzen.
             image: Optionales Bild, das auf der Detailseite und in der Übersicht erscheint.

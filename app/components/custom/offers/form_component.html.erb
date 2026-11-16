@@ -16,6 +16,12 @@
 
     <div class="flex-layout">
       <div class="main-column">
+        <% if show_provider_select? %>
+          <div class="margin-bottom">
+            <%= f.select :provider_id, provider_choices, provider_select_options %>
+          </div>
+        <% end %>
+
         <%= f.translatable_fields do |translations_form| %>
           <div class="user-resources-form--banner-editor">
             <div class="user-resources-form--title-wrapper">

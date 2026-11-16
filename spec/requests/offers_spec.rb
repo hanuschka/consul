@@ -176,7 +176,6 @@ describe "Angebote provider form", type: :request do
         post offers_path, params: { offer: offer_attributes }
       end.not_to change(Offer, :count)
       expect(response).to have_http_status(:unprocessable_entity)
-
       post offers_path, params: { offer: offer_attributes(provider_id: provider_y.id) }
       expect(Offer.last.provider).to eq provider_y
     end
@@ -224,6 +223,35 @@ describe "Angebote provider form", type: :request do
       patch offer_path(offer), params: { offer: { provider_id: provider_y.id } }
 
       expect(offer.reload.provider).to eq provider_x
+    end
+
+    it "offers the add button only to accounts that may create offers" do
+      allow(Setting).to receive(:[]).with("process.offers").and_return(true)
+      add_links = -> { Nokogiri::HTML(response.body).css("a[href='#{new_offer_path}']") }
+
+      get offers_path
+      expect(add_links.call).to be_empty
+
+      login_as(create(:user))
+      get offers_path
+      expect(add_links.call).to be_empty
+
+      login_as(member_of(provider_x))
+      get offers_path
+      expect(add_links.call).to be_present
+    end
+
+    it "shows the provider select only to accounts of several providers" do
+      user = member_of(provider_x)
+      login_as(user)
+      provider_select = -> { Nokogiri::HTML(response.body).css("select[name='offer[provider_id]']") }
+
+      get new_offer_path
+      expect(provider_select.call).to be_empty
+
+      provider_y.add_email(user.email)
+      get new_offer_path
+      expect(provider_select.call.css("option").map(&:text)).to include("Träger X", "Träger Y")
     end
 
     it "lets administrators create offers with or without a provider" do

@@ -1,6 +1,7 @@
 en:
   custom:
     offers:
+      add_offer: Add offer
       index:
         title: Offers
         intro_text: Find offers in your city. Select an offer to see all details.
@@ -30,6 +31,8 @@ en:
       form:
         page_description: "Introduce your offer: what it is about, who it is for and how people can take part. Your details help people find your offer in the overview and on the map."
         required: (required)
+        provider_prompt: Please choose
+        provider_blank: No provider
         no_categories: There are no values to choose from for this category yet.
         sections:
           categories: Categories
@@ -40,6 +43,7 @@ en:
           new: Save offer
           edit: Save changes
         hints:
+          provider: Choose the provider this offer belongs to.
           category_kinds:
             offer_type: What kind of offer is it? Select all that apply.
             target_group: Who is the offer for? Select all that apply.

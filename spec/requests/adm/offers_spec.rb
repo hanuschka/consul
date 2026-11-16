@@ -101,6 +101,19 @@ describe "Angebote list in /adm", type: :request do
         )
         expect(offer.reload.categories).to match_array [sport, north]
       end
+
+      it "assigns and removes the provider" do
+        provider = create(:offer_provider, name: "Träger X")
+
+        get edit_adm_offers_offer_path(offer)
+        expect(response.body).to include("Träger X")
+
+        patch adm_offers_offer_path(offer), params: { offer: { provider_id: provider.id } }
+        expect(offer.reload.provider).to eq provider
+
+        patch adm_offers_offer_path(offer), params: { offer: { provider_id: "" } }
+        expect(offer.reload.provider).to be_nil
+      end
     end
 
     it "deletes an offer" do

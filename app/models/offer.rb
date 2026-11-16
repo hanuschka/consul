@@ -32,7 +32,7 @@ class Offer < ApplicationRecord
 
   attr_accessor :provider_required
 
-  validates :provider, presence: true, if: :provider_required
+  validates :provider_id, presence: true, if: :provider_required
   validates_translation :title, presence: true
   validate :short_description_present
   validates :contact_email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true

@@ -67,10 +67,6 @@
     }
   }
 
-  &:has(.sticky-ballot-progress-bar) .custom-content-block--toolbar-zone {
-    z-index: 501;
-  }
-
   .expanded.jumbo-budget.budget-heading {
     @media screen and (max-width: $small-tablet-viewport-start) {
       margin-left: -20px;

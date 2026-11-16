@@ -307,6 +307,16 @@ describe "Angebote provider form", type: :request do
     context "while the module is switched on" do
       before { enable_module }
 
+      it "shows the intro text from the settings and falls back to the default text" do
+        get offers_path
+        expect(response.body).to include(I18n.t("custom.offers.index.intro_text"))
+
+        Setting["offers.intro_text"] = "Alle Angebote für Familien auf einen Blick."
+        get offers_path
+        expect(response.body).to include("Alle Angebote für Familien auf einen Blick.")
+        expect(response.body).not_to include(I18n.t("custom.offers.index.intro_text"))
+      end
+
       it "filters the list by keyword and category" do
         north = create(:offer_category, :social_area, name: "Nord")
         south = create(:offer_category, :social_area, name: "Süd")

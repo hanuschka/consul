@@ -13,6 +13,7 @@ module MachineTranslation
       deficiency_reports.feature_name
       deficiency_reports.new_form_title
       deficiency_reports.new_form_title_placeholder
+      offers.intro_text
       meta_title
       meta_description
       meta_keywords

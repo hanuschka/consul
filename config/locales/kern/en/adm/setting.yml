@@ -320,6 +320,9 @@ en:
       procedure_steps_description: >
         Offers the procedure steps maintained in the administration area for selection in the plan form, in the order set there. The public detail page then shows the procedure step instead of the version number; the administration area keeps showing the version number. Enable this when your plans go through a formal procedure with fixed steps, such as land-use planning procedures under the BauGB.
     offers:
+      intro_text: Offers overview intro text
+      intro_text_description: >
+        Short text at the top of the public offers overview. Explain what the page offers and how to find offers. If left empty, a default text is shown. The text is translated automatically into the enabled languages.
       reminder_interval: Provider reminder
       reminder_interval_description: >
         Sets how often providers are asked by e-mail to check that their offers are up to date. The e-mail lists all of the provider's offers with a direct link to edit each one. Choose an interval that matches how often the offers change, for example quarterly.

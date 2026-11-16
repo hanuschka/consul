@@ -9,6 +9,7 @@ describe "Angebote settings in /adm", type: :request do
     allow_any_instance_of(ActionView::Base).to receive(:javascript_include_tag).and_return("".html_safe)
     Setting["process.offers"] = false
     Setting["offers.reminder_interval"] = "off"
+    Setting["offers.intro_text"] = nil
   end
 
   it "shows the module switch to an administrator" do
@@ -27,6 +28,14 @@ describe "Angebote settings in /adm", type: :request do
 
     expect(response.body).to include(I18n.t("setting.offers.reminder_interval"))
     expect(response.body).to include(I18n.t("setting.offers.reminder_interval_options.quarterly"))
+  end
+
+  it "shows the intro text field to an administrator" do
+    login_as(admin)
+
+    get adm_offers_settings_path
+
+    expect(response.body).to include(I18n.t("setting.offers.intro_text"))
   end
 
   it "turns any other user away" do

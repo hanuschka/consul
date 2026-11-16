@@ -15,6 +15,10 @@ class Adm::Offers::OfferPolicy < ApplicationPolicy
     index?
   end
 
+  def import?
+    index?
+  end
+
   def mark_checked?
     index?
   end

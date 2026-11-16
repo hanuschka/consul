@@ -4,7 +4,7 @@ class Adm::Offers::MenuComponent < Adm::BaseMenuComponent
   end
 
   def menu_items
-    [offers_item, categories_item, providers_item, settings_item].compact
+    [offers_item, imports_item, categories_item, providers_item, settings_item].compact
   end
 
   private
@@ -17,6 +17,17 @@ class Adm::Offers::MenuComponent < Adm::BaseMenuComponent
         icon: Adm::Section::ICONS["offers"][:material],
         path: adm_offers_root_path,
         active_pattern: %r{\A/adm/offers(/\d+(/.*)?)?\z}
+      }
+    end
+
+    def imports_item
+      return unless Adm::Offers::OfferPolicy.new(current_user, nil).import?
+
+      {
+        label: t("adm.offers.menu.items.imports"),
+        icon: "upload_file",
+        path: new_adm_offers_import_path,
+        active_prefix: "/adm/offers/import"
       }
     end
 

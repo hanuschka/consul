@@ -1,11 +1,81 @@
 de:
   adm:
     offers:
+      imports:
+        new:
+          title: Angebote importieren
+          page_hint: "Mit dem Import legen Sie viele Angebote auf einmal an. Laden Sie dazu eine CSV-Datei hoch, am einfachsten auf Basis der Vorlage. Dabei gilt:"
+          rules:
+            format: Spalten getrennt durch Semikolon oder Komma, Zeichenkodierung UTF-8 oder Excel-Standard.
+            rows: Eine Zeile pro Angebot. Pflichtangaben sind Träger, Titel, Kurzbeschreibung sowie mindestens eine Angebotsart und ein Sozialraum.
+            provider: Der Träger muss bereits angelegt sein und wird über seinen Namen zugeordnet.
+            categories: Kategoriewerte müssen bereits existieren und werden über ihren Namen zugeordnet. Mehrere Werte in einer Zelle trennen Sie durch Kommas.
+            dates: Ablaufdatum im Format TT.MM.JJJJ. Breitengrad und Längengrad sind optional.
+          rules_outro: Gültige Zeilen werden auch dann angelegt, wenn andere Zeilen fehlerhaft sind. Importierte Angebote sind sofort veröffentlicht und gelten als geprüft. Bilder können nicht importiert werden.
+          upload_title: CSV-Datei hochladen
+          template: Vorlage herunterladen
+          file_label: CSV-Datei
+          file_hint: Höchstens %{max}.
+          submit: Importieren
+          result_title: Ergebnis des Imports
+          file_errors_title: Die Datei wurde nicht importiert.
+          no_rows: Die Datei enthält keine Angebote.
+          summary: "%{created}, %{failed}"
+          created:
+            one: 1 Angebot angelegt
+            other: "%{count} Angebote angelegt"
+          failed:
+            one: 1 Zeile fehlgeschlagen
+            other: "%{count} Zeilen fehlgeschlagen"
+          table:
+            line: Zeile
+            title: Titel
+            result: Ergebnis
+            created: Angelegt
+            failed: Fehler
+            untitled: Ohne Titel
+          columns_title: Alle Spalten der Vorlage
+          required_marker: (Pflichtfeld)
+        create:
+          no_file: Bitte wählen Sie eine CSV-Datei aus.
+          too_large: Die Datei ist größer als %{max}.
+        template:
+          filename: angebote-vorlage
+        columns:
+          provider: Träger
+          title: Titel
+          short_description: Kurzbeschreibung
+          times: Zeiten
+          costs: Kosten (Freitext)
+          registration: Anmeldung
+          address: Adresse
+          contact_name: Ansprechperson
+          contact_phone: Telefon
+          contact_email: E-Mail
+          contact_website: Website
+          expires_on: Ablaufdatum
+          latitude: Breitengrad
+          longitude: Längengrad
+          offer_type: Angebotsart
+          target_group: Zielgruppe
+          costs_category: Kosten
+          accessibility: Barrierefreiheit
+          social_area: Sozialraum
+        errors:
+          unreadable: Die Datei konnte nicht gelesen werden. Bitte laden Sie eine CSV-Datei hoch, zum Beispiel auf Basis der Vorlage.
+          missing_columns: "In der Datei fehlen Pflichtspalten: %{columns}."
+          too_many_rows: Die Datei enthält mehr als %{max} Zeilen. Bitte teilen Sie sie auf mehrere Dateien auf.
+          unknown_provider: Träger „%{name}“ nicht gefunden.
+          ambiguous_provider: Es gibt mehrere Träger mit dem Namen „%{name}“.
+          unknown_category: "%{kind} „%{name}“ nicht gefunden."
+          invalid_date: Ablaufdatum „%{value}“ ist kein gültiges Datum (TT.MM.JJJJ).
+          invalid_location: Breitengrad und Längengrad müssen beide als Zahl angegeben werden.
       title: Angebote
       menu:
         aria_label: Angebote Navigation
         items:
           offers: Angebote
+          imports: Import
           categories: Kategorien
           providers: Träger
           settings: Konfiguration
@@ -14,6 +84,7 @@ de:
       offers:
         index:
           title: Angebote
+          import: Importieren
           review_status:
             added: Neu
             changed: Geändert

@@ -56,6 +56,15 @@
       </span>
     <% end %>
 
+    <% if Adm::Offers::OfferPolicy.new(current_user, nil).import? %>
+      <% c.with_toolbar_action do %>
+        <%= link_to new_adm_offers_import_path, class: "adm-text-link", data: { turbo_frame: "_top" } do %>
+          <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
+          <%= t(".import") %>
+        <% end %>
+      <% end %>
+    <% end %>
+
     <% c.with_header_row do %>
       <%= render headers[:id] %>
       <%= render headers[:title] %>

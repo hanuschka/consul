@@ -10,6 +10,10 @@ namespace :adm do
 
     resource :settings, only: :show, controller: "settings"
 
+    resource :import, only: [:new, :create], controller: "imports" do
+      get :template
+    end
+
     resources :offers, only: [:edit, :update, :destroy], path: "" do
       member do
         patch :mark_checked

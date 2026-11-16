@@ -1,11 +1,81 @@
 en:
   adm:
     offers:
+      imports:
+        new:
+          title: Import offers
+          page_hint: "Use the import to create many offers at once. Upload a CSV file, ideally based on the template. Rules:"
+          rules:
+            format: Columns separated by semicolon or comma, encoded in UTF-8 or the Excel default.
+            rows: One offer per row. Provider, title, short description, at least one offer type and one social area are required.
+            provider: The provider must already exist and is matched by name.
+            categories: Category values must already exist and are matched by name. Separate several values in one cell with commas.
+            dates: Expiry date as DD.MM.YYYY. Latitude and longitude are optional.
+          rules_outro: Valid rows are created even if other rows fail. Imported offers are published immediately and count as checked. Images cannot be imported.
+          upload_title: Upload CSV file
+          template: Download template
+          file_label: CSV file
+          file_hint: Up to %{max}.
+          submit: Import
+          result_title: Import result
+          file_errors_title: The file was not imported.
+          no_rows: The file contains no offers.
+          summary: "%{created}, %{failed}"
+          created:
+            one: 1 offer created
+            other: "%{count} offers created"
+          failed:
+            one: 1 row failed
+            other: "%{count} rows failed"
+          table:
+            line: Row
+            title: Title
+            result: Result
+            created: Created
+            failed: Failed
+            untitled: Untitled
+          columns_title: All template columns
+          required_marker: (required)
+        create:
+          no_file: Please choose a CSV file.
+          too_large: The file is larger than %{max}.
+        template:
+          filename: offers-template
+        columns:
+          provider: Provider
+          title: Title
+          short_description: Short description
+          times: Times
+          costs: Costs (free text)
+          registration: Registration
+          address: Address
+          contact_name: Contact person
+          contact_phone: Phone
+          contact_email: E-mail
+          contact_website: Website
+          expires_on: Expiry date
+          latitude: Latitude
+          longitude: Longitude
+          offer_type: Offer type
+          target_group: Target group
+          costs_category: Costs
+          accessibility: Accessibility
+          social_area: Social area
+        errors:
+          unreadable: The file could not be read. Please upload a CSV file, for example based on the template.
+          missing_columns: "The file is missing required columns: %{columns}."
+          too_many_rows: The file has more than %{max} rows. Please split it into several files.
+          unknown_provider: Provider "%{name}" not found.
+          ambiguous_provider: There are several providers named "%{name}".
+          unknown_category: "%{kind} \"%{name}\" not found."
+          invalid_date: Expiry date "%{value}" is not a valid date (DD.MM.YYYY).
+          invalid_location: Latitude and longitude must both be given as numbers.
       title: Offers
       menu:
         aria_label: Offers navigation
         items:
           offers: Offers
+          imports: Import
           categories: Categories
           providers: Providers
           settings: Configuration
@@ -14,6 +84,7 @@ en:
       offers:
         index:
           title: Offers
+          import: Import
           review_status:
             added: New
             changed: Changed

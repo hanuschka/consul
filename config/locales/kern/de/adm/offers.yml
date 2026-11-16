@@ -21,6 +21,8 @@ de:
           visibility:
             visible: Sichtbar
             hidden: Ausgeblendet
+            deactivated: Deaktiviert
+            expired: Abgelaufen
           page_hint: "Hier sehen Sie alle Angebote der Träger. Angebote werden über das Eingabeformular im öffentlichen Bereich angelegt und sind sofort online. Neue und geänderte Angebote bleiben gekennzeichnet, bis Sie sie als geprüft markieren. Sie können Angebote nach Titel suchen, sortieren, nach Prüfstatus und Sichtbarkeit filtern, ausblenden und löschen."
           total_label:
             one: Angebot
@@ -84,15 +86,16 @@ de:
             costs: Optionale Angaben zu den Kosten des Angebots.
             registration: Ob und wie man sich für das Angebot anmelden muss.
             contact_website: Vollständige Adresse beginnend mit https://
+            expires_on: Optional. Bis zu diesem Tag einschließlich wird das Angebot öffentlich angezeigt. Danach sehen es nur noch der Träger und die Verwaltung.
           placeholders:
             title: z. B. Schwimmkurs für Kinder
             short_description: z. B. Kinder ab 6 Jahren lernen in kleinen Gruppen im Hallenbad schwimmen.
             address: z. B. Marktplatz 1, 12345 Musterstadt
             times: z. B. dienstags 15–17 Uhr, außer in den Schulferien
             costs: z. B. 5 €, ermäßigt 3 €
-            registration: z. B. Anmeldung bis Freitag unter 03641 123456
+            registration: z. B. Anmeldung bis Freitag unter 0123 456789
             contact_name: z. B. Maria Muster
-            contact_phone: z. B. 03641 49-0
+            contact_phone: z. B. 0123 456-0
             contact_email: z. B. angebote@example.org
             contact_website: https://
       categories:

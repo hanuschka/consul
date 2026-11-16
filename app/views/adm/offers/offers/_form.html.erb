@@ -113,6 +113,12 @@
       <%= form.text_area :registration, label: false, rows: 4, class: "mb-2",
             placeholder: t(".placeholders.registration") %>
     <% end %>
+
+    <%= render Kern::FormFieldComponent.new(divider: false, label: Offer.human_attribute_name(:expires_on),
+                                            hint: t(".hints.expires_on"),
+                                            form: form, attribute: :expires_on) do %>
+      <%= form.date_field :expires_on, label: false %>
+    <% end %>
   </section>
 <% end %>
 

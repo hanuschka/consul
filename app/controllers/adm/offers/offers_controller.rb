@@ -73,7 +73,7 @@ class Adm::Offers::OffersController < Adm::Offers::BaseController
     end
 
     def visibility_filter_options
-      %w[visible hidden].map { |state| [state, t("adm.offers.offers.index.visibility.#{state}")] }
+      Adm::OffersQuery::VISIBILITY_STATES.map { |state| [state, t("adm.offers.offers.index.visibility.#{state}")] }
     end
 
     def prepare_form
@@ -92,7 +92,7 @@ class Adm::Offers::OffersController < Adm::Offers::BaseController
     def offer_params
       params.require(:offer).permit(
         :title, :short_description, :times, :costs, :registration,
-        :address, :contact_name, :contact_phone, :contact_email, :contact_website, :provider_id,
+        :address, :contact_name, :contact_phone, :contact_email, :contact_website, :provider_id, :expires_on,
         category_ids: [],
         map_location_attributes: map_location_attributes,
         image_attributes: image_attributes

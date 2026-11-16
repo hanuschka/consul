@@ -8,7 +8,7 @@ describe MunicipalPlans::WorkingCopyService do
     create(:municipal_plan, :published, responsible: officer,
                                         title: "Sanierung der Brücke",
                                         short_description: "Die Brücke wird saniert.",
-                                        contact_name: "Kai Ostermann")
+                                        contact_name: "Anna Muster")
   end
 
   it "carries the content of the released Vorhaben" do
@@ -16,7 +16,7 @@ describe MunicipalPlans::WorkingCopyService do
 
     expect(copy.title).to eq("Sanierung der Brücke")
     expect(copy.short_description).to eq("Die Brücke wird saniert.")
-    expect(copy.contact_name).to eq("Kai Ostermann")
+    expect(copy.contact_name).to eq("Anna Muster")
     expect(copy.responsible).to eq(officer)
   end
 

@@ -4,15 +4,23 @@ en:
       add_offer: Add offer
       index:
         title: Offers
-        intro_text: Find offers in your city. Select an offer to see all details.
+        intro_text: Find offers near you. Select an offer to see all details.
         empty_list_text: There are no offers at the moment.
         to_offer: View offer
         hidden_label: Hidden
+        deactivated_label: Deactivated
+        expired_label: Expired
       show:
         back: Back to the overview
         edit: Edit
         opens_in_new_tab: (opens in a new tab)
-        hidden_notice: The city has hidden this offer, so it is not publicly visible. You can still edit it.
+        hidden_notice: The administration has hidden this offer, so it is not publicly visible. You can still edit it.
+        deactivated_notice: This offer is deactivated. It is not publicly visible until it is activated again.
+        expired_notice: This offer has passed its expiry date. It is not publicly visible until the expiry date is changed.
+        deactivate: Deactivate
+        deactivate_hint: The offer will not be publicly visible until you activate it again.
+        activate: Activate
+        activate_hint: The offer is shown publicly again unless it has expired or the administration has hidden it.
         intro:
           title: About this offer
         details:
@@ -30,6 +38,10 @@ en:
         success: The offer has been saved.
       update:
         success: Your changes have been saved.
+      deactivate:
+        success: The offer was deactivated and is no longer publicly visible.
+      activate:
+        success: The offer is active again.
       form:
         page_description: "Introduce your offer: what it is about, who it is for and how people can take part. Your details help people find your offer in the overview and on the map."
         required: (required)
@@ -58,6 +70,7 @@ en:
           costs: Optional details on costs, such as reduced rates.
           registration: Whether and how people need to register.
           contact_website: Full address starting with https://
+          expires_on: Optional. The offer is shown publicly up to and including this day. After that, only your provider can see it until you change the date.
         image_upload:
           top_line: Choose a suitable image for your offer.
         placeholders:
@@ -66,8 +79,8 @@ en:
           address: e.g. 1 Market Square, 12345 Sampletown
           times: e.g. Tuesdays 3–5 pm, except during school holidays
           costs: e.g. €5, reduced €3
-          registration: e.g. Register by Friday on 03641 123456
+          registration: e.g. Register by Friday on 0123 456789
           contact_name: e.g. Maria Muster
-          contact_phone: e.g. 03641 49-0
+          contact_phone: e.g. 0123 456-0
           contact_email: e.g. offers@example.org
           contact_website: https://

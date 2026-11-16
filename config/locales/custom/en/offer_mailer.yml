@@ -1,0 +1,13 @@
+en:
+  custom:
+    offer_mailer:
+      provider_reminder:
+        subject: "Please review the offers of %{provider}"
+        intro: "You are receiving this e-mail because you are registered for the provider “%{provider}”. We ask all providers to check their offers regularly so the information stays up to date."
+        offers_title: "Your offers:"
+        edit_link: "Edit “%{title}”"
+        states:
+          hidden: "Hidden"
+          deactivated: "Deactivated"
+          expired: "Expired on %{date}"
+        closing: "Please update anything that is out of date. You can deactivate offers that no longer take place or give them an expiry date."

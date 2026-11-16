@@ -28,20 +28,27 @@
             <% @offers.each do |offer| %>
               <% offer_types = offer.categories_of(:offer_type).map(&:name).select(&:present?) %>
               <% social_areas = offer.categories_of(:social_area).map(&:name).select(&:present?) %>
+              <% unpublished_states = {
+                hidden: ["eye-slash", offer.hidden?],
+                deactivated: ["power-off", offer.deactivated?],
+                expired: ["calendar-times", offer.expired?]
+              }.select { |_, (_, active)| active } %>
               <%= render Resources::ListItemComponent.new(
                 resource: offer,
                 title: offer.title,
                 description: offer.short_description,
                 url: offer_path(offer),
-                header_style: (offer.hidden? ? "background-color: var(--medium-gray-3);" : nil),
+                header_style: (offer.published? ? nil : "background-color: var(--medium-gray-3);"),
                 title_heading_level: 2
               ) do |item| %>
-                <% if offer.hidden? %>
+                <% if unpublished_states.any? %>
                   <% item.with_header do %>
-                    <div>
-                      <i class="fas fa-eye-slash" aria-hidden="true"></i>
-                      <%= t("custom.offers.index.hidden_label") %>
-                    </div>
+                    <% unpublished_states.each do |state, (icon, _)| %>
+                      <div>
+                        <i class="fas fa-<%= icon %>" aria-hidden="true"></i>
+                        <%= t("custom.offers.index.#{state}_label") %>
+                      </div>
+                    <% end %>
                   <% end %>
                 <% end %>
 

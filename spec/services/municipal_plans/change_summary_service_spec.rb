@@ -7,7 +7,7 @@ describe MunicipalPlans::ChangeSummaryService do
   let(:plan) do
     create(:municipal_plan, :published, responsible: officer,
                                         short_description: "Alte Fassung",
-                                        contact_name: "Kai Ostermann")
+                                        contact_name: "Anna Muster")
   end
   let(:copy) { MunicipalPlans::WorkingCopyService.call(plan) }
 

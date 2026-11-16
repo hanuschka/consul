@@ -21,6 +21,8 @@ en:
           visibility:
             visible: Visible
             hidden: Hidden
+            deactivated: Deactivated
+            expired: Expired
           page_hint: "All offers from providers. Offers are created through the entry form in the public area and go online immediately. New and changed offers stay flagged until you mark them as checked. You can search offers by title, sort them, filter them by check status and visibility, hide them and delete them."
           total_label:
             one: offer
@@ -84,13 +86,14 @@ en:
             costs: Optional details on the costs of the offer.
             registration: Whether and how to register for the offer.
             contact_website: Full address starting with https://
+            expires_on: Optional. The offer is shown publicly up to and including this day. After that, only the provider and administrators can see it.
           placeholders:
             title: e.g. Swimming course for children
             short_description: e.g. Children aged 6 and over learn to swim in small groups at the indoor pool.
             address: e.g. 1 Market Square, 12345 Sample Town
             times: e.g. Tuesdays 3–5 pm, except during school holidays
             costs: e.g. €5, reduced €3
-            registration: e.g. register by Friday on 03641 123456
+            registration: e.g. register by Friday on 0123 456789
             contact_name: e.g. Maria Muster
             contact_phone: e.g. +49 3641 49-0
             contact_email: e.g. offers@provider.example

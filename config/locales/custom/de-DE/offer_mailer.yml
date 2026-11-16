@@ -1,0 +1,13 @@
+de:
+  custom:
+    offer_mailer:
+      provider_reminder:
+        subject: "Bitte prüfen Sie die Angebote von %{provider}"
+        intro: "Sie erhalten diese E-Mail, weil Sie für den Träger „%{provider}“ registriert sind. Wir bitten alle Träger, ihre Angebote regelmäßig zu prüfen, damit die Informationen aktuell bleiben."
+        offers_title: "Ihre Angebote:"
+        edit_link: "„%{title}“ bearbeiten"
+        states:
+          hidden: "Ausgeblendet"
+          deactivated: "Deaktiviert"
+          expired: "Abgelaufen am %{date}"
+        closing: "Bitte aktualisieren Sie veraltete Angaben. Angebote, die nicht mehr stattfinden, können Sie deaktivieren oder mit einem Ablaufdatum versehen."

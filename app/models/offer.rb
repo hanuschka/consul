@@ -22,6 +22,11 @@ class Offer < ApplicationRecord
 
   scope :visible, -> { where(hidden_at: nil) }
   scope :hidden, -> { where.not(hidden_at: nil) }
+  scope :deactivated, -> { where.not(deactivated_at: nil) }
+  scope :expired, -> { where("offers.expires_on < ?", Date.current) }
+  scope :published, -> {
+    visible.where(deactivated_at: nil).where("offers.expires_on IS NULL OR offers.expires_on >= ?", Date.current)
+  }
 
   scope :sort_by_title, ->(direction = :asc) {
     locale = connection.quote(I18n.locale.to_s)
@@ -45,14 +50,34 @@ class Offer < ApplicationRecord
   validate :required_categories_present
 
   def self.listed_for(user)
-    return visible if user.blank?
+    return published if user.blank?
     return all if user.administrator?
 
-    visible.or(where(provider_id: Offer::Provider.for_user(user).select(:id)))
+    published.or(where(provider_id: Offer::Provider.for_user(user).select(:id)))
   end
 
   def hidden?
     hidden_at.present?
+  end
+
+  def deactivated?
+    deactivated_at.present?
+  end
+
+  def expired?
+    expires_on.present? && expires_on < Date.current
+  end
+
+  def published?
+    !hidden? && !deactivated? && !expired?
+  end
+
+  def deactivate!
+    update_column(:deactivated_at, Time.current)
+  end
+
+  def activate!
+    update_column(:deactivated_at, nil)
   end
 
   def mark_for_review

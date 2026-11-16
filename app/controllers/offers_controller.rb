@@ -23,7 +23,7 @@ class OffersController < ApplicationController
 
     unless can?(:update, @offer)
       check_feature_flag(:offers)
-      raise ActiveRecord::RecordNotFound if @offer.hidden?
+      raise ActiveRecord::RecordNotFound unless @offer.published?
     end
   end
 
@@ -71,6 +71,20 @@ class OffersController < ApplicationController
     end
   end
 
+  def deactivate
+    @offer = Offer.find(params[:id])
+    authorize! :update, @offer
+    @offer.deactivate!
+    redirect_to offer_path(@offer), notice: t("custom.offers.deactivate.success")
+  end
+
+  def activate
+    @offer = Offer.find(params[:id])
+    authorize! :update, @offer
+    @offer.activate!
+    redirect_to offer_path(@offer), notice: t("custom.offers.activate.success")
+  end
+
   private
 
     def prepare_form
@@ -104,7 +118,7 @@ class OffersController < ApplicationController
 
     def offer_params
       params.require(:offer).permit(
-        :address, :contact_name, :contact_phone, :contact_email, :contact_website,
+        :address, :contact_name, :contact_phone, :contact_email, :contact_website, :expires_on,
         translation_params(Offer),
         category_ids: [],
         map_location_attributes: map_location_attributes,

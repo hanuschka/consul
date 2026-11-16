@@ -233,6 +233,7 @@ de:
         author: "Erstellt von"
         provider: "Träger"
         provider_id: "Träger"
+        expires_on: "Ablaufdatum"
       offer/provider:
         name: "Name"
         email_list: "E-Mail-Adressen"

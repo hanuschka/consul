@@ -63,6 +63,21 @@ describe "Angebote list in /adm", type: :request do
       expect(listed_titles).to eq %w[Atelier Chor]
     end
 
+    it "filters deactivated and expired offers" do
+      create(:offer, title: "Atelier").deactivate!
+      create(:offer, title: "Bewegung", expires_on: Date.current - 1)
+      create(:offer, title: "Chor", expires_on: Date.current)
+
+      get adm_offers_root_path, params: { visibility: ["deactivated"] }
+      expect(listed_titles).to eq ["Atelier"]
+
+      get adm_offers_root_path, params: { visibility: %w[deactivated expired], sort_by: "title" }
+      expect(listed_titles).to eq %w[Atelier Bewegung]
+
+      get adm_offers_root_path, params: { visibility: ["visible"] }
+      expect(listed_titles).to eq ["Chor"]
+    end
+
     describe "editing" do
       let(:sport) { create(:offer_category, :offer_type, name: "Sportkurs") }
       let(:north) { create(:offer_category, :social_area, name: "Nord") }
@@ -82,7 +97,7 @@ describe "Angebote list in /adm", type: :request do
           short_description: "<p>Neu</p>",
           times: "dienstags 15–17 Uhr",
           costs: "5 €",
-          address: "Markt 1, Jena",
+          address: "Marktplatz 1, Musterstadt",
           contact_email: "info@example.org",
           category_ids: ["", sport.id, south.id],
           map_location_attributes: { latitude: 50.92, longitude: 11.58, zoom: 14 }

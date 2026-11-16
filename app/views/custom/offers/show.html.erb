@@ -36,6 +36,18 @@
             <strong><%= t("custom.offers.show.hidden_notice") %></strong>
           </div>
         <% end %>
+
+        <% if @offer.deactivated? %>
+          <div class="callout warning margin-top">
+            <strong><%= t("custom.offers.show.deactivated_notice") %></strong>
+          </div>
+        <% end %>
+
+        <% if @offer.expired? %>
+          <div class="callout warning margin-top">
+            <strong><%= t("custom.offers.show.expired_notice") %></strong>
+          </div>
+        <% end %>
       </div>
       <div class="sidebar-placeholder"></div>
     </div>
@@ -155,6 +167,17 @@
               <i class="fas fa-edit" aria-hidden="true"></i>
               <%= t("custom.offers.show.edit") %>
             <% end %>
+
+            <% activation = @offer.deactivated? ? :activate : :deactivate %>
+            <% activation_path = @offer.deactivated? ? activate_offer_path(@offer) : deactivate_offer_path(@offer) %>
+            <%= button_to activation_path,
+              method: :patch,
+              class: "button hollow expanded municipal-plan-sidebar--button",
+              "aria-describedby": "offer-activation-hint" do %>
+              <i class="fas fa-power-off" aria-hidden="true"></i>
+              <%= t("custom.offers.show.#{activation}") %>
+            <% end %>
+            <p id="offer-activation-hint" class="help-text"><%= t("custom.offers.show.#{activation}_hint") %></p>
           <% end %>
         <% end %>
 

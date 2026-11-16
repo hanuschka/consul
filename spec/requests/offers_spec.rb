@@ -432,4 +432,97 @@ describe "Angebote provider form", type: :request do
       expect(offer.reload).to be_hidden
     end
   end
+
+  describe "expiry and deactivation" do
+    let(:provider) { create(:offer_provider, name: "Träger X") }
+    let(:member) { create(:user).tap { |user| provider.add_email(user.email) } }
+
+    before do
+      allow_any_instance_of(ActionView::Base).to receive(:stylesheet_link_tag).and_return("".html_safe)
+      allow_any_instance_of(ActionView::Base).to receive(:javascript_include_tag).and_return("".html_safe)
+      allow(Setting).to receive(:[]).with("process.offers").and_return(true)
+    end
+
+    it "takes an offer off the public site after its expiry date but keeps it for its provider" do
+      current = create(:offer, title: "Lesecafé", provider: provider, expires_on: Date.current)
+      expired = create(:offer, title: "Chor", provider: provider, expires_on: Date.current - 1)
+
+      get offers_path
+      expect(response.body).to include("Lesecafé")
+      expect(response.body).not_to include("Chor")
+      expect { get offer_path(expired) }.to raise_error(ActiveRecord::RecordNotFound)
+
+      login_as(member)
+      get offers_path
+      expect(response.body).to include("Lesecafé", "Chor")
+      get offer_path(expired)
+      expect(response).to have_http_status(:ok)
+      get offer_path(current)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "lets a provider set the expiry date" do
+      offer = create(:offer, provider: provider)
+      login_as(member)
+
+      patch offer_path(offer), params: { offer: { expires_on: "2027-06-30" } }
+
+      expect(offer.reload.expires_on).to eq Date.new(2027, 6, 30)
+    end
+
+    it "lets a provider take an offer offline and back online without a new check" do
+      offer = create(:offer, title: "Lesecafé", provider: provider)
+      login_as(member)
+
+      patch deactivate_offer_path(offer)
+      expect(offer.reload).to be_deactivated
+      logout
+      get offers_path
+      expect(response.body).not_to include("Lesecafé")
+
+      login_as(member)
+      patch activate_offer_path(offer)
+      expect(offer.reload).not_to be_deactivated
+      expect(offer).to be_review_checked
+      logout
+      get offers_path
+      expect(response.body).to include("Lesecafé")
+    end
+
+    it "keeps an offer hidden by the city hidden when its provider reactivates it" do
+      offer = create(:offer, provider: provider)
+      offer.hide!
+      offer.deactivate!
+      login_as(member)
+
+      patch activate_offer_path(offer)
+
+      expect(offer.reload).not_to be_deactivated
+      expect(offer).not_to be_published
+    end
+
+    it "shows a provider the deactivated state and the activate button" do
+      offer = create(:offer, title: "Lesecafé", provider: provider)
+      offer.deactivate!
+      login_as(member)
+
+      get offers_path
+      expect(response.body).to include(I18n.t("custom.offers.index.deactivated_label"))
+
+      get offer_path(offer)
+      expect(response.body).to include(I18n.t("custom.offers.show.deactivated_notice"))
+      expect(response.body).to include(%(action="#{activate_offer_path(offer)}"))
+      expect(response.body).to include(I18n.t("custom.offers.show.activate"))
+      expect(response.body).not_to include(%(action="#{deactivate_offer_path(offer)}"))
+    end
+
+    it "does not let other accounts take an offer offline" do
+      offer = create(:offer, provider: provider)
+      login_as(create(:user))
+
+      patch deactivate_offer_path(offer)
+
+      expect(offer.reload).not_to be_deactivated
+    end
+  end
 end

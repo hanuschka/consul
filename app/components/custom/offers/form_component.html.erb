@@ -122,6 +122,10 @@
                 placeholder: t("custom.offers.form.placeholders.#{attribute}"),
                 rows: 4 %>
             <% end %>
+
+            <%= f.date_field :expires_on,
+              label: Offer.human_attribute_name(:expires_on),
+              hint: t("custom.offers.form.hints.expires_on") %>
           </div>
 
           <div class="new-card">

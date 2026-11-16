@@ -1,5 +1,15 @@
-<% if offer.hidden? %>
-  <span class="kern-badge kern-badge--danger kern-badge--small"><%= t("adm.offers.offers.index.visibility.hidden") %></span>
-<% else %>
+<% if offer.published? %>
   <%= t("adm.offers.offers.index.visibility.visible") %>
+<% else %>
+  <span class="d-flex flex-wrap gap-1">
+    <% if offer.hidden? %>
+      <span class="kern-badge kern-badge--danger kern-badge--small"><%= t("adm.offers.offers.index.visibility.hidden") %></span>
+    <% end %>
+    <% if offer.deactivated? %>
+      <span class="kern-badge kern-badge--info kern-badge--small"><%= t("adm.offers.offers.index.visibility.deactivated") %></span>
+    <% end %>
+    <% if offer.expired? %>
+      <span class="kern-badge kern-badge--warning kern-badge--small"><%= t("adm.offers.offers.index.visibility.expired") %></span>
+    <% end %>
+  </span>
 <% end %>

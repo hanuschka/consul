@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_16_135403) do
+ActiveRecord::Schema.define(version: 2026_11_16_144852) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2153,6 +2153,7 @@ ActiveRecord::Schema.define(version: 2026_11_16_135403) do
     t.text "auto_join_emails", default: [], null: false, array: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "last_reminded_at"
   end
 
   create_table "offer_translations", force: :cascade do |t|
@@ -2181,6 +2182,8 @@ ActiveRecord::Schema.define(version: 2026_11_16_135403) do
     t.bigint "provider_id"
     t.integer "review_status", default: 0, null: false
     t.datetime "hidden_at"
+    t.date "expires_on"
+    t.datetime "deactivated_at"
     t.index ["author_id"], name: "index_offers_on_author_id"
     t.index ["provider_id"], name: "index_offers_on_provider_id"
     t.index ["review_status"], name: "index_offers_on_review_status"

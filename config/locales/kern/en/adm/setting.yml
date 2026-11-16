@@ -319,6 +319,16 @@ en:
       procedure_steps: Use procedure steps
       procedure_steps_description: >
         Offers the procedure steps maintained in the administration area for selection in the plan form, in the order set there. The public detail page then shows the procedure step instead of the version number; the administration area keeps showing the version number. Enable this when your plans go through a formal procedure with fixed steps, such as land-use planning procedures under the BauGB.
+    offers:
+      reminder_interval: Provider reminder
+      reminder_interval_description: >
+        Sets how often providers are asked by e-mail to check that their offers are up to date. The e-mail lists all of the provider's offers with a direct link to edit each one. Choose an interval that matches how often the offers change, for example quarterly.
+      reminder_interval_options:
+        "off": No reminder
+        monthly: Monthly
+        quarterly: Quarterly
+        half_yearly: Every six months
+        yearly: Yearly
     deficiency_reports:
       feature_name: Feature name
       feature_name_description: >
@@ -417,7 +427,7 @@ en:
         Makes the municipal plan list publicly available: the overview of published plans, the archive, the detail pages and the notice form. While disabled, these pages are unreachable and the menu entry is hidden. The administration area of the plan list stays usable either way, so plans can be prepared before launch.
       offers: Offers
       offers_description: >
-        Makes the "Offers" module publicly available: the overview of offers, the detail pages and the entry form for authorized providers. While disabled, these pages are unreachable and the menu entry is hidden. The administration area of the offers stays usable either way, so categories and providers can be set up before launch.
+        Makes the "Offers" module publicly available: the overview of offers and the detail pages. While disabled, these pages are unreachable and the menu entry is hidden. The entry form for authorized providers and the administration area stay usable either way, so providers can enter their offers before launch.
       deficiency_reports: Deficiency reporter
       deficiency_reports_description: >
         Enables the deficiency reporter, through which citizens can report damage, pollution, or other deficiencies in public space. Reports are captured with location, category, and description, and can be processed and responded to by officers.

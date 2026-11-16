@@ -141,14 +141,14 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
       plan = create(:municipal_plan, :published, responsible: officer, title: "Eichplatz",
                                                  system_mailbox_email: "postfach@jena.example")
       plan.memos.create!(user: officer.user, text: "Interner Vermerk")
-      plan.update!(contact_name: "Kai Ostermann")
+      plan.update!(contact_name: "Anna Muster")
 
       get api_municipal_plan_path(plan), headers: headers
       body = response.body
       data = JSON.parse(body)["data"]["municipal_plan"]
 
       expect(data["title"]).to eq("Eichplatz")
-      expect(data["contact_name"]).to eq("Kai Ostermann")
+      expect(data["contact_name"]).to eq("Anna Muster")
       expect(data["districts"].first.keys).to eq(%w[id name])
       expect(data["topics"].first.keys).to eq(%w[id name])
       expect(data["map_location"].keys).to eq(%w[latitude longitude address])

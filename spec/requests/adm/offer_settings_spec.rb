@@ -8,6 +8,7 @@ describe "Angebote settings in /adm", type: :request do
     allow_any_instance_of(ActionView::Base).to receive(:stylesheet_link_tag).and_return("".html_safe)
     allow_any_instance_of(ActionView::Base).to receive(:javascript_include_tag).and_return("".html_safe)
     Setting["process.offers"] = false
+    Setting["offers.reminder_interval"] = "off"
   end
 
   it "shows the module switch to an administrator" do
@@ -17,6 +18,15 @@ describe "Angebote settings in /adm", type: :request do
 
     expect(response).to have_http_status(:ok)
     expect(response.body).to include(I18n.t("setting.process.offers"))
+  end
+
+  it "shows the reminder interval select to an administrator" do
+    login_as(admin)
+
+    get adm_offers_settings_path
+
+    expect(response.body).to include(I18n.t("setting.offers.reminder_interval"))
+    expect(response.body).to include(I18n.t("setting.offers.reminder_interval_options.quarterly"))
   end
 
   it "turns any other user away" do

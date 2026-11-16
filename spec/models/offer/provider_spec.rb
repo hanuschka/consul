@@ -67,4 +67,54 @@ describe Offer::Provider do
     expect(provider.destroy).to be false
     expect(provider.errors[:base]).to be_present
   end
+
+  describe ".send_due_reminders" do
+    include ActiveJob::TestHelper
+
+    let!(:provider) { create(:offer_provider, created_at: Time.zone.local(2026, 11, 1)) }
+    let!(:account) { create(:user).tap { |user| provider.add_email(user.email) } }
+
+    before { create(:offer, provider: provider) }
+
+    it "reminds each provider exactly once per quarter" do
+      travel_to(Time.zone.local(2026, 12, 15)) do
+        expect { Offer::Provider.send_due_reminders("quarterly") }.not_to have_enqueued_mail
+      end
+
+      travel_to(Time.zone.local(2027, 1, 1, 8)) do
+        expect { Offer::Provider.send_due_reminders("quarterly") }
+          .to have_enqueued_mail(OfferMailer, :provider_reminder).with(provider, account).once
+      end
+
+      travel_to(Time.zone.local(2027, 2, 20, 8)) do
+        expect { Offer::Provider.send_due_reminders("quarterly") }.not_to have_enqueued_mail
+      end
+
+      travel_to(Time.zone.local(2027, 4, 2, 8)) do
+        expect { Offer::Provider.send_due_reminders("quarterly") }
+          .to have_enqueued_mail(OfferMailer, :provider_reminder).once
+      end
+    end
+
+    it "writes only to confirmed accounts" do
+      provider.add_email(create(:user, :unconfirmed).email)
+      provider.add_email("pending@traeger.example")
+
+      travel_to(Time.zone.local(2027, 1, 1, 8)) do
+        expect { Offer::Provider.send_due_reminders("quarterly") }
+          .to have_enqueued_mail(OfferMailer, :provider_reminder).with(provider, account).once
+      end
+    end
+
+    it "skips providers without offers and sends nothing while reminders are off" do
+      create(:offer_provider, created_at: Time.zone.local(2026, 11, 1))
+        .add_email(create(:user).email)
+
+      travel_to(Time.zone.local(2027, 1, 1, 8)) do
+        expect { Offer::Provider.send_due_reminders("off") }.not_to have_enqueued_mail
+        expect { Offer::Provider.send_due_reminders("quarterly") }
+          .to have_enqueued_mail(OfferMailer, :provider_reminder).once
+      end
+    end
+  end
 end

@@ -86,6 +86,7 @@ en:
         author: "Created by"
         provider: "Provider"
         provider_id: "Provider"
+        expires_on: "Expiry date"
       offer/provider:
         name: "Name"
         email_list: "E-mail addresses"

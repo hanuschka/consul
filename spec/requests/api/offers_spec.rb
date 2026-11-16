@@ -159,8 +159,24 @@ RSpec.describe "Offers API", type: :request, openapi_spec: "v1/swagger.yaml" do
       expect(data["contact_email"]).to eq("kurse@traeger.example")
       expect(data["provider"]).to eq("id" => provider.id, "name" => "Träger X")
       expect(data["categories"]["offer_type"]).to eq([{ "id" => sport.id, "name" => "Sportkurs" }])
+      expect(data["map_location"]).to be_nil
       expect(data.keys).not_to include("author", "author_id", "review_status", "suspended_at")
       expect(body).not_to include("Anna Muster", "anna@traeger.example", "team@traeger.example")
+    end
+
+    it "returns the pin of the offer, not the centre of its map view" do
+      offer = create(:offer)
+      offer.create_map_location!(
+        latitude: 48.0, longitude: 10.0, zoom: 10, skip_masterportal_geocoding: true,
+        features: { type: "FeatureCollection",
+                    features: [{ type: "Feature", geometry: { type: "Point", coordinates: [11.6, 50.9] },
+                                 properties: {} }] }
+      )
+
+      get api_offer_path(offer), headers: headers
+
+      expect(JSON.parse(response.body)["data"]["offer"]["map_location"])
+        .to eq("latitude" => 50.9, "longitude" => 11.6)
     end
 
     it "is not found while the offers module is switched off" do

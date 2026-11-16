@@ -57,7 +57,7 @@ describe Offers::CsvImport do
     expect(offer.author).to eq admin
     expect(offer.categories).to match_array [swimming, north, south]
     expect(offer.expires_on).to eq Date.new(2027, 12, 31)
-    expect(offer.map_location.latitude).to eq 50.9
+    expect(offer.map_location.pin_coordinates).to eq(latitude: 50.9, longitude: 11.6)
     expect(offer.short_description).to eq "<p>Erste Zeile</p><p>&lt;b&gt;Zweite&lt;/b&gt;</p>"
     expect(offer).to be_review_checked
   end

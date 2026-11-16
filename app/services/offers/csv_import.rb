@@ -180,7 +180,15 @@ module Offers
           return
         end
 
-        { latitude: coordinates[0], longitude: coordinates[1], zoom: MAP_ZOOM }
+        latitude, longitude = coordinates
+        {
+          latitude: latitude, longitude: longitude, zoom: MAP_ZOOM, skip_masterportal_geocoding: true,
+          features: {
+            type: "FeatureCollection",
+            features: [{ type: "Feature", geometry: { type: "Point", coordinates: [longitude, latitude] },
+                         properties: {} }]
+          }
+        }
       end
 
       def html_paragraphs(text)

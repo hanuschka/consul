@@ -42,10 +42,10 @@ class OfferSerializer < BaseSerializer
     end
 
     def serialize_map_location
-      map_location = offer.map_location
-      return if map_location.blank? || map_location.latitude.blank? || map_location.longitude.blank?
+      pin = offer.map_location&.pin_coordinates
+      return if pin.blank?
 
-      { latitude: map_location.latitude, longitude: map_location.longitude }
+      { latitude: pin[:latitude], longitude: pin[:longitude] }
     end
 
     def serialize_image

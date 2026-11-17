@@ -104,7 +104,7 @@
     <div id="offers-sidebar" class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do %>
         <div class="margin-bottom-half">
-          <p><%= t("custom.offers.index.sidebar_information") %></p>
+          <%= render_custom_block "offers_index_sidebar", default_content: t("custom.offers.index.sidebar_information") %>
         </div>
 
         <div class="resources--info-count margin-bottom-half" role="status">

@@ -317,6 +317,14 @@ describe "Angebote provider form", type: :request do
         expect(response.body).not_to include(I18n.t("custom.offers.index.intro_text"))
       end
 
+      it "renders the sidebar information as an editable content block" do
+        get offers_path
+
+        expect(Nokogiri::HTML(response.body).at_css("#offers-sidebar").text)
+          .to include(I18n.t("custom.offers.index.sidebar_information"))
+        expect(SiteCustomization::ContentBlock.exists?(key: "offers_index_sidebar")).to be true
+      end
+
       it "says when no offer matches the filters" do
         create(:offer, title: "Lesecafé")
 

@@ -6,7 +6,7 @@ de:
         title: Angebote
         intro_text: Hier finden Sie Angebote vor Ort. Wählen Sie ein Angebot aus, um alle Details zu sehen.
         empty_list_text: Zurzeit gibt es keine Angebote.
-        no_matches_text: Keine Angebote passen zu Ihrer Auswahl. Ändern Sie die Filter oder setzen Sie sie zurück.
+        no_matches_text: Keine Angebote passen zu Ihrer Auswahl. Ändern Sie die Filter oder die Suche.
         to_offer: Zum Angebot
         suspended_label: Ausgeblendet
         deactivated_label: Deaktiviert

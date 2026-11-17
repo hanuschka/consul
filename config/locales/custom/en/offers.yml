@@ -6,7 +6,7 @@ en:
         title: Offers
         intro_text: Find offers near you. Select an offer to see all details.
         empty_list_text: There are no offers at the moment.
-        no_matches_text: No offers match your selection. Change the filters or reset them.
+        no_matches_text: No offers match your selection. Change the filters or the search.
         to_offer: View offer
         suspended_label: Hidden
         deactivated_label: Deactivated

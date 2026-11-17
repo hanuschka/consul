@@ -27,6 +27,12 @@ describe "Angebote list in /adm", type: :request do
       expect(response.body).to include("Schwimmen für Kinder", "Sportkurs", "Nord")
     end
 
+    it "links to the CSV download" do
+      get adm_offers_root_path
+
+      expect(Nokogiri::HTML(response.body).css("a[href='#{adm_offers_root_path(format: :csv)}']")).to be_present
+    end
+
     it "finds offers by title" do
       create(:offer, title: "Schwimmen für Kinder")
       create(:offer, title: "Lesecafé")
@@ -61,6 +67,18 @@ describe "Angebote list in /adm", type: :request do
 
       get adm_offers_root_path, params: { visibility: ["visible"], sort_by: "title" }
       expect(listed_titles).to eq %w[Atelier Chor]
+    end
+
+    it "downloads the filtered list as CSV" do
+      create(:offer, title: "Schwimmen für Kinder")
+      create(:offer, title: "Lesecafé")
+
+      get adm_offers_root_path(format: :csv, title__search: "schwimmen")
+
+      expect(response.media_type).to eq "text/csv"
+      expect(response.headers["Content-Disposition"]).to include(I18n.t("adm.offers.offers.index.export_filename"))
+      expect(response.body).to include("Schwimmen für Kinder")
+      expect(response.body).not_to include("Lesecafé")
     end
 
     it "filters deactivated and expired offers" do
@@ -182,6 +200,14 @@ describe "Angebote list in /adm", type: :request do
       get adm_offers_root_path
 
       expect(response).to redirect_to(adm_root_path)
+    end
+
+    it "cannot download the list as CSV" do
+      create(:offer, title: "Schwimmen")
+
+      get adm_offers_root_path(format: :csv)
+
+      expect(response.body).not_to include("Schwimmen")
     end
 
     it "cannot edit an offer" do

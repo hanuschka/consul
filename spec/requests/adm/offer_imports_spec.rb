@@ -30,7 +30,7 @@ describe "Offer import in /adm", type: :request do
       get new_adm_offers_import_path
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(template_adm_offers_import_path)
+      expect(response.body).to include(template_adm_offers_import_path, sample_adm_offers_import_path)
     end
 
     it "imports the valid rows and lists the failing ones with their reason" do
@@ -57,11 +57,22 @@ describe "Offer import in /adm", type: :request do
       expect(response.body).to include(I18n.t("adm.offers.imports.create.no_file"))
     end
 
-    it "downloads the template" do
+    it "downloads the existing offers as template" do
+      create(:offer, title: "Schwimmen für Kinder")
+
       get template_adm_offers_import_path
 
       expect(response.media_type).to eq "text/csv"
       expect(response.body).to include(*Offers::CsvImport.headers)
+      expect(response.body).to include("Schwimmen für Kinder")
+    end
+
+    it "downloads the sample" do
+      get sample_adm_offers_import_path
+
+      expect(response.media_type).to eq "text/csv"
+      expect(response.headers["Content-Disposition"]).to include("#{I18n.t("adm.offers.imports.sample.filename")}.csv")
+      expect(response.body).to eq Offers::CsvImport.sample
     end
   end
 

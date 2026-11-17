@@ -4,44 +4,83 @@ en:
       imports:
         new:
           title: Import offers
-          page_hint: "Use the import to create many offers at once. Upload a CSV file, ideally based on the template. Rules:"
+          page_hint: "Use the import to create many offers at once or to update existing ones. Upload a CSV file, ideally based on the template. The template contains all existing offers. The sample shows two filled-in rows; it uses placeholder providers and categories and therefore cannot be imported unchanged. Rules:"
           rules:
             format: Columns separated by semicolon or comma, encoded in UTF-8 or the Excel default.
             rows: One offer per row. Provider, title, short description, at least one offer type and one social area are required.
             provider: The provider must already exist and is matched by name.
             categories: Category values must already exist and are matched by name. Separate several values in one cell with commas.
             dates: Expiry date as DD.MM.YYYY. Latitude and longitude are optional.
-          rules_outro: Valid rows are created even if other rows fail. Imported offers are published immediately and count as checked. Images cannot be imported.
+            id: "The ID column links a row to an existing offer. When updating, empty cells remove the previous value. Image, visibility and check status stay unchanged."
+          rules_outro: "Valid rows are applied even if other rows contain errors. Newly created offers are published immediately and count as checked. Images cannot be imported."
           upload_title: Upload CSV file
           template: Download template
+          sample: Download sample
           file_label: CSV file
-          file_hint: "CSV file of up to %{max}. Split very large lists into several files. After the import you see for each row whether the offer was created or why not. Do not upload the same file a second time, otherwise the offers are created twice."
+          file_hint: "CSV file of up to %{max}. Rows with the ID of an existing offer update that offer, rows without an ID create a new one. After the import you see for each row whether the offer was created, updated or unchanged, or why the row was not applied."
           submit: Import
           result_title: Import result
           file_errors_title: The file was not imported.
           no_rows: The file contains no offers.
-          summary: "%{created}, %{failed}"
+          summary: "%{created}, %{updated}, %{unchanged}, %{failed}"
           created:
             one: 1 offer created
             other: "%{count} offers created"
           failed:
             one: 1 row failed
             other: "%{count} rows failed"
+          updated:
+            one: "1 offer updated"
+            other: "%{count} offers updated"
+          unchanged:
+            one: "1 offer unchanged"
+            other: "%{count} offers unchanged"
           table:
             line: Row
             title: Title
             result: Result
             created: Created
             failed: Failed
+            updated: "Updated"
+            unchanged: "Unchanged"
             untitled: Untitled
           columns_title: All template columns
           required_marker: (required)
+          id_marker: "(optional, only for updates)"
         create:
           no_file: Please choose a CSV file.
           too_large: The file is larger than %{max}.
         template:
           filename: offers-template
+        sample:
+          filename: offers-sample
+        sample_rows:
+          - provider: Sample provider
+            title: Swimming course for children
+            short_description: "Children aged 6 and over learn to swim in small groups at the indoor pool.\n\nThe courses are run by trained swimming instructors. Please bring swimwear and a towel."
+            times: Tuesdays 3–5 pm, except during school holidays
+            costs: 5 € per session, reduced 3 €
+            registration: Register by Friday on 0123 456789
+            address: 1 Market Square, 12345 Sample Town
+            contact_name: Maria Sample
+            contact_phone: 0123 456-0
+            contact_email: offers@example.org
+            contact_website: https://www.example.org
+            expires_on: 31.12.2027
+            latitude: "51.1657"
+            longitude: "10.4515"
+            offer_type: Course, Sport
+            target_group: Children, Families
+            costs_category: Fee required
+            accessibility: Wheelchair accessible
+            social_area: North district, Central district
+          - provider: Sample provider
+            title: Online language café
+            short_description: Weekly conversation in German via video call for everyone who wants to practise their language skills.
+            offer_type: Meeting place
+            social_area: Central district
         columns:
+          id: ID
           provider: Provider
           title: Title
           short_description: Short description
@@ -66,6 +105,8 @@ en:
           missing_columns: "The file is missing required columns: %{columns}."
           too_many_rows: The file has more than %{max} rows. Please split it into several files.
           unknown_provider: Provider "%{name}" not found.
+          missing_provider: The provider is missing.
+          unknown_offer: "No offer with ID %{id} found."
           ambiguous_provider: There are several providers named "%{name}".
           unknown_category: "%{kind} \"%{name}\" not found."
           invalid_date: Expiry date "%{value}" is not a valid date (DD.MM.YYYY).
@@ -85,6 +126,8 @@ en:
         index:
           title: Offers
           import: Import
+          export_filename: offers
+          download_csv: Download CSV
           review_status:
             added: New
             changed: Changed

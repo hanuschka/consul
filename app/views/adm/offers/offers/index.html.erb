@@ -56,6 +56,13 @@
       </span>
     <% end %>
 
+    <% c.with_toolbar_action do %>
+      <a href="<%= url_for(request.query_parameters.merge(format: :csv)) %>" class="adm-text-link" data-turbo="false">
+        <span class="material-symbols-outlined" aria-hidden="true">download</span>
+        <%= t(".download_csv") %>
+      </a>
+    <% end %>
+
     <% if Adm::Offers::OfferPolicy.new(current_user, nil).import? %>
       <% c.with_toolbar_action do %>
         <%= link_to new_adm_offers_import_path, class: "adm-text-link", data: { turbo_frame: "_top" } do %>

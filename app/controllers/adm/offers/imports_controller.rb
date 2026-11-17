@@ -23,7 +23,16 @@ class Adm::Offers::ImportsController < Adm::Offers::BaseController
   end
 
   def template
-    send_data Offers::CsvImport.template,
+    offers = policy_scope(Offer, policy_scope_class: Adm::Offers::OfferPolicy::Scope)
+               .includes(:translations, :provider, :map_location, categories: :translations)
+               .order(:id)
+    send_data Offers::CsvExport.call(offers),
+              filename: "#{t(".filename")}.csv",
+              type: "text/csv; charset=utf-8"
+  end
+
+  def sample
+    send_data Offers::CsvImport.sample,
               filename: "#{t(".filename")}.csv",
               type: "text/csv; charset=utf-8"
   end

@@ -12,6 +12,7 @@ namespace :adm do
 
     resource :import, only: [:new, :create], controller: "imports" do
       get :template
+      get :sample
     end
 
     resources :offers, only: [:edit, :update, :destroy], path: "" do

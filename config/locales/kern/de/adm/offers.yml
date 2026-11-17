@@ -4,44 +4,83 @@ de:
       imports:
         new:
           title: Angebote importieren
-          page_hint: "Mit dem Import legen Sie viele Angebote auf einmal an. Laden Sie dazu eine CSV-Datei hoch, am einfachsten auf Basis der Vorlage. Dabei gilt:"
+          page_hint: "Mit dem Import legen Sie viele Angebote auf einmal an oder aktualisieren vorhandene. Laden Sie dazu eine CSV-Datei hoch, am einfachsten auf Basis der Vorlage. Die Vorlage enthält alle vorhandenen Angebote. Das Beispiel zeigt zwei ausgefüllte Zeilen; es enthält Platzhalter-Anbieter und -Kategorien und lässt sich deshalb nicht unverändert importieren. Dabei gilt:"
           rules:
             format: Spalten getrennt durch Semikolon oder Komma, Zeichenkodierung UTF-8 oder Excel-Standard.
             rows: Eine Zeile pro Angebot. Pflichtangaben sind Anbieter, Titel, Kurzbeschreibung sowie mindestens eine Angebotsart und ein Sozialraum.
             provider: Der Anbieter muss bereits angelegt sein und wird über seinen Namen zugeordnet.
             categories: Kategoriewerte müssen bereits existieren und werden über ihren Namen zugeordnet. Mehrere Werte in einer Zelle trennen Sie durch Kommas.
             dates: Ablaufdatum im Format TT.MM.JJJJ. Breitengrad und Längengrad sind optional.
-          rules_outro: Gültige Zeilen werden auch dann angelegt, wenn andere Zeilen fehlerhaft sind. Importierte Angebote sind sofort veröffentlicht und gelten als geprüft. Bilder können nicht importiert werden.
+            id: "Die Spalte ID verknüpft eine Zeile mit einem vorhandenen Angebot. Beim Aktualisieren löschen leere Zellen den bisherigen Wert. Bild, Sichtbarkeit und Prüfstatus bleiben unverändert."
+          rules_outro: "Gültige Zeilen werden auch dann übernommen, wenn andere Zeilen fehlerhaft sind. Neu angelegte Angebote sind sofort veröffentlicht und gelten als geprüft. Bilder können nicht importiert werden."
           upload_title: CSV-Datei hochladen
           template: Vorlage herunterladen
+          sample: Beispiel herunterladen
           file_label: CSV-Datei
-          file_hint: "CSV-Datei mit höchstens %{max}. Sehr große Bestände teilen Sie auf mehrere Dateien auf. Nach dem Import sehen Sie für jede Zeile, ob das Angebot angelegt wurde oder warum nicht. Laden Sie dieselbe Datei nicht ein zweites Mal hoch, sonst werden die Angebote doppelt angelegt."
+          file_hint: "CSV-Datei mit höchstens %{max}. Zeilen mit der ID eines vorhandenen Angebots aktualisieren dieses Angebot, Zeilen ohne ID legen ein neues an. Nach dem Import sehen Sie für jede Zeile, ob das Angebot angelegt, aktualisiert oder unverändert ist oder warum die Zeile nicht übernommen wurde."
           submit: Importieren
           result_title: Ergebnis des Imports
           file_errors_title: Die Datei wurde nicht importiert.
           no_rows: Die Datei enthält keine Angebote.
-          summary: "%{created}, %{failed}"
+          summary: "%{created}, %{updated}, %{unchanged}, %{failed}"
           created:
             one: 1 Angebot angelegt
             other: "%{count} Angebote angelegt"
           failed:
             one: 1 Zeile fehlgeschlagen
             other: "%{count} Zeilen fehlgeschlagen"
+          updated:
+            one: "1 Angebot aktualisiert"
+            other: "%{count} Angebote aktualisiert"
+          unchanged:
+            one: "1 Angebot unverändert"
+            other: "%{count} Angebote unverändert"
           table:
             line: Zeile
             title: Titel
             result: Ergebnis
             created: Angelegt
             failed: Fehler
+            updated: "Aktualisiert"
+            unchanged: "Unverändert"
             untitled: Ohne Titel
           columns_title: Alle Spalten der Vorlage
           required_marker: (Pflichtfeld)
+          id_marker: "(optional, nur zum Aktualisieren)"
         create:
           no_file: Bitte wählen Sie eine CSV-Datei aus.
           too_large: Die Datei ist größer als %{max}.
         template:
           filename: angebote-vorlage
+        sample:
+          filename: angebote-beispiel
+        sample_rows:
+          - provider: Musteranbieter
+            title: Schwimmkurs für Kinder
+            short_description: "Kinder ab 6 Jahren lernen in kleinen Gruppen im Hallenbad schwimmen.\n\nDie Kurse leiten ausgebildete Schwimmlehrkräfte. Bitte Badesachen und Handtuch mitbringen."
+            times: dienstags 15–17 Uhr, außer in den Schulferien
+            costs: 5 € pro Termin, ermäßigt 3 €
+            registration: Anmeldung bis Freitag unter 0123 456789
+            address: Marktplatz 1, 12345 Musterstadt
+            contact_name: Maria Muster
+            contact_phone: 0123 456-0
+            contact_email: angebote@example.org
+            contact_website: https://www.example.org
+            expires_on: 31.12.2027
+            latitude: "51,1657"
+            longitude: "10,4515"
+            offer_type: Kurs, Sport
+            target_group: Kinder, Familien
+            costs_category: kostenpflichtig
+            accessibility: rollstuhlgerecht
+            social_area: Sozialraum Nord, Sozialraum Mitte
+          - provider: Musteranbieter
+            title: Online-Sprachcafé
+            short_description: Wöchentliches Gespräch auf Deutsch per Videokonferenz für alle, die ihre Sprachkenntnisse üben möchten.
+            offer_type: Treffpunkt
+            social_area: Sozialraum Mitte
         columns:
+          id: ID
           provider: Anbieter
           title: Titel
           short_description: Kurzbeschreibung
@@ -66,6 +105,8 @@ de:
           missing_columns: "In der Datei fehlen Pflichtspalten: %{columns}."
           too_many_rows: Die Datei enthält mehr als %{max} Zeilen. Bitte teilen Sie sie auf mehrere Dateien auf.
           unknown_provider: Anbieter „%{name}“ nicht gefunden.
+          missing_provider: Der Anbieter fehlt.
+          unknown_offer: "Angebot mit ID %{id} nicht gefunden."
           ambiguous_provider: Es gibt mehrere Anbieter mit dem Namen „%{name}“.
           unknown_category: "%{kind} „%{name}“ nicht gefunden."
           invalid_date: Ablaufdatum „%{value}“ ist kein gültiges Datum (TT.MM.JJJJ).
@@ -85,6 +126,8 @@ de:
         index:
           title: Angebote
           import: Importieren
+          export_filename: angebote
+          download_csv: CSV herunterladen
           review_status:
             added: Neu
             changed: Geändert

@@ -13,15 +13,22 @@ class Adm::Offers::OffersController < Adm::Offers::BaseController
     @review_status_header_options = { filter_options: review_status_filter_options }
     @visibility_header_options = { filter_options: visibility_filter_options }
 
-    @pagy, @offers = pagy(
-      Adm::OffersQuery.new(
-        policy_scope(Offer, policy_scope_class: Adm::Offers::OfferPolicy::Scope)
-          .includes(:translations, :author, categories: :translations),
-        params
-      ).call
-    )
+    scope = policy_scope(Offer, policy_scope_class: Adm::Offers::OfferPolicy::Scope)
+              .includes(:translations, :author, categories: :translations)
 
-    @breadcrumbs = [{ name: t("adm.offers.menu.items.offers"), icon: Adm::Section::ICONS["offers"][:material] }]
+    respond_to do |format|
+      format.html do
+        @pagy, @offers = pagy(Adm::OffersQuery.new(scope, params).call)
+        @breadcrumbs = [{ name: t("adm.offers.menu.items.offers"), icon: Adm::Section::ICONS["offers"][:material] }]
+      end
+
+      format.csv do
+        offers = Adm::OffersQuery.new(scope.includes(:provider, :map_location), params).call
+        send_data Offers::CsvExport.call(offers),
+                  filename: "#{t(".export_filename")}-#{Time.zone.today}.csv",
+                  type: "text/csv; charset=utf-8"
+      end
+    end
   end
 
   def edit

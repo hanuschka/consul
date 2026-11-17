@@ -37,7 +37,7 @@ describe Offers::CsvImport do
 
     expect(result.created_count).to eq 3
     expect(Offer.count).to eq 3
-    failed = result.rows.reject(&:created?)
+    failed = result.rows.select(&:failed?)
     expect(failed.map(&:line)).to eq [4]
     expect(failed.first.title).to eq "Laufen"
     expect(failed.first.errors).to eq [I18n.t("adm.offers.imports.errors.unknown_provider", name: "Unbekannt")]
@@ -100,11 +100,55 @@ describe Offers::CsvImport do
     expect(Offer.count).to eq 0
   end
 
-  it "offers a template with every column" do
-    template = described_class.template
+  it "refuses a row without a provider" do
+    result = import(csv(row("Schwimmen", provider: "")))
 
-    expect(template).to start_with("\uFEFF")
-    expect(CSV.parse_line(template.delete_prefix("\uFEFF"), col_sep: ";")).to eq headers
-    expect(import(template).rows).to be_empty
+    expect(result.rows.first.errors).to eq [I18n.t("adm.offers.imports.errors.missing_provider")]
+    expect(Offer.count).to eq 0
+  end
+
+  it "reads an export without offers as an empty file" do
+    export = Offers::CsvExport.call(Offer.none)
+
+    expect(CSV.parse_line(export.delete_prefix("\uFEFF"), col_sep: ";").first(headers.size + 1))
+      .to eq [described_class.id_header] + headers
+    expect(import(export).rows).to be_empty
+  end
+
+  describe "sample" do
+    let(:sample_rows) { I18n.t("adm.offers.imports.sample_rows", locale: I18n.default_locale) }
+
+    it "fills every column of the template in its first row" do
+      rows = CSV.parse(described_class.sample.delete_prefix("﻿"), col_sep: ";")
+
+      expect(rows.first).to eq headers
+      expect(rows.size).to eq 3
+      expect(rows.second).to all(be_present)
+    end
+
+    it "creates nothing while its placeholder provider does not exist" do
+      result = import(described_class.sample)
+
+      expect(result.rows.size).to eq 2
+      expect(result.rows.map(&:errors)).to all(include(
+        I18n.t("adm.offers.imports.errors.unknown_provider", name: sample_rows.first[:provider])
+      ))
+      expect(Offer.count).to eq 0
+    end
+
+    it "imports cleanly once its provider and categories exist" do
+      create(:offer_provider, name: sample_rows.first[:provider])
+      described_class::CATEGORY_COLUMNS.each do |column, kind|
+        sample_rows.flat_map { |row| row[column].to_s.split(",").map(&:strip) }.compact_blank.uniq.each do |name|
+          create(:offer_category, kind: kind, name: name)
+        end
+      end
+
+      result = import(described_class.sample)
+
+      expect(result.rows.map(&:errors)).to all(be_empty)
+      expect(result.created_count).to eq 2
+      expect(Offer.find_by!(expires_on: Date.new(2027, 12, 31)).map_location.pin_coordinates).to be_present
+    end
   end
 end

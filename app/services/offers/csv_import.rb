@@ -18,18 +18,14 @@ module Offers
     MAX_ROWS = 500
     MAP_ZOOM = 15
 
-    Row = Struct.new(:line, :title, :offer, :errors, keyword_init: true) do
-      def created?
-        offer.present?
+    Row = Struct.new(:line, :title, :offer, :status, :errors, keyword_init: true) do
+      def failed?
+        status == :failed
       end
     end
     Result = Struct.new(:rows, :file_errors, keyword_init: true) do
-      def created_count
-        rows.count(&:created?)
-      end
-
-      def failed_count
-        rows.count { |row| !row.created? }
+      %i[created updated unchanged failed].each do |status|
+        define_method(:"#{status}_count") { rows.count { |row| row.status == status } }
       end
     end
 
@@ -37,8 +33,17 @@ module Offers
       COLUMNS.map { |column| I18n.t("adm.offers.imports.columns.#{column}", locale: I18n.default_locale) }
     end
 
-    def self.template
-      "\uFEFF" + CSV.generate_line(headers, col_sep: ";")
+    def self.id_header
+      I18n.t("adm.offers.imports.columns.id", locale: I18n.default_locale)
+    end
+
+    def self.sample
+      rows = I18n.t("adm.offers.imports.sample_rows", locale: I18n.default_locale)
+
+      "\uFEFF" + CSV.generate(col_sep: ";") do |csv|
+        csv << headers
+        rows.each { |row| csv << COLUMNS.map { |column| row[column] } }
+      end
     end
 
     def initialize(content, author:)
@@ -80,6 +85,7 @@ module Offers
 
       def header_keys
         @header_keys ||= COLUMNS.zip(self.class.headers).to_h { |key, header| [normalize_header(header), key] }
+                                .merge(normalize_header(self.class.id_header) => :id)
       end
 
       def normalize_header(header)
@@ -100,20 +106,94 @@ module Offers
 
       def import_row(values, line)
         errors = []
+        existing = find_existing(values[:id], errors)
         provider = find_provider(values[:provider], errors)
         categories = find_categories(values, errors)
         expires_on = parse_date(values[:expires_on], errors)
         map_location = parse_location(values, errors)
 
-        return Row.new(line: line, title: values[:title], errors: errors) if errors.any?
+        return failed_row(line, values, errors) if errors.any?
 
-        offer = build_offer(values, provider, categories, expires_on, map_location)
-
-        if offer.save
-          Row.new(line: line, title: values[:title], offer: offer, errors: [])
+        if existing
+          update_offer(existing, values, provider, categories, expires_on, map_location, line)
         else
-          Row.new(line: line, title: values[:title], errors: offer.errors.full_messages)
+          create_offer(values, provider, categories, expires_on, map_location, line)
         end
+      end
+
+      def create_offer(values, provider, categories, expires_on, map_location, line)
+        offer = build_offer(values, provider, categories, expires_on, map_location)
+        return failed_row(line, values, offer.errors.full_messages) unless offer.save
+
+        Row.new(line: line, title: values[:title], offer: offer, status: :created, errors: [])
+      end
+
+      def update_offer(offer, values, provider, categories, expires_on, map_location, line)
+        assign_changes(offer, values, provider, expires_on)
+        categories_changed = offer.category_ids.sort != categories.map(&:id).sort
+        location_changed = pin_of(offer) != map_location&.values_at(:latitude, :longitude)
+
+        unless offer.changed? || categories_changed || location_changed
+          return Row.new(line: line, title: values[:title], offer: offer, status: :unchanged, errors: [])
+        end
+
+        saved = Offer.transaction do
+          offer.category_ids = categories.map(&:id) if categories_changed
+          replace_location(offer, map_location) if location_changed
+          (offer.save && (offer.saved_changes? || offer.touch)) || raise(ActiveRecord::Rollback)
+        end
+
+        return failed_row(line, values, offer.errors.full_messages) unless saved
+
+        Row.new(line: line, title: values[:title], offer: offer, status: :updated, errors: [])
+      end
+
+      def assign_changes(offer, values, provider, expires_on)
+        Globalize.with_locale(I18n.default_locale) do
+          (TEXT_ATTRIBUTES + TRANSLATED_ATTRIBUTES).each do |attribute|
+            next if comparable(offer.public_send(attribute)) == comparable(values[attribute])
+
+            offer.public_send(:"#{attribute}=", values[attribute].presence)
+          end
+
+          if Offers::CsvExport.plain_text(offer.short_description).to_s != comparable(values[:short_description])
+            offer.short_description = html_paragraphs(values[:short_description])
+          end
+        end
+
+        offer.provider = provider unless offer.provider == provider
+        offer.expires_on = expires_on unless offer.expires_on == expires_on
+      end
+
+      def comparable(text)
+        text.to_s.gsub(/\r\n?/, "\n").strip
+      end
+
+      def pin_of(offer)
+        offer.map_location&.pin_coordinates&.values_at(:latitude, :longitude)
+      end
+
+      def replace_location(offer, map_location)
+        if map_location.nil?
+          offer.map_location.destroy!
+          offer.association(:map_location).reset
+        elsif offer.map_location
+          offer.map_location.update!(map_location)
+        else
+          offer.create_map_location!(map_location)
+        end
+      end
+
+      def failed_row(line, values, errors)
+        Row.new(line: line, title: values[:title], status: :failed, errors: errors)
+      end
+
+      def find_existing(id, errors)
+        return if id.blank?
+
+        offer = Offer.find_by(id: id) if id.match?(/\A\d+\z/)
+        errors << t("errors.unknown_offer", id: id) if offer.nil?
+        offer
       end
 
       def build_offer(values, provider, categories, expires_on, map_location)
@@ -128,7 +208,10 @@ module Offers
       end
 
       def find_provider(name, errors)
-        return if name.blank?
+        if name.blank?
+          errors << t("errors.missing_provider")
+          return
+        end
 
         matches = providers_by_name.fetch(name.downcase, [])
         errors << t("errors.unknown_provider", name: name) if matches.empty?

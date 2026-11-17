@@ -307,22 +307,14 @@ describe "Angebote provider form", type: :request do
     context "while the module is switched on" do
       before { enable_module }
 
-      it "shows the intro text from the settings and falls back to the default text" do
+      it "renders the intro and the sidebar information as editable content blocks" do
         get offers_path
+
         expect(response.body).to include(I18n.t("custom.offers.index.intro_text"))
-
-        Setting["offers.intro_text"] = "Alle Angebote für Familien auf einen Blick."
-        get offers_path
-        expect(response.body).to include("Alle Angebote für Familien auf einen Blick.")
-        expect(response.body).not_to include(I18n.t("custom.offers.index.intro_text"))
-      end
-
-      it "renders the sidebar information as an editable content block" do
-        get offers_path
-
         expect(Nokogiri::HTML(response.body).at_css("#offers-sidebar").text)
           .to include(I18n.t("custom.offers.index.sidebar_information"))
-        expect(SiteCustomization::ContentBlock.exists?(key: "offers_index_sidebar")).to be true
+        expect(SiteCustomization::ContentBlock.where(key: %w[offers_index_welcome
+                                                           offers_index_sidebar]).count).to eq 2
       end
 
       it "says when no offer matches the filters" do

@@ -323,9 +323,6 @@ de:
       procedure_steps_description: >
         Bietet im Formular eines Vorhabens die im Verwaltungsbereich gepflegten Verfahrensschritte zur Auswahl an, in der dort festgelegten Reihenfolge. Die öffentliche Detailseite zeigt dann den Verfahrensschritt statt der Versionsnummer; im Verwaltungsbereich bleibt die Versionsnummer sichtbar. Aktivieren Sie diese Funktion, wenn Ihre Vorhaben ein förmliches Verfahren mit festen Schritten durchlaufen, etwa Bauleitplanverfahren nach dem BauGB.
     offers:
-      intro_text: Einleitungstext der Angebotsübersicht
-      intro_text_description: >
-        Kurzer Text oben auf der öffentlichen Übersicht der Angebote. Erklären Sie, was die Seite bietet und wie man Angebote findet. Bleibt das Feld leer, wird ein Standardtext angezeigt. Der Text wird automatisch in die aktivierten Sprachen übersetzt.
       reminder_interval: Erinnerung an Anbieter
       reminder_interval_description: >
         Legt fest, in welchem Abstand Anbieter per E-Mail gebeten werden, ihre Angebote auf Aktualität zu prüfen. Die E-Mail listet alle Angebote des Anbieters mit einem Direktlink zum Bearbeiten auf. Wählen Sie einen Abstand, der zur Änderungshäufigkeit der Angebote passt, zum Beispiel vierteljährlich.

@@ -7,6 +7,5 @@
 
 <div class="kern-container my-5">
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "process.offers"), :value, :boolean) %>
-  <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "offers.intro_text"), :value, :text) %>
   <%= render Adm::AttributeEditorComponent.new(Setting.find_by!(key: "offers.reminder_interval"), :value, :select, select_options: Offer::Provider::REMINDER_INTERVALS) %>
 </div>

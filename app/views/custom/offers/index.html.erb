@@ -6,11 +6,7 @@
   <div class="flex-layout padding-on-mobile">
     <div class="main-column">
       <div class="resource-page--intro-text">
-        <% if (intro_text = setting_text("offers.intro_text")) %>
-          <%= simple_format(h(intro_text)) %>
-        <% else %>
-          <p><%= t("custom.offers.index.intro_text") %></p>
-        <% end %>
+        <%= render_custom_block "offers_index_welcome", default_content: t("custom.offers.index.intro_text") %>
       </div>
 
       <% if can?(:create, Offer.new) %>

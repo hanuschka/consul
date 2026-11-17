@@ -272,7 +272,6 @@ class Setting < ApplicationRecord
         "municipal_plans.procedure_steps": false,
         "process.offers": false,
         "offers.reminder_interval": "off",
-        "offers.intro_text": nil,
         "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,

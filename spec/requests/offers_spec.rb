@@ -418,6 +418,23 @@ describe "Angebote provider form", type: :request do
         expect(listed.call("unknown")).to eq ["Lesecafé", "Malkurs", "Schwimmen für Kinder"]
       end
 
+      it "shows the update date in the card header and the state instead for unpublished offers" do
+        create(:offer, title: "Lesecafé").update_columns(updated_at: Time.zone.local(2026, 3, 5, 12))
+        create(:offer, title: "Malkurs").suspend!
+        login_as(admin)
+
+        get offers_path
+
+        header_of = lambda do |title|
+          Nokogiri::HTML(response.body).css(".resource-item")
+                  .find { |card| card.text.include?(title) }
+                  .at_css(".resource-item--header").text.squish
+        end
+
+        expect(header_of.call("Lesecafé")).to eq I18n.t("custom.offers.index.updated_on", date: "05.03.2026")
+        expect(header_of.call("Malkurs")).to eq I18n.t("custom.offers.index.suspended_label")
+      end
+
       it "shows an offer to visitors" do
         offer_type
         offer = create(:offer, title: "Lesecafé", times: "dienstags 15–17 Uhr",
@@ -520,7 +537,8 @@ describe "Angebote provider form", type: :request do
 
       get offers_path
       expect(response.body).to include("Lesecafé")
-      expect(Nokogiri::HTML(response.body).css(".resource-item--header")).to be_empty
+      expect(Nokogiri::HTML(response.body).at_css(".resource-item--header").text)
+        .not_to include(I18n.t("custom.offers.index.suspended_label"))
     end
 
     it "filters the list of a provider account, including its own suspended offers" do

@@ -8,6 +8,7 @@ de:
         empty_list_text: Zurzeit gibt es keine Angebote.
         no_matches_text: Keine Angebote passen zu Ihrer Auswahl. Ändern Sie die Filter oder die Suche.
         to_offer: Zum Angebot
+        updated_on: Aktualisiert am %{date}
         suspended_label: Ausgeblendet
         deactivated_label: Deaktiviert
         expired_label: Abgelaufen

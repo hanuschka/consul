@@ -8,6 +8,7 @@ en:
         empty_list_text: There are no offers at the moment.
         no_matches_text: No offers match your selection. Change the filters or the search.
         to_offer: View offer
+        updated_on: Updated on %{date}
         suspended_label: Hidden
         deactivated_label: Deactivated
         expired_label: Expired

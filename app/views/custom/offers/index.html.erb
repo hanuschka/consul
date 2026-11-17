@@ -8,13 +8,6 @@
       <div class="resource-page--intro-text">
         <%= render_custom_block "offers_index_welcome", default_content: t("custom.offers.index.intro_text") %>
       </div>
-
-      <% if can?(:create, Offer.new) %>
-        <div class="margin-bottom">
-          <%= link_to t("custom.offers.add_offer"), new_offer_path,
-            class: "button -orange", data: { turbolinks: false } %>
-        </div>
-      <% end %>
     </div>
   </div>
 
@@ -22,6 +15,13 @@
 
   <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
     <div class="main-column">
+      <% if can?(:create, Offer.new) %>
+        <div class="show-on-small-tablet margin-bottom text-center">
+          <%= link_to t("custom.offers.add_offer"), new_offer_path,
+            class: "button -orange", data: { turbolinks: false } %>
+        </div>
+      <% end %>
+
       <%= render Resources::List::BaseComponent.new(
         empty_text: (t("custom.offers.index.#{@filters_active ? "no_matches_text" : "empty_list_text"}") if @offers.empty?)
       ) do |c| %>
@@ -52,14 +52,16 @@
                 header_style: (offer.published? ? nil : "background-color: var(--medium-gray-3);"),
                 title_heading_level: 2
               ) do |item| %>
-                <% if unpublished_states.any? %>
-                  <% item.with_header do %>
+                <% item.with_header do %>
+                  <% if unpublished_states.any? %>
                     <% unpublished_states.each do |state, (icon, _)| %>
                       <div>
                         <i class="fas fa-<%= icon %>" aria-hidden="true"></i>
                         <%= t("custom.offers.index.#{state}_label") %>
                       </div>
                     <% end %>
+                  <% else %>
+                    <%= t("custom.offers.index.updated_on", date: l(offer.updated_at.to_date, format: "%d.%m.%Y")) %>
                   <% end %>
                 <% end %>
 
@@ -111,6 +113,13 @@
             <%= @offers.total_count %>
           </span>
         </div>
+
+        <% if can?(:create, Offer.new) %>
+          <div class="hide-on-mobile">
+            <%= link_to t("custom.offers.add_offer"), new_offer_path,
+              class: "button -orange", style: "display:inline-flex;", data: { turbolinks: false } %>
+          </div>
+        <% end %>
       <% end %>
 
       <%= render "offers/filters" %>

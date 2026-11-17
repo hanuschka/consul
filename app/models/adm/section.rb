@@ -12,7 +12,7 @@ module Adm
       "moderation" => { material: "shield", font_awesome: "fa-shield-alt" },
       "deficiency_reports" => { material: "report_problem", font_awesome: "fa-exclamation-triangle" },
       "municipal_plans" => { material: "assignment", font_awesome: "fa-clipboard-list" },
-      "offers" => { material: "volunteer_activism", font_awesome: "fa-hands-helping" },
+      "offers" => { material: "volunteer_activism", font_awesome: "fa-hand-holding-heart" },
       "ideas" => { material: "lightbulb", font_awesome: "fa-lightbulb" },
       "valuation" => { material: "account_balance_wallet", font_awesome: "fa-wallet" },
       "officing" => { material: "how_to_vote", font_awesome: "fa-vote-yea" }

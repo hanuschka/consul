@@ -80,7 +80,7 @@
           <div class="new-card main-content-card">
             <%= render Shared::ResourceImageComponent.new(
               image_url: @offer.image.attachment_variant(resize_to_limit: [1200, 675], saver: { quality: 85 }, format: "jpeg"),
-              image_placeholder_icon_class: "fa-hands-helping",
+              image_placeholder_icon_class: "fa-hand-holding-heart",
               resource: @offer,
               ai_generated: @offer.image.ai_generated?
             ) %>

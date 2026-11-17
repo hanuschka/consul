@@ -13,7 +13,9 @@
   .image-edit-overlay--actions .rich-tooltip--body,
   .image-edit-overlay--height-control,
   .image-edit-overlay--height-control button,
-  .image-edit-overlay--height-control input {
+  .image-edit-overlay--height-control input,
+  .image-edit-overlay--height-reset,
+  .image-edit-overlay--height-bar .rich-tooltip--body {
     pointer-events: all;
   }
 }
@@ -104,7 +106,8 @@
   display: flex;
 }
 
-.image-edit-overlay--actions .rich-tooltip--body {
+.image-edit-overlay--actions .rich-tooltip--body,
+.image-edit-overlay--height-bar .rich-tooltip--body {
   max-width: 360px;
   padding: 12px 14px;
 }
@@ -173,13 +176,49 @@
   margin-bottom: 20px;
 }
 
-.image-edit-overlay--height-control {
-  display: flex;
+.image-edit-overlay--height-bar {
   position: absolute;
   top: 5px;
   left: 5px;
-  height: 25px;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.image-edit-overlay--height-reset {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  font-size: 14px;
+  background: #ffffff66;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background: #ffffff80;
+  }
+
+  &:active {
+    background: #ffffffb0;
+  }
+}
+
+.image-edit-overlay.-custom-height .image-edit-overlay--height-reset {
+  display: flex;
+}
+
+.image-edit-overlay--height-control {
+  display: flex;
+  height: 25px;
   align-items: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   min-width: 100px;

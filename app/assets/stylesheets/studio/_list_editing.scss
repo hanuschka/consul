@@ -1,0 +1,58 @@
+// "Weiteres Element hinzufügen" — floats over the bottom edge of an editable
+// list in simple edit mode. ListEdit appends it to the block wrapper's
+// `--inner` layer (outside the editable body) and sets left/top to the
+// centre of the list's bottom edge, so it never takes a grid cell, flex slot
+// or line inside the content: the block keeps its size when edit mode
+// toggles. Same surface as the "+" between blocks (_add_content_block.scss).
+.studio-content-block-list-add-button {
+  position: absolute;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: max-content;
+  height: 32px;
+  margin: 0;
+  padding: 0 14px;
+  color: $dt-base;
+  font-size: 1rem;
+  line-height: 1;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  user-select: none;
+  transform: translate(-50%, -50%);
+  transition: background-color 150ms ease-out, box-shadow 180ms ease-out;
+
+  i {
+    font-size: 14px;
+  }
+
+  &:hover {
+    background-color: $dt-base-light;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    background-color: $dt-base-light-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $dt-base;
+    outline-offset: 2px;
+  }
+}
+
+// The list is not rendered (collapsed accordion panel, hidden tab).
+.studio-content-block-list-add-button.-hidden {
+  display: none;
+}
+
+// Anchors an item's drag and delete buttons in simple edit mode. ListEdit
+// adds it only to statically positioned items and removes it on exit, so the
+// saved markup keeps the item's own positioning.
+.studio-content-block-list-item-anchor {
+  position: relative;
+}

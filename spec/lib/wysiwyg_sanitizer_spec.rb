@@ -4,6 +4,12 @@ describe WYSIWYGSanitizer do
   subject(:sanitizer) { described_class.new }
 
   describe "#sanitize" do
+    it "removes style and script blocks together with their content" do
+      html = "<style>a { color: #464feb; }</style><p>Text</p><script>alert(1)</script>"
+
+      expect(sanitizer.sanitize(html)).to eq "<p>Text</p>"
+    end
+
     it "turns a bare e-mail address link target into a mailto link" do
       html = '<p><a href="info@example.org">info@example.org</a></p>'
 

@@ -270,6 +270,7 @@ class User < ApplicationRecord
 
   def erase(erase_reason = nil, destroy_votes: false)
     destroy_votes! if destroy_votes #custom
+    PhoneSignInCode.for_phone(confirmed_phone).delete_all if confirmed_phone.present? #custom
     update!(
       erased_at: Time.current,
       erase_reason: erase_reason,
@@ -379,6 +380,8 @@ class User < ApplicationRecord
   end
 
   def email_required?
+    return false if phone_account? #custom
+
     !erased? && (unverified? || registering_from_web)
   end
 

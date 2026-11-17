@@ -222,6 +222,8 @@ en:
         enable_google_translate_description: 'Embeds the Google Translate widget. A language icon appears in the main menu and the platform''s own language selector is dropped. Enable it for many languages, and first agree to the <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform" target="_blank" rel="noopener">terms of use</a>.'
         show_guest_login_links: Show guest login
         show_guest_login_links_description: "Lets users sign in as a guest with only a display name, no email and no password. A link appears in the footer. Guests can join phases whose minimum status is guest. Enable it for the lowest barrier to participation."
+        sms_login: "Participation with SMS code"
+        sms_login_description: "Offers signed-out visitors sign-in with a mobile number and SMS code at participation actions such as supporting, submitting or commenting. If no account exists for the number, one is created without an email address. German mobile numbers only. Requires an SMS provider to be configured on the server."
         users_overview_page: Overview of all users
         users_overview_page_description: "Enables a public overview page listing all active users who have agreed to be shown. Visitors can browse profiles and see other users' participation activity, such as submitted proposals, comments, and poll participation. It helps showcase the diversity of participants."
         enable_projekt_events_page: Events calendar

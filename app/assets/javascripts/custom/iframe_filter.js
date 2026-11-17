@@ -6,7 +6,8 @@
 
       if (!iframeMetaSetting || iframeMetaSetting.getAttribute("content") !== "true") return;
 
-      var expainerText = "<div class='iframe-explainer js-iframe-consent-explainer'><p class='iframe-explainer-text'>Mit dem Aufruf des Inhaltes erklären Sie sich einverstanden, dass Ihre Daten an Drittanbieter übermittelt werden und das Sie die Datenschutzerklärung gelesen haben.</p><a href='' class='js-iframe-consent-button iframe-consent-button'>Akzeptieren</a></div>"
+      const explainerText = iframeMetaSetting.dataset.explainerText;
+      const consentButtonLabel = iframeMetaSetting.dataset.consentButton;
 
       if ($('.admin-content iframe[src*="matomo"]').length > 0) {
         return false;
@@ -19,8 +20,16 @@
         if ($iframe.parent('.iframe-wrapper').length > 0) return;
 
         $iframe.wrap( "<div class='iframe-wrapper js-iframe-consent-wrapper'></div>" );
-        $iframe.after( expainerText )
+        $iframe.after(App.IframeFilter.buildExplainer(explainerText, consentButtonLabel));
       })
+    },
+
+    buildExplainer: function(explainerText, consentButtonLabel) {
+      const $text = $("<p class='iframe-explainer-text'></p>").text(explainerText);
+      const $consentButton = $("<a href='' class='js-iframe-consent-button iframe-consent-button'></a>")
+        .text(consentButtonLabel);
+
+      return $("<div class='iframe-explainer js-iframe-consent-explainer'></div>").append($text, $consentButton);
     },
 
     initialize: function() {

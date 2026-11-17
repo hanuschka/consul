@@ -56,6 +56,7 @@
       App.SimilarContributionsCheck.initialize();
       App.MitmachboxSurvey.initialize();
       App.TagFilter.initialize();
+      App.SmsSignInModal.initialize();
     }
   };
 }).call(this);

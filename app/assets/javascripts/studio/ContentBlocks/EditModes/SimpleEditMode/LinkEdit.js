@@ -2,7 +2,12 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
   savedSelection: null,
   currentContentBlockWrapper: null,
   savedLinkIdToEdit: null,
-  currentLinkWrapper: null,
+  currentLinkTarget: null,
+  hoveredLink: null,
+  inputFrameRequest: null,
+  linkEditButton: null,
+  linkHighlightFrames: [],
+  linkEditButtonOffset: 22,
 
   linkClassesToIgnore: [
     "glightbox", "glightbox-disabled", "accordion-title"
@@ -23,18 +28,30 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     $document.on("click", ".js-content-block-cancel-link-edit", this.cancelLinkEdit.bind(this));
     $document.on("click", ".js-content-block-edit-link", this.editLink.bind(this));
     $document.on("click", ".js-content-block-delete-link", this.deleteLink.bind(this));
+
+    this.handleLayerMouseOver = this.handleLayerMouseOver.bind(this)
+    this.handleLayerMouseLeave = this.handleLayerMouseLeave.bind(this)
+    this.handleLayerInput = this.handleLayerInput.bind(this)
   },
 
   toggleLinkControls(contentBlock, enabled) {
-    if (enabled) {
-      const ignoreSelector = this.linkClassesToIgnore.map(cls => `:not(.${cls})`).join("")
+    const $layer = $(this.getLinkControlsLayer(contentBlock))
 
-      contentBlock.querySelectorAll(`a${ignoreSelector}`).forEach((link) => {
-        this.wrapLinkWithControls(link)
+    $layer.off(".studioLinkEdit")
+
+    if (enabled) {
+      this.getEditableLinks(contentBlock).forEach((link) => {
+        link.contentEditable = false
       })
+
+      $layer.on("mouseover.studioLinkEdit", this.handleLayerMouseOver)
+      $layer.on("mouseleave.studioLinkEdit", this.handleLayerMouseLeave)
+      $layer.on("input.studioLinkEdit", this.handleLayerInput)
     }
     else {
       this.hidePopup()
+      this.resetLinkEditState()
+      this.hideLinkHoverControls()
 
       contentBlock
         .querySelectorAll(".js-content-block-link-wrapper")
@@ -44,68 +61,236 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     }
   },
 
-  wrapLinkWithControls(link) {
-    if (link.closest(".js-content-block-element-not-editable")) {
+  getEditableLinks(contentBlock) {
+    return Array.from(contentBlock.querySelectorAll("a"))
+      .filter((link) => this.isEditableLink(link))
+  },
+
+  isEditableLink(link) {
+    const isIgnored = this.linkClassesToIgnore.some((cls) => link.classList.contains(cls))
+
+    return !isIgnored &&
+      !link.closest(".js-content-block-element-not-editable") &&
+      !link.closest(".js-content-block-link-wrapper")
+  },
+
+  getLinkControlsLayer(element) {
+    return element.closest(".custom-content-block-wrapper--inner")
+  },
+
+  handleLayerMouseOver(e) {
+    if (e.target.closest(".js-content-block-edit-link")) return
+
+    const link = e.target.closest("a")
+    const isLinkInBody = link && e.currentTarget.contains(link) && link.closest(".js-content-block")
+
+    if (link && link === this.hoveredLink) return
+
+    if (isLinkInBody && this.isEditableLink(link)) {
+      this.showLinkHoverControls(link)
       return
     }
 
-    if (link.parentElement.classList.contains("js-content-block-link-wrapper")) {
+    if (!this.hoveredLink) return
+
+    this.hideLinkHoverControls()
+  },
+
+  handleLayerMouseLeave() {
+    this.hideLinkHoverControls()
+  },
+
+  handleLayerInput() {
+    if (this.inputFrameRequest) return
+
+    this.inputFrameRequest = requestAnimationFrame(() => {
+      this.inputFrameRequest = null
+      this.repositionAfterInput()
+    })
+  },
+
+  repositionAfterInput() {
+    if (this.hoveredLink && !this.hoveredLink.isConnected) {
+      this.hideLinkHoverControls()
       return
     }
 
-    const linkWrapper = this.buildLinkWrapper()
-
-    if (this.isOnlyChildAndNotInline(link)) {
-      linkWrapper.style.width = "100%";
-      linkWrapper.style.justifyContent = link.parentElement.style.justifyContent;
+    if (this.hoveredLink) {
+      this.positionLinkEditButton()
     }
 
-    // TODO: try to use jquery "wrap" method
-    link.parentNode.insertBefore(linkWrapper, link);
-    linkWrapper.appendChild(link);
+    this.refreshLinkHighlight()
+  },
 
-    linkWrapper.insertAdjacentHTML(
-    "beforeend",
-      `
-      <button type="button" title="Link bearbeiten" class="content-block-edit-link-button js-content-block-edit-link">
-          <i class="fas fa-pencil-alt"></i>
+  showLinkHoverControls(link) {
+    const layer = this.getLinkControlsLayer(link)
+    const editButton = this.getLinkEditButton()
+
+    this.hoveredLink = link
+
+    if (editButton.parentNode !== layer) {
+      layer.appendChild(editButton)
+    }
+
+    this.positionLinkEditButton()
+    this.refreshLinkHighlight()
+  },
+
+  hideLinkHoverControls() {
+    this.hoveredLink = null
+
+    if (this.linkEditButton) {
+      this.linkEditButton.remove()
+    }
+
+    this.refreshLinkHighlight()
+  },
+
+  positionLinkEditButton() {
+    const layer = this.getLinkControlsLayer(this.hoveredLink)
+    const layerRect = layer.getBoundingClientRect()
+    const linkRects = Array.from(this.hoveredLink.getClientRects())
+    const fallbackRect = this.hoveredLink.getBoundingClientRect()
+    const firstRect = linkRects[0] || fallbackRect
+    const lastRect = linkRects[linkRects.length - 1] || fallbackRect
+    const editButton = this.linkEditButton
+    const buttonHeight = editButton.offsetHeight
+    const halfButtonWidth = editButton.offsetWidth / 2
+    const linkCenter = firstRect.left - layerRect.left + firstRect.width / 2
+    const center = App.Studio.utils.clampCenterInside(linkCenter, halfButtonWidth, layerRect.width)
+    let top = firstRect.top - layerRect.top - this.linkEditButtonOffset
+
+    const aboveBox = {
+      left: layerRect.left + center - halfButtonWidth,
+      right: layerRect.left + center + halfButtonWidth,
+      top: layerRect.top + top,
+      bottom: layerRect.top + top + buttonHeight
+    }
+
+    if (this.coversBlockControls(layer, aboveBox)) {
+      top = lastRect.bottom - layerRect.top - (buttonHeight - this.linkEditButtonOffset)
+    }
+
+    editButton.style.left = `${center}px`
+    editButton.style.top = `${top}px`
+  },
+
+  coversBlockControls(layer, box) {
+    const controls = layer.querySelectorAll(".js-content-block--add-item, .js-content-block-toolbar")
+
+    return Array.from(controls).some((control) => {
+      const rect = control.getBoundingClientRect()
+
+      return rect.width > 0 && App.Studio.utils.boxesOverlap(rect, box)
+    })
+  },
+
+  refreshLinkHighlight() {
+    const editedTarget = this.getEditedLinkTarget()
+    const target = editedTarget || this.hoveredLink
+
+    if (!target) {
+      this.renderLinkHighlightFrames(null, [])
+      return
+    }
+
+    this.renderLinkHighlightFrames(this.getLinkControlsLayer(target), Array.from(target.getClientRects()))
+    this.linkHighlightFrames.forEach((frame) => frame.classList.toggle("-active", Boolean(editedTarget)))
+  },
+
+  getEditedLinkTarget() {
+    const target = this.currentLinkTarget
+
+    if (target && target.isConnected) return target
+
+    return null
+  },
+
+  getActiveLink() {
+    const target = this.getEditedLinkTarget()
+
+    if (target && target.matches("a")) return target
+
+    return null
+  },
+
+  renderLinkHighlightFrames(layer, linkRects) {
+    const layerRect = layer ? layer.getBoundingClientRect() : null
+
+    while (this.linkHighlightFrames.length < linkRects.length) {
+      this.linkHighlightFrames.push(this.buildLinkHighlightFrame())
+    }
+
+    this.linkHighlightFrames.forEach((frame, index) => {
+      const rect = linkRects[index]
+
+      if (!rect) {
+        frame.remove()
+        return
+      }
+
+      if (frame.parentNode !== layer) {
+        layer.appendChild(frame)
+      }
+
+      frame.style.left = `${rect.left - layerRect.left}px`
+      frame.style.top = `${rect.top - layerRect.top}px`
+      frame.style.width = `${rect.width}px`
+      frame.style.height = `${rect.height}px`
+    })
+  },
+
+  getLinkEditButton() {
+    if (!this.linkEditButton) {
+      this.linkEditButton = App.Studio.utils.htmlToSingleDomElement(`
+        <button
+          type="button"
+          title="Link bearbeiten"
+          aria-label="Link bearbeiten"
+          class="studio-content-block-link-edit-button js-content-block-edit-link js-studio-hide-on-preview"
+        >
+          <i class="fas fa-pencil-alt" aria-hidden="true"></i>
         </button>
-      `
-    );
-
-    return linkWrapper
-  },
-
-  buildLinkWrapper() {
-    const linkWrapper = document.createElement("div")
-    linkWrapper.classList.add("content-block-link-wrapper", "js-content-block-link-wrapper")
-    linkWrapper.contentEditable = false;
-
-    return linkWrapper
-  },
-
-  isOnlyChildAndNotInline(link) {
-    if (link.parentNode.children.length !== 1) {
-      return false;
+      `)
     }
 
-    const computedStyle = window.getComputedStyle(link);
-    return computedStyle.display !== 'inline';
+    return this.linkEditButton
+  },
+
+  buildLinkHighlightFrame() {
+    const frame = document.createElement("div")
+    frame.className = "studio-content-block-link-highlight"
+
+    return frame
+  },
+
+  wrapRangeInDraftLink(range) {
+    const linkWrapper = document.createElement("span")
+    linkWrapper.classList.add("js-content-block-link-wrapper", "-js-draft-link")
+    linkWrapper.contentEditable = false
+
+    const linkContentElement = document.createElement("span")
+    linkContentElement.classList.add("js-link-wrapper-content")
+    linkContentElement.appendChild(range.extractContents())
+    linkWrapper.appendChild(linkContentElement)
+
+    range.insertNode(linkWrapper)
+
+    return linkWrapper
   },
 
   removeLinkControls(linkWrapper) {
-    const link = linkWrapper.querySelector("a");
+    const linkContentElement = linkWrapper.querySelector(".js-link-wrapper-content");
+    const link = linkWrapper.querySelector("a")
 
-    if (link) {
-      linkWrapper.parentNode.insertBefore(link, linkWrapper);
-    } else if (linkWrapper.classList.contains("-js-draft-link")) {
-      const linkContentElement = linkWrapper.querySelector(".js-link-wrapper-content");
-      if (linkContentElement) {
-        const childNodes = Array.from(linkContentElement.childNodes);
-        childNodes.forEach(child => {
-          linkWrapper.parentNode.insertBefore(child, linkWrapper);
-        });
-      }
+    if (linkContentElement) {
+      const childNodes = Array.from(linkContentElement.childNodes);
+      childNodes.forEach(child => {
+        linkWrapper.parentNode.insertBefore(child, linkWrapper);
+      });
+    }
+    else if (link) {
+      linkWrapper.parentNode.insertBefore(link, linkWrapper)
     }
 
     linkWrapper.remove();
@@ -172,11 +357,13 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     }
   },
 
-  editLink(e) {
+  editLink() {
+    const link = this.hoveredLink
+
+    if (!link || !link.isConnected) return
+
     this.resetLinkEditState()
 
-    const button = e.currentTarget;
-    const link = button.closest(".js-content-block-link-wrapper").querySelector('a');
     const linkId = Date.now();
     link.dataset.contentBlockEditLinkId = linkId;
 
@@ -184,12 +371,9 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
 
     const { contentBlockWrapper } = App.Studio.ContentBlocks.DomHelpers.getContentBlockAndWrapper(link);
     this.currentContentBlockWrapper = contentBlockWrapper;
+    this.currentLinkTarget = link
 
-    const linkWrapper = link.closest(".js-content-block-link-wrapper")
-
-    this.currentLinkWrapper = linkWrapper
-
-    this.showEditLinkPopup(linkWrapper)
+    this.showEditLinkPopup(link)
   },
 
   addLink(e) {
@@ -212,17 +396,9 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     this.saveSelection();
     this.currentContentBlockWrapper = contentBlockWrapper;
 
-    const linkWrapper = this.buildLinkWrapper()
-    linkWrapper.classList.add("-js-draft-link")
+    const linkWrapper = this.wrapRangeInDraftLink(range)
 
-    const linkContentElement = document.createElement("span")
-    linkContentElement.classList.add("js-link-wrapper-content")
-    linkContentElement.appendChild(range.extractContents())
-    linkWrapper.appendChild(linkContentElement)
-
-    range.insertNode(linkWrapper);
-
-    this.currentLinkWrapper = linkWrapper
+    this.currentLinkTarget = linkWrapper
     this.showEditLinkPopup(linkWrapper);
   },
 
@@ -245,22 +421,12 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
 
     this.saveSelection();
     this.currentContentBlockWrapper = contentBlockWrapper;
-
-    const linkWrapper = this.buildLinkWrapper();
-    linkWrapper.classList.add("-js-draft-link");
-
-    const linkContentElement = document.createElement("span");
-    linkContentElement.classList.add("js-link-wrapper-content");
-    linkContentElement.appendChild(range.extractContents());
-    linkWrapper.appendChild(linkContentElement);
-    range.insertNode(linkWrapper);
-
-    this.currentLinkWrapper = linkWrapper;
+    this.currentLinkTarget = this.wrapRangeInDraftLink(range);
 
     App.Studio.ContentBlocks.SimpleEditMode.FileManagerDialog.openForDocuments(
       (selectedFile) => {
-        this.createNewLinkWithWrapper(
-          this.currentLinkWrapper,
+        this.createLinkFromDraft(
+          this.currentLinkTarget,
           selectedFile.url,
           true,
           selectedFile.content_type
@@ -283,28 +449,30 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
   },
 
   handleFileManagerCancel() {
-    if (this.currentLinkWrapper && this.currentLinkWrapper.classList.contains("-js-draft-link")) {
-      this.removeLinkControls(this.currentLinkWrapper);
+    if (this.isDraftLinkTarget()) {
+      this.removeLinkControls(this.currentLinkTarget);
     }
     this.resetLinkEditState();
   },
 
-  showEditLinkPopup(linkWrapper) {
+  isDraftLinkTarget() {
+    return Boolean(this.currentLinkTarget) && this.currentLinkTarget.classList.contains("-js-draft-link")
+  },
+
+  showEditLinkPopup(target) {
     // window.getSelection().removeAllRanges();
-    linkWrapper.classList.add("-highlight-active")
+    this.refreshLinkHighlight()
 
     App.Studio.ContentBlocks.SimpleEditMode.EditPopup.show(
       $(".js-content-block-link-popup"),
-      linkWrapper,
+      target,
       "below",
       () => this.cancelLinkEdit()
     );
 
     const textInput = document.querySelector(".js-content-block-link-popup .js-content-block-text-input");
     const urlInput = document.querySelector(".js-content-block-link-popup .js-content-block-url-input");
-    const link = linkWrapper.querySelector("a")
-    console.log("linkWrapper", linkWrapper)
-    console.log("a", link)
+    const link = target.matches("a") ? target : target.querySelector("a")
     const $deleteButton = $(".js-content-block-delete-link")
 
     if (link) {
@@ -347,7 +515,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     const blankCheckbox = document.querySelector(".js-content-block-url-black-checkbox")
 
     if (this.savedSelection) {
-      this.currentLinkWrapper = this.createNewLinkWithWrapper(this.currentLinkWrapper, url, blankCheckbox.checked)
+      this.currentLinkTarget = this.createLinkFromDraft(this.currentLinkTarget, url, blankCheckbox.checked)
     }
     else if (this.savedLinkIdToEdit) {
       const link = document.querySelector(`[data-content-block-edit-link-id="${this.savedLinkIdToEdit}"]`)
@@ -395,7 +563,7 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
     return value;
   },
 
-  createNewLinkWithWrapper(linkWrapper, url, targetBlank = true, contentType = null) {
+  createLinkFromDraft(draftWrapper, url, targetBlank = true, contentType = null) {
     const a = document.createElement("a");
     a.setAttribute("href", this.normalizeLinkUrl(url));
     a.classList.add("js-content-block-disable-link-click", "js-content-block-inline-link")
@@ -408,13 +576,14 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
       this.prependFileTypeIcon(a, contentType);
     }
 
-    const html = this.currentLinkWrapper.querySelector(".js-link-wrapper-content").innerHTML;
+    const html = draftWrapper.querySelector(".js-link-wrapper-content").innerHTML;
     a.insertAdjacentHTML("beforeend", html);
 
-    linkWrapper.parentNode.insertBefore(a, linkWrapper);
-    linkWrapper.remove()
+    draftWrapper.parentNode.insertBefore(a, draftWrapper);
+    draftWrapper.remove()
+    a.contentEditable = false
 
-    return this.wrapLinkWithControls(a)
+    return a
   },
 
   prependFileTypeIcon(linkEl, contentType) {
@@ -430,23 +599,21 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
   cancelLinkEdit() {
     // this.restoreSelection();
 
-    if (this.currentLinkWrapper && this.currentLinkWrapper.classList.contains("-js-draft-link")) {
-      this.removeLinkControls(this.currentLinkWrapper)
+    if (this.isDraftLinkTarget()) {
+      this.removeLinkControls(this.currentLinkTarget)
     }
     this.hidePopup()
     this.resetLinkEditState()
   },
 
   deleteLink() {
-    const link = this.currentLinkWrapper.querySelector('a')
-    const linkContent = link.innerHTML;
+    const link = this.getActiveLink()
 
-    if (!confirm("Möchten Sie diesen Link wirklich entfernen?")) {
-      return;
-    }
+    if (!link) return
+    if (!confirm("Möchten Sie diesen Link wirklich entfernen?")) return
 
-    this.currentLinkWrapper.insertAdjacentHTML('beforebegin', linkContent);
-    this.currentLinkWrapper.remove();
+    link.insertAdjacentHTML('beforebegin', link.innerHTML);
+    link.remove();
     this.hidePopup()
     this.resetLinkEditState()
   },
@@ -471,10 +638,9 @@ App.Studio.ContentBlocks.SimpleEditMode.LinkEdit = {
       .parent()
       .hide()
 
-    if (this.currentLinkWrapper) {
-      this.currentLinkWrapper.classList.remove("-highlight-active")
-      this.currentLinkWrapper = null;
-    }
+    this.currentLinkTarget = null;
+
+    this.refreshLinkHighlight()
 
     $(".js-content-block-link-popup .js-content-block-url-input").val("")
     $(".js-content-block-url-black-checkbox").prop("checked", true)

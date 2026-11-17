@@ -85,6 +85,14 @@ App.Studio.utils.removeChildHtmlAttributes = function(element, attributes = []) 
   })
 }
 
+App.Studio.utils.removeClasses = function(element, classNames) {
+  element.classList.remove(...classNames)
+
+  if (element.classList.length === 0) {
+    element.removeAttribute("class")
+  }
+}
+
 App.Studio.utils.hasBlockChildren = (element) => {
   const blockSelectors = [
     "div", "p", "ul", "ol", "li", "section", "article", "header", "footer", "aside", "nav",
@@ -194,6 +202,7 @@ App.Studio.utils.ADMIN_WYSIWYG_ALLOWLIST = {
     "data-turbolinks", "data-box-shadow", "data-glightbox",
     "data-list-edit-add-outside", "data-list-edit-add-outside-of",
     "data-list-edit-follower", "data-paired-list",
+    "data-template-height",
     "url"
   ]
 };

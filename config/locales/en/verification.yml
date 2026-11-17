@@ -71,9 +71,13 @@ en:
         resend_sms_text: Didn't get a text with your confirmation code?
         submit_button: Send
         title: Security code confirmation
+      errors:
+        delivery_failed: The text message could not be sent. Please try again later.
+        not_german_mobile: Please enter a German mobile number, for example 0171 1234567 or +49 171 1234567.
+      message: "Your confirmation code is: %{code}"
       new:
         phone: Enter your mobile phone number to receive the code
-        phone_format: "<strong><em>(Example: 612345678 or +34612345678)</em></strong>"
+        phone_format: "<strong><em>(Example: 0171 1234567 or +49 171 1234567)</em></strong>"
         phone_note: We only use your phone to send you a code, never to contact you.
         submit_button: Send
         title: Send confirmation code

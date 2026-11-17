@@ -1,0 +1,7 @@
+<% provide :title do %><%= t("sms_sign_in.new.title") %><% end %>
+
+<%= render Auth::AuthPageTemplateComponent.new do |c| %>
+  <% c.with_form do %>
+    <%= render "users/sms_sessions/phone_form", remote: false %>
+  <% end %>
+<% end %>

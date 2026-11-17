@@ -30,7 +30,7 @@
       <% if @ballot %>
         <%= render "adm/officing/budgets/investment_ballot", investment: investment, ballot: @ballot, budget: @budget, offline_user: @offline_user, lines_by_investment_id: @lines_by_investment_id %>
       <% else %>
-        <%= render "adm/officing/budgets/investment_vote", investment: investment, budget: @budget, offline_user: @offline_user %>
+        <%= render "adm/officing/budgets/investment_vote", investment: investment, budget: @budget, offline_user: @offline_user, votes_by_investment_id: @votes_by_investment_id %>
       <% end %>
     <% end %>
   <% else %>
@@ -41,8 +41,6 @@
       </div>
     </div>
   <% end %>
-
-  <%== pagy_nav(@pagy) if @pagy&.pages.to_i > 1 %>
 
   <div class="mt-5">
     <%= kern_link_button(

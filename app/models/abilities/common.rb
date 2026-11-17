@@ -145,7 +145,11 @@ module Abilities
         # can :create, DirectMessage
         # can :show, DirectMessage, sender_id: user.id
       end
-      can :create, DirectMessage
+
+      if user.may_send_direct_messages?
+        can :create, DirectMessage
+      end
+
       can :show, DirectMessage, sender_id: user.id
 
       can [:create, :show, :edit, :update, :destroy], ProposalNotification, proposal: { author_id: user.id }

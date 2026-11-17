@@ -8,6 +8,8 @@ class OffersController < ApplicationController
 
   before_action :authenticate_user!, except: [:index, :show]
 
+  has_orders %w[title title_desc created_at updated_at], only: :index
+
   def index
     authorize! :index, Offer
 
@@ -15,9 +17,8 @@ class OffersController < ApplicationController
     @filters_active = filter_params.values.any?(&:present?)
     @filtered_offers = OffersQuery.new(Offer.listed_for(current_user), filter_params).call
     @overview_map = Offers::OverviewMapService.new(@filtered_offers)
-    @offers = @filtered_offers.includes(:translations, :image, categories: :translations)
-                              .sort_by_title
-                              .page(params[:page])
+    @offers = apply_order(@filtered_offers.includes(:translations, :image, categories: :translations))
+                .page(params[:page])
   end
 
   def show
@@ -116,6 +117,15 @@ class OffersController < ApplicationController
       else
         @offer.provider_required = true
         @offer.provider = chosen_provider || (available_providers.first if available_providers.one?)
+      end
+    end
+
+    def apply_order(scope)
+      case @current_order
+      when "title_desc" then scope.sort_by_title(:desc)
+      when "created_at" then scope.reorder(created_at: :desc, id: :desc)
+      when "updated_at" then scope.reorder(updated_at: :desc, id: :desc)
+      else scope.sort_by_title
       end
     end
 

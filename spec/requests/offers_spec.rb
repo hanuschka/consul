@@ -347,13 +347,13 @@ describe "Angebote provider form", type: :request do
         get offers_path, params: { search: "schwimmen", social_area: [north.id] }
 
         page = Nokogiri::HTML(response.body)
-        form = page.at_css("form[action='#{offers_path}'][method='get']")
-        expect(form.at_css("input[name='search']")["value"]).to eq "schwimmen"
-        expect(form.css("input[type='checkbox'][name='offer_type[]']").map { |box| box["value"] })
-          .to include(offer_type.id.to_s)
-        expect(form.at_css("input[name='social_area[]'][value='#{north.id}']")["checked"]).to be_present
-        expect(form.at_css("input[name='social_area[]'][value='#{south.id}']")["checked"]).to be_nil
-        expect(page.css("a[href='#{offers_path}']").map(&:text)).to include(I18n.t("custom.offers.index.filters.reset"))
+        expect(page.at_css("input[type='text'][name='search']")["value"]).to eq "schwimmen"
+
+        sidebar = page.at_css("#offers-sidebar")
+        offer_type_box = sidebar.at_css("input[type='checkbox'][name='offer_type[]'][value='#{offer_type.id}']")
+        expect(offer_type_box["checked"]).to be_nil
+        expect(sidebar.at_css("input[type='checkbox'][name='social_area[]'][value='#{north.id}']")["checked"]).to be_present
+        expect(sidebar.at_css("input[type='checkbox'][name='social_area[]'][value='#{south.id}']")["checked"]).to be_nil
       end
 
       it "shows the map with the pinned offers of the filtered result only" do
@@ -385,7 +385,8 @@ describe "Angebote provider form", type: :request do
 
         get offers_path, params: { search: "schwimmen", social_area: [social_area.id] }
 
-        expect(response.body).to include(I18n.t("custom.offers.index.count", count: 2))
+        expect(Nokogiri::HTML(response.body).at_css(".resources--info-count").text.squish)
+          .to eq "#{I18n.t("custom.offers.index.count")} 2"
         link = Nokogiri::HTML(response.body).css(".pagination a").find { |a| a["href"].include?("page=2") }
         query = Rack::Utils.parse_nested_query(URI.parse(link["href"]).query)
         expect(query).to include("search" => "schwimmen", "social_area" => [social_area.id.to_s], "page" => "2")
@@ -399,6 +400,22 @@ describe "Angebote provider form", type: :request do
 
         expect(response).to have_http_status(:ok)
         expect(response.body.index("Lesecafé")).to be < response.body.index("Schwimmen für Kinder")
+      end
+
+      it "sorts the list by the chosen order" do
+        create(:offer, title: "Lesecafé").update_columns(created_at: 3.days.ago, updated_at: 1.day.ago)
+        create(:offer, title: "Schwimmen für Kinder").update_columns(created_at: 1.day.ago, updated_at: 2.days.ago)
+        create(:offer, title: "Malkurs").update_columns(created_at: 2.days.ago, updated_at: 3.days.ago)
+
+        listed = lambda do |order|
+          get offers_path, params: { order: order }
+          ["Lesecafé", "Malkurs", "Schwimmen für Kinder"].sort_by { |title| response.body.index(title) }
+        end
+
+        expect(listed.call("title_desc")).to eq ["Schwimmen für Kinder", "Malkurs", "Lesecafé"]
+        expect(listed.call("created_at")).to eq ["Schwimmen für Kinder", "Malkurs", "Lesecafé"]
+        expect(listed.call("updated_at")).to eq ["Lesecafé", "Schwimmen für Kinder", "Malkurs"]
+        expect(listed.call("unknown")).to eq ["Lesecafé", "Malkurs", "Schwimmen für Kinder"]
       end
 
       it "shows an offer to visitors" do

@@ -3,8 +3,8 @@
 <main>
   <h1 class="padding-on-mobile"><%= t("custom.offers.index.title") %></h1>
 
-  <div class="padding-on-mobile">
-    <div class="full-width-column">
+  <div class="flex-layout padding-on-mobile">
+    <div class="main-column">
       <div class="resource-page--intro-text">
         <% if (intro_text = setting_text("offers.intro_text")) %>
           <%= simple_format(h(intro_text)) %>
@@ -19,20 +19,25 @@
             class: "button -orange", data: { turbolinks: false } %>
         </div>
       <% end %>
-
-      <%= render "offers/filters" %>
     </div>
   </div>
 
   <%= render Offers::OverviewMapComponent.new(overview_map: @overview_map) %>
 
-  <div class="padding-on-mobile">
-    <div class="full-width-column">
-      <p><strong><%= t("custom.offers.index.count", count: @offers.total_count) %></strong></p>
-
+  <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
+    <div class="main-column">
       <%= render Resources::List::BaseComponent.new(
         empty_text: (t("custom.offers.index.#{@filters_active ? "no_matches_text" : "empty_list_text"}") if @offers.empty?)
       ) do |c| %>
+        <% c.with_toolbar(
+          i18n_namespace: "custom.offers.index",
+          filters: @valid_orders,
+          current_filter: @current_order,
+          param: "order",
+          text_search_enabled: true,
+          hide_view_mode_button: true
+        ) %>
+
         <% if @offers.present? %>
           <% c.with_items do %>
             <% @offers.each do |offer| %>
@@ -94,6 +99,25 @@
         <% end %>
       <% end %>
       <%= paginate @offers %>
+    </div>
+
+    <div id="offers-sidebar" class="sidebar">
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do %>
+        <div class="margin-bottom-half">
+          <p><%= t("custom.offers.index.sidebar_information") %></p>
+        </div>
+
+        <div class="resources--info-count margin-bottom-half" role="status">
+          <span>
+            <%= t("custom.offers.index.count") %>
+          </span>
+          <span>
+            <%= @offers.total_count %>
+          </span>
+        </div>
+      <% end %>
+
+      <%= render "offers/filters" %>
     </div>
   </div>
 </main>

@@ -11,17 +11,16 @@ de:
         suspended_label: Ausgeblendet
         deactivated_label: Deaktiviert
         expired_label: Abgelaufen
-        count:
-          one: 1 Angebot
-          other: "%{count} Angebote"
-        filters:
-          region_label: Angebote filtern
-          search_label: Suchbegriff
-          selected_count:
-            one: 1 ausgewählt
-            other: "%{count} ausgewählt"
-          submit: Angebote filtern
-          reset: Filter zurücksetzen
+        count: Anzahl Angebote
+        sidebar_information: Hier finden Sie Angebote von Anbietern vor Ort. Über die Filter grenzen Sie die Liste und die Karte ein.
+        search_form:
+          placeholder: z. B. Schwimmen
+          button_title: Angebote durchsuchen
+        orders:
+          title: Titel (A–Z)
+          title_desc: Titel (Z–A)
+          created_at: Neueste zuerst
+          updated_at: Zuletzt aktualisiert
         overview_map:
           region_label: Karte der Angebote
           note: Die Karte zeigt die Angebote mit Ortsangabe. Alle Angebote sind auch in der Liste unter der Karte aufgeführt.

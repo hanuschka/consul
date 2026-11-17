@@ -11,17 +11,16 @@ en:
         suspended_label: Hidden
         deactivated_label: Deactivated
         expired_label: Expired
-        count:
-          one: 1 offer
-          other: "%{count} offers"
-        filters:
-          region_label: Filter offers
-          search_label: Keyword
-          selected_count:
-            one: 1 selected
-            other: "%{count} selected"
-          submit: Filter offers
-          reset: Reset filters
+        count: Number of offers
+        sidebar_information: Find offers from local providers. Use the filters to narrow down the list and the map.
+        search_form:
+          placeholder: e.g. swimming
+          button_title: Search offers
+        orders:
+          title: Title (A–Z)
+          title_desc: Title (Z–A)
+          created_at: Newest first
+          updated_at: Recently updated
         overview_map:
           region_label: Map of offers
           note: The map shows offers that have a location. All offers are also listed below the map.

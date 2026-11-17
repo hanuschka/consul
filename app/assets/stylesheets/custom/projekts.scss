@@ -1189,6 +1189,20 @@ span.projekt-backlink:before {
 .projekt-livestream-container {
   display: flex;
   justify-content: space-between;
+  gap: 20px;
+
+  @media screen and (max-width: $small-tablet-viewport-start) {
+    flex-direction: column;
+  }
+}
+
+.projekt-livestream-video {
+  flex: 1;
+  min-width: 0;
+
+  .external-video-player {
+    max-width: 800px;
+  }
 }
 
 .projekt-livestream--navigation {
@@ -1196,13 +1210,16 @@ span.projekt-backlink:before {
   flex-direction: column;
   width: 290px;
   padding-top: 5px;
+
+  @media screen and (max-width: $small-tablet-viewport-start) {
+    width: auto;
+  }
 }
 
 .projekt-livestream--details {
   padding: 10px 20px;
   background: white;
   margin-top: 15px;
-  max-width: 800px;
   padding-bottom: 22px;
   border-radius: 10px;
 }

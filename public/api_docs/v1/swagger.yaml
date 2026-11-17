@@ -17760,7 +17760,7 @@ paths:
                             provider:
                               type: object
                               nullable: true
-                              description: The provider (Träger) the offer belongs
+                              description: The provider (Anbieter) the offer belongs
                                 to
                               properties:
                                 id:
@@ -17945,7 +17945,7 @@ paths:
                           provider:
                             type: object
                             nullable: true
-                            description: The provider (Träger) the offer belongs to
+                            description: The provider (Anbieter) the offer belongs to
                             properties:
                               id:
                                 type: integer

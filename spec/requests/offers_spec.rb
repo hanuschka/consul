@@ -121,8 +121,8 @@ describe "Angebote provider form", type: :request do
   end
 
   describe "authorized providers" do
-    let(:provider_x) { create(:offer_provider, name: "Träger X") }
-    let(:provider_y) { create(:offer_provider, name: "Träger Y") }
+    let(:provider_x) { create(:offer_provider, name: "Anbieter X") }
+    let(:provider_y) { create(:offer_provider, name: "Anbieter Y") }
 
     before do
       allow_any_instance_of(ActionView::Base).to receive(:stylesheet_link_tag).and_return("".html_safe)
@@ -251,7 +251,7 @@ describe "Angebote provider form", type: :request do
 
       provider_y.add_email(user.email)
       get new_offer_path
-      expect(provider_select.call.css("option").map(&:text)).to include("Träger X", "Träger Y")
+      expect(provider_select.call.css("option").map(&:text)).to include("Anbieter X", "Anbieter Y")
     end
 
     it "lets administrators create offers with or without a provider" do
@@ -424,7 +424,7 @@ describe "Angebote provider form", type: :request do
   end
 
   describe "city check and hiding" do
-    let(:provider) { create(:offer_provider, name: "Träger X") }
+    let(:provider) { create(:offer_provider, name: "Anbieter X") }
     let(:member) { create(:user).tap { |user| provider.add_email(user.email) } }
 
     before do
@@ -532,7 +532,7 @@ describe "Angebote provider form", type: :request do
   end
 
   describe "expiry and deactivation" do
-    let(:provider) { create(:offer_provider, name: "Träger X") }
+    let(:provider) { create(:offer_provider, name: "Anbieter X") }
     let(:member) { create(:user).tap { |user| provider.add_email(user.email) } }
 
     before do

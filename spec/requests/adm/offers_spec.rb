@@ -133,10 +133,10 @@ describe "Angebote list in /adm", type: :request do
       end
 
       it "assigns and removes the provider" do
-        provider = create(:offer_provider, name: "Träger X")
+        provider = create(:offer_provider, name: "Anbieter X")
 
         get edit_adm_offers_offer_path(offer)
-        expect(response.body).to include("Träger X")
+        expect(response.body).to include("Anbieter X")
 
         patch adm_offers_offer_path(offer), params: { offer: { provider_id: provider.id } }
         expect(offer.reload.provider).to eq provider

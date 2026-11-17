@@ -11,7 +11,7 @@ FactoryBot.define do
   end
 
   factory :offer_provider, class: "Offer::Provider" do
-    sequence(:name) { |n| "Träger #{n}" }
+    sequence(:name) { |n| "Anbieter #{n}" }
   end
 
   factory :offer do

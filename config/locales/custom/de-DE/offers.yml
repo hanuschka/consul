@@ -61,7 +61,7 @@ de:
         page_description: "Stellen Sie Ihr Angebot vor: Worum geht es, für wen ist es gedacht und wie kann man teilnehmen? Mit Ihren Angaben finden Interessierte Ihr Angebot in der Übersicht und auf der Karte."
         required: (Pflichtfeld)
         provider_prompt: Bitte wählen
-        provider_blank: Kein Träger
+        provider_blank: Kein Anbieter
         no_categories: Für diese Kategorie stehen derzeit keine Werte zur Auswahl.
         sections:
           categories: Kategorien
@@ -72,7 +72,7 @@ de:
           new: Angebot speichern
           edit: Änderungen speichern
         hints:
-          provider: Wählen Sie den Träger, zu dem das Angebot gehört.
+          provider: Wählen Sie den Anbieter, zu dem das Angebot gehört.
           category_kinds:
             offer_type: Um welche Art von Angebot handelt es sich? Wählen Sie alle passenden Werte aus.
             target_group: Für wen ist das Angebot gedacht? Wählen Sie alle passenden Werte aus.
@@ -85,7 +85,7 @@ de:
           costs: Optionale Angaben zu den Kosten, zum Beispiel zu Ermäßigungen.
           registration: Ob und wie man sich für das Angebot anmelden muss.
           contact_website: Vollständige Adresse beginnend mit https://
-          expires_on: Optional. Bis zu diesem Tag einschließlich wird das Angebot öffentlich angezeigt. Danach ist es nur noch für Ihren Träger sichtbar, bis Sie das Datum ändern.
+          expires_on: Optional. Bis zu diesem Tag einschließlich wird das Angebot öffentlich angezeigt. Danach ist es nur noch für Ihren Anbieter sichtbar, bis Sie das Datum ändern.
         image_upload:
           top_line: Wählen Sie ein passendes Bild für Ihr Angebot.
         placeholders:

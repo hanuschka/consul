@@ -30,7 +30,7 @@ RSpec.describe "Offers API", type: :request, openapi_spec: "v1/swagger.yaml" do
       updated_at: { type: :string, format: "date-time" },
       provider: {
         type: :object, nullable: true,
-        description: "The provider (Träger) the offer belongs to",
+        description: "The provider (Anbieter) the offer belongs to",
         properties: { id: { type: :integer }, name: { type: :string }}
       },
       categories: {
@@ -145,7 +145,7 @@ RSpec.describe "Offers API", type: :request, openapi_spec: "v1/swagger.yaml" do
 
     it "shows the published fields and categories but no account data" do
       author = create(:user, username: "Anna Muster", email: "anna@traeger.example")
-      provider = create(:offer_provider, name: "Träger X")
+      provider = create(:offer_provider, name: "Anbieter X")
       provider.add_email("team@traeger.example")
       sport = create(:offer_category, :offer_type, name: "Sportkurs")
       offer = create(:offer, title: "Schwimmen", author: author, provider: provider,
@@ -157,7 +157,7 @@ RSpec.describe "Offers API", type: :request, openapi_spec: "v1/swagger.yaml" do
 
       expect(data["title"]).to eq("Schwimmen")
       expect(data["contact_email"]).to eq("kurse@traeger.example")
-      expect(data["provider"]).to eq("id" => provider.id, "name" => "Träger X")
+      expect(data["provider"]).to eq("id" => provider.id, "name" => "Anbieter X")
       expect(data["categories"]["offer_type"]).to eq([{ "id" => sport.id, "name" => "Sportkurs" }])
       expect(data["map_location"]).to be_nil
       expect(data.keys).not_to include("author", "author_id", "review_status", "suspended_at")

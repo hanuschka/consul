@@ -7,8 +7,8 @@ de:
           page_hint: "Mit dem Import legen Sie viele Angebote auf einmal an. Laden Sie dazu eine CSV-Datei hoch, am einfachsten auf Basis der Vorlage. Dabei gilt:"
           rules:
             format: Spalten getrennt durch Semikolon oder Komma, Zeichenkodierung UTF-8 oder Excel-Standard.
-            rows: Eine Zeile pro Angebot. Pflichtangaben sind Träger, Titel, Kurzbeschreibung sowie mindestens eine Angebotsart und ein Sozialraum.
-            provider: Der Träger muss bereits angelegt sein und wird über seinen Namen zugeordnet.
+            rows: Eine Zeile pro Angebot. Pflichtangaben sind Anbieter, Titel, Kurzbeschreibung sowie mindestens eine Angebotsart und ein Sozialraum.
+            provider: Der Anbieter muss bereits angelegt sein und wird über seinen Namen zugeordnet.
             categories: Kategoriewerte müssen bereits existieren und werden über ihren Namen zugeordnet. Mehrere Werte in einer Zelle trennen Sie durch Kommas.
             dates: Ablaufdatum im Format TT.MM.JJJJ. Breitengrad und Längengrad sind optional.
           rules_outro: Gültige Zeilen werden auch dann angelegt, wenn andere Zeilen fehlerhaft sind. Importierte Angebote sind sofort veröffentlicht und gelten als geprüft. Bilder können nicht importiert werden.
@@ -42,7 +42,7 @@ de:
         template:
           filename: angebote-vorlage
         columns:
-          provider: Träger
+          provider: Anbieter
           title: Titel
           short_description: Kurzbeschreibung
           times: Zeiten
@@ -65,8 +65,8 @@ de:
           unreadable: Die Datei konnte nicht gelesen werden. Bitte laden Sie eine CSV-Datei hoch, zum Beispiel auf Basis der Vorlage.
           missing_columns: "In der Datei fehlen Pflichtspalten: %{columns}."
           too_many_rows: Die Datei enthält mehr als %{max} Zeilen. Bitte teilen Sie sie auf mehrere Dateien auf.
-          unknown_provider: Träger „%{name}“ nicht gefunden.
-          ambiguous_provider: Es gibt mehrere Träger mit dem Namen „%{name}“.
+          unknown_provider: Anbieter „%{name}“ nicht gefunden.
+          ambiguous_provider: Es gibt mehrere Anbieter mit dem Namen „%{name}“.
           unknown_category: "%{kind} „%{name}“ nicht gefunden."
           invalid_date: Ablaufdatum „%{value}“ ist kein gültiges Datum (TT.MM.JJJJ).
           invalid_location: Breitengrad und Längengrad müssen beide als Zahl angegeben werden.
@@ -77,7 +77,7 @@ de:
           offers: Angebote
           imports: Import
           categories: Kategorien
-          providers: Träger
+          providers: Anbieter
           settings: Konfiguration
       settings:
         title: Konfiguration
@@ -94,13 +94,13 @@ de:
             suspended: Ausgeblendet
             deactivated: Deaktiviert
             expired: Abgelaufen
-          page_hint: "Hier sehen Sie alle Angebote der Träger. Angebote werden über das Eingabeformular im öffentlichen Bereich angelegt und sind sofort online. Neue und geänderte Angebote bleiben gekennzeichnet, bis Sie sie als geprüft markieren. Sie können Angebote nach Titel suchen, sortieren, nach Prüfstatus und Sichtbarkeit filtern, ausblenden und löschen."
+          page_hint: "Hier sehen Sie alle Angebote der Anbieter. Angebote werden über das Eingabeformular im öffentlichen Bereich angelegt und sind sofort online. Neue und geänderte Angebote bleiben gekennzeichnet, bis Sie sie als geprüft markieren. Sie können Angebote nach Titel suchen, sortieren, nach Prüfstatus und Sichtbarkeit filtern, ausblenden und löschen."
           total_label:
             one: Angebot
             other: Angebote
           total_hint: Anzahl der Angebote, die den aktuellen Suchkriterien entsprechen
           no_items_title: Keine Angebote vorhanden
-          no_items_description: Sobald Träger Angebote einstellen, erscheinen sie hier.
+          no_items_description: Sobald Anbieter Angebote einstellen, erscheinen sie hier.
           no_results_filtered_title: Keine Treffer
           no_results_filtered_description: Für die Suche wurden keine Angebote gefunden. Passen Sie die Suche an oder setzen Sie sie zurück.
           table:
@@ -131,7 +131,7 @@ de:
         form:
           errors_title: Das Angebot konnte nicht gespeichert werden
           image_label: Bild
-          provider_blank: Kein Träger
+          provider_blank: Kein Anbieter
           no_categories_title: Keine Werte vorhanden
           no_categories_description: Legen Sie zunächst unter „Kategorien" Werte für diese Kategorie an.
           sections:
@@ -141,7 +141,7 @@ de:
             details: Details
             contact: Kontakt
           hints:
-            provider: Optional. Der Träger, zu dem das Angebot gehört. Alle Konten dieses Trägers können das Angebot bearbeiten.
+            provider: Optional. Der Anbieter, zu dem das Angebot gehört. Alle Konten dieses Anbieters können das Angebot bearbeiten.
             title: Kurzer, aussagekräftiger Titel des Angebots.
             short_description: Beschreiben Sie das Angebot in wenigen Sätzen.
             image: Optionales Bild, das auf der Detailseite und in der Übersicht erscheint.
@@ -157,7 +157,7 @@ de:
             costs: Optionale Angaben zu den Kosten des Angebots.
             registration: Ob und wie man sich für das Angebot anmelden muss.
             contact_website: Vollständige Adresse beginnend mit https://
-            expires_on: Optional. Bis zu diesem Tag einschließlich wird das Angebot öffentlich angezeigt. Danach sehen es nur noch der Träger und die Verwaltung.
+            expires_on: Optional. Bis zu diesem Tag einschließlich wird das Angebot öffentlich angezeigt. Danach sehen es nur noch der Anbieter und die Verwaltung.
           placeholders:
             title: z. B. Schwimmkurs für Kinder
             short_description: z. B. Kinder ab 6 Jahren lernen in kleinen Gruppen im Hallenbad schwimmen.
@@ -172,10 +172,10 @@ de:
       categories:
         index:
           title: Kategorien
-          page_hint: "Hier verwalten Sie die Werte der fünf Kategorien, nach denen Angebote eingeordnet und gefiltert werden. Wählen Sie oben die Kategorie aus. Neue Werte stehen sofort im Eingabeformular der Träger zur Auswahl. Per Drag & Drop legen Sie die Reihenfolge fest. Werte, die noch einem Angebot zugeordnet sind, können nicht gelöscht werden."
+          page_hint: "Hier verwalten Sie die Werte der fünf Kategorien, nach denen Angebote eingeordnet und gefiltert werden. Wählen Sie oben die Kategorie aus. Neue Werte stehen sofort im Eingabeformular der Anbieter zur Auswahl. Per Drag & Drop legen Sie die Reihenfolge fest. Werte, die noch einem Angebot zugeordnet sind, können nicht gelöscht werden."
           new_category: Neuer Wert
           no_items_title: Keine Werte vorhanden
-          no_items_description: Legen Sie einen Wert an, damit Träger ihn ihren Angeboten zuordnen können.
+          no_items_description: Legen Sie einen Wert an, damit Anbieter ihn ihren Angeboten zuordnen können.
           table:
             order: Reihenfolge
             name: Name
@@ -197,36 +197,36 @@ de:
           submit: Speichern
       providers:
         index:
-          title: Träger
-          page_hint: "Legt fest, welche Träger mit welchen E-Mail-Adressen Angebote im Modul „Angebote“ einstellen dürfen. Nur Nutzer mit einer hinterlegten Adresse sehen im Frontend die Schaltfläche „Angebot hinzufügen“. Hinterlegen Sie hier alle Träger, die ihre Angebote selbst pflegen sollen."
-          new_provider: Neuer Träger
+          title: Anbieter
+          page_hint: "Legt fest, welche Anbieter mit welchen E-Mail-Adressen Angebote im Modul „Angebote“ einstellen dürfen. Nur Nutzer mit einer hinterlegten Adresse sehen im Frontend die Schaltfläche „Angebot hinzufügen“. Hinterlegen Sie hier alle Anbieter, die ihre Angebote selbst pflegen sollen."
+          new_provider: Neuer Anbieter
           total_label:
-            one: Träger
-            other: Träger
-          total_hint: Anzahl der Träger, die den aktuellen Suchkriterien entsprechen
-          no_items_title: Keine Träger vorhanden
-          no_items_description: Legen Sie einen Träger an, damit dessen Mitarbeitende Angebote einstellen können.
+            one: Anbieter
+            other: Anbieter
+          total_hint: Anzahl der Anbieter, die den aktuellen Suchkriterien entsprechen
+          no_items_title: Keine Anbieter vorhanden
+          no_items_description: Legen Sie einen Anbieter an, damit dessen Mitarbeitende Angebote einstellen können.
           no_results_filtered_title: Keine Treffer
-          no_results_filtered_description: Für die Suche wurden keine Träger gefunden. Passen Sie die Suche an oder setzen Sie sie zurück.
+          no_results_filtered_description: Für die Suche wurden keine Anbieter gefunden. Passen Sie die Suche an oder setzen Sie sie zurück.
           table:
             offers: Angebote
         provider_row:
           addresses_summary: "%{registered} registriert, %{pending} ausstehend"
           no_addresses: Keine
         new:
-          title: Neuer Träger
+          title: Neuer Anbieter
         edit:
-          title: Träger bearbeiten
+          title: Anbieter bearbeiten
         create:
-          success: Der Träger wurde angelegt.
+          success: Der Anbieter wurde angelegt.
         update:
-          success: Der Träger wurde gespeichert.
+          success: Der Anbieter wurde gespeichert.
         destroy:
-          success: Der Träger wurde gelöscht.
-          cannot_destroy: Der Träger kann nicht gelöscht werden, da ihm noch Angebote zugeordnet sind.
+          success: Der Anbieter wurde gelöscht.
+          cannot_destroy: Der Anbieter kann nicht gelöscht werden, da ihm noch Angebote zugeordnet sind.
         form:
           hints:
-            name: Der Name erscheint bei den Angeboten dieses Trägers.
+            name: Der Name erscheint bei den Angeboten dieses Anbieters.
             email_list: Eine E-Mail-Adresse pro Zeile. Adressen von Personen, die noch nicht registriert sind, bleiben gespeichert und gelten automatisch, sobald sich die Person registriert und ihr Konto bestätigt.
           placeholders:
             name: z. B. Jugendzentrum Nord

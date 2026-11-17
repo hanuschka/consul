@@ -29,8 +29,8 @@ de:
         one: "Kategorie"
         other: "Kategorien"
       offer/provider:
-        one: "Träger"
-        other: "Träger"
+        one: "Anbieter"
+        other: "Anbieter"
       activity:
         one: "Aktivität"
         other: "Aktivitäten"
@@ -231,8 +231,8 @@ de:
         contact_email: "E-Mail"
         contact_website: "Website"
         author: "Erstellt von"
-        provider: "Träger"
-        provider_id: "Träger"
+        provider: "Anbieter"
+        provider_id: "Anbieter"
         expires_on: "Ablaufdatum"
       offer/provider:
         name: "Name"

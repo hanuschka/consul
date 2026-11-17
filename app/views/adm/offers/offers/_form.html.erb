@@ -126,16 +126,19 @@
   <summary class="kern-accordion__header"><span class="kern-title"><%= t(".sections.contact") %></span></summary>
   <section class="kern-accordion__body">
     <%= render Kern::FormFieldComponent.new(divider: false, label: Offer.human_attribute_name(:contact_name),
+                                            hint: t(".hints.contact_name"),
                                             form: form, attribute: :contact_name) do %>
       <%= form.text_field :contact_name, label: false, placeholder: t(".placeholders.contact_name") %>
     <% end %>
 
     <%= render Kern::FormFieldComponent.new(divider: false, label: Offer.human_attribute_name(:contact_phone),
+                                            hint: t(".hints.contact_phone"),
                                             form: form, attribute: :contact_phone) do %>
       <%= form.telephone_field :contact_phone, label: false, placeholder: t(".placeholders.contact_phone") %>
     <% end %>
 
     <%= render Kern::FormFieldComponent.new(divider: false, label: Offer.human_attribute_name(:contact_email),
+                                            hint: t(".hints.contact_email"),
                                             form: form, attribute: :contact_email) do %>
       <%= form.email_field :contact_email, label: false, placeholder: t(".placeholders.contact_email") %>
     <% end %>

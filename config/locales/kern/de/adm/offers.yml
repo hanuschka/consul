@@ -15,7 +15,7 @@ de:
           upload_title: CSV-Datei hochladen
           template: Vorlage herunterladen
           file_label: CSV-Datei
-          file_hint: Höchstens %{max}.
+          file_hint: "CSV-Datei mit höchstens %{max}. Sehr große Bestände teilen Sie auf mehrere Dateien auf. Nach dem Import sehen Sie für jede Zeile, ob das Angebot angelegt wurde oder warum nicht. Laden Sie dieselbe Datei nicht ein zweites Mal hoch, sonst werden die Angebote doppelt angelegt."
           submit: Importieren
           result_title: Ergebnis des Imports
           file_errors_title: Die Datei wurde nicht importiert.
@@ -141,23 +141,26 @@ de:
             details: Details
             contact: Kontakt
           hints:
-            provider: Optional. Der Anbieter, zu dem das Angebot gehört. Alle Konten dieses Anbieters können das Angebot bearbeiten.
-            title: Kurzer, aussagekräftiger Titel des Angebots.
-            short_description: Beschreiben Sie das Angebot in wenigen Sätzen.
-            image: Optionales Bild, das auf der Detailseite und in der Übersicht erscheint.
+            provider: "Optional. Legt fest, zu welchem Anbieter das Angebot gehört. Alle Konten dieses Anbieters können das Angebot dann bearbeiten, deaktivieren und wieder aktivieren. Ohne Anbieter kann nur die Verwaltung das Angebot bearbeiten. Anbieter selbst können ein Angebot keinem anderen Anbieter zuordnen."
+            title: "Der Titel erscheint in der Übersicht, auf der Karte und auf der Detailseite und wird bei der Suche berücksichtigt. Wählen Sie eine kurze, verständliche Bezeichnung, an der man ohne weitere Erklärung erkennt, was angeboten wird und für wen."
+            short_description: "Die Kurzbeschreibung erscheint in der Übersicht unter dem Titel und auf der Detailseite. Beschreiben Sie in wenigen Sätzen, was die Teilnehmenden erwartet und was das Angebot ausmacht. Der Text wird bei der Suche berücksichtigt und, sofern die automatische Übersetzung aktiv ist, in die aktivierten Sprachen übersetzt."
+            image: "Optional. Das Bild erscheint in der Übersicht und auf der Detailseite. Ohne Bild wird dort ein Platzhalter angezeigt. Verwenden Sie nur Bilder, für die Nutzungsrechte vorliegen, und holen Sie bei Fotos, auf denen Personen erkennbar sind, deren Einverständnis ein."
             category_kinds:
-              offer_type: Um welche Art von Angebot handelt es sich? Wählen Sie alle passenden Werte aus.
-              target_group: Für wen ist das Angebot gedacht? Wählen Sie alle passenden Werte aus.
-              costs: Fällt für das Angebot ein Beitrag an? Wählen Sie alle passenden Werte aus.
-              accessibility: Welche Merkmale der Barrierefreiheit erfüllt das Angebot?
-              social_area: In welchem Sozialraum findet das Angebot statt? Wählen Sie alle passenden Werte aus.
-            address: Adresse, unter der das Angebot stattfindet.
-            map_location: Optional. Setzen Sie eine Markierung, damit das Angebot auf der Karte erscheint.
-            times: Wann findet das Angebot statt?
-            costs: Optionale Angaben zu den Kosten des Angebots.
-            registration: Ob und wie man sich für das Angebot anmelden muss.
-            contact_website: Vollständige Adresse beginnend mit https://
-            expires_on: Optional. Bis zu diesem Tag einschließlich wird das Angebot öffentlich angezeigt. Danach sehen es nur noch der Anbieter und die Verwaltung.
+              offer_type: "Um welche Art von Angebot handelt es sich? Wählen Sie alle passenden Werte aus, mindestens einen. Besucherinnen und Besucher können die Übersicht nach diesen Werten filtern; ein Angebot mit mehreren Werten erscheint bei jedem davon. Fehlt ein passender Wert, legen Sie ihn unter „Kategorien“ an."
+              target_group: "Für wen ist das Angebot gedacht? Wählen Sie alle Zielgruppen aus, die das Angebot ansprechen soll. Besucherinnen und Besucher können die Übersicht nach Zielgruppen filtern; ein Angebot mit mehreren Zielgruppen erscheint bei jeder davon. Fehlt ein passender Wert, legen Sie ihn unter „Kategorien“ an."
+              costs: "Fällt für das Angebot ein Beitrag an? Wählen Sie die passende Kostenangabe aus, nach der Besucherinnen und Besucher die Übersicht filtern können. Genaue Beträge, Ermäßigungen oder Zahlungswege tragen Sie zusätzlich im Feld „Kosten (Details)“ im Abschnitt „Details“ ein."
+              accessibility: "Welche Merkmale der Barrierefreiheit erfüllt das Angebot? Wählen Sie nur Merkmale aus, die tatsächlich und dauerhaft gegeben sind, denn Menschen mit Einschränkungen verlassen sich auf diese Angaben. Besucherinnen und Besucher können die Übersicht danach filtern. Trifft keines zu, lassen Sie die Auswahl leer."
+              social_area: "In welchem Sozialraum findet das Angebot statt? Wählen Sie mindestens einen Sozialraum aus, bei Angeboten für mehrere Stadtteile auch mehrere. Besucherinnen und Besucher können die Übersicht nach Sozialräumen filtern; das Angebot erscheint dann bei jedem ausgewählten Sozialraum."
+            address: "Optional. Die Adresse, unter der das Angebot stattfindet, mit Straße, Hausnummer und Ort, bei Bedarf ergänzt um Raum oder Eingang. Sie erscheint auf der Detailseite und wird bei der Suche berücksichtigt. Bei reinen Online-Angeboten lassen Sie das Feld leer."
+            map_location: "Optional. Setzen Sie eine Markierung an den Ort, an dem das Angebot stattfindet. Nur Angebote mit Markierung erscheinen auf der Karte der Übersicht; alle anderen stehen nur in der Liste. Bei reinen Online-Angeboten lassen Sie die Karte leer."
+            times: "Optional. Wann findet das Angebot statt? Beschreiben Sie die Zeiten in eigenen Worten, zum Beispiel Wochentage und Uhrzeiten, regelmäßige Termine oder Ausnahmen wie Schulferien und Feiertage. Der Text erscheint auf der Detailseite und wird bei der Suche berücksichtigt."
+            costs: "Optional. Genaue Angaben zu den Kosten, zum Beispiel Beträge, Ermäßigungen, Materialkosten oder Zahlungsweg. Der Text erscheint auf der Detailseite und ergänzt die Kostenangabe, die Sie im Abschnitt „Kategorien“ ausgewählt haben. Ist das Angebot kostenlos, genügt die Auswahl dort."
+            registration: "Optional. Beschreiben Sie, ob eine Anmeldung nötig ist und wie sie funktioniert, zum Beispiel bis wann, auf welchem Weg und bei wem. Ist keine Anmeldung nötig, können Sie das hier ausdrücklich angeben. Der Text erscheint auf der Detailseite."
+            contact_name: "Optional. Die Person oder Stelle, an die sich Interessierte mit Fragen zum Angebot wenden können. Der Name erscheint öffentlich auf der Detailseite im Kasten „Kontakt“ und wird über die offene Schnittstelle ausgegeben. Nennen Sie eine Person nur mit ihrem Einverständnis, sonst eine Funktion wie „Kursleitung“."
+            contact_phone: "Optional. Eine Telefonnummer für Rückfragen, am besten mit Vorwahl. Auf der Detailseite erscheint sie als Link, über den Mobiltelefone direkt anrufen können, und sie wird über die offene Schnittstelle ausgegeben. Verwenden Sie möglichst eine dienstliche Nummer statt einer privaten."
+            contact_email: "Optional. Eine E-Mail-Adresse für Rückfragen. Sie erscheint öffentlich auf der Detailseite als Link, der das E-Mail-Programm öffnet, und wird über die offene Schnittstelle ausgegeben. Verwenden Sie möglichst eine Funktionsadresse statt einer persönlichen. Eine ungültige Adresse meldet das Formular beim Speichern."
+            contact_website: "Optional. Die Internetseite des Angebots oder des Anbieters als vollständige Adresse, beginnend mit https:// oder http://. Sie erscheint auf der Detailseite als Link, der sich in einem neuen Tab öffnet. Fehlt dieser Anfang, meldet das Formular beim Speichern einen Fehler."
+            expires_on: "Optional. Bis zu diesem Tag einschließlich wird das Angebot öffentlich angezeigt. Danach verschwindet es aus Übersicht, Karte, Suche und Schnittstelle und ist nur noch für den Anbieter und die Verwaltung sichtbar. Wird das Datum geändert oder gelöscht, erscheint es wieder, sofern es nicht ausgeblendet oder deaktiviert ist."
           placeholders:
             title: z. B. Schwimmkurs für Kinder
             short_description: z. B. Kinder ab 6 Jahren lernen in kleinen Gruppen im Hallenbad schwimmen.
@@ -193,7 +196,7 @@ de:
         form:
           kind_label: Kategorie
           name_label: Name
-          name_hint: Der Name erscheint im Eingabeformular, als Filter in der Angebotsübersicht und bei jedem Angebot, dem der Wert zugeordnet ist. Wählen Sie einen kurzen, allgemein verständlichen Begriff.
+          name_hint: "Der Name erscheint im Eingabeformular, als Filter in der Angebotsübersicht und bei jedem Angebot, dem der Wert zugeordnet ist. Wählen Sie einen kurzen, allgemein verständlichen Begriff. Eine Umbenennung gilt sofort für alle zugeordneten Angebote. Sofern die automatische Übersetzung aktiv ist, wird der Name in die aktivierten Sprachen übersetzt."
           submit: Speichern
       providers:
         index:
@@ -226,8 +229,8 @@ de:
           cannot_destroy: Der Anbieter kann nicht gelöscht werden, da ihm noch Angebote zugeordnet sind.
         form:
           hints:
-            name: Der Name erscheint bei den Angeboten dieses Anbieters.
-            email_list: Eine E-Mail-Adresse pro Zeile. Adressen von Personen, die noch nicht registriert sind, bleiben gespeichert und gelten automatisch, sobald sich die Person registriert und ihr Konto bestätigt.
+            name: "Der Name kennzeichnet den Anbieter in der Verwaltung, in der Auswahlliste des Eingabeformulars und in der Erinnerungs-E-Mail. Er wird über die offene Schnittstelle ausgegeben und bei der Suche in der Angebotsübersicht berücksichtigt. Beim CSV-Import wird der Anbieter über genau diesen Namen zugeordnet, deshalb sollte er eindeutig sein."
+            email_list: "Eine E-Mail-Adresse pro Zeile. Personen mit diesen Adressen können nach Bestätigung ihres Kontos Angebote für diesen Anbieter einstellen und alle seine Angebote bearbeiten. Adressen von Personen, die noch nicht registriert sind, bleiben gespeichert und gelten automatisch, sobald sich die Person registriert. Wird eine Adresse entfernt, verliert das Konto diese Berechtigung sofort."
           placeholders:
             name: z. B. Jugendzentrum Nord
             email_list: |-

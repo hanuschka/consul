@@ -15,7 +15,7 @@ en:
           upload_title: Upload CSV file
           template: Download template
           file_label: CSV file
-          file_hint: Up to %{max}.
+          file_hint: "CSV file of up to %{max}. Split very large lists into several files. After the import you see for each row whether the offer was created or why not. Do not upload the same file a second time, otherwise the offers are created twice."
           submit: Import
           result_title: Import result
           file_errors_title: The file was not imported.
@@ -141,23 +141,26 @@ en:
             details: Details
             contact: Contact
           hints:
-            provider: Optional. The provider this offer belongs to. All accounts of this provider can edit the offer.
-            title: Short, meaningful title of the offer.
-            short_description: Describe the offer in a few sentences.
-            image: Optional image shown on the detail page and in the overview.
+            provider: "Optional. Sets the provider this offer belongs to. All accounts of this provider can then edit, deactivate and reactivate the offer. Without a provider, only administrators can edit the offer. Providers themselves cannot assign an offer to another provider."
+            title: "The title appears in the overview, on the map and on the detail page, and is included in the search. Choose a short, clear name that shows without further explanation what is offered and for whom."
+            short_description: "The short description appears in the overview below the title and on the detail page. Describe in a few sentences what participants can expect and what makes the offer special. The text is included in the search and, if automatic translation is active, translated into the enabled languages."
+            image: "Optional. The image appears in the overview and on the detail page. Without an image, a placeholder is shown there. Only use images you have the rights to, and get the consent of anyone recognisable in a photo."
             category_kinds:
-              offer_type: What kind of offer is it? Select all matching values.
-              target_group: Who is the offer for? Select all matching values.
-              costs: Is there a fee for the offer? Select all matching values.
-              accessibility: Which accessibility features does the offer provide?
-              social_area: In which social area does the offer take place? Select all matching values.
-            address: Address where the offer takes place.
-            map_location: Optional. Set a marker so the offer appears on the map.
-            times: When does the offer take place?
-            costs: Optional details on the costs of the offer.
-            registration: Whether and how to register for the offer.
-            contact_website: Full address starting with https://
-            expires_on: Optional. The offer is shown publicly up to and including this day. After that, only the provider and administrators can see it.
+              offer_type: "What kind of offer is it? Select all matching values, at least one. Visitors can filter the overview by these values; an offer with several values appears under each of them. If a matching value is missing, add it under \"Categories\"."
+              target_group: "Who is the offer for? Select all target groups the offer is meant to reach. Visitors can filter the overview by target group; an offer with several target groups appears under each of them. If a matching value is missing, add it under \"Categories\"."
+              costs: "Is there a fee for the offer? Select the matching cost option, which visitors can use to filter the overview. Enter exact amounts, reductions or payment methods in the \"Costs (details)\" field in the \"Details\" section as well."
+              accessibility: "Which accessibility features does the offer provide? Only select features that are actually and permanently in place, because people with disabilities rely on this information. Visitors can filter the overview by them. If none applies, leave the selection empty."
+              social_area: "In which social area does the offer take place? Select at least one social area, or several for offers covering more than one district. Visitors can filter the overview by social area; the offer then appears under each selected one."
+            address: "Optional. The address where the offer takes place, with street, house number and town, plus room or entrance if needed. It appears on the detail page and is included in the search. Leave it empty for online-only offers."
+            map_location: "Optional. Set a marker at the place where the offer takes place. Only offers with a marker appear on the overview map; all others are only listed. Leave the map empty for online-only offers."
+            times: "Optional. When does the offer take place? Describe the times in your own words, for example weekdays and hours, regular dates or exceptions such as school holidays and public holidays. The text appears on the detail page and is included in the search."
+            costs: "Optional. Exact details on the costs, for example amounts, reductions, material costs or payment method. The text appears on the detail page and adds to the cost option selected in the \"Categories\" section. If the offer is free, the selection there is enough."
+            registration: "Optional. Describe whether registration is required and how it works, for example by when, how and with whom. If no registration is needed, you can say so explicitly here. The text appears on the detail page."
+            contact_name: "Optional. The person or office people can contact with questions about the offer. The name appears publicly on the detail page in the \"Contact\" box and is delivered through the open API. Only name a person with their consent; otherwise use a role such as \"Course leader\"."
+            contact_phone: "Optional. A phone number for questions, ideally with area code. On the detail page it appears as a link that lets mobile phones call directly, and it is delivered through the open API. Use a work number rather than a private one where possible."
+            contact_email: "Optional. An email address for questions. It appears publicly on the detail page as a link that opens the email program, and is delivered through the open API. Use a shared office address rather than a personal one where possible. The form reports an invalid address when saving."
+            contact_website: "Optional. The website of the offer or the provider as a full address starting with https:// or http://. It appears on the detail page as a link that opens in a new tab. Without this prefix, the form shows an error when saving."
+            expires_on: "Optional. The offer is shown publicly up to and including this day. After that it disappears from the overview, map, search and API, and only the provider and administrators can see it. If the date is changed or removed, it appears again unless it is hidden or deactivated."
           placeholders:
             title: e.g. Swimming course for children
             short_description: e.g. Children aged 6 and over learn to swim in small groups at the indoor pool.
@@ -193,7 +196,7 @@ en:
         form:
           kind_label: Category
           name_label: Name
-          name_hint: The name appears in the entry form, as a filter in the offers overview and on every offer it is assigned to. Use a short, generally understandable term.
+          name_hint: "The name appears in the entry form, as a filter in the offers overview and on every offer it is assigned to. Use a short, generally understandable term. Renaming applies immediately to all assigned offers. If automatic translation is active, the name is translated into the enabled languages."
           submit: Save
       providers:
         index:
@@ -226,8 +229,8 @@ en:
           cannot_destroy: The provider cannot be deleted because offers are still assigned to it.
         form:
           hints:
-            name: The name appears on this provider's offers.
-            email_list: One e-mail address per line. Addresses of people who have not registered yet are kept and apply automatically once they register and confirm their account.
+            name: "The name identifies the provider in the administration, in the selection list of the entry form and in the reminder email. It is delivered through the open API and included in the search of the offers overview. The CSV import assigns the provider by exactly this name, so it should be unique."
+            email_list: "One email address per line. People with these addresses can add offers for this provider and edit all of its offers once their account is confirmed. Addresses of people who have not registered yet are kept and apply automatically once they register. Removing an address withdraws the permission from that account immediately."
           placeholders:
             name: e.g. Youth centre North
             email_list: |-

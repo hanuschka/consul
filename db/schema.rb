@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_11_090245) do
+ActiveRecord::Schema.define(version: 2026_11_17_145450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3803,6 +3803,7 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.string "company_name"
     t.bigint "brevo_contact_id"
     t.datetime "brevo_synced_at"
+    t.datetime "welcome_email_sent_at"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["brevo_contact_id"], name: "index_users_on_brevo_contact_id", unique: true, where: "(brevo_contact_id IS NOT NULL)"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"

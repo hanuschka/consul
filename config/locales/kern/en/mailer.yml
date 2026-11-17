@@ -72,7 +72,7 @@ en:
       description: Sent to invited people to invite them to register on the platform.
     welcome:
       title: Welcome email
-      description: Sent once to newly registered users as soon as their email address is confirmed or they first sign in with BundID or another login service.
+      description: "Sent once to every new user account: after the email address is confirmed, on the first sign-in with BundID or another login service, after registering via a role invitation, or once an account created by staff is activated."
       recipient: The newly registered user.
     pending_role_invite:
       title: Role invitation

@@ -428,7 +428,9 @@ User.class_eval do
   end
 
   def send_welcome_email
-    Mailer.welcome(self).deliver_later if Setting["email_templates.welcome_email"].present?
+    return if User.where(id: id, welcome_email_sent_at: nil).update_all(welcome_email_sent_at: Time.current).zero?
+
+    Mailer.welcome(self).deliver_later
   end
 
   private

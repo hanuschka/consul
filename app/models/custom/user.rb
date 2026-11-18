@@ -12,6 +12,15 @@ User.class_eval do
     created_at: "created_at", verified_at: "verified_at" }.freeze
 
   User::RECIPIENT_GREETING_OPTIONS = %w[username first_name full_name formal].freeze
+  User::ERASED_PERSONAL_DATA = %i[
+    first_name last_name date_of_birth gender street_name street_number street_number_extension
+    house_number plz city_name location registered_address_id city_street_id bam_street_id geozone_id
+    document_type document_last_digits current_sign_in_ip last_sign_in_ip guest_user_agent oauth_email
+    company_name official_position keycloak_link keycloak_id_token auth_image_link temporary_auth_token
+    temporary_auth_token_valid_until letter_verification_code bam_letter_verification_code
+    bam_letter_verification_code_sent_at bam_unique_stamp brevo_contact_id redeemable_code
+    sms_confirmation_code verified_at
+  ].index_with(nil).freeze
 
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
@@ -229,7 +238,7 @@ User.class_eval do
     return if erased?
     return if unique_stamp.blank?
 
-    erased_user = User.erased.find_by(unique_stamp: unique_stamp)
+    erased_user = User.erased.find_by(unique_stamp: User.erased_identifier(unique_stamp))
 
     if erased_user.present?
       take_votes_from(erased_user)
@@ -239,6 +248,26 @@ User.class_eval do
 
   def stamp_unique?
     User.where.not(id: id).find_by(unique_stamp: prepare_unique_stamp).blank?
+  end
+
+  def self.erased_identifier(value)
+    return if value.blank?
+
+    secret = Rails.application.secret_key_base
+    OpenSSL::HMAC.hexdigest("SHA256", secret, "erased user identifier:#{value}").upcase
+  end
+
+  def self.erased_document_identifier(document_number, document_type)
+    return if document_number.blank?
+
+    erased_identifier("#{document_type}:#{document_number}")
+  end
+
+  def erased_identity_digests
+    {
+      unique_stamp: User.erased_identifier(unique_stamp.presence || prepare_unique_stamp),
+      document_number: User.erased_document_identifier(document_number, document_type)
+    }
   end
 
   def prepare_unique_stamp
@@ -515,6 +544,30 @@ User.class_eval do
 
     def remove_audits
       audits.destroy_all
+    end
+
+    def remove_personal_records
+      FailedCensusCall.where(user_id: id).delete_all
+      Poll::Voter.where(user_id: id).update_all(document_number: nil, gender: nil)
+      Signature.where(user_id: id).update_all(document_number: nil, date_of_birth: nil, postal_code: nil)
+      ProjektEventRegistration.where(user_id: id).update_all(first_name: nil, last_name: nil, email: nil)
+      SectionContactPerson.where(user_id: id).destroy_all
+      GraphqlUser.where(user_id: id).delete_all
+      Audit.where(user_type: "User", user_id: id).update_all(remote_address: nil)
+      remove_formular_answer_contact_data
+      return unless User.connection.table_exists?(:visits)
+
+      User.connection.delete(User.sanitize_sql(["DELETE FROM visits WHERE user_id = ?", id]))
+    end
+
+    def remove_formular_answer_contact_data
+      formular_answers = FormularAnswer.where(submitter_id: id)
+      FormularFollowUpLetterRecipient.where(formular_answer_id: formular_answers.select(:id)).delete_all
+
+      formular_answers.includes(formular: :formular_fields).find_each do |answer|
+        email_keys = answer.formular_fields.select { |field| field.kind == "email" }.map(&:key)
+        answer.update_columns(original_submitter_email: nil, answers: answer.answers.except(*email_keys))
+      end
     end
 
     def remove_subscriptions

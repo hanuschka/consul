@@ -25,7 +25,7 @@ module Offers
         Globalize.with_locale(I18n.default_locale) do
           "\uFEFF" + CSV.generate(col_sep: ";") do |csv|
             csv << headers
-            @offers.each { |offer| csv << row(offer) }
+            @offers.each { |offer| csv << row(offer).map { |value| guard_formula(value) } }
           end
         end
       end
@@ -78,6 +78,10 @@ module Offers
           .select { |_, active| active }
           .map { |state, _| I18n.t("adm.offers.offers.index.visibility.#{state}") }
           .join(", ")
+      end
+
+      def guard_formula(value)
+        value.is_a?(String) && value.match?(CsvImport::FORMULA_START) ? "'#{value}" : value
       end
 
       def decimal(value)

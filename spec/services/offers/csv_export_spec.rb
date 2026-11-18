@@ -48,6 +48,18 @@ describe Offers::CsvExport do
     expect(row.fields.last).to eq I18n.t("adm.offers.offers.index.visibility.suspended", locale: I18n.default_locale)
   end
 
+  it "writes values that start like a spreadsheet formula as text" do
+    offer = create(:offer, title: '=HYPERLINK("https://example.org","Klick")',
+                           contact_phone: "+49 3641 123456", provider: provider,
+                           categories: [offer_type, north])
+
+    row = parse(described_class.call(Offer.where(id: offer.id))).first
+
+    expect(row[column(:title)]).to eq %('=HYPERLINK("https://example.org","Klick"))
+    expect(row[column(:contact_phone)]).to eq "'+49 3641 123456"
+    expect(row[column(:provider)]).to eq "Sportverein Nord"
+  end
+
   it "produces a file the import reads back as a new offer once the ID column is removed" do
     original = create_full_offer
     table = parse(described_class.call(Offer.where(id: original.id)))
@@ -84,6 +96,19 @@ describe Offers::CsvExport do
       expect(result.rows.map(&:status)).to eq [:unchanged]
       expect(Offer.count).to eq 1
       expect(original.reload.updated_at).to be < 1.day.ago
+    end
+
+    it "reads values written as text back without the leading apostrophe" do
+      original = create(:offer, title: '=HYPERLINK("https://example.org","Klick")',
+                                contact_phone: "+49 3641 123456", provider: provider,
+                                categories: [offer_type, north])
+      original.update_columns(updated_at: 2.days.ago)
+
+      result = Offers::CsvImport.call(edited_export(Offer.all), author: admin)
+
+      expect(result.rows.map(&:status)).to eq [:unchanged]
+      expect(original.reload.title).to eq '=HYPERLINK("https://example.org","Klick")'
+      expect(original.contact_phone).to eq "+49 3641 123456"
     end
 
     it "updates the offer of a row with its ID" do

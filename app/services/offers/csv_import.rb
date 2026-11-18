@@ -15,6 +15,7 @@ module Offers
     TEXT_ATTRIBUTES = %i[address contact_name contact_phone contact_email contact_website].freeze
     TRANSLATED_ATTRIBUTES = %i[title times costs registration].freeze
     VALUE_SEPARATOR = ",".freeze
+    FORMULA_START = /\A[=+\-@]/
     MAX_ROWS = 500
     MAP_ZOOM = 15
 
@@ -100,8 +101,13 @@ module Offers
       def normalized(row)
         row.each_with_object({}) do |(header, value), values|
           key = header_keys[normalize_header(header)]
-          values[key] = value.to_s.strip if key
+          values[key] = without_formula_guard(value.to_s.strip) if key
         end
+      end
+
+      def without_formula_guard(value)
+        unguarded = value.delete_prefix("'")
+        unguarded.match?(FORMULA_START) ? unguarded : value
       end
 
       def import_row(values, line)

@@ -4,7 +4,7 @@ describe User, "#erase" do
   let(:personal_data) do
     {
       first_name: "Lena", last_name: "Vogt", date_of_birth: Date.new(1990, 5, 1), gender: "female",
-      street_name: "Marienplatz", street_number: "1", house_number: "1a", plz: 80331, city_name: "München",
+      street_name: "Marienplatz", street_number: "1", plz: 80331, city_name: "München",
       document_type: "1", document_number: "12345678Z", document_last_digits: "678Z",
       current_sign_in_ip: "203.0.113.7", last_sign_in_ip: "203.0.113.8", guest_user_agent: "Firefox",
       oauth_email: "lena@example.org", company_name: "Vogt GmbH", official_position: "Stadträtin"

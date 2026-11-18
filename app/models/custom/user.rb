@@ -14,11 +14,10 @@ User.class_eval do
   User::RECIPIENT_GREETING_OPTIONS = %w[username first_name full_name formal].freeze
   User::ERASED_PERSONAL_DATA = %i[
     first_name last_name date_of_birth gender street_name street_number street_number_extension
-    house_number plz city_name location registered_address_id city_street_id bam_street_id geozone_id
+    plz city_name registered_address_id city_street_id geozone_id
     document_type document_last_digits current_sign_in_ip last_sign_in_ip guest_user_agent oauth_email
-    company_name official_position keycloak_link keycloak_id_token auth_image_link temporary_auth_token
-    temporary_auth_token_valid_until letter_verification_code bam_letter_verification_code
-    bam_letter_verification_code_sent_at bam_unique_stamp brevo_contact_id redeemable_code
+    company_name official_position auth_image_link temporary_auth_token
+    temporary_auth_token_valid_until letter_verification_code redeemable_code
     sms_confirmation_code verified_at
   ].index_with(nil).freeze
 

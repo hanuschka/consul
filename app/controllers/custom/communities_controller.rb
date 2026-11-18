@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "communities_controller").to_s
+load Rails.root.join("app", "controllers", "communities_controller.rb")
 
 class CommunitiesController < ApplicationController
   def show

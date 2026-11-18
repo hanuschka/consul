@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "budgets", "ballot", "investment_component").to_s
+load Rails.root.join("app", "components", "budgets", "ballot", "investment_component.rb")
 
 class Budgets::Ballot::InvestmentComponent < ApplicationComponent
   delegate :current_user, to: :helpers

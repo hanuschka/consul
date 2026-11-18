@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "admin", "settings_controller").to_s
+load Rails.root.join("app", "controllers", "admin", "settings_controller.rb")
 
 class Admin::SettingsController < Admin::BaseController
   def index

@@ -109,6 +109,9 @@ en:
           attributes:
             password:
               low_complexity: "must include minimum three of the following four cretiria: uppercase letter lower, case letter, digit, special symbol (e.g. ! or @)"
+            terms_data_protection:
+              format: "%{message}"
+              accepted: The Privacy Policy must be acknowledged
         unregistered_newsletter_subscriber:
           attributes:
             email:
@@ -313,3 +316,12 @@ en:
         icon: Icon
         color: Farbe
         icon_image: Category icon
+  attributes:
+    resource_terms: The General Terms of Use and the Privacy Policy
+    terms_data_protection: The Privacy Policy
+  errors:
+    attributes:
+      resource_terms:
+        accepted: must be confirmed
+      terms_data_protection:
+        accepted: must be acknowledged

@@ -59,7 +59,6 @@ module CommentableActions
     @resource.author = current_user
 
     if @resource.save
-      track_event
       redirect_path = url_for(controller: controller_name, action: :show, id: @resource.id)
       redirect_to redirect_path, notice: t("flash.actions.create.#{resource_name.underscore}")
     else
@@ -88,10 +87,6 @@ module CommentableActions
   end
 
   private
-
-    def track_event
-      ahoy.track "#{resource_name}_created".to_sym, "#{resource_name}_id": resource.id
-    end
 
     def tag_cloud
       TagCloud.new(resource_model, params[:tags])

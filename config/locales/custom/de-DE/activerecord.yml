@@ -9,7 +9,8 @@ de:
     title: Titel
     description: Beschreibung
     related_sdg_list: Ziele und Unterziele
-    resource_terms: Die AGB und die Datenschutzbestimmung
+    resource_terms: Die AGB und die Datenschutzerklärung
+    terms_data_protection: Die Datenschutzerklärung
   activerecord:
     models:
       municipal_plan:
@@ -610,6 +611,7 @@ de:
         access_level: Zugriffsstufe
         auth_token: Authentifizierungstoken
         service_api_token: Service-API-Token
+        instance_configuration_access: Zugriff auf Instanz-Konfiguration
     errors:
       models:
         municipal_plan:
@@ -634,7 +636,7 @@ de:
               accepted: "Die Bedingungen zur Datenspeicherung müssen akzeptiert werden"
             terms_data_protection:
               format: "%{message}"
-              accepted: "Die Datenschutzvereinbarung muss akzeptiert werden"
+              accepted: "Die Datenschutzerklärung muss zur Kenntnis genommen werden"
             terms_general:
               format: "%{message}"
               accepted: "Die Allgemeinen Nutzungsbedingungen müssen akzeptiert werden"
@@ -683,6 +685,8 @@ de:
           attributes:
             domain:
               uniqueness: wird bereits verwendet
+            instance_configuration_access:
+              requires_admin_access_level: kann nur für API-Clients mit Admin-Zugriff aktiviert werden
         proposal:
           attributes:
             tag_list:

@@ -36,7 +36,7 @@ class DeficiencyReport::Status < ApplicationRecord
   end
 
   def safe_to_destroy?
-    !deficiency_reports.exists?
+    !deficiency_reports.with_deleted.exists?
   end
 
   def self.order_statuses(ordered_array)
@@ -45,5 +45,5 @@ class DeficiencyReport::Status < ApplicationRecord
     end
   end
 
-  alias_attribute :name, :title
+  alias_method :name, :title
 end

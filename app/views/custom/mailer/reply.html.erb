@@ -4,13 +4,13 @@
   </h1>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
-    <%= t("mailers.reply.hi", username: @reply.parent.author.username) %>
+    <%= @reply.parent.author.recipient_greeting %>,
   </p>
 
   <p style="font-family: 'Open Sans','Helvetica Neue',arial,sans-serif;font-size: 14px;font-weight: normal;line-height: 24px;">
     <%= sanitize(
       t("mailers.reply.text",
-        comment_link: link_to(t("mailers.reply.comment_link_text"),
+        comment_url: link_to(t("mailers.reply.comment_link_text"),
                               comment_url(@reply))
        ),
        attributes: %w[href]

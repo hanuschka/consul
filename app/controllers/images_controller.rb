@@ -11,7 +11,7 @@ class ImagesController < ApplicationController
         else
           flash[:alert] = t "images.actions.destroy.alert"
         end
-        redirect_to request.referer
+        redirect_back(fallback_location: root_path)
       end
       format.js do
         if @image.destroy

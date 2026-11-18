@@ -8,7 +8,8 @@ module Schemas
         id: { type: :integer, description: 'Unique identifier for the idea', example: 1 },
         title: { type: :string, description: 'The title or headline of the idea', example: 'Improve Public Parks' },
         description: { type: :string, nullable: true, description: 'Detailed description of the idea and its benefits', example: 'Upgrade existing parks with new equipment and maintenance' },
-        author_id: { type: :integer, nullable: true, description: 'ID of the user who created the idea', example: 42 },
+        author_id: { type: :integer, nullable: true, description: 'ID of the user who created the idea. Only returned to admin clients.', example: 42 },
+        author: { '$ref' => '#/components/schemas/Author' },
         admin_accepted_at: { type: :string, format: :date_time, nullable: true, description: 'Timestamp when an admin approved the idea. Null if pending or rejected.', example: '2024-01-15T10:30:00Z' },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the idea was created', example: '2024-01-10T08:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the idea was last modified', example: '2024-01-15T14:22:00Z' },
@@ -42,6 +43,15 @@ module Schemas
       properties: {
         id: { type: :integer, description: 'Unique identifier for the idea category', example: 1 },
         name: { type: :string, description: 'The name of the category', example: 'Infrastructure' },
+        default_idea_officer: {
+          type: :object,
+          nullable: true,
+          description: 'Officer new ideas in this category are assigned to. Staff email addresses are never returned.',
+          properties: {
+            id: { type: :integer, description: 'Officer ID' },
+            name: { type: :string, description: 'Officer name. Only returned to admin clients.' }
+          }
+        },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the category was created', example: '2024-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the category was last modified', example: '2024-01-01T00:00:00Z' }
       },
@@ -52,12 +62,13 @@ module Schemas
       type: :object,
       properties: {
         id: { type: :integer, description: 'Unique identifier for the idea officer', example: 1 },
-        name: { type: :string, description: 'The name of the idea officer or manager', example: 'John Smith' },
-        email: { type: :string, nullable: true, description: 'The email address of the officer', example: 'john.smith@example.com' },
+        user_id: { type: :integer, description: 'ID of the officer user account. Only returned to admin clients.', example: 7 },
+        name: { type: :string, description: 'The name of the idea officer or manager. Only returned to admin clients. Staff email addresses are never returned.', example: 'John Smith' },
+        ideas_count: { type: :integer, description: 'Number of ideas assigned to the officer', example: 4 },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the officer record was created', example: '2024-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the officer record was last modified', example: '2024-01-01T00:00:00Z' }
       },
-      required: %w[id name created_at updated_at]
+      required: %w[id ideas_count created_at updated_at]
     }.freeze
 
     def self.all

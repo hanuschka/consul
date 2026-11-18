@@ -145,7 +145,11 @@ module Abilities
         # can :create, DirectMessage
         # can :show, DirectMessage, sender_id: user.id
       end
-      can :create, DirectMessage
+
+      if user.may_send_direct_messages?
+        can :create, DirectMessage
+      end
+
       can :show, DirectMessage, sender_id: user.id
 
       can [:create, :show, :edit, :update, :destroy], ProposalNotification, proposal: { author_id: user.id }
@@ -170,8 +174,7 @@ module Abilities
       can deficiency_report_read_actions, DeficiencyReport, author_id: user.id
       can [:create], DeficiencyReport if DeficiencyReport.submissions_open?
       can :destroy, DeficiencyReport do |dr|
-        dr.author_id == user.id &&
-          dr.official_answer.blank?
+        dr.author_id == user.id && !dr.answered?
       end
 
       can :create, Budget::Investment do |investment|

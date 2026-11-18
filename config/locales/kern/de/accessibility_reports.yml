@@ -1,0 +1,35 @@
+de:
+  activemodel:
+    models:
+      accessibility_report: Barrieremeldung
+    attributes:
+      accessibility_report:
+        location: Seite oder Funktion
+        description: Beschreibung der Barriere
+        assistive_technology: Verwendete Hilfstechnologie
+        email: E-Mail-Adresse für eine Rückmeldung
+  accessibility_reports:
+    create:
+      success: Vielen Dank! Ihre Meldung wurde übermittelt.
+    form:
+      error_title: Bitte prüfen Sie Ihre Angaben
+      location: Seite oder Funktion (optional)
+      location_hint: Wo ist Ihnen die Barriere begegnet? Zum Beispiel die Adresse der Seite oder der Name der Funktion.
+      description: Beschreibung der Barriere (Pflichtfeld)
+      description_hint: Beschreiben Sie, was nicht funktioniert hat. Bitte machen Sie keine Angaben zu Ihrer Person oder Gesundheit, die für die Meldung nicht nötig sind. Höchstens %{max} Zeichen.
+      assistive_technology: Verwendete Hilfstechnologie (optional)
+      assistive_technology_hint: Zum Beispiel Screenreader, Bildschirmlupe oder Sprachsteuerung.
+      email: E-Mail-Adresse für eine Rückmeldung (optional)
+      email_hint: Sie erhalten eine Eingangsbestätigung. Wir verwenden Ihre E-Mail-Adresse nur, um Ihre Meldung zu beantworten.
+      submit: Meldung absenden
+    accessibility_link:
+      title: Feedback und Kontakt
+      text_html: "Ist Ihnen auf dieser Website eine Barriere aufgefallen? Teilen Sie es uns über das Formular %{link} mit."
+  accessibility_report_mailer:
+    report_submitted:
+      subject: Neue Barrieremeldung
+      body: über das Formular „Barriere melden“ wurde eine neue Meldung eingereicht.
+      not_given: keine Angabe
+    confirmation:
+      subject: Ihre Barrieremeldung ist eingegangen
+      body: vielen Dank für Ihre Meldung. Wir haben sie erhalten und melden uns bei Ihnen, sobald wir sie geprüft haben.

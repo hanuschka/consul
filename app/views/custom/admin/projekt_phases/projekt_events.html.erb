@@ -44,10 +44,10 @@
                   (<%= t("custom.admin.projekt_phases.projekt_events.open_ended") %>)
                 <% end %>
               </p>
-              <% if event.weblink.present? %>
+              <% if event.weblink_url.present? %>
                 <p>
                   <strong><%= t("custom.admin.projekt_phases.projekt_events.event_weblink") %>:</strong>
-                  <%= link_to(event.weblink, event.weblink) %>
+                  <%= link_to(event.weblink_url, event.weblink_url) %>
                 </p>
               <% end %>
               <% if event.description.present? %>

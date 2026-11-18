@@ -98,7 +98,10 @@ module CustomHelper
     doc = Nokogiri::HTML::DocumentFragment.parse(content)
 
     doc.css("iframe").each do |iframe|
-      iframe["data-src"] = iframe["src"]
+      if iframe["src"].present?
+        iframe["data-src"] = iframe["src"]
+      end
+
       iframe["src"] = ""
     end
 

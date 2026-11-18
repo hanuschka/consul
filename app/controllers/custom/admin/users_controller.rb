@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "admin", "users_controller").to_s
+load Rails.root.join("app", "controllers", "admin", "users_controller.rb")
 
 class Admin::UsersController < Admin::BaseController
   include HasRegisteredAddress

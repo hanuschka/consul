@@ -9,6 +9,8 @@ module Schemas
         title: { type: :string, description: 'The question text or title', example: 'Which infrastructure improvement is most important?' },
         description: { type: :string, nullable: true, description: 'Additional context or description for the question', example: 'Help us prioritize improvements' },
         projekt_phase_id: { type: :integer, nullable: true, description: 'ID of the projekt phase this question belongs to', example: 8 },
+        author_id: { type: :integer, nullable: true, description: 'ID of the user who asked the question. Only returned to admin clients.', example: 15 },
+        author: { '$ref' => '#/components/schemas/Author' },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the question was created', example: '2024-01-10T09:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the question was last modified', example: '2024-01-15T11:00:00Z' },
         question_options: {

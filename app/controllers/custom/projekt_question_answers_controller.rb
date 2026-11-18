@@ -34,7 +34,7 @@ class ProjektQuestionAnswersController < ApplicationController
       @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
       set_comment_flags(@comment_tree.comments)
 
-      render "custom/projekt_questions/show.js.erb", format: :js
+      render "custom/projekt_questions/show", formats: [:js]
     end
   end
 
@@ -58,7 +58,7 @@ class ProjektQuestionAnswersController < ApplicationController
       @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
       set_comment_flags(@comment_tree.comments)
 
-      render "custom/projekt_questions/show.js.erb"
+      render "custom/projekt_questions/show", formats: [:js]
     end
   end
 

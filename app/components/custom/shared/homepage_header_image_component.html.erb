@@ -1,0 +1,8 @@
+<picture>
+  <%= tag.source media: MOBILE_MEDIA, srcset: mobile_srcset, sizes: mobile_sizes %>
+  <% if desktop_attachment %>
+    <%= tag.img class: "homepage-image-header--image", src: desktop_src, srcset: desktop_srcset, sizes: desktop_sizes, alt: "" %>
+  <% else %>
+    <%= tag.img class: "homepage-image-header--image", src: TRANSPARENT_PIXEL, alt: "" %>
+  <% end %>
+</picture>

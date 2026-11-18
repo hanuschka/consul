@@ -26,7 +26,7 @@ class QuestionOptionSerializer < BaseSerializer
       }
     end
 
-    option_data[:answers_count] = question_option.answers.count if question_option.respond_to?(:answers)
+    option_data[:answers_count] = question_option.answers_count
 
     option_data
   end

@@ -70,9 +70,9 @@ class Shared::NewCommentsComponent < ApplicationComponent
 
   def pagination_links
     if params[:projekt_phase_id].present?
-      paginate comment_tree.root_comments.where(hidden_at: nil), params: { action: "projekt_phase_footer_tab", scroll_to: "new_comments_component" }, remote: true
+      helpers.paginate comment_tree.root_comments.where(hidden_at: nil), params: { action: "projekt_phase_footer_tab", scroll_to: "new_comments_component" }, remote: true
     else
-      paginate comment_tree.root_comments.where(hidden_at: nil), params: { anchor: "comments" }, remote: @force_remote
+      helpers.paginate comment_tree.root_comments.where(hidden_at: nil), params: { anchor: "comments" }, remote: @force_remote
     end
   end
 end

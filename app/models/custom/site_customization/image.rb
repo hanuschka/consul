@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "site_customization", "image").to_s
+load Rails.root.join("app", "models", "site_customization", "image.rb")
 
 SiteCustomization::Image.class_eval do
   after_save { Current.site_customization_images = nil }

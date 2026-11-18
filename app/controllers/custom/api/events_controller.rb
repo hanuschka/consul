@@ -8,10 +8,8 @@ class Api::EventsController < Api::BaseController
     check_read_access!
 
     if @projekt_phase.present?
-      if current_client.public_data?
-        unless @projekt_phase.frontend_visibility && @projekt_phase.active?
-          return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
-        end
+      if phase_hidden_from_client?(@projekt_phase)
+        raise ForbiddenError, "Access denied"
       end
 
       events = @projekt_phase.projekt_events
@@ -20,9 +18,7 @@ class Api::EventsController < Api::BaseController
       events = ProjektEvent.includes(:projekt_phase, projekt_phase: :projekt)
 
       if current_client.public_data?
-        events = events.joins(:projekt_phase)
-          .where(projekt_phases: { frontend_visibility: true, active: true })
-          .distinct
+        events = restrict_to_public_phases(events)
       end
     end
 
@@ -49,7 +45,7 @@ class Api::EventsController < Api::BaseController
     else
       render json: { error: { messages: projekt_event.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -72,7 +68,7 @@ class Api::EventsController < Api::BaseController
     else
       render json: { error: { messages: @projekt_event.errors.full_messages } }, status: 422
     end
-  rescue ForbiddenError, UnauthorizedError
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue StandardError => e
     render json: { error: { messages: [e.message] } }, status: 422

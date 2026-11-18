@@ -10,7 +10,7 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
     respond_to do |format|
       format.html do
         @breadcrumbs = [
-          { name: @projekt_phase.projekt.name, url: details_adm_projekts_projekt_path(@projekt_phase.projekt) },
+          { name: @projekt_phase.projekt.name, url: phases_adm_projekts_projekt_path(@projekt_phase.projekt) },
           { name: @projekt_phase.title, url: proposals_adm_projekts_phase_path(@projekt_phase) },
           { name: @proposal.title }
         ]
@@ -78,7 +78,7 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
   end
 
   def update_official_answer
-    authorize [:adm, @proposal], :update?
+    authorize [:adm, @proposal], :update_official_answer?
 
     if @proposal.update(proposal_params)
       flash.now[:success] = t(".success")
@@ -92,7 +92,8 @@ class Adm::Projekts::ProposalsController < Adm::Projekts::BaseController
         :rich_text,
         path: update_official_answer_adm_projekts_phase_proposal_path(@projekt_phase, @proposal),
         label: t(".official_answer"),
-        description: t(".official_answer_hint")
+        description: t(".official_answer_hint"),
+        policy_action: :update_official_answer?
       )
     )
   end

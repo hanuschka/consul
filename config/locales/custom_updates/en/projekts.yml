@@ -61,8 +61,8 @@ en:
         index_order_upcoming_title: 'The "Future project plans" tab lists participation projects that will only take place in the future.'
         index_order_individual_list: "Individual list"
         index_order_individual_list_title: "Individual list"
-        index_order_drafts: "Entwürfe"
-        index_order_drafts_title: "Entwürfe"
+        index_order_drafts: "Drafts"
+        index_order_drafts_title: "Drafts"
       search_form:
         placeholder: Search...
       homepage_search_form:
@@ -89,6 +89,36 @@ en:
           clear: Reset
           order_error: The end must not be before the start.
           save_error: The period could not be saved. Please try again.
+        content_block_youtube_popup:
+          add_link: Add YouTube link
+          description: Paste the link to a YouTube video. Links from the address bar, share links (youtu.be), Shorts and embed links all work; a start time in the link is kept.
+          edit_link: Edit YouTube link
+          invalid_url: This is not a valid YouTube link. Please copy the link straight from YouTube.
+          placeholder: https://www.youtube.com/watch?v=…
+          url_label: YouTube link
+        content_block_progress_bar:
+          slider_label: Progress in percent
+          color_button: Bar color
+        studio_color_picker:
+          presets_title: Palette
+          recent_title: Recently used
+          custom_title: Custom color
+          native_label: Choose any color
+          hex_label: Color as hex code
+          apply: Apply
+          hex_error: "Please enter a color value such as #1a2e44."
+          colors:
+            brand: Brand color
+            navy: Navy
+            blue: Blue
+            teal: Teal
+            green: Green
+            olive: Olive
+            amber: Orange
+            red: Red
+            magenta: Magenta
+            violet: Violet
+            slate: Slate
         toggle_background_label: Background
         toggle_background_tooltip: Show or hide the white background behind the content
         color_picker:

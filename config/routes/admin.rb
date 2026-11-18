@@ -462,7 +462,6 @@ as: :destroy_user_resource_criterion
   end
 
   resource :stats, only: :show do
-    get :graph, on: :member
     get :budgets, on: :collection
     get :budget_supporting, on: :member
     get :budget_balloting, on: :member
@@ -483,10 +482,6 @@ as: :destroy_user_resource_criterion
       resources :progress_bars, except: :show
       resource :homepage, only: [:edit, :update]
     end
-  end
-
-  namespace :api do
-    resource :stats, only: :show
   end
 
   resources :geozones, only: [:index, :new, :create, :edit, :update, :destroy]
@@ -546,11 +541,6 @@ as: "update_heading_content_block"
   resources :local_census_records
   namespace :local_census_records do
     resources :imports, only: [:new, :create, :show]
-  end
-
-  resource :machine_learning, controller: :machine_learning, only: [:show] do
-    post :execute, on: :collection
-    delete :cancel, on: :collection
   end
 
   resources :projekt_point_of_interest_pins, only: [:index, :show, :destroy]

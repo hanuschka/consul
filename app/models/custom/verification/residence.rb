@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "verification", "residence").to_s
+load Rails.root.join("app", "models", "verification", "residence.rb")
 
 class Verification::Residence
   attr_accessor :first_name, :last_name, :gender, :date_of_birth,

@@ -180,7 +180,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
     end
 
     def copy_sdg_relations
-      related_sdgs = Projekts::Copying::Serializing::SdgCodeSerializer
+      related_sdgs = Projekts::Copying::Serializing::SDGCodeSerializer
         .resolve(bundle["sdg_relations"])
 
       related_sdgs.each do |related_sdg|

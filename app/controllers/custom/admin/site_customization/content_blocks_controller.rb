@@ -1,6 +1,6 @@
-require_dependency Rails.root.join(
-  "app", "controllers", "admin", "site_customization", "content_blocks_controller"
-).to_s
+load Rails.root.join(
+  "app", "controllers", "admin", "site_customization", "content_blocks_controller.rb"
+)
 
 class Admin::SiteCustomization::ContentBlocksController
   include AiErrorHandling

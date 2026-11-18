@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "users_helper").to_s
+load Rails.root.join("app", "helpers", "users_helper.rb")
 
 module UsersHelper
   def ck_editor_class(current_user)

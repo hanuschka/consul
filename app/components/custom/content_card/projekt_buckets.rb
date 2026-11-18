@@ -55,9 +55,10 @@ class ContentCard::ProjektBuckets
           .sort_by_order_number
           .to_a
 
-      ActiveRecord::Associations::Preloader.new.preload(
-        active_projekts + current_projekts + expired_projekts, PRELOAD_ASSOCIATIONS
-      )
+      ActiveRecord::Associations::Preloader.new(
+        records: active_projekts + current_projekts + expired_projekts,
+        associations: PRELOAD_ASSOCIATIONS
+      ).call
 
       { active: active_projekts, current: current_projekts, expired: expired_projekts }
     end

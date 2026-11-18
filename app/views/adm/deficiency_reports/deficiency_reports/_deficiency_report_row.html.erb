@@ -1,7 +1,10 @@
 <% public_linkable = !deficiency_report.hidden? %>
+<% policy = Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, deficiency_report) %>
 <tr id="<%= dom_id(deficiency_report) %>" class="kern-table__row">
   <td class="kern-table__cell" data-field="watch">
-    <%= render "adm/deficiency_reports/deficiency_reports/watch_toggle", deficiency_report: deficiency_report %>
+    <% if policy.toggle_watch? %>
+      <%= render "adm/deficiency_reports/deficiency_reports/watch_toggle", deficiency_report: deficiency_report %>
+    <% end %>
   </td>
   <td class="kern-table__cell" data-field="id"><%= link_to_if public_linkable, deficiency_report.id, deficiency_report_path(deficiency_report), class: "kern-link", target: "_blank", data: { turbo: false } %></td>
   <td class="kern-table__cell adm-table-thumb-cell" data-field="image">
@@ -28,7 +31,12 @@
     <% end %>
   </td>
   <th scope="row" class="kern-table__header" data-field="title" style="min-width: 250px; width: 250px; max-width: 250px;">
-    <%= link_to truncate(deficiency_report.title, length: 25), adm_deficiency_reports_deficiency_report_path(deficiency_report), class: "kern-link", title: deficiency_report.title, data: { turbo_frame: "_top" } %>
+    <%= link_to truncate(deficiency_report.title.presence || t("adm.deficiency_reports.deficiency_reports.index.untitled"), length: 25), adm_deficiency_reports_deficiency_report_path(deficiency_report), class: "kern-link", title: deficiency_report.title, data: { turbo_frame: "_top" } %>
+    <% if deficiency_report.hidden? %>
+      <div class="mt-1">
+        <span class="kern-badge kern-badge--danger kern-badge--small"><%= t("adm.deficiency_reports.deficiency_reports.index.hidden_state.hidden") %></span>
+      </div>
+    <% end %>
   </th>
   <% if Setting["deficiency_reports.admin_acceptance_required"].present? %>
     <td class="kern-table__cell" data-field="admin_accepted">
@@ -36,7 +44,7 @@
         deficiency_report,
         :admin_accepted,
         path: accept_adm_deficiency_reports_deficiency_report_path(deficiency_report),
-        disabled: !Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, deficiency_report).accept?
+        disabled: !policy.accept?
       ) %>
     </td>
   <% end %>
@@ -67,18 +75,22 @@
   </td>
   <td class="kern-table__cell">
     <%= render Kern::Table::ActionsComponent.new do |actions| %>
-      <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.show.view_on_site"), url: deficiency_report_path(deficiency_report), icon: "open_in_new", data: { turbo_frame: "_top" }) %>
+      <% if public_linkable %>
+        <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.show.view_on_site"), url: deficiency_report_path(deficiency_report), icon: "open_in_new", data: { turbo_frame: "_top" }) %>
+      <% end %>
       <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.show"), url: adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "visibility", data: { turbo_frame: "_top" }) %>
       <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.audits"), url: audits_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "history", data: { turbo_frame: "_top" }) %>
       <% if deficiency_report.feedback_form.present? %>
         <% actions.with_action(label: t("adm.deficiency_reports.deficiency_reports.tabs.feedback_form"), url: feedback_form_adm_deficiency_reports_deficiency_report_path(deficiency_report), icon: "feedback", data: { turbo_frame: "_top" }) %>
       <% end %>
-      <% actions.with_action(
-        label: t("shared.delete"),
-        url: adm_deficiency_reports_deficiency_report_path(deficiency_report),
-        icon: "delete", style: :delete, divider: true,
-        data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }
-      ) %>
+      <% if policy.destroy? %>
+        <% actions.with_action(
+          label: t("shared.delete"),
+          url: adm_deficiency_reports_deficiency_report_path(deficiency_report),
+          icon: "delete", style: :delete, divider: true,
+          data: { turbo_method: :delete, turbo_confirm: t("shared.confirm_delete") }
+        ) %>
+      <% end %>
     <% end %>
   </td>
 </tr>

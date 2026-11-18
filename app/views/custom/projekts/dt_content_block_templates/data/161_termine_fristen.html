@@ -1,0 +1,60 @@
+<!-- BlockID: N10 Termine und Fristen - kompakte Terminliste mit hervorgehobenem nächsten Termin und Frist -->
+<!-- Geeignet für: Hauptspalte und Seitenleiste, wichtige Termine eines Verfahrens, Abgabefristen, Sitzungstermine -->
+<!-- Befristet: nach dem letzten Termin oder nach Ablauf der Frist entfernen oder durch einen Rückblick ersetzen. -->
+<!-- Editor: jeder Termin ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert den letzten. Termine chronologisch eintragen; die Hervorhebung (Markenfarbe am linken Rand, Etikett „Nächster Termin“) steht beim nächsten anstehenden Termin, nie beim letzten Eintrag. Fehlt ein Ort, das Etikett „Angabe folgt“ stehen lassen. -->
+<!-- Umbruch: kein Raster, Datum, Ereignis und Ort stehen je Termin untereinander und passen damit auch in die schmale Seitenleiste. Die Fristzeile hält das Symbol links und bricht den Text daneben um. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, aller Text 1rem -->
+
+<div style="background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 16px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="far fa-calendar-alt" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Wichtige Termine</h3>
+  </div>
+
+  <ul style="list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+
+    <li style="margin: 0; padding: 12px 16px; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;">
+        <span style="font-size: 1rem; line-height: 1.6; font-weight: 700;">Do, 12.03.2026, 18:00 Uhr</span>
+        <span style="display: inline-block; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 0 12px; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);">Nächster Termin</span>
+      </div>
+      <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600; hyphens: auto; overflow-wrap: break-word;">Auftaktveranstaltung</span>
+      <span style="display: block; font-size: 1rem; line-height: 1.6; hyphens: auto; overflow-wrap: break-word;">Bürgerhaus Mitte, Großer Saal</span>
+    </li>
+
+    <li style="margin: 0; padding: 12px 16px; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #e8edf3; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;">
+        <span style="font-size: 1rem; line-height: 1.6; font-weight: 700;">Sa, 28.03.2026, 10:00 Uhr</span>
+      </div>
+      <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600; hyphens: auto; overflow-wrap: break-word;">Stadtteilspaziergang</span>
+      <span style="display: block; font-size: 1rem; line-height: 1.6; hyphens: auto; overflow-wrap: break-word;">Treffpunkt Brunnen am Marktplatz</span>
+    </li>
+
+    <li style="margin: 0; padding: 12px 16px; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #e8edf3; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;">
+        <span style="font-size: 1rem; line-height: 1.6; font-weight: 700;">Mi, 15.04.2026, 19:00 Uhr</span>
+      </div>
+      <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600; hyphens: auto; overflow-wrap: break-word;">Werkstatt zu den Entwürfen</span>
+      <span style="display: block; font-size: 1rem; line-height: 1.6;"><span style="display: inline-block; background: #ffffff; border: 1px dashed #c5cfdb; border-radius: 999px; padding: 0 12px; font-size: 1rem; line-height: 1.6; font-weight: 600;">Ort: Angabe folgt</span></span>
+    </li>
+
+    <li style="margin: 0; padding: 12px 16px; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #e8edf3; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px;">
+        <span style="font-size: 1rem; line-height: 1.6; font-weight: 700;">Di, 16.06.2026, 17:00 Uhr</span>
+      </div>
+      <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600; hyphens: auto; overflow-wrap: break-word;">Vorstellung der Ergebnisse im Stadtrat</span>
+      <span style="display: block; font-size: 1rem; line-height: 1.6; hyphens: auto; overflow-wrap: break-word;">Rathaus, Sitzungssaal</span>
+    </li>
+
+  </ul>
+
+  <div style="display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #b45309; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: #b45309; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-hourglass-half" style="font-size: 16px;"></i></span>
+    <div style="flex: 1 1 auto; min-width: 0;">
+      <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Frist: 25.04.2026, 23:59 Uhr</span>
+      <span style="display: block; font-size: 1rem; line-height: 1.6;">Bis dahin können Sie Ihre Hinweise online abgeben.</span>
+    </div>
+  </div>
+
+</div>

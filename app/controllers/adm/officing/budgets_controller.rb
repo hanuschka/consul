@@ -24,8 +24,14 @@ class Adm::Officing::BudgetsController < Adm::Officing::BaseController
       investments = @budget.investments.feasible
     end
 
-    if investments
-      @pagy, @investments = pagy(investments, items: 50)
+    return unless investments
+
+    @investments = investments.includes(:translations).order(:id).to_a
+
+    unless @ballot
+      @votes_by_investment_id = ActsAsVotable::Vote
+        .where(voter: @offline_user, votable_type: "Budget::Investment", votable_id: @investments.map(&:id))
+        .index_by(&:votable_id)
     end
   end
 

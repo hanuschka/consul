@@ -85,6 +85,7 @@ App.Studio.Projekt.Banner = {
         data: {
           kind: container.dataset.kind,
           attribute: container.dataset.attribute,
+          field_token: container.dataset.fieldToken,
           [container.dataset.fieldName]: plainText
         }
       })

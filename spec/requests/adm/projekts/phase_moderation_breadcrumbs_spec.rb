@@ -19,14 +19,12 @@ describe "Adm phase moderation breadcrumbs", type: :request do
     Capybara.string(response.body).first(".breadcrumb-item:not(.breadcrumb-item--back)")
   end
 
-  it "shows the projekt as plain text to a moderator who cannot open the phases page" do
+  it "links the projekt to its phases page for a moderator" do
     sign_in_with(:moderate)
 
     get proposals_adm_projekts_phase_path(projekt_phase)
 
-    expect(response).to have_http_status(:ok)
-    expect(projekt_crumb).to have_text(projekt.page.title)
-    expect(projekt_crumb).not_to have_link
+    expect(projekt_crumb).to have_link(projekt.page.title, href: phases_adm_projekts_projekt_path(projekt))
   end
 
   it "links the projekt to its phases page for a manager" do

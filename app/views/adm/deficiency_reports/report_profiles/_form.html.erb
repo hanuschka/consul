@@ -1,0 +1,76 @@
+<% url = @report_profile.persisted? ? adm_deficiency_reports_report_profile_path(@report_profile) : adm_deficiency_reports_report_profiles_path %>
+<% day_names = t("date.day_names") %>
+<%= form_with model: @report_profile, url: url do |f| %>
+
+  <%= render Kern::FormFieldComponent.new(hint: t(".name_hint")) do %>
+    <%= f.text_field :name, label: t(".name_label"), placeholder: t(".name_placeholder") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(hint: t(".building_blocks_hint")) do %>
+    <%= f.collection_check_boxes :building_blocks,
+          DeficiencyReport::ReportProfile::BUILDING_BLOCKS.map { |block| [block, t(".building_blocks.#{block}")] },
+          :first, :last,
+          legend: t(".building_blocks_label") %>
+  <% end %>
+
+  <% if @categories.any? %>
+    <%= render Kern::FormFieldComponent.new(hint: t(".categories_hint")) do %>
+      <%= f.collection_check_boxes :category_ids, @categories, :id, :name, legend: t(".categories_label") %>
+    <% end %>
+  <% end %>
+
+  <% if @officer_groups.any? %>
+    <%= render Kern::FormFieldComponent.new(hint: t(".officer_groups_hint")) do %>
+      <%= f.collection_check_boxes :officer_group_ids, @officer_groups, :id, :name, legend: t(".officer_groups_label") %>
+    <% end %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(hint: t(".instructions_hint")) do %>
+    <%= f.text_area :instructions, label: t(".instructions_label"), rows: 4,
+                    maxlength: DeficiencyReport::ReportProfile::INSTRUCTIONS_MAX_LENGTH %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(hint: t(".frequency_hint")) do %>
+    <div data-controller="shared--visibility-toggle" data-shared--visibility-toggle-show-for-value="weekly">
+      <div class="mb-3" data-shared--visibility-toggle-target="source" data-action="change->shared--visibility-toggle#toggle">
+        <%= f.collection_radio_buttons :frequency,
+              DeficiencyReport::ReportProfile::FREQUENCIES.map { |frequency| [frequency, t(".frequencies.#{frequency}")] },
+              :first, :last,
+              legend: t(".frequency_label") %>
+      </div>
+
+      <div class="mb-3" data-shared--visibility-toggle-target="shown">
+        <%= f.select :weekday,
+              [1, 2, 3, 4, 5, 6, 0].map { |day| [day_names[day], day] },
+              {},
+              { label: t(".weekday_label") } %>
+      </div>
+
+      <div class="mb-3" data-shared--visibility-toggle-target="hidden">
+        <%= f.select :day_of_month,
+              (1..28).to_a,
+              { hint: t(".day_of_month_hint") },
+              { label: t(".day_of_month_label") } %>
+      </div>
+
+      <%= f.select :hour,
+            (0..23).map { |hour| [t(".hour_option", hour: format("%02d", hour)), hour] },
+            {},
+            { label: t(".hour_label") } %>
+    </div>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(hint: @eligible_recipients.any? ? t(".recipient_users_hint") : t(".no_eligible_recipients")) do %>
+    <%= f.collection_check_boxes :recipient_user_ids,
+          @eligible_recipients,
+          :id,
+          ->(user) { "#{user.name} (#{user.email})" },
+          legend: t(".recipient_users_label") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(hint: t(".recipient_emails_hint")) do %>
+    <%= f.text_area :recipient_emails_text, label: t(".recipient_emails_label"), rows: 4 %>
+  <% end %>
+
+  <%= form_submit_button(text: f.object.new_record? ? t("shared.create") : t(".submit")) %>
+<% end %>

@@ -1,11 +1,22 @@
 de:
   setting:
+    accessibility_report:
+      recipient_email: Empfänger-E-Mail-Adresse für Barrieremeldungen
+      recipient_email_description: "An diese Adresse werden alle Meldungen aus dem Formular „Barriere melden“ gesendet. Solange sie leer ist, gehen die Meldungen an alle Administratorinnen und Administratoren."
     handbook:
       url: Adresse des Nutzerhandbuchs
       url_description: "Legt die Adresse des Nutzerhandbuchs fest, das in allen Dashboards unter „Handbuch“ und in der Administration unter „Community“ angezeigt wird. Im Verwaltungsbereich erscheint in jedem Menü ganz unten der passende Eintrag, auf der Startseite der Administration zusätzlich eine Kachel. Die Adresse ist voreingestellt; lassen Sie das Feld leer, um Eintrag und Kachel auszublenden."
     proposals:
       email_on_official_answer: "E-Mail-Benachrichtigung bei offizieller Antwort (Vorschläge)"
       email_on_official_answer_description: "Versendet eine E-Mail an die einreichende Person, sobald zu ihrem Vorschlag eine offizielle Antwort gespeichert oder geändert wird. Die E-Mail enthält den Text der offiziellen Antwort sowie einen Link zum Vorschlag, auf der Vorschlagsseite selbst bleibt die Antwort wie bisher öffentlich sichtbar. Aktivieren Sie diese Einstellung, wenn Einreichende aktiv über die Rückmeldung der Verwaltung informiert werden sollen und nicht selbst auf die Plattform zurückkehren müssen."
+    email_templates:
+      recipient_greeting: "Anrede in System-E-Mails"
+      recipient_greeting_description: "Legt fest, wie die Variable {{ recipient_greeting }} die empfangende Person in angepassten System-E-Mails anspricht. Fehlen dafür Angaben im Nutzerkonto (Vorname, Nachname oder Geschlecht), wird automatisch eine passende Ersatzform verwendet, zuletzt der Nutzername. Vorlagen ohne diese Variable bleiben unverändert."
+      recipient_greeting_options:
+        username: "Nutzername (Hallo maxi84)"
+        first_name: "Vorname (Hallo Max)"
+        full_name: "Vor- und Nachname (Hallo Max Mustermann)"
+        formal: "Förmlich (Sehr geehrte Frau Mustermann)"
     feature:
       bund_id_login: "BundID-Anmeldung aktivieren"
       bund_id_login_description: "Ergänzt Anmelde- und Registrierungsseite um eine BundID-Schaltfläche zur Anmeldung mit BundID-Konto. Die Wohnsitz-Verifizierung ist davon unabhängig. Aktivieren Sie es für Verwaltungskonten. Erfordert Zugangsdaten in der Serverkonfiguration."
@@ -211,6 +222,8 @@ de:
         enable_google_translate_description: 'Bindet das Übersetzungs-Widget von Google Translate ein. Im Hauptmenü erscheint ein Sprach-Symbol, die eigene Sprachauswahl entfällt. Aktivieren Sie es für viele Sprachen und stimmen Sie zuvor den <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform" target="_blank" rel="noopener">Nutzungsbedingungen</a> zu.'
         show_guest_login_links: Zeige Gast-Login an
         show_guest_login_links_description: "Erlaubt die Anmeldung als Gast, nur mit Anzeigenamen, ohne E-Mail und Passwort. In der Fußzeile erscheint dazu ein Link. Gäste können an Phasen mit Mindeststatus „Gastnutzer“ teilnehmen. Aktivieren Sie es für eine niedrige Hürde."
+        sms_login: "Teilnahme per SMS-Code"
+        sms_login_description: "Bietet abgemeldeten Besuchern an Beteiligungsaktionen wie Unterstützen, Einreichen oder Kommentieren die Anmeldung mit Mobilfunknummer und SMS-Code an. Gibt es zur Nummer noch kein Konto, wird eines ohne E-Mail-Adresse angelegt. Nur deutsche Mobilfunknummern. Erfordert einen SMS-Anbieter in der Serverkonfiguration."
         users_overview_page: Übersicht aller Nutzer*innen
         users_overview_page_description: "Aktiviert eine öffentliche Übersichtsseite mit allen aktiven Nutzer*innen, die ihrer Anzeige zugestimmt haben. Besucher können Profile durchsuchen und die Beteiligungsaktivität anderer Nutzer*innen einsehen, etwa eingereichte Vorschläge, Kommentare und Abstimmungsteilnahmen."
         enable_projekt_events_page: Veranstaltungskalender
@@ -374,6 +387,9 @@ de:
       send_feedback_form_link: Feedback-Formular versenden
       send_feedback_form_link_description: >
         Wenn aktiviert, erhalten Nutzer nach Abschluss ihrer Mangelmeldung per E-Mail einen Link zu einem Feedback-Formular. Damit können sie die Bearbeitung ihres Anliegens bewerten und Rückmeldung zur Zufriedenheit mit dem Prozess geben. Dies hilft der Verwaltung, die Qualität der Mängelbearbeitung zu überwachen und zu verbessern.
+      separate_reporter_answer: Antwort an meldende Person und öffentliche Antwort trennen
+      separate_reporter_answer_description: >
+        Teilt die offizielle Antwort zu einer Meldung in zwei Felder: eine Antwort, die per E-Mail an die meldende Person geht, und eine öffentliche Antwort auf der Plattform. Im Frontend erscheint oberhalb der Meldung nur die öffentliche Antwort; bleibt sie leer, wird kein Antwortbereich angezeigt. Aktivieren Sie diese Funktion, wenn Sie meldenden Personen ausführlicher oder persönlicher antworten möchten, als es öffentlich sichtbar sein soll.
       show_create_report_button: Einreichung neuer Mängelmeldungen
       show_create_report_button_description: >
         Steuert, ob Nutzende neue Mängelmeldungen einreichen können. Ist die Option deaktiviert, werden alle Schaltflächen zum Einreichen ausgeblendet und das Meldeformular ist auch über einen direkten Link nicht mehr erreichbar; bereits eingegangene Meldungen bleiben weiterhin öffentlich sichtbar. Deaktivieren Sie diese Option, wenn vorübergehend keine neuen Meldungen entgegengenommen werden sollen, etwa während einer Betriebspause.

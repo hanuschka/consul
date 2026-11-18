@@ -1,53 +1,32 @@
-<!-- BlockID: B03 Split Image Right – Hero mit Split-Layout, Text links, Bild rechts -->
+<!-- BlockID: B03 Bild rechts - Hero mit Text links und Bild rechts -->
 <!-- Geeignet für: Projektseiten, Info-Einleitungen mit visuellem Bezug -->
-<!-- ANPASSEN: src-Attribut im img-Tag ersetzen -->
+<!-- Editor: Bild über das Bild-Werkzeug austauschen (Maus auf das Bild, Alternativtext setzen). Etiketten sind Listenelemente, „Weiteres Element hinzufügen“ kopiert das letzte; Buttons über den Stift verlinken. -->
+<!-- Umbruch: Text und Bild nebeneinander auf breiten Bildschirmen, unter etwa 600 px Breite steht das Bild unter dem Text. Buttons stehen am Handy untereinander. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H2, Einleitung, Etiketten und Buttons 1rem -->
 
-<div style="position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <div class="row" style="min-height: 420px;">
+  <div style="position: relative; z-index: 1; background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border-left: 5px solid var(--brand-color, #1779ba); padding: 24px; padding: clamp(20px, 4vw, 40px);">
+    <div aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; top: 0; bottom: 0; right: -80px; width: 80px; background: linear-gradient(to left, rgba(255,255,255,0) 0%, #ffffff 100%); pointer-events: none;"></div><div aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; left: 0; right: 0; bottom: -56px; height: 56px; background: linear-gradient(to top, rgba(255,255,255,0) 0%, #ffffff 100%); pointer-events: none;"></div>
 
-    <!-- Linke Spalte: Text + CTAs -->
-    <div class="column small-12 medium-7">
-      <div style="position: relative; padding: 52px 44px; background: linear-gradient(160deg, #f8f9fb 0%, #eef2f7 100%); height: 100%;">
+    <ul style="list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px;">
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #e3e8ef; border-radius: 999px; padding: 2px 14px; font-size: 1rem; line-height: 1.6; font-weight: 600; box-shadow: 0 1px 2px rgba(16,24,40,0.05);"><i class="fas fa-bicycle" aria-hidden="true" style="font-size: 13px; color: var(--brand-color, #1779ba);"></i> Mobilität &amp; Verkehr</li>
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 8px; background: var(--brand-color, #1779ba); border: 1px solid var(--brand-color, #1779ba); border-radius: 999px; padding: 2px 14px; font-size: 1rem; line-height: 1.6; font-weight: 600; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 1px 2px rgba(16,24,40,0.05);"><i class="far fa-calendar-alt" aria-hidden="true" style="font-size: 13px;"></i> Läuft bis 31.07.2025</li>
+    </ul>
 
-        <!-- Vertikale Akzentlinie links -->
-        <div style="position: absolute; left: 0; top: 40px; bottom: 40px; width: 3px; background: linear-gradient(180deg, var(--brand-color, #1779ba), rgba(23,121,186,0.15)); border-radius: 2px;"></div>
+    <h2 style="margin: 0 0 12px; hyphens: auto; overflow-wrap: break-word;">Fahrradwege der Zukunft, Ihre Stimme zählt</h2>
 
-        <!-- Badge-Zeile -->
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; position: relative; z-index: 1;">
-          <div style="background: rgba(23,121,186,0.07); border: 1px solid rgba(23,121,186,0.15); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: var(--brand-color, #1779ba); font-weight: 600; letter-spacing: 0.04em;">Mobilität &amp; Verkehr</div>
-          <div style="background: rgba(5,150,105,0.07); border: 1px solid rgba(5,150,105,0.15); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #065f46; font-weight: 600; letter-spacing: 0.04em;">Läuft bis 31.07.2025</div>
-        </div>
+    <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 24px; max-width: 36rem;">Die Stadt plant in den nächsten Jahren den Ausbau des Radwegenetzes. Wo sind die gefährlichsten Stellen? Was fehlt Ihnen? Teilen Sie Ihre Erfahrungen und helfen Sie uns, sicherer zu planen.</p>
 
-        <h3 style="font-size: 30px; font-weight: 800; color: #1a202c; margin-bottom: 16px; margin-top: 0; line-height: 1.2; letter-spacing: -0.4px; position: relative; z-index: 1;">Fahrradwege der Zukunft –<br>Ihre Stimme zählt</h3>
-
-        <p style="font-size: 16px; color: #4b5563; line-height: 1.7; margin-bottom: 28px; margin-top: 0; max-width: 460px; position: relative; z-index: 1;">
-          Die Stadt plant in den nächsten Jahren den Ausbau des Radwegenetzes. Wo sind die gefährlichsten Stellen? Was fehlt Ihnen? Teilen Sie Ihre Erfahrungen und helfen Sie uns, sicherer zu planen.
-        </p>
-
-        <!-- CTAs -->
-        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; position: relative; z-index: 1;">
-          <a href="#" class="button"
-             style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 700; height: 48px; box-sizing: border-box; border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
-             onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'"
-             onmouseout="this.style.transform='none';this.style.boxShadow='none'">Jetzt Feedback geben</a>
-          <a href="#" class="button hollow"
-             style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 600; height: 48px; box-sizing: border-box; border-radius: 8px; transition: transform 0.2s ease, background 0.2s ease;"
-             onmouseover="this.style.transform='translateY(-2px)';this.style.background='rgba(23,121,186,0.05)'"
-             onmouseout="this.style.transform='none';this.style.background='transparent'">Projekt-Details</a>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Rechte Spalte: Bild (randlos) -->
-    <div class="column small-12 medium-5">
-      <div style="position: relative; min-height: 420px; height: 100%; overflow: hidden;">
-        <img src="https://placehold.co/600x400/1779ba/ffffff?text=Projektbild" alt="Projektbild" style=" width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
-        <!-- Subtiler Gradient-Übergang zum Textbereich -->
-        <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(238,242,247,0.4) 0%, transparent 30%); pointer-events: none;"></div>
-      </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+      <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Jetzt Feedback geben</a></div>
+      <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button hollow" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; background: #ffffff;">Projekt-Details</a></div>
     </div>
 
   </div>
+
+  <div style="position: relative; background: #ffffff;">
+    <img src="https://placehold.co/900x700/1779ba/ffffff?text=Projektbild" alt="Radfahrende auf einem neuen Radweg in der Innenstadt" style="display: block; width: 100%; height: 240px; height: clamp(220px, 45vw, 360px); min-height: 100%; object-fit: cover; margin: 0;">
+  </div>
+
 </div>

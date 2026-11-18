@@ -1,21 +1,30 @@
 class InternalApi::ProjektSettingsController < InternalApi::BaseController
   before_action :find_projekt
-  before_action :find_projekt_setting
+  around_action :audit_changes_as_internal_client
 
   skip_authorization_check
 
+  # Written through the typed allowlist of the projekt's settings. `update`,
+  # not `update_column`, inside it: a promoted setting mirrors its value onto
+  # the projekts column from an after_save callback (see Projekt::KEY_TO_COLUMN).
   def update
-    if @projekt_setting.blank?
+    configurable_keys = ProjektSetting::ConfigurableKeys.for_projekt(@projekt)
+    key = projekt_setting_params[:key].to_s
+
+    if !configurable_keys.key?(key)
       return render json: { message: "Projekt setting not found" }, status: :not_found
     end
 
-    # `update`, not `update_column`: a promoted setting mirrors its value onto
-    # the projekts column from an after_save callback, which update_column
-    # would skip — leaving the column stale (see Projekt::KEY_TO_COLUMN).
-    if @projekt_setting.update(value: projekt_setting_params[:value])
+    result = ConfigurableKeys::UpdateService.call(
+      changes: { key => projekt_setting_params[:value] },
+      configurable_keys:,
+      setting_rows: @projekt.projekt_settings
+    )
+
+    if result.success?
       render json: { message: "Projekt setting updated" }
     else
-      render json: { message: "Error updating projekt setting" }
+      render_setting_errors(result.error_details)
     end
   end
 
@@ -23,10 +32,6 @@ class InternalApi::ProjektSettingsController < InternalApi::BaseController
 
   def find_projekt
     @projekt = Projekt.find(params[:projekt_id])
-  end
-
-  def find_projekt_setting
-    @projekt_setting = @projekt.projekt_settings.find_by(key: projekt_setting_params[:key])
   end
 
   def projekt_setting_params

@@ -66,6 +66,24 @@ do once it is recognised:
 Use `admin` only when the client genuinely needs to create, update or delete
 content. For read-only integrations, prefer `public_data`.
 
+### Instance configuration access
+
+The endpoints under `/api/configuration` change the platform itself:
+settings, branding, logos, pages, navigation, texts, map layers and catalogs.
+They need an `admin` client that was also granted **Zugriff auf
+Instanz-Konfiguration** in /adm; every other client, internal tokens
+included, gets `403 Forbidden`.
+
+- Only listed keys are configurable, each checked against its type (switch,
+  colour, URL, text, number, list). Unknown keys are rejected and a request
+  with one bad value changes nothing.
+- Every change is audited: the audit row names the client's content author as
+  its user and carries `api_client:<id>` as its comment, with old and new
+  value.
+- Out of reach on purpose: users, roles, API clients and keys, login and
+  verification providers, census and registry configuration, custom head and
+  body code, AI providers, and sender names and addresses of emails.
+
 ---
 
 ## Which user authors content created via the API?

@@ -119,7 +119,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
       @projekt_import.mark_abandoned!
       render json: { status: "abandoned", redirect_path: helpers.import_source_new_path(@projekt_import) }
     when "import"
-      ProjektImports::ExecuteImportJob.perform_later(@projekt_import.id)
+      ProjektImports::StartSubmitService.call(projekt_import: @projekt_import)
 
       render json: { status: "importing" }
     else
@@ -161,7 +161,7 @@ class Adm::Projekts::Imports::ChatsController < Adm::Projekts::BaseController
   end
 
   def execute
-    ProjektImports::ExecuteImportJob.perform_later(@projekt_import.id)
+    ProjektImports::StartSubmitService.call(projekt_import: @projekt_import)
 
     render json: { status: "importing" }
   end

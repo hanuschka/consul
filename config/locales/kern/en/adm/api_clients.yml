@@ -60,6 +60,8 @@ en:
           updated: Service user updated successfully
           no_service_user: This API client does not use a dedicated service user.
       show:
+        instance_configuration_granted: Granted
+        instance_configuration_not_granted: Not granted
         auth_token_explanation_text: >
           Include this token in the Authorization header of your
           API requests. Use it as a Bearer token
@@ -112,6 +114,13 @@ en:
           created via the API. Square images are displayed best.
         service_user_background_image_description: >
           Background image for the service user's public profile page.
+        instance_configuration_access_label: Instance configuration access
+        instance_configuration_access_description: >
+          Allows this API client to change the platform's settings, logos,
+          pages and navigation through the API. Changes show up in the frontend
+          immediately, for example a new logo or changed metadata. Grant this
+          permission only to clients that set up or maintain the platform.
+          Available only to clients with admin access.
         use_system_user_label: Use system user
         use_system_user_description: >
           When enabled, content created via this API client is published

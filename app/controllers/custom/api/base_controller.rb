@@ -5,6 +5,15 @@ class Api::BaseController < ActionController::API
   class ForbiddenError < StandardError; end
   class UnauthorizedError < StandardError; end
 
+  # Rendered by the handlers below; actions that rescue StandardError
+  # themselves re-raise these so every endpoint answers them the same way.
+  SELF_RENDERED_ERRORS = [
+    ForbiddenError,
+    UnauthorizedError,
+    ActionController::ParameterMissing,
+    Base64Attachable::InvalidEncoding
+  ].freeze
+
   DEFAULT_PER_PAGE = 500
   COMMENTS_PER_PAGE = 5000
   MAX_PER_PAGE = 2000
@@ -18,6 +27,9 @@ class Api::BaseController < ActionController::API
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
   rescue_from ForbiddenError, with: :render_forbidden
   rescue_from UnauthorizedError, with: :render_unauthorized
+  rescue_from ActionController::ParameterMissing, with: :render_missing_parameter
+  rescue_from ActionDispatch::Http::Parameters::ParseError, with: :render_unparsable_body
+  rescue_from Base64Attachable::InvalidEncoding, with: :render_invalid_attachment
 
   private
 
@@ -66,6 +78,18 @@ class Api::BaseController < ActionController::API
       @internal_api_client == true
     end
 
+    def admin_client?
+      current_client.present? && current_client.admin?
+    end
+
+    # Documents arrive without an author: the API never lets a client choose
+    # whom a file is attributed to.
+    def assign_document_authors(resource)
+      resource.documents.select(&:new_record?).each do |document|
+        document.user = current_client.content_author
+      end
+    end
+
     def check_read_access!
       return if internal_api_client?
 
@@ -80,6 +104,32 @@ class Api::BaseController < ActionController::API
       unless current_client&.admin?
         raise ForbiddenError, "You do not have permission to perform this action. Admin access required."
       end
+    end
+
+    # Unlike check_admin_access!, internal clients are not let through: the
+    # right has to be granted to the client explicitly in /adm.
+    def check_configuration_access!
+      return if configuration_client?
+
+      raise ForbiddenError,
+        "You do not have permission to change the instance configuration. " \
+        "The API client needs the instance configuration access right."
+    end
+
+    def configuration_client?
+      !internal_api_client? && current_client.can_configure_instance?
+    end
+
+    # Audit rows written during the action carry the client's content author
+    # as their user (the audit views and SectionTrackable expect a User) and
+    # the client itself in their comment.
+    def audit_changes_as_client(&)
+      Current.api_client = current_client
+      audit_user = internal_api_client? ? User.system : current_client.content_author
+
+      ::Audit.as_user(audit_user, &)
+    ensure
+      Current.api_client = nil
     end
 
     def render_forbidden(exception)
@@ -104,6 +154,74 @@ class Api::BaseController < ActionController::API
       render json: {
         error: { type: "not_found", messages: ["Not found"] }
       }, status: :not_found
+    end
+
+    def render_missing_parameter(exception)
+      render_bad_request(
+        "The request body must contain a non-empty '#{exception.param}' object."
+      )
+    end
+
+    def render_unparsable_body
+      render_bad_request("The request body is not valid JSON.")
+    end
+
+    def render_bad_request(message)
+      render json: {
+        error: { type: "bad_request", messages: [message] }
+      }, status: :bad_request
+    end
+
+    def render_invalid_attachment(exception)
+      render json: {
+        error: { type: "unprocessable_entity", messages: [exception.message] }
+      }, status: :unprocessable_entity
+    end
+
+    def render_invalid_values(errors)
+      render json: {
+        error: {
+          type: "unprocessable_entity",
+          messages: errors.map { |field, messages| "#{field} #{Array(messages).to_sentence}" },
+          details: errors
+        }
+      }, status: :unprocessable_entity
+    end
+
+    def publicly_visible_phase?(projekt_phase)
+      projekt_phase.frontend_visibility && projekt_phase.active?
+    end
+
+    def phase_hidden_from_client?(projekt_phase)
+      current_client.public_data? && !publicly_visible_phase?(projekt_phase)
+    end
+
+    def restrict_to_public_phases(scope)
+      scope
+        .joins(:projekt_phase)
+        .where(projekt_phases: { frontend_visibility: true, active: true })
+    end
+
+    # Clients send document files as base64 strings, which Active Storage
+    # cannot take as they are.
+    def with_decoded_documents(permitted_params)
+      resource_attributes = permitted_params.to_h
+      documents = resource_attributes[:documents_attributes]
+      return resource_attributes if documents.blank?
+
+      document_list = documents.is_a?(Array) ? documents : documents.values
+
+      document_list.each do |document|
+        encoded_file = document[:attachment]
+        next if !encoded_file.is_a?(String) || encoded_file.blank?
+
+        document[:attachment] = Base64Attachable.build(
+          encoded_file,
+          filename_stem: document[:title]
+        )
+      end
+
+      resource_attributes
     end
 
     def paginate(scope, default_per_page: DEFAULT_PER_PAGE)

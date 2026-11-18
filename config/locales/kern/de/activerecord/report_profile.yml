@@ -1,0 +1,15 @@
+de:
+  activerecord:
+    errors:
+      models:
+        deficiency_report/report_profile:
+          attributes:
+            building_blocks:
+              blank_selection: Wählen Sie mindestens einen Inhaltsbaustein aus.
+            recipient_user_ids:
+              no_recipients: Wählen Sie mindestens eine Person aus oder tragen Sie eine E-Mail-Adresse ein.
+              ineligible: Mindestens eine ausgewählte Person hat keinen Zugang zum Mängelmelder.
+            recipient_emails_text:
+              invalid_entries:
+                one: "Ungültige E-Mail-Adresse: %{entries}"
+                other: "Ungültige E-Mail-Adressen: %{entries}"

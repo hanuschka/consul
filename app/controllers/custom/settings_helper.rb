@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "settings_helper").to_s
+load Rails.root.join("app", "helpers", "settings_helper.rb")
 
 module SettingsHelper
   def extended_feature?(name)

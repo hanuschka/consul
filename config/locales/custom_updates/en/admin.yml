@@ -193,7 +193,7 @@ en:
               age: Age
               geo: Geo
               verification: Verification
-            copy_phase_link: Link für Tab abrufen
+            copy_phase_link: Get link for tab
           projekt_settings_tab:
             name: Settings
             general_settings: General
@@ -339,7 +339,7 @@ en:
           index:
             create: Create question
             title: Short survey
-            attached_to: Angehängt
+            attached_to: Attached to
             title: Short survey
             question_options: Question options
             answers_count: Answers count
@@ -637,13 +637,13 @@ en:
           page_title: Posteingang & Follow-up E-Mails
           emails_title: Follow-up E-Mails
           subject_placeholder: E-Mail
-          recipients: "%{number} Empfänger"
+          recipients: "%{number} recipients"
           emails_sent: "%{number} E-Mails gesendet"
           new_email_title: Posteingang
           buttons:
             save_draft: Save draft
             send_email: Send E-Mail
-            create_email_draft: E-Mail-Entwurf an ausgewählte Empfänger*innen erstellen
+            create_email_draft: Create e-mail draft to selected recipients
         age_ranges_for_stats:
           page_title: Age ranges for stats
         ai_settings:

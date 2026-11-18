@@ -1,51 +1,45 @@
-<!-- BlockID: D01 Two-Column Split – Text links / Text rechts, asymmetrische Behandlung -->
-<!-- Geeignet für: Kontext vs. Bedeutung, Hintergrund vs. Mitmachen, Warum vs. Wie -->
+<!-- BlockID: D01 Zwei Textspalten - Hintergrund links, Beteiligung rechts -->
+<!-- Geeignet für: Kontext und Bedeutung, Hintergrund und Mitmachen, Warum und Wie -->
+<!-- Editor: jede Spalte ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Spalte; Listenpunkte in der Spalte ebenfalls kopieren oder löschen. Icon über die Klasse fa-… tauschen, nur im Code-Modus. -->
+<!-- Umbruch: Spalten untereinander am Handy, nebeneinander ab etwa 600 px Breite. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Spaltentitel = Theme-H4, Text und Listenpunkte 1rem -->
 
-<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+<div style="position: relative; overflow: hidden; background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <div style="margin-bottom: 24px;">
-    <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; margin: 0; letter-spacing: -0.3px; line-height: 1.3; padding-left: 16px; border-left: 3px solid var(--brand-color, #1779ba);">Hintergrund &amp; Ihre Möglichkeiten</h3>
+  <div style="position: relative; z-index: 1;">
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 16px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-book-open" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Hintergrund &amp; Ihre Möglichkeiten</h3>
   </div>
 
-  <div class="row">
+  <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 12px; gap: clamp(12px, 2vw, 16px);">
 
-    <!-- Linke Spalte: Kontext -->
-    <div class="column small-12 medium-6">
-      <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 28px; border: 1px solid rgba(255,255,255,0.8); margin-bottom: 16px; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-        <div style="font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">Hintergrund</div>
-        <p style="font-size: 15px; color: #374151; line-height: 1.7; margin: 0 0 12px 0;">
-          Die Innenstadt steht vor einem Wandel: Der Autoverkehr soll zurückgehen, Aufenthaltsqualität und Grünflächen zunehmen. Diese Neugestaltung betrifft alle – deshalb wollen wir Sie einbeziehen.
-        </p>
-        <p style="font-size: 14px; color: #6b7280; line-height: 1.6; margin: 0;">
-          Grundlage ist der Stadtratsbeschluss vom 15. Januar 2025 (Drucksache 25/001).
-        </p>
+    <li style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22); padding: 20px; padding: clamp(18px, 3vw, 24px);">
+      <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 12px;">
+        <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-landmark" style="font-size: 18px;"></i></span>
+        <h4 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Hintergrund</h4>
       </div>
-    </div>
+      <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Die Innenstadt steht vor einem Wandel: Der Autoverkehr soll zurückgehen, Aufenthaltsqualität und Grünflächen zunehmen. Diese Neugestaltung betrifft alle – deshalb wollen wir Sie einbeziehen.</p>
+      <ul style="display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none;">
+        <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;"><span aria-hidden="true" style="flex: 0 0 auto; width: 8px; height: 8px; margin: 9px 0 0; border-radius: 50%; background: var(--brand-color, #1779ba);"></span><span style="flex: 1 1 auto; min-width: 0;">Grundlage ist der Stadtratsbeschluss vom 15. Januar 2025 (Drucksache 25/001)</span></li>
+        <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;"><span aria-hidden="true" style="flex: 0 0 auto; width: 8px; height: 8px; margin: 9px 0 0; border-radius: 50%; background: var(--brand-color, #1779ba);"></span><span style="flex: 1 1 auto; min-width: 0;">Planungsgebiet: historischer Stadtkern zwischen Rathausplatz, Postgasse und Lindenring</span></li>
+      </ul>
+    </li>
 
-    <!-- Rechte Spalte: Was Teilnehmende tun können -->
-    <div class="column small-12 medium-6">
-      <div style="background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; padding: 28px; border: 1px solid rgba(255,255,255,0.9); border-left: 3px solid var(--brand-color, #1779ba); margin-bottom: 16px; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-        <div style="font-size: 11px; font-weight: 600; color: var(--brand-color, #1779ba); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">Ihre Beteiligung</div>
-        <ul style="display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; list-style: none;">
-          <li style="display: flex; align-items: flex-start; font-size: 15px; color: #1a202c; line-height: 1.5;">
-            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 7px; margin-right: 12px; flex-shrink: 0;"></div>
-            Ideen und Wünsche für die Neugestaltung einreichen
-          </li>
-          <li style="display: flex; align-items: flex-start; font-size: 15px; color: #1a202c; line-height: 1.5;">
-            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 7px; margin-right: 12px; flex-shrink: 0;"></div>
-            Vorschläge anderer Bürger:innen bewerten
-          </li>
-          <li style="display: flex; align-items: flex-start; font-size: 15px; color: #1a202c; line-height: 1.5;">
-            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 7px; margin-right: 12px; flex-shrink: 0;"></div>
-            An Online-Umfragen teilnehmen
-          </li>
-          <li style="display: flex; align-items: flex-start; font-size: 15px; color: #1a202c; line-height: 1.5;">
-            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 7px; margin-right: 12px; flex-shrink: 0;"></div>
-            Zu Präsenz-Workshops anmelden
-          </li>
-        </ul>
+    <li style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22); padding: 20px; padding: clamp(18px, 3vw, 24px);">
+      <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 12px;">
+        <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-hands-helping" style="font-size: 18px;"></i></span>
+        <h4 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Ihre Beteiligung</h4>
       </div>
-    </div>
+      <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">So können Sie sich in den kommenden Monaten einbringen:</p>
+      <ul style="display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none;">
+        <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;"><span aria-hidden="true" style="flex: 0 0 auto; width: 8px; height: 8px; margin: 9px 0 0; border-radius: 50%; background: var(--brand-color, #1779ba);"></span><span style="flex: 1 1 auto; min-width: 0;">Ideen und Wünsche für die Neugestaltung einreichen</span></li>
+        <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;"><span aria-hidden="true" style="flex: 0 0 auto; width: 8px; height: 8px; margin: 9px 0 0; border-radius: 50%; background: var(--brand-color, #1779ba);"></span><span style="flex: 1 1 auto; min-width: 0;">Vorschläge anderer Bürger:innen bewerten</span></li>
+        <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;"><span aria-hidden="true" style="flex: 0 0 auto; width: 8px; height: 8px; margin: 9px 0 0; border-radius: 50%; background: var(--brand-color, #1779ba);"></span><span style="flex: 1 1 auto; min-width: 0;">An Online-Umfragen teilnehmen</span></li>
+        <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;"><span aria-hidden="true" style="flex: 0 0 auto; width: 8px; height: 8px; margin: 9px 0 0; border-radius: 50%; background: var(--brand-color, #1779ba);"></span><span style="flex: 1 1 auto; min-width: 0;">Zu Präsenz-Workshops anmelden</span></li>
+      </ul>
+    </li>
 
+  </ul>
   </div>
 </div>

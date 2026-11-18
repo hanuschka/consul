@@ -36,15 +36,20 @@ App.Studio.ContentBlocks.TemplateSelector = {
     this.openDialog(section)
   },
 
+  // A site block in the sidebar or footer (e.g. the sidebar info card) sits
+  // outside any content blocks list, so it must not inherit the page list's
+  // section.
   detectSection(wrapper) {
+    const ownList = wrapper ? wrapper.closest(".js-content-blocks-list") : null;
+
+    if (ownList && ownList.dataset.templateSection) return ownList.dataset.templateSection
+    if (wrapper && wrapper.closest("aside, .sidebar, footer")) return "sidebar_and_footer"
+
     const contentBlocksList = document.querySelector(".js-content-blocks-list");
 
     if (contentBlocksList && contentBlocksList.dataset.templateSection) {
       return contentBlocksList.dataset.templateSection
     }
-
-    if (!wrapper) return "projekt_page"
-    if (wrapper.closest("aside, .sidebar, footer")) return "sidebar_and_footer"
 
     return "projekt_page"
   },

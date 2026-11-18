@@ -31,6 +31,15 @@
       <% end %>
     </div>
 
+    <p class="mb-4">
+      <strong><%= ApiClient.human_attribute_name(:instance_configuration_access) %></strong><br>
+      <% if @api_client.can_configure_instance? %>
+        <span class="kern-badge kern-badge--warning"><%= t("adm.api_clients.show.instance_configuration_granted") %></span>
+      <% else %>
+        <span class="kern-badge kern-badge--info"><%= t("adm.api_clients.show.instance_configuration_not_granted") %></span>
+      <% end %>
+    </p>
+
     <p class="mb-2">
       <strong><%= ApiClient.human_attribute_name(:auth_token) %></strong>
     </p>

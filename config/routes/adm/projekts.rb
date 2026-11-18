@@ -216,6 +216,7 @@ namespace :adm do
         member do
           put :calculate_winners
           put :recalculate_winners
+          put :resolve_tie
         end
       end
       resources :poll_question_imports, only: %i[index new create show destroy] do

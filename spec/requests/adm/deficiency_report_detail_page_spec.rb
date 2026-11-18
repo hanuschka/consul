@@ -87,6 +87,40 @@ describe "The Anliegen detail page in /adm", type: :request do
       expect(action_row).not_to include(">#{scope("share.trigger")}<")
       expect(action_row).to include(">#{scope("action_row.edit")}<")
     end
+
+    it "keeps only the PDF control for a deleted report" do
+      report.destroy
+      login_as(manager)
+
+      get adm_deficiency_reports_deficiency_report_path(report)
+
+      labels = action_row.scan(/<span class="kern-label">([^<]+)<\/span>/).flatten
+      expect(labels.first).to eq(scope("action_row.pdf"))
+      expect(labels).not_to include(
+        scope("action_row.website"), scope("watch.label"), scope("share.trigger"), scope("action_row.edit")
+      )
+    end
+  end
+
+  describe "deleted report subpages" do
+    before do
+      report.destroy
+      login_as(manager)
+    end
+
+    it "opens the audits page" do
+      get audits_adm_deficiency_reports_deficiency_report_path(report)
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "opens the feedback form page" do
+      DeficiencyReport::FeedbackForm.create!(deficiency_report: report, overall_satisfaction: 4)
+
+      get feedback_form_adm_deficiency_reports_deficiency_report_path(report)
+
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "share menu" do

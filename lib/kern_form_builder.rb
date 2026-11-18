@@ -32,14 +32,14 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def date_field(field, options = {})
-    value = options.fetch(:value) { object&.send(field) }
+    value = options.fetch(:value) { form_object&.send(field) }
     options[:value] = value.respond_to?(:strftime) ? value.strftime("%Y-%m-%d") : value.presence
 
     text_field(field, options.merge(type: "date"))
   end
 
   def datetime_local_field(field, options = {})
-    value = options.fetch(:value) { object&.send(field) }
+    value = options.fetch(:value) { form_object&.send(field) }
     options[:value] = value.respond_to?(:strftime) ? value.strftime("%Y-%m-%dT%H:%M") : value.presence
 
     text_field(field, options.merge(type: "datetime-local"))
@@ -210,7 +210,7 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
     ## Errors
 
     def field_errors(field)
-      object&.errors&.[](field) || []
+      form_object&.errors&.[](field) || []
     end
 
     def error_html(field, field_errors)
@@ -302,5 +302,10 @@ class KernFormBuilder < ActionView::Helpers::FormBuilder
 
     def merge_css_classes(*classes)
       classes.compact.flatten.join(" ")
+    end
+
+    # form_with without a model passes false instead of nil since Rails 7.2
+    def form_object
+      object || nil
     end
 end

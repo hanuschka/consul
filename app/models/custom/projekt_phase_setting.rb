@@ -17,6 +17,8 @@ class ProjektPhaseSetting < ApplicationRecord
 
   belongs_to :projekt_phase, touch: true
 
+  audited only: :value, on: :update, associated_with: :projekt_phase
+
   validates :projekt_phase_id, :key, presence: true
   validates :key, uniqueness: { scope: :projekt_phase_id }
 

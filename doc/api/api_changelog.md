@@ -2,6 +2,49 @@
 
 Notable changes to the Consul Projekt API, most recent first.
 
+## 2026-11-09
+
+### Instance configuration through the API
+
+API clients granted **Zugriff auf Instanz-Konfiguration** in /adm (admin
+clients only) can configure the platform under `/api/configuration`:
+
+- `GET`/`PATCH /api/configuration/settings` — metadata, brand and newsletter
+  colours, homepage texts, module switches and options, GDPR, uploads, map
+  defaults. `GET` lists every configurable key with its type.
+- `/api/configuration/images` and `/videos` — every logo and image slot,
+  including the new `favicon` slot, and the header videos.
+- `/api/configuration/footer_pages`, `/landing_pages`, `/navbar_items`,
+  `/content_blocks`, `/content_cards`, `/banners`, `/modal_notifications`,
+  `/texts`, `/email_templates`, `/map_layers`, `/geozones`,
+  `/tag_categories`, `/age_ranges`, `/individual_groups`.
+
+Values are checked against their type; unknown keys are rejected and nothing
+is written when one value is wrong. Every change is audited with the client,
+time, and old and new value.
+
+```
+PATCH /api/configuration/settings
+{ "settings": { "brand_color": "#004a83", "process.ideas": true } }
+```
+
+### Breaking: projekt and phase settings only accept known keys and typed values
+
+`PATCH /api/projekts/{id}/update_setting(s)` and
+`PATCH /api/projekt_phases/{id}/update_setting(s)` now accept only the keys
+the projekt or the phase's type actually has, each checked against its type.
+Phase settings no longer create keys that do not exist. Switches take
+`true`/`false`; the stored forms `"active"`/`""` keep working.
+
+- `update_setting`: unknown key → `404`, value of the wrong type → `422`.
+- `update_settings`: all or nothing. When one key is rejected, `updated` is
+  empty and `errors` lists every problem per key.
+
+`PATCH /api/projekt_phases/{projekt_phase_id}/iframe` checks its values the
+same way: `url` must be an http(s) URL, `width` and `height` whole numbers,
+and `""` clears any of them. A wrong value returns `422` with the problems
+per attribute under `error.details`, and nothing is written.
+
 ## 2026-07-20
 
 ### Poll questions and answers are now paginated

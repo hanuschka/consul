@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "moderation", "comments_controller").to_s
+load Rails.root.join("app", "controllers", "moderation", "comments_controller.rb")
 
 class Moderation::CommentsController < Moderation::BaseController
   has_filters %w[all unseen seen], only: :index

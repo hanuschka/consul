@@ -151,6 +151,15 @@ namespace :email_templates do
       }
     end
 
+    contribution_comment = Comment.all.find { |c| !c.commentable.is_a?(ProjektPhase) }
+    if contribution_comment
+      tests << {
+        name: "NotificationServiceMailer#new_contribution_comment",
+        phase: nil,
+        call: -> { NotificationServiceMailer.new_contribution_comment(user.id, contribution_comment.id).deliver_now }
+      }
+    end
+
     if question_phase
       tests << {
         name: "NotificationServiceMailer#projekt_questions",

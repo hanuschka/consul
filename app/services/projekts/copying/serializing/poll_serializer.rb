@@ -38,7 +38,7 @@ class Projekts::Copying::Serializing::PollSerializer < ApplicationService
       node
         .merge(Projekts::Copying::Serializing::AttachableSerializer.call(record: poll))
         .merge(
-          "sdg_relations" => Projekts::Copying::Serializing::SdgCodeSerializer.call(source: poll),
+          "sdg_relations" => Projekts::Copying::Serializing::SDGCodeSerializer.call(source: poll),
           "questions" => poll.questions.map { |question| question_node(question) }
         )
     end

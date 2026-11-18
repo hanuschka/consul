@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "comment").to_s
+load Rails.root.join("app", "models", "comment.rb")
 
 class Comment < ApplicationRecord
   scope :seen, -> { where.not(ignored_flag_at: nil) }
@@ -7,6 +7,12 @@ class Comment < ApplicationRecord
     return if datetime.blank?
 
     where("created_at > ?", datetime)
+  }
+  scope :on_public_projekt_phases, -> {
+    where(
+      commentable_type: "ProjektPhase",
+      commentable_id: ProjektPhase.frontend_visible.active.select(:id)
+    )
   }
 
   delegate :comments_allowed?, to: :projekt, allow_nil: true

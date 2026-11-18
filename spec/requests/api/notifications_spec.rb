@@ -20,7 +20,7 @@ end
       tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results. Clients with `public_data` access get 403 for a phase that is inactive or hidden in the frontend.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
@@ -49,6 +49,20 @@ end
                  pagination: Schemas::Miscellaneous::PAGINATION_RESPONSE_SCHEMA
                },
                required: ['data']
+
+        run_test!
+      end
+
+      response '403', 'phase hidden from public_data clients' do
+        let(:projekt_phase_id) do
+          Projekt.create!(name: 'Hidden').projekt_phases.create!(
+            type: 'ProjektPhase::ProjektNotificationPhase', active: true, frontend_visibility: false
+          ).id
+        end
+
+        before { api_client.update!(access_level: :public_data) }
+
+        schema ApiResponseExamples::ERROR_SCHEMA
 
         run_test!
       end
@@ -142,9 +156,37 @@ end
       tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a paginated list of all notifications across all projekt phases.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a paginated list of all notifications across all projekt phases. Clients with `public_data` access only see notifications of phases that are active and visible in the frontend.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
+
+      response '200', 'notifications of hidden or inactive phases left out for public_data clients' do
+        let(:visible_phase) do
+          Projekt.create!(name: 'Visible').projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: true)
+        end
+        let(:hidden_phase) do
+          Projekt.create!(name: 'Hidden').projekt_phases.create!(
+            type: 'ProjektPhase::ProjektNotificationPhase', active: true, frontend_visibility: false
+          )
+        end
+        let(:inactive_phase) do
+          Projekt.create!(name: 'Inactive').projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: false)
+        end
+
+        before do
+          api_client.update!(access_level: :public_data)
+
+          [[visible_phase, 'Visible'], [hidden_phase, 'Hidden'], [inactive_phase, 'Inactive']].each do |phase, title|
+            phase.projekt_notifications.create!(title: title, body: 'Body')
+          end
+        end
+
+        run_test! do |response|
+          titles = JSON.parse(response.body)['data']['notifications'].map { |notification| notification['title'] }
+
+          expect(titles).to eq(['Visible'])
+        end
+      end
 
       response '200', 'projekt notifications found' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }

@@ -13,7 +13,7 @@ class Tags::ToggleSelectionService < ApplicationService
       tag_names += [ @toggled_tag_name ]
     end
 
-    tag_names.join(",")
+    tag_names.sort.join(",")
   end
 
   private

@@ -132,7 +132,7 @@ end
       tags 'Question Options'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a single question option by ID. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a single question option by ID. `answers_count` is the number of answers given for this option. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'question option found' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -149,6 +149,14 @@ end
         end
         let(:id) { question_option.id }
 
+        before do
+          other_option = projekt_question.question_options.create!(value: 'Option 2')
+
+          [question_option, question_option, other_option].each do |option|
+            ProjektQuestionAnswer.create!(question: projekt_question, question_option: option, user: create(:user))
+          end
+        end
+
         schema type: :object,
                properties: {
                  data: {
@@ -161,7 +169,9 @@ end
                },
                required: ['data']
 
-        run_test!
+        run_test! do |response|
+          expect(JSON.parse(response.body)['data']['question_option']['answers_count']).to eq(2)
+        end
       end
 
       response '404', 'question option not found' do

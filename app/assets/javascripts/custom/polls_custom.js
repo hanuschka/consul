@@ -4,6 +4,7 @@
     resizeDebounceTimer: null,
     openAnswerAutosaveTimers: new WeakMap(),
     openAnswerStatusTimers: new WeakMap(),
+    openAnswerSavesPending: new WeakMap(),
 
     initialize: function() {
       this.destroy();
@@ -38,49 +39,36 @@
       const savedText = form.dataset.savedText;
       const errorText = form.dataset.errorText;
 
-      // Capture textarea state for restore after the answers section is re-rendered.
-      const wasFocused = document.activeElement === textarea;
-      const selStart = textarea.selectionStart;
-      const selEnd = textarea.selectionEnd;
-
       const status = form.querySelector(".js-poll-open-answer-status");
       if (status) {
         status.textContent = savingText || "";
         status.className = "poll-open-answer-status js-poll-open-answer-status -saving";
       }
 
-      const answersWrapper = form.closest('[id$="_answers"]');
-      if (answersWrapper) {
-        const observer = new MutationObserver(() => {
-          observer.disconnect();
+      this.openAnswerSavesPending.set(form, (this.openAnswerSavesPending.get(form) || 0) + 1);
 
-          const newForm = answersWrapper.querySelector(".js-poll-open-answer-autosave");
-          if (!newForm) return;
+      $(form).off(".pollsOpenAnswer");
 
-          const newTextarea = newForm.querySelector("textarea");
-          if (newTextarea) {
-            if (wasFocused) newTextarea.focus();
-            try { newTextarea.setSelectionRange(selStart, selEnd); } catch (_) {}
-          }
+      $(form).on("ajax:complete.pollsOpenAnswer", (_event, _xhr, outcome) => {
+        const pending = this.openAnswerSavesPending.get(form) - 1;
+        this.openAnswerSavesPending.set(form, pending);
 
-          const newStatus = newForm.querySelector(".js-poll-open-answer-status");
-          if (newStatus) {
-            newStatus.textContent = savedText || "";
-            newStatus.className = "poll-open-answer-status js-poll-open-answer-status -saved";
-            this.openAnswerStatusTimers.set(newForm, setTimeout(() => {
-              newStatus.textContent = "";
-              newStatus.className = "poll-open-answer-status js-poll-open-answer-status";
-            }, 2000));
-          }
-        });
-        observer.observe(answersWrapper, { childList: true, subtree: true });
-      }
+        if (!status || pending > 0) return;
 
-      $(form).one("ajax:error", () => {
-        if (status) {
+        clearTimeout(this.openAnswerStatusTimers.get(form));
+
+        if (outcome !== "success") {
           status.textContent = errorText || "";
           status.className = "poll-open-answer-status js-poll-open-answer-status -error";
+          return;
         }
+
+        status.textContent = savedText || "";
+        status.className = "poll-open-answer-status js-poll-open-answer-status -saved";
+        this.openAnswerStatusTimers.set(form, setTimeout(() => {
+          status.textContent = "";
+          status.className = "poll-open-answer-status js-poll-open-answer-status";
+        }, 2000));
       });
 
       $(form).submit();

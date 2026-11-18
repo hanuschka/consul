@@ -2,8 +2,7 @@
   "use strict";
 
   App.SessionTimeoutWarning = {
-    warningTimer: null,
-    logoutTimer: null,
+    syncTimer: null,
 
     initialize: function() {
       var container = document.querySelector(".js-session-timeout-warning");
@@ -12,6 +11,7 @@
       this.timeoutMinutes = parseInt(container.dataset.timeoutMinutes, 10);
       this.warningMinutes = parseInt(container.dataset.warningMinutes, 10);
       this.keepaliveUrl = container.dataset.keepaliveUrl;
+      this.statusUrl = container.dataset.statusUrl;
       this.dialog = container.querySelector(".js-session-timeout-dialog");
       this.extendButton = container.querySelector(".js-session-timeout-extend");
       this.logoutButton = container.querySelector(".js-session-timeout-logout");
@@ -29,24 +29,64 @@
     },
 
     resetTimers: function() {
+      this.scheduleSync(this.timeoutMinutes * 60);
+    },
+
+    scheduleSync: function(remainingSeconds) {
       this.clearTimers();
 
-      var warningDelay = (this.timeoutMinutes - this.warningMinutes) * 60 * 1000;
-      var logoutDelay = this.timeoutMinutes * 60 * 1000;
+      var delay = Math.max(remainingSeconds - this.warningMinutes * 60, 0) * 1000;
+      this.syncTimer = setTimeout(this.syncWithServer.bind(this), delay);
+    },
 
-      this.warningTimer = setTimeout(this.showWarning.bind(this), warningDelay);
-      this.logoutTimer = setTimeout(this.handleLogout.bind(this), logoutDelay);
+    syncWithServer: function() {
+      this.clearTimers();
+
+      App.Ajax
+        .request({ method: "GET", url: this.statusUrl, dataType: "json" })
+        .done(this.handleStatus.bind(this))
+        .fail(this.handleStatusFailure.bind(this));
+    },
+
+    handleStatus: function(response) {
+      var remainingSeconds = response.remaining_seconds;
+
+      if (remainingSeconds <= 0) {
+        this.handleLogout();
+      } else if (remainingSeconds <= this.warningMinutes * 60) {
+        this.showWarning(remainingSeconds);
+      } else {
+        this.hideWarning();
+        this.scheduleSync(remainingSeconds);
+      }
+    },
+
+    handleStatusFailure: function(xhr) {
+      if (xhr.status === 401) {
+        this.reloadPage();
+      } else if (this.dialog.open) {
+        this.handleLogout();
+      } else {
+        this.showWarning(this.warningMinutes * 60);
+      }
+    },
+
+    handleExtendFailure: function(xhr) {
+      if (xhr.status === 401) {
+        this.reloadPage();
+      } else {
+        this.showWarning(this.remainingSeconds);
+      }
+    },
+
+    reloadPage: function() {
+      window.location.assign(window.location.pathname + window.location.search);
     },
 
     clearTimers: function() {
-      if (this.warningTimer) {
-        clearTimeout(this.warningTimer);
-        this.warningTimer = null;
-      }
-
-      if (this.logoutTimer) {
-        clearTimeout(this.logoutTimer);
-        this.logoutTimer = null;
+      if (this.syncTimer) {
+        clearTimeout(this.syncTimer);
+        this.syncTimer = null;
       }
 
       if (this.countdownInterval) {
@@ -55,13 +95,15 @@
       }
     },
 
-    showWarning: function() {
-      this.remainingSeconds = this.warningMinutes * 60;
+    showWarning: function(remainingSeconds) {
+      this.remainingSeconds = remainingSeconds;
       this.updateCountdown();
       this.countdownInterval = setInterval(this.tickCountdown.bind(this), 1000);
 
-      this.dialog.showModal();
-      this.extendButton.focus();
+      if (!this.dialog.open) {
+        this.dialog.showModal();
+        this.extendButton.focus();
+      }
     },
 
     hideWarning: function() {
@@ -79,7 +121,7 @@
       this.remainingSeconds -= 1;
 
       if (this.remainingSeconds <= 0) {
-        this.handleLogout();
+        this.syncWithServer();
         return;
       }
 
@@ -102,7 +144,8 @@
 
       App.Ajax
         .post(this.keepaliveUrl)
-        .then(this.resetTimers.bind(this));
+        .done(this.resetTimers.bind(this))
+        .fail(this.handleExtendFailure.bind(this));
     },
 
     handleLogout: function() {

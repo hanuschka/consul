@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "dashboard", "base_controller").to_s
+load Rails.root.join("app", "controllers", "dashboard", "base_controller.rb")
 
 class Dashboard::BaseController < ApplicationController
   helper_method :custom_votes_for_proposal_success

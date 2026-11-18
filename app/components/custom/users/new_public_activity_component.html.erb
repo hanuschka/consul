@@ -27,7 +27,7 @@
         <% end %>
       <% end %>
       <% unless current_filter == "follows" %>
-        <%= paginate resources, remote: true, params: { action: "refresh_activities", filter: current_filter } %>
+        <%= helpers.paginate resources, remote: true, params: { action: "refresh_activities", filter: current_filter } %>
       <% end %>
     <% else %>
       <div class="callout primary">

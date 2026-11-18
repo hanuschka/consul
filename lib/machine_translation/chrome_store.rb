@@ -14,11 +14,19 @@ module MachineTranslation
         mutex.synchronize { cache[locale] ||= load(locale) }
       end
 
+      def stale_translation_ids
+        I18nContent.translation_class
+          .joins(:globalized_model)
+          .pluck(:id, "i18n_contents.key", :value)
+          .filter_map { |id, key, value| id if stale?(key, value) }
+      end
+
       def reset!
         mutex.synchronize do
           @cache = {}
           @signature = nil
           @checked_at = nil
+          @source_corpus = nil
         end
       end
 
@@ -45,8 +53,27 @@ module MachineTranslation
             .pluck("i18n_contents.key", "i18n_content_translations.value")
             .to_h
             .compact
+            .reject { |key, value| stale?(key, value) }
         rescue ActiveRecord::ActiveRecordError
           {}
+        end
+
+        def stale?(key, value)
+          source = source_text(key)
+
+          source.is_a?(String) && value.is_a?(String) &&
+            !MachineTranslation.placeholders_supplied?(source, value)
+        end
+
+        def source_text(key)
+          source_corpus.fetch(key) do
+            base, _, category = key.rpartition(".")
+            source_corpus["#{base}.other"] if MachineTranslation::PLURAL_CATEGORIES.include?(category.to_sym)
+          end
+        end
+
+        def source_corpus
+          @source_corpus ||= MachineTranslation::ChromeWriter.corpus(MachineTranslation.source_locale)
         end
 
         def signature

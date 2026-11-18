@@ -2,7 +2,7 @@ class Api::DeficiencyReportCategoriesController < Api::BaseController
   def index
     check_read_access!
     categories = paginate(DeficiencyReport::Category.includes(:deficiency_reports))
-    serialized_categories = DeficiencyReportCategorySerializer.serialize_collection(categories)
+    serialized_categories = DeficiencyReportCategorySerializer.serialize_collection(categories, client: current_client)
     render json: {
       data: { deficiency_report_categories: serialized_categories },
       pagination: pagination_meta(categories)

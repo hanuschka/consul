@@ -85,11 +85,39 @@ module Schemas
       }
     }.freeze
 
+    LEGISLATION_DRAFT_VERSION_SCHEMA = {
+      type: :object,
+      properties: {
+        id: { type: :integer, description: 'Unique identifier for the text draft', example: 1 },
+        legislation_process_id: { type: :integer, description: 'ID of the legislation process (one per text participation phase) this draft belongs to', example: 7 },
+        title: { type: :string, description: 'Title of the draft version', example: 'Second draft after public feedback' },
+        changelog: { type: :string, nullable: true, description: 'What changed compared to the previous draft version', example: 'Section 3 rewritten based on comments' },
+        body: { type: :string, nullable: true, description: 'Full text of the draft in Markdown', example: "# Introduction\n\nThe draft text." },
+        body_html: { type: :string, nullable: true, description: 'The draft text rendered to sanitized HTML, as shown on the public page', example: "<h1 id=\"introduction\">Introduction</h1>\n\n<p>The draft text.</p>" },
+        status: { type: :string, enum: %w[draft published], description: 'Publication status. Clients with public_data access only receive published drafts.', example: 'published' },
+        created_at: { type: :string, format: :date_time, description: 'Timestamp when the draft was created', example: '2024-03-01T09:00:00Z' },
+        updated_at: { type: :string, format: :date_time, description: 'Timestamp when the draft was last modified', example: '2024-03-05T14:30:00Z' }
+      },
+      required: %w[id legislation_process_id title status created_at updated_at]
+    }.freeze
+
+    AUTHOR_SCHEMA = {
+      type: :object,
+      description: 'Author of a contribution, limited to the name the public site shows next to it. Real names and email addresses are never returned.',
+      properties: {
+        id: { type: :integer, description: 'ID of the user. Only returned to admin clients.', example: 15 },
+        public_name: { type: :string, nullable: true, description: 'Name shown on the site next to the contribution: the organisation name or the username. Null when the author hid their activity.', example: 'Gartenfreunde e.V.' }
+      },
+      required: ['public_name']
+    }.freeze
+
     def self.all
       {
         Argument: ARGUMENT_SCHEMA,
+        Author: AUTHOR_SCHEMA,
         Iframe: IFRAME_SCHEMA,
-        ImageResponse: IMAGE_RESPONSE_SCHEMA
+        ImageResponse: IMAGE_RESPONSE_SCHEMA,
+        LegislationDraftVersion: LEGISLATION_DRAFT_VERSION_SCHEMA
       }
     end
   end

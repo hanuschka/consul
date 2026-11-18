@@ -50,10 +50,10 @@ module Adm
         end
         flash.now[:success] = t(".success")
 
-        if params[:respond_with].present?
+        if params[:respond_with] == "manager_assignments"
           render turbo_stream: turbo_stream.replace(
-            params[:respond_with],
-            partial: params[:respond_with],
+            "manager_assignments",
+            partial: "manager_assignments",
             locals: { landing_page: @landing_page }
           )
         end

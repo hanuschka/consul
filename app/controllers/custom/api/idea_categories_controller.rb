@@ -9,7 +9,7 @@ class Api::IdeaCategoriesController < Api::BaseController
     check_read_access!
     categories = paginate(Idea::Category.includes(:ideas))
 
-    serialized_categories = IdeaCategorySerializer.serialize_collection(categories)
+    serialized_categories = IdeaCategorySerializer.serialize_collection(categories, client: current_client)
 
     render json: {
       data: { idea_categories: serialized_categories },
@@ -19,7 +19,7 @@ class Api::IdeaCategoriesController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_category = IdeaCategorySerializer.new(@idea_category).serialize
+    serialized_category = IdeaCategorySerializer.new(@idea_category, client: current_client).serialize
 
     render json: { data: { idea_category: serialized_category } }
   end
@@ -29,7 +29,7 @@ class Api::IdeaCategoriesController < Api::BaseController
     category = Idea::Category.new(idea_category_params)
 
     if category.save
-      serialized_category = IdeaCategorySerializer.new(category).serialize
+      serialized_category = IdeaCategorySerializer.new(category, client: current_client).serialize
 
       render json: { data: { idea_category: serialized_category } }, status: 201
     else
@@ -42,7 +42,7 @@ class Api::IdeaCategoriesController < Api::BaseController
     @idea_category.assign_attributes(idea_category_params)
 
     if @idea_category.save
-      serialized_category = IdeaCategorySerializer.new(@idea_category).serialize
+      serialized_category = IdeaCategorySerializer.new(@idea_category, client: current_client).serialize
 
       render json: { data: { idea_category: serialized_category } }
     else

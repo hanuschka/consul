@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "budgets", "investments", "form_component").to_s
+load Rails.root.join("app", "components", "budgets", "investments", "form_component.rb")
 
 class Budgets::Investments::FormComponent < ApplicationComponent
   delegate :projekt_feature?, :projekt_phase_feature?, :render_custom_block, :ck_editor_class, :current_user, to: :helpers

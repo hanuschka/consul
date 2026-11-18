@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class BlobsController < ActionController::Base
+  rescue_from ActionController::MissingFile, ActiveStorage::FileNotFoundError, with: :render_file_missing
+
   def show
-    blob = ActiveStorage::Blob.find_by!(key: params[:key])
+    blob = find_blob!
 
     unless publicly_accessible?(blob)
       raise ActiveRecord::RecordNotFound
@@ -24,7 +26,7 @@ class BlobsController < ActionController::Base
   ] + LEGACY_VARIANT_SIZES).uniq.freeze
 
   def variant
-    blob = ActiveStorage::Blob.find_by!(key: params[:key])
+    blob = find_blob!
 
     unless publicly_accessible?(blob) && blob.variable?
       raise ActiveRecord::RecordNotFound
@@ -49,6 +51,19 @@ class BlobsController < ActionController::Base
   end
 
   private
+
+    def render_file_missing
+      expires_now
+
+      head :not_found
+    end
+
+    def find_blob!
+      key = params[:key].to_s
+
+      ActiveStorage::Blob.find_by(key: key) ||
+        ActiveStorage::Blob.find_by!("LOWER(key) = ?", key)
+    end
 
     def publicly_accessible?(blob)
       ActiveStorage::Attachment.exists?(blob_id: blob.id, record_type: allowed_record_types)

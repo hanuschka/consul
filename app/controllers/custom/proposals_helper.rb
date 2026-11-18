@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "proposals_helper").to_s
+load Rails.root.join("app", "helpers", "proposals_helper.rb")
 
 module ProposalsHelper
 

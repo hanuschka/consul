@@ -1,0 +1,55 @@
+<div class="kern-alert kern-alert--warning mb-5">
+  <div class="kern-alert__header">
+    <span class="kern-icon kern-icon--warning" aria-hidden="true"></span>
+    <span class="kern-title"><%= t(".title") %></span>
+  </div>
+  <div class="kern-alert__body">
+    <p class="kern-body mb-3"><%= t(".description") %></p>
+
+    <% if tie.free_places || tie.remaining_budget %>
+      <ul class="kern-body mb-3">
+        <% if tie.free_places %>
+          <li><%= t(".free_places", count: tie.free_places) %></li>
+        <% end %>
+        <% if tie.remaining_budget %>
+          <li><%= t(".remaining_budget", amount: budget.formatted_amount(tie.remaining_budget)) %></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <p class="kern-body mb-4" id="budget_tie_pick_hint"><%= t(".pick_hint") %></p>
+
+    <%= form_with url: resolve_tie_adm_projekts_phase_budget_path(projekt_phase, budget), method: :put,
+                  data: {
+                    controller: "adm--budget-tie",
+                    "adm--budget-tie-free-places-value": tie.free_places,
+                    "adm--budget-tie-remaining-budget-value": tie.remaining_budget
+                  } do %>
+      <fieldset class="kern-fieldset mb-4">
+        <legend class="kern-label"><%= t(".legend") %></legend>
+        <div class="kern-fieldset__body">
+          <% tie.candidates.each do |investment| %>
+            <% checkbox_id = "budget_tie_investment_#{investment.id}" %>
+            <div class="kern-form-check mb-2">
+              <%= check_box_tag "investment_ids[]", investment.id, false,
+                    id: checkbox_id,
+                    class: "kern-form-check__checkbox",
+                    "aria-describedby": "budget_tie_pick_hint",
+                    data: {
+                      "adm--budget-tie-target": "checkbox",
+                      action: "change->adm--budget-tie#update",
+                      price: (investment.price if budget.show_money?)
+                    } %>
+              <label for="<%= checkbox_id %>" class="kern-label">
+                <%= investment.title %><% if budget.show_money? %> – <%= investment.formatted_price %><% end %>
+              </label>
+            </div>
+          <% end %>
+        </div>
+      </fieldset>
+
+      <%= kern_button(text: t(".submit"), icon: "emoji_events", type: :submit,
+                      data: { turbo_confirm: t(".submit_confirm") }) %>
+    <% end %>
+  </div>
+</div>

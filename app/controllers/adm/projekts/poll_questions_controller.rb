@@ -54,13 +54,13 @@ class Adm::Projekts::PollQuestionsController < Adm::Projekts::BaseController
 
     respond_to do |format|
       format.html do
-        @map_point_count = Poll::Answer::MapPoint.for_question(@question).count if @question.map_points?
+        @map_point_count = Poll::Answer::MapPoint.for_question([@question, *@question.contexted_variants]).count if @question.map_points?
         @breadcrumbs = breadcrumbs_for_action(@question.title)
       end
 
       format.geojson do
         if @question.map_points?
-          send_data JSON.generate(Polls::MapPointsFeatureCollection.call(@question)),
+          send_data JSON.generate(Polls::MapPointsFeatureCollection.call(@question, export: true)),
                     filename: "poll-question-#{@question.id}-map-points-#{Time.zone.today}.geojson",
                     type: "application/geo+json"
         else

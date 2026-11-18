@@ -85,5 +85,11 @@ describe DeficiencyReport::Subcategory do
 
       expect(subcategory.safe_to_destroy?).to be(false)
     end
+
+    it "is false while only a hidden report uses the subcategory" do
+      create(:deficiency_report, category: subcategory.category, subcategory: subcategory).hide
+
+      expect(subcategory.safe_to_destroy?).to be(false)
+    end
   end
 end

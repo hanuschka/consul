@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "image").to_s
+load Rails.root.join("app", "models", "image.rb")
 
 class Image
   # Uploaded photographs carry camera EXIF, including GPS, that must never

@@ -5,6 +5,10 @@ de:
         updated: KI-Einstellung erfolgreich aktualisiert
         custom_model_required: >
           Bitte geben Sie ein benutzerdefiniertes Modell an. Wenn ein API-Endpunkt gesetzt ist, funktioniert die KI ohne benutzerdefiniertes Modell nicht.
+        invalid_api_endpoint: >
+          Der API-Endpunkt wurde nicht gespeichert. Bitte geben Sie die Basis-URL als http(s)-Adresse ohne Abfrageparameter an, z. B. https://<ressource>.services.ai.azure.com/openai/v1.
+        api_endpoint_shortened: >
+          KI-Einstellung gespeichert. Der API-Endpunkt wurde auf die Basis-URL gekürzt: %{url}
       warnings:
         feature_disabled:
           title: KI-Funktion nicht aktiviert

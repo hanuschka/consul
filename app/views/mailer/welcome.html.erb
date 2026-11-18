@@ -1,0 +1,26 @@
+<td style="<%= css_for_mailer_content %>">
+
+  <h1 style="<%= css_for_mailer_heading %>">
+    <%= t("mailers.welcome.subject", org_name: Setting["org_name"]) %>
+  </h1>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= @user.recipient_greeting %>,
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("mailers.welcome.body") %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= link_to t("mailers.welcome.link"), root_url, style: css_for_mailer_link %>
+  </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
+</td>

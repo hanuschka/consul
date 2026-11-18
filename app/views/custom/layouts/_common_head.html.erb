@@ -8,7 +8,7 @@
 <% end %>
 
 <%= csrf_meta_tags %>
-<%= favicon_link_tag "favicon.ico" %>
+<%= site_favicon_link_tag %>
 <script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
 
 <%= content_for :additional_plugin_styles %>
@@ -35,7 +35,14 @@
 <% end %>
 
 <meta name="external-links" content="<%= Setting["extended_feature.gdpr.link_out_warning"].present? %>" />
-<meta name="two-click-iframes" content="<%= Setting["extended_feature.gdpr.two_click_iframe_solution"].present? %>" />
+<%= tag.meta(
+  name: "two-click-iframes",
+  content: Setting["extended_feature.gdpr.two_click_iframe_solution"].present?,
+  data: {
+    explainer_text: t("shared.two_click_iframes.explainer_text"),
+    consent_button: t("shared.two_click_iframes.consent_button")
+  }
+) %>
 <meta name="turbolinks-cache-control" content="no-cache">
 
 <%= stylesheet_link_tag "ckeditor5" %>

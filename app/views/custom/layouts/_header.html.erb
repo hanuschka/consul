@@ -8,14 +8,6 @@
 
   <div class="js-sticky-header top-bar-wrapper">
     <div class="top-bar">
-        <button data-responsive-toggle="responsive-menu"
-              class="hamburger-menu header--mobile-hamburger-menu js-toggle-mobile-menu js-prevent-key-scroll"
-              aria-expanded="false"
-              aria-label='<%= t('custom.links.menu.mobile.menu_label') %>' >
-              <span class="menu-icon dark" data-toggle></span>
-        </button>
-
-
         <%= link_to (@ui_site_homepage_path.presence || root_path), class: "top-bar--title" do %>
           <% transparent_background_logo =
               @ui_site_logo_transparent_background.presence || image_path_for("logo_header_for_transparent.png")
@@ -27,6 +19,13 @@
           %>
           <%= image_tag(white_background_logo, alt: Setting["org_name"], class: "top-logo--regular") %>
         <% end %>
+
+        <button data-responsive-toggle="responsive-menu"
+              class="hamburger-menu header--mobile-hamburger-menu js-toggle-mobile-menu js-prevent-key-scroll"
+              aria-expanded="false"
+              aria-label='<%= t('custom.links.menu.mobile.menu_label') %>' >
+              <span class="menu-icon dark" data-toggle></span>
+        </button>
 
         <div class="header--navigation expanded not-print hide-for-small-only">
           <nav

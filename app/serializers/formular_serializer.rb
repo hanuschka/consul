@@ -23,6 +23,8 @@ class FormularSerializer < BaseSerializer
         projekt_id: formular.projekt_phase.projekt_id
       }
 
+      formular_data[:settings] = serialize_settings
+
       if formular.projekt_phase.projekt.present?
         projekt = formular.projekt_phase.projekt
         formular_data[:projekt] = {
@@ -42,4 +44,16 @@ class FormularSerializer < BaseSerializer
   def self.serialize_collection(formulars)
     formulars.map { |formular| new(formular).serialize }
   end
+
+  private
+
+    def serialize_settings
+      setting_keys = ProjektPhase::FormularPhase::UpdateSettingsService::SETTING_KEYS
+      setting_values = formular.projekt_phase.settings
+        .where(key: setting_keys.values)
+        .pluck(:key, :value)
+        .to_h
+
+      setting_keys.transform_values { |key| setting_values[key] }
+    end
 end

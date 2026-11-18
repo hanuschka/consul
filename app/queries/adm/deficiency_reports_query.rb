@@ -151,7 +151,7 @@ module Adm
 
       def filter_by_hidden_state(scope, values)
         values = Array(values).compact_blank.map(&:to_s)
-        return scope.with_hidden if values.empty?
+        return scope if values.empty?
         return scope.with_hidden if values.include?("visible") && values.include?("hidden")
         return scope.only_hidden if values == ["hidden"]
         return scope if values == ["visible"]

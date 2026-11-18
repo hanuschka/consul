@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "polls", "questions", "answers_component").to_s
+load Rails.root.join("app", "components", "polls", "questions", "answers_component.rb")
 
 class Polls::Questions::AnswersComponent < ApplicationComponent
   delegate :projekt_feature?, :projekt_phase_feature?, :answer_with_description?, to: :helpers

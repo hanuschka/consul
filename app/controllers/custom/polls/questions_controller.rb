@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "polls", "questions_controller").to_s
+load Rails.root.join("app", "controllers", "polls", "questions_controller.rb")
 
 class Polls::QuestionsController < ApplicationController
   include GuestUsers
@@ -62,7 +62,7 @@ class Polls::QuestionsController < ApplicationController
     limit_reached = false
 
     Poll::Answer.transaction do
-      lock_map_points_for_current_user
+      lock_answers_for_current_user
       answer = map_points_answer
 
       if answer.present? && answer.map_points.count >= @question.max_map_points
@@ -110,11 +110,17 @@ class Polls::QuestionsController < ApplicationController
     end
 
     if open_answer_params[:open_answer_text].present?
-      @answer = @question.find_or_initialize_user_answer(current_user, @question.open_question_answer)
-      @answer.save_and_record_voter_participation if @answer.new_record?
+      Poll::Answer.transaction do
+        lock_answers_for_current_user
+        @answer = @question.find_or_initialize_user_answer(current_user, @question.open_question_answer)
+        created = @answer.new_record?
+        replaced_other_option = !created && @answer.question_answer_id_changed?
+        @answer.save_and_record_voter_participation if created
 
-      if @answer.update(open_answer_text: open_answer_params[:open_answer_text])
-        @open_answer_updated = true
+        if @answer.update(open_answer_text: open_answer_params[:open_answer_text])
+          @open_answer_updated = true
+          @skip_answers_rerender = !replaced_other_option && !(created && max_votes_reached?)
+        end
       end
     else
       @answer = @question.answers.find_by(author: current_user,
@@ -122,6 +128,7 @@ class Polls::QuestionsController < ApplicationController
       @answer.destroy_and_remove_voter_participation if @answer.present?
     end
 
+    @keep_open_answer_form = true
     resolve_wizard_has_next
 
     respond_to do |format|
@@ -188,7 +195,7 @@ class Polls::QuestionsController < ApplicationController
       @boundary ||= Polls::MapPointBoundary.new(@question)
     end
 
-    def lock_map_points_for_current_user
+    def lock_answers_for_current_user
       Poll::Answer.connection.execute(
         "SELECT pg_advisory_xact_lock(#{@question.id.to_i}, #{current_user.id.to_i})"
       )
@@ -229,6 +236,11 @@ class Polls::QuestionsController < ApplicationController
       ::Polls::AnswerAllowanceQuery.call(
         question: @question, user: current_user, title: title, weight: weight
       )
+    end
+
+    def max_votes_reached?
+      @question.votation_type&.multiple? &&
+        @question.answers.where(author: current_user).count >= @question.max_votes
     end
 
     def providing_an_open_answer?(answer)

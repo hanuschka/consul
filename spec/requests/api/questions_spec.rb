@@ -70,7 +70,7 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Create a new projekt question in a specific phase. Questions can be created as: (1) root questions in a QuestionPhase, (2) livestream questions in a LivestreamPhase by specifying projekt_livestream_id. Questions support multiple choice options via nested question_options_attributes. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Create a new projekt question in a specific phase. Questions can be created as: (1) root questions in a QuestionPhase, (2) livestream questions in a LivestreamPhase by specifying projekt_livestream_id. Questions support multiple choice options via nested question_options_attributes. Projekt questions have no description; a `description` field in the payload is ignored. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_question, in: :body, description: 'Projekt question creation payload', schema: {
         type: :object,
@@ -94,7 +94,8 @@ end
         let(:projekt_question) do
           {
             projekt_question: {
-              title: 'Test Question'
+              title: 'Test Question',
+              description: 'Ignored: projekt questions have no description'
             }
           }
         end
@@ -239,7 +240,7 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update an existing projekt question. Allows modifying question text and associated options. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update an existing projekt question. Allows modifying question text and associated options. Projekt questions have no description; a `description` field in the payload is ignored. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_question, in: :body, description: 'Attributes to update on the projekt question', schema: {
         type: :object,

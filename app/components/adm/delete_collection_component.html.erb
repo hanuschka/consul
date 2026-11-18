@@ -40,12 +40,13 @@
     </div>
   </div>
 
-  <%= helpers.kern_link_button url,
-        text: text,
-        icon: icon,
-        style: style,
-        data: {
-          "adm--delete-collection-target": "trigger",
-          action: "adm--delete-collection#start"
-        } %>
+  <%= helpers.kern_button(
+    text: text,
+    icon: icon,
+    style: style,
+    data: {
+      "adm--delete-collection-target": "trigger",
+      action: "adm--delete-collection#start"
+    }
+  ) %>
 </div>

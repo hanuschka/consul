@@ -12,12 +12,12 @@ module SimilarContributionsCheckable
 
     has_many :similar_contribution_exclusions, as: :contribution, dependent: :destroy
 
-    enum similar_contributions_check_status: {
+    enum :similar_contributions_check_status, {
       pending: "pending",
       processing: "processing",
       completed: "completed",
       failed: "failed"
-    }, _prefix: :similar_contributions_check
+    }, prefix: :similar_contributions_check
   end
 
   def similar_contributions_check_finished?

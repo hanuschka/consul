@@ -9,7 +9,7 @@
 <%= render "shared/filter_subnav", i18n_namespace: "admin.budgets.index" %>
 
 <% if budgets.any? %>
-  <h3><%= page_entries_info budgets %></h3>
+  <h3><%= helpers.page_entries_info budgets %></h3>
 
   <table class="budgets-table">
     <thead>
@@ -41,7 +41,7 @@
     </tbody>
   </table>
 
-  <%= paginate budgets %>
+  <%= helpers.paginate budgets %>
 <% else %>
   <div class="callout primary">
     <%= t("admin.budgets.index.no_budgets") %>

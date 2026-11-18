@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "budget", "investment").to_s
+load Rails.root.join("app", "models", "budget", "investment.rb")
 
 class Budget
   class Investment < ApplicationRecord
@@ -31,7 +31,7 @@ to: :budget
     scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
     scope :user_created, -> { where(masterportal_pin_id: nil) }
 
-    enum implementation_performer: { city: 0, user: 1 }
+    enum :implementation_performer, { city: 0, user: 1 }
 
     scope :sort_by_newest, -> { reorder(created_at: :desc) }
 
@@ -49,6 +49,7 @@ to: :budget
       left_joins(budget_ballot_lines: :ballot)
         .group("budget_investments.id")
         .order(Arel.sql("COALESCE(SUM(CASE WHEN budget_ballots.conditional = false THEN budget_ballot_lines.line_weight ELSE 0 END), 0) DESC"))
+        .order(id: :desc)
     end
 
     def register_selection(user, vote_weight = 1)

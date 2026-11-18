@@ -54,7 +54,7 @@ Rails.application.routes.draw do
   get "/consul.json", to: "installation#details"
   get "/latest_activity", to: "welcome#latest_activity" #custom
 
-  resources :stats, only: [:index]
+  get "/stats", to: redirect("/")
   resources :images, only: [:destroy]
   resources :documents, only: [:destroy]
   resources :follows, only: [:create, :destroy]

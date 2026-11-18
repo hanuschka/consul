@@ -1,15 +1,15 @@
 class QuestionSerializer < BaseSerializer
   attr_reader :projekt_question
 
-  def initialize(projekt_question)
+  def initialize(projekt_question, client: nil)
     @projekt_question = projekt_question
+    @client = client
   end
 
   def serialize
     question_data = projekt_question.as_json(
       only: [
         :id,
-        :author_id,
         :projekt_phase_id,
         :projekt_livestream_id,
         :created_at,
@@ -21,21 +21,12 @@ class QuestionSerializer < BaseSerializer
       title: projekt_question.title
     )
 
-    if projekt_question.respond_to?(:author) && projekt_question.author.present?
-      question_data[:author] = {
-        id: projekt_question.author.id,
-        username: projekt_question.author.username,
-        public_name: projekt_question.author.public_name
-      }
-    elsif projekt_question.author_id.present? && projekt_question.author_id > 0
-      author = User.find_by(id: projekt_question.author_id)
-      if author.present?
-        question_data[:author] = {
-          id: author.id,
-          username: author.username,
-          public_name: author.public_name
-        }
-      end
+    if admin_client?
+      question_data[:author_id] = projekt_question.author_id
+    end
+
+    if projekt_question.author.present?
+      question_data[:author] = serialize_author(projekt_question.author)
     end
 
     if projekt_question.projekt_phase.present?
@@ -77,8 +68,8 @@ class QuestionSerializer < BaseSerializer
     question_data
   end
 
-  def self.serialize_collection(questions)
-    questions.map { |question| new(question).serialize }
+  def self.serialize_collection(questions, client: nil)
+    questions.map { |question| new(question, client: client).serialize }
   end
 end
 

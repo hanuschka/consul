@@ -2,7 +2,7 @@ class ProjektEvaluation < ApplicationRecord
   belongs_to :projekt
   has_many :projekt_phase_evaluations, dependent: :destroy
 
-  enum status: {
+  enum :status, {
     pending: "pending",
     processing: "processing",
     completed: "completed",

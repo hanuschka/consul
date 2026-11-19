@@ -49,10 +49,11 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
         comment: {
           type: :object,
           properties: {
-            body: { type: :string, description: 'Text content of the comment' },
+            body: { type: :string, description: 'Text content of the comment in the current language' },
+            translations: Schemas::Miscellaneous.translations_schema(%w[body]),
             parent_id: { type: :integer, nullable: true, description: 'Optional: ID of a comment on the same resource to reply to' }
           },
-          required: %w[body]
+          required: []
         }
       },
       required: ['comment']
@@ -65,7 +66,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
              data: {
                type: :object,
                properties: {
-                 comment: { type: :object }
+                 comment: { '$ref' => '#/components/schemas/Comment' }
                },
                required: ['comment']
              }
@@ -105,7 +106,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     comments: { type: :array, items: { type: :object } }
+                     comments: { type: :array, items: { '$ref' => '#/components/schemas/Comment' } }
                    },
                    required: ['comments']
                  },
@@ -164,7 +165,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     comments: { type: :array, items: { type: :object } }
+                     comments: { type: :array, items: { '$ref' => '#/components/schemas/Comment' } }
                    },
                    required: ['comments']
                  },
@@ -191,7 +192,8 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           comment: {
             type: :object,
             properties: {
-              body: { type: :string, description: 'Text content of the comment' },
+              body: { type: :string, description: 'Text content of the comment in the current language' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[body]),
               parent_id: { type: :integer, nullable: true, description: 'Optional: ID of parent comment for replies. If provided, creates a nested reply.' },
               ancestry: { type: :string, nullable: true, description: 'Ancestry string for hierarchy (auto-generated)' }
             },
@@ -217,7 +219,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     comment: { type: :object }
+                     comment: { '$ref' => '#/components/schemas/Comment' }
                    },
                    required: ['comment']
                  }
@@ -253,10 +255,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     comment: {
-                       type: :object,
-                       description: 'Serialized comment reply with parent_comment reference and ancestry information'
-                     }
+                     comment: { '$ref' => '#/components/schemas/Comment' }
                    },
                    required: ['comment']
                  }
@@ -307,7 +306,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     comment: { type: :object }
+                     comment: { '$ref' => '#/components/schemas/Comment' }
                    },
                    required: ['comment']
                  }
@@ -607,7 +606,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     comments: { type: :array, items: { type: :object } }
+                     comments: { type: :array, items: { '$ref' => '#/components/schemas/Comment' } }
                    },
                    required: ['comments']
                  },
@@ -649,7 +648,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     comment: { type: :object }
+                     comment: { '$ref' => '#/components/schemas/Comment' }
                    },
                    required: ['comment']
                  }
@@ -686,20 +685,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     comment: {
-                       type: :object,
-                       properties: {
-                         id: { type: :integer },
-                         body: { type: :string },
-                         parent_comment: { type: :object, nullable: true, description: 'Parent comment (null for root comments)' },
-                         child_comments: {
-                           type: :array,
-                           description: 'Array of direct child comments (replies to this comment)',
-                           items: { type: :object }
-                         },
-                         ancestry: { type: :string, nullable: true, description: 'Ancestry string for comment hierarchy (null for root comments)' }
-                       }
-                     }
+                     comment: { '$ref' => '#/components/schemas/Comment' }
                    },
                    required: ['comment']
                  }
@@ -788,9 +774,10 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           comment: {
             type: :object,
             properties: {
-              body: { type: :string, description: 'New text content of the comment' }
+              body: { type: :string, description: 'New text content of the comment in the current language' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[body])
             },
-            required: %w[body]
+            required: []
           }
         },
         required: ['comment']
@@ -808,7 +795,7 @@ RSpec.describe 'Comments API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     comment: { type: :object }
+                     comment: { '$ref' => '#/components/schemas/Comment' }
                    },
                    required: ['comment']
                  }

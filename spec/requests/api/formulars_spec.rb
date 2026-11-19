@@ -9,81 +9,6 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 let(:existing_formular_phase) { create_projekt_phase('ProjektPhase::FormularPhase') }
 let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_phase.id) }
 
-  FORMULAR_RESPONSE_SCHEMA = {
-    type: :object,
-    properties: {
-      id: {
-        type: :integer,
-        description: 'Unique identifier for the formular',
-        example: 1
-      },
-      projekt_phase_id: {
-        type: :integer,
-        description: 'ID of the projekt phase this formular belongs to',
-        example: 5
-      },
-      formular_fields_count: {
-        type: :integer,
-        description: 'Number of form fields defined in this formular',
-        example: 12
-      },
-      formular_answers_count: {
-        type: :integer,
-        description: 'Number of participant responses submitted to this formular',
-        example: 45
-      },
-      settings: {
-        type: :object,
-        description: 'Settings of the formular phase that govern submissions, as shown in /adm',
-        properties: {
-          primary_cutoff_date: {
-            type: :string,
-            nullable: true,
-            description: 'Date (YYYY-MM-DD) after which the formular takes no more submissions; empty when unset',
-            example: '2026-12-31'
-          },
-          submissions_limit: {
-            type: :string,
-            nullable: true,
-            description: 'How many times one user may submit the formular',
-            example: '1'
-          }
-        }
-      },
-      projekt_phase: {
-        type: :object,
-        description: 'The projekt phase this formular belongs to',
-        properties: {
-          id: { type: :integer, example: 5 },
-          title: { type: :string, nullable: true, example: 'Feedback Phase' },
-          type: { type: :string, example: 'ProjektPhase::FormularPhase' },
-          projekt_id: { type: :integer, example: 2 }
-        }
-      },
-      projekt: {
-        type: :object,
-        description: 'The projekt this formular belongs to',
-        properties: {
-          id: { type: :integer, example: 2 },
-          title: { type: :string, example: 'Community Survey' }
-        }
-      },
-      created_at: {
-        type: :string,
-        format: :date_time,
-        description: 'Timestamp when the formular was created',
-        example: '2024-01-10T10:00:00Z'
-      },
-      updated_at: {
-        type: :string,
-        format: :date_time,
-        description: 'Timestamp when the formular was last modified',
-        example: '2024-01-15T14:30:00Z'
-      }
-    },
-    required: %w[id projekt_phase_id created_at updated_at]
-  }.freeze
-
   path '/api/projekt_phases/{projekt_phase_id}/formulars' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (FormularPhase)'
 
@@ -107,7 +32,7 @@ let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_p
                    properties: {
                      formulars: {
                        type: :array,
-                       items: FORMULAR_RESPONSE_SCHEMA
+                       items: { '$ref' => '#/components/schemas/Formular' }
                      }
                    },
                    required: ['formulars']
@@ -139,7 +64,7 @@ let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_p
                  data: {
                    type: :object,
                    properties: {
-                     formular: FORMULAR_RESPONSE_SCHEMA
+                     formular: { '$ref' => '#/components/schemas/Formular' }
                    },
                    required: ['formular']
                  }
@@ -199,7 +124,7 @@ let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_p
                  data: {
                    type: :object,
                    properties: {
-                     formular: FORMULAR_RESPONSE_SCHEMA
+                     formular: { '$ref' => '#/components/schemas/Formular' }
                    },
                    required: ['formular']
                  }
@@ -262,7 +187,7 @@ let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_p
                  data: {
                    type: :object,
                    properties: {
-                     formular: FORMULAR_RESPONSE_SCHEMA
+                     formular: { '$ref' => '#/components/schemas/Formular' }
                    },
                    required: ['formular']
                  }

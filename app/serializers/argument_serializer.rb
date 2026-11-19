@@ -1,8 +1,9 @@
 class ArgumentSerializer < BaseSerializer
   attr_reader :projekt_argument
 
-  def initialize(projekt_argument)
+  def initialize(projekt_argument, client: nil)
     @projekt_argument = projekt_argument
+    @client = client
   end
 
   def serialize
@@ -10,6 +11,7 @@ class ArgumentSerializer < BaseSerializer
       only: [
         :id,
         :name,
+        :party,
         :position,
         :note,
         :pro,
@@ -44,8 +46,8 @@ class ArgumentSerializer < BaseSerializer
     argument_data
   end
 
-  def self.serialize_collection(arguments)
-    arguments.map { |argument| new(argument).serialize }
+  def self.serialize_collection(arguments, client: nil)
+    arguments.map { |argument| new(argument, client: client).serialize }
   end
 end
 

@@ -20,12 +20,24 @@ module Schemas
         total_duration_start: { type: :string, format: :datetime, nullable: true, description: 'The project start date. When set, this defines when the projekt begins.', example: '2024-01-01T00:00:00Z' },
         total_duration_end: { type: :string, format: :datetime, nullable: true, description: 'The project end date. When set, this defines when the projekt concludes.', example: '2024-12-31T23:59:59Z' },
         comments_count: { type: :integer, nullable: true, description: 'The total number of comments on the projekt', example: 0 },
-        geozone_affiliated: { type: [:boolean, :string], nullable: true, description: 'Indicates if the projekt is restricted to specific geographic zones', example: false },
-        level: { type: :integer, nullable: true, description: 'The hierarchy level of the projekt. Level 0 is a top-level projekt, higher numbers indicate deeper nesting.', example: 0 },
+        geozone_affiliated: { type: :string, nullable: true, enum: ['no_affiliation', 'entire_city', 'only_geozones', nil], description: 'Which area the projekt belongs to: none, the entire city, or the geozones in geozone_affiliation_ids', example: 'only_geozones' },
+        geozone_affiliation_ids: { type: :array, items: { type: :integer }, description: 'Geozones the projekt belongs to (used when geozone_affiliated is only_geozones)', example: [3, 4] },
+        registered_address_district_affiliation_ids: { type: :array, items: { type: :integer }, description: 'Registered-address districts the projekt belongs to', example: [] },
+        level: { type: :integer, nullable: true, description: 'The hierarchy level of the projekt. Level 1 is a top-level projekt, higher numbers indicate deeper nesting.', example: 1 },
         show_start_date_in_frontend: { type: [:boolean, :string], nullable: true, description: 'Whether to display the project start date on the frontend', example: true },
         show_end_date_in_frontend: { type: [:boolean, :string], nullable: true, description: 'Whether to display the project end date on the frontend', example: true },
         top_level_projekt_id: { type: :integer, nullable: true, description: 'ID of the top-level projekt in the hierarchy. Null if this is the top level.', example: nil },
         preview_code: { type: :string, nullable: true, description: 'A unique code used for generating preview links to the projekt before publication. Only returned to admin clients.', example: 'abc123' },
+        color: { type: :string, nullable: true, description: 'Colour of the projekt as a hex code', example: '#004a83' },
+        icon: { type: :string, nullable: true, description: 'Font Awesome icon name of the projekt', example: 'tree' },
+        landing_page_id: { type: :integer, nullable: true, description: 'ID of the landing page the projekt links to', example: nil },
+        activated: { type: :boolean, nullable: true, description: 'Whether the projekt is activated. Change it with the projekt setting projekt_feature.main.activate. Read-only here.', example: true },
+        published_at: { type: :string, format: :date_time, nullable: true, description: 'When the projekt became publicly visible. Derived from activation; read-only.', example: '2024-01-01T00:00:00Z' },
+        content_updated_at: { type: :string, format: :date_time, nullable: true, description: 'When the projekt content last changed (texts, settings, content blocks). Read-only.', example: '2024-02-01T10:00:00Z' },
+        description: { type: :string, nullable: true, description: 'Short description of the projekt in the current language', example: 'Neighbourhood redesign' },
+        translations: Schemas::Miscellaneous.translations_schema(%w[description]),
+        tags: { type: :array, items: { type: :string }, description: 'Tags of the projekt', example: %w[environment mobility] },
+        map_location: { '$ref' => '#/components/schemas/MapLocation' },
         page: {
           type: :object,
           nullable: true,
@@ -33,8 +45,12 @@ module Schemas
           properties: {
             title: { type: :string, nullable: true, description: 'The page title displayed in the frontend', example: 'Sample Projekt Page' },
             slug: { type: :string, nullable: true, description: 'URL-friendly identifier for the page', example: 'sample-projekt' },
+            status: { type: :string, nullable: true, description: 'Publication status of the page. Projekt pages are always published; visibility follows the projekt. Read-only.', example: 'published' },
+            published_at: { type: :string, format: :date_time, nullable: true, description: 'When the page was published. Read-only.', example: '2024-01-01T00:00:00Z' },
+            translations: Schemas::Miscellaneous.translations_schema(%w[title subtitle]),
             image: { '$ref' => '#/components/schemas/Image' }
-          }
+          },
+          additionalProperties: false
         },
         projekt_settings: {
           type: :array,
@@ -42,6 +58,7 @@ module Schemas
           items: {
             type: :object,
             properties: {
+              id: { type: :integer, description: 'ID of the setting row', example: 12 },
               key: { type: :string, description: 'Setting identifier (e.g., show_map, enable_comments)', example: 'show_map' },
               value: { type: :string, nullable: true, description: 'Setting value (e.g., true, false, or other values)', example: 'true' }
             }
@@ -62,7 +79,8 @@ module Schemas
           items: { '$ref' => '#/components/schemas/ContentBlock' }
         }
       },
-      required: %w[id name created_at updated_at]
+      required: %w[id name created_at updated_at translations tags map_location],
+      additionalProperties: false
     }.freeze
 
     # Image response schema (matches ImageSerializer with include_variants: true)
@@ -156,7 +174,11 @@ module Schemas
             total_duration_end: { type: :string, format: :date_time, nullable: true, description: 'Project end date (ISO 8601 format). Omit for no end date.' },
             show_start_date_in_frontend: { type: :boolean, description: 'Whether to display the start date on the frontend' },
             show_end_date_in_frontend: { type: :boolean, description: 'Whether to display the end date on the frontend' },
-            geozone_affiliated: { type: :boolean, description: 'Whether this projekt is restricted to specific geographic zones' },
+            geozone_affiliated: { type: :string, enum: %w[no_affiliation entire_city only_geozones], description: 'Which area the projekt belongs to' },
+            color: { type: :string, description: 'Colour of the projekt as a hex code (#rrggbb)', example: '#004a83' },
+            icon: { type: :string, description: 'Font Awesome icon name', example: 'tree' },
+            registered_address_district_affiliation_ids: { type: :array, items: { type: :integer }, description: 'Registered-address districts the projekt belongs to' },
+            translations: Schemas::Miscellaneous.translations_schema(%w[description]),
             order_number: { type: :integer, nullable: true, description: 'Display order among sibling projekts. Lower numbers appear first. Omit for default ordering.' },
             tag_list: { type: :string, nullable: true, description: 'Comma-separated list of tags for categorization (e.g., "environment,infrastructure")' },
             related_sdg_list: { type: :string, nullable: true, description: 'Comma-separated list of related Sustainable Development Goal IDs' },
@@ -164,15 +186,7 @@ module Schemas
             geozone_affiliation_ids: { type: :array, items: { type: :integer }, description: 'Array of geographic zone IDs this projekt belongs to' },
             sdg_goal_ids: { type: :array, items: { type: :integer }, description: 'Array of Sustainable Development Goal IDs this projekt aligns with' },
             individual_group_value_ids: { type: :array, items: { type: :integer }, description: 'Array of individual group/demographic IDs with special restrictions or access' },
-            map_location_attributes: {
-              type: :object,
-              description: 'Geographic coordinates and zoom level for map display',
-              properties: {
-                latitude: { type: :number, description: 'Latitude coordinate (-90 to 90)' },
-                longitude: { type: :number, description: 'Longitude coordinate (-180 to 180)' },
-                zoom: { type: :integer, description: 'Map zoom level (0-18, where 0 is world view)' }
-              }
-            },
+            map_location_attributes: { '$ref' => '#/components/schemas/MapLocationWriteParams' },
             projekt_manager_assignments_attributes: {
               type: :array,
               description: 'Array of projekt manager role assignments. Omit if no managers need to be assigned.',
@@ -234,44 +248,92 @@ module Schemas
       required: ['projekt']
     }.freeze
 
+    # Texts of a phase shown on the public site, in the current language
+    PROJEKT_PHASE_TEXT_PROPERTIES = {
+      phase_tab_name: { type: :string, nullable: true, description: 'Name of the phase tab. Responses fall back to the phase type when it is empty.', example: 'Ideen sammeln' },
+      description: { type: :string, nullable: true, description: 'Description of the phase', example: 'Bring your ideas for the market square.' },
+      cta_button_name: { type: :string, nullable: true, description: 'Text of the call-to-action button that opens the phase', example: 'Mitmachen' },
+      welcome_text_in_show: { type: :string, nullable: true, description: 'Welcome text shown above the phase content', example: 'Welcome to the proposal phase.' },
+      resource_form_title: { type: :string, nullable: true, description: 'Heading of the form for new contributions', example: 'Your proposal' },
+      resource_form_intro: { type: :string, nullable: true, description: 'Introduction text above the form for new contributions', example: 'Describe your proposal in a few sentences.' },
+      resource_form_title_placeholder: { type: :string, nullable: true, description: 'Placeholder of the title field in the form for new contributions', example: 'Short title' },
+      resource_form_description_placeholder: { type: :string, nullable: true, description: 'Placeholder of the description field in the form for new contributions', example: 'What should change?' },
+      comment_form_title: { type: :string, nullable: true, description: 'Heading of the comment form', example: 'Your comment' },
+      comment_form_button: { type: :string, nullable: true, description: 'Text of the comment form button', example: 'Publish comment' },
+      support_button_text: { type: :string, nullable: true, description: 'Text of the support (vote) button', example: 'Support' },
+      labels_name: { type: :string, nullable: true, description: 'Name the phase uses for its labels', example: 'Topics' },
+      sentiments_name: { type: :string, nullable: true, description: 'Name the phase uses for its sentiments', example: 'Mood' }
+    }.freeze
+
+    PROJEKT_PHASE_TYPE_DESCRIPTION = 'The phase type determining what kind of participation or content is available. Regular phases: CommentPhase (discussion/feedback), ProposalPhase (citizen proposals), PointOfInterestPhase (map pins), QuestionPhase (Q&A), VotingPhase (polls/voting), IframePhase (embedded content), BudgetPhase (participatory budgeting), LegislationPhase (texts), FormularPhase (forms/surveys), MitmachboxPhase (Mitmachbox survey). Special phases: EventPhase, MilestonePhase, ProjektNotificationPhase, LivestreamPhase, ArgumentPhase, NewsfeedPhase. DebatePhase is deprecated and only returned for old phases.'
+
     # ProjektPhase schema definition for OpenAPI/Swagger documentation
     PROJEKT_PHASE_SCHEMA = {
       type: :object,
       properties: {
         id: { type: :integer, description: 'Unique identifier for the projekt phase', example: 1 },
-        phase_tab_name: { type: :string, description: 'The display name of the phase shown in the frontend interface', example: 'Planning Phase' },
         type: {
           type: :string,
-          description: 'The phase type determining what kind of participation or content is available during this phase',
+          description: PROJEKT_PHASE_TYPE_DESCRIPTION,
           example: 'ProjektPhase::CommentPhase',
-          enum: [
-            'ProjektPhase::CommentPhase',
-            'ProjektPhase::ProposalPhase',
-            'ProjektPhase::QuestionPhase',
-            'ProjektPhase::VotingPhase',
-            'ProjektPhase::BudgetPhase',
-            'ProjektPhase::LegislationPhase',
-            'ProjektPhase::FormularPhase',
-            'ProjektPhase::LivestreamPhase',
-            'ProjektPhase::MilestonePhase',
-            'ProjektPhase::ProjektNotificationPhase',
-            'ProjektPhase::EventPhase',
-            'ProjektPhase::ArgumentPhase',
-            'ProjektPhase::NewsfeedPhase',
-            'ProjektPhase::IframePhase',
-            'ProjektPhase::PointOfInterestPhase'
-          ]
+          enum: ProjektPhase::ALL_PHASE_TYPES
         },
         projekt_id: { type: :integer, description: 'ID of the projekt this phase belongs to', example: 1 },
-        active: { type: :boolean, description: 'Whether the phase is currently active and allowing participation', example: true },
-        visible: { type: :boolean, description: 'Whether the phase is visible to users on the frontend', example: true },
-        position: { type: :integer, description: 'The display order of this phase among other phases in the projekt. Lower numbers appear first.', example: 0 },
-        start_date: { type: :string, format: :datetime, nullable: true, description: 'When the phase becomes active. Null means no start date restriction.', example: '2024-01-01T00:00:00Z' },
-        end_date: { type: :string, format: :datetime, nullable: true, description: 'When the phase becomes inactive. Null means no end date restriction.', example: '2024-03-31T23:59:59Z' },
-        created_at: { type: :string, format: :datetime, description: 'Timestamp when the phase was created', example: '2024-01-01T00:00:00Z' },
-        updated_at: { type: :string, format: :datetime, description: 'Timestamp when the phase was last modified', example: '2024-01-01T00:00:00Z' }
+        active: { type: :boolean, description: 'Whether the phase is switched on and allows participation', example: true },
+        frontend_visibility: { type: :boolean, description: 'Whether the phase is shown to visitors', example: true },
+        given_order: { type: :integer, nullable: true, description: 'Display order among the phases of the projekt. Lower numbers appear first.', example: 1 },
+        start_date: { type: :string, format: :date, nullable: true, description: 'First day of the phase. Null means no start restriction.', example: '2024-01-01' },
+        end_date: { type: :string, format: :date, nullable: true, description: 'Last day of the phase. Null means no end restriction.', example: '2024-03-31' },
+        lock_on: { type: :string, format: :date, nullable: true, description: 'Day from which contributions in the phase can no longer be edited', example: nil },
+        geozone_restricted: { type: :string, nullable: true, enum: ['no_restriction', 'only_citizens', 'only_geozones', 'only_streets', nil], description: 'Who may take part: everybody, citizens of the city, residents of geozone_restriction_ids, or residents of registered_address_street_ids', example: 'no_restriction' },
+        geozone_restriction_ids: { type: :array, items: { type: :integer }, description: 'Geozones whose residents may take part (geozone_restricted only_geozones)', example: [3] },
+        registered_address_district_ids: { type: :array, items: { type: :integer }, description: 'Registered-address districts whose residents may take part', example: [] },
+        registered_address_street_ids: { type: :array, items: { type: :integer }, description: 'Registered-address streets whose residents may take part (geozone_restricted only_streets)', example: [] },
+        registered_address_districts: {
+          type: :array,
+          description: 'Registered-address districts whose residents may take part, with their names',
+          items: {
+            type: :object,
+            properties: {
+              id: { type: :integer, example: 2 },
+              name: { type: :string, example: 'Mitte' }
+            }
+          }
+        },
+        registered_address_grouping_restriction: { type: :string, nullable: true, description: 'Key of the registered-address grouping that restricts participation. Empty or no_restriction means none.', example: '' },
+        registered_address_grouping_restrictions: {
+          type: :object,
+          description: 'Allowed values per registered-address grouping key',
+          additionalProperties: { type: :array, items: { type: :string } },
+          example: {}
+        },
+        age_range_id: { type: :integer, nullable: true, description: 'Age range participants must be in. Null means no age restriction.', example: nil },
+        user_status: { type: :string, nullable: true, enum: ['guest', 'registered', 'verified', nil], description: 'Minimum account status required to take part', example: 'registered' },
+        individual_group_values: {
+          type: :array,
+          description: 'Individual group values participants must have',
+          items: {
+            type: :object,
+            properties: {
+              id: { type: :integer, example: 4 },
+              name: { type: :string, example: 'Students' }
+            }
+          }
+        },
+        settings: {
+          type: :array,
+          description: 'Settings of the phase. Change them with update_setting or update_settings.',
+          items: { '$ref' => '#/components/schemas/ProjektPhaseSetting' }
+        },
+        comments_count: { type: :integer, nullable: true, description: 'Number of comments in the phase', example: 4 },
+        **PROJEKT_PHASE_TEXT_PROPERTIES,
+        translations: Schemas::Miscellaneous.translations_schema(PROJEKT_PHASE_TEXT_PROPERTIES.keys.map(&:to_s)),
+        mitmachbox_survey_id: { type: :string, nullable: true, description: 'ID of the Mitmachbox survey behind a MitmachboxPhase. Only returned to admin clients; set by the platform, not writable.', example: 'svy_8c1d' },
+        created_at: { type: :string, format: :date_time, description: 'Timestamp when the phase was created', example: '2024-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :date_time, description: 'Timestamp when the phase was last modified', example: '2024-01-01T00:00:00Z' }
       },
-      required: %w[id phase_tab_name type projekt_id]
+      required: %w[id phase_tab_name type projekt_id active frontend_visibility translations settings],
+      additionalProperties: false
     }.freeze
 
     # ProjektPhase request schema for create/update operations
@@ -282,7 +344,7 @@ module Schemas
           type: :string,
           example: 'ProjektPhase::CommentPhase',
           enum: ProjektPhase::PROJEKT_PHASES_TYPES,
-          description: 'The type of projekt phase that determines what kind of participation or content is available. Regular phases: CommentPhase (discussion/feedback), ProposalPhase (citizen proposals), QuestionPhase (Q&A), VotingPhase (polls/voting), BudgetPhase (participatory budgeting), LegislationPhase (legislative process), FormularPhase (forms/surveys). Special phases: LivestreamPhase (live streaming), MilestonePhase (timeline milestones), ProjektNotificationPhase (announcements), EventPhase (events/meetings), ArgumentPhase (pro/con arguments), NewsfeedPhase (news feed), IframePhase (embedded content), PointOfInterestPhase (map pins). Required for creation.'
+          description: "#{PROJEKT_PHASE_TYPE_DESCRIPTION} Required on create; ignored on update, a phase keeps its type."
         },
         start_date: {
           type: :string,
@@ -310,8 +372,9 @@ module Schemas
           description: 'The display order/position of this phase among other phases in the projekt. Lower numbers appear first in phase navigation and listings. If null, phases are ordered by creation date. Use this to control the sequence in which phases appear to users (e.g., planning phase before voting phase).'
         },
         geozone_restricted: {
-          type: :boolean,
-          description: 'Whether participation in this phase is restricted to specific geographic zones. When true, only users from geozones listed in geozone_restriction_ids can participate. When false, all users can participate (subject to other restrictions). Must be true if geozone_restriction_ids is provided.'
+          type: :string,
+          enum: %w[no_restriction only_citizens only_geozones only_streets],
+          description: 'Who may take part: everybody (no_restriction), citizens of the city (only_citizens), residents of the geozones in geozone_restriction_ids (only_geozones), or residents of the streets in registered_address_street_ids (only_streets).'
         },
         age_range_id: {
           type: :integer,
@@ -329,15 +392,12 @@ module Schemas
           nullable: true,
           description: 'Date after which the phase becomes locked and no longer editable (YYYY-MM-DD format). After this date, administrators cannot modify phase settings or content, ensuring data integrity for completed phases. Useful for preserving historical records of participation processes. If null, the phase remains editable indefinitely.'
         },
-        phase_tab_name: {
+        **PROJEKT_PHASE_TEXT_PROPERTIES.transform_values { |property| property.merge(description: "#{property[:description].delete_suffix(".")}. Written in the current language; use translations for several languages.") },
+        translations: Schemas::Miscellaneous.translations_schema(PROJEKT_PHASE_TEXT_PROPERTIES.keys.map(&:to_s)),
+        registered_address_grouping_restriction: {
           type: :string,
           nullable: true,
-          description: 'The display name of the phase shown in the frontend interface navigation tabs and phase listings. This is a translatable field - provide translations via translations_attributes for multilingual support. If null, defaults to a name derived from the phase type. Examples: "Discussion", "Proposals", "Voting", "Budget Planning".'
-        },
-        registered_address_grouping_restriction: {
-          type: :boolean,
-          nullable: true,
-          description: 'Whether participation is restricted based on registered address grouping (e.g., district, neighborhood, street). When true, only users whose registered address matches the criteria in registered_address_grouping_restrictions can participate. When false or null, address grouping is not used as a restriction. Useful for hyper-local participation initiatives.'
+          description: 'Key of the registered-address grouping that restricts participation (e.g. "wahlbezirk"). Empty or "no_restriction" means no restriction. The allowed values per key go into registered_address_grouping_restrictions.'
         },
         registered_address_grouping_restrictions: {
           type: :object,
@@ -353,7 +413,17 @@ module Schemas
         geozone_restriction_ids: {
           type: :array,
           items: { type: :integer },
-          description: 'Array of geographic zone IDs where participation is allowed. Only users whose registered address is in one of these geozones can participate. Requires geozone_restricted to be true. Geozones represent administrative boundaries (districts, neighborhoods, etc.). Empty array with geozone_restricted=true means no one can participate. Used for location-based participation initiatives.'
+          description: 'Array of geographic zone IDs where participation is allowed. Only users whose registered address is in one of these geozones can participate. Requires geozone_restricted to be only_geozones. Geozones represent administrative boundaries (districts, neighborhoods, etc.). Empty array with geozone_restricted=only_geozones means no one can participate. Used for location-based participation initiatives.'
+        },
+        registered_address_district_ids: {
+          type: :array,
+          items: { type: :integer },
+          description: 'Registered-address districts whose residents may take part. Replaces the current list.'
+        },
+        registered_address_street_ids: {
+          type: :array,
+          items: { type: :integer },
+          description: 'Registered-address streets whose residents may take part (geozone_restricted only_streets). Replaces the current list.'
         },
         settings_attributes: {
           type: :array,
@@ -406,9 +476,37 @@ module Schemas
         name: { type: :string, description: 'The name or title of the poll', example: 'Community Vote' },
         summary: { type: :string, nullable: true, description: 'A brief summary of the poll topic or purpose', example: 'Summary' },
         description: { type: :string, nullable: true, description: 'Detailed description of the poll and its context', example: 'Description' },
+        closing_note: { type: :string, nullable: true, description: 'Text shown to participants after they finished the poll', example: 'Thank you for taking part!' },
+        translations: Schemas::Miscellaneous.translations_schema(%w[name summary description closing_note]),
         starts_at: { type: :string, format: :date_time, nullable: true, description: 'When the poll opens for voting. Null means no start time restriction.', example: '2025-01-01T00:00:00Z' },
         ends_at: { type: :string, format: :date_time, nullable: true, description: 'When the poll closes. Null means the poll never automatically closes.', example: '2025-01-31T23:59:59Z' },
         geozone_restricted: { type: :boolean, nullable: true, description: 'Whether voting in this poll is restricted to specific geographic zones', example: false },
+        published: { type: :boolean, nullable: true, description: 'Stored publication flag. Visibility follows the phase (frontend visibility and activity).', example: true },
+        live: { type: :boolean, description: 'False while the poll is in test mode: votes cast then are test data and deleted when it goes live (POST /api/polls/{id}/go_live).', example: true },
+        wizard_mode: { type: :boolean, description: 'Questions are shown one at a time. Phase setting feature.resource.wizard_mode; change it through the phase settings.', example: true },
+        show_on_home_page: { type: :boolean, description: 'Phase setting feature.resource.show_on_home_page. Read-only here.', example: true },
+        show_on_index_page: { type: :boolean, description: 'Phase setting feature.resource.show_on_index_page. Read-only here.', example: true },
+        show_open_answer_author_name: { type: :boolean, description: 'Phase setting feature.resource.show_open_answer_author_name. Read-only here.', example: false },
+        show_summary_instead_of_questions: { type: :boolean, nullable: true, description: 'The poll card shows the summary instead of the question list', example: false },
+        image: { '$ref' => '#/components/schemas/ImageResponse' },
+        projekt_phase: {
+          type: :object,
+          description: 'Voting phase the poll belongs to',
+          properties: {
+            id: { type: :integer },
+            title: { type: :string, nullable: true },
+            type: { type: :string },
+            projekt_id: { type: :integer }
+          }
+        },
+        projekt: {
+          type: :object,
+          description: 'Projekt the poll belongs to',
+          properties: {
+            id: { type: :integer },
+            title: { type: :string, nullable: true }
+          }
+        },
         budget_id: { type: :integer, nullable: true, description: 'ID of an associated budget if this poll is part of participatory budgeting. Null if not associated with a budget.', example: 1 },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the poll was created', example: '2025-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the poll was last modified', example: '2025-01-01T00:00:00Z' },
@@ -434,36 +532,12 @@ module Schemas
         },
         questions: {
           type: :array,
-          description: 'Array of questions included in this poll for voters to answer',
-          items: {
-            type: :object,
-            properties: {
-              id: { type: :integer, description: 'Question identifier' },
-              title: { type: :string, description: 'Question text or title' },
-              created_at: { type: :string, format: :date_time, description: 'Timestamp when the question was created' },
-              updated_at: { type: :string, format: :date_time, description: 'Timestamp when the question was last modified' },
-              answers: {
-                type: :array,
-                description: 'Array of answer options for this question',
-                items: {
-                  type: :object,
-                  properties: {
-                    id: { type: :integer, description: 'Answer option identifier' },
-                    title: { type: :string, description: 'Answer option text' },
-                    description: { type: :string, nullable: true, description: 'Detailed description of the answer option' },
-                    given_order: { type: :integer, description: 'Order position of this answer among other answers' },
-                    total_votes: { type: :integer, description: 'Total number of votes for this answer option' },
-                    total_votes_percentage: { type: :number, format: :float, description: 'Percentage of total votes this answer received (0-100)' },
-                    created_at: { type: :string, format: :date_time, description: 'Timestamp when the answer option was created' },
-                    updated_at: { type: :string, format: :date_time, description: 'Timestamp when the answer option was last modified' }
-                  }
-                }
-              }
-            }
-          }
+          description: 'Every question of the poll, nested questions included (see parent_question_id), in display order',
+          items: { '$ref' => '#/components/schemas/PollQuestion' }
         }
       },
-      required: %w[id name created_at updated_at]
+      required: %w[id name translations live wizard_mode created_at updated_at],
+      additionalProperties: false
     }.freeze
 
     # ProjektEvent schema definition
@@ -481,6 +555,23 @@ module Schemas
         open_ended: { type: :boolean, nullable: true, description: 'Whether the event has no fixed end time', example: false },
         language: { type: :string, nullable: true, description: 'Primary language of the event (e.g., "de", "en")', example: 'de' },
         projekt_phase_id: { type: :integer, description: 'ID of the projekt phase this event is associated with', example: 10 },
+        translations: Schemas::Miscellaneous.translations_schema(%w[title description location]),
+        registration_enabled: { type: :boolean, description: 'Whether visitors can register for the event on the site', example: true },
+        max_attendees: { type: :integer, nullable: true, description: 'Maximum number of confirmed attendees. Null means unlimited; always null while registration is disabled.', example: 40 },
+        registrations: {
+          type: :object,
+          description: 'Registration counts. Individual registrations are never returned.',
+          properties: {
+            confirmed_count: { type: :integer, description: 'Confirmed registrations', example: 12 },
+            spots_available: { type: :integer, nullable: true, description: 'Places left; null without an attendee limit', example: 28 },
+            waitlisted_count: { type: :integer, description: 'Registrations on the waiting list. Only returned to admin clients.', example: 0 },
+            pending_confirmation_count: { type: :integer, description: 'Registrations waiting for email confirmation. Only returned to admin clients.', example: 2 }
+          },
+          required: %w[confirmed_count spots_available],
+          additionalProperties: false
+        },
+        confirmation_email_text: { type: :string, nullable: true, description: 'Text of the email confirming a registration. Only returned to admin clients.', example: 'Sie sind angemeldet.' },
+        waitlist_email_text: { type: :string, nullable: true, description: 'Text of the email for registrations on the waiting list. Only returned to admin clients.', example: 'Sie stehen auf der Warteliste.' },
         accessibility: {
           type: :object,
           description: 'Accessibility features available at the event',
@@ -492,35 +583,17 @@ module Schemas
             induction_loop_available: { type: :boolean, nullable: true },
             assistance_dogs_welcome: { type: :boolean, nullable: true },
             sign_language_interpreter: { type: :boolean, nullable: true }
-          }
+          },
+          additionalProperties: false
         },
-        projekt_phase: {
-          type: :object,
-          description: 'Summary of the projekt phase this event belongs to (present when the phase is loaded)',
-          properties: {
-            id: { type: :integer, example: 10 },
-            title: { type: :string, nullable: true, example: 'Events Phase' },
-            type: { type: :string, example: 'ProjektPhase::EventPhase' },
-            projekt_id: { type: :integer, example: 2 }
-          }
-        },
-        projekt: {
-          type: :object,
-          description: 'Summary of the projekt this event belongs to (present when the projekt is loaded)',
-          properties: {
-            id: { type: :integer, example: 2 },
-            title: { type: :string, example: 'Community Survey' }
-          }
-        },
-        image: {
-          type: :object,
-          nullable: true,
-          description: 'Associated image, present only when the event has an attached image'
-        },
+        projekt_phase: { '$ref' => '#/components/schemas/ProjektPhaseReference' },
+        projekt: { '$ref' => '#/components/schemas/ProjektReference' },
+        image: { '$ref' => '#/components/schemas/ImageResponse' },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the event was created', example: '2025-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the event was last modified', example: '2025-01-01T00:00:00Z' }
       },
-      required: %w[id title created_at updated_at]
+      required: %w[id title created_at updated_at translations registration_enabled registrations],
+      additionalProperties: false
     }.freeze
 
     # ProjektNotification schema definition
@@ -530,14 +603,14 @@ module Schemas
         id: { type: :integer, description: 'Unique identifier for the notification', example: 1 },
         title: { type: :string, description: 'The notification headline or subject line', example: 'Update' },
         body: { type: :string, nullable: true, description: 'The full text content of the notification message', example: 'We have news' },
-        link_text: { type: :string, nullable: true, description: 'The text displayed for a clickable link (e.g., "Read more", "Learn more")', example: 'Read more' },
-        link_url: { type: :string, nullable: true, description: 'The URL that the link_text directs to when clicked', example: 'https://example.com' },
-        segment_recipient: { type: :string, nullable: true, description: 'The audience segment for this notification (e.g., "all", specific user groups)', example: 'all' },
         projekt_phase_id: { type: :integer, description: 'ID of the projekt phase this notification is associated with', example: 10 },
+        projekt_phase: { '$ref' => '#/components/schemas/ProjektPhaseReference' },
+        projekt: { '$ref' => '#/components/schemas/ProjektReference' },
         created_at: { type: :string, format: :date_time, description: 'Timestamp when the notification was created', example: '2025-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :date_time, description: 'Timestamp when the notification was last modified', example: '2025-01-01T00:00:00Z' }
       },
-      required: %w[id title created_at updated_at]
+      required: %w[id title created_at updated_at],
+      additionalProperties: false
     }.freeze
 
     # ContentBlock schema definition for OpenAPI/Swagger documentation
@@ -547,8 +620,8 @@ module Schemas
         id: { type: :integer, description: 'Unique identifier for the content block', example: 1 },
         name: { type: :string, description: 'Block type. Always "custom" for projekt page blocks.', example: 'custom' },
         key: { type: :string, description: 'Internal unique key of the block', example: 'projekt_content_block_1_1_1704067200' },
-        body: { type: :string, nullable: true, description: 'The HTML content of the block', example: '<h2>Introduction</h2><p>This is the content of the block.</p>' },
-        locale: { type: :string, description: 'Language code for this content block (e.g., "en" for English, "de" for German)', example: 'de' },
+        body: { type: :string, nullable: true, description: 'The HTML content of the block. Blocks are written and shown in the instance default language only (see locale).', example: '<h2>Introduction</h2><p>This is the content of the block.</p>' },
+        locale: { type: :string, description: 'Language the block is written in: always the instance default language', example: 'de' },
         projekt_id: { type: :integer, nullable: true, description: 'ID of the projekt this block belongs to', example: 1 },
         position: { type: :integer, nullable: true, description: 'The display order of this block. Lower numbers appear first.', example: 1 },
         visible: { type: :boolean, description: 'Whether the block is switched on. A switched-off block is never shown to visitors.', example: true },
@@ -558,7 +631,63 @@ module Schemas
         created_at: { type: :string, format: :datetime, description: 'Timestamp when the content block was created', example: '2024-01-01T00:00:00Z' },
         updated_at: { type: :string, format: :datetime, description: 'Timestamp when the content block was last modified', example: '2024-01-01T00:00:00Z' }
       },
-      required: %w[id position]
+      required: %w[id position],
+      additionalProperties: false
+    }.freeze
+
+    PROJEKT_LABEL_SCHEMA = {
+      type: :object,
+      description: 'A label contributions in the phase can carry (proposals, budget investments)',
+      properties: {
+        id: { type: :integer, description: 'Unique identifier for the label', example: 7 },
+        projekt_phase_id: { type: :integer, description: 'ID of the phase the label belongs to', example: 12 },
+        name: { type: :string, nullable: true, description: 'Name of the label in the current language', example: 'Verkehr' },
+        color: { type: :string, nullable: true, description: 'Colour of the label as a hex code', example: '#e65100' },
+        icon: { type: :string, nullable: true, description: 'Font Awesome icon name of the label', example: 'bicycle' },
+        masterportal_collection_id: { type: :integer, nullable: true, description: 'Masterportal collection the label was imported from. Null for labels created by staff.', example: nil },
+        translations: Schemas::Miscellaneous.translations_schema(%w[name]),
+        created_at: { type: :string, format: :date_time, example: '2024-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :date_time, example: '2024-01-01T00:00:00Z' }
+      },
+      required: %w[id projekt_phase_id name translations],
+      additionalProperties: false
+    }.freeze
+
+    SENTIMENT_SCHEMA = {
+      type: :object,
+      description: 'A sentiment contributions in the phase can carry (proposals, budget investments)',
+      properties: {
+        id: { type: :integer, description: 'Unique identifier for the sentiment', example: 3 },
+        projekt_phase_id: { type: :integer, description: 'ID of the phase the sentiment belongs to', example: 12 },
+        name: { type: :string, nullable: true, description: 'Name of the sentiment in the current language', example: 'Zustimmung' },
+        color: { type: :string, nullable: true, description: 'Colour of the sentiment as a hex code; contributions with this sentiment use it on the map', example: '#2e7d32' },
+        translations: Schemas::Miscellaneous.translations_schema(%w[name]),
+        created_at: { type: :string, format: :date_time, example: '2024-01-01T00:00:00Z' },
+        updated_at: { type: :string, format: :date_time, example: '2024-01-01T00:00:00Z' }
+      },
+      required: %w[id projekt_phase_id name translations],
+      additionalProperties: false
+    }.freeze
+
+    MASTERPORTAL_COLLECTION_SCHEMA = {
+      type: :object,
+      description: 'A Masterportal layer imported into the phase. Import state and errors are not returned.',
+      properties: {
+        id: { type: :integer, description: 'Unique identifier for the collection', example: 4 },
+        projekt_phase_id: { type: :integer, description: 'ID of the phase the collection belongs to', example: 12 },
+        collection_id: { type: :string, description: 'ID of the layer in the Masterportal', example: 'trinkbrunnen' },
+        name: { type: :string, nullable: true, description: 'Name of the collection', example: 'Trinkbrunnen' },
+        source: { type: :string, enum: %w[geoserver file], description: 'Where the features come from: a GeoServer endpoint or an uploaded GeoJSON file', example: 'geoserver' },
+        icon_url: { type: :string, nullable: true, description: 'URL of the icon the collection uses on the map', example: 'https://geo.example.org/icons/brunnen.svg' },
+        feature_color: { type: :string, nullable: true, description: 'Colour of the features as a hex code', example: '#0277bd' },
+        contains_shapes: { type: :boolean, description: 'Whether the collection holds areas (polygons) rather than points', example: false },
+        has_default_icon_pins: { type: :boolean, description: 'Whether the pins use the default icon', example: true },
+        last_imported_at: { type: :string, format: :date_time, nullable: true, description: 'When the features were last imported', example: '2024-03-01T08:00:00Z' },
+        endpoint_url: { type: :string, nullable: true, description: 'GeoServer URL the features are imported from. Only returned to admin clients.', example: 'https://geo.example.org/wfs' },
+        create_domain_records: { type: :boolean, description: 'Whether imported features become contributions of the phase. Only returned to admin clients.', example: false }
+      },
+      required: %w[id projekt_phase_id collection_id source contains_shapes has_default_icon_pins],
+      additionalProperties: false
     }.freeze
 
     # Request schema for one item of projekt[content_blocks]
@@ -588,6 +717,9 @@ module Schemas
         ProjektPhaseRequestParams: PROJEKT_PHASE_REQUEST_SCHEMA,
         ContentBlock: CONTENT_BLOCK_SCHEMA,
         ContentBlockWriteParams: CONTENT_BLOCK_WRITE_PARAMS,
+        ProjektLabel: PROJEKT_LABEL_SCHEMA,
+        Sentiment: SENTIMENT_SCHEMA,
+        MasterportalCollection: MASTERPORTAL_COLLECTION_SCHEMA,
         ProjektPhaseSetting: PROJEKT_PHASE_SETTING_SCHEMA,
         Poll: POLL_SCHEMA,
         ProjektEvent: PROJEKT_EVENT_SCHEMA,

@@ -27,6 +27,8 @@ include MachineTranslatable
   validates_translation :description, presence: true
   validates :projekt_phase, presence: true
   validate :description_sanitized
+  validates :external_source, presence: true, if: :external_id?
+  validates :external_id, uniqueness: { scope: [:projekt_phase_id, :external_source] }, allow_nil: true
 
   # Catalog B12's "moderation decision" trigger. Both directions count: a
   # proposal being accepted and a proposal being hidden are each a decision the

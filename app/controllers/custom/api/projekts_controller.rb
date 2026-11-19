@@ -10,6 +10,18 @@ class Api::ProjektsController < Api::BaseController
 
   DEFAULT_PROJEKTS_PER_PAGE = 20
 
+  TRANSLATED_ATTRIBUTES = %w[description].freeze
+
+  PAGE_TRANSLATED_ATTRIBUTES = ProjektSerializer::PAGE_TRANSLATED_ATTRIBUTES
+
+  WRITABLE_FIELD_PRELOADS = {
+    translations: {},
+    map_location: {},
+    tags: {},
+    geozone_affiliations: {},
+    registered_address_district_affiliations: {}
+  }.freeze
+
   SORTABLE_COLUMNS = %w[
     created_at total_duration_start total_duration_end
     order_number name published_at page_title
@@ -64,13 +76,10 @@ class Api::ProjektsController < Api::BaseController
     includes_hash[:projekt_settings] = {} if include_projekt_settings
     includes_hash[:content_blocks] = {} if include_text || include_content_blocks
     includes_hash[:page] = { translations: {}, image: { attachment_attachment: :blob }}
+    includes_hash.merge!(WRITABLE_FIELD_PRELOADS)
 
     if include_phases
-      includes_hash[:projekt_phases] = [
-        :settings,
-        :individual_group_values,
-        :geozone_restrictions
-      ]
+      includes_hash[:projekt_phases] = ProjektPhaseSerializer::PRELOADS
     end
 
     projekts = sort_projekts(projekts)
@@ -132,8 +141,9 @@ class Api::ProjektsController < Api::BaseController
   def create
     check_admin_access!
     projekt = Projekt.new(projekt_params)
+    translations = assign_requested_translations(projekt, :projekt, TRANSLATED_ATTRIBUTES)
 
-    if save_with_content_blocks(projekt)
+    if save_with_content_blocks(projekt, translations)
       Projekt.ensure_order_integrity
       process_image_with_base64(projekt.page, params[:projekt][:image_attributes])
 
@@ -145,8 +155,10 @@ class Api::ProjektsController < Api::BaseController
 
   def update
     check_admin_access!
+    @projekt.assign_attributes(with_existing_map_location_id(@projekt, projekt_params))
+    translations = assign_requested_translations(@projekt, :projekt, TRANSLATED_ATTRIBUTES)
 
-    if update_with_content_blocks(@projekt)
+    if update_with_content_blocks(@projekt, translations)
       Projekt.ensure_order_integrity
 
       render json: { data: { projekt: serialize_written_projekt(@projekt) } }
@@ -157,7 +169,10 @@ class Api::ProjektsController < Api::BaseController
 
   def update_page
     check_admin_access!
-    if @projekt.page.update(projekt_page_params)
+    @projekt.page.assign_attributes(projekt_page_params)
+    translations = assign_requested_translations(@projekt.page, :page, PAGE_TRANSLATED_ATTRIBUTES)
+
+    if save_with_translations(@projekt.page, translations)
       process_image_with_base64(@projekt.page, params[:projekt][:image_attributes])
       serailized_projekt = ProjektSerializer.new(@projekt, current_api_client: current_client).serialize
 
@@ -321,9 +336,12 @@ class Api::ProjektsController < Api::BaseController
     attributes = [
       :name, :parent_id, :total_duration_start, :total_duration_end,
       :show_start_date_in_frontend, :show_end_date_in_frontend,
-      :geozone_affiliated, :order_number, :tag_list, :related_sdg_list, :landing_page_id, geozone_affiliation_ids: [], sdg_goal_ids: [],
+      :geozone_affiliated, :order_number, :tag_list, :related_sdg_list, :landing_page_id,
+      :color, :icon,
+      geozone_affiliation_ids: [], sdg_goal_ids: [],
+      registered_address_district_affiliation_ids: [],
       individual_group_value_ids: [],
-      map_location_attributes: map_location_attributes,
+      map_location_attributes: map_location_attributes_api,
       projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []]
     ]
     params.require(:projekt).permit(attributes, translation_params(Projekt))
@@ -335,28 +353,12 @@ class Api::ProjektsController < Api::BaseController
     )
   end
 
-  def process_tags
-    if params[:projekt].present?
-      params[:projekt][:tag_list] = (params[:projekt][:tag_list_predefined] || @projekt.tag_list.join(","))
-      params[:projekt].delete(:tag_list_predefined)
-    end
-  end
-
-  def map_location_params
-    params.require(:projekt)
-      .require(:map_location_attributes)
-      .permit(map_location_attributes)
-  end
-
   def find_projekt
     @projekt = Projekt
       .includes(
         :content_blocks,
-        projekt_phases: [
-          :settings,
-          :individual_group_values,
-          :geozone_restrictions
-        ]
+        **WRITABLE_FIELD_PRELOADS,
+        projekt_phases: ProjektPhaseSerializer::PRELOADS
       )
       .find(params[:id])
   end
@@ -420,10 +422,10 @@ class Api::ProjektsController < Api::BaseController
       end
   end
 
-  def save_with_content_blocks(projekt)
+  def save_with_content_blocks(projekt, translations)
     touching_projekt_once(projekt) do
       ActiveRecord::Base.transaction do
-        projekt_saved = projekt.save
+        projekt_saved = save_with_translations(projekt, translations)
 
         if projekt_saved
           create_initial_content_blocks(projekt)
@@ -442,10 +444,10 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
-  def update_with_content_blocks(projekt)
+  def update_with_content_blocks(projekt, translations)
     touching_projekt_once(projekt) do
       ActiveRecord::Base.transaction do
-        projekt_updated = projekt.update(projekt_params)
+        projekt_updated = save_with_translations(projekt, translations)
 
         if projekt_updated && content_blocks_sent?
           ProjektContentBlocks::BulkWrite::Apply.call(

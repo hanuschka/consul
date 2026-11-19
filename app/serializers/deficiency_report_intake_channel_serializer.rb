@@ -10,7 +10,8 @@ class DeficiencyReportIntakeChannelSerializer < BaseSerializer
       id: intake_channel.id,
       name: intake_channel.name,
       default: intake_channel.default,
-      given_order: intake_channel.given_order
+      given_order: intake_channel.given_order,
+      translations: serialize_translations(intake_channel)
     }
   end
 end

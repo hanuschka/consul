@@ -269,7 +269,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           {
             projekt: {
               name: 'Test Projekt',
-              geozone_affiliated: false,
+              geozone_affiliated: "no_affiliation",
               show_start_date_in_frontend: true,
               show_end_date_in_frontend: true
             }
@@ -326,7 +326,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           {
             projekt: {
               name: 'Test Projekt',
-              geozone_affiliated: false
+              geozone_affiliated: "no_affiliation"
             }
           }
         end
@@ -538,6 +538,113 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           }
         }
       )
+      request_body_example(
+        name: 'translations_and_shape',
+        summary: 'Write the description in two languages, set colour and icon, draw an area',
+        value: {
+          projekt: {
+            color: '#2e7d32',
+            icon: 'tree',
+            translations: {
+              de: { description: 'Neugestaltung des Marktplatzes' },
+              en: { description: 'Redesign of the market square' }
+            },
+            map_location_attributes: {
+              latitude: 51.4818,
+              longitude: 7.2162,
+              zoom: 15,
+              features: {
+                type: 'FeatureCollection',
+                features: [{
+                  type: 'Feature',
+                  geometry: { type: 'Polygon', coordinates: [[[7.21, 51.48], [7.22, 51.48], [7.22, 51.49], [7.21, 51.48]]] },
+                  properties: {}
+                }]
+              }
+            }
+          }
+        }
+      )
+
+      response '200', 'projekt updated with translations, colour and a drawn area' do
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:polygon) { [[[7.21, 51.48], [7.22, 51.48], [7.22, 51.49], [7.21, 51.48]]] }
+        let(:projekt) do
+          {
+            projekt: {
+              color: '#2e7d32',
+              icon: 'tree',
+              translations: {
+                de: { description: 'Neugestaltung des Marktplatzes' },
+                en: { description: 'Redesign of the market square' }
+              },
+              map_location_attributes: {
+                latitude: 51.4818,
+                longitude: 7.2162,
+                zoom: 15,
+                features: {
+                  type: 'FeatureCollection',
+                  features: [{ type: 'Feature', geometry: { type: 'Polygon', coordinates: polygon }, properties: {} }]
+                }
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt: { '$ref' => '#/components/schemas/Projekt' }
+                   },
+                   required: ['projekt']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          projekt_data = JSON.parse(response.body)['data']['projekt']
+
+          expect(projekt_data['color']).to eq('#2e7d32')
+          expect(projekt_data['icon']).to eq('tree')
+          expect(projekt_data['translations']['de']['description']).to eq('Neugestaltung des Marktplatzes')
+          expect(projekt_data['translations']['en']['description']).to eq('Redesign of the market square')
+          expect(projekt_data['map_location']['features']['features'].first['geometry']['coordinates']).to eq(polygon)
+        end
+      end
+
+      response '200', 'map location updated in place when the body carries no id' do
+        let(:test_projekt) do
+          Projekt.create!(name: 'Original Name').tap do |created_projekt|
+            created_projekt.create_map_location!(latitude: 51.0, longitude: 7.0, zoom: 10)
+          end
+        end
+        let(:id) { test_projekt.id }
+        let(:projekt) { { projekt: { map_location_attributes: { latitude: 52.0, longitude: 8.0, zoom: 12 } } } }
+
+        run_test! do |response|
+          map_location_data = JSON.parse(response.body)['data']['projekt']['map_location']
+
+          expect(map_location_data['id']).to eq(test_projekt.map_location.id)
+          expect(map_location_data['latitude']).to eq(52.0)
+          expect(MapLocation.where(mappable: test_projekt).count).to eq(1)
+        end
+      end
+
+      response '422', 'language the instance does not offer' do
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:projekt) { { projekt: { translations: { xx: { description: 'Unknown' } } } } }
+
+        run_test! do |response|
+          error_data = JSON.parse(response.body)['error']
+
+          expect(error_data['details']['translations']).to eq(['contain unsupported languages: xx'])
+          expect(test_projekt.reload.translations.map(&:locale)).not_to include(:xx)
+        end
+      end
 
       response '200', 'projekt updated successfully' do
         let(:test_projekt) { Projekt.create!(name: 'Original Name') }
@@ -1266,16 +1373,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     content_block: {
-                       type: :object,
-                       properties: {
-                         id: { type: :integer },
-                         body: { type: :string },
-                         name: { type: :string },
-                         locale: { type: :string },
-                         position: { type: :integer }
-                       }
-                     }
+                     content_block: { '$ref' => '#/components/schemas/ContentBlock' }
                    },
                    required: ['content_block']
                  },

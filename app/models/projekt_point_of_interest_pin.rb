@@ -21,6 +21,8 @@ class ProjektPointOfInterestPin < ApplicationRecord
 
   validates :author, presence: true
   validate :validate_max_point_of_interest_pins_per_user, if: :require_user_pin_limit?
+  validates :external_source, presence: true, if: :external_id?
+  validates :external_id, uniqueness: { scope: [:projekt_phase_id, :external_source] }, allow_nil: true
 
   private
 

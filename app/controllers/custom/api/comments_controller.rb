@@ -1,6 +1,8 @@
 class Api::CommentsController < Api::BaseController
   include Translatable
 
+  TRANSLATED_ATTRIBUTES = %w[body].freeze
+
   before_action :find_projekt_phase, only: [:index], if: -> { params[:projekt_phase_id].present? }
   before_action :find_commentable, only: [:create]
   before_action :find_comment, only: [:show, :update, :destroy]
@@ -14,9 +16,9 @@ class Api::CommentsController < Api::BaseController
       end
 
       comments = @projekt_phase.comments
-        .includes(:commentable, user: :organization)
+        .includes(:commentable, :translations, user: :organization)
     else
-      comments = Comment.includes(:commentable, user: :organization)
+      comments = Comment.includes(:commentable, :translations, user: :organization)
 
       if current_client.public_data?
         comments = comments.on_public_projekt_phases
@@ -65,12 +67,13 @@ class Api::CommentsController < Api::BaseController
     check_admin_access!
     comment = @commentable.comments.new(comment_params)
     comment.user = @current_client.content_author
+    translations = assign_requested_translations(comment, :comment, TRANSLATED_ATTRIBUTES)
 
     if comment.parent.present? && comment.parent.commentable != @commentable
       render json: {
         error: { messages: ["Parent comment belongs to a different resource."] }
       }, status: 422
-    elsif comment.save
+    elsif save_with_translations(comment, translations)
       serialized_comment = CommentSerializer.new(comment, client: current_client).serialize
 
       render json: { data: { comment: serialized_comment } }, status: 201
@@ -82,7 +85,10 @@ class Api::CommentsController < Api::BaseController
   def update
     check_admin_access!
 
-    if @comment.update(comment_update_params)
+    @comment.assign_attributes(comment_update_params)
+    translations = assign_requested_translations(@comment, :comment, TRANSLATED_ATTRIBUTES)
+
+    if save_with_translations(@comment, translations)
       serialized_comment = CommentSerializer.new(@comment, client: current_client).serialize
 
       render json: { data: { comment: serialized_comment } }
@@ -134,6 +140,6 @@ class Api::CommentsController < Api::BaseController
   end
 
   def find_comment
-    @comment = Comment.includes(:user, :commentable).find(params[:id])
+    @comment = Comment.includes(:user, :commentable, :translations).find(params[:id])
   end
 end

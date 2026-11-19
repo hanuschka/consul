@@ -1,4 +1,9 @@
 class Api::LivestreamsController < Api::BaseController
+  SERIALIZER_PRELOADS = [
+    { projekt_phase: { projekt: :page } },
+    { projekt_questions: QuestionSerializer::PRELOADS }
+  ].freeze
+
   before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_projekt_livestream, only: [:show, :update, :destroy]
 
@@ -13,11 +18,11 @@ class Api::LivestreamsController < Api::BaseController
       if @projekt_phase.present?
         @projekt_phase
           .projekt_livestreams
-          .includes(:projekt_phase)
+          .includes(*SERIALIZER_PRELOADS)
       elsif current_client.public_data?
-        restrict_to_public_phases(ProjektLivestream.includes(:projekt_phase))
+        restrict_to_public_phases(ProjektLivestream.includes(*SERIALIZER_PRELOADS))
       else
-        ProjektLivestream.includes(:projekt_phase)
+        ProjektLivestream.includes(*SERIALIZER_PRELOADS)
       end
 
     livestreams = paginate(livestreams.order(created_at: :asc))
@@ -46,6 +51,11 @@ class Api::LivestreamsController < Api::BaseController
 
   def show
     check_read_access!
+
+    if phase_hidden_from_client?(@projekt_livestream.projekt_phase)
+      raise ForbiddenError, "Access denied"
+    end
+
     serialized_projekt_livestream = LivestreamSerializer.new(@projekt_livestream, client: current_client).serialize
 
     render json: { data: { projekt_livestream: serialized_projekt_livestream } }
@@ -90,7 +100,7 @@ class Api::LivestreamsController < Api::BaseController
   end
 
   def find_projekt_livestream
-    @projekt_livestream = ProjektLivestream.find(params[:id])
+    @projekt_livestream = ProjektLivestream.includes(*SERIALIZER_PRELOADS).find(params[:id])
   end
 end
 

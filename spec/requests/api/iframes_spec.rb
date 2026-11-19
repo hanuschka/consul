@@ -32,16 +32,7 @@ RSpec.describe 'Iframes API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     iframe: {
-                       type: :object,
-                       properties: {
-                         projekt_phase: { type: :object },
-                         url: { type: :string },
-                         width: { type: :string },
-                         height: { type: :string }
-                       },
-                       required: ['projekt_phase']
-                     }
+                     iframe: { '$ref' => '#/components/schemas/Iframe' }
                    },
                    required: ['iframe']
                  }
@@ -53,6 +44,16 @@ RSpec.describe 'Iframes API', type: :request, openapi_spec: 'v1/swagger.yaml' do
 
           expect(iframe['url']).to eq('https://example.com/set-in-adm')
         end
+      end
+
+      response '403', 'phase hidden from public_data clients' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:test_iframe_phase) { ProjektPhase::IframePhase.create!(projekt: test_projekt, active: true, frontend_visibility: false) }
+        let(:projekt_phase_id) { test_iframe_phase.id }
+
+        before { api_client.update!(access_level: :public_data) }
+
+        run_test!
       end
 
       response '404', 'iframe not found' do
@@ -104,16 +105,7 @@ RSpec.describe 'Iframes API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     iframe: {
-                       type: :object,
-                       properties: {
-                         projekt_phase: { type: :object },
-                         url: { type: :string },
-                         width: { type: :string },
-                         height: { type: :string }
-                       },
-                       required: ['projekt_phase']
-                     }
+                     iframe: { '$ref' => '#/components/schemas/Iframe' }
                    },
                    required: ['iframe']
                  }
@@ -233,16 +225,7 @@ RSpec.describe 'Iframes API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     iframe: {
-                       type: :object,
-                       properties: {
-                         projekt_phase: { type: :object },
-                         url: { type: :string },
-                         width: { type: :string },
-                         height: { type: :string }
-                       },
-                       required: ['projekt_phase']
-                     }
+                     iframe: { '$ref' => '#/components/schemas/Iframe' }
                    },
                    required: ['iframe']
                  }

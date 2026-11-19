@@ -1,4 +1,13 @@
 class BudgetSerializer < BaseSerializer
+  TRANSLATED_ATTRIBUTES = %w[name main_link_text main_link_url].freeze
+
+  PRELOADS = [
+    :translations,
+    { image: { attachment_attachment: :blob } },
+    { group: [:translations, { heading: :translations }] },
+    { projekt_phase: [:translations, { projekt: { page: :translations } }] }
+  ].freeze
+
   attr_reader :budget
 
   def initialize(budget)
@@ -26,6 +35,12 @@ class BudgetSerializer < BaseSerializer
       ]
     )
 
+    budget_data.merge!(
+      main_link_text: budget.main_link_text,
+      main_link_url: budget.main_link_url,
+      translations: serialize_translations(budget, TRANSLATED_ATTRIBUTES)
+    )
+
     if budget.projekt_phase.present?
       budget_data[:projekt_phase] = {
         id: budget.projekt_phase.id,
@@ -43,27 +58,30 @@ class BudgetSerializer < BaseSerializer
       end
     end
 
-    if budget.respond_to?(:image) && budget.image.present?
+    if budget.image.present?
       serialized_image = ImageSerializer.new(budget.image, include_variants: false).serialize
       budget_data[:image] = serialized_image if serialized_image.present?
     end
 
-    if group_data.present?
-      budget_data[:group] = group_data
+    serialized_group = group_data
+
+    if serialized_group.present?
+      budget_data[:group] = serialized_group
     end
 
     budget_data
   end
 
   def group_data
-    group = Budget::Group.find_by(budget_id: budget.id)
+    group = budget.group
 
     return nil if group.nil?
 
     group_data = {
       id: group.id,
       name: group.name,
-      slug: group.slug
+      slug: group.slug,
+      translations: serialize_translations(group, %w[name])
     }
 
     if group.heading.present?
@@ -74,7 +92,8 @@ class BudgetSerializer < BaseSerializer
         slug: heading.slug,
         price: heading.price,
         population: heading.population,
-        max_ballot_lines: heading.max_ballot_lines
+        max_ballot_lines: heading.max_ballot_lines,
+        translations: serialize_translations(heading, %w[name])
       }
     end
 

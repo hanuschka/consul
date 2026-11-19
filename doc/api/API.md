@@ -7,6 +7,7 @@ deficiency reports, points of interest and more.
 
 - [Endpoint reference (OpenAPI)](#endpoint-reference-openapi)
 - [Authentication](#authentication)
+- [Content: languages, visibility, personal data](#content-languages-visibility-personal-data)
 - [Which user authors content created via the API?](#which-user-authors-content-created-via-the-api)
 - [The system user](#the-system-user)
 - [The service user (dedicated API user)](#the-service-user-dedicated-api-user)
@@ -83,6 +84,31 @@ included, gets `403 Forbidden`.
 - Out of reach on purpose: users, roles, API clients and keys, login and
   verification providers, census and registry configuration, custom head and
   body code, AI providers, and sender names and addresses of emails.
+
+---
+
+## Content: languages, visibility, personal data
+
+**Texts per language.** Every translated record returns its texts in the
+request language and, under `translations`, in every language it has, keyed
+by locale. Writes accept the same `translations` hash; a language the
+instance doesn't offer answers `422`. Writing several languages in one
+request switches machine translation off for that save.
+
+**Visibility.** A `public_data` client reads what the public site shows.
+Content of a hidden or inactive phase, records staff haven't accepted, and
+single records that belong to no phase answer `403 Forbidden`; lists leave
+them out. Admin clients read everything.
+
+**Personal data.** Read-only clients get the public author name and what the
+site displays. Admin clients also get the workflow data (acceptance,
+assignment, internal answers). No client gets login data, private staff
+contact data, form submissions, event registrations or single votes; polls
+and events return counts only.
+
+**External ids.** Proposals, budget investments and point of interest pins
+take an `external_source` and `external_id` on create, unique per phase
+(investments: per budget), so a client can find its records again.
 
 ---
 

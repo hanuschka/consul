@@ -73,6 +73,46 @@ describe Shared::HomepageHeaderImageComponent, type: :component do
     expect(page.find("source", visible: :all)[:sizes]).to eq "1618px"
   end
 
+  describe "image credits" do
+    let!(:desktop) { upload("header_image", "clippy.png", width: 4000, height: 1583) }
+    let!(:mobile) { upload("mobile_header_image", "clippy.jpg", width: 1080, height: 1450) }
+
+    it "shows the desktop credit on desktop and the mobile credit on mobile" do
+      render_inline(described_class.new(desktop_attachment: desktop, mobile_attachment: mobile,
+                                        desktop_credits: "©Desktop Fotograf",
+                                        mobile_credits: "©Mobil Fotograf"))
+
+      expect(page).to have_css(".homepage-image-header--credit.-desktop .image-credit-label",
+                               text: "©Desktop Fotograf")
+      expect(page).to have_css(".homepage-image-header--credit.-mobile .image-credit-label",
+                               text: "©Mobil Fotograf")
+    end
+
+    it "uses the desktop credit on mobile when there is no mobile image" do
+      render_inline(described_class.new(desktop_attachment: desktop, desktop_credits: "©Desktop Fotograf"))
+
+      expect(page).to have_css(".image-credit-label", count: 1, text: "©Desktop Fotograf")
+      expect(page).not_to have_css(".homepage-image-header--credit")
+    end
+
+    it "drops the credit of a viewport covered by a header video" do
+      render_inline(described_class.new(desktop_attachment: desktop, mobile_attachment: mobile,
+                                        desktop_credits: "©Desktop Fotograf",
+                                        mobile_credits: "©Mobil Fotograf",
+                                        desktop_video: true))
+
+      expect(page).not_to have_css(".homepage-image-header--credit.-desktop")
+      expect(page).to have_css(".homepage-image-header--credit.-mobile", text: "©Mobil Fotograf")
+    end
+
+    it "renders no credit label without credits" do
+      render_inline(described_class.new(desktop_attachment: desktop, mobile_attachment: mobile))
+
+      expect(page).not_to have_css(".image-credit-label")
+      expect(page).not_to have_css(".homepage-image-header--credit")
+    end
+  end
+
   it "renders nothing without an image" do
     render_inline(described_class.new(desktop_attachment: SiteCustomization::Image.new.image))
 

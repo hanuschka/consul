@@ -16,6 +16,12 @@ de:
         ai_marker_tooltip_title: "Titelbild als KI-Bild kennzeichnen"
         ai_marker_tooltip_text: "Setzt den Hinweis „KI-generiertes Bild“ auf dem Titelbild. Aktivieren Sie ihn für Bilder, die mit KI erstellt oder bearbeitet wurden."
         ai_marker_tooltip_note: "Bilder, die über die Funktion „Bild generieren“ auf der Projektseite erstellt werden, werden automatisch als KI-generiert gekennzeichnet."
+        credit_button_label: "Bildnachweis bearbeiten"
+        credit_tooltip_text: "Zeigt einen Bildnachweis klein unten links auf dem Titelbild an, z. B. „©Name_stock.adobe.com“. Beim Ersetzen des Bildes wird der Nachweis entfernt."
+        credit_input_label: "Bildnachweis"
+        credit_save: "Speichern"
+        credit_cancel: "Abbrechen"
+        credit_failed: "Der Bildnachweis konnte nicht gespeichert werden. Bitte laden Sie die Seite neu."
       banner_generate_modal:
         title: "Titelbild mit KI generieren"
         description: "Erstellt ein Titelbild auf Basis von Projekttitel, Untertitel und optional den Projektinhalten. Mit einem eigenen Prompt können Sie das gewünschte Motiv genauer beschreiben."

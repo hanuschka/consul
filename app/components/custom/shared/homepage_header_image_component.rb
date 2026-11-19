@@ -11,15 +11,28 @@ class Shared::HomepageHeaderImageComponent < ApplicationComponent
   QUALITY = 90
   TRANSPARENT_PIXEL = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
-  attr_reader :desktop_attachment, :mobile_attachment
+  attr_reader :desktop_attachment, :mobile_attachment, :desktop_credits, :mobile_credits
 
-  def initialize(desktop_attachment:, mobile_attachment: nil)
+  def initialize(
+    desktop_attachment:, mobile_attachment: nil,
+    desktop_credits: nil, mobile_credits: nil,
+    desktop_video: false, mobile_video: false
+  )
     @desktop_attachment = desktop_attachment if desktop_attachment&.attached?
-    @mobile_attachment = mobile_attachment&.attached? ? mobile_attachment : @desktop_attachment
+    mobile_falls_back = !mobile_attachment&.attached?
+    @mobile_attachment = mobile_falls_back ? @desktop_attachment : mobile_attachment
+    @desktop_credits = desktop_credits if @desktop_attachment && !desktop_video
+    @mobile_credits = (mobile_falls_back ? desktop_credits : mobile_credits) unless mobile_video
   end
 
   def render?
     !mobile_attachment.nil?
+  end
+
+  def shared_credits?
+    desktop_credits.present? &&
+      desktop_credits == mobile_credits &&
+      desktop_attachment.blob == mobile_attachment.blob
   end
 
   def desktop_srcset

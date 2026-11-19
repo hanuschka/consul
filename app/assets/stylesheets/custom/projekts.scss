@@ -1523,15 +1523,80 @@ span.projekt-backlink:before {
   line-height: 1;
 }
 
-.projekt-image-delete-button {
+.projekt-image-credit-button {
   left: 165px;
+  padding: 0;
+
+  &.-active {
+    background-color: color(srgb 1 1 1 / 0.85) !important;
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.projekt-image-credit-button--text {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.projekt-image-delete-button {
+  left: 215px;
 }
 
 // The buttons sit at fixed offsets, so a hidden AI marker would leave its slot
 // empty between the generate and delete buttons.
-.projekt-image-upload-wrapper:has(.projekt-image-ai-marker-button.d-none)
+.projekt-image-upload-wrapper:has(.projekt-image-ai-marker-button.d-none) {
+  .projekt-image-credit-button {
+    left: 115px;
+  }
+
   .projekt-image-delete-button {
-  left: 115px;
+    left: 165px;
+  }
+}
+
+.projekt-image-credit-editor {
+  position: absolute;
+  bottom: 60px;
+  left: 15px;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 320px;
+  max-width: calc(100% - 30px);
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08), 0 10px 24px rgba(0, 0, 0, 0.22);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.projekt-image-credit-editor--label {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.projekt-image-credit-editor--input {
+  margin: 0;
+}
+
+.projekt-image-credit-editor--actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+
+  .button {
+    margin: 0;
+  }
+}
+
+body:not(.-preview-mode) .projekt-image-upload-wrapper .image-credit-label {
+  bottom: 58px;
 }
 
 rich-tooltip:has(.projekt-image-generate-button:disabled) {

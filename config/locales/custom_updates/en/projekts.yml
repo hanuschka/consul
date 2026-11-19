@@ -16,6 +16,12 @@ en:
         ai_marker_tooltip_title: "Mark banner as an AI image"
         ai_marker_tooltip_text: "Adds the \"AI-generated image\" notice to the banner. Turn it on for pictures created or edited with AI."
         ai_marker_tooltip_note: "Images created with the \"Generate image\" function on the projekt page are marked as AI-generated automatically."
+        credit_button_label: "Edit image credit"
+        credit_tooltip_text: "Shows an image credit small at the bottom left of the banner image, e.g. \"©Name_stock.adobe.com\". Replacing the image removes the credit."
+        credit_input_label: "Image credit"
+        credit_save: "Save"
+        credit_cancel: "Cancel"
+        credit_failed: "The image credit could not be saved. Please reload the page."
       banner_generate_modal:
         title: "Generate banner image with AI"
         description: "Creates a banner image based on the projekt title, subtitle and optionally the projekt content. Use a custom prompt to describe the desired image more precisely."

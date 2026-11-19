@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_18_085906) do
+ActiveRecord::Schema.define(version: 2026_11_19_100504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3552,6 +3552,7 @@ ActiveRecord::Schema.define(version: 2026_11_18_085906) do
     t.datetime "image_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "credits"
     t.index ["name"], name: "index_site_customization_images_on_name", unique: true
   end
 

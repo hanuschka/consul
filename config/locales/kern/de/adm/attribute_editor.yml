@@ -56,6 +56,8 @@ de:
       image:
         attachment_label: Bild
         attachment_description: "Das Bild wird im oberen Bereich des Newsletters als visueller Aufmacher angezeigt, direkt unterhalb des Logos und oberhalb des Titels. Verwenden Sie ein Querformat-Bild mit klarem Motiv, das thematisch zum Newsletter-Inhalt passt. Empfohlenes Format: mindestens 600 Pixel breit, JPG oder PNG. Das Bild ist ein Pflichtfeld und muss vor dem Versand hochgeladen werden."
+        credits_label: Bildnachweis
+        credits_description: "Wird klein unten auf dem Bild angezeigt, im Banner der Seite und auf der Kachel in Übersichten, z. B. „©Name_stock.adobe.com“. Leer lassen, wenn kein Nachweis nötig ist. Beim Ersetzen des Bildes wird der Nachweis entfernt."
       newsletter:
         recipient_group_id_label: Empfängergruppe
         recipient_group_id_description: 'Legt fest, an welche Empfängergruppe dieser Newsletter versendet wird. Empfängergruppen werden unter <a href="/adm/newsletters/recipient_groups" target="_blank">Benachrichtigungen > Empfängergruppen</a> verwaltet und können z. B. nach Gebiet, Interessengebiet oder Registrierungsstatus zusammengestellt sein. Nur Nutzer, die der gewählten Gruppe zugeordnet sind, erhalten die E-Mail. Wenn Sie alle registrierten Nutzer erreichen möchten, wählen Sie die entsprechende Standardgruppe.'
@@ -106,8 +108,12 @@ de:
       site_customization/image:
         header_image_label: Hintergrundbild für Desktop
         header_image_description: "Dieses Bild füllt den oberen Bereich der Startseite auf Bildschirmen ab 751 Pixel Breite. Oben bleibt es bündig, auf schmaleren Bildschirmen und Tablets wird es links und rechts beschnitten. Verwenden Sie ein Querformat-Bild mit mindestens 1920 Pixel Breite und dem Hauptmotiv in der Mitte. Empfohlenes Format für scharfe Darstellung auf hochauflösenden Bildschirmen: 3840 × 1400 Pixel. Wird ignoriert, wenn unten ein Desktop-Hintergrundvideo hochgeladen ist."
+        header_image_credits_label: Bildnachweis für Desktop
+        header_image_credits_description: "Wird klein unten rechts im Startseiten-Header auf Bildschirmen ab 751 Pixel Breite angezeigt, z. B. „©Name_stock.adobe.com“. Leer lassen, wenn kein Nachweis nötig ist. Beim Ersetzen des Bildes wird der Nachweis entfernt."
         mobile_header_image_label: Hintergrundbild für Mobile
         mobile_header_image_description: "Dieses Bild füllt den oberen Bereich der Startseite auf Bildschirmen bis 750 Pixel Breite, ohne Mobilbild wird dort das Desktop-Bild verwendet. Der obere Rand liegt hinter der Navigationsleiste, und je nach Gerät wird das Bild unten oder an den Seiten beschnitten. Verwenden Sie ein Bild im Hoch- oder nahezu quadratischen Format mit mindestens 1080 Pixel Breite, lassen Sie den oberen Rand frei und setzen Sie das Hauptmotiv in die Mitte. Empfohlenes Format für scharfe Darstellung auf hochauflösenden Bildschirmen: 1080 × 1450 Pixel. Wird ignoriert, wenn unten ein Mobile-Hintergrundvideo hochgeladen ist."
+        mobile_header_image_credits_label: Bildnachweis für Mobile
+        mobile_header_image_credits_description: "Wird klein unten rechts im Startseiten-Header auf Bildschirmen bis 750 Pixel Breite angezeigt, z. B. „©Name_stock.adobe.com“. Leer lassen, wenn kein Nachweis nötig ist. Beim Ersetzen des Bildes wird der Nachweis entfernt."
         logo_header_label: Logo (weißer Hintergrund)
         logo_header_description: "Dieses Logo erscheint in der oberen Navigationsleiste, sobald sie weiß hinterlegt ist: auf der Startseite und auf Landingpages nach dem Scrollen, auf allen anderen Seiten immer. Es wird mit höchstens 200 × 52 Pixel angezeigt, auf Bildschirmen bis 640 Pixel Breite erscheint kein Logo. Verwenden Sie ein PNG mit transparentem Hintergrund, das auf Weiß gut lesbar ist (maximal 2 MB)."
         logo_header_for_transparent_label: Logo (transparenter Hintergrund)

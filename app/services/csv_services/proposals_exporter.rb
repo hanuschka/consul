@@ -49,6 +49,7 @@ module CsvServices
           "community_id",
           "selected",
           "image_ai_generated",
+          "image_credits",
           "district",
           "geometry",
           "similar_contributions"
@@ -79,6 +80,7 @@ module CsvServices
           proposal.community_id,
           proposal.selected,
           proposal.image&.ai_generated,
+          sanitize_for_csv(proposal.image&.credits),
           proposal.district&.name,
           format_geometry(proposal.map_location&.features),
           similar_contributions_count(proposal)

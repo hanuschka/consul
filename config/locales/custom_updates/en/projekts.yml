@@ -265,6 +265,8 @@ en:
         new_question_notification: "New question: %{question_title}"
         all_questions: All questions
         go_to_question: Go to question
+        answer_error: Your vote was not saved. Please reload the page and try again.
+        answer_closed: Voting has closed. Your vote was not saved.
         participation_not_allowed:
           login_to_answer: Please %{signin} or %{signup} to proceed.
           organizations: Organizations cannot take part

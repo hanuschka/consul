@@ -6,16 +6,24 @@ class Api::IdeasController < Api::BaseController
   include DocumentAttributes
   include MapLocationAttributes
 
+  TRANSLATED_ATTRIBUTES = IdeaSerializer::ADMIN_TRANSLATED_ATTRIBUTES
+
+  ACCEPTANCE_FILTERS = %w[accepted pending all].freeze
+
+  SERIALIZER_PRELOADS = [
+    :map_location,
+    :translations,
+    { category: :translations },
+    { image: { attachment_attachment: :blob } },
+    { documents: { attachment_attachment: :blob } },
+    { author: :organization }
+  ].freeze
+
   before_action :find_idea, only: [:show, :update]
 
   def index
     check_read_access!
-    ideas = Idea.accepted.includes(
-      :category,
-      :map_location,
-      documents: { attachment_attachment: :blob },
-      author: :organization
-    )
+    ideas = filter_by_acceptance(Idea.includes(*SERIALIZER_PRELOADS))
     ideas = paginate(apply_sorting(apply_filters(ideas)))
 
     serialized_ideas = IdeaSerializer.serialize_collection(ideas, client: current_client)
@@ -28,6 +36,11 @@ class Api::IdeasController < Api::BaseController
 
   def show
     check_read_access!
+
+    if current_client.public_data? && @idea.admin_accepted_at.blank?
+      raise ForbiddenError, "Access denied"
+    end
+
     serialized_idea = IdeaSerializer.new(@idea, client: current_client).serialize
 
     render json: { data: { idea: serialized_idea } }
@@ -40,16 +53,17 @@ class Api::IdeasController < Api::BaseController
     idea.resource_terms = true
     assign_document_authors(idea)
     assign_acceptance(idea)
+    translations = assign_requested_translations(idea, :idea, TRANSLATED_ATTRIBUTES)
 
     idea.officer = idea.get_default_officer if idea.respond_to?(:get_default_officer)
 
-    if idea.save
+    if save_with_translations(idea, translations)
       process_image_with_base64(idea, params[:idea][:image_attributes])
       serialized_idea = IdeaSerializer.new(idea, client: current_client).serialize
 
       render json: { data: { idea: serialized_idea } }, status: 201
     else
-      render json: { error: { messages: idea.errors.full_messages } }, status: 422
+      render_translated_record_errors(idea)
     end
   rescue *SELF_RENDERED_ERRORS
     raise
@@ -59,17 +73,18 @@ class Api::IdeasController < Api::BaseController
 
   def update
     check_admin_access!
-    @idea.assign_attributes(idea_params)
+    @idea.assign_attributes(with_existing_map_location_id(@idea, idea_params))
     assign_document_authors(@idea)
     assign_acceptance(@idea)
+    translations = assign_requested_translations(@idea, :idea, TRANSLATED_ATTRIBUTES)
 
-    if @idea.save
+    if save_with_translations(@idea, translations)
       process_image_with_base64(@idea, params[:idea][:image_attributes])
       serialized_idea = IdeaSerializer.new(@idea, client: current_client).serialize
 
       render json: { data: { idea: serialized_idea } }
     else
-      render json: { error: { messages: @idea.errors.full_messages } }, status: 422
+      render_translated_record_errors(@idea)
     end
   rescue *SELF_RENDERED_ERRORS
     raise
@@ -88,10 +103,33 @@ class Api::IdeasController < Api::BaseController
         :idea_category_id,
         :video_url,
         :on_behalf_of,
-        map_location_attributes: map_location_attributes,
+        :official_answer,
+        :timeframe,
+        :votes_needed_for_success,
+        map_location_attributes: map_location_attributes_api,
         documents_attributes: document_attributes_api
       )
     )
+  end
+
+  # Read-only clients only get the accepted ideas the site lists; admin
+  # clients can ask for the pending ones too.
+  def filter_by_acceptance(ideas)
+    acceptance =
+      if admin_client? && ACCEPTANCE_FILTERS.include?(params[:acceptance])
+        params[:acceptance]
+      else
+        "accepted"
+      end
+
+    case acceptance
+    when "accepted"
+      ideas.accepted
+    when "pending"
+      ideas.where(admin_accepted_at: nil)
+    else
+      ideas
+    end
   end
 
   # The acceptance date starts the idea's timeframe, so accepting an already
@@ -109,7 +147,7 @@ class Api::IdeasController < Api::BaseController
   end
 
   def find_idea
-    @idea = Idea.find(params[:id])
+    @idea = Idea.includes(*SERIALIZER_PRELOADS).find(params[:id])
   end
 
   def apply_filters(ideas)

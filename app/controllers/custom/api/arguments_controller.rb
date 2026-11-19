@@ -1,15 +1,21 @@
 class Api::ArgumentsController < Api::BaseController
   include ImageAttributes
 
+  SERIALIZER_PRELOADS = [
+    { image: { attachment_attachment: :blob } },
+    { projekt_phase: { projekt: :page } }
+  ].freeze
+
   before_action :find_projekt_phase, only: [:index, :create]
   before_action :find_projekt_argument, only: [:show, :update, :destroy]
 
   def index
     check_read_access!
+    check_phase_visible!(@projekt_phase)
 
-    arguments = paginate(@projekt_phase.projekt_arguments)
+    arguments = paginate(@projekt_phase.projekt_arguments.includes(*SERIALIZER_PRELOADS))
 
-    serialized_arguments = ArgumentSerializer.serialize_collection(arguments)
+    serialized_arguments = ArgumentSerializer.serialize_collection(arguments, client: current_client)
 
     render json: {
       data: { arguments: serialized_arguments },
@@ -24,7 +30,7 @@ class Api::ArgumentsController < Api::BaseController
     if projekt_argument.save
       process_image_with_base64(projekt_argument, params[:projekt_argument][:image_attributes])
 
-      serialized_projekt_argument = ArgumentSerializer.new(projekt_argument).serialize
+      serialized_projekt_argument = ArgumentSerializer.new(projekt_argument, client: current_client).serialize
 
       render json: { data: { projekt_argument: serialized_projekt_argument } }, status: 201
     else
@@ -38,7 +44,9 @@ class Api::ArgumentsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_projekt_argument = ArgumentSerializer.new(@projekt_argument).serialize
+    check_phase_visible!(@projekt_argument.projekt_phase)
+
+    serialized_projekt_argument = ArgumentSerializer.new(@projekt_argument, client: current_client).serialize
 
     render json: { data: { projekt_argument: serialized_projekt_argument } }
   end
@@ -48,7 +56,7 @@ class Api::ArgumentsController < Api::BaseController
     if @projekt_argument.update(projekt_argument_params)
       process_image_with_base64(@projekt_argument, params[:projekt_argument][:image_attributes])
 
-      serialized_projekt_argument = ArgumentSerializer.new(@projekt_argument).serialize
+      serialized_projekt_argument = ArgumentSerializer.new(@projekt_argument, client: current_client).serialize
 
       render json: { data: { projekt_argument: serialized_projekt_argument } }
     else
@@ -74,6 +82,7 @@ class Api::ArgumentsController < Api::BaseController
   def projekt_argument_params
     params.require(:projekt_argument).permit(
       :name,
+      :party,
       :position,
       :note,
       :pro
@@ -85,7 +94,7 @@ class Api::ArgumentsController < Api::BaseController
   end
 
   def find_projekt_argument
-    @projekt_argument = ProjektArgument.find(params[:id])
+    @projekt_argument = ProjektArgument.includes(*SERIALIZER_PRELOADS).find(params[:id])
   end
 end
 

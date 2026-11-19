@@ -1,18 +1,15 @@
 class Api::ProjektPhasesController < Api::BaseController
   include Translatable
 
+  SERIALIZER_PRELOADS = ProjektPhaseSerializer::PRELOADS
+
   before_action :find_projekt, only: %i[index new create]
   before_action :find_projekt_phase, only: [:show, :update, :destroy, :update_setting, :update_settings]
   around_action :audit_changes_as_client, only: [:update_setting, :update_settings]
 
   def index
     check_read_access!
-    projekt_phases = @projekt.projekt_phases
-      .includes(
-        :settings,
-        :individual_group_values,
-        :geozone_restrictions
-      )
+    projekt_phases = @projekt.projekt_phases.includes(*SERIALIZER_PRELOADS)
 
     if current_client.public_data?
       return render_access_denied unless @projekt.visible_for?(nil)
@@ -49,10 +46,11 @@ class Api::ProjektPhasesController < Api::BaseController
   def create
     check_admin_access!
     phase_class = resolve_phase_class(params.dig(:projekt_phase, :type))
-    projekt_phase = phase_class.new(projekt_phase_params.except(:type))
+    projekt_phase = phase_class.new(projekt_phase_params)
     projekt_phase.projekt = @projekt
+    translations = assign_requested_translations(projekt_phase, :projekt_phase, ProjektPhase.translated_attribute_names)
 
-    if projekt_phase.save
+    if save_with_translations(projekt_phase, translations)
       serialized_projekt_phase = ProjektPhaseSerializer.new(projekt_phase, current_api_client: current_client).serialize
 
       render json: { data: { projekt_phase: serialized_projekt_phase } }, status: 201
@@ -63,7 +61,10 @@ class Api::ProjektPhasesController < Api::BaseController
 
   def update
     check_admin_access!
-    if @projekt_phase.update(projekt_phase_params)
+    @projekt_phase.assign_attributes(projekt_phase_params)
+    translations = assign_requested_translations(@projekt_phase, :projekt_phase, ProjektPhase.translated_attribute_names)
+
+    if save_with_translations(@projekt_phase, translations)
       serialized_projekt_phase = ProjektPhaseSerializer.new(@projekt_phase, current_api_client: current_client).serialize
 
       render json: { data: { projekt_phase: serialized_projekt_phase } }
@@ -138,7 +139,6 @@ class Api::ProjektPhasesController < Api::BaseController
 
   def projekt_phase_params
     params.require(:projekt_phase).permit(
-      :type,
       :start_date,
       :end_date,
       :active,
@@ -149,11 +149,14 @@ class Api::ProjektPhasesController < Api::BaseController
       :user_status,
       :lock_on,
       :registered_address_grouping_restriction,
-      *translation_params(ProjektPhase),
+      *ProjektPhase.translated_attribute_names,
+      translation_params(ProjektPhase),
       registered_address_grouping_restrictions: {},
       individual_group_value_ids: [],
       geozone_restriction_ids: [],
-      settings_attributes: [:id, :key, :value, :_destroy],
+      registered_address_district_ids: [],
+      registered_address_street_ids: [],
+      settings_attributes: [:id, :key, :value, :_destroy]
     )
   end
 
@@ -182,13 +185,7 @@ class Api::ProjektPhasesController < Api::BaseController
   end
 
   def find_projekt_phase
-    @projekt_phase = ProjektPhase
-      .includes(
-        :settings,
-        :individual_group_values,
-        :geozone_restrictions
-      )
-      .find(params[:id])
+    @projekt_phase = ProjektPhase.includes(*SERIALIZER_PRELOADS).find(params[:id])
   end
 end
 

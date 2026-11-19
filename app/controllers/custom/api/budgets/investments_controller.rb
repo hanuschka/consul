@@ -6,22 +6,25 @@ class Api::Budgets::InvestmentsController < Api::BaseController
   include DocumentAttributes
   include MapLocationAttributes
 
+  TRANSLATED_ATTRIBUTES = BudgetInvestmentSerializer::TRANSLATED_ATTRIBUTES
+
   before_action :find_budget, only: [:index, :create], if: -> { params[:budget_id].present? }
   before_action :find_budget_investment, only: [:show, :update, :destroy]
 
   def index
     check_read_access!
+
+    if @budget.present?
+      check_phase_visible!(@budget.projekt_phase)
+    end
+
     investment_scope = @budget.present? ? @budget.investments : Budget::Investment
-    budget_investments = investment_scope.includes(
-      :heading,
-      :map_location,
-      documents: { attachment_attachment: :blob },
-      author: :organization,
-      budget: {
-        projekt_phase: [:settings, :projekt],
-        group: :heading
-      }
-    )
+
+    if current_client.public_data?
+      investment_scope = restrict_to_public_budget_phases(investment_scope)
+    end
+
+    budget_investments = investment_scope.preload(BudgetInvestmentSerializer::PRELOADS)
     budget_investments = paginate(apply_sorting(apply_filters(budget_investments)))
 
     serialized_budget_investments = BudgetInvestmentSerializer.serialize_collection(
@@ -38,6 +41,8 @@ class Api::Budgets::InvestmentsController < Api::BaseController
 
   def show
     check_read_access!
+    check_phase_visible!(@budget_investment.budget.projekt_phase)
+
     serialized_budget_investment = BudgetInvestmentSerializer.new(
       @budget_investment,
       client: current_client,
@@ -49,39 +54,43 @@ class Api::Budgets::InvestmentsController < Api::BaseController
 
   def create
     check_admin_access!
-    find_budget unless @budget.present?
-    budget_investment = @budget.investments.new(budget_investment_params)
+    find_budget if @budget.blank?
+    budget_investment = @budget.investments.new(budget_investment_params.merge(external_reference_params.to_h))
     budget_investment.author = @current_client.content_author
     budget_investment.resource_terms = true
     assign_document_authors(budget_investment)
+    translations = assign_requested_translations(budget_investment, :budget_investment, TRANSLATED_ATTRIBUTES)
 
-    if budget_investment.save
+    if save_with_translations(budget_investment, translations)
       process_image_with_base64(budget_investment, params[:budget_investment][:image_attributes])
       serialized_budget_investment = BudgetInvestmentSerializer.new(budget_investment, client: current_client).serialize
 
       render json: { data: { budget_investment: serialized_budget_investment } }, status: 201
     else
-      render json: { error: { messages: budget_investment.errors.full_messages } }, status: 422
+      render_investment_errors(budget_investment)
     end
   end
 
+  # Staff edit an investment the way /adm does: the marked-areas check is for
+  # citizens' pins, and `winner` is applied after the save, so a winner set in
+  # the same request as `incompatible` survives the heading's recalculation.
   def update
     check_admin_access!
-    @budget_investment.assign_attributes(budget_investment_params)
+    @budget_investment.skip_marked_areas_check = true
+    @budget_investment.assign_attributes(
+      with_existing_map_location_id(@budget_investment, budget_investment_params.except(:winner))
+    )
     assign_document_authors(@budget_investment)
+    translations = assign_requested_translations(@budget_investment, :budget_investment, TRANSLATED_ATTRIBUTES)
 
-    if @budget_investment.save
+    if save_with_winner(@budget_investment, translations)
       process_image_with_base64(@budget_investment, params[:budget_investment][:image_attributes])
-
-      if feasibility_assessment_submitted?
-        @budget_investment.send_feasibility_email
-      end
-
+      send_status_emails(@budget_investment)
       serialized_budget_investment = BudgetInvestmentSerializer.new(@budget_investment, client: current_client).serialize
 
       render json: { data: { budget_investment: serialized_budget_investment } }
     else
-      render json: { error: { messages: @budget_investment.errors.full_messages } }, status: 422
+      render_investment_errors(@budget_investment)
     end
   end
 
@@ -106,16 +115,70 @@ class Api::Budgets::InvestmentsController < Api::BaseController
         :on_behalf_of,
         :resource_terms,
         :price,
+        :price_explanation,
+        :price_first_year,
+        :duration,
         :feasibility,
+        :unfeasibility_explanation,
         :valuator_explanation,
         :valuation_finished,
         :selected,
         :visible_to_valuators,
-        map_location_attributes: map_location_attributes,
+        :winner,
+        :incompatible,
+        :physical_votes,
+        :external_url,
+        :location,
+        :implementation_performer,
+        :implementation_contribution,
+        :user_cost_estimate,
+        :sentiment_id,
+        projekt_label_ids: [],
+        map_location_attributes: map_location_attributes_api,
         documents_attributes: document_attributes_api,
         tag_list: []
       )
     )
+  end
+
+  def render_investment_errors(budget_investment)
+    render json: {
+      error: { messages: TranslatedRecordErrors.full_messages(budget_investment) }
+    }, status: 422
+  end
+
+  # The external reference identifies the record in the client's system, so
+  # it is set once, when the record is created.
+  def external_reference_params
+    params.require(:budget_investment).permit(:external_source, :external_id)
+  end
+
+  # A failing `winner` update rolls the first save back; its errors are
+  # reported like those of the save.
+  def save_with_winner(budget_investment, translations)
+    Budget::Investment.transaction do
+      save_with_translations(budget_investment, translations) && apply_winner(budget_investment)
+    end
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
+
+  def apply_winner(budget_investment)
+    if !budget_investment_params.key?(:winner)
+      return true
+    end
+
+    budget_investment.update!(winner: budget_investment_params[:winner])
+  end
+
+  def send_status_emails(budget_investment)
+    if feasibility_assessment_submitted?
+      budget_investment.send_feasibility_email
+    end
+
+    if budget_investment_params.key?(:selected)
+      budget_investment.send_selection_email
+    end
   end
 
   def feasibility_assessment_submitted?
@@ -124,16 +187,17 @@ class Api::Budgets::InvestmentsController < Api::BaseController
   end
 
   def find_budget
-    @budget = Budget.find(params[:budget_id])
+    @budget = Budget.includes(:projekt_phase).find(params[:budget_id])
   end
 
   def find_budget_investment
-    @budget_investment = Budget::Investment.includes(
-      budget: {
-        projekt_phase: :projekt,
-        group: :heading
-      }
-    ).find(params[:id])
+    @budget_investment = Budget::Investment.includes(BudgetInvestmentSerializer::PRELOADS).find(params[:id])
+  end
+
+  def restrict_to_public_budget_phases(scope)
+    scope
+      .joins(budget: :projekt_phase)
+      .where(projekt_phases: { frontend_visibility: true, active: true })
   end
 
   def apply_filters(budget_investments)

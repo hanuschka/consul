@@ -12,18 +12,18 @@ class Api::NotificationsController < Api::BaseController
     notifications =
       if @projekt_phase.present?
         @projekt_phase.projekt_notifications
-          .includes(:projekt_phase, projekt_phase: :projekt)
+          .includes(projekt_phase: { projekt: :page })
       elsif current_client.public_data?
         restrict_to_public_phases(
-          ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt)
+          ProjektNotification.includes(projekt_phase: { projekt: :page })
         )
       else
-        ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt)
+        ProjektNotification.includes(projekt_phase: { projekt: :page })
       end
 
     notifications = paginate(notifications.order(created_at: :asc))
 
-    serialized_notifications = NotificationSerializer.serialize_collection(notifications)
+    serialized_notifications = NotificationSerializer.serialize_collection(notifications, client: current_client)
 
     render json: {
       data: { notifications: serialized_notifications },
@@ -37,7 +37,7 @@ class Api::NotificationsController < Api::BaseController
     projekt_notification = @projekt_phase.projekt_notifications.new(projekt_notification_params)
 
     if projekt_notification.save
-      serialized_projekt_notification = NotificationSerializer.new(projekt_notification).serialize
+      serialized_projekt_notification = NotificationSerializer.new(projekt_notification, client: current_client).serialize
 
       render json: { data: { projekt_notification: serialized_projekt_notification } }, status: 201
     else
@@ -47,7 +47,12 @@ class Api::NotificationsController < Api::BaseController
 
   def show
     check_read_access!
-    serialized_projekt_notification = NotificationSerializer.new(@projekt_notification).serialize
+
+    if phase_hidden_from_client?(@projekt_notification.projekt_phase)
+      raise ForbiddenError, "Access denied"
+    end
+
+    serialized_projekt_notification = NotificationSerializer.new(@projekt_notification, client: current_client).serialize
 
     render json: { data: { projekt_notification: serialized_projekt_notification } }
   end
@@ -55,7 +60,7 @@ class Api::NotificationsController < Api::BaseController
   def update
     check_admin_access!
     if @projekt_notification.update(projekt_notification_params)
-      serialized_projekt_notification = NotificationSerializer.new(@projekt_notification).serialize
+      serialized_projekt_notification = NotificationSerializer.new(@projekt_notification, client: current_client).serialize
 
       render json: { data: { projekt_notification: serialized_projekt_notification } }
     else
@@ -86,7 +91,7 @@ class Api::NotificationsController < Api::BaseController
   end
 
   def find_projekt_notification
-    @projekt_notification = ProjektNotification.includes(:projekt_phase, projekt_phase: :projekt).find(params[:id])
+    @projekt_notification = ProjektNotification.includes(projekt_phase: { projekt: :page }).find(params[:id])
   end
 end
 

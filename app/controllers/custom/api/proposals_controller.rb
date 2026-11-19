@@ -6,20 +6,37 @@ class Api::ProposalsController < Api::BaseController
   include DocumentAttributes
   include MapLocationAttributes
 
+  TRANSLATED_ATTRIBUTES = ProposalSerializer::TRANSLATED_ATTRIBUTES
+
+  SERIALIZER_PRELOADS = [
+    :tags, :geozone, :translations, :masterportal_pin, :map_location,
+    { projekt_labels: :translations },
+    { sentiment: :translations },
+    { author: :organization },
+    { image: { attachment_attachment: :blob } },
+    { documents: { attachment_attachment: :blob } },
+    { projekt_phase: [:settings, { projekt: :page }] }
+  ].freeze
+
   before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_proposal, only: [:show, :update, :destroy, :publish]
 
   def index
     check_read_access!
+
+    if @projekt_phase.present? && phase_hidden_from_client?(@projekt_phase)
+      raise ForbiddenError, "Access denied"
+    end
+
     proposals =
       if @projekt_phase.present?
         @projekt_phase.resources
       else
-        Proposal
+        Proposal.all
       end
 
     if current_client.public_data?
-      proposals = proposals.discard_draft.discard_archived
+      proposals = restrict_to_public_phases(proposals.discard_draft.discard_archived.admin_accepted)
     end
 
     if params["for_public_render"] == "true"
@@ -43,15 +60,7 @@ class Api::ProposalsController < Api::BaseController
         proposals.order(created_at: :asc)
       end
 
-    proposals = paginate(
-      proposals
-        .includes(
-          :tags, :geozone, :projekt_labels, :sentiment,
-          author: :organization,
-          documents: { attachment_attachment: :blob },
-          projekt_phase: [:settings, { projekt: :page }]
-        )
-    )
+    proposals = paginate(proposals.includes(*SERIALIZER_PRELOADS))
 
     serialized_proposals = ProposalSerializer.serialize_collection(proposals, client: current_client)
 
@@ -64,10 +73,8 @@ class Api::ProposalsController < Api::BaseController
   def show
     check_read_access!
 
-    if current_client.public_data?
-      if @proposal.draft? || @proposal.archived?
-        return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
-      end
+    if current_client.public_data? && hidden_from_public?(@proposal)
+      return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
     end
 
     serialized_proposal = ProposalSerializer.new(@proposal, client: current_client).serialize
@@ -78,12 +85,14 @@ class Api::ProposalsController < Api::BaseController
   def create
     check_admin_access!
     find_projekt_phase unless @projekt_phase.present?
-    proposal = @projekt_phase.resources.new(proposal_params.except("image_attributes"))
+    proposal = @projekt_phase.resources.new(proposal_create_params.except("image_attributes"))
     proposal.author = @current_client.content_author
     proposal.resource_terms = true
     assign_document_authors(proposal)
+    assign_retirement(proposal)
+    translations = assign_requested_translations(proposal, :proposal, TRANSLATED_ATTRIBUTES)
 
-    if proposal.save
+    if save_with_translations(proposal, translations)
       process_image_with_base64(proposal, params[:proposal][:image_attributes])
 
       if publish_on_create?
@@ -94,7 +103,7 @@ class Api::ProposalsController < Api::BaseController
 
       render json: { data: { proposal: serialized_proposal } }, status: 201
     else
-      render json: { error: { messages: proposal.errors.full_messages } }, status: 422
+      render_translated_record_errors(proposal)
     end
   rescue *SELF_RENDERED_ERRORS
     raise
@@ -104,16 +113,25 @@ class Api::ProposalsController < Api::BaseController
 
   def update
     check_admin_access!
-    @proposal.assign_attributes(proposal_params.except("image_attributes"))
+    @proposal.assign_attributes(
+      with_existing_map_location_id(@proposal, proposal_params.except("image_attributes"))
+    )
     assign_document_authors(@proposal)
+    assign_retirement(@proposal)
+    translations = assign_requested_translations(@proposal, :proposal, TRANSLATED_ATTRIBUTES)
 
-    if @proposal.save
+    if save_with_translations(@proposal, translations)
       process_image_with_base64(@proposal, params[:proposal][:image_attributes])
+
+      if @proposal.draft? && publish_on_update?
+        @proposal.publish
+      end
+
       serialized_proposal = ProposalSerializer.new(@proposal, client: current_client).serialize
 
       render json: { data: { proposal: serialized_proposal } }
     else
-      render json: { error: { messages: @proposal.errors.full_messages } }, status: 422
+      render_translated_record_errors(@proposal)
     end
   rescue *SELF_RENDERED_ERRORS
     raise
@@ -164,11 +182,37 @@ class Api::ProposalsController < Api::BaseController
         :resource_terms,
         :title,
         :description,
+        :summary,
+        :retired_reason,
+        :retired_explanation,
         projekt_label_ids: [],
-        map_location_attributes: map_location_attributes,
+        map_location_attributes: map_location_attributes_api,
         documents_attributes: document_attributes_api
       )
     )
+  end
+
+  def proposal_create_params
+    proposal_params.merge(params.require(:proposal).permit(:external_source, :external_id))
+  end
+
+  def assign_retirement(proposal)
+    retired = ActiveModel::Type::Boolean.new.cast(params.dig(:proposal, :retired))
+
+    if retired && proposal.retired_at.blank?
+      proposal.retired_at = Time.current
+    end
+  end
+
+  def hidden_from_public?(proposal)
+    proposal.draft? ||
+      proposal.archived? ||
+      !proposal.admin_accepted? ||
+      phase_hidden_from_client?(proposal.projekt_phase)
+  end
+
+  def publish_on_update?
+    ActiveModel::Type::Boolean.new.cast(params.dig(:proposal, :published)) == true
   end
 
   def publish_on_create?
@@ -183,10 +227,7 @@ class Api::ProposalsController < Api::BaseController
   end
 
   def find_proposal
-    @proposal = Proposal
-      .includes(:author, :tags, :geozone, :projekt_labels, :sentiment,
-                  projekt_phase: [:settings, { projekt: :page }])
-      .find(params[:id])
+    @proposal = Proposal.includes(*SERIALIZER_PRELOADS).find(params[:id])
   end
 end
 

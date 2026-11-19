@@ -1,4 +1,13 @@
 class ProjektPhaseSerializer < BaseSerializer
+  PRELOADS = [
+    :settings,
+    :translations,
+    :individual_group_values,
+    :geozone_restrictions,
+    :registered_address_districts,
+    :registered_address_streets
+  ].freeze
+
   attr_reader :projekt_phase
 
   def initialize(projekt_phase, options = {})
@@ -33,28 +42,22 @@ class ProjektPhaseSerializer < BaseSerializer
     phase_data["active"] = projekt_phase.active?
 
     # Add translated attributes if they exist
-    translatable_attributes = {}
-    if projekt_phase.respond_to?(:phase_tab_name)
-      translatable_attributes[:phase_tab_name] = projekt_phase.phase_tab_name || projekt_phase.type.split('::').last
-    end
-    if projekt_phase.respond_to?(:description)
-      translatable_attributes[:description] = projekt_phase.description
-    end
-    if projekt_phase.respond_to?(:cta_button_name)
-      translatable_attributes[:cta_button_name] = projekt_phase.cta_button_name
-    end
-    if projekt_phase.respond_to?(:welcome_text_in_show)
-      translatable_attributes[:welcome_text_in_show] = projekt_phase.welcome_text_in_show
-    end
-
-    phase_data.merge!(translatable_attributes) if translatable_attributes.any?
+    phase_data.merge!(current_locale_texts)
+    phase_data[:translations] = serialize_translations(projekt_phase)
 
     # Add settings
     phase_data.merge!(
       settings: projekt_phase_settings,
       individual_group_values: individual_group_values,
-      registered_address_districts: registered_address_districts
+      registered_address_districts: registered_address_districts,
+      geozone_restriction_ids: projekt_phase.geozone_restrictions.map(&:id),
+      registered_address_district_ids: projekt_phase.registered_address_districts.map(&:id),
+      registered_address_street_ids: projekt_phase.registered_address_streets.map(&:id)
     )
+
+    if admin_client? && projekt_phase.is_a?(ProjektPhase::MitmachboxPhase)
+      phase_data[:mitmachbox_survey_id] = projekt_phase.mitmachbox_survey_id
+    end
 
     # Add resources based on phase type (only if nested fields are requested)
     if @include_nested_fields
@@ -198,6 +201,14 @@ class ProjektPhaseSerializer < BaseSerializer
 
   def admin_only_author_id
     admin_client? ? [:author_id] : []
+  end
+
+  def current_locale_texts
+    texts = ProjektPhase.translated_attribute_names.to_h do |attribute_name|
+      [attribute_name, projekt_phase[attribute_name]]
+    end
+
+    texts.merge(phase_tab_name: projekt_phase.phase_tab_name || projekt_phase.type.split("::").last)
   end
 
   def client_has_access_to_resources?

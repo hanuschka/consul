@@ -1,9 +1,10 @@
 class DeficiencyReportCategorySerializer < BaseSerializer
   attr_reader :category
 
-  def initialize(category, client: nil)
+  def initialize(category, client: nil, deficiency_reports_count: nil)
     @category = category
     @client = client
+    @deficiency_reports_count = deficiency_reports_count
   end
 
   def serialize
@@ -14,12 +15,14 @@ class DeficiencyReportCategorySerializer < BaseSerializer
         :updated_at,
         :given_order,
         :icon,
-        :color
+        :color,
+        :warning_text
       ]
     )
 
     category_data.merge!(
-      name: category.name
+      name: category.name,
+      translations: serialize_translations(category)
     )
 
     if admin_client? && category.default_responsible.present?
@@ -30,12 +33,19 @@ class DeficiencyReportCategorySerializer < BaseSerializer
       }
     end
 
-    category_data[:deficiency_reports_count] = category.deficiency_reports.count
+    category_data[:deficiency_reports_count] =
+      @deficiency_reports_count || category.deficiency_reports.admin_accepted.count
 
     category_data
   end
 
-  def self.serialize_collection(categories, client: nil)
-    categories.map { |category| new(category, client: client).serialize }
+  def self.serialize_collection(categories, client: nil, reports_counts: {})
+    categories.map do |category|
+      new(
+        category,
+        client: client,
+        deficiency_reports_count: reports_counts.fetch(category.id, 0)
+      ).serialize
+    end
   end
 end

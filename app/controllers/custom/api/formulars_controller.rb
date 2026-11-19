@@ -6,6 +6,11 @@ class Api::FormularsController < Api::BaseController
 
   def index
     check_read_access!
+
+    if phase_hidden_from_client?(@projekt_phase)
+      raise ForbiddenError, "Access denied"
+    end
+
     formulars = paginate(
       Formular.where(projekt_phase_id: @projekt_phase.id).order(:id),
       default_per_page: DEFAULT_FORMULARS_PER_PAGE
@@ -35,6 +40,11 @@ class Api::FormularsController < Api::BaseController
 
   def show
     check_read_access!
+
+    if phase_hidden_from_client?(@formular.projekt_phase)
+      raise ForbiddenError, "Access denied"
+    end
+
     serialized_formular = FormularSerializer.new(@formular).serialize
 
     render json: { data: { formular: serialized_formular } }

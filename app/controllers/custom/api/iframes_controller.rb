@@ -4,6 +4,11 @@ class Api::IframesController < Api::BaseController
 
   def show
     check_read_access!
+
+    if phase_hidden_from_client?(@projekt_phase)
+      raise ForbiddenError, "Access denied"
+    end
+
     serialized_iframe = IframeSerializer.new(@projekt_phase).serialize
 
     render json: { data: { iframe: serialized_iframe } }

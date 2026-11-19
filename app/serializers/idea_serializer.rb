@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class IdeaSerializer < BaseSerializer
+  PUBLIC_TRANSLATED_ATTRIBUTES = %w[title description].freeze
+  ADMIN_TRANSLATED_ATTRIBUTES = %w[title description official_answer].freeze
+
   attr_reader :idea
 
   def initialize(idea, client: nil)
@@ -28,12 +31,15 @@ class IdeaSerializer < BaseSerializer
 
     idea_data.merge!(
       title: idea.title,
-      description: idea.description,
-      official_answer: idea.official_answer
+      description: idea.description
     )
 
     if admin_client?
       idea_data[:author_id] = idea.author_id
+      idea_data[:official_answer] = idea.official_answer
+      idea_data[:translations] = serialize_translations(idea, ADMIN_TRANSLATED_ATTRIBUTES)
+    else
+      idea_data[:translations] = serialize_translations(idea, PUBLIC_TRANSLATED_ATTRIBUTES)
     end
 
     idea_data[:status] = idea.status if idea.respond_to?(:status)
@@ -45,18 +51,13 @@ class IdeaSerializer < BaseSerializer
     if idea.category.present?
       idea_data[:category] = {
         id: idea.category.id,
-        name: idea.category.name
+        name: idea.category.name,
+        color: idea.category.color,
+        icon: idea.category.icon
       }
     end
 
-    if idea.map_location.present?
-      idea_data[:map_location] = {
-        latitude: idea.map_location.latitude,
-        longitude: idea.map_location.longitude,
-        zoom: idea.map_location.zoom,
-        approximated_address: idea.approximated_address
-      }
-    end
+    idea_data[:map_location] = serialize_map_location(idea.map_location)
 
     if idea.respond_to?(:image) && idea.image.present?
       serialized_image = ImageSerializer.new(idea.image, include_variants: true).serialize

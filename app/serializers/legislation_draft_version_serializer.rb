@@ -13,6 +13,7 @@ class LegislationDraftVersionSerializer < BaseSerializer
       changelog: draft_version.changelog,
       body: draft_version.body,
       body_html: sanitized_body_html,
+      translations: serialize_translations(draft_version, %w[title changelog body]),
       status: draft_version.status,
       created_at: draft_version.created_at,
       updated_at: draft_version.updated_at

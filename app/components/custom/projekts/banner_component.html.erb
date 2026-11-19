@@ -110,6 +110,7 @@
               image_placeholder_icon_class: "fa-comments",
               resource: @custom_page,
               ai_generated: @custom_page.image&.ai_generated?,
+              credits: @custom_page.image&.credits,
               placeholder_hint: show_admin_controls? ? banner_image_size_hint : nil
             )
           ) %>
@@ -124,6 +125,7 @@
             data-generate-url="<%= generate_image_adm_projekts_projekt_path(@projekt) %>"
             data-generate-status-url="<%= generate_image_status_adm_projekts_projekt_path(@projekt) %>"
             data-ai-generated-url="<%= update_image_ai_generated_adm_projekts_projekt_path(@projekt) %>"
+            data-credits-url="<%= update_image_credits_adm_projekts_projekt_path(@projekt) %>"
             data-placeholder-icon-class="fa-comments"
             data-placeholder-aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>"
             data-placeholder-hint="<%= banner_image_size_hint %>"
@@ -141,6 +143,7 @@
                 data-fallback-text="<%= t('custom.projekts.banner_upload.upload_failed') %>"
                 data-generate-failed-text="<%= t('custom.projekts.banner_upload.generate_failed') %>"
                 data-ai-marker-failed-text="<%= t('custom.projekts.banner_upload.ai_marker_failed') %>"
+                data-credit-failed-text="<%= t('custom.projekts.banner_upload.credit_failed') %>"
               ></span>
             </div>
             <%= banner_image %>
@@ -211,6 +214,29 @@
                 <span class="projekt-image-ai-marker-button--text" aria-hidden="true">AI</span>
               </button>
             <% end %>
+            <%= studio_rich_tooltip(
+              title: t("custom.projekts.banner_upload.credit_button_label"),
+              text: t("custom.projekts.banner_upload.credit_tooltip_text"),
+              delay: 1200
+            ) do %>
+              <button type="button"
+                      class="image-change-button projekt-image-upload-button projekt-image-credit-button js-projekt-banner--credit-button js-studio-hide-on-preview <%= '-active' if @custom_page.image&.credits.present? %> <%= 'd-none' unless @custom_page.image.present? %>"
+                      aria-label="<%= t('custom.projekts.banner_upload.credit_button_label') %>"
+                      aria-expanded="false"
+                      aria-controls="projektImageCreditEditor"
+                      data-credits="<%= @custom_page.image&.credits %>"
+                      tabindex="-1">
+                <span class="projekt-image-credit-button--text" aria-hidden="true">©</span>
+              </button>
+            <% end %>
+            <div id="projektImageCreditEditor" class="projekt-image-credit-editor js-projekt-banner--credit-editor js-studio-hide-on-preview" hidden>
+              <label for="projektImageCreditInput" class="projekt-image-credit-editor--label"><%= t("custom.projekts.banner_upload.credit_input_label") %></label>
+              <input id="projektImageCreditInput" type="text" class="projekt-image-credit-editor--input js-projekt-banner--credit-input" autocomplete="off">
+              <div class="projekt-image-credit-editor--actions">
+                <button type="button" class="button hollow small js-projekt-banner--credit-cancel"><%= t("custom.projekts.banner_upload.credit_cancel") %></button>
+                <button type="button" class="button small js-projekt-banner--credit-save"><%= t("custom.projekts.banner_upload.credit_save") %></button>
+              </div>
+            </div>
             <%= studio_rich_tooltip(
               title: t("custom.studio.remove_banner.title"),
               text: t("custom.studio.remove_banner.text"),

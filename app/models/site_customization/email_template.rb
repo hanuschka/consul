@@ -263,6 +263,7 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
     ["Mailer", "newsletter_subscription_for_existing_user"],
     ["Mailer", "proposal_official_answer"],
     ["Mailer", "user_invite"],
+    ["Mailer", "welcome"],
     ["Mailer", "pending_role_invite"],
     ["Mailer", "csv_download_ready"],
     ["Mailer", "file_ready"],

@@ -145,7 +145,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       elsif setting_type?
         "setting.#{@record.key}#{'_description' if type == :description}"
       elsif @record.is_a?(::SiteCustomization::Image) || @record.is_a?(::SiteCustomization::Video)
-        "adm.attribute_editor.#{record_type_key}.#{@record.name}_#{type}"
+        name_key = @attribute.to_s.in?(%w[image video]) ? @record.name : "#{@record.name}_#{@attribute}"
+        "adm.attribute_editor.#{record_type_key}.#{name_key}_#{type}"
       elsif @record.is_a?(::SiteCustomization::ContentBlock) && @record.key.present?
         ["adm.attribute_editor", record_type_key, @record.key, "#{@attribute}_#{type}"].join(".")
       else

@@ -42,14 +42,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def finish_signup
     current_user.registering_with_oauth = false
     current_user.email = current_user.oauth_email if current_user.email.blank?
-
-    if current_user.valid?
-      current_user.save!
-      current_user.send_oauth_confirmation_instructions
-      current_user.verify! if current_user.last_stork_level.in?(["STORK-QAA-Level-3", "STORK-QAA-Level-4"])
-
-      sign_in_and_redirect current_user, event: :authentication
-    end
+    current_user.validate
   end
 
   def do_finish_signup

@@ -90,7 +90,7 @@ end
                    properties: {
                      projekt_livestreams: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/Livestream' }
                      }
                    },
                    required: ['projekt_livestreams']
@@ -148,7 +148,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     projekt_livestream: { type: :object }
+                     projekt_livestream: { '$ref' => '#/components/schemas/Livestream' }
                    },
                    required: ['projekt_livestream']
                  }
@@ -259,7 +259,7 @@ end
                    properties: {
                      projekt_livestreams: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/Livestream' }
                      }
                    },
                    required: ['projekt_livestreams']
@@ -301,7 +301,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     projekt_livestream: { type: :object }
+                     projekt_livestream: { '$ref' => '#/components/schemas/Livestream' }
                    },
                    required: ['projekt_livestream']
                  }
@@ -354,7 +354,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     projekt_livestream: { type: :object }
+                     projekt_livestream: { '$ref' => '#/components/schemas/Livestream' }
                    },
                    required: ['projekt_livestream']
                  }

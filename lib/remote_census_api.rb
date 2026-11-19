@@ -58,6 +58,8 @@ class RemoteCensusApi
   end
 
   class Response
+    UMLAUT_TRANSCRIPTIONS = { "ä" => "ae", "ö" => "oe", "ü" => "ue", "ß" => "ss" }.freeze
+
     def initialize(body, version:, street_check: false)
       @body = body
       @version = version
@@ -80,16 +82,19 @@ class RemoteCensusApi
     end
 
     def first_name_matched?
-      registered_first_name = xpath("//ns2:ergebnis/ns2:ergebnis //ns2:vornamen/name").text
+      registered = name_parts(xpath("//ns2:ergebnis/ns2:ergebnis //ns2:vornamen/name").map(&:text).join(" "))
+      entered = name_parts(xpath("//ns2:datenZurAnfrage //ns2:vornamen/name").text)
 
-      registered_first_name.present? &&
-        registered_first_name == xpath("//ns2:datenZurAnfrage //ns2:vornamen/name").text
+      registered.present? && entered.present? &&
+        entered.all? { |word| registered.any? { |registered_word| same_name?(word, registered_word) } }
     end
 
     def last_name_matched?
-      registered = registered_last_name.strip.downcase
+      registered = name_parts(registered_last_name)
+      entered = name_parts(xpath("//ns2:datenZurAnfrage //ns2:nachname/name").text)
 
-      registered.present? && registered == xpath("//ns2:datenZurAnfrage //ns2:nachname/name").text.downcase
+      registered.present? && registered.size == entered.size &&
+        registered.zip(entered).all? { |registered_word, word| same_name?(registered_word, word) }
     end
 
     def house_number_matched?
@@ -145,6 +150,20 @@ class RemoteCensusApi
 
           [last_name_particle, last_name].join(" ")
         end
+      end
+
+      def name_parts(name)
+        name.unicode_normalize(:nfc).downcase.split(/[[:space:]\-‐‑–]+/).reject(&:empty?)
+      end
+
+      def same_name?(word, other_word)
+        without_diacritics(word.gsub(/[äöüß]/, UMLAUT_TRANSCRIPTIONS)) ==
+          without_diacritics(other_word.gsub(/[äöüß]/, UMLAUT_TRANSCRIPTIONS)) ||
+          without_diacritics(word) == without_diacritics(other_word)
+      end
+
+      def without_diacritics(word)
+        word.unicode_normalize(:nfkd).gsub(/\p{Mn}/, "")
       end
 
       def normalized_street(street)

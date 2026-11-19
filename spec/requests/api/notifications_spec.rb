@@ -75,19 +75,16 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Send a notification to projekt participants. Notifications are announcements and updates that can include call-to-action links. Supports segment-based targeting (e.g., \"all\", specific groups). Required: notification title. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Send a notification to projekt participants. Notifications are announcements and updates shown in the phase. Required: notification title. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_notification, in: :body, description: 'Notification with required title and optional body, link, and recipient segment', schema: {
+      parameter name: :projekt_notification, in: :body, description: 'Notification with required title and optional body', schema: {
         type: :object,
         properties: {
           projekt_notification: {
             type: :object,
             properties: {
               title: { type: :string },
-              body: { type: :string, nullable: true },
-              link_text: { type: :string, nullable: true },
-              link_url: { type: :string, nullable: true },
-              segment_recipient: { type: :string, nullable: true }
+              body: { type: :string, nullable: true }
             },
             required: ['title']
           }
@@ -265,7 +262,7 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update an existing projekt notification. Allows modifying notification title, body, and link information. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update an existing projekt notification. Allows modifying the notification title and body. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_notification, in: :body, description: 'Attributes to update on the notification', schema: {
         type: :object,
@@ -274,10 +271,7 @@ end
             type: :object,
             properties: {
               title: { type: :string },
-              body: { type: :string, nullable: true },
-              link_text: { type: :string, nullable: true },
-              link_url: { type: :string, nullable: true },
-              segment_recipient: { type: :string, nullable: true }
+              body: { type: :string, nullable: true }
             }
           }
         }

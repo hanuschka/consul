@@ -41,6 +41,7 @@ module Adm
           helpers.dom_id(@record, params[:attribute]),
           Adm::AttributeEditorComponent.new(@record, params[:attribute], params[:kind], **component_options)
         ),
+        credits_editor_stream,
         @whatsapp_webhook_alert
       ].compact
     end
@@ -71,6 +72,16 @@ module Adm
           ::Kern::FlashComponent.new(
             flash: { alert: t("adm.whatsapp.show.webhook_registration_failed", code: response.code) }
           )
+        )
+      end
+
+      def credits_editor_stream
+        return if @kind != :image || !@record.has_attribute?(:credits)
+
+        turbo_stream.replace(
+          helpers.dom_id(@record, :credits_editor),
+          partial: "adm/shared/image_credits_editor",
+          locals: { record: @record }
         )
       end
 

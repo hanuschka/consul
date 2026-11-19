@@ -9,20 +9,32 @@ class Api::DeficiencyReportsController < Api::BaseController
     "DeficiencyReport::OfficerGroup" => DeficiencyReport::OfficerGroup
   }.freeze
 
+  TRANSLATED_ATTRIBUTES = DeficiencyReportSerializer::ADMIN_TRANSLATED_ATTRIBUTES
+
+  ADMIN_ONLY_FILTERS = %w[author_id assigned].freeze
+
+  PRELOADS = [
+    :tags,
+    :responsible,
+    :map_location,
+    :translations,
+    { category: :translations },
+    { subcategory: :translations },
+    { status: :translations },
+    { intake_channel: :translations },
+    { image: { attachment_attachment: :blob } },
+    { documents: { attachment_attachment: :blob } },
+    { official_answer_documents_attachments: :blob },
+    { author: :organization }
+  ].freeze
+
   before_action :find_deficiency_report, only: [:show, :update]
 
   def index
     check_read_access!
+    check_admin_only_filters!
     deficiency_reports = DeficiencyReport
-      .includes(
-        :tags,
-        :category,
-        :status,
-        :responsible,
-        :map_location,
-        documents: { attachment_attachment: :blob },
-        author: :organization
-      )
+      .includes(PRELOADS)
       .admin_accepted
     deficiency_reports = paginate(apply_sorting(apply_filters(deficiency_reports)))
 
@@ -52,13 +64,15 @@ class Api::DeficiencyReportsController < Api::BaseController
     deficiency_report.author = @current_client.content_author
     deficiency_report.resource_terms = true
     deficiency_report.admin_accepted = true
+    translations = assign_requested_translations(deficiency_report, :deficiency_report, TRANSLATED_ATTRIBUTES)
     assign_document_authors(deficiency_report)
+    assign_official_answer_documents(deficiency_report)
 
     if !assignable_responsible?(deficiency_report)
       render_unassignable_responsible
     elsif !assignable_intake_channel?(deficiency_report)
       render_unassignable_intake_channel
-    elsif deficiency_report.save
+    elsif save_with_translations(deficiency_report, translations)
       process_image_with_base64(deficiency_report, params[:deficiency_report][:image_attributes])
       serialized_deficiency_report = DeficiencyReportSerializer.new(deficiency_report, client: current_client).serialize
 
@@ -74,14 +88,16 @@ class Api::DeficiencyReportsController < Api::BaseController
 
   def update
     check_admin_access!
-    @deficiency_report.assign_attributes(deficiency_report_params)
+    @deficiency_report.assign_attributes(with_existing_map_location_id(@deficiency_report, deficiency_report_params))
+    translations = assign_requested_translations(@deficiency_report, :deficiency_report, TRANSLATED_ATTRIBUTES)
     assign_document_authors(@deficiency_report)
+    assign_official_answer_documents(@deficiency_report)
 
     if !assignable_responsible?(@deficiency_report)
       render_unassignable_responsible
     elsif !assignable_intake_channel?(@deficiency_report)
       render_unassignable_intake_channel
-    elsif @deficiency_report.save
+    elsif save_with_translations(@deficiency_report, translations)
       process_image_with_base64(@deficiency_report, params[:deficiency_report][:image_attributes]) if params[:deficiency_report]&.key?(:image_attributes)
       serialized_deficiency_report = DeficiencyReportSerializer.new(@deficiency_report, client: current_client).serialize
 
@@ -98,16 +114,7 @@ class Api::DeficiencyReportsController < Api::BaseController
   private
 
   def find_deficiency_report
-    @deficiency_report = DeficiencyReport
-      .includes(
-        :author,
-        :tags,
-        :category,
-        :status,
-        :responsible,
-        :map_location
-      )
-      .find(params[:id])
+    @deficiency_report = DeficiencyReport.includes(PRELOADS).find(params[:id])
   end
 
   # Only staff can be made responsible: any other record type would let a
@@ -160,6 +167,7 @@ class Api::DeficiencyReportsController < Api::BaseController
         :official_answer,
         :reporter_answer,
         :deficiency_report_category_id,
+        :deficiency_report_subcategory_id,
         :deficiency_report_status_id,
         :deficiency_report_intake_channel_id,
         :on_behalf_of,
@@ -167,10 +175,42 @@ class Api::DeficiencyReportsController < Api::BaseController
         :responsible_id,
         :responsible_type,
         :tag_list,
-        map_location_attributes: map_location_attributes,
+        map_location_attributes: map_location_attributes_api,
         documents_attributes: document_attributes_api
       )
     )
+  end
+
+  # Official answer documents are files attached straight to the report, not
+  # document records: new ones are appended, listed ids are removed, and the
+  # model checks type, size and count on save.
+  def assign_official_answer_documents(deficiency_report)
+    new_documents = Array.wrap(params.dig(:deficiency_report, :official_answer_documents))
+    removed_ids = Array.wrap(params.dig(:deficiency_report, :remove_official_answer_document_ids)).map { it.to_s.to_i }
+    return if new_documents.empty? && removed_ids.empty?
+
+    kept_blobs = deficiency_report.official_answer_documents
+      .reject { |attachment| removed_ids.include?(attachment.id) }
+      .map(&:blob)
+    attachables = new_documents.map { |document| official_answer_attachable(document) }
+
+    deficiency_report.official_answer_documents = kept_blobs + attachables
+  end
+
+  def official_answer_attachable(document)
+    if !document.is_a?(ActionController::Parameters)
+      raise ActionController::ParameterMissing, :official_answer_documents
+    end
+
+    decoded_attachment(document[:attachment], document[:title])
+  end
+
+  # A read-only client would otherwise get an unfiltered list that looks
+  # filtered.
+  def check_admin_only_filters!
+    if !admin_client? && params.keys.intersect?(ADMIN_ONLY_FILTERS)
+      raise ForbiddenError, "The author_id and assigned filters require admin access."
+    end
   end
 
   def apply_filters(deficiency_reports)
@@ -185,8 +225,12 @@ class Api::DeficiencyReportsController < Api::BaseController
     end
 
     # Filter by author
-    if admin_client? && params[:author_id].present?
+    if params[:author_id].present?
       deficiency_reports = deficiency_reports.by_author(params[:author_id])
+    end
+
+    if params[:subcategory_id].present?
+      deficiency_reports = deficiency_reports.where(deficiency_report_subcategory_id: params[:subcategory_id])
     end
 
     # Filter by assigned/not assigned

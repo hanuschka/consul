@@ -31,7 +31,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
         redirect_to new_user_registration_path,
           alert: t("custom.devise_views.users.registrations.create.existing_user_with_same_stamp")
       else
-        super
+        super do |user|
+          user.send_welcome_email if user.persisted? && pending_invitation.present?
+        end
       end
     else
       render :new

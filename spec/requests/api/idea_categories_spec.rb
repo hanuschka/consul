@@ -43,7 +43,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                  data: {
                    type: :object,
                    properties: {
-                     idea_categories: { type: :array, items: { type: :object } }
+                     idea_categories: { type: :array, items: { '$ref' => '#/components/schemas/IdeaCategory' } }
                    },
                    required: ['idea_categories']
                  },
@@ -69,7 +69,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                  data: {
                    type: :object,
                    properties: {
-                     idea_categories: { type: :array, items: { type: :object } }
+                     idea_categories: { type: :array, items: { '$ref' => '#/components/schemas/IdeaCategory' } }
                    },
                    required: ['idea_categories']
                  },
@@ -97,7 +97,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                  data: {
                    type: :object,
                    properties: {
-                     idea_categories: { type: :array, items: { type: :object } }
+                     idea_categories: { type: :array, items: { '$ref' => '#/components/schemas/IdeaCategory' } }
                    },
                    required: ['idea_categories']
                  },
@@ -129,6 +129,11 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
           idea_category: {
             type: :object,
             properties: {
+              name: { type: :string, description: 'Name in the current language' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[name]),
+              color: { type: :string, description: 'Colour as a hex code (#rgb or #rrggbb) or colour name', example: '#2e7d32' },
+              icon: { type: :string, description: 'Font Awesome icon name (lowercase letters, digits and dashes)', example: 'tree' },
+              given_order: { type: :integer, description: 'Position of the category in lists', example: 2 },
               idea_officer_id: { type: :integer, nullable: true }
             },
             required: []
@@ -151,7 +156,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                  data: {
                    type: :object,
                    properties: {
-                     idea_category: { type: :object }
+                     idea_category: { '$ref' => '#/components/schemas/IdeaCategory' }
                    },
                    required: ['idea_category']
                  }
@@ -159,6 +164,40 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                required: ['data']
 
         run_test!
+      end
+
+      response '201', 'idea category created with colour, icon and names per language' do
+        let(:idea_category) do
+          {
+            idea_category: {
+              color: '#2e7d32',
+              icon: 'tree',
+              given_order: 2,
+              translations: { en: { name: 'Green spaces' }, de: { name: 'Grünflächen' } }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     idea_category: { '$ref' => '#/components/schemas/IdeaCategory' }
+                   },
+                   required: ['idea_category']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          category_data = JSON.parse(response.body)['data']['idea_category']
+
+          expect(category_data['color']).to eq('#2e7d32')
+          expect(category_data['icon']).to eq('tree')
+          expect(category_data['given_order']).to eq(2)
+          expect(category_data['translations']['de']['name']).to eq('Grünflächen')
+        end
       end
 
       response '201', 'idea category created with default officer' do
@@ -179,7 +218,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                  data: {
                    type: :object,
                    properties: {
-                     idea_category: { type: :object }
+                     idea_category: { '$ref' => '#/components/schemas/IdeaCategory' }
                    },
                    required: ['idea_category']
                  }
@@ -300,7 +339,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                  data: {
                    type: :object,
                    properties: {
-                     idea_category: { type: :object }
+                     idea_category: { '$ref' => '#/components/schemas/IdeaCategory' }
                    },
                    required: ['idea_category']
                  }
@@ -357,7 +396,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                  data: {
                    type: :object,
                    properties: {
-                     idea_category: { type: :object }
+                     idea_category: { '$ref' => '#/components/schemas/IdeaCategory' }
                    },
                    required: ['idea_category']
                  }
@@ -391,7 +430,7 @@ RSpec.describe 'Idea Categories API', type: :request, openapi_spec: 'v1/swagger.
                  data: {
                    type: :object,
                    properties: {
-                     idea_category: { type: :object }
+                     idea_category: { '$ref' => '#/components/schemas/IdeaCategory' }
                    },
                    required: ['idea_category']
                  }

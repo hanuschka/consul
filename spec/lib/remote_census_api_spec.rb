@@ -2,11 +2,11 @@ require "rails_helper"
 
 describe RemoteCensusApi do
   describe RemoteCensusApi::Response do
-    def registered_names(version, last_name:, particle:)
+    def registered_names(version, last_name:, particle:, first_name:)
       if RemoteCensusApi::XmeldVersion.new(version).unstructured_names?
         <<~XML
           <ns2:familienname.unstrukturiert><ns2:nachname><name>#{last_name}</name></ns2:nachname></ns2:familienname.unstrukturiert>
-          <ns2:vornamen><ns2:vornamen><name>Maria</name></ns2:vornamen></ns2:vornamen>
+          <ns2:vornamen><ns2:vornamen><name>#{first_name}</name></ns2:vornamen></ns2:vornamen>
         XML
       else
         <<~XML
@@ -14,13 +14,14 @@ describe RemoteCensusApi do
             #{"<ns2:namensbestandteil>#{particle}</ns2:namensbestandteil>" if particle}
             <ns2:nachname>#{last_name}</ns2:nachname>
           </ns2:familienname>
-          <ns2:vornamen><name>Maria</name></ns2:vornamen>
+          <ns2:vornamen><name>#{first_name}</name></ns2:vornamen>
         XML
       end
     end
 
     def registry_answer(version:, entered_number:, entered_suffix:, registered_number:, registered_suffix:,
                         entered_last_name:, registered_last_name:, registered_particle:,
+                        entered_first_name:, registered_first_name:,
                         entered_street:, registered_street:)
       <<~XML
         <root xmlns:ns2="#{RemoteCensusApi::XmeldVersion.new(version).namespace}">
@@ -28,7 +29,7 @@ describe RemoteCensusApi do
           <ns2:datenZurAnfrage>
             <ns2:name>
               <ns2:nachname><name>#{entered_last_name}</name></ns2:nachname>
-              <ns2:vornamen><name>Maria</name></ns2:vornamen>
+              <ns2:vornamen><name>#{entered_first_name}</name></ns2:vornamen>
             </ns2:name>
             <ns2:anschrift>
               <hausnummer>#{entered_number}</hausnummer>
@@ -41,7 +42,8 @@ describe RemoteCensusApi do
           <ns2:ergebnis>
             <ns2:ergebnis>
               <ns2:namen>
-                #{registered_names(version, last_name: registered_last_name, particle: registered_particle)}
+                #{registered_names(version, last_name: registered_last_name, particle: registered_particle,
+                                          first_name: registered_first_name)}
               </ns2:namen>
               <ns2:anschrift.aktuell>
                 <ns2:anschrift.inland>
@@ -61,6 +63,7 @@ describe RemoteCensusApi do
     def response(version: "3.4", street_check: false, entered_number: "12", entered_suffix: nil,
                  registered_number: "12", registered_suffix: nil, entered_last_name: "Muster",
                  registered_last_name: "Muster", registered_particle: nil,
+                 entered_first_name: "Maria", registered_first_name: "Maria",
                  entered_street: "Hauptstraße", registered_street: "Hauptstraße")
       body = registry_answer(version: version,
                              entered_number: entered_number,
@@ -70,6 +73,8 @@ describe RemoteCensusApi do
                              entered_last_name: entered_last_name,
                              registered_last_name: registered_last_name,
                              registered_particle: registered_particle,
+                             entered_first_name: entered_first_name,
+                             registered_first_name: registered_first_name,
                              entered_street: entered_street,
                              registered_street: registered_street)
 
@@ -135,6 +140,57 @@ describe RemoteCensusApi do
 
       it "rejects a different last name" do
         expect(response(version: "26.11", entered_last_name: "Mustermann")).not_to be_valid
+      end
+    end
+
+    describe "first names" do
+      it "accepts one of several registered first names" do
+        expect(response(version: "26.05", entered_first_name: "Anna", registered_first_name: "Anna Maria")).to be_valid
+        expect(response(version: "26.05", entered_first_name: "Maria", registered_first_name: "Anna Maria")).to be_valid
+      end
+
+      it "accepts several registered first names in any order" do
+        expect(response(version: "26.05", entered_first_name: "Maria Anna", registered_first_name: "Anna Maria")).to be_valid
+      end
+
+      it "rejects a first name the register does not have" do
+        expect(response(version: "26.05", entered_first_name: "Anna Petra", registered_first_name: "Anna Maria")).not_to be_valid
+        expect(response(version: "26.05", entered_first_name: "Anna Maria", registered_first_name: "Anna")).not_to be_valid
+      end
+
+      it "accepts first names that differ only in spelling conventions" do
+        expect(response(version: "24.11", entered_first_name: "jurgen", registered_first_name: "Jürgen")).to be_valid
+        expect(response(version: "24.11", entered_first_name: "Hans Peter", registered_first_name: "Hans-Peter")).to be_valid
+      end
+    end
+
+    describe "spelling conventions in last names" do
+      it "accepts umlauts written out" do
+        expect(response(version: "26.05", entered_last_name: "Mueller", registered_last_name: "Müller")).to be_valid
+      end
+
+      it "accepts umlauts without dots" do
+        expect(response(version: "26.05", entered_last_name: "Muller", registered_last_name: "Müller")).to be_valid
+      end
+
+      it "accepts letters without their accents" do
+        expect(response(version: "26.05", entered_last_name: "Pena Gomez", registered_last_name: "Peña Gómez")).to be_valid
+      end
+
+      it "accepts ss for ß" do
+        expect(response(version: "26.05", entered_last_name: "Strauss", registered_last_name: "Strauß")).to be_valid
+      end
+
+      it "accepts a space for a hyphen" do
+        expect(response(version: "26.05", entered_last_name: "Müller Schmidt", registered_last_name: "Müller-Schmidt")).to be_valid
+      end
+
+      it "accepts an umlaut in another Unicode form" do
+        expect(response(version: "26.05", entered_last_name: "Mu\u0308ller", registered_last_name: "Müller")).to be_valid
+      end
+
+      it "still rejects a missing part of a double name" do
+        expect(response(version: "26.05", entered_last_name: "Müller", registered_last_name: "Müller-Schmidt")).not_to be_valid
       end
     end
 

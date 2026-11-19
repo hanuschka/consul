@@ -49,6 +49,11 @@ class Image
     super
   end
 
+  def credits=(value)
+    @credits_assigned = true
+    super
+  end
+
   private
 
     # A form can declare that a picture is AI-generated, which is a claim about
@@ -96,10 +101,16 @@ class Image
       # than left for the next save of the same in-memory record to inherit.
       ai_declared = @ai_generated_assigned
       in_app_declared = @ai_generated_in_app_assigned
+      credits_declared = @credits_assigned
       @ai_generated_assigned = false
       @ai_generated_in_app_assigned = false
+      @credits_assigned = false
 
       return if attachment_changes["attachment"].blank?
+
+      if !credits_declared && credits.present?
+        self.credits = nil
+      end
 
       if !ai_declared && ai_generated?
         self.ai_generated = false
@@ -111,5 +122,6 @@ class Image
 
       @ai_generated_assigned = false
       @ai_generated_in_app_assigned = false
+      @credits_assigned = false
     end
 end

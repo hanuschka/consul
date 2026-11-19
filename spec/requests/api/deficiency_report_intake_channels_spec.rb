@@ -32,9 +32,11 @@ RSpec.describe 'Deficiency Report Intake Channels API', type: :request, openapi_
                            id: { type: :integer, example: 3 },
                            name: { type: :string, example: 'Counter' },
                            default: { type: :boolean, description: 'Whether reports created without a channel get this one' },
-                           given_order: { type: :integer, nullable: true, description: 'Position in the /adm ordering' }
+                           given_order: { type: :integer, nullable: true, description: 'Position in the /adm ordering' },
+                           translations: Schemas::Miscellaneous.translations_schema(%w[name])
                          },
-                         required: %w[id name default]
+                         required: %w[id name default translations],
+                         additionalProperties: false
                        }
                      }
                    },

@@ -44,6 +44,18 @@ describe "Finishing an OAuth sign-up", type: :request do
       expect(user.registering_with_oauth).to be false
     end
 
+    it "leaves the account unverified while the form is only opened" do
+      user.update_columns(last_stork_level: "STORK-QAA-Level-3", first_name: "Erika", last_name: "Mustermann",
+                          date_of_birth: Date.new(1964, 8, 12), plz: 51147)
+
+      get finish_signup_path
+
+      expect(response).to have_http_status(:ok)
+      user.reload
+      expect(user).not_to be_level_three_verified
+      expect(user.registering_with_oauth).to be true
+    end
+
     it "ignores a password" do
       patch do_finish_signup_path, params: { user: { username: "finished",
                                                      password: "Bb98765432!",

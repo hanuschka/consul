@@ -18,6 +18,12 @@ class PointOfInterestPinSerializer < BaseSerializer
       ]
     )
 
+    pin_data.merge!(
+      translations: serialize_translations(pin),
+      map_location: serialize_map_location(pin.map_location),
+      **serialize_external_reference(pin)
+    )
+
     if admin_client?
       pin_data[:author_id] = pin.author_id
     end
@@ -50,14 +56,6 @@ class PointOfInterestPinSerializer < BaseSerializer
           title: projekt.page&.title || projekt.name
         }
       end
-    end
-
-    if pin.map_location.present?
-      pin_data[:map_location] = {
-        latitude: pin.map_location.latitude,
-        longitude: pin.map_location.longitude,
-        zoom: pin.map_location.zoom
-      }
     end
 
     pin_data

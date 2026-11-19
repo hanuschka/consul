@@ -38,6 +38,8 @@ to: :budget
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
     validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
     validate :description_sanitized #custom
+    validates :external_source, presence: true, if: :external_id?
+    validates :external_id, uniqueness: { scope: [:budget_id, :external_source] }, allow_nil: true
 
     def self.sort_by_total_votes
       left_joins(:votes_for)

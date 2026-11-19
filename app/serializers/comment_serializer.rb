@@ -26,7 +26,8 @@ class CommentSerializer < BaseSerializer
     )
 
     comment_data.merge!(
-      body: comment.body
+      body: comment.body,
+      translations: serialize_translations(comment)
     )
 
     if admin_client?
@@ -104,7 +105,7 @@ class CommentSerializer < BaseSerializer
     def visible_child_comments
       return [] if !comment.respond_to?(:children)
 
-      children = comment.children.includes(user: :organization)
+      children = comment.children.includes(:translations, user: :organization)
 
       if admin_client?
         children.to_a

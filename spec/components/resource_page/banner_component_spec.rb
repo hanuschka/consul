@@ -34,4 +34,16 @@ describe ResourcePage::BannerComponent, type: :component do
     expect(page).not_to have_css("a[href='#comments']")
     expect(page).not_to have_css(".resource-page-banner--image")
   end
+
+  it "shows the image credit on the poll banner" do
+    poll = create(:poll)
+    image = poll.build_image(user: create(:user), credits: "©Stadt Rheinfelden (Baden)")
+    image.attachment.attach(io: file_fixture("clippy.jpg").open, filename: "clippy.jpg")
+    image.save!(validate: false)
+
+    render_inline(ResourcePage::BannerComponent.new(resource: poll.reload))
+
+    expect(page).to have_css(".resource-image .image-credit-label", count: 1,
+                             text: "©Stadt Rheinfelden (Baden)")
+  end
 end

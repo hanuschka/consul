@@ -719,6 +719,9 @@ de:
     show:
       back: "Zurück zu meiner Aktivität"
   shared:
+    two_click_iframes:
+      explainer_text: "Mit dem Aufruf des Inhaltes erklären Sie sich einverstanden, dass Ihre Daten an Drittanbieter übermittelt werden und dass Sie die Datenschutzerklärung gelesen haben."
+      consent_button: "Akzeptieren"
     edit: "Bearbeiten"
     filter: "Filtern"
     save: "Speichern"

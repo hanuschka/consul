@@ -175,9 +175,15 @@
   margin-bottom: 18px;
 }
 
+.projekt-question-embed .projekt-question-container-question-block {
+  width: 100%;
+  margin-bottom: 0;
+}
+
 .projekt-question-embed .projekt-question-container,
 .projekt-question-embed .projekt-question-next-question-section {
   width: 100%;
+  max-width: 100%;
   margin-left: 0;
   margin-right: 0;
   padding-left: 0;
@@ -198,6 +204,11 @@
 .projekt-question-embed .projekt-next-question-button-section {
   justify-content: flex-start;
   order: 2;
+  margin-bottom: 0;
+}
+
+.projekt-question-embed .projekt-question-section--quiz-next {
+  margin-bottom: 0;
 }
 
 .projekt-question-embed .projekt-question-answer-list {
@@ -216,6 +227,7 @@
 
 .projekt-question-embed .projekt-question--comments-wrapper {
   width: 100%;
+  max-width: 100%;
   margin-top: 20px;
 }
 

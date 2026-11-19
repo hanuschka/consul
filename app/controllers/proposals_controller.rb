@@ -103,6 +103,7 @@ class ProposalsController < ApplicationController
       projekt_phase_id: @proposal.projekt_phase_id,
       image_url: image_url,
       image_ai_label_html: helpers.ai_image_label_html(@proposal.image),
+      image_credit_html: helpers.image_credit_html(@proposal.image),
       labels: @proposal.projekt_labels.map { |pl| pl.attributes.slice("name", "icon") },
       sentiment: @proposal.sentiment.present? ? { name: @proposal.sentiment.name, backgroundColor: @proposal.sentiment.color, color: helpers.pick_text_color(@proposal.sentiment.color) } : {},
     }.to_json

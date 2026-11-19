@@ -82,7 +82,7 @@ class Images::BackfillAiMarkingService < ApplicationService
       image.attachment = uploaded_file(
         marking.data[:image_data], filename: filename, content_type: content_type
       )
-      image.ai_generated = true
+      image.assign_attributes(ai_generated: true, credits: image.credits)
       image.save!
 
       @report.marked += 1

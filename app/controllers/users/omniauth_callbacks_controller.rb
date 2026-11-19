@@ -169,6 +169,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       auth = auth_data || request.env["omniauth.auth"]
 
       identity = Identity.first_or_create_from_oauth(auth)
+
+      if identity.user_id.present? && identity.user.nil?
+        Rails.logger.warn("#{provider} login refused: identity belongs to blocked user #{identity.user_id}")
+        return redirect_to new_user_session_path,
+                           alert: t("custom.users.omniauth.login_refused", provider: provider_label(provider))
+      end
+
       identity.update!(auth_data: provider == :bund_id ? bund_id_auth_summary(auth) : auth)
 
       @user = identity.user || User.first_or_initialize_for_oauth(auth)

@@ -38,4 +38,10 @@ module ImagesHelper
 
     render(Shared::AiImageLabelComponent.new)
   end
+
+  def image_credit_html(image)
+    return nil if image.blank? || image.credits.blank?
+
+    render(Shared::ImageCreditComponent.new(credits: image.credits))
+  end
 end

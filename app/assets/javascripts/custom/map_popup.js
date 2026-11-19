@@ -82,6 +82,7 @@ App.MapPopup = {
       popupHtml += "<span class='resource-map-popup-image-wrap'>";
       popupHtml += "<img class='resource-map-popup-image' src='" + data.image_url + "' </img>"; //image
       popupHtml += data.image_ai_label_html || "";
+      popupHtml += data.image_credit_html || "";
       popupHtml += "</span>";
     }
 

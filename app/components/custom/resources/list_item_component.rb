@@ -8,6 +8,8 @@ class Resources::ListItemComponent < ApplicationComponent
   renders_one :subheading
   renders_one :author, Resources::ListItem::AuthorComponent
   renders_one :image, ->(image:, resource:, image_placeholder_icon_class: "fa-file") do
+    @image_credits = image&.credits if helpers.show_image_thumbnail?(resource)
+
     Shared::ResourceImageComponent.new(
       image_url: image_variant(image, IMAGE_THUMB_SIZE),
       image_url_2x: image_variant(image, IMAGE_THUMB_SIZE_2X),

@@ -17,6 +17,51 @@ end
   path '/api/questions/{question_id}/question_options' do
     parameter name: :question_id, in: :path, type: :integer, description: 'Projekt Question ID'
 
+    get 'List the options of a question' do
+      tags 'Question Options'
+      produces 'application/json'
+      security [bearer_auth: []]
+      description "List the answer options of a question in order. Answer counts are omitted for read-only clients when the question hides them. #{ApiAccessRequirements::GET_READ_ONLY}"
+      parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
+      parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
+
+      response '200', 'question options listed' do
+        let(:question_id) { existing_projekt_question.id }
+
+        before do
+          existing_projekt_question.question_options.create!(value: 'Monday')
+          existing_projekt_question.question_options.create!(value: 'Tuesday')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     question_options: { type: :array, items: { '$ref' => '#/components/schemas/QuestionOption' } }
+                   },
+                   required: ['question_options']
+                 },
+                 pagination: { type: :object }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          values = JSON.parse(response.body)['data']['question_options'].map { it['value'] }
+
+          expect(values).to eq(%w[Monday Tuesday])
+        end
+      end
+
+      response '404', 'question not found' do
+        let(:question_id) { 999_999 }
+
+        run_test!
+      end
+
+      unauthorized_response { let(:question_id) { 1 } }
+    end
+
     post 'Create a question option' do
       tags 'Question Options'
       consumes 'application/json'
@@ -30,7 +75,8 @@ end
           question_option: {
             type: :object,
             properties: {
-              value: { type: :string }
+              value: { type: :string, description: 'Option text in the current language' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[value])
             }
           }
         },
@@ -59,7 +105,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     question_option: { type: :object }
+                     question_option: { '$ref' => '#/components/schemas/QuestionOption' }
                    },
                    required: ['question_option']
                  }
@@ -162,7 +208,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     question_option: { type: :object }
+                     question_option: { '$ref' => '#/components/schemas/QuestionOption' }
                    },
                    required: ['question_option']
                  }
@@ -196,7 +242,8 @@ end
           question_option: {
             type: :object,
             properties: {
-              value: { type: :string }
+              value: { type: :string, description: 'Option text in the current language' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[value])
             }
           }
         },
@@ -230,7 +277,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     question_option: { type: :object }
+                     question_option: { '$ref' => '#/components/schemas/QuestionOption' }
                    },
                    required: ['question_option']
                  }

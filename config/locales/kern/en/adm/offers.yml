@@ -119,7 +119,19 @@ en:
           imports: Import
           categories: Categories
           providers: Providers
+          managers: Offers administrators
           settings: Configuration
+      managers:
+        index:
+          title: Offers administrators
+          page_hint: "Offers administrators work in the offers area: they can review, hide and delete offers and manage categories, providers, the CSV import and the reminders to providers. Turning the area on or off is left to administrators. They do not see any other area of the administration. Only administrators can add or remove offers administrators. If an email address is not registered yet, the person receives an invitation."
+          new_link: Add new offers administrator
+          empty_title: No offers administrators available
+          empty_description: Offers administrators will be shown here as soon as they are added.
+        new:
+          title: Add new offers administrator
+          search_label: Search users
+          search_description: "Search by email or username for registered users listed under <a href=\"/adm/users\" target=\"_blank\">Users</a>. If an email address is not registered yet, you can invite the person as an offers administrator. Offers administrators manage the entire offers area."
       settings:
         title: Configuration
       offers:

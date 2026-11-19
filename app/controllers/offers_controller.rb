@@ -25,7 +25,7 @@ class OffersController < ApplicationController
     @offer = Offer.find(params[:id])
     authorize! :show, @offer
 
-    unless can?(:update, @offer)
+    unless can?(:update, @offer) || current_user&.offer_manager?
       check_feature_flag(:offers)
       raise ActiveRecord::RecordNotFound unless @offer.published?
     end

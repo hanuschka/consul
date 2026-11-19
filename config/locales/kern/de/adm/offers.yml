@@ -119,7 +119,19 @@ de:
           imports: Import
           categories: Kategorien
           providers: Anbieter
+          managers: Angebote-Administratoren
           settings: Konfiguration
+      managers:
+        index:
+          title: Angebote-Administratoren
+          page_hint: "Angebote-Administratoren arbeiten im Bereich Angebote: Sie können Angebote prüfen, ausblenden und löschen sowie Kategorien, Anbieter, den CSV-Import und die Erinnerungen an Anbieter verwalten. Das Ein- und Ausschalten des Bereichs bleibt Administratoren vorbehalten. Andere Bereiche der Verwaltung sehen sie nicht. Nur Administratoren können Angebote-Administratoren hinzufügen oder entfernen. Ist eine E-Mail-Adresse noch nicht registriert, erhält die Person eine Einladung."
+          new_link: Neuen Angebote-Administrator hinzufügen
+          empty_title: Keine Angebote-Administratoren vorhanden
+          empty_description: Sobald Angebote-Administratoren hinzugefügt werden, werden diese hier angezeigt.
+        new:
+          title: Neuen Angebote-Administrator hinzufügen
+          search_label: Nutzer suchen
+          search_description: "Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href=\"/adm/users\" target=\"_blank\">Nutzer</a> gelistet sind. Ist eine E-Mail-Adresse noch nicht registriert, können Sie die Person als Angebote-Administrator einladen. Angebote-Administratoren verwalten den gesamten Bereich Angebote."
       settings:
         title: Konfiguration
       offers:

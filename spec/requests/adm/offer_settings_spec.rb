@@ -51,4 +51,32 @@ describe "Angebote settings in /adm", type: :request do
 
     expect(Setting["process.offers"]).to be_present
   end
+
+  describe "as an Angebote-Administrator" do
+    before { login_as(create(:offer_manager).user) }
+
+    def update_setting(key, kind, value)
+      setting = Setting.find_by!(key: key)
+
+      patch adm_attribute_path(record_type: "setting", id: setting.id),
+            params: {
+              attribute: "value",
+              kind: kind,
+              field_token: Adm::AttributeEditorToken.generate(setting, "value", kind),
+              setting: { value: value }
+            }
+    end
+
+    it "changes the reminder interval" do
+      update_setting("offers.reminder_interval", "select", "quarterly")
+
+      expect(Setting["offers.reminder_interval"]).to eq "quarterly"
+    end
+
+    it "cannot switch the module on" do
+      update_setting("process.offers", "boolean", "true")
+
+      expect(Setting["process.offers"]).to be_blank
+    end
+  end
 end

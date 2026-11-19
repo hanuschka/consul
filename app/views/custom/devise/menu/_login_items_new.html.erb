@@ -27,7 +27,8 @@
        current_user.officing_manager? ||
        Adm::DeficiencyReports::DeficiencyReportPolicy.new(current_user, nil).index? ||
        Adm::MunicipalPlans::MunicipalPlanPolicy.new(current_user, nil).index? ||
-       Adm::Ideas::IdeaPolicy.new(current_user, nil).index?
+       Adm::Ideas::IdeaPolicy.new(current_user, nil).index? ||
+       Adm::Offers::OfferPolicy.new(current_user, nil).index?
      ) %>
 
   <% if admin_links %>

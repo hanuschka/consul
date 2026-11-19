@@ -70,6 +70,7 @@ de:
         valuator: "Budgetgutachter"
         deficiency_report_manager: "Mängelmelder-Admin"
         idea_manager: "Ideenplattform-Admin"
+        offer_manager: "Angebote-Administrator"
         projekt_manager: "Projektmanager"
         officing_manager: "Officing-Manager"
         landing_page_manager: "Landing-Page-Manager"

@@ -10,6 +10,10 @@ namespace :adm do
 
     resource :settings, only: :show, controller: "settings"
 
+    resources :managers, only: [:index, :new, :destroy] do
+      post :search, on: :collection
+    end
+
     resource :import, only: [:new, :create], controller: "imports" do
       get :template
       get :sample

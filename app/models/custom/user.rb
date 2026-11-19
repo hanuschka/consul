@@ -64,6 +64,7 @@ User.class_eval do
   has_one :idea_officer, class_name: "Idea::Officer"
   has_one :idea_manager
   has_one :officing_manager
+  has_one :offer_manager, dependent: :destroy
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
@@ -406,6 +407,10 @@ User.class_eval do
 
   def idea_manager?
     idea_manager.present?
+  end
+
+  def offer_manager?
+    offer_manager.present?
   end
 
   def recipient_greeting

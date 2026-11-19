@@ -1,6 +1,6 @@
 class Adm::Offers::ProviderPolicy < ApplicationPolicy
   def index?
-    @user&.administrator?
+    @user&.administrator? || @user&.offer_manager?
   end
 
   def create?
@@ -17,7 +17,7 @@ class Adm::Offers::ProviderPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      return scope.all if user&.administrator?
+      return scope.all if user&.administrator? || user&.offer_manager?
 
       scope.none
     end

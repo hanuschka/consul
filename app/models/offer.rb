@@ -52,7 +52,7 @@ class Offer < ApplicationRecord
 
   def self.listed_for(user)
     return published if user.blank?
-    return all if user.administrator?
+    return all if user.administrator? || user.offer_manager?
 
     published.or(where(provider_id: Offer::Provider.for_user(user).select(:id)))
   end

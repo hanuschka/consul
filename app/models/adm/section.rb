@@ -23,7 +23,7 @@ module Adm
       "ideas"              => :idea_manager?,
       "deficiency_reports" => :deficiency_report_manager?,
       "municipal_plans"    => :administrator?,
-      "offers"             => :administrator?,
+      "offers"             => :offer_manager?,
       "landing_pages"      => :landing_page_manager?,
       "moderation"         => :moderator?,
       "valuation"          => :valuator?,

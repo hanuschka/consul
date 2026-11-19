@@ -4,7 +4,7 @@ class Adm::Offers::MenuComponent < Adm::BaseMenuComponent
   end
 
   def menu_items
-    [offers_item, imports_item, categories_item, providers_item, settings_item].compact
+    [offers_item, imports_item, categories_item, providers_item, managers_item, settings_item].compact
   end
 
   private
@@ -50,6 +50,17 @@ class Adm::Offers::MenuComponent < Adm::BaseMenuComponent
         icon: "badge",
         path: adm_offers_providers_path,
         active_prefix: "/adm/offers/providers"
+      }
+    end
+
+    def managers_item
+      return unless Adm::OfferManagerPolicy.new(current_user, nil).index?
+
+      {
+        label: t("adm.offers.menu.items.managers"),
+        icon: "admin_panel_settings",
+        path: adm_offers_managers_path,
+        active_prefix: "/adm/offers/managers"
       }
     end
 

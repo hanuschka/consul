@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_16_144852) do
+ActiveRecord::Schema.define(version: 2026_11_19_150822) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2148,6 +2148,13 @@ ActiveRecord::Schema.define(version: 2026_11_16_144852) do
     t.index ["user_id"], name: "index_offer_provider_users_on_user_id"
   end
 
+  create_table "offer_managers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_offer_managers_on_user_id", unique: true
+  end
+
   create_table "offer_providers", force: :cascade do |t|
     t.string "name", null: false
     t.text "auto_join_emails", default: [], null: false, array: true
@@ -4216,6 +4223,7 @@ ActiveRecord::Schema.define(version: 2026_11_16_144852) do
   add_foreign_key "notifications", "users"
   add_foreign_key "offer_category_assignments", "offer_categories"
   add_foreign_key "offer_category_assignments", "offers"
+  add_foreign_key "offer_managers", "users"
   add_foreign_key "offer_provider_users", "offer_providers"
   add_foreign_key "offer_provider_users", "users"
   add_foreign_key "offers", "offer_providers", column: "provider_id"

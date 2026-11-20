@@ -40,6 +40,7 @@ class Newsletter < ApplicationRecord
     emails = normalize.call(emails)
 
     return emails unless respect_newsletter_optout?
+    return emails if recipient_group&.projekt_subscribers_group?
 
     optin_set = normalize.call(
       User.actual.where(newsletter: true).pluck(:email) +

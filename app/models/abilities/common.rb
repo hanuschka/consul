@@ -200,13 +200,7 @@ module Abilities
             user.has_pm_permission_to?("manage", admin_image.projekt))
       end
 
-      can :toggle_subscription, ProjektSubscription do |subscription|
-        subscription.user == user
-      end
-
-      can :toggle_subscription, ProjektPhaseSubscription do |subscription|
-        subscription.user == user
-      end
+      can :update, ProjektSubscription, user_id: user.id
 
       can :create, RelatedContent
       can :destroy, RelatedContent do |related_content|

@@ -570,8 +570,8 @@ User.class_eval do
     end
 
     def remove_subscriptions
-      projekt_subscriptions.destroy_all
-      projekt_phase_subscriptions.destroy_all
+      ProjektSubscription.where(user_id: id).delete_all
+      projekt_phase_subscriptions.delete_all
       whatsapp_account&.destroy!
     end
 

@@ -1,18 +1,17 @@
 class ProjektSubscriptionsController < ApplicationController
-  def toggle_subscription
-    @projekt_subscription = ProjektSubscription.find(params[:id])
-    authorize! :toggle_subscription, @projekt_subscription
+  before_action :authenticate_user!
 
-    redirect_to new_user_session_path and return unless current_user
+  def update
+    @projekt = Projekt.find(params[:projekt_id])
+    authorize! :update, ProjektSubscription.new(projekt: @projekt, user: current_user)
 
-    @projekt = @projekt_subscription.projekt
-    @custom_page = @projekt.page
-
-    @projekt_subscription.update!(active: projekt_subscription_params[:active])
-
-    @projekt.projekt_phases.each do |phase|
-      @projekt_subscription.active? ? phase.subscribe(current_user) : phase.unsubscribe(current_user)
+    if ActiveModel::Type::Boolean.new.cast(projekt_subscription_params[:active])
+      ProjektSubscription.follow!(user: current_user, projekt: @projekt)
+    else
+      ProjektSubscription.unfollow!(user: current_user, projekt: @projekt)
     end
+
+    @projekt_subscription = ProjektSubscription.find_by!(projekt: @projekt, user: current_user)
   end
 
   private

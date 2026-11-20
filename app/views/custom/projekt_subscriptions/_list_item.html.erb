@@ -1,0 +1,18 @@
+<% projekt = projekt_subscription.projekt %>
+<li class="projekt-subscription-list--item">
+  <span class="projekt-subscription-list--title">
+    <% if projekt.page.present? %>
+      <%= link_to projekt.title, page_path(projekt.page.slug) %>
+    <% else %>
+      <%= projekt.title %>
+    <% end %>
+  </span>
+
+  <label class="show-for-sr" for="<%= dom_id(projekt, :subscription_toggler) %>">
+    <%= t("custom.account.subscriptions.projekts.switch_label", title: projekt.title) %>
+  </label>
+
+  <%= render "projekt_subscriptions/switch",
+    projekt_subscription: projekt_subscription,
+    path: toggle_path.call(projekt) %>
+</li>

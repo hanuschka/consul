@@ -11,22 +11,14 @@ module Whatsapp::Subscriptions
   module_function
 
   def follow(user:, projekt:)
-    write(user: user, projekt: projekt, active: true)
+    ::ProjektSubscription.follow!(user: user, projekt: projekt)
   end
 
   def unfollow(user:, projekt:)
-    write(user: user, projekt: projekt, active: false)
+    ::ProjektSubscription.unfollow!(user: user, projekt: projekt)
   end
 
   def following?(user:, projekt:)
-    ::ProjektSubscription.exists?(user: user, projekt: projekt, active: true)
+    ::ProjektSubscription.following?(user: user, projekt: projekt)
   end
-
-  def write(user:, projekt:, active:)
-    ::ProjektSubscription
-      .find_or_initialize_by(user: user, projekt: projekt)
-      .update!(active: active)
-  end
-
-  private_class_method :write
 end

@@ -214,9 +214,12 @@ de:
             title: Aufbau
           projekt_start: Projektstart
           projekt_end: Geplante Fertigstellung
-          phases_subscription:
-            title: Benachrichtigungen
-            description: Möchten Sie zu diesem Projekt auf dem Laufenden bleiben?
+          projekt_subscription:
+            title: Projekt abonnieren
+            switch_label: Nachrichten zu diesem Projekt erhalten
+            hint: Sie erhalten Nachrichten der Stadt zu diesem Projekt, etwa Newsletter und Ankündigungen. Über einzelne neue Beiträge werden Sie nicht benachrichtigt.
+            sign_in_html: "%{link}, um dieses Projekt zu abonnieren."
+            sign_in_link: Melden Sie sich an
           share:
             title: Teilen
         tabs:

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_19_133021) do
+ActiveRecord::Schema.define(version: 2026_11_19_162424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -2945,7 +2945,7 @@ ActiveRecord::Schema.define(version: 2026_11_19_133021) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["projekt_id"], name: "index_projekt_subscriptions_on_projekt_id"
-    t.index ["user_id"], name: "index_projekt_subscriptions_on_user_id"
+    t.index ["user_id", "projekt_id"], name: "index_projekt_subscriptions_on_user_id_and_projekt_id", unique: true
   end
 
   create_table "projekt_translations", force: :cascade do |t|
@@ -3133,6 +3133,8 @@ ActiveRecord::Schema.define(version: 2026_11_19_133021) do
     t.string "access_method"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "projekt_id"
+    t.index ["projekt_id"], name: "index_recipient_groups_on_projekt_id", unique: true
   end
 
   create_table "registered_address_cities", force: :cascade do |t|
@@ -4213,6 +4215,7 @@ ActiveRecord::Schema.define(version: 2026_11_19_133021) do
   add_foreign_key "proposals", "projekts"
   add_foreign_key "proposals", "sentiments"
   add_foreign_key "recipient_group_filters", "recipient_groups"
+  add_foreign_key "recipient_groups", "projekts", on_delete: :nullify
   add_foreign_key "registered_address_district_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_district_projekt_phases", "registered_address_districts"
   add_foreign_key "registered_address_districts", "idea_officers"

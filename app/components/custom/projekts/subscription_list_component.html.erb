@@ -1,0 +1,12 @@
+<% if @subscriptions.any? %>
+  <ul class="projekt-subscription-list">
+    <%= render partial: "projekt_subscriptions/list_item",
+      collection: @subscriptions,
+      as: :projekt_subscription,
+      locals: { toggle_path: @toggle_path } %>
+  </ul>
+<% else %>
+  <p class="projekt-subscription-list--hint">
+    <%= t("custom.account.subscriptions.projekts.empty") %>
+  </p>
+<% end %>

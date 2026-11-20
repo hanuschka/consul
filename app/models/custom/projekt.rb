@@ -866,16 +866,14 @@ class Projekt < ApplicationRecord
     preview_code.present? && preview_code == code
   end
 
+  def actual_subscribers
+    subscribers.merge(User.actual)
+  end
+
   def acceptable_to_be_exported_for_global_overview?
     !special &&
       activated? &&
       feature?("general.show_in_overview_page")
-  end
-
-  def any_phase_subscribers_ids
-    User.joins(:projekt_phase_subscriptions)
-      .where(projekt_phase_subscriptions: { projekt_phase_id: projekt_phases.ids })
-      .ids.uniq
   end
 
   def page_content

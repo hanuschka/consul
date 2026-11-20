@@ -14,14 +14,17 @@ en:
         verification_with_bund_id_description: Some participation projects require user verification. You can start the user verification by clicking on the button. You must verify yourself with the BundID using a high level of verification, such as an ID card or Elster. Other login methods such as a user name and password are not sufficient.
         personal_settings: Personal settings
         notifications: Notifications
+        projekt_subscriptions: Subscribed projects
         save_settings: Update
         not_verified_account: Account is not verified
       subscriptions:
         projekts:
-          title: Project related notifications
-          description1: "You have activated project notification for the following projects:"
-          description2: By clicking on the button below you can unsubscribe from all project notifications. If you only want to unsubscribe from individual project phases, please use the direct link to the projects.
-          cancel_projekts_subscriptions_button: Unsubscribe from all project notifications
+          title: Subscribed projects
+          description: You receive messages from the city about these projects, such as newsletters and announcements. Switch a project off to stop receiving messages about it.
+          newsletter_note: The general newsletter setting does not cover subscribed projects.
+          switch_label: "Receive messages about “%{title}”"
+          empty: You have not subscribed to any project yet. Subscribe with the switch on a project page.
+          cancel_projekts_subscriptions_button: Unsubscribe from all projects
       edit_details:
         title: Update personal information
         documents_label: Document check

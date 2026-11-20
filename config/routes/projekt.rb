@@ -1,6 +1,7 @@
 resources :projekts, only: [:index, :show] do
   resources :projekt_questions, only: [:index, :show]
   resources :projekt_question_answers, only: [:create, :update]
+  resource :subscription, only: [:update], controller: "projekt_subscriptions"
 
   collection do
     get :footer_comments
@@ -33,7 +34,6 @@ resources :projekt_phases, only: [] do
     get :map_html
     post :mitmachbox_response, to: "mitmachbox_responses#create"
     post :marked_areas_check, to: "marked_areas_checks#create"
-    post :toggle_subscription
     post :create_stat_question
     get :stat_question_status
     get :download_stat_answer
@@ -41,5 +41,3 @@ resources :projekt_phases, only: [] do
     get :download_all_stat_answers
   end
 end
-
-patch "/projekt_subscriptions/:id/toggle_subscription", to: "projekt_subscriptions#toggle_subscription", as: :toggle_subscription_projekt_subscription

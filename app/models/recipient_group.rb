@@ -1,4 +1,5 @@
 class RecipientGroup < ApplicationRecord
+  belongs_to :projekt, optional: true
   has_many :newsletters, dependent: :restrict_with_exception
   has_many :filters,
            -> { order(:position) },
@@ -8,8 +9,21 @@ class RecipientGroup < ApplicationRecord
 
   validates :name, presence: true
 
+  scope :editable, -> { where(projekt_id: nil) }
+  scope :for_projekt_subscribers, -> { where.not(projekt_id: nil) }
+
   def self.base_options_for_kind
     %i[projekts user_roles]
+  end
+
+  def projekt_subscribers_group?
+    projekt_id.present?
+  end
+
+  def display_name
+    return name if projekt.blank?
+
+    I18n.t("adm.recipient_groups.projekt_subscribers_group_name", title: projekt.title)
   end
 
   def user_emails

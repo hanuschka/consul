@@ -216,9 +216,12 @@ en:
             title: Composition
           projekt_start: Projekt start
           projekt_end: Planned completion
-          phases_subscription:
-            title: Notifications
-            description: Would you like to stay current?
+          projekt_subscription:
+            title: Subscribe to project
+            switch_label: Receive messages about this project
+            hint: You will receive messages from the city about this project, such as newsletters and announcements. You will not be notified about individual new contributions.
+            sign_in_html: "%{link} to subscribe to this project."
+            sign_in_link: Sign in
           share:
             title: Share
         tabs:
@@ -265,6 +268,8 @@ en:
         new_question_notification: "New question: %{question_title}"
         all_questions: All questions
         go_to_question: Go to question
+        answer_error: Your vote was not saved. Please reload the page and try again.
+        answer_closed: Voting has closed. Your vote was not saved.
         participation_not_allowed:
           login_to_answer: Please %{signin} or %{signup} to proceed.
           organizations: Organizations cannot take part

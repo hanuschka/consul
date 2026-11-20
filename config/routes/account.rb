@@ -8,4 +8,5 @@ end
 
 resource :subscriptions, only: [:edit, :update] do
   delete :cancel_projekts, on: :collection
+  patch "projekts/:projekt_id", action: :update_projekt, as: :update_projekt, on: :collection
 end

@@ -5,7 +5,7 @@ module NotificationServices
     end
 
     def call
-      users_to_notify.each do |user|
+      projekt_subscribers.find_each do |user|
         NotificationServiceMailer.projekt_questions(user.id, @projekt_phase.id).deliver_later
         Notification.add(user, @projekt_phase)
         Activity.log(user, "email", @projekt_phase)
@@ -14,15 +14,12 @@ module NotificationServices
 
     private
 
-      def users_to_notify
-        [projekt_phase_subscribers]
-          .flatten.uniq(&:id).reject(&:not_actual?)
-      end
-
-      def projekt_phase_subscribers
-        return [] unless @projekt_phase.questions.any?
-
-        @projekt_phase.subscribers.to_a
+      def projekt_subscribers
+        if @projekt_phase.questions.exists?
+          @projekt_phase.projekt.actual_subscribers
+        else
+          User.none
+        end
       end
   end
 end

@@ -7,11 +7,13 @@ class Subscriptions::EditComponent < ApplicationComponent
 
   private
 
-    def projekts_with_subscriptions
-      projekt_ids_with_subscription = user.projekt_subscriptions.pluck(:projekt_id)
-      projekt_ids_with_phase_subscription = user.projekt_phase_subscriptions.joins(projekt_phase: :projekt).pluck("projekts.id")
+    def projekt_subscriptions
+      @projekt_subscriptions ||= ProjektSubscription.active_for_user(user).to_a
+    end
 
-      relevant_projekt_ids = [projekt_ids_with_subscription + projekt_ids_with_phase_subscription].flatten.uniq
-      Projekt.where(id: relevant_projekt_ids).order(:id)
+    def projekt_toggle_path
+      ->(projekt) {
+        update_projekt_subscriptions_path(projekt_id: projekt.id, token: user.subscriptions_token)
+      }
     end
 end

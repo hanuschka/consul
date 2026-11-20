@@ -70,6 +70,7 @@ class AccountController < ApplicationController
       @account_individial_groups_hard = IndividualGroup.hard
       @account_individial_groups_soft = IndividualGroup.soft
       @account_individual_group_values = @account.individual_group_values
+      @projekt_subscriptions = ProjektSubscription.active_for_user(current_user).to_a
       @notifications =
         if params[:notifications] == "read"
           current_user.notifications.read

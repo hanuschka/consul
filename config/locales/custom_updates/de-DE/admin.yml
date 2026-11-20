@@ -360,7 +360,7 @@ de:
             authors_of_selected_ids: Autor*innen, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
             authors_of_not_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung nicht gewonnen haben
             authors_of_winners_ids: Autor*innen, deren Vorschläge in der finalen Abstimmung gewonnen haben
-            any_phase_subscribers_ids: Abonnent*innen aller Phasen
+            subscriber_ids: Abonnent*innen des Projekts
         create:
           notice: Adressatengruppe wurde erfolgreich erstellt
         update:

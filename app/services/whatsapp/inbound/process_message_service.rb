@@ -898,6 +898,8 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       following ? followed_note(title) : unfollowed_note(title)
+    rescue ActiveRecord::RecordNotFound
+      FOLLOW_GONE_NOTE
     end
 
     def followed_note(title)

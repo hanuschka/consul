@@ -29,7 +29,7 @@
           <div class="adm-newsletter-summary--pair">
             <dt class="adm-newsletter-summary--label"><%= t("adm.newsletters.show.recipient_group") %></dt>
             <dd class="adm-newsletter-summary--value">
-              <%= @newsletter.recipient_group.present? ? @newsletter.recipient_group.name : "—" %>
+              <%= @newsletter.recipient_group.present? ? @newsletter.recipient_group.display_name : "—" %>
             </dd>
           </div>
         </div>

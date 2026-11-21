@@ -15,8 +15,8 @@ class SubscriptionsController < ApplicationController
   def update_projekt
     @projekt = Projekt.find(params[:projekt_id])
 
-    if ActiveModel::Type::Boolean.new.cast(params.dig(:projekt_subscription, :active))
-      ProjektSubscription.follow!(user: @user, projekt: @projekt)
+    if ActiveModel::Type::Boolean.new.cast(projekt_subscription_params[:active])
+      ProjektSubscription.follow_visible!(user: @user, projekt: @projekt)
     else
       ProjektSubscription.unfollow!(user: @user, projekt: @projekt)
     end
@@ -43,6 +43,10 @@ class SubscriptionsController < ApplicationController
 
     def subscriptions_params
       params.require(:user).permit(allowed_params)
+    end
+
+    def projekt_subscription_params
+      params.permit(projekt_subscription: [:active]).require(:projekt_subscription)
     end
 
     def allowed_params

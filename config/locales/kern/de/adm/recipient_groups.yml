@@ -2,7 +2,6 @@ de:
   adm:
     recipient_groups:
       projekt_subscribers_group_name: "Projekt-Abonnenten: %{title}"
-      projekt_subscribers_group_option: "Projekt-Abonnenten: %{title} (%{count})"
       index:
         title: Empfängergruppen
         new_recipient_group: Neue Empfängergruppe erstellen
@@ -23,6 +22,7 @@ de:
           edit: Bearbeiten
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie diese Empfängergruppe löschen möchten?
+          automatic: Automatisch verwaltet
         empty_title: Keine Empfängergruppen vorhanden
         empty_description: Erstellen Sie eine Empfängergruppe, um Newsletter gezielt an bestimmte Nutzerkreise zu versenden.
       new:

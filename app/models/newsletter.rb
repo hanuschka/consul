@@ -39,8 +39,7 @@ class Newsletter < ApplicationRecord
     normalize = ->(list) { list.filter_map { |e| e.to_s.strip.downcase.presence }.uniq }
     emails = normalize.call(emails)
 
-    return emails unless respect_newsletter_optout?
-    return emails if recipient_group&.projekt_subscribers_group?
+    return emails if optout_skipped?
 
     optin_set = normalize.call(
       User.actual.where(newsletter: true).pluck(:email) +
@@ -173,6 +172,10 @@ class Newsletter < ApplicationRecord
 
     def valid_email?(email)
       email.match(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i)
+    end
+
+    def optout_skipped?
+      !respect_newsletter_optout? || recipient_group&.projekt_subscribers_audience?
     end
 
     def log_delivery(recipient_email)

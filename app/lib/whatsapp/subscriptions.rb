@@ -11,7 +11,7 @@ module Whatsapp::Subscriptions
   module_function
 
   def follow(user:, projekt:)
-    ::ProjektSubscription.follow!(user: user, projekt: projekt)
+    ::ProjektSubscription.follow_visible!(user: user, projekt: projekt)
   end
 
   def unfollow(user:, projekt:)

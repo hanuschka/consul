@@ -9,8 +9,7 @@ class RecipientGroup < ApplicationRecord
 
   validates :name, presence: true
 
-  scope :editable, -> { where(projekt_id: nil) }
-  scope :for_projekt_subscribers, -> { where.not(projekt_id: nil) }
+  scope :with_projekt_titles, -> { includes(projekt: { page: :translations }) }
 
   def self.base_options_for_kind
     %i[projekts user_roles]
@@ -18,6 +17,14 @@ class RecipientGroup < ApplicationRecord
 
   def projekt_subscribers_group?
     projekt_id.present?
+  end
+
+  def projekt_subscribers_audience?
+    if filters.any?
+      filters.all? { it.kind == "projekt_subscribers" }
+    else
+      origin_class_name == "Projekt" && access_method == "subscriber_ids"
+    end
   end
 
   def display_name

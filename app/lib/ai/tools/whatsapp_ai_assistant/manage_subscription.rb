@@ -89,6 +89,8 @@ class Ai::Tools::WhatsappAiAssistant::ManageSubscription < Ai::Tools::WhatsappAi
         hint: "Say what changed in one line, and say how they can undo it: the button that " \
               "does is put under your reply for you."
       }
+    rescue ActiveRecord::RecordNotFound
+      unknown_projekt_error
     end
 
     # The enum should make this unreachable; it stands as the floor for a provider

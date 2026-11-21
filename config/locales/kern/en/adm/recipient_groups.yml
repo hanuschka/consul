@@ -2,7 +2,6 @@ en:
   adm:
     recipient_groups:
       projekt_subscribers_group_name: "Project subscribers: %{title}"
-      projekt_subscribers_group_option: "Project subscribers: %{title} (%{count})"
       index:
         title: Recipient groups
         new_recipient_group: Create new recipient group
@@ -22,6 +21,7 @@ en:
           edit: Edit
           delete: Delete
           delete_confirm: Are you sure you want to delete this recipient group?
+          automatic: Managed automatically
         empty_title: No recipient groups available
         empty_description: Create a recipient group to send newsletters to specific audiences.
       new:

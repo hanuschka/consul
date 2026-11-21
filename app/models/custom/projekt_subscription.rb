@@ -19,12 +19,22 @@ class ProjektSubscription < ApplicationRecord
     RecipientGroups::EnsureProjektSubscribersGroup.call(projekt)
   end
 
+  def self.follow_visible!(user:, projekt:)
+    if projekt.hidden_for?(user)
+      raise ActiveRecord::RecordNotFound
+    end
+
+    follow!(user: user, projekt: projekt)
+  end
+
   def self.unfollow!(user:, projekt:)
     write!(user: user, projekt: projekt, active: false)
   end
 
   def self.following?(user:, projekt:)
-    return false if user.blank? || projekt.blank?
+    if user.blank? || projekt.blank?
+      return false
+    end
 
     active.exists?(user_id: user.id, projekt_id: projekt.id)
   end

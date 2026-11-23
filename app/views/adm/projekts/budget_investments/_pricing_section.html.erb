@@ -1,4 +1,4 @@
-<% phase_early_access = !budget.valuating_or_later? && investment.feasibility == "feasible" %>
+<% phase_early_access = !budget.valuating_or_later? && investment.feasible? %>
 <% phase_enabled = budget.valuating_or_later? || phase_early_access %>
 <% phase_completed = investment.price.present? && investment.price > 0 %>
 <% phase_state = phase_enabled ? (phase_completed ? "completed" : "active") : "disabled" %>

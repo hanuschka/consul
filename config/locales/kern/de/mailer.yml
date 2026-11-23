@@ -14,6 +14,10 @@ de:
       title: Vorschlag als umsetzbar bewertet
       description: 'Wird in den Budget-Phasen „Bewertung der Umsetzbarkeit" (Phase 2 + 3) an den Autor gesendet, sobald eine Sachbearbeitung den Vorschlag als umsetzbar bewertet und die Bewertung als abgeschlossen markiert hat. Der Versand erfolgt nur einmalig — spätere Änderungen der Bewertung lösen keine erneute E-Mail aus.'
       recipient: Der Nutzer, der den Vorschlag eingereicht hat.
+    budget_investment_feasible_with_changes:
+      title: Vorschlag als umsetzbar mit Änderungen bewertet
+      description: 'Wird in den Budget-Phasen „Bewertung der Umsetzbarkeit" (Phase 2 + 3) an den Autor gesendet, sobald eine Sachbearbeitung den Vorschlag als „Entspricht mit Änderungen den Kriterien" bewertet und die Bewertung als abgeschlossen markiert hat. Der Versand erfolgt nur einmalig — spätere Änderungen der Bewertung lösen keine erneute E-Mail aus.'
+      recipient: Der Nutzer, der den Vorschlag eingereicht hat.
     budget_investment_unfeasible:
       title: Vorschlag als nicht umsetzbar bewertet
       description: 'Wird in den Budget-Phasen „Bewertung der Umsetzbarkeit" (Phase 2 + 3) an den Autor gesendet, sobald eine Sachbearbeitung den Vorschlag als nicht umsetzbar bewertet und die Bewertung als abgeschlossen markiert hat. Der Versand erfolgt nur einmalig — spätere Änderungen der Bewertung lösen keine erneute E-Mail aus.'

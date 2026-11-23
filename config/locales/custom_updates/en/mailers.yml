@@ -27,6 +27,13 @@ en:
       project_link_2_text: project
       text: "We have reviewed your proposal %{investment_title}: your proposal meets %{projekt_link_1}. This means it will be accepted for the next phase of %{projekt_link_2}."
       sincerely: Best regards
+    budget_investment_feasible_with_changes:
+      subject: "Your proposal meets the criteria with changes."
+      title: "Your proposal meets the criteria with changes."
+      projekt_link_1_text: criteria
+      projekt_link_2_text: project
+      text: "We have reviewed your proposal %{investment_title}: your proposal meets the %{projekt_link_1}, but only with changes. What we adjusted is shown on the proposal page. This means it will be accepted for the next phase of the %{projekt_link_2}."
+      sincerely: Best regards
     newsletter_subscription_for_existing_user:
       subject: Subscribe to the newsletter
       p1_html: "There was an attempt to sign up for our newsletter using your email address. Since you already have an account on the participation platform, we would like to ask you to log in and activate the option to receive the newsletter in your <a href=%{account_url}>Account Settings</a>."

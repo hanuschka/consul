@@ -112,7 +112,7 @@ en:
           heading_label: Heading
           price_label: Total cost
           feasibility_label: Criteria
-          feasibility_hint: "Criteria status: undecided, feasible, unfeasible"
+          feasibility_hint: "Criteria status: undecided, feasible, feasible_with_changes, unfeasible"
           selected_label: Selected
           winner_label: Winner
           incompatible_label: Incompatible

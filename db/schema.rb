@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_19_162424) do
+ActiveRecord::Schema.define(version: 2026_11_23_152929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -463,7 +463,7 @@ ActiveRecord::Schema.define(version: 2026_11_19_162424) do
     t.integer "administrator_id"
     t.string "external_url"
     t.bigint "price"
-    t.string "feasibility", limit: 15, default: "undecided"
+    t.string "feasibility", limit: 30, default: "undecided"
     t.text "price_explanation"
     t.text "unfeasibility_explanation"
     t.boolean "valuation_finished", default: false

@@ -11,6 +11,10 @@ class SiteCustomization::EmailTemplate < ApplicationRecord
       variables: %w[recipient_greeting investment_title projekt_title feasibility_explanation investment_url],
       hidden_variables: %w[username]
     },
+    "Mailer#budget_investment_feasible_with_changes" => {
+      variables: %w[recipient_greeting investment_title projekt_title changes_explanation investment_url],
+      hidden_variables: %w[username]
+    },
     "Mailer#budget_investment_unfeasible" => {
       variables: %w[recipient_greeting investment_title projekt_title unfeasibility_explanation
                     investment_url],

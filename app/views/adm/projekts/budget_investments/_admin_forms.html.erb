@@ -9,7 +9,7 @@
     <h2 class="adm-detail-section-title m-0"><%= t("adm.projekts.budget_investments.show.admin_section_title") %></h2>
     <%= render Adm::HintComponent.new do %>
       <p class="adm-hint__text"><%= t("adm.projekts.budget_investments.show.admin_info_banner") %></p>
-      <% if !budget.valuating_or_later? && investment.feasibility == "feasible" %>
+      <% if !budget.valuating_or_later? && investment.feasible? %>
         <p class="adm-hint__text adm-hint__text--spaced"><%= t("adm.projekts.budget_investments.show.early_pricing_hint") %></p>
       <% end %>
     <% end %>

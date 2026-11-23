@@ -50,6 +50,10 @@
             <% end %>
 
             <% if @investment.valuator_explanation.present? %>
+              <% if @investment.feasible_with_changes? %>
+                <h4><%= t("custom.budgets.investments.show.changes_explanation") %></h4>
+              <% end %>
+
               <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@investment.valuator_explanation) %>
             <% end %>
           </div>

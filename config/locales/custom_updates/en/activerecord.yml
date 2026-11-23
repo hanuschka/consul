@@ -198,6 +198,7 @@ en:
         implementation_contribution: How can you contribute?
         user_cost_estimate: Cost estimate
         on_behalf_of: Create investment proposal on behalf of someone
+        feasibility_feasible_with_changes: Meets the criteria with changes
       milestone:
         custom_date: Custom date
       map_layer:

@@ -53,7 +53,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
       parameter name: :heading_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category heading'
       parameter name: :group_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category group'
-      parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility assessment: "feasible", "unfeasible", or "undecided"'
+      parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility assessment: "feasible" (includes "feasible_with_changes"), "feasible_with_changes", "unfeasible", or "undecided"'
       parameter name: :selected, in: :query, type: :string, required: false, description: 'Filter by selection status: "true" for selected investments, "false" for unselected'
       parameter name: :order, in: :query, type: :string, required: false, description: 'Sort by: "id" (**default**, highest id first), "supports" (vote count), "confidence_score", "price", "ballots", or "newest". Ties are broken by id, highest first.'
 
@@ -176,8 +176,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               on_behalf_of: { type: :string, nullable: true, description: 'Optional: Organization or group name if the proposal is made on behalf of an entity rather than an individual.' },
               resource_terms: { type: :boolean, description: 'Must be true. Confirms the submitter accepts the terms and conditions.' },
               price: { type: :number, nullable: true, description: 'Estimated budget/cost for the investment in the budget\'s currency.' },
-              feasibility: { type: :string, nullable: true, enum: %w[feasible unfeasible undecided], description: 'Admin feasibility assessment (admin only). Set to "feasible" (can be completed), "unfeasible" (cannot be done), or "undecided" (still evaluating).' },
-              valuator_explanation: { type: :string, nullable: true, description: 'Admin-only: Explanation of the feasibility assessment, shown on the public proposal page. HTML, stored as-is like the /adm feasibility editor (e.g. "<p>Does not meet the criteria because ...</p>"). Required when feasibility is "unfeasible" and valuation_finished is true; can be sent in the same request.' },
+              feasibility: { type: :string, nullable: true, enum: %w[feasible feasible_with_changes unfeasible undecided], description: 'Admin feasibility assessment (admin only). Set to "feasible" (can be completed), "feasible_with_changes" (can be completed with changes by the administration, described in the valuator explanation), "unfeasible" (cannot be done), or "undecided" (still evaluating).' },
+              valuator_explanation: { type: :string, nullable: true, description: 'Admin-only: Explanation of the feasibility assessment, shown on the public proposal page. HTML, stored as-is like the /adm feasibility editor (e.g. "<p>Does not meet the criteria because ...</p>"). Required when feasibility is "unfeasible" or "feasible_with_changes" and valuation_finished is true; can be sent in the same request.' },
               valuation_finished: { type: :boolean, nullable: true, description: 'Admin-only: Whether feasibility assessment is complete' },
               selected: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is selected as a winner' },
               visible_to_valuators: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is visible to valuators during the assessment phase' },
@@ -615,7 +615,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update a budget investment details. Allows editing project information, admin feasibility assessment, selection status, or image. Can add, replace, or remove the investment image. Admin-only: can set feasibility status, the valuator explanation, valuation completion, and mark as selected. The full criteria check (feasibility, explanation, valuation_finished) works in a single request. Like the /adm feasibility form, a request that sets feasibility or valuation_finished emails the author once when the valuation is finished as feasible or unfeasible. All fields are optional - only provide fields to change. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update a budget investment details. Allows editing project information, admin feasibility assessment, selection status, or image. Can add, replace, or remove the investment image. Admin-only: can set feasibility status, the valuator explanation, valuation completion, and mark as selected. The full criteria check (feasibility, explanation, valuation_finished) works in a single request. Like the /adm feasibility form, a request that sets feasibility or valuation_finished emails the author once when the valuation is finished as feasible, feasible with changes or unfeasible. All fields are optional - only provide fields to change. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :budget_investment, in: :body, description: 'Investment attributes to update (title, description, price, feasibility, valuator explanation, selection status, image, translations). Any field not provided remains unchanged.', schema: {
         type: :object,
@@ -628,8 +628,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               video_url: { type: :string, nullable: true, description: 'URL to demonstration or explanation video' },
               on_behalf_of: { type: :string, nullable: true, description: 'Organization or group name if applicable' },
               price: { type: :number, nullable: true, description: 'Estimated project cost in budget currency' },
-              feasibility: { type: :string, nullable: true, enum: %w[feasible unfeasible undecided], description: 'Admin feasibility assessment (admin only). Set to "feasible" (can be completed), "unfeasible" (cannot be done), or "undecided" (still evaluating).' },
-              valuator_explanation: { type: :string, nullable: true, description: 'Admin-only: Explanation of the feasibility assessment, shown on the public proposal page. HTML, stored as-is like the /adm feasibility editor (e.g. "<p>Does not meet the criteria because ...</p>"). Required when feasibility is "unfeasible" and valuation_finished is true; can be sent in the same request.' },
+              feasibility: { type: :string, nullable: true, enum: %w[feasible feasible_with_changes unfeasible undecided], description: 'Admin feasibility assessment (admin only). Set to "feasible" (can be completed), "feasible_with_changes" (can be completed with changes by the administration, described in the valuator explanation), "unfeasible" (cannot be done), or "undecided" (still evaluating).' },
+              valuator_explanation: { type: :string, nullable: true, description: 'Admin-only: Explanation of the feasibility assessment, shown on the public proposal page. HTML, stored as-is like the /adm feasibility editor (e.g. "<p>Does not meet the criteria because ...</p>"). Required when feasibility is "unfeasible" or "feasible_with_changes" and valuation_finished is true; can be sent in the same request.' },
               valuation_finished: { type: :boolean, nullable: true, description: 'Admin-only: Whether feasibility assessment is complete' },
               selected: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is selected as a winner' },
               visible_to_valuators: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is visible to valuators during the assessment phase' },
@@ -846,6 +846,77 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           {
             budget_investment: {
               feasibility: 'unfeasible',
+              valuation_finished: true
+            }
+          }
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          explanation_label = Budget::Investment.human_attribute_name(:valuator_explanation)
+
+          expect(data['error']['messages']).to include(a_string_including(explanation_label))
+          expect(existing_investment.reload.valuation_finished).to be(false)
+        end
+      end
+
+      response '200', 'criteria check completed as feasible with changes' do
+        let(:existing_investment) { create_investment_for_valuation }
+        let(:id) { existing_investment.id }
+        let(:explanation) { '<p>Built at the other end of the park.</p>' }
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              feasibility: 'feasible_with_changes',
+              valuator_explanation: explanation,
+              valuation_finished: true
+            }
+          }
+        end
+
+        before do
+          allow(Mailer).to receive(:budget_investment_feasible_with_changes).and_call_original
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          existing_investment.reload
+
+          expect(data['data']['budget_investment']['feasible']).to be(true)
+          expect(data['data']['budget_investment']['feasible_with_changes']).to be(true)
+          expect(existing_investment).to be_feasible_with_changes
+          expect(existing_investment.email_on_feasibility_sent_at).to be_present
+          expect(Mailer).to have_received(:budget_investment_feasible_with_changes).with(existing_investment)
+        end
+      end
+
+      response '422', 'unknown feasibility value' do
+        let(:existing_investment) { create_investment_for_valuation }
+        let(:id) { existing_investment.id }
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              feasibility: 'maybe'
+            }
+          }
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          feasibility_label = Budget::Investment.human_attribute_name(:feasibility)
+
+          expect(data['error']['messages']).to include(a_string_including(feasibility_label))
+          expect(existing_investment.reload.feasibility).to eq('undecided')
+        end
+      end
+
+      response '422', 'feasible with changes valuation finished without explanation' do
+        let(:existing_investment) { create_investment_for_valuation }
+        let(:id) { existing_investment.id }
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              feasibility: 'feasible_with_changes',
               valuation_finished: true
             }
           }

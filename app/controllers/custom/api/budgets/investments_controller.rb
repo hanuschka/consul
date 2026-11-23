@@ -212,6 +212,8 @@ class Api::Budgets::InvestmentsController < Api::BaseController
     case params[:feasibility]
     when "feasible"
       budget_investments = budget_investments.feasible
+    when "feasible_with_changes"
+      budget_investments = budget_investments.feasible_with_changes
     when "unfeasible"
       budget_investments = budget_investments.unfeasible
     when "undecided"

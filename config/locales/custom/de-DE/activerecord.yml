@@ -288,6 +288,7 @@ de:
         price_first_year: Jährliche Folgekosten (intern)
         duration: Umsetzungszeitraum (intern)
         feasibility_feasible: Entspricht den Kriterien
+        feasibility_feasible_with_changes: Entspricht mit Änderungen den Kriterien
         feasibility_undecided: Noch nicht bewertet
         feasibility_unfeasible: Entspricht nicht den Kriterien
         incompatible: Diesen Vorschlag nicht zur Kalkulation der Gewinner berücksichtigen

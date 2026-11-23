@@ -33,7 +33,9 @@ class Api::ProjektPhasesController < Api::BaseController
   def show
     check_read_access!
 
-    return render_access_denied if current_client.public_data? && !public_phase?(@projekt_phase)
+    if phase_hidden_from_client?(@projekt_phase)
+      return render_access_denied
+    end
 
     serialized_projekt_phase = ProjektPhaseSerializer.new(
       @projekt_phase,
@@ -170,10 +172,6 @@ class Api::ProjektPhasesController < Api::BaseController
     ProjektPhase::ALL_PHASE_TYPES.each_with_object({}) do |name, map|
       map[name] = name.safe_constantize
     end
-  end
-
-  def public_phase?(projekt_phase)
-    projekt_phase.frontend_visibility && projekt_phase.active? && projekt_phase.projekt.visible_for?(nil)
   end
 
   def render_access_denied

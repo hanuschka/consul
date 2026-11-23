@@ -556,11 +556,19 @@ class Projekt < ApplicationRecord
       hard_individual_group_values.none?
   end
 
+  # What may be announced to every WhatsApp subscriber: published, and seen by
+  # an anonymous visitor. The publish criteria count only hard group values,
+  # while a soft one hides the projekt from the public as well.
+  def announceable_on_whatsapp?
+    meets_publish_criteria? && visible_for?(nil)
+  end
+
   # Geo-restricted projekts are left out: most subscribers live outside the
   # affiliated districts and could not take part in what they were notified
   # about. Staff can still send those from the projekt details page.
   def eligible_for_whatsapp_publication_broadcast?
     published_at.present? &&
+      announceable_on_whatsapp? &&
       geozone_affiliated != "only_geozones"
   end
 

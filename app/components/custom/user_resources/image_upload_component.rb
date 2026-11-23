@@ -12,6 +12,8 @@ class UserResources::ImageUploadComponent < ApplicationComponent
         "debates"
       when Proposal
         "proposals"
+      when Offer
+        "offers"
       else
         "other"
       end

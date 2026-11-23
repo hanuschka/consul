@@ -12,7 +12,7 @@ describe MunicipalPlan do
     end
 
     it "counts draft edits upwards within the 0 series" do
-      plan.update!(contact_name: "Kai Ostermann")
+      plan.update!(contact_name: "Anna Muster")
 
       expect(plan.reload.version).to eq("0.2")
     end
@@ -31,7 +31,7 @@ describe MunicipalPlan do
 
     it "never returns to the 0 series once published" do
       plan.update!(status: "published")
-      plan.update!(contact_name: "Kai Ostermann")
+      plan.update!(contact_name: "Anna Muster")
       plan.update!(status: "draft")
 
       expect(plan.reload.version).to eq("1.1")
@@ -45,7 +45,7 @@ describe MunicipalPlan do
       plan.update!(status: "published")
 
       travel_to(Date.current + 3.days) do
-        expect { plan.update!(contact_name: "Kai Ostermann") }
+        expect { plan.update!(contact_name: "Anna Muster") }
           .to change { plan.reload.version }.from("1.0").to("1.1")
 
         expect(plan.content_updated_at).to eq(Date.current)

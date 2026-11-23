@@ -250,7 +250,7 @@ RSpec.describe 'Polls API', type: :request, openapi_spec: 'v1/swagger.yaml' do
           api_client.update!(access_level: :public_data)
         end
 
-        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:projekt) { Projekt.create!(name: 'Projekt', activated: true) }
         let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
         let(:created_poll) { voting_phase.polls.create!(name: 'Poll name') }
         let(:id) { created_poll.id }

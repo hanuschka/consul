@@ -52,6 +52,7 @@ User.class_eval do
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
   after_create :assign_individual_group_values_based_on_email_pattern
   after_create :assign_individual_group_values_based_on_auto_join_emails
+  after_create :assign_offer_providers_based_on_auto_join_emails
   after_create :fulfill_pending_role_assignments
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -61,6 +62,7 @@ User.class_eval do
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :user_individual_group_values, dependent: :destroy
   has_many :individual_group_values, through: :user_individual_group_values
+  has_many :offer_provider_users, class_name: "Offer::ProviderUser", dependent: :destroy
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :municipal_plan_officer, class_name: "MunicipalPlan::Officer"
   has_one :projekt_manager
@@ -70,6 +72,7 @@ User.class_eval do
   has_one :idea_officer, class_name: "Idea::Officer"
   has_one :idea_manager
   has_one :officing_manager
+  has_one :offer_manager, dependent: :destroy
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
@@ -446,6 +449,10 @@ User.class_eval do
     email_on_direct_message? || sender.bypasses_direct_message_reception?
   end
 
+  def offer_manager?
+    offer_manager.present?
+  end
+
   def recipient_greeting
     case Setting["email_templates.recipient_greeting"]
     when "first_name" then informal_recipient_greeting(first_name)
@@ -616,6 +623,14 @@ User.class_eval do
       IndividualGroupValue.where("? = ANY(auto_join_emails)", email).find_each do |group_value|
         group_value.users << self unless group_value.users.include?(self)
         group_value.remove_auto_join_email(email)
+      end
+    end
+
+    def assign_offer_providers_based_on_auto_join_emails
+      return unless email.present?
+
+      Offer::Provider.where("? = ANY(auto_join_emails)", email.downcase).find_each do |provider|
+        provider.link_user(self)
       end
     end
 

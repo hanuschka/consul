@@ -197,7 +197,7 @@ class Api::Budgets::InvestmentsController < Api::BaseController
   def restrict_to_public_budget_phases(scope)
     scope
       .joins(budget: :projekt_phase)
-      .where(projekt_phases: { frontend_visibility: true, active: true })
+      .where(projekt_phases: public_phase_conditions)
   end
 
   def apply_filters(budget_investments)

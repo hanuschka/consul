@@ -18,7 +18,7 @@ RSpec.describe "Poll Questions API", type: :request, openapi_spec: "v1/swagger.y
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 100, max: 2000)', required: false
 
       response "200", "questions found" do
-        let(:projekt) { Projekt.create!(name: "Projekt") }
+        let(:projekt) { Projekt.create!(name: "Projekt", activated: true) }
         let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
         let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
         let(:poll_id) { poll.id }

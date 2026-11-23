@@ -118,6 +118,7 @@ module Setting::ConfigurableKeys
           process.projekts
           process.deficiency_reports
           process.municipal_plans
+          process.offers
           process.ideas
           advanced_newsletter
           feature.featured_proposals

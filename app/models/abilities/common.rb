@@ -232,6 +232,17 @@ module Abilities
       can idea_read_actions, Idea, admin_accepted_at: (Time.zone.at(0)..)
       can idea_read_actions, Idea, author_id: user.id
       can [:create], Idea
+
+      offer_provider_ids = nil
+      provider_ids = -> { offer_provider_ids ||= Offer::Provider.for_user(user).ids }
+
+      can :create, Offer do |offer|
+        provider_ids.call.any? && (offer.provider_id.nil? || provider_ids.call.include?(offer.provider_id))
+      end
+
+      can :update, Offer do |offer|
+        offer.provider_id.present? && provider_ids.call.include?(offer.provider_id)
+      end
       can [:create], ProjektPointOfInterestPin do |pin|
         pin.projekt_phase.permission_problem(user).blank?
       end

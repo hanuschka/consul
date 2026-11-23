@@ -296,13 +296,14 @@ class ProjektPhase < ApplicationRecord
       .where("end_date IS NULL OR end_date >= ?", timestamp)
   }
 
-  # Phases of a projekt a visitor can actually reach: activated, and with its
-  # page published. Anything offered outside a session — the WhatsApp bot, a
-  # digest — has to narrow by this before it links to a phase.
+  # Phases of a projekt a visitor can actually reach: activated, not restricted
+  # to an individual group, and with its page published. Anything offered
+  # outside a session — the WhatsApp bot, a digest — has to narrow by this
+  # before it links to a phase.
   scope :of_publicly_visible_projekt, -> {
     joins(projekt: :page)
       .where(site_customization_pages: { status: "published" })
-      .merge(Projekt.activated)
+      .merge(Projekt.visible_for(nil))
   }
 
   scope :has_resources, -> {

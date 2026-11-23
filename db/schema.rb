@@ -2113,6 +2113,92 @@ ActiveRecord::Schema.define(version: 2026_11_19_162424) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "offer_categories", force: :cascade do |t|
+    t.string "kind", null: false
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["kind", "given_order"], name: "index_offer_categories_on_kind_and_given_order"
+  end
+
+  create_table "offer_category_assignments", force: :cascade do |t|
+    t.bigint "offer_id", null: false
+    t.bigint "offer_category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["offer_category_id"], name: "index_offer_category_assignments_on_offer_category_id"
+    t.index ["offer_id", "offer_category_id"], name: "index_offer_category_assignments_unique", unique: true
+    t.index ["offer_id"], name: "index_offer_category_assignments_on_offer_id"
+  end
+
+  create_table "offer_category_translations", force: :cascade do |t|
+    t.bigint "offer_category_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_offer_category_translations_on_locale"
+    t.index ["offer_category_id"], name: "index_offer_category_translations_on_offer_category_id"
+  end
+
+  create_table "offer_provider_users", force: :cascade do |t|
+    t.bigint "offer_provider_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["offer_provider_id", "user_id"], name: "index_offer_provider_users_unique", unique: true
+    t.index ["offer_provider_id"], name: "index_offer_provider_users_on_offer_provider_id"
+    t.index ["user_id"], name: "index_offer_provider_users_on_user_id"
+  end
+
+  create_table "offer_managers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_offer_managers_on_user_id", unique: true
+  end
+
+  create_table "offer_providers", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "auto_join_emails", default: [], null: false, array: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "last_reminded_at"
+  end
+
+  create_table "offer_translations", force: :cascade do |t|
+    t.bigint "offer_id", null: false
+    t.string "locale", null: false
+    t.string "title"
+    t.text "short_description"
+    t.text "times"
+    t.text "costs"
+    t.text "registration"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_offer_translations_on_locale"
+    t.index ["offer_id"], name: "index_offer_translations_on_offer_id"
+  end
+
+  create_table "offers", force: :cascade do |t|
+    t.string "address"
+    t.string "contact_name"
+    t.string "contact_phone"
+    t.string "contact_email"
+    t.string "contact_website"
+    t.bigint "author_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "provider_id"
+    t.integer "review_status", default: 0, null: false
+    t.datetime "suspended_at"
+    t.date "expires_on"
+    t.datetime "deactivated_at"
+    t.index ["author_id"], name: "index_offers_on_author_id"
+    t.index ["provider_id"], name: "index_offers_on_provider_id"
+    t.index ["review_status"], name: "index_offers_on_review_status"
+  end
+
   create_table "officing_manager_assignments", force: :cascade do |t|
     t.bigint "officing_manager_id", null: false
     t.bigint "projekt_phase_id", null: false
@@ -4148,6 +4234,13 @@ ActiveRecord::Schema.define(version: 2026_11_19_162424) do
   add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
+  add_foreign_key "offer_category_assignments", "offer_categories"
+  add_foreign_key "offer_category_assignments", "offers"
+  add_foreign_key "offer_managers", "users"
+  add_foreign_key "offer_provider_users", "offer_providers"
+  add_foreign_key "offer_provider_users", "users"
+  add_foreign_key "offers", "offer_providers", column: "provider_id"
+  add_foreign_key "offers", "users", column: "author_id", on_delete: :nullify
   add_foreign_key "officing_manager_assignments", "officing_managers"
   add_foreign_key "officing_manager_assignments", "projekt_phases"
   add_foreign_key "officing_managers", "users"

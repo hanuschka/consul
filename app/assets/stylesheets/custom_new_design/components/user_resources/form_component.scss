@@ -168,6 +168,23 @@ textarea.user-resources-form--banner-editor-title {
   }
 }
 
+.user-resources-form--banner-editor .banner-editor-image-attachment {
+  @media(min-width: 1280px) {
+    display: flex;
+    flex-direction: column;
+
+    .direct-image-upload {
+      flex: 1 1 0;
+      height: auto;
+      min-height: 0;
+    }
+
+    .image-upload-meta-row {
+      flex: 0 0 auto;
+    }
+  }
+}
+
 .banner-editor-image-attachment--placeholder {
   text-align: left;
   display: flex;

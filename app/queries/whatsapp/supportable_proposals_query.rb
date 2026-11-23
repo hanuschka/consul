@@ -22,6 +22,10 @@ class Whatsapp::SupportableProposalsQuery < ApplicationQuery
   def call
     return [] if @text.blank?
 
-    Proposal.base_selection.search(@text).limit(MAX_RESULTS).to_a
+    ::Whatsapp::ReachableContributionsQuery
+      .listed_proposals
+      .search(@text)
+      .limit(MAX_RESULTS)
+      .to_a
   end
 end

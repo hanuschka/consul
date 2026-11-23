@@ -1,0 +1,17 @@
+<% filter_icons = {
+  "offer_type" => "hands-helping",
+  "target_group" => "users",
+  "costs" => "euro-sign",
+  "accessibility" => "universal-access",
+  "social_area" => "map-marker-alt"
+} %>
+
+<% Offer::Category::KINDS.each do |kind| %>
+  <%= render Sidebar::CheckboxFilterComponent.new(
+    identifier: kind.to_sym,
+    options: Array(@categories_by_kind[kind]).map { |c| [c.name, c.id] },
+    title: t("activerecord.attributes.offer/category.kinds.#{kind}"),
+    icon: filter_icons[kind],
+    id_prefix: "filter_#{kind}"
+  ) %>
+<% end %>

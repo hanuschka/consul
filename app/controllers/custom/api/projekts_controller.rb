@@ -46,21 +46,14 @@ class Api::ProjektsController < Api::BaseController
   def index
     check_read_access!
 
-    only_public =
+    projekts =
       if current_client.public_data?
-        true
+        projekts_for_public_clients
+      elsif params[:only_public] != "false"
+        Projekt.activated.show_in_overview_page
       else
-        params[:only_public] != 'false'
+        Projekt.regular
       end
-
-    if only_public
-      projekts =
-        Projekt
-          .activated
-          .show_in_overview_page
-    else
-      projekts = Projekt.regular
-    end
 
     valid_filters = %w[index_order_all index_order_underway index_order_ongoing index_order_upcoming index_order_expired index_order_individual_list]
     valid_filters.push("index_order_drafts") if current_client.admin?
@@ -117,12 +110,8 @@ class Api::ProjektsController < Api::BaseController
   def show
     check_read_access!
 
-    if current_client.public_data?
-      show_in_overview = @projekt.projekt_settings.find_by(key: 'projekt_feature.general.show_in_overview_page')&.value == 'active'
-
-      unless @projekt.activated? && show_in_overview
-        return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
-      end
+    if current_client.public_data? && @projekt.hidden_for?(nil)
+      return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
     end
 
     include_phases = params[:include_phases] == 'true'
@@ -294,6 +283,10 @@ class Api::ProjektsController < Api::BaseController
   end
 
   private
+
+  def projekts_for_public_clients
+    Projekt.visible_for(nil).show_in_overview_page
+  end
 
   def sort_projekts(projekts)
     apply_sort_join(projekts)

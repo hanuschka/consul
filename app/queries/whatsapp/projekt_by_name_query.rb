@@ -32,7 +32,7 @@ class Whatsapp::ProjektByNameQuery < ApplicationQuery
   # wider set here rather than a second query object with the same matching rules
   # in it.
   #
-  # Everything reachable on the portal, which is the same two conditions
+  # Everything reachable on the portal, which is the projekt visibility
   # ProjektPhase.of_publicly_visible_projekt applies — deliberately not
   # index_order_all, whose third condition is `show_in_overview_page`. That flag
   # decides whether a projekt is *listed*, not whether it can be opened, and a
@@ -47,7 +47,7 @@ class Whatsapp::ProjektByNameQuery < ApplicationQuery
   # offered back rather than reported as matching nothing at all.
   def self.readable_candidates
     Projekt
-      .activated
+      .visible_for(nil)
       .order("projekts.created_at DESC")
       .includes(page: :translations)
   end
@@ -168,7 +168,14 @@ class Whatsapp::ProjektByNameQuery < ApplicationQuery
     # Materialised once. The default carries its own preload because every match
     # is decided on Whatsapp::ProjektLink.title, which reads the page.
     def loaded_candidates
-      @loaded_candidates ||= (@candidates || Projekt.index_order_underway.includes(:page)).to_a
+      @loaded_candidates ||= (@candidates || underway_candidates).to_a
+    end
+
+    def underway_candidates
+      Projekt
+        .index_order_underway
+        .visible_for(nil)
+        .includes(:page)
     end
 
     def title_of(projekt)

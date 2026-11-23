@@ -2,7 +2,7 @@ class PendingRoleAssignment < ApplicationRecord
   ROLE_TYPES = %w[
     Administrator Moderator Manager Valuator
     DeficiencyReportManager IdeaManager ProjektManager OfficingManager
-    LandingPageManager
+    LandingPageManager OfferManager
   ].freeze
 
   has_secure_token :invitation_token

@@ -1,6 +1,6 @@
 module ApiRecordHelper
   def create_projekt_phase(type)
-    projekt = Projekt.create!(name: "Projekt #{SecureRandom.hex(4)}")
+    projekt = Projekt.create!(name: "Projekt #{SecureRandom.hex(4)}", activated: true)
 
     projekt.projekt_phases.create!(type: type, active: true)
   end

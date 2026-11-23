@@ -1,0 +1,38 @@
+<% scope = "custom.offer_mailer.provider_reminder" %>
+<td style="<%= css_for_mailer_content %>">
+  <p style="<%= css_for_mailer_text %>">
+    <%= @user.recipient_greeting %>,
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("#{scope}.intro", provider: @provider.name) %>
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("#{scope}.offers_title") %>
+  </p>
+
+  <ul style="<%= css_for_mailer_text %>">
+    <% @offers.each do |offer| %>
+      <% state = (:suspended if offer.suspended?) || (:deactivated if offer.deactivated?) || (:expired if offer.expired?) %>
+      <li>
+        <%= link_to t("#{scope}.edit_link", title: offer.title), edit_offer_url(offer), style: "color: #004a83;" %>
+        <% if state %>
+          (<%= t("#{scope}.states.#{state}", date: offer.expires_on && l(offer.expires_on, format: "%d.%m.%Y")) %>)
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= t("#{scope}.closing") %>
+  </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
+</td>

@@ -10,10 +10,13 @@ module Whatsapp::BroadcastGuards
   # Asked again per batch, not only once by the fan-out: the batches are spread
   # over BATCH_INTERVAL each, so the last of them can run long after the first.
   def still_published?(projekt, context:)
-    return true if projekt.meets_publish_criteria?
+    if projekt.announceable_on_whatsapp?
+      return true
+    end
 
     Rails.logger.info(
-      "[Whatsapp] #{context} for projekt #{projekt.id} skipped: no longer published"
+      "[Whatsapp] #{context} for projekt #{projekt.id} skipped: " \
+      "no longer published or visible to everyone"
     )
 
     false

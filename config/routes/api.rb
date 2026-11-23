@@ -72,6 +72,7 @@
       end
     end
     resources :municipal_plan_topics, only: [:index]
+    resources :offers, only: [:index, :show]
     resources :polls, only: [:index, :show] do
       member do
         post :go_live

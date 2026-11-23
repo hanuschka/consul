@@ -13,11 +13,11 @@ RSpec.describe 'Texts API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Texts'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve the text drafts of a text participation (legislation) phase, oldest first. Each draft carries its title, changelog, text (Markdown `body` plus the rendered `body_html`) and status. Clients with `public_data` access only receive published drafts, and only for phases that are active and visible in the frontend; other phases return 403. A phase without drafts returns an empty list.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve the text drafts of a text participation (legislation) phase, oldest first. Each draft carries its title, changelog, text (Markdown `body` plus the rendered `body_html`) and status. Clients with `public_data` access only receive published drafts, and only for phases that are active and visible in the frontend, in a projekt an anonymous visitor can see (activated and not restricted to an individual group); other phases return 403. A phase without drafts returns an empty list.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
 
-      let(:projekt) { Projekt.create!(name: 'Projekt') }
+      let(:projekt) { Projekt.create!(name: 'Projekt', activated: true) }
       let(:legislation_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::LegislationPhase', active: true) }
       let(:projekt_phase_id) { legislation_phase.id }
       let(:legislation_process) { legislation_phase.reload.legislation_process }

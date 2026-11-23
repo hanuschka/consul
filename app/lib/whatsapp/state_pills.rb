@@ -123,18 +123,26 @@ module Whatsapp::StatePills
   # account, and manage_subscription refuses an unlinked one for the same reason.
   def projekt_buttons(projekt_id, conversation)
     user = conversation.user
-    projekt = ::Projekt.activated.find_by(id: projekt_id)
+    projekt = ::Projekt.find_by(id: projekt_id)
 
     return [] if user.blank? || projekt.blank?
 
-    action =
-      if ::Whatsapp::Subscriptions.following?(user: user, projekt: projekt)
-        :follow_disable
-      else
-        :follow_enable
-      end
+    action = follow_action(user, projekt)
+
+    return [] if action.blank?
 
     [pill(action: action, param: projekt.id, conversation: conversation)].compact
+  end
+
+  # Stopping is offered for every followed projekt, so one restricted after it
+  # was followed never traps anyone; following only for one an anonymous
+  # visitor can see.
+  def follow_action(user, projekt)
+    if ::Whatsapp::Subscriptions.following?(user: user, projekt: projekt)
+      :follow_disable
+    elsif projekt.visible_for?(nil)
+      :follow_enable
+    end
   end
 
   def pill(action:, param:, conversation:)

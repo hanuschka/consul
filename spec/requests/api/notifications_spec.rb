@@ -153,21 +153,21 @@ end
       tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a paginated list of all notifications across all projekt phases. Clients with `public_data` access only see notifications of phases that are active and visible in the frontend.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a paginated list of all notifications across all projekt phases. Clients with `public_data` access only see notifications of phases that are active and visible in the frontend, in projekts an anonymous visitor can see (activated and not restricted to an individual group).#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
       response '200', 'notifications of hidden or inactive phases left out for public_data clients' do
         let(:visible_phase) do
-          Projekt.create!(name: 'Visible').projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: true)
+          Projekt.create!(name: 'Visible', activated: true).projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: true)
         end
         let(:hidden_phase) do
-          Projekt.create!(name: 'Hidden').projekt_phases.create!(
+          Projekt.create!(name: 'Hidden', activated: true).projekt_phases.create!(
             type: 'ProjektPhase::ProjektNotificationPhase', active: true, frontend_visibility: false
           )
         end
         let(:inactive_phase) do
-          Projekt.create!(name: 'Inactive').projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: false)
+          Projekt.create!(name: 'Inactive', activated: true).projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: false)
         end
 
         before do

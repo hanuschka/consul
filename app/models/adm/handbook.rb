@@ -7,6 +7,7 @@ module Adm
       "moderation"         => "moderation",
       "deficiency_reports" => "maengelmelder",
       "municipal_plans"    => "vorhabenliste",
+      "offers"             => "angebote",
       "ideas"              => "ideen",
       "valuation"          => "budget-begutachtung",
       "officing"           => "abstimmungshelfer"

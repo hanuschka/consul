@@ -735,6 +735,10 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
 
       return support_refusal_note(supports, proposal) if supports.is_a?(Symbol)
 
+      if !::Whatsapp::ReachableContributionsQuery.listed_proposal?(proposal)
+        return unlisted_withdrawn_support_note
+      end
+
       ::Whatsapp::Send.message_block(
         account: account,
         block: ::Whatsapp::SupportRecap.withdrawn_block(
@@ -748,6 +752,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       )
 
       WITHDRAWN_NOTE
+    end
+
+    def unlisted_withdrawn_support_note
+      hint = ::Whatsapp::SupportRecap::UNLISTED_WITHDRAWN_HINT
+
+      conversation.note_completed_tool_result!(
+        tool: SUPPORT_BUTTON, result: { completed: true, withdrawn: true, hint: hint }
+      )
+
+      hint
     end
 
     # The rule underneath rather than the sentence, the same way a tool reports a
@@ -878,7 +892,7 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
         return FOLLOW_NOT_LINKED_NOTE
       end
 
-      projekt = ::Projekt.activated.find_by(id: param.to_i)
+      projekt = tapped_follow_projekt(action, param)
 
       return FOLLOW_GONE_NOTE if projekt.blank?
 
@@ -900,6 +914,16 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
       following ? followed_note(title) : unfollowed_note(title)
     rescue ActiveRecord::RecordNotFound
       FOLLOW_GONE_NOTE
+    end
+
+    # Following needs a projekt an anonymous visitor can see. Stopping works for
+    # any projekt, so one restricted after it was followed never traps anyone.
+    def tapped_follow_projekt(action, param)
+      if action == :follow_enable
+        ::Projekt.visible_for(nil).find_by(id: param.to_i)
+      else
+        ::Projekt.find_by(id: param.to_i)
+      end
     end
 
     def followed_note(title)
@@ -1870,7 +1894,11 @@ class Whatsapp::Inbound::ProcessMessageService < ApplicationService
     def entry_note(entry)
       return if entry.blank?
 
-      ENTRY_NOTES[entry] || sprintf(ENTRY_NOTES.fetch(:projekt), projekt: entry_projekt_title)
+      if entry == :projekt
+        return sprintf(ENTRY_NOTES.fetch(:projekt), projekt: entry_projekt_title)
+      end
+
+      ENTRY_NOTES[entry]
     end
 
     ENTRY_NOTES = {

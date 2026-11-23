@@ -57,7 +57,7 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
       end
 
       response '200', 'vote counts hidden from read-only clients while results are not public' do
-        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:projekt) { Projekt.create!(name: 'Projekt', activated: true) }
         let(:voting_phase) do
           projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true, frontend_visibility: true)
         end

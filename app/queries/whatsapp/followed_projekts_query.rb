@@ -21,13 +21,16 @@ class Whatsapp::FollowedProjektsQuery < ApplicationQuery
   def call
     return [] if @user.blank?
 
-    scope.offset(::Whatsapp::ListWindow.offset(@from)).limit(::Whatsapp::ListWindow::ROWS).to_a
+    listed_scope
+      .offset(::Whatsapp::ListWindow.offset(@from))
+      .limit(::Whatsapp::ListWindow::ROWS)
+      .to_a
   end
 
   def total
     return 0 if @user.blank?
 
-    scope.count
+    listed_scope.count
   end
 
   def uncapped
@@ -37,6 +40,13 @@ class Whatsapp::FollowedProjektsQuery < ApplicationQuery
   end
 
   private
+
+    # The list shows only what an anonymous visitor can see. Unfollowing still
+    # resolves against every followed projekt, so one restricted after it was
+    # followed never traps its followers in the subscriber newsletters.
+    def listed_scope
+      scope.visible_for(nil)
+    end
 
     # The title every match is decided on is Globalize-translated, so the
     # translations are preloaded with the page — without them each candidate

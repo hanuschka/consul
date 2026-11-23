@@ -232,7 +232,7 @@ end
       response '200', 'answer counts hidden from public_data clients when the question hides them' do
         before { api_client.update!(access_level: :public_data) }
 
-        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:projekt) { Projekt.create!(name: 'Projekt', activated: true) }
         let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
         let(:test_projekt_question) do
           question_phase.questions.create!(title: 'Hidden counts', show_answers_count: false).tap do |question|

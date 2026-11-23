@@ -47,7 +47,7 @@ class Whatsapp::OpenPollsQuery < ApplicationQuery
         .joins(projekt_phase: { projekt: :page })
         .merge(ProjektPhase.current)
         .where(site_customization_pages: { status: "published" })
-        .merge(Projekt.activated)
+        .merge(Projekt.visible_for(nil))
         .merge(Poll.published)
         .reorder(:ends_at)
 

@@ -16295,7 +16295,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve a paginated list of all livestreams across all projekt phases. Clients with `public_data` access only see livestreams of phases that are active and visible in the frontend.
+        Retrieve a paginated list of all livestreams across all projekt phases. Clients with `public_data` access only see livestreams of phases that are active and visible in the frontend, in projekts an anonymous visitor can see (activated and not restricted to an individual group).
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -18154,7 +18154,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve a paginated list of all notifications across all projekt phases. Clients with `public_data` access only see notifications of phases that are active and visible in the frontend.
+        Retrieve a paginated list of all notifications across all projekt phases. Clients with `public_data` access only see notifications of phases that are active and visible in the frontend, in projekts an anonymous visitor can see (activated and not restricted to an individual group).
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:
@@ -22903,10 +22903,12 @@ paths:
         (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring
         next at the top). By default returns only public projekts (activated and shown
         in the overview). Users with public_data access level can only access public
-        projekts. Pagination is optional: by default all matching projekts are returned,
-        but supplying 'page' (and optionally 'per_page', default 20) paginates the
-        results and adds a 'pagination' object to the response. \n\n*Authorization:
-        Available to both `admin` and `public_data` access levels.*"
+        projekts, and never see a projekt restricted to an individual group, matching
+        what an anonymous visitor sees on the website. Pagination is optional: by
+        default all matching projekts are returned, but supplying 'page' (and optionally
+        'per_page', default 20) paginates the results and adds a 'pagination' object
+        to the response. \n\n*Authorization: Available to both `admin` and `public_data`
+        access levels.*"
       parameters:
       - name: filter
         in: query
@@ -22959,7 +22961,7 @@ paths:
         in: query
         required: false
         description: |
-          If false, returns all projekts (admin only); true returns only activated projekts shown in overview. Users with public_data access can only access public projekts.
+          If false, returns all projekts (admin only); true returns only activated projekts shown in overview. Users with public_data access can only access public projekts and never see projekts restricted to an individual group.
 
           **Default:** true (only public projekts).
         schema:
@@ -23201,8 +23203,11 @@ paths:
       - bearer_auth: []
       description: "Retrieve a single projekt by ID with all its details. Can optionally
         include/exclude nested phases and content blocks. Returns full projekt hierarchy
-        information, page metadata, and settings. \n\n*Authorization: Available to
-        both `admin` and `public_data` access levels.*"
+        information, page metadata, and settings. Users with public_data access level
+        get 403 for a projekt an anonymous visitor cannot open on the website (not
+        activated, or restricted to an individual group). A projekt left out of the
+        overview can still be retrieved, as on the website by its address. \n\n*Authorization:
+        Available to both `admin` and `public_data` access levels.*"
       parameters:
       - name: include_phases
         in: query
@@ -26073,7 +26078,7 @@ paths:
       security:
       - bearer_auth: []
       description: |-
-        Retrieve the text drafts of a text participation (legislation) phase, oldest first. Each draft carries its title, changelog, text (Markdown `body` plus the rendered `body_html`) and status. Clients with `public_data` access only receive published drafts, and only for phases that are active and visible in the frontend; other phases return 403. A phase without drafts returns an empty list.
+        Retrieve the text drafts of a text participation (legislation) phase, oldest first. Each draft carries its title, changelog, text (Markdown `body` plus the rendered `body_html`) and status. Clients with `public_data` access only receive published drafts, and only for phases that are active and visible in the frontend, in a projekt an anonymous visitor can see (activated and not restricted to an individual group); other phases return 403. A phase without drafts returns an empty list.
 
         *Authorization: Available to both `admin` and `public_data` access levels.*
       parameters:

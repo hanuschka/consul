@@ -29,7 +29,11 @@ class Whatsapp::OpenableContributionsQuery < ApplicationQuery
   private
 
     def proposals
-      Proposal.base_selection.search(@text).limit(MAX_RESULTS).to_a
+      ::Whatsapp::ReachableContributionsQuery
+        .listed_proposals
+        .search(@text)
+        .limit(MAX_RESULTS)
+        .to_a
     end
 
     # not_unfeasible is what the portal itself lists, and acts_as_paranoid on
@@ -37,8 +41,8 @@ class Whatsapp::OpenableContributionsQuery < ApplicationQuery
     # re-queries by id and drops the ranking with it, which would otherwise make
     # the three that survive the limit arbitrary.
     def investments
-      Budget::Investment
-        .not_unfeasible
+      ::Whatsapp::ReachableContributionsQuery
+        .listed_investments
         .search(@text)
         .includes(:budget)
         .order(cached_votes_up: :desc)

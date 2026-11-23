@@ -384,7 +384,9 @@ class Api::BaseController < ActionController::API
     end
 
     def publicly_visible_phase?(projekt_phase)
-      projekt_phase.frontend_visibility && projekt_phase.active?
+      projekt_phase.frontend_visibility &&
+        projekt_phase.active? &&
+        Projekt.visible_projekt_ids_for(nil).include?(projekt_phase.projekt_id)
     end
 
     def phase_hidden_from_client?(projekt_phase)
@@ -415,7 +417,15 @@ class Api::BaseController < ActionController::API
     def restrict_to_public_phases(scope)
       scope
         .joins(:projekt_phase)
-        .where(projekt_phases: { frontend_visibility: true, active: true })
+        .where(projekt_phases: public_phase_conditions)
+    end
+
+    def public_phase_conditions
+      {
+        frontend_visibility: true,
+        active: true,
+        projekt_id: Projekt.visible_for(nil).select(:id)
+      }
     end
 
     # Clients send document files as base64 strings, which Active Storage

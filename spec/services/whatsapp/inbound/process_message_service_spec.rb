@@ -403,8 +403,9 @@ describe Whatsapp::Inbound::ProcessMessageService do
 
     before do
       allow(account).to receive(:user).and_return(user)
-      allow(Projekt).to receive_message_chain(:activated, :find_by)
+      allow(Projekt).to receive_message_chain(:visible_for, :find_by)
         .with(id: 45).and_return(projekt)
+      allow(Projekt).to receive(:find_by).with(id: 45).and_return(projekt)
       allow(Whatsapp::ProjektLink).to receive(:title).with(projekt).and_return("Radweg")
       allow(Whatsapp::Subscriptions).to receive(:follow)
       allow(Whatsapp::Subscriptions).to receive(:unfollow)

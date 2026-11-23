@@ -50,12 +50,14 @@ class Whatsapp::EligiblePhasesQuery < ApplicationQuery
 
   # Read off the already-loaded projekt rather than asked of the database: the
   # collection path eager-loads it, and both stores behind Projekt.activated are
-  # kept in sync, so the column is current whichever one the scope reads.
+  # kept in sync, so the column is current whichever one the scope reads. The
+  # group restriction comes from the per-request set of projekts an anonymous
+  # visitor can see, one query however many phases are checked.
   def self.projekt_visible?(projekt)
     return false if projekt.blank?
     return false if projekt.page&.status != "published"
 
-    projekt.activated?
+    projekt.activated? && projekt.visible_for?(nil)
   end
 
   # The subset an unlinked number may submit to. Narrowed in the query rather

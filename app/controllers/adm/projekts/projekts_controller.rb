@@ -533,7 +533,7 @@ class Adm::Projekts::ProjektsController < Adm::Projekts::BaseController
         alert: t("adm.projekts.projekts.whatsapp_broadcast.not_configured")
     end
 
-    if !@projekt.meets_publish_criteria?
+    if !@projekt.announceable_on_whatsapp?
       return redirect_to details_adm_projekts_projekt_path(@projekt),
         alert: t("adm.projekts.projekts.whatsapp_broadcast.not_published")
     end

@@ -7,7 +7,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
   def create_phase_with_context
-    projekt = Projekt.create!(name: 'Projekt For Proposals')
+    projekt = Projekt.create!(name: 'Projekt For Proposals', activated: true)
     geozone = Geozone.create!(name: "Zone #{SecureRandom.hex(2)}")
     phase = projekt.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true, phase_tab_name: 'Proposals')
     [projekt, geozone, phase]

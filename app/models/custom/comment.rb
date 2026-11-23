@@ -11,7 +11,12 @@ class Comment < ApplicationRecord
   scope :on_public_projekt_phases, -> {
     where(
       commentable_type: "ProjektPhase",
-      commentable_id: ProjektPhase.frontend_visible.active.select(:id)
+      commentable_id:
+        ProjektPhase
+          .frontend_visible
+          .active
+          .where(projekt_id: Projekt.visible_for(nil).select(:id))
+          .select(:id)
     )
   }
 

@@ -37,6 +37,14 @@ class Ai::Tools::WhatsappAiAssistant::WithdrawSupport < Ai::Tools::WhatsappAiAss
     def withdrawn_answer(contribution_id, supports)
       proposal = ::Proposal.find_by(id: contribution_id)
 
+      if !::Whatsapp::ReachableContributionsQuery.listed_proposal?(proposal)
+        return {
+          completed: true,
+          withdrawn: true,
+          hint: ::Whatsapp::SupportRecap::UNLISTED_WITHDRAWN_HINT
+        }
+      end
+
       send_recap(proposal: proposal, supports: supports)
 
       {

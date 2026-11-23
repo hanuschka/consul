@@ -44,10 +44,6 @@ class ProjektPhase::FormularPhase < ProjektPhase
     formular.blank?
   end
 
-  def subscribable?
-    false
-  end
-
   private
 
     def phase_specific_permission_problems(user, location)

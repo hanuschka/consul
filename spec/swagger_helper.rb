@@ -5,6 +5,7 @@ require_relative 'shared/api_client_helper'
 require_relative 'shared/api_record_helper'
 require_relative 'shared/api_access_requirements'
 require_relative 'shared/api_response_examples'
+require_relative 'schemas/miscellaneous_schemas'
 require_relative 'schemas/projekts_schemas'
 require_relative 'schemas/ideas_schemas'
 require_relative 'schemas/comments_proposals_schemas'
@@ -13,7 +14,7 @@ require_relative 'schemas/questions_formulars_schemas'
 require_relative 'schemas/deficiency_reports_schemas'
 require_relative 'schemas/milestones_livestreams_schemas'
 require_relative 'schemas/point_of_interest_schemas'
-require_relative 'schemas/miscellaneous_schemas'
+require_relative 'schemas/municipal_plans_schemas'
 require_relative 'schemas/polls_schemas'
 require_relative 'schemas/configuration_schemas'
 
@@ -102,6 +103,11 @@ RSpec.configure do |config|
         { name: 'Idea Categories', description: 'Categories for citizen ideas' },
         { name: 'Idea Officers', description: 'Officers responsible for citizen ideas' },
         { name: 'Deficiency Report Categories', description: 'Categories for deficiency reports' },
+        { name: 'Deficiency Report Subcategories', description: 'Subcategories within the deficiency report categories' },
+        { name: 'Deficiency Report Statuses', description: 'Statuses a deficiency report moves through' },
+        { name: 'Deficiency Report Intake Channels', description: 'Channels a deficiency report reaches the municipality through' },
+        { name: 'Deficiency Report Answer Templates', description: 'Templates for official answers (admin clients)' },
+        { name: 'Municipal Plans', description: 'Vorhaben of the Vorhabenliste and their Themen' },
         { name: 'Masterportal', description: 'Masterportal GIS integration endpoints' },
         { name: 'Configuration Settings', description: 'Typed instance settings: metadata, branding, modules' },
         { name: 'Configuration Media', description: 'Logo, image and video slots of the instance' },
@@ -152,7 +158,18 @@ RSpec.configure do |config|
         },
         {
           name: 'Deficiency Reports',
-          tags: ['Deficiency Reports', 'Deficiency Report Categories']
+          tags: [
+            'Deficiency Reports',
+            'Deficiency Report Categories',
+            'Deficiency Report Subcategories',
+            'Deficiency Report Statuses',
+            'Deficiency Report Intake Channels',
+            'Deficiency Report Answer Templates'
+          ]
+        },
+        {
+          name: 'Municipal Plans',
+          tags: ['Municipal Plans']
         },
         {
           name: 'Integrations',
@@ -196,6 +213,7 @@ RSpec.configure do |config|
                          .merge(Schemas::DeficiencyReports.all)
                          .merge(Schemas::MilestonesLivestreams.all)
                          .merge(Schemas::PointOfInterest.all)
+                         .merge(Schemas::MunicipalPlans.all)
                          .merge(Schemas::Miscellaneous.all)
                          .merge(Schemas::Polls.all)
                          .merge(Schemas::Configuration.all)

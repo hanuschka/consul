@@ -46,11 +46,6 @@
     </div>
   <% end %>
 
-  <% if phase.subscribable? && projekt_feature?(phase.projekt, "sidebar.show_notification_subscription_toggler") %>
-    <div class="phase-subscription">
-      <%= render "custom/projekts/partials/phase_subscription", phase: phase %>
-    </div>
-  <% end %>
   <% if helpers.show_admin_controls_for_projekt?(phase.projekt) %>
     <div class="projekt-phase--actions">
       <div class="projekt-phase--actions-first-block d-flex">

@@ -40,7 +40,7 @@ describe MunicipalPlanMailer do
 
   describe "notice_submitted" do
     let(:notice) do
-      plan.notices.create!(name: "Kai Ostermann", email: "kai@example.org",
+      plan.notices.create!(name: "Anna Muster", email: "anna@example.org",
                            body: "Bitte prüfen Sie den Zeitplan.")
     end
     let(:mail) { MunicipalPlanMailer.notice_submitted(notice, "amt@jena.example") }
@@ -52,13 +52,13 @@ describe MunicipalPlanMailer do
 
     it "links to the Vorhaben and carries the Hinweis with its sender" do
       expect(mail.body.encoded).to include(municipal_plan_url(plan, host: mail_host))
-      expect(mail.body.encoded).to include("Kai Ostermann")
-      expect(mail.body.encoded).to include("kai@example.org")
+      expect(mail.body.encoded).to include("Anna Muster")
+      expect(mail.body.encoded).to include("anna@example.org")
       expect(mail.body.encoded).to include("Bitte")
     end
 
     it "manages a Hinweis without a Name" do
-      anonymous = plan.notices.create!(email: "kai@example.org", body: "Anonym")
+      anonymous = plan.notices.create!(email: "anna@example.org", body: "Anonym")
 
       expect { MunicipalPlanMailer.notice_submitted(anonymous, "amt@jena.example").deliver_now }
         .to change { ActionMailer::Base.deliveries.count }.by(1)

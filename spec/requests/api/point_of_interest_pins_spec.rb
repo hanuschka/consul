@@ -59,7 +59,7 @@ end
                    properties: {
                      pins: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/PointOfInterestPin' }
                      }
                    },
                    required: ['pins']
@@ -67,6 +67,17 @@ end
                  pagination: Schemas::Miscellaneous::PAGINATION_RESPONSE_SCHEMA
                },
                required: ['data']
+
+        run_test!
+      end
+
+      response '403', 'phase hidden from read-only clients' do
+        let(:projekt_phase_id) { existing_poi_phase.id }
+
+        before do
+          api_client.update!(access_level: :public_data)
+          existing_poi_phase.update_column(:frontend_visibility, false)
+        end
 
         run_test!
       end
@@ -79,43 +90,35 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Create a new point of interest pin on the map. Pins mark specific locations with descriptions and categories. The pin is attributed to the content author of the API client; the author cannot be set or changed via the API. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Create a new point of interest pin on the map. Pins mark specific locations with descriptions, shapes and categories. Send external_source and external_id to sync pins from another system without duplicates; a second pin with the same pair in the phase is rejected. The pin is attributed to the content author of the API client; the author cannot be set or changed via the API. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_point_of_interest_pin, in: :body, description: 'Projekt point of interest pin creation payload', schema: {
-        type: :object,
-        properties: {
-          projekt_point_of_interest_pin: {
-            type: :object,
-            properties: {
-              projekt_point_of_interest_category_id: { type: :integer, nullable: true },
-              description: { type: :string, nullable: true },
-              map_location_attributes: {
-                type: :object,
-                properties: {
-                  latitude: { type: :number, format: :float, nullable: true },
-                  longitude: { type: :number, format: :float, nullable: true },
-                  zoom: { type: :integer, nullable: true }
-                }
-              }
-            }
-          }
-        },
-        required: ['projekt_point_of_interest_pin']
-      }
+      parameter name: :projekt_point_of_interest_pin, in: :body, description: 'Projekt point of interest pin creation payload', schema: { '$ref' => '#/components/schemas/PointOfInterestPinWriteParams' }
 
       response '201', 'projekt point of interest pin created' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
         let(:poi_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::PointOfInterestPhase', active: true) }
         let(:category) { poi_phase.projekt_point_of_interest_categories.create!(name: 'Test Category', color: '#FF0000', icon: 'icon-name') }
         let(:projekt_phase_id) { poi_phase.id }
+        let(:polygon) { [[[13.40, 52.52], [13.41, 52.52], [13.41, 52.53], [13.40, 52.52]]] }
         let(:projekt_point_of_interest_pin) do
           {
             projekt_point_of_interest_pin: {
               projekt_point_of_interest_category_id: category.id,
+              external_source: 'stadtportal',
+              external_id: 'A-1042',
+              translations: {
+                de: { description: 'Stadtbibliothek' },
+                en: { description: 'City library' }
+              },
               map_location_attributes: {
                 latitude: 52.5200,
                 longitude: 13.4050,
-                zoom: 15
+                zoom: 15,
+                pin_color: '#004a83',
+                features: {
+                  type: 'FeatureCollection',
+                  features: [{ type: 'Feature', geometry: { type: 'Polygon', coordinates: polygon }, properties: {} }]
+                }
               }
             }
           }
@@ -126,14 +129,22 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     pin: { type: :object }
+                     pin: { '$ref' => '#/components/schemas/PointOfInterestPin' }
                    },
                    required: ['pin']
                  }
                },
                required: ['data']
 
-        run_test!
+        run_test! do |response|
+          pin_data = JSON.parse(response.body)['data']['pin']
+
+          expect(pin_data['external_source']).to eq('stadtportal')
+          expect(pin_data['external_id']).to eq('A-1042')
+          expect(pin_data['translations']['en']['description']).to eq('City library')
+          expect(pin_data['map_location']['pin_color']).to eq('#004a83')
+          expect(pin_data['map_location']['features']['features'].first['geometry']['coordinates']).to eq(polygon)
+        end
       end
 
       response '422', 'invalid request' do
@@ -143,19 +154,14 @@ end
         let(:projekt_point_of_interest_pin) do
           {
             projekt_point_of_interest_pin: {
+              external_id: 'A-1',
               map_location_attributes: {
-                latitude: 'invalid',
-                longitude: 'invalid'
+                latitude: 52.52,
+                longitude: 13.405,
+                zoom: 15
               }
             }
           }
-        end
-
-        before do
-          allow_any_instance_of(ProjektPointOfInterestPin).to receive(:save).and_return(false)
-          errors_mock = double('errors').as_null_object
-          allow(errors_mock).to receive(:full_messages).and_return(['Map location is invalid'])
-          allow_any_instance_of(ProjektPointOfInterestPin).to receive(:errors).and_return(errors_mock)
         end
 
         schema type: :object,
@@ -224,7 +230,7 @@ end
                    properties: {
                      pins: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/PointOfInterestPin' }
                      }
                    },
                    required: ['pins']
@@ -273,7 +279,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     pin: { type: :object }
+                     pin: { '$ref' => '#/components/schemas/PointOfInterestPin' }
                    },
                    required: ['pin']
                  }
@@ -299,27 +305,7 @@ end
       security [bearer_auth: []]
       description "Update an existing point of interest pin. Allows modifying pin location, description, and category. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_point_of_interest_pin, in: :body, description: 'Attributes to update on the projekt point of interest pin', schema: {
-        type: :object,
-        properties: {
-          projekt_point_of_interest_pin: {
-            type: :object,
-            properties: {
-              projekt_point_of_interest_category_id: { type: :integer, nullable: true },
-              description: { type: :string, nullable: true },
-              map_location_attributes: {
-                type: :object,
-                properties: {
-                  latitude: { type: :number, format: :float, nullable: true },
-                  longitude: { type: :number, format: :float, nullable: true },
-                  zoom: { type: :integer, nullable: true }
-                }
-              }
-            }
-          }
-        },
-        required: ['projekt_point_of_interest_pin']
-      }
+      parameter name: :projekt_point_of_interest_pin, in: :body, description: 'Attributes to update on the projekt point of interest pin', schema: { '$ref' => '#/components/schemas/PointOfInterestPinWriteParams' }
 
       response '200', 'projekt point of interest pin updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -356,7 +342,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     pin: { type: :object }
+                     pin: { '$ref' => '#/components/schemas/PointOfInterestPin' }
                    },
                    required: ['pin']
                  }
@@ -400,18 +386,10 @@ end
           {
             projekt_point_of_interest_pin: {
               map_location_attributes: {
-                latitude: 'invalid',
-                longitude: 'invalid'
+                latitude: 'not a number'
               }
             }
           }
-        end
-
-        before do
-          allow_any_instance_of(ProjektPointOfInterestPin).to receive(:save).and_return(false)
-          errors_mock = double('errors').as_null_object
-          allow(errors_mock).to receive(:full_messages).and_return(['Map location is invalid'])
-          allow_any_instance_of(ProjektPointOfInterestPin).to receive(:errors).and_return(errors_mock)
         end
 
         schema type: :object,

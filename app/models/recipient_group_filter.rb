@@ -1,7 +1,7 @@
 class RecipientGroupFilter < ApplicationRecord
   KINDS = %w[
     newsletter_subscribers role
-    phase_authors phase_subscribers projekt_subscribers comment_authors voting_participants
+    phase_authors projekt_subscribers comment_authors voting_participants
     district plz age_range gender
     individual_group manual_users
   ].freeze
@@ -12,7 +12,6 @@ class RecipientGroupFilter < ApplicationRecord
     "newsletter_subscribers" => [],
     "role"                   => ["role"],
     "phase_authors"          => ["projekt_phase_id"],
-    "phase_subscribers"      => [], # validated below — either projekt_id OR projekt_phase_id
     "projekt_subscribers"    => ["projekt_id"],
     "comment_authors"        => [],
     "voting_participants"    => ["projekt_phase_id"],

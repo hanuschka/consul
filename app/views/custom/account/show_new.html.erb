@@ -109,6 +109,20 @@
         <% end %>
       <% end %>
 
+      <%= render Shared::SidebarCardComponent.new(
+        title: t("custom.account.show.projekt_subscriptions"),
+        icon_name: "bell"
+      ) do |c| %>
+        <p class="projekt-subscription-list--hint">
+          <%= t("custom.account.subscriptions.projekts.description") %>
+        </p>
+
+        <%= render Projekts::SubscriptionListComponent.new(
+          subscriptions: @projekt_subscriptions,
+          toggle_path: ->(projekt) { projekt_subscription_path(projekt) }
+        ) %>
+      <% end %>
+
       <% if Whatsapp.enabled? %>
         <%= render Shared::SidebarCardComponent.new(
           title: t("whatsapp.account.title"),

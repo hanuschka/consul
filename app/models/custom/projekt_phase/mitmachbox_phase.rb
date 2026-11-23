@@ -23,10 +23,6 @@ class ProjektPhase::MitmachboxPhase < ProjektPhase
     []
   end
 
-  def subscribable?
-    false
-  end
-
   def safe_to_destroy?
     true
   end

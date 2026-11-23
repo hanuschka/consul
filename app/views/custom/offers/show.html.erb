@@ -1,0 +1,229 @@
+<%= content_for :body_class, "offers-show" %>
+<% provide :title do %><%= @offer.title %><% end %>
+<% plain_description = truncate(strip_tags(wysiwyg(@offer.short_description)), length: 300) %>
+<% content_for :meta_description do %><%= plain_description %><% end %>
+<% provide :social_media_meta_tags do %>
+  <%= render "shared/social_media_meta_tags",
+              social_url: offer_url(@offer),
+              social_title: @offer.title,
+              social_description: plain_description %>
+<% end %>
+<% content_for :canonical do %>
+  <%= render "shared/canonical", href: offer_url(@offer) %>
+<% end %>
+
+<% kind_label = ->(kind) { t("activerecord.attributes.offer/category.kinds.#{kind}") } %>
+<% category_names = ->(kind) { @offer.categories_of(kind).map(&:name).select(&:present?) } %>
+<% hero_kinds = { offer_type: "tag", social_area: "map-marker-alt" }.select { |kind, _| category_names.call(kind).any? } %>
+<% target_groups = category_names.call(:target_group) %>
+<% cost_names = category_names.call(:costs) %>
+<% accessibility_names = category_names.call(:accessibility) %>
+<% details_present = target_groups.any? || cost_names.any? || accessibility_names.any? ||
+                     [@offer.times, @offer.costs, @offer.registration].any?(&:present?) %>
+<% map_location = @offer.map_location if @offer.map_location&.available? %>
+<% contact_present = [@offer.contact_name, @offer.contact_phone, @offer.contact_email, @offer.contact_website].any?(&:present?) %>
+
+<main>
+  <div class="resource-page">
+    <div class="flex-layout">
+      <div class="main-column">
+        <% if Setting["process.offers"].present? %>
+          <%= back_link_to(offers_path, t("custom.offers.show.back")) %>
+        <% end %>
+
+        <% if @offer.suspended? %>
+          <div class="callout warning margin-top">
+            <strong><%= t("custom.offers.show.suspended_notice") %></strong>
+          </div>
+        <% end %>
+
+        <% if @offer.deactivated? %>
+          <div class="callout warning margin-top">
+            <strong><%= t("custom.offers.show.deactivated_notice") %></strong>
+          </div>
+        <% end %>
+
+        <% if @offer.expired? %>
+          <div class="callout warning margin-top">
+            <strong><%= t("custom.offers.show.expired_notice") %></strong>
+          </div>
+        <% end %>
+      </div>
+      <div class="sidebar-placeholder"></div>
+    </div>
+
+    <div class="municipal-plan-hero">
+      <% if hero_kinds.any? %>
+        <div class="municipal-plan-hero--chips">
+          <% hero_kinds.each do |kind, icon| %>
+            <span class="show-for-sr"><%= kind_label.call(kind) %>:</span>
+            <ul class="municipal-plan-hero--topics">
+              <% category_names.call(kind).each do |name| %>
+                <li>
+                  <span class="municipal-plan-hero--chip">
+                    <i class="fas fa-<%= icon %>" aria-hidden="true"></i>
+                    <%= name %>
+                  </span>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </div>
+      <% end %>
+
+      <h1 class="municipal-plan-hero--title"><%= @offer.title %></h1>
+    </div>
+
+    <div class="flex-layout">
+      <div class="main-column">
+        <% if show_image_thumbnail?(@offer) %>
+          <div class="new-card main-content-card">
+            <%= render Shared::ResourceImageComponent.new(
+              image_url: @offer.image.attachment_variant(resize_to_limit: [1200, 675], saver: { quality: 85 }, format: "jpeg"),
+              image_placeholder_icon_class: "fa-hand-holding-heart",
+              resource: @offer,
+              ai_generated: @offer.image.ai_generated?
+            ) %>
+          </div>
+        <% end %>
+
+        <div class="new-card main-content-card municipal-plan-block municipal-plan-intro">
+          <h2 class="municipal-plan-block--eyebrow"><%= t("custom.offers.show.intro.title") %></h2>
+          <div class="municipal-plan-block--text">
+            <%= auto_link_already_sanitized_html(wysiwyg(@offer.short_description)) %>
+          </div>
+        </div>
+
+        <% if details_present %>
+          <section class="new-card main-content-card municipal-plan-block" aria-labelledby="offer-details-title">
+            <div class="municipal-plan-block--heading">
+              <span class="municipal-plan-block--icon" aria-hidden="true"><i class="fas fa-info"></i></span>
+              <h2 id="offer-details-title" class="municipal-plan-block--title"><%= t("custom.offers.show.details.title") %></h2>
+            </div>
+            <dl class="municipal-plan-block--text">
+              <% if target_groups.any? %>
+                <dt><%= kind_label.call(:target_group) %></dt>
+                <dd><%= target_groups.join(", ") %></dd>
+              <% end %>
+              <% if @offer.times.present? %>
+                <dt><%= Offer.human_attribute_name(:times) %></dt>
+                <dd><%= simple_format(h(@offer.times)) %></dd>
+              <% end %>
+              <% if cost_names.any? || @offer.costs.present? %>
+                <dt><%= kind_label.call(:costs) %></dt>
+                <dd>
+                  <% if cost_names.any? %>
+                    <p><%= cost_names.join(", ") %></p>
+                  <% end %>
+                  <% if @offer.costs.present? %>
+                    <%= simple_format(h(@offer.costs)) %>
+                  <% end %>
+                </dd>
+              <% end %>
+              <% if @offer.registration.present? %>
+                <dt><%= Offer.human_attribute_name(:registration) %></dt>
+                <dd><%= simple_format(h(@offer.registration)) %></dd>
+              <% end %>
+              <% if accessibility_names.any? %>
+                <dt><%= kind_label.call(:accessibility) %></dt>
+                <dd><%= accessibility_names.join(", ") %></dd>
+              <% end %>
+            </dl>
+          </section>
+        <% end %>
+
+        <% if map_location.present? || @offer.address.present? %>
+          <section class="municipal-plan-block municipal-plan-location" aria-labelledby="offer-location-title">
+            <h2 id="offer-location-title" class="show-for-sr"><%= t("custom.offers.show.location.title") %></h2>
+
+            <div class="new-card main-content-card municipal-plan-location--card">
+              <% if map_location.present? %>
+                <div class="municipal-plan-location--map not-print">
+                  <%= render Shared::MapComponent.new(
+                    mappable: @offer,
+                    features: map_location.features_json_data
+                  ) %>
+                </div>
+              <% end %>
+
+              <% if @offer.address.present? %>
+                <div class="municipal-plan-location--footer">
+                  <span class="municipal-plan-location--icon" aria-hidden="true"><i class="fas fa-map-marker-alt"></i></span>
+                  <div>
+                    <h3 class="municipal-plan-location--label"><%= Offer.human_attribute_name(:address) %></h3>
+                    <p class="municipal-plan-location--address"><%= @offer.address %></p>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </section>
+        <% end %>
+      </div>
+
+      <aside class="sidebar">
+        <% if can?(:update, @offer) %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.offers.edit.title"), icon_name: "edit", opened_on_mobile: true)) do %>
+            <%= link_to edit_offer_path(@offer), class: "button hollow expanded municipal-plan-sidebar--button" do %>
+              <i class="fas fa-edit" aria-hidden="true"></i>
+              <%= t("custom.offers.show.edit") %>
+            <% end %>
+
+            <% activation = @offer.deactivated? ? :activate : :deactivate %>
+            <% activation_path = @offer.deactivated? ? activate_offer_path(@offer) : deactivate_offer_path(@offer) %>
+            <%= button_to activation_path,
+              method: :patch,
+              class: "button hollow expanded municipal-plan-sidebar--button",
+              "aria-describedby": "offer-activation-hint" do %>
+              <i class="fas fa-power-off" aria-hidden="true"></i>
+              <%= t("custom.offers.show.#{activation}") %>
+            <% end %>
+            <p id="offer-activation-hint" class="help-text"><%= t("custom.offers.show.#{activation}_hint") %></p>
+          <% end %>
+        <% end %>
+
+        <% if contact_present %>
+          <%= render(Shared::SidebarCardComponent.new(title: t("custom.offers.show.contact.title"), icon_name: "address-card", opened_on_mobile: true)) do %>
+            <dl class="municipal-plan-glance">
+              <% if @offer.contact_name.present? %>
+                <div class="municipal-plan-glance--row">
+                  <dt><%= t("custom.offers.show.contact.name") %>:</dt>
+                  <dd><%= @offer.contact_name %></dd>
+                </div>
+              <% end %>
+              <% if @offer.contact_phone.present? %>
+                <div class="municipal-plan-glance--row">
+                  <dt><%= Offer.human_attribute_name(:contact_phone) %>:</dt>
+                  <dd>
+                    <% if @offer.contact_phone.match?(/\d/) %>
+                      <%= link_to @offer.contact_phone, "tel:#{@offer.contact_phone.gsub(/[^0-9+]/, "")}" %>
+                    <% else %>
+                      <%= @offer.contact_phone %>
+                    <% end %>
+                  </dd>
+                </div>
+              <% end %>
+              <% if @offer.contact_email.present? %>
+                <div class="municipal-plan-glance--row">
+                  <dt><%= Offer.human_attribute_name(:contact_email) %>:</dt>
+                  <dd><%= mail_to @offer.contact_email %></dd>
+                </div>
+              <% end %>
+              <% if @offer.contact_website.present? %>
+                <div class="municipal-plan-glance--row">
+                  <dt><%= Offer.human_attribute_name(:contact_website) %>:</dt>
+                  <dd>
+                    <%= link_to @offer.contact_website, target: "_blank", rel: "noopener" do %>
+                      <%= @offer.contact_website %>
+                      <span class="show-for-sr"><%= t("custom.offers.show.opens_in_new_tab") %></span>
+                      <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+                    <% end %>
+                  </dd>
+                </div>
+              <% end %>
+            </dl>
+          <% end %>
+        <% end %>
+      </aside>
+    </div>
+  </div>
+</main>

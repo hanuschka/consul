@@ -12,6 +12,14 @@ User.class_eval do
     created_at: "created_at", verified_at: "verified_at" }.freeze
 
   User::RECIPIENT_GREETING_OPTIONS = %w[username first_name full_name formal].freeze
+  User::ERASED_PERSONAL_DATA = %i[
+    first_name last_name date_of_birth gender street_name street_number street_number_extension
+    plz city_name registered_address_id city_street_id geozone_id
+    document_type document_last_digits current_sign_in_ip last_sign_in_ip guest_user_agent oauth_email
+    company_name official_position auth_image_link temporary_auth_token
+    temporary_auth_token_valid_until letter_verification_code redeemable_code
+    sms_confirmation_code verified_at
+  ].index_with(nil).freeze
 
   devise :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable,
          :timeoutable,
@@ -44,6 +52,7 @@ User.class_eval do
   after_create -> { update_column(:geozone_id, geozone_with_plz&.id) }
   after_create :assign_individual_group_values_based_on_email_pattern
   after_create :assign_individual_group_values_based_on_auto_join_emails
+  after_create :assign_offer_providers_based_on_auto_join_emails
   after_create :fulfill_pending_role_assignments
 
   has_many :projekts, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
@@ -53,6 +62,7 @@ User.class_eval do
   has_many :deficiency_reports, -> { with_hidden }, foreign_key: :author_id, inverse_of: :author
   has_many :user_individual_group_values, dependent: :destroy
   has_many :individual_group_values, through: :user_individual_group_values
+  has_many :offer_provider_users, class_name: "Offer::ProviderUser", dependent: :destroy
   has_one :deficiency_report_officer, class_name: "DeficiencyReport::Officer"
   has_one :municipal_plan_officer, class_name: "MunicipalPlan::Officer"
   has_one :projekt_manager
@@ -62,6 +72,7 @@ User.class_eval do
   has_one :idea_officer, class_name: "Idea::Officer"
   has_one :idea_manager
   has_one :officing_manager
+  has_one :offer_manager, dependent: :destroy
   belongs_to :registered_address, optional: true
 
   has_many :projekt_subscriptions, -> { where(active: true) }
@@ -229,7 +240,7 @@ User.class_eval do
     return if erased?
     return if unique_stamp.blank?
 
-    erased_user = User.erased.find_by(unique_stamp: unique_stamp)
+    erased_user = User.erased.find_by(unique_stamp: User.erased_identifier(unique_stamp))
 
     if erased_user.present?
       take_votes_from(erased_user)
@@ -239,6 +250,26 @@ User.class_eval do
 
   def stamp_unique?
     User.where.not(id: id).find_by(unique_stamp: prepare_unique_stamp).blank?
+  end
+
+  def self.erased_identifier(value)
+    return if value.blank?
+
+    secret = Rails.application.secret_key_base
+    OpenSSL::HMAC.hexdigest("SHA256", secret, "erased user identifier:#{value}").upcase
+  end
+
+  def self.erased_document_identifier(document_number, document_type)
+    return if document_number.blank?
+
+    erased_identifier("#{document_type}:#{document_number}")
+  end
+
+  def erased_identity_digests
+    {
+      unique_stamp: User.erased_identifier(unique_stamp.presence || prepare_unique_stamp),
+      document_number: User.erased_document_identifier(document_number, document_type)
+    }
   end
 
   def prepare_unique_stamp
@@ -418,6 +449,10 @@ User.class_eval do
     email_on_direct_message? || sender.bypasses_direct_message_reception?
   end
 
+  def offer_manager?
+    offer_manager.present?
+  end
+
   def recipient_greeting
     case Setting["email_templates.recipient_greeting"]
     when "first_name" then informal_recipient_greeting(first_name)
@@ -428,7 +463,9 @@ User.class_eval do
   end
 
   def send_welcome_email
-    Mailer.welcome(self).deliver_later if Setting["email_templates.welcome_email"].present?
+    return if User.where(id: id, welcome_email_sent_at: nil).update_all(welcome_email_sent_at: Time.current).zero?
+
+    Mailer.welcome(self).deliver_later
   end
 
   private
@@ -517,9 +554,33 @@ User.class_eval do
       audits.destroy_all
     end
 
+    def remove_personal_records
+      FailedCensusCall.where(user_id: id).delete_all
+      Poll::Voter.where(user_id: id).update_all(document_number: nil, gender: nil)
+      Signature.where(user_id: id).update_all(document_number: nil, date_of_birth: nil, postal_code: nil)
+      ProjektEventRegistration.where(user_id: id).update_all(first_name: nil, last_name: nil, email: nil)
+      SectionContactPerson.where(user_id: id).destroy_all
+      GraphqlUser.where(user_id: id).delete_all
+      Audit.where(user_type: "User", user_id: id).update_all(remote_address: nil)
+      remove_formular_answer_contact_data
+      return unless User.connection.table_exists?(:visits)
+
+      User.connection.delete(User.sanitize_sql(["DELETE FROM visits WHERE user_id = ?", id]))
+    end
+
+    def remove_formular_answer_contact_data
+      formular_answers = FormularAnswer.where(submitter_id: id)
+      FormularFollowUpLetterRecipient.where(formular_answer_id: formular_answers.select(:id)).delete_all
+
+      formular_answers.includes(formular: :formular_fields).find_each do |answer|
+        email_keys = answer.formular_fields.select { |field| field.kind == "email" }.map(&:key)
+        answer.update_columns(original_submitter_email: nil, answers: answer.answers.except(*email_keys))
+      end
+    end
+
     def remove_subscriptions
-      projekt_subscriptions.destroy_all
-      projekt_phase_subscriptions.destroy_all
+      ProjektSubscription.where(user_id: id).delete_all
+      ProjektPhaseSubscription.where(user_id: id).delete_all
       whatsapp_account&.destroy!
     end
 
@@ -564,6 +625,14 @@ User.class_eval do
       IndividualGroupValue.where("? = ANY(auto_join_emails)", email).find_each do |group_value|
         group_value.users << self unless group_value.users.include?(self)
         group_value.remove_auto_join_email(email)
+      end
+    end
+
+    def assign_offer_providers_based_on_auto_join_emails
+      return unless email.present?
+
+      Offer::Provider.where("? = ANY(auto_join_emails)", email.downcase).find_each do |provider|
+        provider.link_user(self)
       end
     end
 

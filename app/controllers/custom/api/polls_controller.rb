@@ -1,8 +1,11 @@
 class Api::PollsController < Api::BaseController
   include Translatable
+  include ImageAttributes
+
+  TRANSLATED_ATTRIBUTES = PollSerializer::TRANSLATED_ATTRIBUTES
 
   before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
-  before_action :find_poll, only: [:show, :update, :destroy]
+  before_action :find_poll, only: [:show, :update, :destroy, :go_live, :results]
 
   def index
     check_read_access!
@@ -12,10 +15,9 @@ class Api::PollsController < Api::BaseController
         raise ForbiddenError, "Access denied"
       end
 
-      polls = @projekt_phase.polls
-        .includes(:projekt_phase, projekt_phase: :projekt)
+      polls = @projekt_phase.polls.preload(PollSerializer::PRELOADS)
     else
-      polls = Poll.includes(:projekt_phase, projekt_phase: :projekt)
+      polls = Poll.preload(PollSerializer::PRELOADS)
 
       if current_client.public_data?
         polls = restrict_to_public_phases(polls)
@@ -24,7 +26,7 @@ class Api::PollsController < Api::BaseController
 
     polls = paginate(polls.order(created_at: :asc))
 
-    serialized_polls = PollSerializer.serialize_collection(polls)
+    serialized_polls = PollSerializer.serialize_collection(polls, client: current_client)
 
     render json: {
       data: { polls: serialized_polls },
@@ -34,33 +36,37 @@ class Api::PollsController < Api::BaseController
 
   def create
     check_admin_access!
-    find_projekt_phase unless @projekt_phase.present?
+    find_projekt_phase if @projekt_phase.blank?
     poll = @projekt_phase.polls.new(poll_params)
+    translations = assign_requested_translations(poll, :poll, TRANSLATED_ATTRIBUTES)
 
-    if poll.save
-      serialized_poll = PollSerializer.new(poll).serialize
+    if save_with_translations(poll, translations)
+      process_image_with_base64(poll, params[:poll][:image_attributes])
 
-      render json: { data: { poll: serialized_poll } }, status: 201
+      render json: { data: { poll: serialize_poll(poll) } }, status: 201
     else
-      render json: { error: { messages: poll.errors.full_messages } }, status: 422
+      render json: { error: { messages: TranslatedRecordErrors.full_messages(poll) } }, status: 422
     end
   end
 
   def show
     check_read_access!
-    serialized_poll = PollSerializer.new(@poll).serialize
+    check_phase_visible!(@poll.projekt_phase)
 
-    render json: { data: { poll: serialized_poll } }
+    render json: { data: { poll: serialize_poll(@poll) } }
   end
 
   def update
     check_admin_access!
-    if @poll.update(poll_params)
-      serialized_poll = PollSerializer.new(@poll).serialize
+    @poll.assign_attributes(poll_params)
+    translations = assign_requested_translations(@poll, :poll, TRANSLATED_ATTRIBUTES)
 
-      render json: { data: { poll: serialized_poll } }
+    if save_with_translations(@poll, translations)
+      process_image_with_base64(@poll, params[:poll][:image_attributes])
+
+      render json: { data: { poll: serialize_poll(@poll) } }
     else
-      render json: { error: { messages: @poll.errors.full_messages } }, status: 422
+      render json: { error: { messages: TranslatedRecordErrors.full_messages(@poll) } }, status: 422
     end
   end
 
@@ -71,6 +77,32 @@ class Api::PollsController < Api::BaseController
     else
       render json: { error: { messages: @poll.errors.messages } }, status: 422
     end
+  end
+
+  # Same transition as the /adm "go live" button: every answer, voter and
+  # booth result collected in test mode is deleted. A live poll is refused,
+  # since its votes are real.
+  def go_live
+    check_admin_access!
+
+    if @poll.live?
+      return render_invalid_values({ "live" => ["poll is already live"] })
+    end
+
+    @poll.go_live!
+
+    render json: { data: { poll: serialize_poll(@poll.reload) } }
+  end
+
+  def results
+    check_read_access!
+    check_phase_visible!(@poll.projekt_phase)
+
+    if !PollSerializer.results_visible?(@poll, current_client)
+      raise ForbiddenError, "The results of this poll are not public."
+    end
+
+    render json: { data: { results: Polls::ResultsSummary.call(@poll) } }
   end
 
   private
@@ -85,9 +117,14 @@ class Api::PollsController < Api::BaseController
       :ends_at,
       :geozone_restricted,
       :published,
+      :show_summary_instead_of_questions,
       :budget_id,
       geozone_ids: [],
     )
+  end
+
+  def serialize_poll(poll)
+    PollSerializer.new(poll, client: current_client).serialize
   end
 
   def find_projekt_phase
@@ -95,7 +132,6 @@ class Api::PollsController < Api::BaseController
   end
 
   def find_poll
-    @poll = Poll.includes(:projekt_phase, projekt_phase: :projekt).find(params[:id])
+    @poll = Poll.includes(PollSerializer::PRELOADS).find(params[:id])
   end
 end
-

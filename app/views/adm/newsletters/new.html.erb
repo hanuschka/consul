@@ -31,7 +31,7 @@
         divider: false
       ) do %>
         <%= f.select :recipient_group_id,
-          options_for_select(RecipientGroup.all.map { |rg| [rg.name, rg.id] }, f.object.recipient_group_id),
+          options_for_select(recipient_group_options, f.object.recipient_group_id),
           { prompt: t("custom.shared.select") },
           label: false %>
         <div class="mt-2">

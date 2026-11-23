@@ -56,19 +56,3 @@
     }
   }
 }
-
-// Layout der Benachrichtigungs-Sektion: Frage links, Toggle rechts
-.sidebar-projekt-phase-subscriptions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-
-  .form-label {
-    flex: 1;
-    margin: 0;
-    font-size: 13.5px;
-    line-height: 1.4;
-    color: rgba(0, 0, 0, 0.7);
-  }
-}

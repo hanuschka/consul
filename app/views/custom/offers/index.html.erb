@@ -1,0 +1,128 @@
+<% provide :title do %><%= t("custom.offers.index.title") %><% end %>
+
+<main>
+  <h1 class="padding-on-mobile"><%= t("custom.offers.index.title") %></h1>
+
+  <div class="flex-layout padding-on-mobile">
+    <div class="main-column">
+      <div class="resource-page--intro-text">
+        <%= render_custom_block "offers_index_welcome", default_content: t("custom.offers.index.intro_text") %>
+      </div>
+    </div>
+  </div>
+
+  <%= render Offers::OverviewMapComponent.new(overview_map: @overview_map) %>
+
+  <div class="flex-layout flex-layout-reverse-on-mobile padding-on-mobile">
+    <div class="main-column">
+      <% if can?(:create, Offer.new) %>
+        <div class="show-on-small-tablet margin-bottom text-center">
+          <%= link_to t("custom.offers.add_offer"), new_offer_path,
+            class: "button -orange", data: { turbolinks: false } %>
+        </div>
+      <% end %>
+
+      <%= render Resources::List::BaseComponent.new(
+        empty_text: (t("custom.offers.index.#{@filters_active ? "no_matches_text" : "empty_list_text"}") if @offers.empty?)
+      ) do |c| %>
+        <% c.with_toolbar(
+          i18n_namespace: "custom.offers.index",
+          filters: @valid_orders,
+          current_filter: @current_order,
+          param: "order",
+          text_search_enabled: true,
+          hide_view_mode_button: true
+        ) %>
+
+        <% if @offers.present? %>
+          <% c.with_items do %>
+            <% @offers.each do |offer| %>
+              <% offer_types = offer.categories_of(:offer_type).map(&:name).select(&:present?) %>
+              <% social_areas = offer.categories_of(:social_area).map(&:name).select(&:present?) %>
+              <% unpublished_states = {
+                suspended: ["eye-slash", offer.suspended?],
+                deactivated: ["power-off", offer.deactivated?],
+                expired: ["calendar-times", offer.expired?]
+              }.select { |_, (_, active)| active } %>
+              <%= render Resources::ListItemComponent.new(
+                resource: offer,
+                title: offer.title,
+                description: offer.short_description,
+                url: offer_path(offer),
+                header_style: (offer.published? ? nil : "background-color: var(--medium-gray-3);"),
+                title_heading_level: 2
+              ) do |item| %>
+                <% item.with_header do %>
+                  <% if unpublished_states.any? %>
+                    <% unpublished_states.each do |state, (icon, _)| %>
+                      <div>
+                        <i class="fas fa-<%= icon %>" aria-hidden="true"></i>
+                        <%= t("custom.offers.index.#{state}_label") %>
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <%= t("custom.offers.index.updated_on", date: l(offer.updated_at.to_date, format: "%d.%m.%Y")) %>
+                  <% end %>
+                <% end %>
+
+                <% item.with_image(image: offer.image, image_placeholder_icon_class: "fa-hand-holding-heart", resource: offer) %>
+
+                <% if offer_types.any? %>
+                  <% item.with_subheading do %>
+                    <span class="show-for-sr"><%= t("activerecord.attributes.offer/category.kinds.offer_type") %>:</span>
+                    <div class="resource-item--tags">
+                      <% offer_types.each do |name| %>
+                        <span class="resource-item--tag"><%= name %></span>
+                      <% end %>
+                    </div>
+                  <% end %>
+                <% end %>
+
+                <% if social_areas.any? %>
+                  <% item.with_additional_body_section do %>
+                    <span>
+                      <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                      <span class="show-for-sr"><%= t("activerecord.attributes.offer/category.kinds.social_area") %>:</span>
+                      <%= social_areas.to_sentence %>
+                    </span>
+                  <% end %>
+                <% end %>
+
+                <% item.with_footer_section do %>
+                  <%= link_to t("custom.offers.index.to_offer"), offer_path(offer), class: "button -grey", tabindex: "-1", data: { turbolinks: false }, aria: { hidden: true } %>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+      <%= paginate @offers %>
+    </div>
+
+    <div id="offers-sidebar" class="sidebar">
+      <%= render Shared::SidebarCardComponent.new(title: t("custom.common.information"), icon_name: "info-circle") do %>
+        <div class="margin-bottom-half">
+          <%= render_custom_block "offers_index_sidebar", default_content: t("custom.offers.index.sidebar_information") %>
+        </div>
+
+        <div class="resources--info-count margin-bottom-half" role="status">
+          <span>
+            <%= t("custom.offers.index.count") %>
+          </span>
+          <span>
+            <%= @offers.total_count %>
+          </span>
+        </div>
+
+        <% if can?(:create, Offer.new) %>
+          <div class="hide-on-mobile">
+            <%= link_to t("custom.offers.add_offer"), new_offer_path,
+              class: "button -orange", style: "display:inline-flex;", data: { turbolinks: false } %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <%= render "offers/filters" %>
+    </div>
+  </div>
+</main>

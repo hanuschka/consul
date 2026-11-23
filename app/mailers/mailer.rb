@@ -284,7 +284,7 @@ class Mailer < ApplicationMailer
     @email_to = user.email
     @user = user
 
-    I18n.with_locale(I18n.default_locale) do
+    with_user(user) do
       mail_with_custom_template(nil, {
         "username" => @user.username,
         "recipient_greeting" => @user.recipient_greeting,

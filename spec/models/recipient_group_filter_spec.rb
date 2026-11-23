@@ -8,10 +8,10 @@ describe RecipientGroupFilter do
   end
 
   describe "constants" do
-    it "exposes the 13 kinds" do
+    it "exposes the 12 kinds" do
       expect(RecipientGroupFilter::KINDS).to match_array(%w[
         newsletter_subscribers role
-        phase_authors phase_subscribers projekt_subscribers comment_authors voting_participants
+        phase_authors projekt_subscribers comment_authors voting_participants
         district plz age_range gender
         individual_group manual_users
       ])

@@ -2,23 +2,32 @@ class Api::PointOfInterestPinsController < Api::BaseController
   include Translatable
   include MapLocationAttributes
 
+  TRANSLATED_ATTRIBUTES = %w[description].freeze
+
+  PRELOADS = [
+    :projekt_point_of_interest_category, :map_location, :translations, :masterportal_pin,
+    { projekt_phase: [:translations, { projekt: { page: :translations } }] },
+    { author: :organization }
+  ].freeze
+
   before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_pin, only: [:show, :update, :destroy]
 
   def index
     check_read_access!
-    pins = if @projekt_phase.present?
-      @projekt_phase.projekt_point_of_interest_pins
-        .includes(
-          :projekt_point_of_interest_category, :projekt_phase, :map_location,
-          author: :organization
-        )
-    else
-      ProjektPointOfInterestPin.includes(
-        :projekt_point_of_interest_category, :projekt_phase, :map_location,
-        author: :organization
-      )
+
+    if @projekt_phase.present?
+      check_phase_visible!(@projekt_phase)
     end
+
+    pins =
+      if @projekt_phase.present?
+        @projekt_phase.projekt_point_of_interest_pins.includes(PRELOADS)
+      elsif current_client.public_data?
+        restrict_to_public_phases(ProjektPointOfInterestPin.includes(PRELOADS))
+      else
+        ProjektPointOfInterestPin.includes(PRELOADS)
+      end
 
     pins = paginate(pins.order(created_at: :asc))
 
@@ -32,21 +41,23 @@ class Api::PointOfInterestPinsController < Api::BaseController
 
   def create
     check_admin_access!
-    find_projekt_phase unless @projekt_phase.present?
-    pin = @projekt_phase.projekt_point_of_interest_pins.new(pin_params)
+    pin =@projekt_phase.projekt_point_of_interest_pins.new(pin_params.merge(external_reference_params))
     pin.author = @current_client.content_author
+    translations = assign_requested_translations(pin, :projekt_point_of_interest_pin, TRANSLATED_ATTRIBUTES)
 
-    if pin.save
+    if save_with_translations(pin, translations)
       serialized_pin = PointOfInterestPinSerializer.new(pin, client: current_client).serialize
 
       render json: { data: { pin: serialized_pin } }, status: 201
     else
-      render json: { error: { messages: pin.errors.full_messages } }, status: 422
+      render_translated_record_errors(pin)
     end
   end
 
   def show
     check_read_access!
+    check_phase_visible!(@pin.projekt_phase)
+
     serialized_pin = PointOfInterestPinSerializer.new(@pin, client: current_client).serialize
 
     render json: { data: { pin: serialized_pin } }
@@ -54,14 +65,15 @@ class Api::PointOfInterestPinsController < Api::BaseController
 
   def update
     check_admin_access!
-    @pin.assign_attributes(pin_params)
+    @pin.assign_attributes(with_existing_map_location_id(@pin, pin_params))
+    translations = assign_requested_translations(@pin, :projekt_point_of_interest_pin, TRANSLATED_ATTRIBUTES)
 
-    if @pin.save
+    if save_with_translations(@pin, translations)
       serialized_pin = PointOfInterestPinSerializer.new(@pin, client: current_client).serialize
 
       render json: { data: { pin: serialized_pin } }
     else
-      render json: { error: { messages: @pin.errors.full_messages } }, status: 422
+      render_translated_record_errors(@pin)
     end
   end
 
@@ -80,8 +92,12 @@ class Api::PointOfInterestPinsController < Api::BaseController
     params.require(:projekt_point_of_interest_pin).permit(
       :description,
       :projekt_point_of_interest_category_id,
-      map_location_attributes: map_location_attributes
-    )
+      map_location_attributes: map_location_attributes_api
+    ).to_h
+  end
+
+  def external_reference_params
+    params.require(:projekt_point_of_interest_pin).permit(:external_source, :external_id).to_h
   end
 
   def find_projekt_phase
@@ -89,7 +105,6 @@ class Api::PointOfInterestPinsController < Api::BaseController
   end
 
   def find_pin
-    @pin = ProjektPointOfInterestPin.includes(:author, :projekt_point_of_interest_category, :projekt_phase, :projekt_phase, :map_location).find(params[:id])
+    @pin = ProjektPointOfInterestPin.includes(PRELOADS).find(params[:id])
   end
 end
-

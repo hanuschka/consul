@@ -1,0 +1,293 @@
+de:
+  adm:
+    offers:
+      imports:
+        new:
+          title: Angebote importieren
+          page_hint: "Mit dem Import legen Sie viele Angebote auf einmal an oder aktualisieren vorhandene. Laden Sie dazu eine CSV-Datei hoch, am einfachsten auf Basis der Vorlage. Die Vorlage enthält alle vorhandenen Angebote. Das Beispiel zeigt zwei ausgefüllte Zeilen; es enthält Platzhalter-Anbieter und -Kategorien und lässt sich deshalb nicht unverändert importieren. Dabei gilt:"
+          rules:
+            format: Spalten getrennt durch Semikolon oder Komma, Zeichenkodierung UTF-8 oder Excel-Standard.
+            rows: Eine Zeile pro Angebot. Pflichtangaben sind Anbieter, Titel, Kurzbeschreibung sowie mindestens eine Angebotsart und ein Sozialraum.
+            provider: Der Anbieter muss bereits angelegt sein und wird über seinen Namen zugeordnet.
+            categories: Kategoriewerte müssen bereits existieren und werden über ihren Namen zugeordnet. Mehrere Werte in einer Zelle trennen Sie durch Kommas.
+            dates: Ablaufdatum im Format TT.MM.JJJJ. Breitengrad und Längengrad sind optional.
+            id: "Die Spalte ID verknüpft eine Zeile mit einem vorhandenen Angebot. Beim Aktualisieren löschen leere Zellen den bisherigen Wert. Bild, Sichtbarkeit und Prüfstatus bleiben unverändert."
+          rules_outro: "Gültige Zeilen werden auch dann übernommen, wenn andere Zeilen fehlerhaft sind. Neu angelegte Angebote sind sofort veröffentlicht und gelten als geprüft. Bilder können nicht importiert werden."
+          upload_title: CSV-Datei hochladen
+          template: Vorlage herunterladen
+          sample: Beispiel herunterladen
+          file_label: CSV-Datei
+          file_hint: "CSV-Datei mit höchstens %{max}. Zeilen mit der ID eines vorhandenen Angebots aktualisieren dieses Angebot, Zeilen ohne ID legen ein neues an. Nach dem Import sehen Sie für jede Zeile, ob das Angebot angelegt, aktualisiert oder unverändert ist oder warum die Zeile nicht übernommen wurde."
+          submit: Importieren
+          result_title: Ergebnis des Imports
+          file_errors_title: Die Datei wurde nicht importiert.
+          no_rows: Die Datei enthält keine Angebote.
+          summary: "%{created}, %{updated}, %{unchanged}, %{failed}"
+          created:
+            one: 1 Angebot angelegt
+            other: "%{count} Angebote angelegt"
+          failed:
+            one: 1 Zeile fehlgeschlagen
+            other: "%{count} Zeilen fehlgeschlagen"
+          updated:
+            one: "1 Angebot aktualisiert"
+            other: "%{count} Angebote aktualisiert"
+          unchanged:
+            one: "1 Angebot unverändert"
+            other: "%{count} Angebote unverändert"
+          table:
+            line: Zeile
+            title: Titel
+            result: Ergebnis
+            created: Angelegt
+            failed: Fehler
+            updated: "Aktualisiert"
+            unchanged: "Unverändert"
+            untitled: Ohne Titel
+          columns_title: Alle Spalten der Vorlage
+          required_marker: (Pflichtfeld)
+          id_marker: "(optional, nur zum Aktualisieren)"
+        create:
+          no_file: Bitte wählen Sie eine CSV-Datei aus.
+          too_large: Die Datei ist größer als %{max}.
+        template:
+          filename: angebote-vorlage
+        sample:
+          filename: angebote-beispiel
+        sample_rows:
+          - provider: Musteranbieter
+            title: Schwimmkurs für Kinder
+            short_description: "Kinder ab 6 Jahren lernen in kleinen Gruppen im Hallenbad schwimmen.\n\nDie Kurse leiten ausgebildete Schwimmlehrkräfte. Bitte Badesachen und Handtuch mitbringen."
+            times: dienstags 15–17 Uhr, außer in den Schulferien
+            costs: 5 € pro Termin, ermäßigt 3 €
+            registration: Anmeldung bis Freitag unter 0123 456789
+            address: Marktplatz 1, 12345 Musterstadt
+            contact_name: Maria Muster
+            contact_phone: 0123 456-0
+            contact_email: angebote@example.org
+            contact_website: https://www.example.org
+            expires_on: 31.12.2027
+            latitude: "51,1657"
+            longitude: "10,4515"
+            offer_type: Kurs, Sport
+            target_group: Kinder, Familien
+            costs_category: kostenpflichtig
+            accessibility: rollstuhlgerecht
+            social_area: Sozialraum Nord, Sozialraum Mitte
+          - provider: Musteranbieter
+            title: Online-Sprachcafé
+            short_description: Wöchentliches Gespräch auf Deutsch per Videokonferenz für alle, die ihre Sprachkenntnisse üben möchten.
+            offer_type: Treffpunkt
+            social_area: Sozialraum Mitte
+        columns:
+          id: ID
+          provider: Anbieter
+          title: Titel
+          short_description: Kurzbeschreibung
+          times: Zeiten
+          costs: Kosten (Freitext)
+          registration: Anmeldung
+          address: Adresse
+          contact_name: Ansprechperson
+          contact_phone: Telefon
+          contact_email: E-Mail
+          contact_website: Website
+          expires_on: Ablaufdatum
+          latitude: Breitengrad
+          longitude: Längengrad
+          offer_type: Angebotsart
+          target_group: Zielgruppe
+          costs_category: Kosten
+          accessibility: Barrierefreiheit
+          social_area: Sozialraum
+        errors:
+          unreadable: Die Datei konnte nicht gelesen werden. Bitte laden Sie eine CSV-Datei hoch, zum Beispiel auf Basis der Vorlage.
+          missing_columns: "In der Datei fehlen Pflichtspalten: %{columns}."
+          too_many_rows: Die Datei enthält mehr als %{max} Zeilen. Bitte teilen Sie sie auf mehrere Dateien auf.
+          unknown_provider: Anbieter „%{name}“ nicht gefunden.
+          missing_provider: Der Anbieter fehlt.
+          unknown_offer: "Angebot mit ID %{id} nicht gefunden."
+          ambiguous_provider: Es gibt mehrere Anbieter mit dem Namen „%{name}“.
+          unknown_category: "%{kind} „%{name}“ nicht gefunden."
+          invalid_date: Ablaufdatum „%{value}“ ist kein gültiges Datum (TT.MM.JJJJ).
+          invalid_location: Breitengrad und Längengrad müssen beide als Zahl angegeben werden.
+      title: Angebote
+      menu:
+        aria_label: Angebote Navigation
+        items:
+          offers: Angebote
+          imports: Import
+          categories: Kategorien
+          providers: Anbieter
+          managers: Angebote-Administratoren
+          settings: Konfiguration
+      managers:
+        index:
+          title: Angebote-Administratoren
+          page_hint: "Angebote-Administratoren arbeiten im Bereich Angebote: Sie können Angebote prüfen, ausblenden und löschen sowie Kategorien, Anbieter, den CSV-Import und die Erinnerungen an Anbieter verwalten. Das Ein- und Ausschalten des Bereichs bleibt Administratoren vorbehalten. Andere Bereiche der Verwaltung sehen sie nicht. Nur Administratoren können Angebote-Administratoren hinzufügen oder entfernen. Ist eine E-Mail-Adresse noch nicht registriert, erhält die Person eine Einladung."
+          new_link: Neuen Angebote-Administrator hinzufügen
+          empty_title: Keine Angebote-Administratoren vorhanden
+          empty_description: Sobald Angebote-Administratoren hinzugefügt werden, werden diese hier angezeigt.
+        new:
+          title: Neuen Angebote-Administrator hinzufügen
+          search_label: Nutzer suchen
+          search_description: "Suchen Sie per E-Mail oder Nutzername nach registrierten Nutzern, die unter <a href=\"/adm/users\" target=\"_blank\">Nutzer</a> gelistet sind. Ist eine E-Mail-Adresse noch nicht registriert, können Sie die Person als Angebote-Administrator einladen. Angebote-Administratoren verwalten den gesamten Bereich Angebote."
+      settings:
+        title: Konfiguration
+      offers:
+        index:
+          title: Angebote
+          import: Importieren
+          export_filename: angebote
+          download_csv: CSV herunterladen
+          review_status:
+            added: Neu
+            changed: Geändert
+            checked: Geprüft
+          visibility:
+            visible: Sichtbar
+            suspended: Ausgeblendet
+            deactivated: Deaktiviert
+            expired: Abgelaufen
+          page_hint: "Hier sehen Sie alle Angebote der Anbieter. Angebote werden über das Eingabeformular im öffentlichen Bereich angelegt und sind sofort online. Neue und geänderte Angebote bleiben gekennzeichnet, bis Sie sie als geprüft markieren. Sie können Angebote nach Titel suchen, sortieren, nach Prüfstatus und Sichtbarkeit filtern, ausblenden und löschen."
+          total_label:
+            one: Angebot
+            other: Angebote
+          total_hint: Anzahl der Angebote, die den aktuellen Suchkriterien entsprechen
+          no_items_title: Keine Angebote vorhanden
+          no_items_description: Sobald Anbieter Angebote einstellen, erscheinen sie hier.
+          no_results_filtered_title: Keine Treffer
+          no_results_filtered_description: Für die Suche wurden keine Angebote gefunden. Passen Sie die Suche an oder setzen Sie sie zurück.
+          table:
+            id: ID
+            title: Titel
+            offer_type: Angebotsart
+            social_area: Sozialraum
+            author: Erstellt von
+            updated_at: Aktualisiert am
+            review_status: Prüfstatus
+            visibility: Sichtbarkeit
+        actions:
+          mark_checked: Als geprüft markieren
+          suspend: Ausblenden
+          unsuspend: Einblenden
+        edit:
+          title: Angebot bearbeiten
+        update:
+          success: Das Angebot wurde gespeichert.
+        destroy:
+          success: Das Angebot wurde gelöscht.
+        mark_checked:
+          success: Das Angebot wurde als geprüft markiert.
+        suspend:
+          success: Das Angebot wurde ausgeblendet.
+        unsuspend:
+          success: Das Angebot wird wieder angezeigt.
+        form:
+          errors_title: Das Angebot konnte nicht gespeichert werden
+          image_label: Bild
+          provider_blank: Kein Anbieter
+          no_categories_title: Keine Werte vorhanden
+          no_categories_description: Legen Sie zunächst unter „Kategorien" Werte für diese Kategorie an.
+          sections:
+            basics: Grunddaten
+            categories: Kategorien
+            location: Ort
+            details: Details
+            contact: Kontakt
+          hints:
+            provider: "Optional. Legt fest, zu welchem Anbieter das Angebot gehört. Alle Konten dieses Anbieters können das Angebot dann bearbeiten, deaktivieren und wieder aktivieren. Ohne Anbieter kann nur die Verwaltung das Angebot bearbeiten. Anbieter selbst können ein Angebot keinem anderen Anbieter zuordnen."
+            title: "Der Titel erscheint in der Übersicht, auf der Karte und auf der Detailseite und wird bei der Suche berücksichtigt. Wählen Sie eine kurze, verständliche Bezeichnung, an der man ohne weitere Erklärung erkennt, was angeboten wird und für wen."
+            short_description: "Die Kurzbeschreibung erscheint in der Übersicht unter dem Titel und auf der Detailseite. Beschreiben Sie in wenigen Sätzen, was die Teilnehmenden erwartet und was das Angebot ausmacht. Der Text wird bei der Suche berücksichtigt und, sofern die automatische Übersetzung aktiv ist, in die aktivierten Sprachen übersetzt."
+            image: "Optional. Das Bild erscheint in der Übersicht und auf der Detailseite. Ohne Bild wird dort ein Platzhalter angezeigt. Verwenden Sie nur Bilder, für die Nutzungsrechte vorliegen, und holen Sie bei Fotos, auf denen Personen erkennbar sind, deren Einverständnis ein."
+            category_kinds:
+              offer_type: "Um welche Art von Angebot handelt es sich? Wählen Sie alle passenden Werte aus, mindestens einen. Besucherinnen und Besucher können die Übersicht nach diesen Werten filtern; ein Angebot mit mehreren Werten erscheint bei jedem davon. Fehlt ein passender Wert, legen Sie ihn unter „Kategorien“ an."
+              target_group: "Für wen ist das Angebot gedacht? Wählen Sie alle Zielgruppen aus, die das Angebot ansprechen soll. Besucherinnen und Besucher können die Übersicht nach Zielgruppen filtern; ein Angebot mit mehreren Zielgruppen erscheint bei jeder davon. Fehlt ein passender Wert, legen Sie ihn unter „Kategorien“ an."
+              costs: "Fällt für das Angebot ein Beitrag an? Wählen Sie die passende Kostenangabe aus, nach der Besucherinnen und Besucher die Übersicht filtern können. Genaue Beträge, Ermäßigungen oder Zahlungswege tragen Sie zusätzlich im Feld „Kosten (Details)“ im Abschnitt „Details“ ein."
+              accessibility: "Welche Merkmale der Barrierefreiheit erfüllt das Angebot? Wählen Sie nur Merkmale aus, die tatsächlich und dauerhaft gegeben sind, denn Menschen mit Einschränkungen verlassen sich auf diese Angaben. Besucherinnen und Besucher können die Übersicht danach filtern. Trifft keines zu, lassen Sie die Auswahl leer."
+              social_area: "In welchem Sozialraum findet das Angebot statt? Wählen Sie mindestens einen Sozialraum aus, bei Angeboten für mehrere Stadtteile auch mehrere. Besucherinnen und Besucher können die Übersicht nach Sozialräumen filtern; das Angebot erscheint dann bei jedem ausgewählten Sozialraum."
+            address: "Optional. Die Adresse, unter der das Angebot stattfindet, mit Straße, Hausnummer und Ort, bei Bedarf ergänzt um Raum oder Eingang. Sie erscheint auf der Detailseite und wird bei der Suche berücksichtigt. Bei reinen Online-Angeboten lassen Sie das Feld leer."
+            map_location: "Optional. Setzen Sie eine Markierung an den Ort, an dem das Angebot stattfindet. Nur Angebote mit Markierung erscheinen auf der Karte der Übersicht; alle anderen stehen nur in der Liste. Bei reinen Online-Angeboten lassen Sie die Karte leer."
+            times: "Optional. Wann findet das Angebot statt? Beschreiben Sie die Zeiten in eigenen Worten, zum Beispiel Wochentage und Uhrzeiten, regelmäßige Termine oder Ausnahmen wie Schulferien und Feiertage. Der Text erscheint auf der Detailseite und wird bei der Suche berücksichtigt."
+            costs: "Optional. Genaue Angaben zu den Kosten, zum Beispiel Beträge, Ermäßigungen, Materialkosten oder Zahlungsweg. Der Text erscheint auf der Detailseite und ergänzt die Kostenangabe, die Sie im Abschnitt „Kategorien“ ausgewählt haben. Ist das Angebot kostenlos, genügt die Auswahl dort."
+            registration: "Optional. Beschreiben Sie, ob eine Anmeldung nötig ist und wie sie funktioniert, zum Beispiel bis wann, auf welchem Weg und bei wem. Ist keine Anmeldung nötig, können Sie das hier ausdrücklich angeben. Der Text erscheint auf der Detailseite."
+            contact_name: "Optional. Die Person oder Stelle, an die sich Interessierte mit Fragen zum Angebot wenden können. Der Name erscheint öffentlich auf der Detailseite im Kasten „Kontakt“ und wird über die offene Schnittstelle ausgegeben. Nennen Sie eine Person nur mit ihrem Einverständnis, sonst eine Funktion wie „Kursleitung“."
+            contact_phone: "Optional. Eine Telefonnummer für Rückfragen, am besten mit Vorwahl. Auf der Detailseite erscheint sie als Link, über den Mobiltelefone direkt anrufen können, und sie wird über die offene Schnittstelle ausgegeben. Verwenden Sie möglichst eine dienstliche Nummer statt einer privaten."
+            contact_email: "Optional. Eine E-Mail-Adresse für Rückfragen. Sie erscheint öffentlich auf der Detailseite als Link, der das E-Mail-Programm öffnet, und wird über die offene Schnittstelle ausgegeben. Verwenden Sie möglichst eine Funktionsadresse statt einer persönlichen. Eine ungültige Adresse meldet das Formular beim Speichern."
+            contact_website: "Optional. Die Internetseite des Angebots oder des Anbieters als vollständige Adresse, beginnend mit https:// oder http://. Sie erscheint auf der Detailseite als Link, der sich in einem neuen Tab öffnet. Fehlt dieser Anfang, meldet das Formular beim Speichern einen Fehler."
+            expires_on: "Optional. Bis zu diesem Tag einschließlich wird das Angebot öffentlich angezeigt. Danach verschwindet es aus Übersicht, Karte, Suche und Schnittstelle und ist nur noch für den Anbieter und die Verwaltung sichtbar. Wird das Datum geändert oder gelöscht, erscheint es wieder, sofern es nicht ausgeblendet oder deaktiviert ist."
+          placeholders:
+            title: z. B. Schwimmkurs für Kinder
+            short_description: z. B. Kinder ab 6 Jahren lernen in kleinen Gruppen im Hallenbad schwimmen.
+            address: z. B. Marktplatz 1, 12345 Musterstadt
+            times: z. B. dienstags 15–17 Uhr, außer in den Schulferien
+            costs: z. B. 5 €, ermäßigt 3 €
+            registration: z. B. Anmeldung bis Freitag unter 0123 456789
+            contact_name: z. B. Maria Muster
+            contact_phone: z. B. 0123 456-0
+            contact_email: z. B. angebote@example.org
+            contact_website: https://
+      categories:
+        index:
+          title: Kategorien
+          page_hint: "Hier verwalten Sie die Werte der fünf Kategorien, nach denen Angebote eingeordnet und gefiltert werden. Wählen Sie oben die Kategorie aus. Neue Werte stehen sofort im Eingabeformular der Anbieter zur Auswahl. Per Drag & Drop legen Sie die Reihenfolge fest. Werte, die noch einem Angebot zugeordnet sind, können nicht gelöscht werden."
+          new_category: Neuer Wert
+          no_items_title: Keine Werte vorhanden
+          no_items_description: Legen Sie einen Wert an, damit Anbieter ihn ihren Angeboten zuordnen können.
+          table:
+            order: Reihenfolge
+            name: Name
+        new:
+          title: Neuer Wert
+        edit:
+          title: Wert bearbeiten
+        create:
+          success: Der Wert wurde erstellt.
+        update:
+          success: Der Wert wurde aktualisiert.
+        destroy:
+          success: Der Wert wurde gelöscht.
+          cannot_destroy: Der Wert kann nicht gelöscht werden, da ihm noch Angebote zugeordnet sind.
+        form:
+          kind_label: Kategorie
+          name_label: Name
+          name_hint: "Der Name erscheint im Eingabeformular, als Filter in der Angebotsübersicht und bei jedem Angebot, dem der Wert zugeordnet ist. Wählen Sie einen kurzen, allgemein verständlichen Begriff. Eine Umbenennung gilt sofort für alle zugeordneten Angebote. Sofern die automatische Übersetzung aktiv ist, wird der Name in die aktivierten Sprachen übersetzt."
+          submit: Speichern
+      providers:
+        index:
+          title: Anbieter
+          page_hint: "Legt fest, welche Anbieter mit welchen E-Mail-Adressen Angebote im Modul „Angebote“ einstellen dürfen. Nur Nutzer mit einer hinterlegten Adresse sehen im Frontend die Schaltfläche „Angebot hinzufügen“. Hinterlegen Sie hier alle Anbieter, die ihre Angebote selbst pflegen sollen."
+          new_provider: Neuer Anbieter
+          total_label:
+            one: Anbieter
+            other: Anbieter
+          total_hint: Anzahl der Anbieter, die den aktuellen Suchkriterien entsprechen
+          no_items_title: Keine Anbieter vorhanden
+          no_items_description: Legen Sie einen Anbieter an, damit dessen Mitarbeitende Angebote einstellen können.
+          no_results_filtered_title: Keine Treffer
+          no_results_filtered_description: Für die Suche wurden keine Anbieter gefunden. Passen Sie die Suche an oder setzen Sie sie zurück.
+          table:
+            offers: Angebote
+        provider_row:
+          addresses_summary: "%{registered} registriert, %{pending} ausstehend"
+          no_addresses: Keine
+        new:
+          title: Neuer Anbieter
+        edit:
+          title: Anbieter bearbeiten
+        create:
+          success: Der Anbieter wurde angelegt.
+        update:
+          success: Der Anbieter wurde gespeichert.
+        destroy:
+          success: Der Anbieter wurde gelöscht.
+          cannot_destroy: Der Anbieter kann nicht gelöscht werden, da ihm noch Angebote zugeordnet sind.
+        form:
+          hints:
+            name: "Der Name kennzeichnet den Anbieter in der Verwaltung, in der Auswahlliste des Eingabeformulars und in der Erinnerungs-E-Mail. Er wird über die offene Schnittstelle ausgegeben und bei der Suche in der Angebotsübersicht berücksichtigt. Beim CSV-Import wird der Anbieter über genau diesen Namen zugeordnet, deshalb sollte er eindeutig sein."
+            email_list: "Eine E-Mail-Adresse pro Zeile. Personen mit diesen Adressen können nach Bestätigung ihres Kontos Angebote für diesen Anbieter einstellen und alle seine Angebote bearbeiten. Adressen von Personen, die noch nicht registriert sind, bleiben gespeichert und gelten automatisch, sobald sich die Person registriert. Wird eine Adresse entfernt, verliert das Konto diese Berechtigung sofort."
+          placeholders:
+            name: z. B. Jugendzentrum Nord
+            email_list: |-
+              anna.muster@traeger.example
+              ben.beispiel@traeger.example

@@ -3,9 +3,10 @@
 class IdeaCategorySerializer < BaseSerializer
   attr_reader :category
 
-  def initialize(category, client: nil)
+  def initialize(category, client: nil, ideas_count: nil)
     @category = category
     @client = client
+    @ideas_count = ideas_count
   end
 
   def serialize
@@ -15,12 +16,15 @@ class IdeaCategorySerializer < BaseSerializer
         :idea_officer_id,
         :created_at,
         :updated_at,
-        :given_order
+        :given_order,
+        :color,
+        :icon
       ]
     )
 
     category_data.merge!(
-      name: category.name
+      name: category.name,
+      translations: serialize_translations(category)
     )
 
     default_officer = category.default_idea_officer
@@ -34,12 +38,26 @@ class IdeaCategorySerializer < BaseSerializer
         end
     end
 
-    category_data[:ideas_count] = category.ideas.count
+    category_data[:ideas_count] = ideas_count
 
     category_data
   end
 
   def self.serialize_collection(categories, client: nil)
-    categories.map { |category| new(category, client: client).serialize }
+    counts = accepted_ideas_counts(categories.map(&:id))
+
+    categories.map do |category|
+      new(category, client: client, ideas_count: counts.fetch(category.id, 0)).serialize
+    end
   end
+
+  def self.accepted_ideas_counts(category_ids)
+    Idea.accepted.where(idea_category_id: category_ids).group(:idea_category_id).count
+  end
+
+  private
+
+    def ideas_count
+      @ideas_count ||= self.class.accepted_ideas_counts([category.id]).fetch(category.id, 0)
+    end
 end

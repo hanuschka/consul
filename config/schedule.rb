@@ -41,6 +41,10 @@ every 1.day, at: "3:30 am", roles: [:cron] do
   rake "-s municipal_plans:apply_due_archiving"
 end
 
+every 1.day, at: "8:00 am", roles: [:cron] do
+  rake "-s offers:send_reminders"
+end
+
 every 2.hours do
   rake "-s stats:generate"
 end

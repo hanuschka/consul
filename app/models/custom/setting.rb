@@ -270,6 +270,8 @@ class Setting < ApplicationRecord
         "municipal_plans.officers_see_all": false,
         "municipal_plans.auto_archive": false,
         "municipal_plans.procedure_steps": false,
+        "process.offers": false,
+        "offers.reminder_interval": "off",
         "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,
@@ -281,7 +283,6 @@ class Setting < ApplicationRecord
         "proposals.poster_description": nil,
         "proposals.email_on_official_answer": nil,
         "email_templates.recipient_greeting": "username",
-        "email_templates.welcome_email": nil,
         # Images and Documents
         "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,

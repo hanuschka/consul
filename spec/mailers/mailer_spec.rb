@@ -191,5 +191,13 @@ describe Mailer do
                                                                     locale: I18n.default_locale)
       expect(email.body.encoded).to include(I18n.t("mailers.welcome.body", locale: I18n.default_locale))
     end
+
+    it "is written in the language of the user" do
+      user.update!(locale: "de")
+
+      email = Mailer.welcome(user)
+
+      expect(email.subject).to eq I18n.t("mailers.welcome.subject", org_name: Setting["org_name"], locale: :de)
+    end
   end
 end

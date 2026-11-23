@@ -1,15 +1,27 @@
 class Api::PointOfInterestCategoriesController < Api::BaseController
+  PRELOADS = [
+    { icon_image_attachment: :blob },
+    { projekt_phase: [:translations, { projekt: { page: :translations } }] }
+  ].freeze
+
   before_action :find_projekt_phase, only: [:index, :create], if: -> { params[:projekt_phase_id].present? }
   before_action :find_category, only: [:show, :update, :destroy]
 
   def index
     check_read_access!
-    categories = if @projekt_phase.present?
-      @projekt_phase.projekt_point_of_interest_categories
-        .includes(:projekt_phase, projekt_phase: :projekt)
-    else
-      ProjektPointOfInterestCategory.includes(:projekt_phase, projekt_phase: :projekt)
+
+    if @projekt_phase.present?
+      check_phase_visible!(@projekt_phase)
     end
+
+    categories =
+      if @projekt_phase.present?
+        @projekt_phase.projekt_point_of_interest_categories.includes(PRELOADS)
+      elsif current_client.public_data?
+        restrict_to_public_phases(ProjektPointOfInterestCategory.includes(PRELOADS))
+      else
+        ProjektPointOfInterestCategory.includes(PRELOADS)
+      end
 
     categories = paginate(categories)
 
@@ -23,7 +35,6 @@ class Api::PointOfInterestCategoriesController < Api::BaseController
 
   def create
     check_admin_access!
-    find_projekt_phase unless @projekt_phase.present?
     category = @projekt_phase.projekt_point_of_interest_categories.new(category_params)
 
     if category.save
@@ -37,6 +48,8 @@ class Api::PointOfInterestCategoriesController < Api::BaseController
 
   def show
     check_read_access!
+    check_phase_visible!(@category.projekt_phase)
+
     serialized_category = PointOfInterestCategorySerializer.new(@category).serialize
 
     render json: { data: { category: serialized_category } }
@@ -68,7 +81,8 @@ class Api::PointOfInterestCategoriesController < Api::BaseController
     params.require(:projekt_point_of_interest_category).permit(
       :name,
       :color,
-      :icon
+      :icon,
+      :position
     )
   end
 
@@ -77,7 +91,7 @@ class Api::PointOfInterestCategoriesController < Api::BaseController
   end
 
   def find_category
-    @category = ProjektPointOfInterestCategory.includes(:projekt_phase, projekt_phase: :projekt).find(params[:id])
+    @category = ProjektPointOfInterestCategory.includes(PRELOADS).find(params[:id])
   end
 end
 

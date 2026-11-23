@@ -1,10 +1,13 @@
 class Api::Budgets::PhasesController < Api::BaseController
+  TRANSLATED_ATTRIBUTES = %w[name summary description main_link_text main_link_url].freeze
+
   before_action :find_budget, only: [:index, :bulk_update]
   before_action :find_phase, only: [:show, :update]
 
   def index
     check_read_access!
-    phases = paginate(@budget.phases.order(:id))
+    check_phase_visible!(@budget.projekt_phase)
+    phases = paginate(@budget.phases.includes(:translations).order(:id))
 
     render json: {
       data: {
@@ -16,17 +19,20 @@ class Api::Budgets::PhasesController < Api::BaseController
 
   def show
     check_read_access!
+    check_phase_visible!(@phase.budget.projekt_phase)
 
     render json: { data: { budget_phase: serialize_phase(@phase) } }
   end
 
   def update
     check_admin_access!
+    @phase.assign_attributes(phase_params)
+    translations = assign_requested_translations(@phase, :budget_phase, TRANSLATED_ATTRIBUTES)
 
-    if @phase.update(phase_params)
+    if save_with_translations(@phase, translations)
       render json: { data: { budget_phase: serialize_phase(@phase) } }
     else
-      render json: { error: { messages: @phase.errors.full_messages } }, status: 422
+      render_translated_record_errors(@phase)
     end
   end
 
@@ -57,7 +63,8 @@ class Api::Budgets::PhasesController < Api::BaseController
     params.require(:budget_phase).permit(
       :starts_at,
       :ends_at,
-      :enabled
+      :enabled,
+      *TRANSLATED_ATTRIBUTES
     )
   end
 
@@ -70,11 +77,11 @@ class Api::Budgets::PhasesController < Api::BaseController
   end
 
   def find_budget
-    @budget = Budget.find(params[:budget_id])
+    @budget = Budget.includes(:projekt_phase).find(params[:budget_id])
   end
 
   def find_phase
-    @phase = Budget::Phase.find(params[:id])
+    @phase = Budget::Phase.includes(:translations, budget: :projekt_phase).find(params[:id])
   end
 
   def serialize_phase(phase)
@@ -82,9 +89,14 @@ class Api::Budgets::PhasesController < Api::BaseController
       id: phase.id,
       kind: phase.kind,
       name: phase.name,
+      summary: phase.summary,
+      description: phase.description,
+      main_link_text: phase.main_link_text,
+      main_link_url: phase.main_link_url,
       starts_at: phase.starts_at,
       ends_at: phase.ends_at,
-      enabled: phase.enabled
+      enabled: phase.enabled,
+      translations: serialize_translations(phase, TRANSLATED_ATTRIBUTES)
     }
   end
 end

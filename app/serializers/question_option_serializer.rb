@@ -1,8 +1,9 @@
 class QuestionOptionSerializer < BaseSerializer
   attr_reader :question_option
 
-  def initialize(question_option)
+  def initialize(question_option, client: nil)
     @question_option = question_option
+    @client = client
   end
 
   def serialize
@@ -16,7 +17,8 @@ class QuestionOptionSerializer < BaseSerializer
     )
 
     option_data.merge!(
-      value: question_option.value
+      value: question_option.value,
+      translations: serialize_translations(question_option)
     )
 
     if question_option.question.present?
@@ -26,12 +28,14 @@ class QuestionOptionSerializer < BaseSerializer
       }
     end
 
-    option_data[:answers_count] = question_option.answers_count
+    if admin_client? || question_option.question&.show_answers_count
+      option_data[:answers_count] = question_option.answers_count
+    end
 
     option_data
   end
 
-  def self.serialize_collection(options)
-    options.map { |option| new(option).serialize }
+  def self.serialize_collection(options, client: nil)
+    options.map { |option| new(option, client: client).serialize }
   end
 end

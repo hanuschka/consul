@@ -34,7 +34,7 @@
         resources :questions, only: [:create]
       end
       resources :questions, only: [:index, :create, :show, :update, :destroy], shallow: true do
-        resources :question_options, only: [:create, :show, :update, :destroy]
+        resources :question_options, only: [:index, :create, :show, :update, :destroy]
       end
       resources :events, only: [:index, :create, :show, :update, :destroy]
       resources :arguments, only: [:index, :create, :show, :update, :destroy]
@@ -44,8 +44,13 @@
       resources :point_of_interest_categories, only: [:index, :create, :show, :update, :destroy]
       resources :comments, only: [:index, :create, :show, :update, :destroy]
       resources :budgets, only: [:index, :create, :show, :update, :destroy]
-      resources :formulars, only: [:index, :create, :show, :update, :destroy]
-      resources :milestones, only: [:index, :create]
+      resources :formulars, only: [:index, :create, :show, :update, :destroy] do
+        resources :formular_fields, only: [:index]
+      end
+      resources :milestones, only: [:index, :create, :show, :update, :destroy]
+      resources :projekt_labels, only: [:index]
+      resources :sentiments, only: [:index]
+      resources :masterportal_collections, only: [:index]
       resources :progress_bars, only: [:index, :create, :show, :update, :destroy]
 
       resource :iframe, only: [:show, :update]
@@ -55,12 +60,25 @@
     resources :deficiency_reports, only: [:index, :show, :create, :update]
     resources :deficiency_report_categories, only: [:index]
     resources :deficiency_report_intake_channels, only: [:index]
+    resources :deficiency_report_statuses, only: [:index]
+    resources :deficiency_report_subcategories, only: [:index]
+    resources :deficiency_report_answer_templates, only: [:index]
     resources :ideas, only: [:index, :show, :create, :update]
     resources :idea_categories, only: [:index, :show, :create, :update, :destroy]
     resources :idea_officers, only: [:index]
-    resources :municipal_plans, only: [:index, :show]
+    resources :municipal_plans, only: [:index, :show, :create, :update] do
+      collection do
+        patch :order
+      end
+    end
     resources :municipal_plan_topics, only: [:index]
+    resources :offers, only: [:index, :show]
     resources :polls, only: [:index, :show] do
+      member do
+        post :go_live
+        get :results
+      end
+
       resources :poll_questions, only: [:index, :create], path: "questions", as: :questions
     end
     resources :poll_questions, only: [:show, :update, :destroy] do

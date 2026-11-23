@@ -25,7 +25,7 @@ describe "Barriere melden", type: :request do
   end
 
   it "confirms the report only to a reporter who left an address" do
-    expect { submit(description: "Kontrast zu gering", email: "kai@example.org") }
+    expect { submit(description: "Kontrast zu gering", email: "anna@example.org") }
       .to have_enqueued_mail(AccessibilityReportMailer, :confirmation)
     expect { submit(description: "Kontrast zu gering") }
       .not_to have_enqueued_mail(AccessibilityReportMailer, :confirmation)

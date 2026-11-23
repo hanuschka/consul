@@ -57,8 +57,8 @@ class PagesController < ApplicationController
 
       resolve_landing_page_for_projekt(@projekt)
 
-      if @projekt.feature?("sidebar.show_notification_subscription_toggler")
-        @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
+      if current_user.present?
+        @projekt_subscription = ProjektSubscription.find_or_initialize_by(projekt: @projekt, user: current_user)
       end
 
       if @projekt.projekt_phases.active.frontend_visible.any? || helpers.show_admin_controls_for_projekt?(@projekt)

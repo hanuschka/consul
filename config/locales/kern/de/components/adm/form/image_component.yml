@@ -6,3 +6,5 @@ de:
           replace: Bild ersetzen
           remove: Bild entfernen
           add: Bild hinzufügen
+          credits_label: Bildnachweis
+          credits_hint: "Wird klein auf dem Bild angezeigt, auf der Seite der Projektidee und auf ihrer Kachel in Übersichten, z. B. „©Name_stock.adobe.com“. Leer lassen, wenn kein Nachweis nötig ist."

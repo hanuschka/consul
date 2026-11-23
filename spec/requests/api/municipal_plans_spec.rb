@@ -6,17 +6,18 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
 
   before { Setting["process.municipal_plans"] = true }
 
-  municipal_plan_schema = {
+  municipal_plan_schema = { "$ref" => "#/components/schemas/MunicipalPlan" }
+
+  municipal_plan_response_schema = {
     type: :object,
     properties: {
-      version: { type: :string, description: "Versionsnummer, set by the system" },
-      procedure_step: {
-        type: :object, nullable: true,
-        description: "Verfahrensschritt from the list the instance maintains, with its name as entered " \
-                     "there, null when none is set",
-        properties: { id: { type: :integer }, name: { type: :string }}
+      data: {
+        type: :object,
+        properties: { municipal_plan: municipal_plan_schema },
+        required: ["municipal_plan"]
       }
-    }
+    },
+    required: ["data"]
   }
 
   path "/api/municipal_plans" do
@@ -70,6 +71,117 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
       unauthorized_response
       forbidden_response
     end
+
+    post "Create a municipal plan" do
+      tags "Municipal Plans"
+      consumes "application/json"
+      produces "application/json"
+      security [bearer_auth: []]
+      description "Create a Vorhaben and release it in the same request, as /adm does when a new Vorhaben is " \
+                  "released: it is published as version 1.0. When a field the release needs is missing, " \
+                  "nothing is saved and the response is 422.#{ApiAccessRequirements::ADMIN_REQUIRED}"
+      parameter name: :municipal_plan, in: :body, schema: { "$ref" => "#/components/schemas/MunicipalPlanWriteParams" }
+
+      response "201", "municipal plan created and released" do
+        let(:officer) { create(:municipal_plan_officer) }
+        let(:polygon) { [[[11.58, 50.92], [11.59, 50.92], [11.59, 50.93], [11.58, 50.92]]] }
+        let(:municipal_plan) do
+          {
+            municipal_plan: {
+              translations: {
+                de: { title: "Eichplatz", short_description: "Neubau", processing_status: "Planung", next_steps: "Beteiligung" },
+                en: { title: "Eich square", short_description: "New building", processing_status: "Planning", next_steps: "Participation" }
+              },
+              responsible_type: "MunicipalPlan::Officer",
+              responsible_id: officer.id,
+              district_ids: [create(:registered_address_district).id],
+              topic_ids: [create(:municipal_plan_topic).id],
+              map_location_attributes: {
+                latitude: 50.927,
+                longitude: 11.589,
+                zoom: 15,
+                features: {
+                  type: "FeatureCollection",
+                  features: [{ type: "Feature", geometry: { type: "Polygon", coordinates: polygon }, properties: {} }]
+                }
+              },
+              links: [{ title: "Ratsbeschluss", url: "https://jena.example/beschluss" }]
+            }
+          }
+        end
+
+        before { api_client.update!(access_level: :admin) }
+
+        schema municipal_plan_response_schema
+
+        run_test! do |response|
+          plan_data = JSON.parse(response.body)["data"]["municipal_plan"]
+
+          expect(plan_data).to include("status" => "published", "version" => "1.0")
+          expect(plan_data["translations"]["en"]["title"]).to eq("Eich square")
+          expect(plan_data["responsible"]).to include("id" => officer.id, "type" => "MunicipalPlan::Officer")
+          expect(plan_data["links"]).to eq([{ "title" => "Ratsbeschluss", "url" => "https://jena.example/beschluss" }])
+          expect(plan_data["map_location"]["features"]["features"].first["geometry"]["coordinates"]).to eq(polygon)
+        end
+      end
+
+      response "422", "a field the release needs is missing" do
+        let(:municipal_plan) { { municipal_plan: { title: "Ohne Beschreibung" } } }
+
+        before { api_client.update!(access_level: :admin) }
+
+        schema ApiResponseExamples::ERROR_SCHEMA
+
+        run_test! do
+          expect(MunicipalPlan.count).to eq(0)
+        end
+      end
+
+      forbidden_response
+    end
+  end
+
+  path "/api/municipal_plans/order" do
+    patch "Set the editorial order of the municipal plans" do
+      tags "Municipal Plans"
+      consumes "application/json"
+      produces "application/json"
+      security [bearer_auth: []]
+      description "Set the order the Vorhabenliste shows. Send the ids in the wanted order; archived Vorhaben and " \
+                  "unknown ids are left out. Like /adm, this releases nothing and changes no version." \
+                  "#{ApiAccessRequirements::ADMIN_REQUIRED}"
+      parameter name: :order, in: :body, schema: {
+        type: :object,
+        properties: { ids: { type: :array, items: { type: :integer }, description: "Vorhaben ids in the wanted order" } },
+        required: ["ids"]
+      }
+
+      response "200", "order saved" do
+        let(:first) { create(:municipal_plan, :published) }
+        let(:second) { create(:municipal_plan, :published) }
+        let(:order) { { ids: [second.id, first.id] } }
+
+        before { api_client.update!(access_level: :admin) }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: { ordered_ids: { type: :array, items: { type: :integer } } },
+                   required: ["ordered_ids"]
+                 }
+               },
+               required: ["data"]
+
+        run_test! do
+          expect(second.reload.given_order).to eq(1)
+          expect(first.reload.given_order).to eq(2)
+          expect(first.version).to eq("1.0")
+        end
+      end
+
+      forbidden_response
+    end
   end
 
   path "/api/municipal_plans/{id}" do
@@ -79,7 +191,8 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
       tags "Municipal Plans"
       produces "application/json"
       security [bearer_auth: []]
-      description "Retrieve one published Vorhaben. Drafts and archived Vorhaben return 404." \
+      description "Retrieve one published Vorhaben. For read-only clients drafts and archived Vorhaben " \
+                  "return 404; admin clients get every released Vorhaben, working copies never." \
                   "#{ApiAccessRequirements::GET_READ_ONLY}"
 
       response "200", "municipal plan found" do
@@ -105,6 +218,71 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
       end
 
       unauthorized_response { let(:id) { create(:municipal_plan, :published).id } }
+    end
+
+    patch "Update a municipal plan" do
+      tags "Municipal Plans"
+      consumes "application/json"
+      produces "application/json"
+      security [bearer_auth: []]
+      description "Change a Vorhaben. As in /adm the change goes to a working copy that is released right away, " \
+                  "so the Vorhaben keeps its id and gets the next version; a Vorhaben still in Entwurf is " \
+                  "changed in place and stays an Entwurf. archive_on sent alone changes nothing else. A change " \
+                  "prepared in /adm and not yet released blocks content writes with 422." \
+                  "#{ApiAccessRequirements::ADMIN_REQUIRED}"
+      parameter name: :municipal_plan, in: :body, schema: { "$ref" => "#/components/schemas/MunicipalPlanWriteParams" }
+
+      response "200", "change released as a new version" do
+        let(:plan) { create(:municipal_plan, :published) }
+        let(:id) { plan.id }
+        let(:municipal_plan) { { municipal_plan: { translations: { en: { title: "Eich square" } }, costs: "2 Mio. Euro" } } }
+
+        before { api_client.update!(access_level: :admin) }
+
+        schema municipal_plan_response_schema
+
+        run_test! do |response|
+          plan_data = JSON.parse(response.body)["data"]["municipal_plan"]
+
+          expect(plan_data["id"]).to eq(plan.id)
+          expect(plan_data["version"]).to eq("1.1")
+          expect(plan_data["translations"]["en"]["title"]).to eq("Eich square")
+          expect(plan_data["costs"]).to eq("2 Mio. Euro")
+          expect(MunicipalPlan.where(released_plan_id: plan.id)).to be_empty
+        end
+      end
+
+      response "200", "archive date set without a new version" do
+        let(:plan) { create(:municipal_plan, :published) }
+        let(:id) { plan.id }
+        let(:municipal_plan) { { municipal_plan: { archive_on: "2027-03-31" } } }
+
+        before { api_client.update!(access_level: :admin) }
+
+        run_test! do |response|
+          plan_data = JSON.parse(response.body)["data"]["municipal_plan"]
+
+          expect(plan_data["archive_on"]).to eq("2027-03-31")
+          expect(plan_data["version"]).to eq("1.0")
+        end
+      end
+
+      response "422", "a change prepared in /adm is pending" do
+        let(:plan) { create(:municipal_plan, :published) }
+        let(:id) { plan.id }
+        let(:municipal_plan) { { municipal_plan: { costs: "3 Mio. Euro" } } }
+
+        before do
+          api_client.update!(access_level: :admin)
+          MunicipalPlans::WorkingCopyService.call(plan)
+        end
+
+        schema ApiResponseExamples::ERROR_SCHEMA
+
+        run_test!
+      end
+
+      forbidden_response { let(:id) { create(:municipal_plan, :published).id } }
     end
   end
 
@@ -141,18 +319,20 @@ RSpec.describe "Municipal Plans API", type: :request, openapi_spec: "v1/swagger.
       plan = create(:municipal_plan, :published, responsible: officer, title: "Eichplatz",
                                                  system_mailbox_email: "postfach@jena.example")
       plan.memos.create!(user: officer.user, text: "Interner Vermerk")
-      plan.update!(contact_name: "Kai Ostermann")
+      plan.update!(contact_name: "Anna Muster")
 
       get api_municipal_plan_path(plan), headers: headers
       body = response.body
       data = JSON.parse(body)["data"]["municipal_plan"]
 
       expect(data["title"]).to eq("Eichplatz")
-      expect(data["contact_name"]).to eq("Kai Ostermann")
+      expect(data["contact_name"]).to eq("Anna Muster")
       expect(data["districts"].first.keys).to eq(%w[id name])
       expect(data["topics"].first.keys).to eq(%w[id name])
-      expect(data["map_location"].keys).to eq(%w[latitude longitude address])
-      expect(data.keys).not_to include("responsible", "system_mailbox_email", "memos", "audits")
+      expect(data["map_location"].keys).to include("latitude", "longitude", "address", "features")
+      expect(data.keys).not_to include(
+        "responsible", "system_mailbox_email", "memos", "audits", "archive_on", "notices_count"
+      )
       expect(body).not_to include("Interner Vermerk", "postfach@jena.example", officer.name)
     end
 

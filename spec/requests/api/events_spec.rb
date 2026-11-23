@@ -85,6 +85,11 @@ end
               induction_loop_available: { type: :boolean, nullable: true },
               assistance_dogs_welcome: { type: :boolean, nullable: true },
               sign_language_interpreter: { type: :boolean, nullable: true },
+              registration_enabled: { type: :boolean, description: 'Whether visitors can register on the site. Turning it off clears max_attendees.' },
+              max_attendees: { type: :integer, nullable: true, description: 'Maximum number of confirmed attendees; null or 0 means unlimited. Only kept while registration_enabled is true.' },
+              confirmation_email_text: { type: :string, nullable: true, description: 'Text of the email confirming a registration' },
+              waitlist_email_text: { type: :string, nullable: true, description: 'Text of the email for registrations on the waiting list' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[title description location]),
               image_attributes: {
                 type: :object,
                 nullable: true,
@@ -266,6 +271,11 @@ end
               induction_loop_available: { type: :boolean, nullable: true },
               assistance_dogs_welcome: { type: :boolean, nullable: true },
               sign_language_interpreter: { type: :boolean, nullable: true },
+              registration_enabled: { type: :boolean, description: 'Whether visitors can register on the site. Turning it off clears max_attendees.' },
+              max_attendees: { type: :integer, nullable: true, description: 'Maximum number of confirmed attendees; null or 0 means unlimited. Only kept while registration_enabled is true.' },
+              confirmation_email_text: { type: :string, nullable: true, description: 'Text of the email confirming a registration' },
+              waitlist_email_text: { type: :string, nullable: true, description: 'Text of the email for registrations on the waiting list' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[title description location]),
               image_attributes: {
                 type: :object,
                 nullable: true,
@@ -285,6 +295,56 @@ end
           }
         }
       }
+
+      response '200', 'registration settings and texts per language written' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:event_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::EventPhase', active: true) }
+        let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall', datetime: '2025-02-01T18:00:00Z') }
+        let(:id) { created_event.id }
+        let(:projekt_event) do
+          {
+            projekt_event: {
+              registration_enabled: true,
+              max_attendees: 2,
+              confirmation_email_text: 'You are registered.',
+              translations: { de: { title: 'Bürgerversammlung', location: 'Rathaus' } }
+            }
+          }
+        end
+
+        before do
+          registration = created_event.projekt_event_registrations.create!(
+            first_name: 'Erika',
+            last_name: 'Muster',
+            email: 'erika@example.com'
+          )
+          registration.update_column(:status, 'confirmed')
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt_event: { '$ref' => '#/components/schemas/ProjektEvent' }
+                   },
+                   required: ['projekt_event']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          event_data = JSON.parse(response.body)['data']['projekt_event']
+
+          expect(event_data['max_attendees']).to eq(2)
+          expect(event_data['registration_enabled']).to be(true)
+          expect(event_data['confirmation_email_text']).to eq('You are registered.')
+          expect(event_data['translations']['de']['title']).to eq('Bürgerversammlung')
+          expect(event_data['registrations']['confirmed_count']).to eq(1)
+          expect(event_data['registrations']['spots_available']).to eq(1)
+          expect(event_data['registrations']).to have_key('waitlisted_count')
+        end
+      end
 
       response '200', 'projekt event updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -316,14 +376,7 @@ end
         let(:created_event) { event_phase.projekt_events.create!(title: 'Town Hall', datetime: '2025-02-01T18:00:00Z') }
         let(:id) { created_event.id }
         let(:projekt_event) do
-          { projekt_event: { datetime: 'invalid' } }
-        end
-
-        before do
-          allow_any_instance_of(ProjektEvent).to receive(:update).and_return(false)
-          errors_mock = double('errors').as_null_object
-          allow(errors_mock).to receive(:full_messages).and_return(['Datetime is invalid'])
-          allow_any_instance_of(ProjektEvent).to receive(:errors).and_return(errors_mock)
+          { projekt_event: { registration_enabled: true, max_attendees: -3 } }
         end
 
         schema type: :object,

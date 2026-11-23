@@ -34,17 +34,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
                    properties: {
                      budget_phases: {
                        type: :array,
-                       items: {
-                         type: :object,
-                         properties: {
-                           id: { type: :integer },
-                           kind: { type: :string },
-                           name: { type: :string },
-                           starts_at: { type: :string, nullable: true },
-                           ends_at: { type: :string, nullable: true },
-                           enabled: { type: :boolean }
-                         }
-                       }
+                       items: { '$ref' => '#/components/schemas/BudgetPhase' }
                      }
                    },
                    required: ['budget_phases']
@@ -131,7 +121,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update a budget phase's dates and enabled status. Use this to configure the budget workflow timeline. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update a budget phase's dates, enabled status and texts (name, summary, description, main link) in one or several languages. Use this to configure the budget workflow timeline. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :budget_phase, in: :body, description: 'Budget phase attributes to update', schema: {
         type: :object,
@@ -141,7 +131,13 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
             properties: {
               starts_at: { type: :string, nullable: true, description: 'Phase start date (YYYY-MM-DD)' },
               ends_at: { type: :string, nullable: true, description: 'Phase end date (YYYY-MM-DD)' },
-              enabled: { type: :boolean, nullable: true, description: 'Enable or disable this phase' }
+              enabled: { type: :boolean, nullable: true, description: 'Enable or disable this phase' },
+              name: { type: :string, nullable: true, description: 'Phase name (current language)' },
+              summary: { type: :string, nullable: true, description: 'Short summary (current language)' },
+              description: { type: :string, nullable: true, description: 'Description (current language, max. 2000 characters)' },
+              main_link_text: { type: :string, nullable: true, description: 'Text of the main link (current language)' },
+              main_link_url: { type: :string, nullable: true, description: 'URL of the main link (current language); required with main_link_text' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[name summary description main_link_text main_link_url])
             }
           }
         },
@@ -169,7 +165,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
                  data: {
                    type: :object,
                    properties: {
-                     budget_phase: { type: :object }
+                     budget_phase: { '$ref' => '#/components/schemas/BudgetPhase' }
                    },
                    required: ['budget_phase']
                  }
@@ -202,7 +198,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
                  data: {
                    type: :object,
                    properties: {
-                     budget_phase: { type: :object }
+                     budget_phase: { '$ref' => '#/components/schemas/BudgetPhase' }
                    },
                    required: ['budget_phase']
                  }
@@ -312,7 +308,7 @@ RSpec.describe 'Budget Phases API', type: :request, openapi_spec: 'v1/swagger.ya
                  data: {
                    type: :object,
                    properties: {
-                     budget_phases: { type: :array, items: { type: :object } }
+                     budget_phases: { type: :array, items: { '$ref' => '#/components/schemas/BudgetPhase' } }
                    },
                    required: ['budget_phases']
                  }

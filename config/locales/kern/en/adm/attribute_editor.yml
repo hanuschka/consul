@@ -56,6 +56,8 @@ en:
       image:
         attachment_label: Image
         attachment_description: "The image is shown at the top of the newsletter as a visual lead, directly below the logo and above the title. Use a landscape image with a clear subject that fits thematically with the newsletter content. Recommended format: at least 600 pixels wide, JPG or PNG. The image is required and must be uploaded before sending."
+        credits_label: Image credit
+        credits_description: 'Shown small at the bottom of the image, in the page banner and on the tile in overviews, e.g. "©Name_stock.adobe.com". Leave empty if no credit is needed. Replacing the image removes the credit.'
       newsletter:
         recipient_group_id_label: Recipient group
         recipient_group_id_description: 'Defines which recipient group this newsletter is sent to. Recipient groups are managed under <a href="/adm/newsletters/recipient_groups" target="_blank">Notifications > Recipient groups</a> and can be composed by area, interest, or registration status. Only users assigned to the selected group receive the email. If you want to reach all registered users, choose the corresponding default group.'
@@ -90,8 +92,12 @@ en:
       site_customization/image:
         header_image_label: Background image for desktop
         header_image_description: "This image fills the top area of the homepage on screens from 751 pixels wide. It stays flush at the top; on narrower screens and tablets it is cropped on the left and right. Use a landscape image at least 1920 pixels wide with the main subject in the centre. Recommended format for sharp display on high-resolution screens: 3840 × 1400 pixels. Ignored when a desktop background video is uploaded below."
+        header_image_credits_label: Image credit for desktop
+        header_image_credits_description: 'Shown small at the bottom right of the homepage header on screens 751 pixels wide and up, e.g. "©Name_stock.adobe.com". Leave empty if no credit is needed. Replacing the image removes the credit.'
         mobile_header_image_label: Background image for mobile
         mobile_header_image_description: "This image fills the top area of the homepage on screens up to 750 pixels wide; without a mobile image, the desktop image is used there. The top edge sits behind the navigation bar, and depending on the device the image is cropped at the bottom or the sides. Use a portrait or nearly square image at least 1080 pixels wide, keep the top edge free and place the main subject in the centre. Recommended format for sharp display on high-resolution screens: 1080 × 1450 pixels. Ignored when a mobile background video is uploaded below."
+        mobile_header_image_credits_label: Image credit for mobile
+        mobile_header_image_credits_description: 'Shown small at the bottom right of the homepage header on screens up to 750 pixels wide, e.g. "©Name_stock.adobe.com". Leave empty if no credit is needed. Replacing the image removes the credit.'
         logo_header_label: Logo (white background)
         logo_header_description: "This logo appears in the top navigation bar as soon as it has a white background: on the homepage and on landing pages after scrolling, on all other pages always. It is shown at no more than 200 × 52 pixels; on screens up to 640 pixels wide no logo is shown. Use a PNG with a transparent background that reads well on white (max. 2 MB)."
         logo_header_for_transparent_label: Logo (transparent background)

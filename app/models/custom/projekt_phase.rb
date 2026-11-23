@@ -183,8 +183,7 @@ class ProjektPhase < ApplicationRecord
   has_many :similar_search_projekts,
            through: :projekt_phase_similar_search_projekts, source: :projekt
 
-  has_many :subscriptions, class_name: "ProjektPhaseSubscription", dependent: :destroy
-  has_many :subscribers, through: :subscriptions, source: :user
+  has_many :projekt_phase_subscriptions, dependent: :delete_all
 
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
@@ -455,24 +454,6 @@ class ProjektPhase < ApplicationRecord
     false
   end
 
-  def subscribed?(user)
-    return false unless user
-
-    subscriptions.where(user_id: user.id).exists?
-  end
-
-  def subscribe(user)
-    return false unless user
-
-    subscriptions.create(user_id: user.id)
-  end
-
-  def unsubscribe(user)
-    return false unless user
-
-    subscriptions.where(user_id: user.id).destroy_all
-  end
-
   def title
     phase_tab_name.presence || model_name.human
   end
@@ -655,10 +636,6 @@ class ProjektPhase < ApplicationRecord
 
   def marked_areas_restrictable?
     ProjektPhaseSetting.defaults[self.class.name].to_h.key?(:"feature.form.restrict_map_features_to_marked_areas")
-  end
-
-  def subscribable?
-    true
   end
 
   def regular_formular_cutoff_date

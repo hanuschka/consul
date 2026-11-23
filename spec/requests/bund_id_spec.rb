@@ -126,6 +126,22 @@ describe "BundID" do
       expect(signed_in?).to be false
     end
 
+    describe "with a BundID that belongs to a blocked account" do
+      before { user.update_columns(hidden_at: Time.current, email: "blocked@example.org") }
+
+      it "refuses the login and creates no new account" do
+        relay_state = start_bund_id_request
+
+        post_bund_id_response(relay_state, response_for(relay_state))
+
+        expect(response).to redirect_to(new_user_session_path)
+        expect(flash[:alert]).to eq(I18n.t("custom.users.omniauth.login_refused", provider: "BundID"))
+        expect(signed_in?).to be false
+        expect(User.with_hidden.count).to eq 1
+        expect(Identity.find_by(provider: "bund_id").user_id).to eq user.id
+      end
+    end
+
     describe "into a verified account" do
       let!(:geozone) { Geozone.create!(name: "Porz", postal_codes: "51147") }
       let(:old_address) do
@@ -245,6 +261,22 @@ describe "BundID" do
         expect(user.street_name).to eq("Altstraße")
         expect(user.plz).to eq(50667)
       end
+    end
+  end
+
+  describe "signing up" do
+    it "verifies the new account at ID-card level once the sign-up form is submitted" do
+      relay_state = start_bund_id_request
+
+      post_bund_id_response(relay_state, response_for(relay_state))
+
+      expect(response).to redirect_to(finish_signup_path)
+      new_user = User.find_by!(email: "erika@example.org")
+      expect(new_user).not_to be_level_three_verified
+
+      patch do_finish_signup_path, params: { user: { username: "erika" } }
+
+      expect(new_user.reload).to be_level_three_verified
     end
   end
 

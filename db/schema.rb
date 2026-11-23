@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_11_090245) do
+ActiveRecord::Schema.define(version: 2026_11_19_162424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -518,8 +518,11 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.string "similar_contributions_check_status"
     t.jsonb "similar_contributions_matches"
     t.boolean "selection_email_deferred", default: false, null: false
+    t.string "external_source"
+    t.string "external_id"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
+    t.index ["budget_id", "external_source", "external_id"], name: "index_budget_investments_on_budget_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
     t.index ["community_id"], name: "index_budget_investments_on_community_id"
     t.index ["draft"], name: "index_budget_investments_on_draft"
@@ -2110,6 +2113,92 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "offer_categories", force: :cascade do |t|
+    t.string "kind", null: false
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["kind", "given_order"], name: "index_offer_categories_on_kind_and_given_order"
+  end
+
+  create_table "offer_category_assignments", force: :cascade do |t|
+    t.bigint "offer_id", null: false
+    t.bigint "offer_category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["offer_category_id"], name: "index_offer_category_assignments_on_offer_category_id"
+    t.index ["offer_id", "offer_category_id"], name: "index_offer_category_assignments_unique", unique: true
+    t.index ["offer_id"], name: "index_offer_category_assignments_on_offer_id"
+  end
+
+  create_table "offer_category_translations", force: :cascade do |t|
+    t.bigint "offer_category_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_offer_category_translations_on_locale"
+    t.index ["offer_category_id"], name: "index_offer_category_translations_on_offer_category_id"
+  end
+
+  create_table "offer_provider_users", force: :cascade do |t|
+    t.bigint "offer_provider_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["offer_provider_id", "user_id"], name: "index_offer_provider_users_unique", unique: true
+    t.index ["offer_provider_id"], name: "index_offer_provider_users_on_offer_provider_id"
+    t.index ["user_id"], name: "index_offer_provider_users_on_user_id"
+  end
+
+  create_table "offer_managers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_offer_managers_on_user_id", unique: true
+  end
+
+  create_table "offer_providers", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "auto_join_emails", default: [], null: false, array: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "last_reminded_at"
+  end
+
+  create_table "offer_translations", force: :cascade do |t|
+    t.bigint "offer_id", null: false
+    t.string "locale", null: false
+    t.string "title"
+    t.text "short_description"
+    t.text "times"
+    t.text "costs"
+    t.text "registration"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_offer_translations_on_locale"
+    t.index ["offer_id"], name: "index_offer_translations_on_offer_id"
+  end
+
+  create_table "offers", force: :cascade do |t|
+    t.string "address"
+    t.string "contact_name"
+    t.string "contact_phone"
+    t.string "contact_email"
+    t.string "contact_website"
+    t.bigint "author_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "provider_id"
+    t.integer "review_status", default: 0, null: false
+    t.datetime "suspended_at"
+    t.date "expires_on"
+    t.datetime "deactivated_at"
+    t.index ["author_id"], name: "index_offers_on_author_id"
+    t.index ["provider_id"], name: "index_offers_on_provider_id"
+    t.index ["review_status"], name: "index_offers_on_review_status"
+  end
+
   create_table "officing_manager_assignments", force: :cascade do |t|
     t.bigint "officing_manager_id", null: false
     t.bigint "projekt_phase_id", null: false
@@ -2852,8 +2941,11 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "masterportal_pin_id"
+    t.string "external_source"
+    t.string "external_id"
     t.index ["author_id"], name: "index_projekt_point_of_interest_pins_on_author_id"
     t.index ["masterportal_pin_id"], name: "index_projekt_point_of_interest_pins_on_masterportal_pin_id"
+    t.index ["projekt_phase_id", "external_source", "external_id"], name: "index_poi_pins_on_phase_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
     t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_pins_on_projekt_phase_id"
     t.index ["projekt_point_of_interest_category_id"], name: "projekt_point_of_interest_category"
   end
@@ -2939,7 +3031,7 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["projekt_id"], name: "index_projekt_subscriptions_on_projekt_id"
-    t.index ["user_id"], name: "index_projekt_subscriptions_on_user_id"
+    t.index ["user_id", "projekt_id"], name: "index_projekt_subscriptions_on_user_id_and_projekt_id", unique: true
   end
 
   create_table "projekt_translations", force: :cascade do |t|
@@ -3086,6 +3178,8 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.boolean "generated_image", default: false, null: false
     t.string "similar_contributions_check_status"
     t.jsonb "similar_contributions_matches"
+    t.string "external_source"
+    t.string "external_id"
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
@@ -3098,6 +3192,7 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.index ["hot_score"], name: "index_proposals_on_hot_score"
     t.index ["masterportal_pin_id"], name: "index_proposals_on_masterportal_pin_id"
     t.index ["projekt_id"], name: "index_proposals_on_projekt_id"
+    t.index ["projekt_phase_id", "external_source", "external_id"], name: "index_proposals_on_phase_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
     t.index ["projekt_phase_id"], name: "index_proposals_on_projekt_phase_id"
     t.index ["selected"], name: "index_proposals_on_selected"
     t.index ["sentiment_id"], name: "index_proposals_on_sentiment_id"
@@ -3124,6 +3219,8 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.string "access_method"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "projekt_id"
+    t.index ["projekt_id"], name: "index_recipient_groups_on_projekt_id", unique: true
   end
 
   create_table "registered_address_cities", force: :cascade do |t|
@@ -3552,6 +3649,7 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.datetime "image_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "credits"
     t.index ["name"], name: "index_site_customization_images_on_name", unique: true
   end
 
@@ -3803,6 +3901,7 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
     t.string "company_name"
     t.bigint "brevo_contact_id"
     t.datetime "brevo_synced_at"
+    t.datetime "welcome_email_sent_at"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["brevo_contact_id"], name: "index_users_on_brevo_contact_id", unique: true, where: "(brevo_contact_id IS NOT NULL)"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
@@ -4135,6 +4234,13 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
   add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
+  add_foreign_key "offer_category_assignments", "offer_categories"
+  add_foreign_key "offer_category_assignments", "offers"
+  add_foreign_key "offer_managers", "users"
+  add_foreign_key "offer_provider_users", "offer_providers"
+  add_foreign_key "offer_provider_users", "users"
+  add_foreign_key "offers", "offer_providers", column: "provider_id"
+  add_foreign_key "offers", "users", column: "author_id", on_delete: :nullify
   add_foreign_key "officing_manager_assignments", "officing_managers"
   add_foreign_key "officing_manager_assignments", "projekt_phases"
   add_foreign_key "officing_managers", "users"
@@ -4202,6 +4308,7 @@ ActiveRecord::Schema.define(version: 2026_11_11_090245) do
   add_foreign_key "proposals", "projekts"
   add_foreign_key "proposals", "sentiments"
   add_foreign_key "recipient_group_filters", "recipient_groups"
+  add_foreign_key "recipient_groups", "projekts", on_delete: :nullify
   add_foreign_key "registered_address_district_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_district_projekt_phases", "registered_address_districts"
   add_foreign_key "registered_address_districts", "idea_officers"

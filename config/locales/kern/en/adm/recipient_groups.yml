@@ -1,6 +1,7 @@
 en:
   adm:
     recipient_groups:
+      projekt_subscribers_group_name: "Project subscribers: %{title}"
       index:
         title: Recipient groups
         new_recipient_group: Create new recipient group
@@ -20,6 +21,7 @@ en:
           edit: Edit
           delete: Delete
           delete_confirm: Are you sure you want to delete this recipient group?
+          automatic: Managed automatically
         empty_title: No recipient groups available
         empty_description: Create a recipient group to send newsletters to specific audiences.
       new:
@@ -57,7 +59,7 @@ en:
           newsletter_subscriber_ids: All users with consent
           all_newsletter_subscriber_ids: All users with consent plus newsletter subscribers without an account
           administrators_ids: Administrators
-          any_phase_subscribers_ids: Subscribers of all phases
+          subscriber_ids: Project subscribers
           authors_of_feasible_ids: Authors whose proposals meet the criteria
           authors_of_unfeasible_ids: Authors whose proposals do not meet the criteria
           authors_of_selected_ids: Authors whose proposals were selected for the voting phase
@@ -85,8 +87,7 @@ en:
           newsletter_subscribers: Newsletter subscribers
           role: Role
           phase_authors: Phase authors
-          phase_subscribers: Phase subscribers
-          projekt_subscribers: Projekt subscribers (sidebar toggle)
+          projekt_subscribers: Project subscribers
           comment_authors: Commenters
           voting_participants: Voting participants
           district: District

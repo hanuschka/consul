@@ -107,7 +107,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investments: { type: :array, items: { type: :object } }
+                     budget_investments: { type: :array, items: { '$ref' => '#/components/schemas/BudgetInvestment' } }
                    },
                    required: ['budget_investments']
                  },
@@ -122,6 +122,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
         let(:budget_id) do
           api_client.update!(access_level: :public_data)
           _user, budget, heading = create_minimal_prereqs
+          budget.update!(projekt_phase: create_projekt_phase('ProjektPhase::BudgetPhase'))
           2.times do |i|
             investment = Budget::Investment.new(
               author: api_client.user,
@@ -141,7 +142,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investments: { type: :array, items: { type: :object } }
+                     budget_investments: { type: :array, items: { '$ref' => '#/components/schemas/BudgetInvestment' } }
                    },
                    required: ['budget_investments']
                  },
@@ -180,23 +181,8 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               valuation_finished: { type: :boolean, nullable: true, description: 'Admin-only: Whether feasibility assessment is complete' },
               selected: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is selected as a winner' },
               visible_to_valuators: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is visible to valuators during the assessment phase' },
-              map_location_attributes: {
-                type: :object,
-                nullable: true,
-                description: 'Geographic location data for mapping the investment',
-                properties: {
-                  id: { type: :integer, nullable: true },
-                  latitude: { type: :number, description: 'Latitude coordinate' },
-                  longitude: { type: :number, description: 'Longitude coordinate' },
-                  altitude: { type: :number, nullable: true },
-                  zoom: { type: :integer, nullable: true },
-                  features: { type: :string, nullable: true },
-                  rendering_library: { type: :string, nullable: true },
-                  show_admin_shape: { type: :boolean, nullable: true },
-                  _destroy: { type: :boolean, nullable: true }
-                },
-                required: %w[latitude longitude]
-              },
+              **Schemas::Budgets::BUDGET_INVESTMENT_WRITE_PROPERTIES,
+              **Schemas::Miscellaneous::EXTERNAL_REFERENCE_WRITE_PROPERTIES,
               image_attributes: {
                 type: :object,
                 nullable: true,
@@ -239,6 +225,85 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
         required: ['budget_investment']
       }
 
+      response '201', 'budget investment created with an external reference and texts in two languages' do
+        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
+        let(:budget) { Budget.find(budget_id) }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              heading_id: heading.id,
+              external_source: 'stadtportal',
+              external_id: 'A-1042',
+              translations: {
+                de: { title: 'Neue Bänke im Park', description: 'Zehn Bänke entlang des Weges' },
+                en: { title: 'New park benches', description: 'Ten benches along the path' }
+              },
+              implementation_performer: 'city',
+              user_cost_estimate: '5.000 €'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
+                   },
+                   required: ['budget_investment']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          investment_data = JSON.parse(response.body)['data']['budget_investment']
+
+          expect(investment_data['external_source']).to eq('stadtportal')
+          expect(investment_data['external_id']).to eq('A-1042')
+          expect(investment_data['translations']['de']['title']).to eq('Neue Bänke im Park')
+          expect(investment_data['implementation_performer']).to eq('city')
+        end
+      end
+
+      response '422', 'external id already used in the budget' do
+        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
+        let(:budget) { Budget.find(budget_id) }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+
+        before do
+          budget.investments.create!(
+            heading: heading,
+            author: api_client.content_author,
+            resource_terms: true,
+            title: 'Synced before',
+            description: 'Synced before',
+            external_source: 'stadtportal',
+            external_id: 'A-1042'
+          )
+        end
+
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              heading_id: heading.id,
+              title: 'Synced again',
+              description: 'Synced again',
+              external_source: 'stadtportal',
+              external_id: 'A-1042'
+            }
+          }
+        end
+
+        run_test! do
+          expect(budget.investments.where(external_id: 'A-1042').count).to eq(1)
+        end
+      end
+
       response '201', 'budget investment created' do
         let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
         let(:budget) { Budget.find(budget_id) }
@@ -261,7 +326,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -379,7 +444,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -437,7 +502,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                    properties: {
                      budget_investments: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/BudgetInvestment' }
                      }
                    },
                    required: ['budget_investments']
@@ -485,7 +550,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -501,7 +566,13 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '200', 'budget investment found with public_data access' do
-        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:budget) do
+          Budget.create!(
+            name: 'Test Budget',
+            currency_symbol: '€',
+            projekt_phase: create_projekt_phase('ProjektPhase::BudgetPhase')
+          )
+        end
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:budget_investment) do
@@ -526,7 +597,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -562,22 +633,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               valuation_finished: { type: :boolean, nullable: true, description: 'Admin-only: Whether feasibility assessment is complete' },
               selected: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is selected as a winner' },
               visible_to_valuators: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is visible to valuators during the assessment phase' },
-              map_location_attributes: {
-                type: :object,
-                nullable: true,
-                description: 'Geographic location data for mapping the investment',
-                properties: {
-                  id: { type: :integer, nullable: true },
-                  latitude: { type: :number, nullable: true, description: 'Latitude coordinate' },
-                  longitude: { type: :number, nullable: true, description: 'Longitude coordinate' },
-                  altitude: { type: :number, nullable: true },
-                  zoom: { type: :integer, nullable: true },
-                  features: { type: :string, nullable: true },
-                  rendering_library: { type: :string, nullable: true },
-                  show_admin_shape: { type: :boolean, nullable: true },
-                  _destroy: { type: :boolean, nullable: true }
-                }
-              },
+              **Schemas::Budgets::BUDGET_INVESTMENT_WRITE_PROPERTIES,
               image_attributes: {
                 type: :object,
                 nullable: true,
@@ -648,7 +704,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -656,6 +712,57 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                required: ['data']
 
         run_test!
+      end
+
+      response '200', 'winner kept when incompatible is changed in the same request' do
+        let(:existing_investment) do
+          create_investment_for_valuation(
+            feasibility: 'feasible',
+            valuation_finished: true,
+            selected: true,
+            valuator_explanation: '<p>Machbar</p>'
+          )
+        end
+        let(:id) { existing_investment.id }
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              incompatible: false,
+              winner: true,
+              physical_votes: 12,
+              price_explanation: 'Laut Kostenschätzung',
+              translations: {
+                de: { title: 'Bänke im Park', description: 'Zehn Bänke entlang des Weges' },
+                en: { title: 'Benches in the park' }
+              }
+            }
+          }
+        end
+
+        before { existing_investment.update_column(:incompatible, true) }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
+                   },
+                   required: ['budget_investment']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          investment_data = JSON.parse(response.body)['data']['budget_investment']
+
+          expect(investment_data['winner']).to be(true)
+          expect(investment_data['incompatible']).to be(false)
+          expect(investment_data['physical_votes']).to eq(12)
+          expect(investment_data['price_explanation']).to eq('Laut Kostenschätzung')
+          expect(investment_data['translations']['en']['title']).to eq('Benches in the park')
+          expect(existing_investment.reload.winner).to be(true)
+        end
       end
 
       response '200', 'criteria check completed with explanation in one request' do
@@ -877,7 +984,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -1045,7 +1152,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }

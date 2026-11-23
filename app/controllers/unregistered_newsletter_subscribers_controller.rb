@@ -40,7 +40,7 @@ class UnregisteredNewsletterSubscribersController < ApplicationController
         @subscriber_email = @unregistered_newsletter_subscriber.email
       else
         respond_to do |format|
-          format.js { render "errors.js.erb" }
+          format.js { render "errors" }
         end
       end
 

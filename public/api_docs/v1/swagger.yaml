@@ -18422,6 +18422,367 @@ paths:
                         type: array
                         items:
                           type: string
+  "/api/offers":
+    get:
+      summary: List offers
+      tags:
+      - Offers
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve the published offers of the offers module with their fields and categories. Offers suspended by the administration, deactivated by their provider or past their expiry date are never part of the response. Returns 404 while the offers module is switched off.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Pagination page number (**default:** 1)
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: 'Number of offers per page (**default:** 500, max: 2000)'
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: offers found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      offers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            title:
+                              type: string
+                            short_description:
+                              type: string
+                              description: HTML
+                            times:
+                              type: string
+                              nullable: true
+                            costs:
+                              type: string
+                              nullable: true
+                              description: Free text in addition to the costs categories
+                            registration:
+                              type: string
+                              nullable: true
+                            address:
+                              type: string
+                              nullable: true
+                            contact_name:
+                              type: string
+                              nullable: true
+                            contact_phone:
+                              type: string
+                              nullable: true
+                            contact_email:
+                              type: string
+                              nullable: true
+                            contact_website:
+                              type: string
+                              nullable: true
+                            expires_on:
+                              type: string
+                              format: date
+                              nullable: true
+                              description: Last day the offer is shown publicly, null
+                                when it does not expire
+                            updated_at:
+                              type: string
+                              format: date-time
+                            provider:
+                              type: object
+                              nullable: true
+                              description: The provider (Anbieter) the offer belongs
+                                to
+                              properties:
+                                id:
+                                  type: integer
+                                name:
+                                  type: string
+                            categories:
+                              type: object
+                              description: Category values per kind
+                              properties:
+                                offer_type:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: integer
+                                      name:
+                                        type: string
+                                target_group:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: integer
+                                      name:
+                                        type: string
+                                costs:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: integer
+                                      name:
+                                        type: string
+                                accessibility:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: integer
+                                      name:
+                                        type: string
+                                social_area:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      id:
+                                        type: integer
+                                      name:
+                                        type: string
+                            map_location:
+                              type: object
+                              nullable: true
+                              properties:
+                                latitude:
+                                  type: number
+                                longitude:
+                                  type: number
+                            image:
+                              type: object
+                              nullable: true
+                          required:
+                          - id
+                          - title
+                          - categories
+                    required:
+                    - offers
+                  pagination:
+                    type: object
+                required:
+                - data
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+        '403':
+          description: forbidden - insufficient access
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
+  "/api/offers/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: Offer id
+      schema:
+        type: integer
+    get:
+      summary: Show an offer
+      tags:
+      - Offers
+      security:
+      - bearer_auth: []
+      description: |-
+        Retrieve one published offer. Suspended, deactivated and expired offers return 404.
+
+        *Authorization: Available to both `admin` and `public_data` access levels.*
+      responses:
+        '200':
+          description: offer found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      offer:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          title:
+                            type: string
+                          short_description:
+                            type: string
+                            description: HTML
+                          times:
+                            type: string
+                            nullable: true
+                          costs:
+                            type: string
+                            nullable: true
+                            description: Free text in addition to the costs categories
+                          registration:
+                            type: string
+                            nullable: true
+                          address:
+                            type: string
+                            nullable: true
+                          contact_name:
+                            type: string
+                            nullable: true
+                          contact_phone:
+                            type: string
+                            nullable: true
+                          contact_email:
+                            type: string
+                            nullable: true
+                          contact_website:
+                            type: string
+                            nullable: true
+                          expires_on:
+                            type: string
+                            format: date
+                            nullable: true
+                            description: Last day the offer is shown publicly, null
+                              when it does not expire
+                          updated_at:
+                            type: string
+                            format: date-time
+                          provider:
+                            type: object
+                            nullable: true
+                            description: The provider (Anbieter) the offer belongs to
+                            properties:
+                              id:
+                                type: integer
+                              name:
+                                type: string
+                          categories:
+                            type: object
+                            description: Category values per kind
+                            properties:
+                              offer_type:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                    name:
+                                      type: string
+                              target_group:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                    name:
+                                      type: string
+                              costs:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                    name:
+                                      type: string
+                              accessibility:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                    name:
+                                      type: string
+                              social_area:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                    name:
+                                      type: string
+                          map_location:
+                            type: object
+                            nullable: true
+                            properties:
+                              latitude:
+                                type: number
+                              longitude:
+                                type: number
+                          image:
+                            type: object
+                            nullable: true
+                        required:
+                        - id
+                        - title
+                        - categories
+                    required:
+                    - offer
+                required:
+                - data
+        '404':
+          description: offer not published
+        '401':
+          description: unauthorized - missing or invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      messages:
+                        type: array
+                        items:
+                          type: string
   "/api/projekt_phases/{projekt_phase_id}/point_of_interest_categories":
     parameters:
     - name: projekt_phase_id
@@ -32750,6 +33111,9 @@ components:
           type: boolean
           description: boolean (modules)
         process.municipal_plans:
+          type: boolean
+          description: boolean (modules)
+        process.offers:
           type: boolean
           description: boolean (modules)
         process.ideas:

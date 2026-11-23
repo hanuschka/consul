@@ -5,6 +5,7 @@ module Adm
       "projekt_manager" => ProjektManager,
       "deficiency_report_manager" => DeficiencyReportManager,
       "idea_manager" => IdeaManager,
+      "offer_manager" => OfferManager,
       "moderator" => Moderator,
       "valuator" => Valuator,
       "officing_manager" => OfficingManager,
@@ -93,6 +94,8 @@ module Adm
           adm_valuators_path
         when "OfficingManager"
           adm_officing_managers_path
+        when "OfferManager"
+          adm_offers_managers_path
         else
           url_from(request.referer) || adm_root_path
         end
@@ -104,6 +107,8 @@ module Adm
           adm_projekts_managers_path
         when "LandingPageManager"
           adm_landing_pages_managers_path
+        when "OfferManager"
+          adm_offers_managers_path
         else
           url_from(request.referer) || adm_root_path
         end

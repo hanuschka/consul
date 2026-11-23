@@ -27,4 +27,8 @@ FactoryBot.define do
   factory :moderator do
     user
   end
+
+  factory :offer_manager do
+    user
+  end
 end

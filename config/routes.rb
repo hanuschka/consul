@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   draw "adm/landing_pages"
   draw "adm/deficiency_reports"
   draw "adm/municipal_plans"
+  draw "adm/offers"
   draw "adm/moderation"
   draw "adm/valuation"
   draw "adm/officing"
@@ -41,6 +42,7 @@ Rails.application.routes.draw do
   draw :projekt
   draw :ideas
   draw :municipal_plans
+  draw :offers
   draw :projekt_management
   draw :deficiency_report_management
   draw :idea_management

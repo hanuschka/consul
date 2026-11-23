@@ -38,7 +38,7 @@ describe "Vorhaben in /adm", type: :request do
 
     it "advances only once when an attribute and an association change together" do
       expect do
-        patch_plan(contact_name: "Kai Ostermann", district_ids: plan.district_ids + [other_district.id])
+        patch_plan(contact_name: "Anna Muster", district_ids: plan.district_ids + [other_district.id])
       end.to change { plan.reload.version }.from("0.1").to("0.2")
     end
 
@@ -105,14 +105,14 @@ describe "Vorhaben in /adm", type: :request do
 
     it "shows every value again when it is reopened" do
       create_plan(title: "Halbfertiges Vorhaben", short_description: "Nur ein Anfang",
-                  contact_name: "Kai Ostermann",
+                  contact_name: "Anna Muster",
                   district_ids: [district.id], topic_ids: [topic.id])
 
       get edit_adm_municipal_plans_municipal_plan_path(MunicipalPlan.last)
 
       expect(response.body).to include("Halbfertiges Vorhaben")
       expect(response.body).to include("Nur ein Anfang")
-      expect(response.body).to include("Kai Ostermann")
+      expect(response.body).to include("Anna Muster")
       expect(response.body).to match(/value="#{district.id}"[^>]*checked/)
       expect(response.body).to match(/value="#{topic.id}"[^>]*checked/)
     end
@@ -591,7 +591,7 @@ describe "Vorhaben in /adm", type: :request do
 
   describe "Hinweise in the administration" do
     let!(:notice) do
-      plan.notices.create!(name: "Kai Ostermann", email: "kai@example.org", body: "Eine Frage")
+      plan.notices.create!(name: "Anna Muster", email: "anna@example.org", body: "Eine Frage")
     end
 
     it "removes a Hinweis" do
@@ -629,7 +629,7 @@ describe "Vorhaben in /adm", type: :request do
 
     it "keeps a Sachbearbeitung away from another Vorhaben's Hinweise" do
       other = create(:municipal_plan, responsible: create(:municipal_plan_officer))
-      other_notice = other.notices.create!(email: "kai@example.org", body: "Eine Frage")
+      other_notice = other.notices.create!(email: "anna@example.org", body: "Eine Frage")
       login_as(officer.user)
 
       expect { delete adm_municipal_plans_municipal_plan_notice_path(other, other_notice) }
@@ -738,31 +738,31 @@ describe "Vorhaben in /adm", type: :request do
     end
 
     it "keeps saving working" do
-      patch_plan(contact_name: "Kai Ostermann")
+      patch_plan(contact_name: "Anna Muster")
 
-      expect(plan.reload.contact_name).to eq "Kai Ostermann"
+      expect(plan.reload.contact_name).to eq "Anna Muster"
     end
   end
 
   describe "the Änderungslog tab" do
     it "lists the changes of a Vorhaben" do
-      plan.update!(contact_name: "Kai Ostermann")
+      plan.update!(contact_name: "Anna Muster")
 
       get audits_adm_municipal_plans_municipal_plan_path(plan)
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(I18n.t("adm.municipal_plans.municipal_plans.tabs.audits"))
-      expect(response.body).to include("Kai Ostermann")
+      expect(response.body).to include("Anna Muster")
     end
 
     it "shows the released Vorhaben's history on the pending version's page" do
-      released = create(:municipal_plan, :published, responsible: officer, contact_name: "Kai Ostermann")
+      released = create(:municipal_plan, :published, responsible: officer, contact_name: "Anna Muster")
       copy = ::MunicipalPlans::WorkingCopyService.call(released)
 
       get audits_adm_municipal_plans_municipal_plan_path(copy)
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include("Kai Ostermann")
+      expect(response.body).to include("Anna Muster")
       expect(response.body).to include(
         adm_municipal_plans_municipal_plan_audit_path(released, released.audits.last)
       )

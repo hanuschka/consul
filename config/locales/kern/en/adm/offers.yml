@@ -1,0 +1,293 @@
+en:
+  adm:
+    offers:
+      imports:
+        new:
+          title: Import offers
+          page_hint: "Use the import to create many offers at once or to update existing ones. Upload a CSV file, ideally based on the template. The template contains all existing offers. The sample shows two filled-in rows; it uses placeholder providers and categories and therefore cannot be imported unchanged. Rules:"
+          rules:
+            format: Columns separated by semicolon or comma, encoded in UTF-8 or the Excel default.
+            rows: One offer per row. Provider, title, short description, at least one offer type and one social area are required.
+            provider: The provider must already exist and is matched by name.
+            categories: Category values must already exist and are matched by name. Separate several values in one cell with commas.
+            dates: Expiry date as DD.MM.YYYY. Latitude and longitude are optional.
+            id: "The ID column links a row to an existing offer. When updating, empty cells remove the previous value. Image, visibility and check status stay unchanged."
+          rules_outro: "Valid rows are applied even if other rows contain errors. Newly created offers are published immediately and count as checked. Images cannot be imported."
+          upload_title: Upload CSV file
+          template: Download template
+          sample: Download sample
+          file_label: CSV file
+          file_hint: "CSV file of up to %{max}. Rows with the ID of an existing offer update that offer, rows without an ID create a new one. After the import you see for each row whether the offer was created, updated or unchanged, or why the row was not applied."
+          submit: Import
+          result_title: Import result
+          file_errors_title: The file was not imported.
+          no_rows: The file contains no offers.
+          summary: "%{created}, %{updated}, %{unchanged}, %{failed}"
+          created:
+            one: 1 offer created
+            other: "%{count} offers created"
+          failed:
+            one: 1 row failed
+            other: "%{count} rows failed"
+          updated:
+            one: "1 offer updated"
+            other: "%{count} offers updated"
+          unchanged:
+            one: "1 offer unchanged"
+            other: "%{count} offers unchanged"
+          table:
+            line: Row
+            title: Title
+            result: Result
+            created: Created
+            failed: Failed
+            updated: "Updated"
+            unchanged: "Unchanged"
+            untitled: Untitled
+          columns_title: All template columns
+          required_marker: (required)
+          id_marker: "(optional, only for updates)"
+        create:
+          no_file: Please choose a CSV file.
+          too_large: The file is larger than %{max}.
+        template:
+          filename: offers-template
+        sample:
+          filename: offers-sample
+        sample_rows:
+          - provider: Sample provider
+            title: Swimming course for children
+            short_description: "Children aged 6 and over learn to swim in small groups at the indoor pool.\n\nThe courses are run by trained swimming instructors. Please bring swimwear and a towel."
+            times: Tuesdays 3–5 pm, except during school holidays
+            costs: 5 € per session, reduced 3 €
+            registration: Register by Friday on 0123 456789
+            address: 1 Market Square, 12345 Sample Town
+            contact_name: Maria Sample
+            contact_phone: 0123 456-0
+            contact_email: offers@example.org
+            contact_website: https://www.example.org
+            expires_on: 31.12.2027
+            latitude: "51.1657"
+            longitude: "10.4515"
+            offer_type: Course, Sport
+            target_group: Children, Families
+            costs_category: Fee required
+            accessibility: Wheelchair accessible
+            social_area: North district, Central district
+          - provider: Sample provider
+            title: Online language café
+            short_description: Weekly conversation in German via video call for everyone who wants to practise their language skills.
+            offer_type: Meeting place
+            social_area: Central district
+        columns:
+          id: ID
+          provider: Provider
+          title: Title
+          short_description: Short description
+          times: Times
+          costs: Costs (free text)
+          registration: Registration
+          address: Address
+          contact_name: Contact person
+          contact_phone: Phone
+          contact_email: E-mail
+          contact_website: Website
+          expires_on: Expiry date
+          latitude: Latitude
+          longitude: Longitude
+          offer_type: Offer type
+          target_group: Target group
+          costs_category: Costs
+          accessibility: Accessibility
+          social_area: Social area
+        errors:
+          unreadable: The file could not be read. Please upload a CSV file, for example based on the template.
+          missing_columns: "The file is missing required columns: %{columns}."
+          too_many_rows: The file has more than %{max} rows. Please split it into several files.
+          unknown_provider: Provider "%{name}" not found.
+          missing_provider: The provider is missing.
+          unknown_offer: "No offer with ID %{id} found."
+          ambiguous_provider: There are several providers named "%{name}".
+          unknown_category: "%{kind} \"%{name}\" not found."
+          invalid_date: Expiry date "%{value}" is not a valid date (DD.MM.YYYY).
+          invalid_location: Latitude and longitude must both be given as numbers.
+      title: Offers
+      menu:
+        aria_label: Offers navigation
+        items:
+          offers: Offers
+          imports: Import
+          categories: Categories
+          providers: Providers
+          managers: Offers administrators
+          settings: Configuration
+      managers:
+        index:
+          title: Offers administrators
+          page_hint: "Offers administrators work in the offers area: they can review, hide and delete offers and manage categories, providers, the CSV import and the reminders to providers. Turning the area on or off is left to administrators. They do not see any other area of the administration. Only administrators can add or remove offers administrators. If an email address is not registered yet, the person receives an invitation."
+          new_link: Add new offers administrator
+          empty_title: No offers administrators available
+          empty_description: Offers administrators will be shown here as soon as they are added.
+        new:
+          title: Add new offers administrator
+          search_label: Search users
+          search_description: "Search by email or username for registered users listed under <a href=\"/adm/users\" target=\"_blank\">Users</a>. If an email address is not registered yet, you can invite the person as an offers administrator. Offers administrators manage the entire offers area."
+      settings:
+        title: Configuration
+      offers:
+        index:
+          title: Offers
+          import: Import
+          export_filename: offers
+          download_csv: Download CSV
+          review_status:
+            added: New
+            changed: Changed
+            checked: Checked
+          visibility:
+            visible: Visible
+            suspended: Hidden
+            deactivated: Deactivated
+            expired: Expired
+          page_hint: "All offers from providers. Offers are created through the entry form in the public area and go online immediately. New and changed offers stay flagged until you mark them as checked. You can search offers by title, sort them, filter them by check status and visibility, hide them and delete them."
+          total_label:
+            one: offer
+            other: offers
+          total_hint: Number of offers matching the current search
+          no_items_title: No offers yet
+          no_items_description: Offers appear here as soon as providers publish them.
+          no_results_filtered_title: No results
+          no_results_filtered_description: No offers match the search. Adjust or reset the search.
+          table:
+            id: ID
+            title: Title
+            offer_type: Offer type
+            social_area: Social area
+            author: Created by
+            updated_at: Updated on
+            review_status: Check status
+            visibility: Visibility
+        actions:
+          mark_checked: Mark as checked
+          suspend: Hide
+          unsuspend: Unhide
+        edit:
+          title: Edit offer
+        update:
+          success: The offer was saved.
+        destroy:
+          success: The offer was deleted.
+        mark_checked:
+          success: The offer was marked as checked.
+        suspend:
+          success: The offer was hidden.
+        unsuspend:
+          success: The offer is shown again.
+        form:
+          errors_title: The offer could not be saved
+          image_label: Image
+          provider_blank: No provider
+          no_categories_title: No values yet
+          no_categories_description: Create values for this category under "Categories" first.
+          sections:
+            basics: Basics
+            categories: Categories
+            location: Location
+            details: Details
+            contact: Contact
+          hints:
+            provider: "Optional. Sets the provider this offer belongs to. All accounts of this provider can then edit, deactivate and reactivate the offer. Without a provider, only administrators can edit the offer. Providers themselves cannot assign an offer to another provider."
+            title: "The title appears in the overview, on the map and on the detail page, and is included in the search. Choose a short, clear name that shows without further explanation what is offered and for whom."
+            short_description: "The short description appears in the overview below the title and on the detail page. Describe in a few sentences what participants can expect and what makes the offer special. The text is included in the search and, if automatic translation is active, translated into the enabled languages."
+            image: "Optional. The image appears in the overview and on the detail page. Without an image, a placeholder is shown there. Only use images you have the rights to, and get the consent of anyone recognisable in a photo."
+            category_kinds:
+              offer_type: "What kind of offer is it? Select all matching values, at least one. Visitors can filter the overview by these values; an offer with several values appears under each of them. If a matching value is missing, add it under \"Categories\"."
+              target_group: "Who is the offer for? Select all target groups the offer is meant to reach. Visitors can filter the overview by target group; an offer with several target groups appears under each of them. If a matching value is missing, add it under \"Categories\"."
+              costs: "Is there a fee for the offer? Select the matching cost option, which visitors can use to filter the overview. Enter exact amounts, reductions or payment methods in the \"Costs (details)\" field in the \"Details\" section as well."
+              accessibility: "Which accessibility features does the offer provide? Only select features that are actually and permanently in place, because people with disabilities rely on this information. Visitors can filter the overview by them. If none applies, leave the selection empty."
+              social_area: "In which social area does the offer take place? Select at least one social area, or several for offers covering more than one district. Visitors can filter the overview by social area; the offer then appears under each selected one."
+            address: "Optional. The address where the offer takes place, with street, house number and town, plus room or entrance if needed. It appears on the detail page and is included in the search. Leave it empty for online-only offers."
+            map_location: "Optional. Set a marker at the place where the offer takes place. Only offers with a marker appear on the overview map; all others are only listed. Leave the map empty for online-only offers."
+            times: "Optional. When does the offer take place? Describe the times in your own words, for example weekdays and hours, regular dates or exceptions such as school holidays and public holidays. The text appears on the detail page and is included in the search."
+            costs: "Optional. Exact details on the costs, for example amounts, reductions, material costs or payment method. The text appears on the detail page and adds to the cost option selected in the \"Categories\" section. If the offer is free, the selection there is enough."
+            registration: "Optional. Describe whether registration is required and how it works, for example by when, how and with whom. If no registration is needed, you can say so explicitly here. The text appears on the detail page."
+            contact_name: "Optional. The person or office people can contact with questions about the offer. The name appears publicly on the detail page in the \"Contact\" box and is delivered through the open API. Only name a person with their consent; otherwise use a role such as \"Course leader\"."
+            contact_phone: "Optional. A phone number for questions, ideally with area code. On the detail page it appears as a link that lets mobile phones call directly, and it is delivered through the open API. Use a work number rather than a private one where possible."
+            contact_email: "Optional. An email address for questions. It appears publicly on the detail page as a link that opens the email program, and is delivered through the open API. Use a shared office address rather than a personal one where possible. The form reports an invalid address when saving."
+            contact_website: "Optional. The website of the offer or the provider as a full address starting with https:// or http://. It appears on the detail page as a link that opens in a new tab. Without this prefix, the form shows an error when saving."
+            expires_on: "Optional. The offer is shown publicly up to and including this day. After that it disappears from the overview, map, search and API, and only the provider and administrators can see it. If the date is changed or removed, it appears again unless it is hidden or deactivated."
+          placeholders:
+            title: e.g. Swimming course for children
+            short_description: e.g. Children aged 6 and over learn to swim in small groups at the indoor pool.
+            address: e.g. 1 Market Square, 12345 Sample Town
+            times: e.g. Tuesdays 3–5 pm, except during school holidays
+            costs: e.g. €5, reduced €3
+            registration: e.g. register by Friday on 0123 456789
+            contact_name: e.g. Maria Muster
+            contact_phone: e.g. +49 3641 49-0
+            contact_email: e.g. offers@provider.example
+            contact_website: https://
+      categories:
+        index:
+          title: Categories
+          page_hint: "Manage the values of the five categories used to classify and filter offers. Choose the category above. New values are available in the providers' entry form right away. Use drag and drop to set the order. Values still assigned to an offer cannot be deleted."
+          new_category: New value
+          no_items_title: No values yet
+          no_items_description: Create a value so providers can assign it to their offers.
+          table:
+            order: Order
+            name: Name
+        new:
+          title: New value
+        edit:
+          title: Edit value
+        create:
+          success: The value was created.
+        update:
+          success: The value was updated.
+        destroy:
+          success: The value was deleted.
+          cannot_destroy: The value cannot be deleted because offers are still assigned to it.
+        form:
+          kind_label: Category
+          name_label: Name
+          name_hint: "The name appears in the entry form, as a filter in the offers overview and on every offer it is assigned to. Use a short, generally understandable term. Renaming applies immediately to all assigned offers. If automatic translation is active, the name is translated into the enabled languages."
+          submit: Save
+      providers:
+        index:
+          title: Providers
+          page_hint: "Defines which providers may add offers to the “Offers” module, using which e-mail addresses. Only users with a listed address see the “Add offer” button on the website. List every provider that should maintain its own offers here."
+          new_provider: New provider
+          total_label:
+            one: provider
+            other: providers
+          total_hint: Number of providers matching the current search
+          no_items_title: No providers yet
+          no_items_description: Create a provider so its staff can add offers.
+          no_results_filtered_title: No results
+          no_results_filtered_description: No providers match the search. Adjust or reset the search.
+          table:
+            offers: Offers
+        provider_row:
+          addresses_summary: "%{registered} registered, %{pending} pending"
+          no_addresses: None
+        new:
+          title: New provider
+        edit:
+          title: Edit provider
+        create:
+          success: The provider was created.
+        update:
+          success: The provider was saved.
+        destroy:
+          success: The provider was deleted.
+          cannot_destroy: The provider cannot be deleted because offers are still assigned to it.
+        form:
+          hints:
+            name: "The name identifies the provider in the administration, in the selection list of the entry form and in the reminder email. It is delivered through the open API and included in the search of the offers overview. The CSV import assigns the provider by exactly this name, so it should be unique."
+            email_list: "One email address per line. People with these addresses can add offers for this provider and edit all of its offers once their account is confirmed. Addresses of people who have not registered yet are kept and apply automatically once they register. Removing an address withdraws the permission from that account immediately."
+          placeholders:
+            name: e.g. Youth centre North
+            email_list: |-
+              anna.muster@provider.example
+              ben.example@provider.example

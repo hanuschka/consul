@@ -270,6 +270,8 @@ class Setting < ApplicationRecord
         "municipal_plans.officers_see_all": false,
         "municipal_plans.auto_archive": false,
         "municipal_plans.procedure_steps": false,
+        "process.offers": false,
+        "offers.reminder_interval": "off",
         "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,

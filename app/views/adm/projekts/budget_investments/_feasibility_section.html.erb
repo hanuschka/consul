@@ -1,5 +1,6 @@
 <% phase_enabled = budget.accepting_or_later? %>
-<% phase_completed = investment.valuation_finished? %>
+<% saved_feasibility = investment.feasibility_in_database %>
+<% phase_completed = investment.valuation_finished_in_database %>
 <% phase_state = phase_enabled ? (phase_completed ? "completed" : "active") : "disabled" %>
 
 <% phase_open = saved_editor == "feasibility" || investment.errors.include?(:valuator_explanation) %>
@@ -14,28 +15,28 @@
     </div>
     <% if phase_enabled %>
       <div class="adm-admin-phase__chips">
-        <% if investment.feasibility == "feasible" %>
+        <% if saved_feasibility == "feasible" %>
           <span class="adm-admin-chip adm-admin-chip--success">
             <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
-            <%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %>
+            <%= Budget::Investment.human_attribute_name("feasibility_#{saved_feasibility}") %>
           </span>
-        <% elsif investment.feasibility == "feasible_with_changes" %>
+        <% elsif saved_feasibility == "feasible_with_changes" %>
           <span class="adm-admin-chip adm-admin-chip--success">
             <span class="material-symbols-outlined" aria-hidden="true">published_with_changes</span>
-            <%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %>
+            <%= Budget::Investment.human_attribute_name("feasibility_#{saved_feasibility}") %>
           </span>
-        <% elsif investment.feasibility == "unfeasible" %>
+        <% elsif saved_feasibility == "unfeasible" %>
           <span class="adm-admin-chip adm-admin-chip--danger">
             <span class="material-symbols-outlined" aria-hidden="true">cancel</span>
-            <%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %>
+            <%= Budget::Investment.human_attribute_name("feasibility_#{saved_feasibility}") %>
           </span>
         <% else %>
           <span class="adm-admin-chip">
             <span class="material-symbols-outlined" aria-hidden="true">pending</span>
-            <%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %>
+            <%= Budget::Investment.human_attribute_name("feasibility_#{saved_feasibility}") %>
           </span>
         <% end %>
-        <% if investment.valuation_finished? %>
+        <% if phase_completed %>
           <span class="adm-admin-chip adm-admin-chip--success">
             <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
             <%= t("adm.projekts.budget_investments.show.valuation_finished") %>

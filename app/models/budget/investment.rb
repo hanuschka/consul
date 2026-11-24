@@ -241,6 +241,10 @@ class Budget
       feasibility == "feasible_with_changes"
     end
 
+    def feasible_in_database?
+      feasibility_in_database.in?(FEASIBLE_VALUES)
+    end
+
     def unfeasible?
       feasibility == "unfeasible"
     end

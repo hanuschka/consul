@@ -12,10 +12,12 @@
       t("mailers.budget_investment_feasible.text",
         investment_title: link_to(@investment.title,
                                budget_investment_url(@investment.budget, @investment)),
-        projekt_link_1: link_to(t("mailers.budget_investment_feasible.projekt_link_1_text"),
-                                page_url(@projekt.page.slug)),
-        projekt_link_2: link_to(t("mailers.budget_investment_feasible.projekt_link_2_text"),
-                                page_url(@projekt.page.slug))
+        projekt_link_1: projekt_page_link_or_text(
+          t("mailers.budget_investment_feasible.projekt_link_1_text"), @projekt
+        ),
+        projekt_link_2: projekt_page_link_or_text(
+          t("mailers.budget_investment_feasible.projekt_link_2_text"), @projekt
+        )
        ),
        attributes: %w[href]
     ) %>

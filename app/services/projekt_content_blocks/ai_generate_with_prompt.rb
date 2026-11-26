@@ -99,8 +99,15 @@ class ProjektContentBlocks::AiGenerateWithPrompt < ApplicationService
     INSTRUCTIONS
   end
 
+  # Shuffled for the same reason as the projekt import's list: in catalogue
+  # order, every generated page leaned on the first templates offered.
   def fetch_dt_templates
-    ContentBlockTemplates::Catalogue.call(section: "projekt_page")
+    templates_by_category = ContentBlockTemplates::Catalogue.call(section: "projekt_page")
+
+    ContentBlockTemplates::Visibility
+      .without_hidden_templates(templates_by_category)
+      .shuffle
+      .map { |category_data| category_data.merge("templates" => category_data["templates"].shuffle) }
   end
 
   def build_templates_reference(dt_templates_by_category)

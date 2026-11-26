@@ -40,6 +40,7 @@ class ProjektImports::ExecuteImportJob < ApplicationJob
 
     resolve_result = ProjektImports::ResolveContentBlocksService.call(
       projekt_import: projekt_import,
+      projekt: projekt,
       phases: create_result.data[:phases],
       image_urls: source_images.data[:image_urls]
     )

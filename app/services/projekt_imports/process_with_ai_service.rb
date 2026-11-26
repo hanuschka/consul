@@ -1,23 +1,25 @@
 class ProjektImports::ProcessWithAiService < ApplicationService
   MAX_INPUT_CHARS = 200_000
 
-  attr_reader :text, :additional_user_instructions, :source_images, :source_label
+  attr_reader :text, :additional_user_instructions, :source_images, :source_label,
+    :recent_opening_template_ids
 
   def initialize(
     text:, additional_user_instructions: nil, response_language: nil,
-    source_images: [], source_label: nil
+    source_images: [], source_label: nil, recent_opening_template_ids: []
   )
     @text = text
     @additional_user_instructions = additional_user_instructions
     @response_language = response_language
     @source_images = Array(source_images)
     @source_label = source_label
+    @recent_opening_template_ids = Array(recent_opening_template_ids)
   end
 
   def call
     base_prompt = load_base_prompt
 
-    refs = ProjektImports::ReferencesBuilder.build
+    refs = offered_references
 
     system_prompt = ProjektImports::PromptBuilder.new(
       base_prompt: base_prompt,
@@ -72,6 +74,19 @@ class ProjektImports::ProcessWithAiService < ApplicationService
   end
 
   private
+
+  # The prompt and the output schema are both built from this, so a withheld
+  # template is neither listed nor accepted as an answer.
+  def offered_references
+    refs = ProjektImports::ReferencesBuilder.build
+
+    refs.merge(
+      "content_block_templates" => ProjektImports::WithholdRecentOpeningTemplatesService.call(
+        templates: refs["content_block_templates"],
+        recent_opening_template_ids: recent_opening_template_ids
+      )
+    )
+  end
 
   def load_base_prompt
     response = DtApi::Client.new(use_cache: true).consul_ai_prompts.get(prompt_key)

@@ -1,0 +1,6 @@
+<% attached = record.is_a?(SiteCustomization::Image) ? record.persisted_attachment? : record.persisted? && record.attachment.attached? %>
+<div id="<%= dom_id(record, :credits_editor) %>">
+  <% if attached %>
+    <%= render Adm::AttributeEditorComponent.new(record, :credits, :string) %>
+  <% end %>
+</div>

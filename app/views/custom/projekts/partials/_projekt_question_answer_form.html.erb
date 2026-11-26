@@ -1,7 +1,7 @@
 <% if projekt_question.question_options.any? %>
   <% path = projekt_answer.persisted? ? projekt_projekt_question_answer_path(projekt, projekt_answer) : projekt_projekt_question_answers_path(projekt) %>
 
-  <%= form_for projekt_answer, url: path, remote: true, html: { class: "controls-stacked js-projekt-answer-form" } do |f| %>
+  <%= form_for projekt_answer, url: path, remote: true, html: { class: "controls-stacked js-projekt-answer-form", data: { error_message: t("custom.projekts.projekt_questions.answer_error"), closed_message: t("custom.projekts.projekt_questions.answer_closed") } } do |f| %>
     <% projekt_question.question_options.each do |question_option| %>
       <label class="projekt-question-answer-option <%= "-active" if projekt_answer.question_option&.id == question_option.id %>">
         <% radio_button_disabled = projekt_question.permission_problem(current_user).present? %>
@@ -14,5 +14,7 @@
         <% end %>
       </label>
     <% end %>
+
+    <p class="form-error js-projekt-answer-error" role="alert"></p>
   <% end %>
 <% end %>

@@ -1,0 +1,33 @@
+<td style="<%= css_for_mailer_content %>">
+  <h1 style="<%= css_for_mailer_heading %>">
+    <%= t("mailers.budget_investment_feasible_with_changes.title") %>
+  </h1>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= @author.recipient_greeting %>,
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
+    <%= sanitize(
+      t("mailers.budget_investment_feasible_with_changes.text",
+        investment_title: link_to(@investment.title,
+                               budget_investment_url(@investment.budget, @investment)),
+        projekt_link_1: projekt_page_link_or_text(
+          t("mailers.budget_investment_feasible_with_changes.projekt_link_1_text"), @projekt
+        ),
+        projekt_link_2: projekt_page_link_or_text(
+          t("mailers.budget_investment_feasible_with_changes.projekt_link_2_text"), @projekt
+        )
+       ),
+       attributes: %w[href]
+    ) %>
+  </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.budget_investment_feasible_with_changes.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
+</td>

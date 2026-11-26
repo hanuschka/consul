@@ -293,10 +293,11 @@ App.Studio.ContentBlocks.Crud = {
 
     // Strip any hydrated map back to the {{projekt_map}} placeholder so the
     // persisted body stays canonical; the live map is re-hydrated below.
-    const normalized = App.Studio.utils.resetMapEmbeds(newContent);
+    // Consent-processed iframes get their URL back the same way.
+    const normalized = App.Studio.utils.persistableContentBlockHtml(newContent);
     const sanitized = App.Studio.utils.sanitizeAdminHtml(normalized);
 
-    const oldContent = App.Studio.utils.resetMapEmbeds(
+    const oldContent = App.Studio.utils.persistableContentBlockHtml(
       contentBlock.dataset.previousContentBlockHtml
         ? contentBlock.dataset.previousContentBlockHtml
         : contentBlock.innerHTML.trim()

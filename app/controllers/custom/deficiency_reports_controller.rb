@@ -182,6 +182,7 @@ class DeficiencyReportsController < ApplicationController
       id: @deficiency_report.id,
       image_url: image_url,
       image_ai_label_html: helpers.ai_image_label_html(@deficiency_report.image),
+      image_credit_html: helpers.image_credit_html(@deficiency_report.image),
       title: @deficiency_report.title
     }.to_json
 

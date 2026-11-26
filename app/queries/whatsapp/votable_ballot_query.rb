@@ -241,6 +241,10 @@ class Whatsapp::VotableBallotQuery < ApplicationQuery
   def call
     return if !@projekt_phase.current?
 
+    if !::Whatsapp::EligiblePhasesQuery.projekt_visible?(@projekt_phase.projekt)
+      return
+    end
+
     poll = ballot
 
     return if poll.blank?

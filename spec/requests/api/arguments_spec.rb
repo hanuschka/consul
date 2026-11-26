@@ -32,9 +32,10 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
   PROJEKT_ARGUMENT_PARAMS = {
     type: :object,
     properties: {
-      name: { type: :string, nullable: true, description: 'Argument title or name. Optional, can be auto-generated if not provided.' },
-      position: { type: :integer, nullable: true, description: 'Display order among other arguments in the phase. Lower numbers appear first.' },
-      note: { type: :string, nullable: true, description: 'Detailed argument text explaining the position, evidence, and reasoning.' },
+      name: { type: :string, description: 'Name of the person making the argument. Required.' },
+      party: { type: :string, nullable: true, description: 'Party or organisation of the person', example: 'Bürgerliste' },
+      position: { type: :string, description: 'Role or office of the person (e.g. "Ratsmitglied"). Required.', example: 'Ratsmitglied' },
+      note: { type: :string, description: 'The argument text. Required.' },
       pro: { type: :boolean, nullable: true, description: 'true = pro-argument (in favor), false/null = con-argument (against)' },
       image_attributes: IMAGE_ATTRIBUTES_SCHEMA
     }
@@ -88,7 +89,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
                    properties: {
                      arguments: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/Argument' }
                      }
                    },
                    required: ['arguments']
@@ -125,7 +126,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
       security [bearer_auth: []]
       description "Create a new argument (pro or con) for a projekt phase. Arguments present reasoning, evidence, or positions on a topic within the ArgumentPhase. Can include supporting images with titles and credits. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_argument, in: :body, description: 'Argument details with optional name, position, note, pro/con flag, and image attachment', schema: PROJEKT_ARGUMENT_PARAM_SCHEMA
+      parameter name: :projekt_argument, in: :body, description: 'Argument with the name, party and role of the person, the argument text, the pro/con flag and an optional image', schema: PROJEKT_ARGUMENT_PARAM_SCHEMA
 
       response '201', 'projekt argument created successfully' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -134,8 +135,9 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
         let(:projekt_argument) do
           {
             projekt_argument: {
-              name: 'Test Argument',
-              position: 1,
+              name: 'Erika Muster',
+              party: 'Bürgerliste',
+              position: 'Ratsmitglied',
               note: 'Test note',
               pro: true
             }
@@ -147,14 +149,19 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
                  data: {
                    type: :object,
                    properties: {
-                     projekt_argument: { type: :object }
+                     projekt_argument: { '$ref' => '#/components/schemas/Argument' }
                    },
                    required: ['projekt_argument']
                  }
                },
                required: ['data']
 
-        run_test!
+        run_test! do |response|
+          argument_data = JSON.parse(response.body)['data']['projekt_argument']
+
+          expect(argument_data['party']).to eq('Bürgerliste')
+          expect(argument_data['position']).to eq('Ratsmitglied')
+        end
       end
 
       response '422', 'invalid request' do
@@ -258,7 +265,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
                  data: {
                    type: :object,
                    properties: {
-                     projekt_argument: { type: :object }
+                     projekt_argument: { '$ref' => '#/components/schemas/Argument' }
                    },
                    required: ['projekt_argument']
                  }
@@ -312,7 +319,7 @@ RSpec.describe 'Projekt Arguments API', type: :request, openapi_spec: 'v1/swagge
                  data: {
                    type: :object,
                    properties: {
-                     projekt_argument: { type: :object }
+                     projekt_argument: { '$ref' => '#/components/schemas/Argument' }
                    },
                    required: ['projekt_argument']
                  }

@@ -2,7 +2,7 @@ class Shared::NewButtonComponent < ApplicationComponent
   delegate :can?, :current_user,
            :sanitize,
            :link_to_signin, :link_to_signup, :link_to_verify_account,
-           :link_to_guest_signin, :link_to_enter_missing_user_data, to: :helpers
+           :link_to_guest_signin, :link_to_sms_signin, :link_to_enter_missing_user_data, to: :helpers
 
   def initialize(projekt_phase: nil, resources_name: nil, query_params: nil)
     @projekt_phase = projekt_phase
@@ -35,7 +35,7 @@ class Shared::NewButtonComponent < ApplicationComponent
     end
 
     def permission_problem_message(permission_problem_key)
-      sanitize(
+      message = sanitize(
         t(path_to_key(permission_problem_key),
               sign_in: link_to_signin(intended_path: CGI::escape(link_path)),
               sign_up: link_to_signup(intended_path: CGI::escape(link_path)),
@@ -52,6 +52,10 @@ class Shared::NewButtonComponent < ApplicationComponent
               max_pin_number: @projekt_phase.is_a?(ProjektPhase::PointOfInterestPhase) ? @projekt_phase.max_pins_per_user : nil
         )
       )
+      return message unless permission_problem_key.in?(%i[not_logged_in guest_not_logged_in])
+
+      safe_join([message, link_to_sms_signin(intended_path: CGI::escape(link_path),
+                                             projekt_phase: @projekt_phase)].compact, " ")
     end
 
     def path_to_key(permission_problem_key)

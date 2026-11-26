@@ -26,18 +26,27 @@ module Measurable
   private
 
     def description_sanitized
-      return "" if description.nil?
+      max_length = (projekt_phase&.option("form.description_max_length").presence || "6000").to_i
 
-      stripped = ActionController::Base.helpers.strip_tags(description)
+      if measured_descriptions.any? { sanitized_description_length(it) > max_length }
+        errors.add(:description, :too_long)
+      end
+    end
 
-      sanitized_description = stripped
+    def measured_descriptions
+      written_descriptions = globalize.stash.filter_map do |locale, attributes|
+        attributes["description"] if globalize.changes(locale).key?("description")
+      end
+      nested_descriptions = translations.select(&:description_changed?).map(&:description)
+
+      [description, *written_descriptions, *nested_descriptions].compact
+    end
+
+    def sanitized_description_length(text)
+      ActionController::Base.helpers.strip_tags(text)
         .delete("\n\r ")
         .gsub(/^$\n/, "")
         .gsub(/[\u202F\u00A0\u2000\u2001\u2003]/, "")
-
-      max_length = (projekt_phase&.option("form.description_max_length").presence || "6000").to_i
-
-      errors.add(:description, :too_long) if
-        sanitized_description.length > max_length
+        .length
     end
 end

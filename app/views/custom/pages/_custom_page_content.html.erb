@@ -59,6 +59,19 @@
   <% end %>
 </div>
 
+<% if @accessibility_report.present? %>
+  <%= render "pages/accessibility_report_form" %>
+<% end %>
+
+<% if @accessibility_report_page.present? %>
+  <section aria-labelledby="accessibility-report-link-title">
+    <h2 id="accessibility-report-link-title"><%= t("accessibility_reports.accessibility_link.title") %></h2>
+    <p>
+      <%= t("accessibility_reports.accessibility_link.text_html",
+            link: link_to(@accessibility_report_page.title, page_path(@accessibility_report_page.slug))) %>
+    </p>
+  </section>
+<% end %>
 
 <% if @custom_page.print_content_flag %>
   <%= render "/shared/print" %>

@@ -8,6 +8,17 @@ class Comment < ApplicationRecord
 
     where("created_at > ?", datetime)
   }
+  scope :on_public_projekt_phases, -> {
+    where(
+      commentable_type: "ProjektPhase",
+      commentable_id:
+        ProjektPhase
+          .frontend_visible
+          .active
+          .where(projekt_id: Projekt.visible_for(nil).select(:id))
+          .select(:id)
+    )
+  }
 
   delegate :comments_allowed?, to: :projekt, allow_nil: true
 

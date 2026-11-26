@@ -121,7 +121,6 @@ class DebatesController < ApplicationController
     @debate.author = current_user
 
     if @debate.save
-      track_event
       NotificationServices::NewDebateNotifier.new(@debate.id).call
 
       if @debate.projekt_phase.active?

@@ -510,9 +510,18 @@ en:
         budget_investments:
           title: Proposals
           calculate_winners: Determine winners
-          calculate_winners_confirm: The top-rated proposals will be determined in the background. Continue?
+          calculate_winners_confirm: The top-rated proposals will be determined as winners. Continue?
           recalculate_winners: Recalculate winners
           recalculate_winners_confirm: Winners will be recalculated immediately. Continue?
+          tie:
+            title: Tie in winner calculation
+            description: The following proposals have the same score and compete for the remaining winning places. Until you make a choice, none of them counts as a winner.
+            free_places: "Free places: %{count}"
+            remaining_budget: "Remaining budget: %{amount}"
+            pick_hint: You may select fewer proposals than there are free places, or none. The decision is final until the winners are recalculated.
+            legend: Tied proposals
+            submit: Set selection as winners
+            submit_confirm: The selection is final until the winners are recalculated. Continue?
           download_csv: Download CSV
           download_geojson: Download GeoJSON
           columns: Columns

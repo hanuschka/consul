@@ -94,6 +94,10 @@
     height: 37px;
   }
 
+  form textarea {
+    margin-bottom: rem-calc(16);
+  }
+
   form select {
     height: 37px;
     max-height: 37px;

@@ -20,7 +20,7 @@ end
       tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve all notifications for a projekt phase. Notifications are messages sent to participants with updates, announcements, or calls to action. Can include links for directing users to relevant pages. Returns paginated results. Clients with `public_data` access get 403 for a phase that is inactive or hidden in the frontend.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
 
@@ -53,6 +53,20 @@ end
         run_test!
       end
 
+      response '403', 'phase hidden from public_data clients' do
+        let(:projekt_phase_id) do
+          Projekt.create!(name: 'Hidden').projekt_phases.create!(
+            type: 'ProjektPhase::ProjektNotificationPhase', active: true, frontend_visibility: false
+          ).id
+        end
+
+        before { api_client.update!(access_level: :public_data) }
+
+        schema ApiResponseExamples::ERROR_SCHEMA
+
+        run_test!
+      end
+
       unauthorized_response { let(:projekt_phase_id) { 1 } }
     end
 
@@ -61,19 +75,16 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Send a notification to projekt participants. Notifications are announcements and updates that can include call-to-action links. Supports segment-based targeting (e.g., \"all\", specific groups). Required: notification title. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Send a notification to projekt participants. Notifications are announcements and updates shown in the phase. Required: notification title. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_notification, in: :body, description: 'Notification with required title and optional body, link, and recipient segment', schema: {
+      parameter name: :projekt_notification, in: :body, description: 'Notification with required title and optional body', schema: {
         type: :object,
         properties: {
           projekt_notification: {
             type: :object,
             properties: {
               title: { type: :string },
-              body: { type: :string, nullable: true },
-              link_text: { type: :string, nullable: true },
-              link_url: { type: :string, nullable: true },
-              segment_recipient: { type: :string, nullable: true }
+              body: { type: :string, nullable: true }
             },
             required: ['title']
           }
@@ -142,9 +153,37 @@ end
       tags 'Notifications'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a paginated list of all notifications across all projekt phases.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a paginated list of all notifications across all projekt phases. Clients with `public_data` access only see notifications of phases that are active and visible in the frontend, in projekts an anonymous visitor can see (activated and not restricted to an individual group).#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, description: 'Pagination page number (**default:** 1)', required: false
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 500, max: 2000)', required: false
+
+      response '200', 'notifications of hidden or inactive phases left out for public_data clients' do
+        let(:visible_phase) do
+          Projekt.create!(name: 'Visible', activated: true).projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: true)
+        end
+        let(:hidden_phase) do
+          Projekt.create!(name: 'Hidden', activated: true).projekt_phases.create!(
+            type: 'ProjektPhase::ProjektNotificationPhase', active: true, frontend_visibility: false
+          )
+        end
+        let(:inactive_phase) do
+          Projekt.create!(name: 'Inactive', activated: true).projekt_phases.create!(type: 'ProjektPhase::ProjektNotificationPhase', active: false)
+        end
+
+        before do
+          api_client.update!(access_level: :public_data)
+
+          [[visible_phase, 'Visible'], [hidden_phase, 'Hidden'], [inactive_phase, 'Inactive']].each do |phase, title|
+            phase.projekt_notifications.create!(title: title, body: 'Body')
+          end
+        end
+
+        run_test! do |response|
+          titles = JSON.parse(response.body)['data']['notifications'].map { |notification| notification['title'] }
+
+          expect(titles).to eq(['Visible'])
+        end
+      end
 
       response '200', 'projekt notifications found' do
         let(:projekt1) { Projekt.create!(name: 'Projekt 1') }
@@ -223,7 +262,7 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update an existing projekt notification. Allows modifying notification title, body, and link information. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update an existing projekt notification. Allows modifying the notification title and body. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_notification, in: :body, description: 'Attributes to update on the notification', schema: {
         type: :object,
@@ -232,10 +271,7 @@ end
             type: :object,
             properties: {
               title: { type: :string },
-              body: { type: :string, nullable: true },
-              link_text: { type: :string, nullable: true },
-              link_url: { type: :string, nullable: true },
-              segment_recipient: { type: :string, nullable: true }
+              body: { type: :string, nullable: true }
             }
           }
         }

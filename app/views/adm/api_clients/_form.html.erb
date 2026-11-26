@@ -38,6 +38,16 @@
 
   <div class="mb-4">
     <%= render Kern::SwitchComponent.new(
+      name: "api_client[instance_configuration_access]",
+      id: "api_client_instance_configuration_access",
+      checked: @api_client.instance_configuration_access,
+      label: t("adm.api_clients.form.instance_configuration_access_label"),
+      description: t("adm.api_clients.form.instance_configuration_access_description")
+    ) %>
+  </div>
+
+  <div class="mb-4">
+    <%= render Kern::SwitchComponent.new(
       name: "api_client[use_system_user]",
       id: "api_client_use_system_user",
       checked: @api_client.use_system_user,

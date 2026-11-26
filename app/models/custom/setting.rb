@@ -13,6 +13,8 @@ class Setting < ApplicationRecord
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
 
+  audited only: :value, on: :update
+
   validate :validate_whatsapp_template_name
   validate :validate_whatsapp_template_language
   validate :validate_whatsapp_address_form
@@ -223,7 +225,6 @@ class Setting < ApplicationRecord
         "feature.bund_id_login": false,
         "feature.kobil_login": false,
         "feature.kobil_address_verification": false,
-        "feature.public_stats": true,
         "feature.signature_sheets": true,
         "feature.user.recommendations": true,
         "feature.user.recommendations_on_debates": true,
@@ -269,6 +270,8 @@ class Setting < ApplicationRecord
         "municipal_plans.officers_see_all": false,
         "municipal_plans.auto_archive": false,
         "municipal_plans.procedure_steps": false,
+        "process.offers": false,
+        "offers.reminder_interval": "off",
         "process.ideas": false,
         "proposals.successful_proposal_id": nil,
         "proposals.poll_short_title": nil,
@@ -279,6 +282,7 @@ class Setting < ApplicationRecord
         "proposals.poster_short_title": nil,
         "proposals.poster_description": nil,
         "proposals.email_on_official_answer": nil,
+        "email_templates.recipient_greeting": "username",
         # Images and Documents
         "uploads.images.max_size": 4,
         "uploads.images.title.min_length": 4,
@@ -311,6 +315,7 @@ class Setting < ApplicationRecord
         "direct_message_max_per_day": 3,
         "mailer_from_deficiency_report_address": "noreply@consul.dev",
         "moderation.reports_notification_email": nil,
+        "accessibility_report.recipient_email": nil,
         "min_age_to_participate": 16,
         "hot_score_period_in_days": 31,
         "related_content_score_threshold": -0.3,
@@ -417,6 +422,7 @@ class Setting < ApplicationRecord
         # "extended_feature.general.enable_old_design": true,
         "extended_feature.general.users_overview_page": true,
         "extended_feature.general.show_guest_login_links": false,
+        "extended_feature.general.sms_login": false,
         # "extended_feature.general.homepage_projekt_search": false,
 
         "extended_option.general.launch_date": "",

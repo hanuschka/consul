@@ -6,6 +6,8 @@ class Geozone < ApplicationRecord
   has_many :limited_projekts, through: :projekt_phases, source: :projekt
   has_and_belongs_to_many :affiliated_projekts, through: :geozones_projekts, class_name: 'Projekt'
 
+  audited
+
   def self.find_with_plz(plz)
     return nil unless plz.present?
 

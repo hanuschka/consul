@@ -38,6 +38,7 @@
     border-color: $soft-border;
     border-radius: $radius-large;
     box-shadow: $shadow-small;
+    --main-content-card--phone-padding: 16px;
 
     h1 {
       margin-top: 0;
@@ -51,7 +52,7 @@
       padding: 25px 25px;
     }
     @media (max-width: $mobile-viewport-start) {
-      padding: 20px 25px;
+      padding: 15px;
     }
 
     &.-hide-background {
@@ -61,6 +62,32 @@
 
       .add-new-content-block-section--controls {
         right: calc(100% + 12px);
+      }
+    }
+
+    &.-full-bleed-on-phone {
+      @media (max-width: $mobile-viewport-start) {
+        margin-left: (-$mobile-side-padding);
+        margin-right: (-$mobile-side-padding);
+        padding: var(--main-content-card--phone-padding);
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+
+        &.-hide-background {
+          padding: 0 var(--main-content-card--phone-padding);
+        }
+      }
+    }
+
+    // Boxed content blocks carry their padding inline, so only !important
+    // keeps them from adding a second full indent on phones.
+    @media (max-width: $mobile-viewport-start) {
+      .custom-content-block > [style*="padding:"]:not([style*="padding:0"]):not([style*="padding: 0"]) {
+        &[style*="background"], &[style*="border"] {
+          padding-left: var(--main-content-card--phone-padding) !important;
+          padding-right: var(--main-content-card--phone-padding) !important;
+        }
       }
     }
   }

@@ -23,6 +23,7 @@ en:
         landing_page_manager: "Invite as topic page manager"
         deficiency_report_manager: "Invite as deficiency manager"
         idea_manager: "Invite as idea manager"
+        offer_manager: "Invite as offers administrator"
       role_name:
         administrator: "administrator"
         moderator: "moderator"
@@ -32,3 +33,4 @@ en:
         landing_page_manager: "topic page manager"
         deficiency_report_manager: "deficiency manager"
         idea_manager: "idea manager"
+        offer_manager: "offers administrator"

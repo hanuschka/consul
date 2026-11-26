@@ -1,6 +1,9 @@
 class ProjektImports::ExecuteImportJob < ApplicationJob
   queue_as :projekt_imports
   self.max_run_time = Ai::Settings::JOB_MAX_RUN_TIME
+  # A failed run may already have built a projekt, and a retry would build
+  # another one; the admin retries from the import page instead.
+  self.max_attempts = 1
 
   BANNER_ASPECT_RATIO = "16:9".freeze
 

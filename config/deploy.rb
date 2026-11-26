@@ -2,10 +2,81 @@
 lock "~> 3.17.3"
 
 require "base64"
+require "json"
+require "open3"
+
+OP_ACCOUNT = "demokratietoday.1password.eu".freeze
+DEMO_DEPLOY_ITEM = "cli_demo_2 prod".freeze
+HOSTS_ITEM_ENVS = { "production" => "prod", "staging" => "stage" }.freeze
 
 def deploysecret(key)
-  @deploy_secrets_yml ||= YAML.load_file("config/deploy-secrets/deploy-secrets-cli_demo.yml")[fetch(:stage).to_s]
-  @deploy_secrets_yml.fetch(key.to_s, "undefined")
+  deploy_target.fetch(key.to_s, "undefined")
+end
+
+def deploy_branch
+  @deploy_branch ||= begin
+    branch = ENV["branch"].to_s.strip
+    abort "branch=<branch> is required, e.g. branch=cli_demo_2 cap #{fetch(:stage)} deploy" if branch.empty?
+
+    current_branch = `git rev-parse --abbrev-ref HEAD`.strip
+    abort "branch=#{branch} does not match the checked-out branch #{current_branch}" if branch != current_branch
+
+    branch
+  end
+end
+
+def deploy_target
+  @deploy_target ||= begin
+    deploy_branch
+    op_installed? ? deploy_target_from_hosts_vault : deploy_target_from_local_file
+  end
+end
+
+def op_installed?
+  !system("op", "--version", out: File::NULL, err: File::NULL).nil?
+end
+
+def deploy_target_from_hosts_vault
+  env = HOSTS_ITEM_ENVS[fetch(:stage).to_s]
+  abort "No hosts vault mapping for stage #{fetch(:stage)}" unless env
+
+  title = "#{deploy_branch} #{env}"
+  item = hosts_vault_item(title)
+
+  if item.nil?
+    abort "No hosts vault item #{title.inspect}; feature branches deploy only to production (#{DEMO_DEPLOY_ITEM})" if env != "prod"
+
+    title = DEMO_DEPLOY_ITEM
+    item = hosts_vault_item(title) || abort("No hosts vault item #{title.inspect}")
+  end
+
+  fields = item.fetch("fields", []).to_h { |field| [field["label"], field["value"].to_s] }.reject { |_, value| value.empty? }
+  abort "Hosts vault item #{title.inspect} has no ip" unless fields["ip"]
+
+  puts "Deploy target: #{deploy_branch} -> #{title} (#{fields["ip"]})"
+
+  {
+    "server" => fields["ip"],
+    "server1" => fields["ip"],
+    "user" => fields.fetch("deploy_user", "deploy"),
+    "ssh_port" => fields.fetch("ssh_port", "22"),
+    "deploy_to" => fields.fetch("deploy_to", "/home/deploy/consul")
+  }
+end
+
+def hosts_vault_item(title)
+  output, error, status = Open3.capture3("op", "item", "get", title, "--vault", "hosts", "--account", OP_ACCOUNT, "--format", "json")
+  return JSON.parse(output) if status.success?
+  return nil if error.include?("isn't an item")
+
+  abort "1Password lookup of #{title.inspect} failed: #{error.strip}"
+end
+
+def deploy_target_from_local_file
+  path = "config/deploy-secrets/deploy-secrets-#{deploy_branch.delete_suffix("_2")}.yml"
+  abort "1Password CLI not found and no #{path}" unless File.exist?(path)
+
+  YAML.load_file(path)[fetch(:stage).to_s] || abort("#{path} has no #{fetch(:stage)} entry")
 end
 
 set :rails_env, fetch(:stage)

@@ -1,11 +1,22 @@
 en:
   setting:
+    accessibility_report:
+      recipient_email: Recipient email address for barrier reports
+      recipient_email_description: "All reports from the \"Report a barrier\" form are sent to this address. While it is empty, reports go to all administrators."
     handbook:
       url: User manual address
       url_description: "Sets the address of the user manual shown under “Help” in every dashboard. In the administration area each menu ends with a “Help” entry that opens the matching section of the manual. The address is preset. Leave the field empty to hide the entry."
     proposals:
       email_on_official_answer: "Email notification on official answer (proposals)"
       email_on_official_answer_description: "Sends an email to the submitting person as soon as an official answer to their proposal is saved or changed. The email contains the text of the official answer and a link to the proposal; on the proposal page itself the answer stays publicly visible as before. Enable this setting if submitters should be actively informed about the administration's response instead of having to return to the platform themselves."
+    email_templates:
+      recipient_greeting: "Greeting in system emails"
+      recipient_greeting_description: "Sets how the {{ recipient_greeting }} variable addresses the recipient in customized system emails. If the user account lacks the required details (first name, last name or gender), a suitable fallback is used, ending with the username. Templates without this variable stay unchanged."
+      recipient_greeting_options:
+        username: "Username (Hello maxi84)"
+        first_name: "First name (Hello Max)"
+        full_name: "Full name (Hello Max Mustermann)"
+        formal: "Formal (Dear Ms Mustermann)"
     feature:
       bund_id_login: "Enable BundID login"
       bund_id_login_description: "Adds a BundID button to the sign-in and registration pages for signing in with a BundID account. Residence verification is independent of this. Enable it for existing accounts. Requires the credentials to be configured on the server."
@@ -209,6 +220,8 @@ en:
         enable_google_translate_description: 'Embeds the Google Translate widget. A language icon appears in the main menu and the platform''s own language selector is dropped. Enable it for many languages, and first agree to the <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAyBtxLmBe3s1m-6nkSBcs7W_8EAUmwmPTEXlSqctg1QCRBw/viewform" target="_blank" rel="noopener">terms of use</a>.'
         show_guest_login_links: Show guest login
         show_guest_login_links_description: "Lets users sign in as a guest with only a display name, no email and no password. A link appears in the footer. Guests can join phases whose minimum status is guest. Enable it for the lowest barrier to participation."
+        sms_login: "Participation with SMS code"
+        sms_login_description: "Offers signed-out visitors sign-in with a mobile number and SMS code at participation actions such as supporting, submitting or commenting. If no account exists for the number, one is created without an email address. German mobile numbers only. Requires an SMS provider to be configured on the server."
         users_overview_page: Overview of all users
         users_overview_page_description: "Enables a public overview page listing all active users who have agreed to be shown. Visitors can browse profiles and see other users' participation activity, such as submitted proposals, comments, and poll participation. It helps showcase the diversity of participants."
         enable_projekt_events_page: Events calendar
@@ -304,6 +317,16 @@ en:
       procedure_steps: Use procedure steps
       procedure_steps_description: >
         Offers the procedure steps maintained in the administration area for selection in the plan form, in the order set there. The public detail page then shows the procedure step instead of the version number; the administration area keeps showing the version number. Enable this when your plans go through a formal procedure with fixed steps, such as land-use planning procedures under the BauGB.
+    offers:
+      reminder_interval: Provider reminder
+      reminder_interval_description: >
+        Sets how often providers are asked by e-mail to check that their offers are up to date. The e-mail lists all of the provider's offers with a direct link to edit each one. Choose an interval that matches how often the offers change, for example quarterly.
+      reminder_interval_options:
+        "off": No reminder
+        monthly: Monthly
+        quarterly: Quarterly
+        half_yearly: Every six months
+        yearly: Yearly
     deficiency_reports:
       feature_name: Feature name
       feature_name_description: >
@@ -400,6 +423,9 @@ en:
       municipal_plans: Municipal plans
       municipal_plans_description: >
         Makes the municipal plan list publicly available: the overview of published plans, the archive, the detail pages and the notice form. While disabled, these pages are unreachable and the menu entry is hidden. The administration area of the plan list stays usable either way, so plans can be prepared before launch.
+      offers: Offers
+      offers_description: >
+        Makes the "Offers" module publicly available: the overview of offers and the detail pages. While disabled, these pages are unreachable and the menu entry is hidden. The entry form for authorized providers and the administration area stay usable either way, so providers can enter their offers before launch.
       deficiency_reports: Deficiency reporter
       deficiency_reports_description: >
         Enables the deficiency reporter, through which citizens can report damage, pollution, or other deficiencies in public space. Reports are captured with location, category, and description, and can be processed and responded to by officers.

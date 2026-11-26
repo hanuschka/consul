@@ -103,6 +103,7 @@ de:
           unverified_note_no_data_html: "Bitte %{verify_account}, damit Ihre Stimme gezählt wird."
           unfeasible_html: "Dieser Vorschlag entspricht <strong>nicht</strong> den Kriterien"
           feasible_html: "Dieser Vorschlag entspricht den Kriterien"
+          feasible_with_changes_html: "Dieser Vorschlag entspricht den Kriterien <strong>nur mit Änderungen</strong> der Verwaltung"
         show:
           callouts:
             publishing_prices:
@@ -116,6 +117,7 @@ de:
             Sie können den Beitrag an der rechten Seitenleiste unterstützen, indem Sie ihm Ihre Stimme geben. Außerdem können Sie dem Beitrag folgen, um auf dem Laufenden zu bleiben.
             Die Karte hilft Ihnen dabei, den Beitrag in der Stadt zu verorten, des Weiteren haben Sie die Möglichkeit, den Beitrag zu kommentieren."
           feasibility_explanation: Einschätzung der Verwaltung
+          changes_explanation: Änderungen der Verwaltung
           implementation_city_text: "Umsetzung: Soll von Stadtverwaltung umgesetzt werden"
           implementation_user_text: "Umsetzung: %{author} unterstützt bei der Durchführung"
           user_cost_estimate_text: "Preisliche Einschätzung des Nutzers: %{user_cost_estimate}"

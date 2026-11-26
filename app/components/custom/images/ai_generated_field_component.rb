@@ -7,14 +7,8 @@ class Images::AiGeneratedFieldComponent < ApplicationComponent
 
   private
 
-    # The visible label is deliberately terse, so the full sentence carries the
-    # meaning through the accessible name and the tooltip.
     def switch_label
       t("components.images.ai_generated_field_component.switch_label")
-    end
-
-    def label_text
-      t("components.images.ai_generated_field_component.label")
     end
 
     def tooltip_title

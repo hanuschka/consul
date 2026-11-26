@@ -3,6 +3,10 @@ load Rails.root.join("app", "controllers", "users", "registrations_controller.rb
 class Users::RegistrationsController < Devise::RegistrationsController
   include HasRegisteredAddress
 
+  before_action only: [:edit, :update] do
+    redirect_to account_path if current_user.phone_account?
+  end
+
   def create
     build_resource(sign_up_params)
     resource.registering_from_web = true
@@ -27,7 +31,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
         redirect_to new_user_registration_path,
           alert: t("custom.devise_views.users.registrations.create.existing_user_with_same_stamp")
       else
-        super
+        super do |user|
+          user.send_welcome_email if user.persisted? && pending_invitation.present?
+        end
       end
     else
       render :new

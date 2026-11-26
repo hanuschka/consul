@@ -1,0 +1,101 @@
+de:
+  custom:
+    offers:
+      add_offer: Angebot hinzufügen
+      index:
+        title: Angebote
+        intro_text: Hier finden Sie Angebote vor Ort. Wählen Sie ein Angebot aus, um alle Details zu sehen.
+        empty_list_text: Zurzeit gibt es keine Angebote.
+        no_matches_text: Keine Angebote passen zu Ihrer Auswahl. Ändern Sie die Filter oder die Suche.
+        to_offer: Zum Angebot
+        updated_on: Aktualisiert am %{date}
+        suspended_label: Ausgeblendet
+        deactivated_label: Deaktiviert
+        expired_label: Abgelaufen
+        count: Anzahl Angebote
+        sidebar_information: Hier finden Sie Angebote von Anbietern vor Ort. Über die Filter grenzen Sie die Liste und die Karte ein.
+        search_form:
+          placeholder: z. B. Schwimmen
+          button_title: Angebote durchsuchen
+        orders:
+          title: Titel (A–Z)
+          title_desc: Titel (Z–A)
+          created_at: Neueste zuerst
+          updated_at: Zuletzt aktualisiert
+        overview_map:
+          region_label: Karte der Angebote
+          note: Die Karte zeigt die Angebote mit Ortsangabe. Alle Angebote sind auch in der Liste unter der Karte aufgeführt.
+      show:
+        back: Zurück zur Übersicht
+        edit: Bearbeiten
+        opens_in_new_tab: (öffnet in einem neuen Tab)
+        suspended_notice: Dieses Angebot wurde von der Verwaltung ausgeblendet und ist öffentlich nicht sichtbar. Sie können es weiterhin bearbeiten.
+        deactivated_notice: Dieses Angebot ist deaktiviert. Es ist öffentlich nicht sichtbar, bis es wieder aktiviert wird.
+        expired_notice: Das Ablaufdatum dieses Angebots ist überschritten. Es ist öffentlich nicht sichtbar, bis das Ablaufdatum geändert wird.
+        deactivate: Deaktivieren
+        deactivate_hint: Das Angebot ist dann öffentlich nicht sichtbar, bis Sie es wieder aktivieren.
+        activate: Aktivieren
+        activate_hint: Das Angebot wird wieder öffentlich angezeigt, sofern es nicht abgelaufen ist oder von der Verwaltung ausgeblendet wurde.
+        intro:
+          title: Über das Angebot
+        details:
+          title: Details
+        location:
+          title: Ort
+        contact:
+          title: Kontakt
+          name: Ansprechperson
+      new:
+        title: Angebot erfassen
+      edit:
+        title: Angebot bearbeiten
+      create:
+        success: Das Angebot wurde gespeichert.
+      update:
+        success: Die Änderungen wurden gespeichert.
+      deactivate:
+        success: Das Angebot wurde deaktiviert und ist öffentlich nicht mehr sichtbar.
+      activate:
+        success: Das Angebot ist wieder aktiv.
+      form:
+        page_description: "Stellen Sie Ihr Angebot vor: Worum geht es, für wen ist es gedacht und wie kann man teilnehmen? Mit Ihren Angaben finden Interessierte Ihr Angebot in der Übersicht und auf der Karte."
+        required: (Pflichtfeld)
+        provider_prompt: Bitte wählen
+        provider_blank: Kein Anbieter
+        no_categories: Für diese Kategorie stehen derzeit keine Werte zur Auswahl.
+        sections:
+          categories: Kategorien
+          location: Ort
+          details: Details
+          contact: Kontakt
+        submit:
+          new: Angebot speichern
+          edit: Änderungen speichern
+        hints:
+          provider: Wählen Sie den Anbieter, zu dem das Angebot gehört.
+          category_kinds:
+            offer_type: Um welche Art von Angebot handelt es sich? Wählen Sie alle passenden Werte aus.
+            target_group: Für wen ist das Angebot gedacht? Wählen Sie alle passenden Werte aus.
+            costs: Fällt für das Angebot ein Beitrag an? Wählen Sie alle passenden Werte aus.
+            accessibility: Welche Merkmale der Barrierefreiheit erfüllt das Angebot?
+            social_area: In welchem Sozialraum findet das Angebot statt? Wählen Sie alle passenden Werte aus.
+          address: Adresse, unter der das Angebot stattfindet.
+          map_location: Optional. Setzen Sie eine Markierung, damit Ihr Angebot auf der Karte erscheint.
+          times: Wann findet das Angebot statt?
+          costs: Optionale Angaben zu den Kosten, zum Beispiel zu Ermäßigungen.
+          registration: Ob und wie man sich für das Angebot anmelden muss.
+          contact_website: Vollständige Adresse beginnend mit https://
+          expires_on: Optional. Bis zu diesem Tag einschließlich wird das Angebot öffentlich angezeigt. Danach ist es nur noch für Ihren Anbieter sichtbar, bis Sie das Datum ändern.
+        image_upload:
+          top_line: Wählen Sie ein passendes Bild für Ihr Angebot.
+        placeholders:
+          title: z. B. Schwimmkurs für Kinder
+          short_description: z. B. Kinder ab 6 Jahren lernen in kleinen Gruppen im Hallenbad schwimmen.
+          address: z. B. Marktplatz 1, 12345 Musterstadt
+          times: z. B. dienstags 15–17 Uhr, außer in den Schulferien
+          costs: z. B. 5 €, ermäßigt 3 €
+          registration: z. B. Anmeldung bis Freitag unter 0123 456789
+          contact_name: z. B. Maria Muster
+          contact_phone: z. B. 0123 456-0
+          contact_email: z. B. angebote@example.org
+          contact_website: https://

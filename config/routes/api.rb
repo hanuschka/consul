@@ -29,13 +29,12 @@
           patch :publish
         end
       end
-      resources :debates, only: [:create, :show, :update, :destroy]
       resources :polls, only: [:index, :create, :show, :update, :destroy]
       resources :livestreams, only: [:index, :create, :show, :update, :destroy] do
         resources :questions, only: [:create]
       end
       resources :questions, only: [:index, :create, :show, :update, :destroy], shallow: true do
-        resources :question_options, only: [:create, :show, :update, :destroy]
+        resources :question_options, only: [:index, :create, :show, :update, :destroy]
       end
       resources :events, only: [:index, :create, :show, :update, :destroy]
       resources :arguments, only: [:index, :create, :show, :update, :destroy]
@@ -43,10 +42,15 @@
       resources :texts, only: [:index]
       resources :point_of_interest_pins, only: [:index, :create, :show, :update, :destroy]
       resources :point_of_interest_categories, only: [:index, :create, :show, :update, :destroy]
-      resources :comments, only: [:index, :create, :show, :destroy]
+      resources :comments, only: [:index, :create, :show, :update, :destroy]
       resources :budgets, only: [:index, :create, :show, :update, :destroy]
-      resources :formulars, only: [:index, :create, :show, :update, :destroy]
-      resources :milestones, only: [:index, :create]
+      resources :formulars, only: [:index, :create, :show, :update, :destroy] do
+        resources :formular_fields, only: [:index]
+      end
+      resources :milestones, only: [:index, :create, :show, :update, :destroy]
+      resources :projekt_labels, only: [:index]
+      resources :sentiments, only: [:index]
+      resources :masterportal_collections, only: [:index]
       resources :progress_bars, only: [:index, :create, :show, :update, :destroy]
 
       resource :iframe, only: [:show, :update]
@@ -55,12 +59,26 @@
 
     resources :deficiency_reports, only: [:index, :show, :create, :update]
     resources :deficiency_report_categories, only: [:index]
+    resources :deficiency_report_intake_channels, only: [:index]
+    resources :deficiency_report_statuses, only: [:index]
+    resources :deficiency_report_subcategories, only: [:index]
+    resources :deficiency_report_answer_templates, only: [:index]
     resources :ideas, only: [:index, :show, :create, :update]
     resources :idea_categories, only: [:index, :show, :create, :update, :destroy]
     resources :idea_officers, only: [:index]
-    resources :municipal_plans, only: [:index, :show]
+    resources :municipal_plans, only: [:index, :show, :create, :update] do
+      collection do
+        patch :order
+      end
+    end
     resources :municipal_plan_topics, only: [:index]
+    resources :offers, only: [:index, :show]
     resources :polls, only: [:index, :show] do
+      member do
+        post :go_live
+        get :results
+      end
+
       resources :poll_questions, only: [:index, :create], path: "questions", as: :questions
     end
     resources :poll_questions, only: [:show, :update, :destroy] do
@@ -69,7 +87,9 @@
     end
     resources :poll_question_answers, only: [:show, :update, :destroy]
     resources :livestreams, only: [:index, :show]
-    resources :proposals, only: [:index, :show]
+    resources :proposals, only: [:index, :show] do
+      resources :comments, only: [:create]
+    end
     resources :events, only: [:index, :show]
     resources :notifications, only: [:index, :show]
     resources :questions, only: [:index, :show]
@@ -85,10 +105,35 @@
         end
       end
     end
-    resources :budget_investments, only: [:index, :show], controller: "budgets/investments"
+    resources :budget_investments, only: [:index, :show], controller: "budgets/investments" do
+      resources :comments, only: [:create]
+    end
 
     namespace :masterportal do
       resources :category_icons, only: [:create]
+    end
+
+    namespace :configuration do
+      get "settings", to: "settings#index"
+      patch "settings", to: "settings#update"
+      get "texts", to: "texts#index"
+      patch "texts", to: "texts#update"
+
+      resources :images, only: [:index, :update, :destroy], param: :name
+      resources :videos, only: [:index, :update, :destroy], param: :name
+      resources :footer_pages, only: [:index, :show, :update]
+      resources :landing_pages, only: [:index, :show, :create, :update, :destroy]
+      resources :navbar_items, only: [:index, :show, :create, :update, :destroy]
+      resources :content_blocks, only: [:index, :show, :update], param: :key
+      resources :content_cards, only: [:index, :show, :update]
+      resources :banners, only: [:index, :show, :create, :update, :destroy]
+      resources :modal_notifications, only: [:index, :show, :create, :update, :destroy]
+      resources :email_templates, only: [:index, :show, :update], param: :key, constraints: { key: %r{[^/]+} }
+      resources :map_layers, only: [:index, :show, :create, :update, :destroy]
+      resources :geozones, only: [:index, :show, :create, :update, :destroy]
+      resources :tag_categories, only: [:index, :show, :create, :update, :destroy]
+      resources :age_ranges, only: [:index, :show, :create, :update, :destroy]
+      resources :individual_groups, only: [:index, :show, :create, :update]
     end
 
     match '*path', to: 'not_found#index', via: [:get, :post, :patch, :put, :delete]

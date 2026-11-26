@@ -257,7 +257,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   end
 
   def audits
-    @deficiency_report = DeficiencyReport.find(params[:id])
+    @deficiency_report = DeficiencyReport.with_hidden.find(params[:id])
     authorize @deficiency_report, :show?, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     @breadcrumbs = [
@@ -283,7 +283,7 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
   end
 
   def feedback_form
-    @deficiency_report = DeficiencyReport.find(params[:id])
+    @deficiency_report = DeficiencyReport.with_hidden.find(params[:id])
     authorize @deficiency_report, policy_class: Adm::DeficiencyReports::DeficiencyReportPolicy
 
     @feedback_form = @deficiency_report.feedback_form
@@ -313,7 +313,14 @@ class Adm::DeficiencyReports::DeficiencyReportsController < Adm::DeficiencyRepor
     reporter_answer_was = @deficiency_report.official_answer_for_reporter.presence
     documents = Array(params[:deficiency_report][:official_answer_documents]).reject(&:blank?)
 
-    if @deficiency_report.update(params.require(:deficiency_report).permit(:official_answer, :reporter_answer))
+    answer_params = params.require(:deficiency_report).permit(:official_answer, :reporter_answer, :same_public_answer)
+    same_public_answer = answer_params.delete(:same_public_answer) == "1"
+
+    if DeficiencyReport.separate_reporter_answer? && same_public_answer && answer_params.key?(:reporter_answer)
+      answer_params[:official_answer] = answer_params[:reporter_answer]
+    end
+
+    if @deficiency_report.update(answer_params)
       answers_now = [@deficiency_report.official_answer.presence, @deficiency_report.reporter_answer.presence]
       reporter_answer_now = @deficiency_report.official_answer_for_reporter.presence
 

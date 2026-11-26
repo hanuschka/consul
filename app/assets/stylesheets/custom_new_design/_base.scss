@@ -271,7 +271,7 @@ a.resources--info-count {
   transition: background-color 0.15s ease-in-out;
 
   &:hover {
-    background: $brand-lighter;
+    background: var(--brand-color-lighter);
   }
 }
 

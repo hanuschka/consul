@@ -28,6 +28,7 @@ describe "Separate reporter answer for Anliegen", type: :request do
 
       expect(response.body).to include('name="deficiency_report[official_answer]"')
       expect(response.body).not_to include('name="deficiency_report[reporter_answer]"')
+      expect(response.body).not_to include('name="deficiency_report[same_public_answer]"')
 
       expect { save_answers(official_answer: "Die Laterne wird morgen repariert.") }
         .to have_enqueued_mail(DeficiencyReportMailer, :notify_author_about_official_answer)
@@ -139,6 +140,71 @@ describe "Separate reporter answer for Anliegen", type: :request do
                               "Persönliche Antwort",
                               I18n.t("adm.deficiency_reports.deficiency_reports.show.public_answer"),
                               "Öffentliche Antwort")
+    end
+
+    describe "public answer same as the reporter answer" do
+      def same_answer_checkbox
+        get adm_deficiency_reports_deficiency_report_path(report)
+
+        Nokogiri::HTML(response.body)
+                .at_css('input[type="checkbox"][name="deficiency_report[same_public_answer]"]')
+      end
+
+      it "is checked for an unanswered report" do
+        expect(same_answer_checkbox["checked"]).to be_present
+      end
+
+      it "is checked when both answers are the same" do
+        report.update!(official_answer: "Wird repariert.", reporter_answer: "Wird repariert.")
+
+        expect(same_answer_checkbox["checked"]).to be_present
+      end
+
+      it "is unchecked when the answers differ" do
+        report.update!(official_answer: "Wird repariert.", reporter_answer: "Danke für Ihre Meldung.")
+
+        expect(same_answer_checkbox["checked"]).to be_blank
+      end
+
+      it "is unchecked for an answer given before the setting was switched on" do
+        report.update!(official_answer: "Bereits erledigt.")
+
+        expect(same_answer_checkbox["checked"]).to be_blank
+      end
+
+      it "publishes the reporter answer and e-mails it once when checked" do
+        expect do
+          save_answers(reporter_answer: "Die Laterne wird morgen repariert.",
+                       official_answer: "Anderer Text",
+                       same_public_answer: "1")
+        end.to have_enqueued_mail(DeficiencyReportMailer, :notify_author_about_official_answer).once
+
+        expect(report.reload.official_answer).to eq "Die Laterne wird morgen repariert."
+        expect(report.reporter_answer).to eq "Die Laterne wird morgen repariert."
+        expect(DeficiencyReport.search("Laterne")).to include(report)
+
+        logout
+        get deficiency_report_path(report)
+
+        expect(response.body).to include(box_title, "Die Laterne wird morgen repariert.")
+      end
+
+      it "overwrites a different public answer without a reporter e-mail when the reporter answer is unchanged" do
+        report.update!(official_answer: "Alt", reporter_answer: "Danke für Ihre Meldung.")
+
+        expect do
+          save_answers(reporter_answer: "Danke für Ihre Meldung.", official_answer: "Alt", same_public_answer: "1")
+        end.not_to have_enqueued_mail(DeficiencyReportMailer, :notify_author_about_official_answer)
+
+        expect(report.reload.official_answer).to eq "Danke für Ihre Meldung."
+      end
+
+      it "keeps both answers separate when unchecked" do
+        save_answers(reporter_answer: "Persönlich", official_answer: "Öffentlich", same_public_answer: "0")
+
+        expect(report.reload.reporter_answer).to eq "Persönlich"
+        expect(report.official_answer).to eq "Öffentlich"
+      end
     end
   end
 

@@ -130,7 +130,6 @@ get "/:landing_page_slug/budgets/:budget_id/investments/:id",
   to: redirect("/budgets/%{budget_id}/investments/%{id}")
 
 
-post "/voice_assistant/create_session",               to: "voice_assistant#create_session"
 post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
@@ -156,3 +155,5 @@ namespace :api do
     resources :category_icons, only: [:create]
   end
 end
+
+resources :accessibility_reports, only: :create

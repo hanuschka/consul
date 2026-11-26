@@ -140,6 +140,7 @@ class ProjektsController < ApplicationController
       title: @projekt.title,
       image_url: image_url,
       image_ai_label_html: helpers.ai_image_label_html(@projekt.image),
+      image_credit_html: helpers.image_credit_html(@projekt.image),
       tags: @projekt.tags.pluck(:name),
       sdg_goals: @projekt.sdg_goals.map { |goal| { code: goal.code, title: goal.title, image: "sdg/goal_#{goal.code}.png"} }
     }.to_json

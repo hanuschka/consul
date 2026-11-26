@@ -1,58 +1,55 @@
-<!-- BlockID: E09 -->
-<!-- J3: KPI – Icon-gefuehrte Kacheln mit je eigenem Akzent-Tint -->
+<!-- BlockID: E09 Kennzahlen mit Symbol - Eckdaten als Kacheln mit Symbol auf getönter Fläche -->
 <!-- Geeignet für: Projektmerkmale, Teilnahmebedingungen, Eckdaten -->
+<!-- Editor: jede Kachel ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Kachel. Icon über die Klasse fa-… tauschen (fontawesome.com, Version 5), nur im Code-Modus. -->
+<!-- Umbruch: Kacheln stehen am Handy untereinander, ab mittlerer Breite zwei nebeneinander (2 x 2). Button füllt am Handy die Breite. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Kennzahl = Zahl-Ausnahme, Bezeichnung und Button = 1rem -->
 
-<div style="background: linear-gradient(160deg, #1a2e44 0%, #243b55 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
-  <h3 style="font-size: 22px; font-weight: 700; color: #ffffff; margin-bottom: 24px; margin-top: 0; letter-spacing: -0.3px;">Wer kann mitmachen?</h3>
+<div style="position: relative; overflow: hidden; background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <ul class="row" style="margin: 0; padding: 0; list-style: none;">
+  <div style="position: relative; z-index: 1; display: flex; align-items: center; gap: 12px; margin: 0 0 8px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-user-check" aria-hidden="true" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Wer kann mitmachen?</h3>
+  </div>
+  <p style="position: relative; z-index: 1; font-size: 1rem; line-height: 1.6; margin: 0 0 20px;">Die Eckdaten zur Teilnahme auf einen Blick.</p>
 
-    <li class="column small-12 medium-6 large-3" style="margin-bottom: 16px;">
-      <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 18px; height: 100%; transition: transform 0.2s ease, box-shadow 0.2s ease;"
-           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.24)'"
-           onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-        <div style="width: 40px; height: 40px; background: rgba(23,121,186,0.15); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 15px; font-weight: 700; color: #60a5fa;">&#9650;</div>
-        <div style="font-size: 28px; font-weight: 800; color: #ffffff; margin-bottom: 4px; letter-spacing: -0.5px; line-height: 1.2;">6 Monate</div>
-        <div style="font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.4;">M&auml;rz &ndash; August 2025</div>
+  <ul style="position: relative; z-index: 1; list-style: none; margin: 0 0 20px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 12px;">
+
+    <li style="display: flex; align-items: center; gap: 16px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 16px 18px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="far fa-calendar-alt" aria-hidden="true" style="font-size: 22px;"></i></span>
+      <div style="flex: 1 1 auto; min-width: 0;">
+        <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: var(--brand-color, #1779ba); overflow-wrap: break-word;">6 Monate</div>
+        <div style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 4px 0 0;">M&auml;rz bis August 2025</div>
       </div>
     </li>
 
-    <li class="column small-12 medium-6 large-3" style="margin-bottom: 16px;">
-      <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 18px; height: 100%; transition: transform 0.2s ease, box-shadow 0.2s ease;"
-           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.24)'"
-           onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-        <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.8);">&#9998;</div>
-        <div style="font-size: 28px; font-weight: 800; color: #ffffff; margin-bottom: 4px; letter-spacing: -0.5px; line-height: 1.2;">Ab 16</div>
-        <div style="font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.4;">Mindestalter zur Teilnahme</div>
+    <li style="display: flex; align-items: center; gap: 16px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 16px 18px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="far fa-id-card" aria-hidden="true" style="font-size: 22px;"></i></span>
+      <div style="flex: 1 1 auto; min-width: 0;">
+        <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: var(--brand-color, #1779ba); overflow-wrap: break-word;">Ab 16</div>
+        <div style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 4px 0 0;">Mindestalter zur Teilnahme</div>
       </div>
     </li>
 
-    <li class="column small-12 medium-6 large-3" style="margin-bottom: 16px;">
-      <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 18px; height: 100%; transition: transform 0.2s ease, box-shadow 0.2s ease;"
-           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.24)'"
-           onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-        <div style="width: 40px; height: 40px; background: rgba(22,163,106,0.15); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 15px; font-weight: 700; color: #4ade80;">&#9679;</div>
-        <div style="font-size: 28px; font-weight: 800; color: #ffffff; margin-bottom: 4px; letter-spacing: -0.5px; line-height: 1.2;">2 Wege</div>
-        <div style="font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.4;">Online &amp; vor Ort teilnehmen</div>
+    <li style="display: flex; align-items: center; gap: 16px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 16px 18px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-map-signs" aria-hidden="true" style="font-size: 22px;"></i></span>
+      <div style="flex: 1 1 auto; min-width: 0;">
+        <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: var(--brand-color, #1779ba); overflow-wrap: break-word;">2 Wege</div>
+        <div style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 4px 0 0;">Online und vor Ort teilnehmen</div>
       </div>
     </li>
 
-    <li class="column small-12 medium-6 large-3" style="margin-bottom: 16px;">
-      <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 18px; height: 100%; transition: transform 0.2s ease, box-shadow 0.2s ease;"
-           onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.24)'"
-           onmouseout="this.style.transform='none';this.style.boxShadow='none'">
-        <div style="width: 40px; height: 40px; background: rgba(202,138,4,0.15); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 15px; font-weight: 700; color: #facc15;">&#9733;</div>
-        <div style="font-size: 28px; font-weight: 800; color: #ffffff; margin-bottom: 4px; letter-spacing: -0.5px; line-height: 1.2;">&infin;</div>
-        <div style="font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.4;">Ideen pro Person einreichbar</div>
+    <li style="display: flex; align-items: center; gap: 16px; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 16px 18px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="far fa-lightbulb" aria-hidden="true" style="font-size: 22px;"></i></span>
+      <div style="flex: 1 1 auto; min-width: 0;">
+        <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: var(--brand-color, #1779ba); overflow-wrap: break-word;">Beliebig viele</div>
+        <div style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 4px 0 0;">Ideen pro Person einreichbar</div>
       </div>
     </li>
 
   </ul>
 
-  <!-- Optionaler CTA -->
-  <div style="text-align: center; margin-top: 12px;">
-    <a href="#" class="button" style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.18); padding: 12px 28px; text-decoration: none; font-size: 15px; font-weight: 700; height: 44px; box-sizing: border-box; border-radius: 8px; transition: background 0.2s ease;"
-       onmouseover="this.style.background='rgba(255,255,255,0.18)'"
-       onmouseout="this.style.background='rgba(255,255,255,0.12)'">Jetzt registrieren &amp; mitmachen</a>
+  <div style="position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;">
+    <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Jetzt registrieren und mitmachen</a></div>
   </div>
+
 </div>

@@ -124,6 +124,15 @@ namespace :machine_translation do
     puts "  cache cleared"
   end
 
+  desc "Delete stored UI translations that use placeholders their source text no longer has"
+  task chrome_cleanup: :environment do
+    ids = MachineTranslation::ChromeStore.stale_translation_ids
+    I18nContent.translation_class.where(id: ids).delete_all
+    MachineTranslation::ChromeStore.reset!
+
+    puts "  deleted #{ids.size} stale UI translations"
+  end
+
   desc "Delete stored setting translations whose source value has since changed"
   task setting_cleanup: :environment do
     keys = MachineTranslation::SettingText.stale_content_keys

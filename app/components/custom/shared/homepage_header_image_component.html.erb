@@ -6,3 +6,14 @@
     <%= tag.img class: "homepage-image-header--image", src: TRANSPARENT_PIXEL, alt: "" %>
   <% end %>
 </picture>
+
+<% if shared_credits? %>
+  <%= render Shared::ImageCreditComponent.new(credits: desktop_credits) %>
+<% else %>
+  <% if desktop_credits.present? %>
+    <span class="homepage-image-header--credit -desktop"><%= render Shared::ImageCreditComponent.new(credits: desktop_credits) %></span>
+  <% end %>
+  <% if mobile_credits.present? %>
+    <span class="homepage-image-header--credit -mobile"><%= render Shared::ImageCreditComponent.new(credits: mobile_credits) %></span>
+  <% end %>
+<% end %>

@@ -5,6 +5,10 @@
   </h1>
 
   <p style="<%= css_for_mailer_text %>">
+    <%= @user.recipient_greeting %>,
+  </p>
+
+  <p style="<%= css_for_mailer_text %>">
     <%= t("mailers.already_confirmed.info") %>
   </p>
 
@@ -16,4 +20,12 @@
     <%= link_to t("devise_views.shared.links.new_password"),
                 new_password_url(@user), style: css_for_mailer_link %>
   </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

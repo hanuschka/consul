@@ -4,10 +4,23 @@ class Api::ProjektsController < Api::BaseController
   include Translatable
 
   before_action :find_projekt, only: [:show, :update, :destroy, :update_setting, :update_settings, :update_page, :update_page_image, :update_body]
+  around_action :audit_changes_as_client, only: [:update_setting, :update_settings]
 
   rescue_from ProjektContentBlocks::BulkWrite::InvalidRequestError, with: :render_content_blocks_error
 
   DEFAULT_PROJEKTS_PER_PAGE = 20
+
+  TRANSLATED_ATTRIBUTES = %w[description].freeze
+
+  PAGE_TRANSLATED_ATTRIBUTES = ProjektSerializer::PAGE_TRANSLATED_ATTRIBUTES
+
+  WRITABLE_FIELD_PRELOADS = {
+    translations: {},
+    map_location: {},
+    tags: {},
+    geozone_affiliations: {},
+    registered_address_district_affiliations: {}
+  }.freeze
 
   SORTABLE_COLUMNS = %w[
     created_at total_duration_start total_duration_end
@@ -33,21 +46,14 @@ class Api::ProjektsController < Api::BaseController
   def index
     check_read_access!
 
-    only_public =
+    projekts =
       if current_client.public_data?
-        true
+        projekts_for_public_clients
+      elsif params[:only_public] != "false"
+        Projekt.activated.show_in_overview_page
       else
-        params[:only_public] != 'false'
+        Projekt.regular
       end
-
-    if only_public
-      projekts =
-        Projekt
-          .activated
-          .show_in_overview_page
-    else
-      projekts = Projekt.regular
-    end
 
     valid_filters = %w[index_order_all index_order_underway index_order_ongoing index_order_upcoming index_order_expired index_order_individual_list]
     valid_filters.push("index_order_drafts") if current_client.admin?
@@ -63,13 +69,10 @@ class Api::ProjektsController < Api::BaseController
     includes_hash[:projekt_settings] = {} if include_projekt_settings
     includes_hash[:content_blocks] = {} if include_text || include_content_blocks
     includes_hash[:page] = { translations: {}, image: { attachment_attachment: :blob }}
+    includes_hash.merge!(WRITABLE_FIELD_PRELOADS)
 
     if include_phases
-      includes_hash[:projekt_phases] = [
-        :settings,
-        :individual_group_values,
-        :geozone_restrictions
-      ]
+      includes_hash[:projekt_phases] = ProjektPhaseSerializer::PRELOADS
     end
 
     projekts = sort_projekts(projekts)
@@ -107,12 +110,8 @@ class Api::ProjektsController < Api::BaseController
   def show
     check_read_access!
 
-    if current_client.public_data?
-      show_in_overview = @projekt.projekt_settings.find_by(key: 'projekt_feature.general.show_in_overview_page')&.value == 'active'
-
-      unless @projekt.activated? && show_in_overview
-        return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
-      end
+    if current_client.public_data? && @projekt.hidden_for?(nil)
+      return render json: { error: { type: 'forbidden', messages: ['Access denied'] } }, status: 403
     end
 
     include_phases = params[:include_phases] == 'true'
@@ -131,8 +130,9 @@ class Api::ProjektsController < Api::BaseController
   def create
     check_admin_access!
     projekt = Projekt.new(projekt_params)
+    translations = assign_requested_translations(projekt, :projekt, TRANSLATED_ATTRIBUTES)
 
-    if save_with_content_blocks(projekt)
+    if save_with_content_blocks(projekt, translations)
       Projekt.ensure_order_integrity
       process_image_with_base64(projekt.page, params[:projekt][:image_attributes])
 
@@ -144,8 +144,10 @@ class Api::ProjektsController < Api::BaseController
 
   def update
     check_admin_access!
+    @projekt.assign_attributes(with_existing_map_location_id(@projekt, projekt_params))
+    translations = assign_requested_translations(@projekt, :projekt, TRANSLATED_ATTRIBUTES)
 
-    if update_with_content_blocks(@projekt)
+    if update_with_content_blocks(@projekt, translations)
       Projekt.ensure_order_integrity
 
       render json: { data: { projekt: serialize_written_projekt(@projekt) } }
@@ -156,9 +158,12 @@ class Api::ProjektsController < Api::BaseController
 
   def update_page
     check_admin_access!
-    if @projekt.page.update(projekt_page_params)
+    @projekt.page.assign_attributes(projekt_page_params)
+    translations = assign_requested_translations(@projekt.page, :page, PAGE_TRANSLATED_ATTRIBUTES)
+
+    if save_with_translations(@projekt.page, translations)
       process_image_with_base64(@projekt.page, params[:projekt][:image_attributes])
-      serailized_projekt = ProjektSerializer.new(@projekt).serialize
+      serailized_projekt = ProjektSerializer.new(@projekt, current_api_client: current_client).serialize
 
       render json: { data: { projekt: serailized_projekt } }
     else
@@ -177,8 +182,8 @@ class Api::ProjektsController < Api::BaseController
 
     process_image_with_base64(@projekt.page, image_data)
 
-    render json: { data: { projekt: ProjektSerializer.new(@projekt).serialize } }
-  rescue ForbiddenError, UnauthorizedError
+    render json: { data: { projekt: ProjektSerializer.new(@projekt, current_api_client: current_client).serialize } }
+  rescue *SELF_RENDERED_ERRORS
     raise
   rescue => e
     render json: { error: { messages: [e.message] } }, status: 422
@@ -199,13 +204,22 @@ class Api::ProjektsController < Api::BaseController
 
   def update_setting
     check_admin_access!
-    setting = @projekt.projekt_settings.find_by(key: setting_params[:key])
+    configurable_keys = ProjektSetting::ConfigurableKeys.for_projekt(@projekt)
+    key = setting_params[:key].to_s
 
-    unless setting
+    if !configurable_keys.key?(key)
       return render json: { error: { messages: ["Setting not found"] } }, status: 404
     end
 
-    if setting.update(value: setting_params[:value])
+    result = ConfigurableKeys::UpdateService.call(
+      changes: { key => setting_params[:value] },
+      configurable_keys:,
+      setting_rows: @projekt.projekt_settings
+    )
+
+    if result.success?
+      setting = @projekt.projekt_settings.find_by!(key:)
+
       render json: {
         data: {
           setting: {
@@ -218,37 +232,33 @@ class Api::ProjektsController < Api::BaseController
         message: "Setting updated successfully"
       }
     else
-      render json: { error: { messages: setting.errors.full_messages } }, status: 422
+      render json: { error: { messages: result.error_details[key] } }, status: 422
     end
   end
 
+  # All or nothing: when one key is unknown or one value has the wrong type,
+  # no setting is written and every problem is listed under errors.
   def update_settings
     check_admin_access!
     settings_hash = params[:settings]
 
-    if settings_hash.blank?
+    if !settings_hash.is_a?(ActionController::Parameters) || settings_hash.blank?
       return render json: { error: { messages: ["settings parameter is required"] } }, status: 422
     end
 
-    updated = []
-    errors = {}
-
-    settings_hash.each do |key, value|
-      setting = @projekt.projekt_settings.find_by(key: key)
-
-      if setting.blank?
-        errors[key] = ["Setting not found"]
-        next
-      end
-
-      if setting.update(value: value.to_s)
-        updated << key
-      else
-        errors[key] = setting.errors.full_messages
-      end
+    result = ProjektSetting.with_single_overview_sync do
+      ConfigurableKeys::UpdateService.call(
+        changes: settings_hash.to_unsafe_h,
+        configurable_keys: ProjektSetting::ConfigurableKeys.for_projekt(@projekt),
+        setting_rows: @projekt.projekt_settings
+      )
     end
 
-    render json: { data: { updated: updated, errors: errors } }
+    if result.success?
+      render json: { data: { updated: result.data[:values].keys, errors: {} } }
+    else
+      render json: { data: { updated: [], errors: result.error_details } }
+    end
   end
 
   def update_body
@@ -273,6 +283,10 @@ class Api::ProjektsController < Api::BaseController
   end
 
   private
+
+  def projekts_for_public_clients
+    Projekt.visible_for(nil).show_in_overview_page
+  end
 
   def sort_projekts(projekts)
     apply_sort_join(projekts)
@@ -315,9 +329,12 @@ class Api::ProjektsController < Api::BaseController
     attributes = [
       :name, :parent_id, :total_duration_start, :total_duration_end,
       :show_start_date_in_frontend, :show_end_date_in_frontend,
-      :geozone_affiliated, :order_number, :tag_list, :related_sdg_list, :landing_page_id, geozone_affiliation_ids: [], sdg_goal_ids: [],
+      :geozone_affiliated, :order_number, :tag_list, :related_sdg_list, :landing_page_id,
+      :color, :icon,
+      geozone_affiliation_ids: [], sdg_goal_ids: [],
+      registered_address_district_affiliation_ids: [],
       individual_group_value_ids: [],
-      map_location_attributes: map_location_attributes,
+      map_location_attributes: map_location_attributes_api,
       projekt_manager_assignments_attributes: [:id, :projekt_manager_id, :projekt_id, permissions: []]
     ]
     params.require(:projekt).permit(attributes, translation_params(Projekt))
@@ -329,28 +346,12 @@ class Api::ProjektsController < Api::BaseController
     )
   end
 
-  def process_tags
-    if params[:projekt].present?
-      params[:projekt][:tag_list] = (params[:projekt][:tag_list_predefined] || @projekt.tag_list.join(","))
-      params[:projekt].delete(:tag_list_predefined)
-    end
-  end
-
-  def map_location_params
-    params.require(:projekt)
-      .require(:map_location_attributes)
-      .permit(map_location_attributes)
-  end
-
   def find_projekt
     @projekt = Projekt
       .includes(
         :content_blocks,
-        projekt_phases: [
-          :settings,
-          :individual_group_values,
-          :geozone_restrictions
-        ]
+        **WRITABLE_FIELD_PRELOADS,
+        projekt_phases: ProjektPhaseSerializer::PRELOADS
       )
       .find(params[:id])
   end
@@ -414,10 +415,10 @@ class Api::ProjektsController < Api::BaseController
       end
   end
 
-  def save_with_content_blocks(projekt)
+  def save_with_content_blocks(projekt, translations)
     touching_projekt_once(projekt) do
       ActiveRecord::Base.transaction do
-        projekt_saved = projekt.save
+        projekt_saved = save_with_translations(projekt, translations)
 
         if projekt_saved
           create_initial_content_blocks(projekt)
@@ -436,10 +437,10 @@ class Api::ProjektsController < Api::BaseController
     end
   end
 
-  def update_with_content_blocks(projekt)
+  def update_with_content_blocks(projekt, translations)
     touching_projekt_once(projekt) do
       ActiveRecord::Base.transaction do
-        projekt_updated = projekt.update(projekt_params)
+        projekt_updated = save_with_translations(projekt, translations)
 
         if projekt_updated && content_blocks_sent?
           ProjektContentBlocks::BulkWrite::Apply.call(
@@ -479,7 +480,7 @@ class Api::ProjektsController < Api::BaseController
     if content_blocks_sent?
       serialize_projekt_with_all_content_blocks(projekt)
     else
-      ProjektSerializer.new(projekt).serialize
+      ProjektSerializer.new(projekt, current_api_client: current_client).serialize
     end
   end
 
@@ -496,7 +497,7 @@ class Api::ProjektsController < Api::BaseController
       projekt.content_blocks.sort_by { |content_block| content_block.position.to_i }
 
     ProjektSerializer
-      .new(projekt)
+      .new(projekt, current_api_client: current_client)
       .serialize
       .merge("content_blocks" => ContentBlockSerializer.serialize_collection(content_blocks))
   end

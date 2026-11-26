@@ -34,7 +34,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                    properties: {
                      budgets: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/Budget' }
                      }
                    },
                    required: ['budgets']
@@ -78,7 +78,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                    properties: {
                      budgets: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/Budget' }
                      }
                    },
                    required: ['budgets']
@@ -117,12 +117,15 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               show_results_after_first_vote: { type: :boolean, nullable: true, description: 'Show voting results in real time after the first vote' },
               show_percentage_values_only: { type: :boolean, nullable: true, description: 'Display only percentage values instead of absolute numbers' },
               max_preselected: { type: :integer, nullable: true, description: 'Maximum number of pre-selected proposals (0 = disabled)' },
+              **Schemas::Budgets::BUDGET_WRITE_PROPERTIES.except(:name),
               heading_attributes: {
                 type: :object,
                 nullable: true,
                 description: 'Budget heading configuration: total amount, population and ballot limits',
                 properties: {
-                  id: { type: :integer, nullable: true, description: 'Heading ID (required for updates)' },
+                  id: { type: :integer, nullable: true, description: 'Heading ID (ignored: every budget has exactly one heading)' },
+                  name: { type: :string, nullable: true, description: 'Heading name (current language)' },
+                  translations: Schemas::Budgets::NAME_TRANSLATIONS,
                   price: { type: :integer, nullable: true, description: 'Total budget amount for this heading' },
                   population: { type: :integer, nullable: true, description: 'Population count for this heading' },
                   max_ballot_lines: { type: :integer, nullable: true, description: 'Maximum ballot lines per voter' }
@@ -169,7 +172,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     budget: { type: :object }
+                     budget: { '$ref' => '#/components/schemas/Budget' }
                    },
                    required: ['budget']
                  }
@@ -267,7 +270,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     budget: { type: :object }
+                     budget: { '$ref' => '#/components/schemas/Budget' }
                    },
                    required: ['budget']
                  }
@@ -305,7 +308,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     budget: { type: :object }
+                     budget: { '$ref' => '#/components/schemas/Budget' }
                    },
                    required: ['budget']
                  }
@@ -343,7 +346,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     budget: { type: :object }
+                     budget: { '$ref' => '#/components/schemas/Budget' }
                    },
                    required: ['budget']
                  }
@@ -386,12 +389,15 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               show_results_after_first_vote: { type: :boolean, nullable: true, description: 'Show results in real time' },
               show_percentage_values_only: { type: :boolean, nullable: true, description: 'Display only percentages' },
               max_preselected: { type: :integer, nullable: true, description: 'Maximum pre-selected proposals' },
+              **Schemas::Budgets::BUDGET_WRITE_PROPERTIES.except(:name),
               heading_attributes: {
                 type: :object,
                 nullable: true,
-                description: 'Budget heading: total amount, population and ballot limits',
+                description: 'Budget heading: name, total amount, population and ballot limits',
                 properties: {
-                  id: { type: :integer, nullable: true, description: 'Heading ID (required for updates)' },
+                  id: { type: :integer, nullable: true, description: 'Heading ID (ignored: every budget has exactly one heading)' },
+                  name: { type: :string, nullable: true, description: 'Heading name (current language)' },
+                  translations: Schemas::Budgets::NAME_TRANSLATIONS,
                   price: { type: :integer, nullable: true, description: 'Total budget amount' },
                   population: { type: :integer, nullable: true, description: 'Population count' },
                   max_ballot_lines: { type: :integer, nullable: true, description: 'Maximum ballot lines per voter' }
@@ -436,7 +442,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     budget: { type: :object }
+                     budget: { '$ref' => '#/components/schemas/Budget' }
                    },
                    required: ['budget']
                  }
@@ -519,6 +525,75 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
         end
       end
 
+      response '200', 'budget, group and heading names written in two languages' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
+        let(:test_budget) do
+          Budget.create!(name_en: 'Original', projekt_phase_id: projekt_phase.id, currency_symbol: '€', slug: 'original').tap do |created_budget|
+            group = created_budget.create_group!(name: 'Group')
+            group.create_heading!(name: 'Heading', price: 1000)
+          end
+        end
+        let(:id) { test_budget.id }
+        let(:budget) do
+          {
+            budget: {
+              translations: {
+                de: { name: 'Bürgerhaushalt', main_link_text: 'Mehr erfahren', main_link_url: 'https://example.org/de' },
+                en: { name: 'Citizen budget', main_link_text: 'Learn more', main_link_url: 'https://example.org/en' }
+              },
+              group_attributes: { translations: { de: { name: 'Stadtteile' }, en: { name: 'Districts' } } },
+              heading_attributes: { translations: { de: { name: 'Gesamte Stadt' }, en: { name: 'Whole city' } } }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget: { '$ref' => '#/components/schemas/Budget' }
+                   },
+                   required: ['budget']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          budget_data = JSON.parse(response.body)['data']['budget']
+
+          expect(budget_data['translations']['de']['main_link_text']).to eq('Mehr erfahren')
+          expect(budget_data['translations']['en']['name']).to eq('Citizen budget')
+          expect(budget_data['group']['translations']['de']['name']).to eq('Stadtteile')
+          expect(budget_data['group']['heading']['translations']['en']['name']).to eq('Whole city')
+        end
+      end
+
+      response '422', 'heading name missing in a language' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
+        let(:test_budget) do
+          Budget.create!(name_en: 'Original', projekt_phase_id: projekt_phase.id, currency_symbol: '€', slug: 'original').tap do |created_budget|
+            group = created_budget.create_group!(name: 'Group')
+            group.create_heading!(name: 'Heading', price: 1000)
+          end
+        end
+        let(:id) { test_budget.id }
+        let(:budget) do
+          {
+            budget: {
+              translations: { en: { name: 'Renamed' } },
+              heading_attributes: { translations: { en: { name: '' } } }
+            }
+          }
+        end
+
+        run_test! do
+          expect(test_budget.reload.name).to eq('Original')
+        end
+      end
+
       response '200', 'budget updated with heading and settings' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase) { ProjektPhase::BudgetPhase.create!(projekt: test_projekt) }
@@ -545,7 +620,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     budget: { type: :object }
+                     budget: { '$ref' => '#/components/schemas/Budget' }
                    },
                    required: ['budget']
                  }
@@ -581,7 +656,7 @@ RSpec.describe 'Budgets API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     budget: { type: :object }
+                     budget: { '$ref' => '#/components/schemas/Budget' }
                    },
                    required: ['budget']
                  }

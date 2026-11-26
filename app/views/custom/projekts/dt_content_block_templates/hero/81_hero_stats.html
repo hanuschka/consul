@@ -1,57 +1,54 @@
-<!-- BlockID: B08 – Hero mit Stats-Leiste: Dunkler Hero oben, KPI-Bar unten -->
-<!-- Geeignet für: Projektseiten mit Kennzahlen, Beteiligungsstart mit Kontext -->
+<!-- BlockID: B08 Hero mit Kennzahlen-Leiste - dunkler Hero oben, Kennzahlen ragen hinein -->
+<!-- Geeignet für: Projektseiten mit Kennzahlen, Beteiligungsstart mit Kontext, Befragung zu einer konkreten Frage -->
+<!-- Editor: jede Kennzahl ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Kachel. Titel als die Leitfrage formulieren; Zeitraum im zweiten Etikett pflegen (fehlt er noch, „Zeitraum: Angabe folgt“); Kennzahlen mit einem kurzen ganzen Satz erklären statt mit einem Stichwort. Die hervorgehobene Kachel steht vorn. -->
+<!-- Umbruch: Etiketten und Buttons brechen untereinander um; Kennzahlen stehen am Handy zu zweit nebeneinander, auf breiten Bildschirmen zu viert. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H2, Kennzahl = Zahl-Ausnahme, Text, Etiketten und Kennzahlen-Sätze 1rem -->
 
-<div style="position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.16);">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <!-- Hero-Bereich (dunkel) -->
-  <div style="position: relative; background: linear-gradient(160deg, #1a2e44 0%, #243b55 100%); padding: 56px 36px 48px; text-align: center;">
+  <div style="position: relative; overflow: hidden; background: #1a2e44; background: linear-gradient(135deg, #1a2e44 0%, var(--brand-color, #1779ba) 140%); color: #ffffff; text-align: center; padding: 32px 20px 76px; padding: clamp(28px, 6vw, 56px) clamp(20px, 5vw, 40px) 80px;">
 
-    <!-- Mesh-Gradient -->
-    <div style="position: absolute; top: -30%; right: -10%; width: 60%; height: 160%; background: radial-gradient(ellipse at center, rgba(23,121,186,0.12) 0%, transparent 70%); pointer-events: none;"></div>
+    <div style="position: relative; z-index: 1;">
 
-    <!-- Badge -->
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 24px; position: relative; z-index: 1;">
-      <div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #ffffff; font-weight: 600; letter-spacing: 0.04em; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">Stadtentwicklung 2025</div>
-    </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 16px;">
+        <span style="display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; padding: 4px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);"><i class="fas fa-poll-h" aria-hidden="true" style="font-size: 14px;"></i> Bürgerbefragung</span>
+        <span style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border-radius: 999px; padding: 4px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #1a2e44; box-shadow: 0 4px 10px -4px rgba(0,0,0,0.4);"><i class="far fa-calendar-alt" aria-hidden="true" style="font-size: 14px; color: var(--brand-color, #1779ba);"></i> Zeitraum: 1.10. bis 30.11.2026</span>
+      </div>
 
-    <h3 style="font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 16px; margin-top: 0; line-height: 1.15; letter-spacing: -0.5px; position: relative; z-index: 1; max-width: 600px; margin-left: auto; margin-right: auto;">Gemeinsam planen, gemeinsam entscheiden</h3>
+      <h2 style="color: #ffffff; max-width: 40rem; margin: 0 auto 12px; hyphens: auto; overflow-wrap: break-word;">Wie soll der Marktplatz künftig aussehen?</h2>
 
-    <p style="font-size: 17px; color: rgba(255,255,255,0.8); max-width: 520px; margin: 0 auto 32px auto; line-height: 1.65; position: relative; z-index: 1;">
-      Bringen Sie Ihre Ideen ein und gestalten Sie die Zukunft Ihres Stadtteils aktiv mit.
-    </p>
+      <p style="font-size: 1rem; line-height: 1.6; color: #ffffff; max-width: 36rem; margin: 0 auto 24px;">Der Marktplatz wird ab 2028 umgebaut. Bevor der Stadtrat über die Planung entscheidet, möchten wir wissen, was Ihnen auf dem Platz wichtig ist.</p>
 
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; position: relative; z-index: 1;">
-      <a href="#" class="button"
-         style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; background: #ffffff; color: #1a2e44; text-decoration: none; font-size: 15px; font-weight: 700; height: 48px; box-sizing: border-box; border: none; border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
-         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'"
-         onmouseout="this.style.transform='none';this.style.boxShadow='none'">Jetzt beteiligen</a>
-      <a href="#" class="button hollow"
-         style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 600; height: 48px; box-sizing: border-box; border: 2px solid rgba(255,255,255,0.35); border-radius: 8px; background: transparent; transition: transform 0.2s ease, border-color 0.2s ease;"
-         onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(255,255,255,0.6)'"
-         onmouseout="this.style.transform='none';this.style.borderColor='rgba(255,255,255,0.35)'">Projekt-Details</a>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;">
+        <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; background: #ffffff; color: #1a2e44; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Jetzt beteiligen</a></div>
+        <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button hollow" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; color: #ffffff; border: 2px solid #ffffff; background: transparent;">Zu den Plänen</a></div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Stats-Leiste -->
-  <div style="background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06); padding: 0;">
-    <div class="row" style="margin: 0;">
-      <div class="column small-6 medium-3" style="padding: 20px 16px; text-align: center; border-right: 1px solid rgba(0,0,0,0.06);">
-        <div style="font-size: 28px; font-weight: 800; color: #1a202c; letter-spacing: -0.5px; line-height: 1;">1.247</div>
-        <div style="font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500;">Beitr&auml;ge</div>
-      </div>
-      <div class="column small-6 medium-3" style="padding: 20px 16px; text-align: center; border-right: 1px solid rgba(0,0,0,0.06);">
-        <div style="font-size: 28px; font-weight: 800; color: #1a202c; letter-spacing: -0.5px; line-height: 1;">89%</div>
-        <div style="font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500;">Zufriedenheit</div>
-      </div>
-      <div class="column small-6 medium-3" style="padding: 20px 16px; text-align: center; border-right: 1px solid rgba(0,0,0,0.06);">
-        <div style="font-size: 28px; font-weight: 800; color: #1a202c; letter-spacing: -0.5px; line-height: 1;">12</div>
-        <div style="font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500;">Stadtteile</div>
-      </div>
-      <div class="column small-6 medium-3" style="padding: 20px 16px; text-align: center;">
-        <div style="font-size: 28px; font-weight: 800; color: var(--brand-color, #1779ba); letter-spacing: -0.5px; line-height: 1;">47</div>
-        <div style="font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500;">Tage verbleibend</div>
-      </div>
-    </div>
-  </div>
+  <ul style="position: relative; z-index: 1; list-style: none; margin: -48px 16px 0; margin: -48px clamp(16px, 4vw, 32px) 0; padding: 0 0 20px; padding: 0 0 clamp(16px, 4vw, 28px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr)); gap: 12px;">
+
+    <li style="margin: 0; text-align: center; background: var(--brand-color, #1779ba); color: #ffffff; border: 1px solid var(--brand-color, #1779ba); border-radius: 12px; padding: 18px 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 10px 24px -10px rgba(16,24,40,0.45);">
+      <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; white-space: nowrap; color: #ffffff;">47</div>
+      <div style="font-size: 1rem; line-height: 1.6; color: #ffffff; margin: 6px 0 0;">Tage bleiben noch zum Mitmachen</div>
+    </li>
+
+    <li style="margin: 0; text-align: center; background: #ffffff; color: #1a2e44; border: 1px solid #e8edf3; border-radius: 12px; padding: 18px 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; white-space: nowrap; color: var(--brand-color, #1779ba);">1.247</div>
+      <div style="font-size: 1rem; line-height: 1.6; margin: 6px 0 0;">Beiträge sind bis heute eingegangen</div>
+    </li>
+
+    <li style="margin: 0; text-align: center; background: #ffffff; color: #1a2e44; border: 1px solid #e8edf3; border-radius: 12px; padding: 18px 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; white-space: nowrap; color: var(--brand-color, #1779ba);">89 %</div>
+      <div style="font-size: 1rem; line-height: 1.6; margin: 6px 0 0;">der Befragten wünschen sich mehr Grün und Schatten</div>
+    </li>
+
+    <li style="margin: 0; text-align: center; background: #ffffff; color: #1a2e44; border: 1px solid #e8edf3; border-radius: 12px; padding: 18px 12px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; white-space: nowrap; color: var(--brand-color, #1779ba);">12</div>
+      <div style="font-size: 1rem; line-height: 1.6; margin: 6px 0 0;">Stadtteile sind mit Antworten vertreten</div>
+    </li>
+
+  </ul>
 
 </div>

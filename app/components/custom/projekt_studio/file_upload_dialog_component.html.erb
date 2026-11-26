@@ -176,4 +176,11 @@
 
 <% if type == "picture" %>
   <%= render Shared::ImageCropperModalComponent.new %>
+
+  <template class="js-image-load-failed-toast">
+    <%= render(
+      "layouts/toast_stack",
+      messages: { "alert" => t("custom.studio.upload_image.load_failed") }
+    ) %>
+  </template>
 <% end %>

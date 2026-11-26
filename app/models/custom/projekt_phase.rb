@@ -183,8 +183,7 @@ class ProjektPhase < ApplicationRecord
   has_many :similar_search_projekts,
            through: :projekt_phase_similar_search_projekts, source: :projekt
 
-  has_many :subscriptions, class_name: "ProjektPhaseSubscription", dependent: :destroy
-  has_many :subscribers, through: :subscriptions, source: :user
+  has_many :projekt_phase_subscriptions, dependent: :delete_all
 
   has_many :map_layers, as: :mappable, dependent: :destroy
   has_many :comments, as: :commentable, inverse_of: :commentable, dependent: :destroy
@@ -297,13 +296,14 @@ class ProjektPhase < ApplicationRecord
       .where("end_date IS NULL OR end_date >= ?", timestamp)
   }
 
-  # Phases of a projekt a visitor can actually reach: activated, and with its
-  # page published. Anything offered outside a session — the WhatsApp bot, a
-  # digest — has to narrow by this before it links to a phase.
+  # Phases of a projekt a visitor can actually reach: activated, not restricted
+  # to an individual group, and with its page published. Anything offered
+  # outside a session — the WhatsApp bot, a digest — has to narrow by this
+  # before it links to a phase.
   scope :of_publicly_visible_projekt, -> {
     joins(projekt: :page)
       .where(site_customization_pages: { status: "published" })
-      .merge(Projekt.activated)
+      .merge(Projekt.visible_for(nil))
   }
 
   scope :has_resources, -> {
@@ -453,24 +453,6 @@ class ProjektPhase < ApplicationRecord
 
   def selectable_by_admins_only?
     false
-  end
-
-  def subscribed?(user)
-    return false unless user
-
-    subscriptions.where(user_id: user.id).exists?
-  end
-
-  def subscribe(user)
-    return false unless user
-
-    subscriptions.create(user_id: user.id)
-  end
-
-  def unsubscribe(user)
-    return false unless user
-
-    subscriptions.where(user_id: user.id).destroy_all
   end
 
   def title
@@ -657,10 +639,6 @@ class ProjektPhase < ApplicationRecord
     ProjektPhaseSetting.defaults[self.class.name].to_h.key?(:"feature.form.restrict_map_features_to_marked_areas")
   end
 
-  def subscribable?
-    true
-  end
-
   def regular_formular_cutoff_date
     setting = settings.find_by(key: "option.general.primary_formular_cutoff_date")
     setting&.value&.to_date
@@ -781,7 +759,9 @@ class ProjektPhase < ApplicationRecord
       return phase_state_problem if phase_state_problem.present?
 
       return :guest_not_logged_in if guest_participation? && !user
-      return if guest_participation? && !GUEST_WAIVER_EXEMPT_LOCATIONS.include?(location)
+      if guest_participation? && !GUEST_WAIVER_EXEMPT_LOCATIONS.include?(location)
+        return user.persisted? ? phase_specific_permission_problems(user, location) : nil
+      end
       return :not_logged_in if user.blank? || (user.guest? && !guest_participation?)
       return :not_verified if user_status == "verified" && !user.level_three_verified?
 

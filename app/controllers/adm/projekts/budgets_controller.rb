@@ -5,7 +5,7 @@ class Adm::Projekts::BudgetsController < Adm::Projekts::BaseController
   def calculate_winners
     authorize [:adm, :projekts, @budget]
 
-    Budget::Result.new(@budget, @budget.heading).delay.calculate_winners
+    Budget::Result.new(@budget, @budget.heading).calculate_winners
     redirect_to budget_investments_adm_projekts_phase_path(@projekt_phase),
       notice: t(".notice")
   end
@@ -16,6 +16,17 @@ class Adm::Projekts::BudgetsController < Adm::Projekts::BaseController
     Budget::Result.new(@budget, @budget.heading).calculate_winners
     redirect_to budget_investments_adm_projekts_phase_path(@projekt_phase),
       notice: t(".notice")
+  end
+
+  def resolve_tie
+    authorize [:adm, :projekts, @budget]
+
+    result = Budget::Result.new(@budget, @budget.heading)
+    if result.resolve_tie(Array(params[:investment_ids]))
+      redirect_to budget_investments_adm_projekts_phase_path(@projekt_phase), notice: t(".notice")
+    else
+      redirect_to budget_investments_adm_projekts_phase_path(@projekt_phase), alert: t(".alert")
+    end
   end
 
   def update

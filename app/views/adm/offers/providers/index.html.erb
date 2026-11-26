@@ -1,0 +1,63 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+<% end %>
+
+<%
+  headers = {
+    name:      Kern::Table::HeaderComponent.new(:name, Offer::Provider.human_attribute_name(:name),
+                 **@name_header_options.merge(data_field: "name")),
+    addresses: Kern::Table::HeaderComponent.new(:addresses, Offer::Provider.human_attribute_name(:email_list),
+                 data_field: "addresses"),
+    offers:    Kern::Table::HeaderComponent.new(:offers, t(".table.offers"), data_field: "offers")
+  }
+%>
+
+<div class="kern-container my-5">
+  <%= new_resource_link(new_adm_offers_provider_path, t(".new_provider")) %>
+
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "offer_providers_table",
+        records: @providers,
+        pagy: @pagy,
+        headers: headers,
+        column_count: 4,
+        column_selector: {
+          storage_key: "adm-offer-providers-columns-v2",
+          defaults: "name,addresses,offers"
+        },
+        empty_state: {
+          title: t(".no_items_title"),
+          description: t(".no_items_description"),
+          icon: "badge"
+        },
+        empty_state_filtered: {
+          title: t(".no_results_filtered_title"),
+          description: t(".no_results_filtered_description"),
+          icon: "filter_alt_off"
+        }
+      ) do |c| %>
+    <% c.with_toolbar_meta do %>
+      <span class="adm-table-count" title="<%= t(".total_hint") %>">
+        <span class="adm-table-count__value"><%= number_with_delimiter(@pagy.count) %></span>
+        <span class="adm-table-count__label"><%= t(".total_label", count: @pagy.count) %></span>
+      </span>
+    <% end %>
+
+    <% c.with_header_row do %>
+      <%= render headers[:name] %>
+      <%= render headers[:addresses] %>
+      <%= render headers[:offers] %>
+      <th scope="col" class="kern-table__header"><%= t("shared.table.actions") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @providers.each do |provider| %>
+        <%= render "provider_row", provider: provider %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

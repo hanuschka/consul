@@ -20,7 +20,7 @@
     <%= l(user.date_of_birth, format: "%d.%m.%Y") if user.date_of_birth %>
   </td>
   <td class="kern-table__cell" data-field="roles"><%= user.roles.map { |r| r.to_s.titleize }.join(", ") %></td>
-  <td class="kern-table__cell" data-field="unique_stamp"><%= user.unique_stamp %></td>
+  <td class="kern-table__cell" data-field="unique_stamp"><%= user.unique_stamp unless user.erased? %></td>
   <td class="kern-table__cell" data-field="created_at"><%= l(user.created_at, format: "%d.%m.%Y") %></td>
   <td class="kern-table__cell" data-field="last_sign_in">
     <%= l(user.current_sign_in_at || user.created_at, format: "%d.%m.%Y") %>

@@ -61,6 +61,10 @@ class Budget < ApplicationRecord
     voting_style == "distributed"
   end
 
+  def winners_calculated?
+    winners_calculated_at.present? || investments.winners.exists?
+  end
+
   def find_or_create_stats_version
     balloting_phase_ends_at = phases.find_by(kind: "balloting").ends_at
 

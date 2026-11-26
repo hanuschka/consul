@@ -713,6 +713,10 @@ $phase-marker-border: #cbd5e1;
         border-radius: $radius-base;
       }
     }
+
+    .projekt-question-embed .comments {
+      width: 100%;
+    }
   }
 
   .projekt-page {
@@ -785,6 +789,10 @@ $phase-marker-border: #cbd5e1;
       outline: $outline-focus;
       outline-offset: -3px;
     }
+  }
+
+  .accessibility-report-form textarea {
+    margin-bottom: $form-spacing;
   }
 
   .content-blocks-container {

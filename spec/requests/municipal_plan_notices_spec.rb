@@ -21,13 +21,13 @@ describe "Hinweise zu einem Vorhaben", type: :request do
   describe "submitting one" do
     it "stores the Hinweis at its Vorhaben" do
       expect do
-        submit(name: "Kai Ostermann", email: "kai@example.org", body: "Bitte prüfen Sie den Zeitplan.")
+        submit(name: "Anna Muster", email: "anna@example.org", body: "Bitte prüfen Sie den Zeitplan.")
       end.to change { plan.notices.count }.by(1)
 
       notice = plan.notices.last
 
-      expect(notice.name).to eq("Kai Ostermann")
-      expect(notice.email).to eq("kai@example.org")
+      expect(notice.name).to eq("Anna Muster")
+      expect(notice.email).to eq("anna@example.org")
       expect(notice.body).to eq("Bitte prüfen Sie den Zeitplan.")
       expect(response).to redirect_to(municipal_plan_path(plan))
       expect(flash[:notice]).to eq I18n.t("custom.municipal_plans.notices.create.success")
@@ -37,28 +37,28 @@ describe "Hinweise zu einem Vorhaben", type: :request do
     it "notifies the responsible department" do
       expect(::MunicipalPlans::NoticeNotificationService).to receive(:call)
 
-      submit(email: "kai@example.org", body: "Eine Frage")
+      submit(email: "anna@example.org", body: "Eine Frage")
     end
 
     it "takes a Hinweis without a Name" do
-      expect { submit(email: "kai@example.org", body: "Anonym") }
+      expect { submit(email: "anna@example.org", body: "Anonym") }
         .to change { plan.notices.count }.by(1)
     end
   end
 
   describe "a refused submission" do
     it "keeps the entered text and names the missing field" do
-      expect { submit(name: "Kai Ostermann", email: "", body: "Bitte prüfen Sie den Zeitplan.") }
+      expect { submit(name: "Anna Muster", email: "", body: "Bitte prüfen Sie den Zeitplan.") }
         .not_to change { plan.notices.count }
 
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.body).to include("Bitte prüfen Sie den Zeitplan.")
-      expect(response.body).to include("Kai Ostermann")
+      expect(response.body).to include("Anna Muster")
       expect(response.body).to include(MunicipalPlan::Notice.human_attribute_name(:email))
     end
 
     it "links each error in the callout to its field" do
-      submit(name: "Kai Ostermann", email: "", body: "")
+      submit(name: "Anna Muster", email: "", body: "")
 
       callout = Nokogiri::HTML(response.body).at_css("#municipal-plan-notice-form .callout.alert")
 
@@ -68,7 +68,7 @@ describe "Hinweise zu einem Vorhaben", type: :request do
     end
 
     it "refuses a Hinweis longer than the limit" do
-      expect { submit(email: "kai@example.org", body: "a" * (MunicipalPlan::Notice::MAX_BODY_LENGTH + 1)) }
+      expect { submit(email: "anna@example.org", body: "a" * (MunicipalPlan::Notice::MAX_BODY_LENGTH + 1)) }
         .not_to change { plan.notices.count }
 
       expect(response).to have_http_status(:unprocessable_entity)
@@ -88,7 +88,7 @@ describe "Hinweise zu einem Vorhaben", type: :request do
     it "swallows a submission that fills the honeypot" do
       expect do
         post municipal_plan_notices_path(plan),
-             params: { municipal_plan_notice: { email: "kai@example.org", body: "Werbung",
+             params: { municipal_plan_notice: { email: "anna@example.org", body: "Werbung",
                                                 subtitle: "ich bin ein Bot" }}
       end.not_to change { plan.notices.count }
     end
@@ -100,7 +100,7 @@ describe "Hinweise zu einem Vorhaben", type: :request do
 
       expect do
         post municipal_plan_notices_path(draft),
-             params: { municipal_plan_notice: { email: "kai@example.org", body: "Eine Frage" }}
+             params: { municipal_plan_notice: { email: "anna@example.org", body: "Eine Frage" }}
       end.to raise_error(ActiveRecord::RecordNotFound)
     end
 
@@ -110,14 +110,14 @@ describe "Hinweise zu einem Vorhaben", type: :request do
 
       expect do
         post municipal_plan_notices_path(archived),
-             params: { municipal_plan_notice: { email: "kai@example.org", body: "Eine Frage" }}
+             params: { municipal_plan_notice: { email: "anna@example.org", body: "Eine Frage" }}
       end.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "is unreachable while the module is off" do
       allow(Setting).to receive(:[]).with("process.municipal_plans").and_return(nil)
 
-      expect { submit(email: "kai@example.org", body: "Eine Frage") }
+      expect { submit(email: "anna@example.org", body: "Eine Frage") }
         .to raise_error(FeatureFlags::FeatureDisabled)
     end
   end
@@ -131,14 +131,14 @@ describe "Hinweise zu einem Vorhaben", type: :request do
     end
 
     it "never shows the Hinweise that were submitted" do
-      plan.notices.create!(name: "Kai Ostermann", email: "kai@example.org",
+      plan.notices.create!(name: "Anna Muster", email: "anna@example.org",
                            body: "Ein interner Hinweis")
 
       get municipal_plan_path(plan)
 
       expect(response.body).not_to include("Ein interner Hinweis")
-      expect(response.body).not_to include("kai@example.org")
-      expect(response.body).not_to include("Kai Ostermann")
+      expect(response.body).not_to include("anna@example.org")
+      expect(response.body).not_to include("Anna Muster")
     end
   end
 end

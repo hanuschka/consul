@@ -30,9 +30,11 @@
     <aside class="sidebar">
       <%= render Shared::SidebarCardComponent.new(title: t("custom.users.settings"), icon_name: "cog") do |c| %>
         <ul class="account-settings-actions">
-          <li>
-            <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow expanded" %>
-          </li>
+          <% unless current_user.phone_account? %>
+            <li>
+              <%= link_to t("custom.account.show.change_credentials_link"), edit_user_registration_path, class: "button hollow expanded" %>
+            </li>
+          <% end %>
           <li>
             <%= link_to t("custom.account.show.erase_account_link"), users_registrations_delete_form_path, class: "button hollow expanded delete alert" %>
           </li>
@@ -105,6 +107,20 @@
           -->
           <%= f.submit t("custom.account.show.save_settings"), class: "button margin-top" %>
         <% end %>
+      <% end %>
+
+      <%= render Shared::SidebarCardComponent.new(
+        title: t("custom.account.show.projekt_subscriptions"),
+        icon_name: "bell"
+      ) do |c| %>
+        <p class="projekt-subscription-list--hint">
+          <%= t("custom.account.subscriptions.projekts.description") %>
+        </p>
+
+        <%= render Projekts::SubscriptionListComponent.new(
+          subscriptions: @projekt_subscriptions,
+          toggle_path: ->(projekt) { projekt_subscription_path(projekt) }
+        ) %>
       <% end %>
 
       <% if Whatsapp.enabled? %>

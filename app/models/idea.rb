@@ -36,6 +36,7 @@ class Idea < ApplicationRecord
   validates_translation :description, presence: true
   validates :resource_terms, acceptance: { allow_nil: false }, on: :create
   validates :author, presence: true
+  validates :timeframe, :votes_needed_for_success, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   scope :by_author, ->(author_id) { where(author_id: author_id) }
 
@@ -83,13 +84,15 @@ class Idea < ApplicationRecord
     true
   end
 
+  # Same rules as the active, archived and pending scopes, read from the loaded
+  # columns so a list of ideas costs no query per idea.
   def status
-    if in? self.class.active
-      "active"
-    elsif in? self.class.archived
-      "archived"
-    elsif in? self.class.pending
+    if admin_accepted_at.blank?
       "pending"
+    elsif admin_accepted_at + timeframe.days >= Time.zone.now.beginning_of_day
+      "active"
+    else
+      "archived"
     end
   end
 

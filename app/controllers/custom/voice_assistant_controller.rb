@@ -2,16 +2,6 @@ class VoiceAssistantController < ApplicationController
   before_action :authenticate_user!
   before_action :authorize_voice_assistant
 
-  def create_session
-    response =
-      VoiceAssistant::CreateSessionService.call(
-        codename: params[:codename],
-        consul_projekt_phase_id: params[:consul_projekt_phase_id]
-      )
-
-    render json: response.parsed_response, status: response.code
-  end
-
   def create_session_v2
     response =
       VoiceAssistant::CreateSessionServiceV2.call(

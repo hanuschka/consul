@@ -1,6 +1,6 @@
 <td style="<%= css_for_mailer_content %>">
   <p style="<%= css_for_mailer_text %>">
-    <%= I18n.t("custom.moderation_mailer.flag_report.greeting") %>
+    <%= t("mailers.shared.greeting_without_name") %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">
@@ -14,4 +14,12 @@
                 adm_moderation_proposals_url,
                 style: "color: #004a83;" %>
   </p>
+
+  <% unless custom_email_footer_present? %>
+    <p style="<%= css_for_mailer_text %>">
+      <%= t("mailers.shared.sincerely") %>
+      <br>
+      <%= t("mailers.shared.signature") %>
+    </p>
+  <% end %>
 </td>

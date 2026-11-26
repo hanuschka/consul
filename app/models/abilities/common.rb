@@ -145,7 +145,11 @@ module Abilities
         # can :create, DirectMessage
         # can :show, DirectMessage, sender_id: user.id
       end
-      can :create, DirectMessage
+
+      if user.may_send_direct_messages?
+        can :create, DirectMessage
+      end
+
       can :show, DirectMessage, sender_id: user.id
 
       can [:create, :show, :edit, :update, :destroy], ProposalNotification, proposal: { author_id: user.id }
@@ -196,13 +200,7 @@ module Abilities
             user.has_pm_permission_to?("manage", admin_image.projekt))
       end
 
-      can :toggle_subscription, ProjektSubscription do |subscription|
-        subscription.user == user
-      end
-
-      can :toggle_subscription, ProjektPhaseSubscription do |subscription|
-        subscription.user == user
-      end
+      can :update, ProjektSubscription, user_id: user.id
 
       can :create, RelatedContent
       can :destroy, RelatedContent do |related_content|
@@ -234,6 +232,17 @@ module Abilities
       can idea_read_actions, Idea, admin_accepted_at: (Time.zone.at(0)..)
       can idea_read_actions, Idea, author_id: user.id
       can [:create], Idea
+
+      offer_provider_ids = nil
+      provider_ids = -> { offer_provider_ids ||= Offer::Provider.for_user(user).ids }
+
+      can :create, Offer do |offer|
+        provider_ids.call.any? && (offer.provider_id.nil? || provider_ids.call.include?(offer.provider_id))
+      end
+
+      can :update, Offer do |offer|
+        offer.provider_id.present? && provider_ids.call.include?(offer.provider_id)
+      end
       can [:create], ProjektPointOfInterestPin do |pin|
         pin.projekt_phase.permission_problem(user).blank?
       end

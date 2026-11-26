@@ -1,0 +1,101 @@
+en:
+  custom:
+    offers:
+      add_offer: Add offer
+      index:
+        title: Offers
+        intro_text: Find offers near you. Select an offer to see all details.
+        empty_list_text: There are no offers at the moment.
+        no_matches_text: No offers match your selection. Change the filters or the search.
+        to_offer: View offer
+        updated_on: Updated on %{date}
+        suspended_label: Hidden
+        deactivated_label: Deactivated
+        expired_label: Expired
+        count: Number of offers
+        sidebar_information: Find offers from local providers. Use the filters to narrow down the list and the map.
+        search_form:
+          placeholder: e.g. swimming
+          button_title: Search offers
+        orders:
+          title: Title (A–Z)
+          title_desc: Title (Z–A)
+          created_at: Newest first
+          updated_at: Recently updated
+        overview_map:
+          region_label: Map of offers
+          note: The map shows offers that have a location. All offers are also listed below the map.
+      show:
+        back: Back to the overview
+        edit: Edit
+        opens_in_new_tab: (opens in a new tab)
+        suspended_notice: The administration has hidden this offer, so it is not publicly visible. You can still edit it.
+        deactivated_notice: This offer is deactivated. It is not publicly visible until it is activated again.
+        expired_notice: This offer has passed its expiry date. It is not publicly visible until the expiry date is changed.
+        deactivate: Deactivate
+        deactivate_hint: The offer will not be publicly visible until you activate it again.
+        activate: Activate
+        activate_hint: The offer is shown publicly again unless it has expired or the administration has hidden it.
+        intro:
+          title: About this offer
+        details:
+          title: Details
+        location:
+          title: Location
+        contact:
+          title: Contact
+          name: Contact person
+      new:
+        title: Add offer
+      edit:
+        title: Edit offer
+      create:
+        success: The offer has been saved.
+      update:
+        success: Your changes have been saved.
+      deactivate:
+        success: The offer was deactivated and is no longer publicly visible.
+      activate:
+        success: The offer is active again.
+      form:
+        page_description: "Introduce your offer: what it is about, who it is for and how people can take part. Your details help people find your offer in the overview and on the map."
+        required: (required)
+        provider_prompt: Please choose
+        provider_blank: No provider
+        no_categories: There are no values to choose from for this category yet.
+        sections:
+          categories: Categories
+          location: Location
+          details: Details
+          contact: Contact
+        submit:
+          new: Save offer
+          edit: Save changes
+        hints:
+          provider: Choose the provider this offer belongs to.
+          category_kinds:
+            offer_type: What kind of offer is it? Select all that apply.
+            target_group: Who is the offer for? Select all that apply.
+            costs: Is there a fee for the offer? Select all that apply.
+            accessibility: Which accessibility features does the offer provide?
+            social_area: In which social area does the offer take place? Select all that apply.
+          address: Address where the offer takes place.
+          map_location: Optional. Place a pin so your offer appears on the map.
+          times: When does the offer take place?
+          costs: Optional details on costs, such as reduced rates.
+          registration: Whether and how people need to register.
+          contact_website: Full address starting with https://
+          expires_on: Optional. The offer is shown publicly up to and including this day. After that, only your provider can see it until you change the date.
+        image_upload:
+          top_line: Choose a suitable image for your offer.
+        placeholders:
+          title: e.g. Swimming lessons for children
+          short_description: e.g. Children aged 6 and over learn to swim in small groups at the indoor pool.
+          address: e.g. 1 Market Square, 12345 Sampletown
+          times: e.g. Tuesdays 3–5 pm, except during school holidays
+          costs: e.g. €5, reduced €3
+          registration: e.g. Register by Friday on 0123 456789
+          contact_name: e.g. Maria Muster
+          contact_phone: e.g. 0123 456-0
+          contact_email: e.g. offers@example.org
+          contact_website: https://

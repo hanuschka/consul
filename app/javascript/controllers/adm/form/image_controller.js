@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="adm--form--image"
 export default class extends Controller {
-  static targets = ["input", "preview", "previewImage", "empty", "destroy"]
+  static targets = ["input", "preview", "previewImage", "empty", "destroy", "credits", "creditsInput"]
 
   triggerInput() {
     this.inputTarget.click()
@@ -14,6 +14,10 @@ export default class extends Controller {
 
     if (this.hasDestroyTarget) {
       this.destroyTarget.value = "false"
+    }
+
+    if (this.hasCreditsInputTarget) {
+      this.creditsInputTarget.value = ""
     }
 
     const reader = new FileReader()
@@ -35,10 +39,12 @@ export default class extends Controller {
   showPreview() {
     this.previewTarget.classList.remove("d-none")
     this.emptyTarget.classList.add("d-none")
+    if (this.hasCreditsTarget) this.creditsTarget.classList.remove("d-none")
   }
 
   showEmpty() {
     this.previewTarget.classList.add("d-none")
     this.emptyTarget.classList.remove("d-none")
+    if (this.hasCreditsTarget) this.creditsTarget.classList.add("d-none")
   }
 }

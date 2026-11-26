@@ -6,14 +6,32 @@
     <% templates = DeficiencyReport::OfficialAnswerTemplate.all.to_a %>
 
     <% if DeficiencyReport.separate_reporter_answer? %>
-      <%= render "adm/deficiency_reports/deficiency_reports/official_answer_field",
-                 f: f, deficiency_report: deficiency_report, templates: templates, attribute: :reporter_answer,
-                 label: t("adm.deficiency_reports.deficiency_reports.show.reporter_answer"),
-                 hint: t("adm.deficiency_reports.deficiency_reports.show.reporter_answer_hint") %>
-      <%= render "adm/deficiency_reports/deficiency_reports/official_answer_field",
-                 f: f, deficiency_report: deficiency_report, templates: templates, attribute: :official_answer,
-                 label: t("adm.deficiency_reports.deficiency_reports.show.public_answer"),
-                 hint: sanitize(t("adm.deficiency_reports.deficiency_reports.show.official_answer_hint")) %>
+      <% same_public_answer = deficiency_report.public_answer_same_as_reporter? %>
+      <div data-controller="adm-deficiency-reports--same-answer"
+           data-adm-deficiency-reports--same-answer-reporter-editor-id-value="official_answer_editor_reporter_answer"
+           data-adm-deficiency-reports--same-answer-public-editor-id-value="official_answer_editor_official_answer">
+        <%= f.check_box :same_public_answer,
+              label: t("adm.deficiency_reports.deficiency_reports.show.same_public_answer"),
+              checked: same_public_answer,
+              data: { adm_deficiency_reports__same_answer_target: "checkbox", action: "change->adm-deficiency-reports--same-answer#toggle" } %>
+        <%= render "adm/deficiency_reports/deficiency_reports/official_answer_field",
+                   f: f, deficiency_report: deficiency_report, templates: templates, attribute: :reporter_answer,
+                   label: t("adm.deficiency_reports.deficiency_reports.show.reporter_answer"),
+                   hint: safe_join([
+                     tag.span(t("adm.deficiency_reports.deficiency_reports.show.reporter_answer_hint"),
+                              hidden: same_public_answer,
+                              data: { adm_deficiency_reports__same_answer_target: "privateHint" }),
+                     tag.span(t("adm.deficiency_reports.deficiency_reports.show.reporter_answer_public_hint"),
+                              hidden: !same_public_answer,
+                              data: { adm_deficiency_reports__same_answer_target: "publicHint" })
+                   ]) %>
+        <%= tag.div hidden: same_public_answer, data: { adm_deficiency_reports__same_answer_target: "publicField" } do %>
+          <%= render "adm/deficiency_reports/deficiency_reports/official_answer_field",
+                     f: f, deficiency_report: deficiency_report, templates: templates, attribute: :official_answer,
+                     label: t("adm.deficiency_reports.deficiency_reports.show.public_answer"),
+                     hint: sanitize(t("adm.deficiency_reports.deficiency_reports.show.official_answer_hint")) %>
+        <% end %>
+      </div>
     <% else %>
       <%= render "adm/deficiency_reports/deficiency_reports/official_answer_field",
                  f: f, deficiency_report: deficiency_report, templates: templates, attribute: :official_answer,

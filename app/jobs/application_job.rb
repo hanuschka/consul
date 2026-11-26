@@ -11,14 +11,22 @@ class ApplicationJob < ActiveJob::Base
   # stale-worker alert to get the worker restarted.
   retry_on ::Whatsapp::MissingCredentialsError, wait: :polynomially_longer, attempts: 10
 
-  # Per-job cap on delayed_job's run time, carried in the payload for the
-  # JobWrapper patch in config/initializers/delayed_job_config.rb. nil keeps
-  # the worker-wide Delayed::Worker.max_run_time.
+  # Per-job caps on delayed_job's run time and attempts, carried in the payload
+  # for the JobWrapper patch in config/initializers/delayed_job_config.rb. nil
+  # keeps the worker-wide Delayed::Worker.max_run_time / max_attempts.
   class_attribute :max_run_time, instance_accessor: false
+  class_attribute :max_attempts, instance_accessor: false
 
   def serialize
-    return super if self.class.max_run_time.blank?
-
-    super.merge("max_run_time" => self.class.max_run_time.to_i)
+    super.merge(delayed_job_limits)
   end
+
+  private
+
+    def delayed_job_limits
+      {
+        "max_run_time" => self.class.max_run_time&.to_i,
+        "max_attempts" => self.class.max_attempts
+      }.compact
+    end
 end

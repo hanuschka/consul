@@ -1,0 +1,579 @@
+de:
+  custom:
+    projekts:
+      page:
+        content_block_icon_picker:
+          title: Icon auswählen
+          search_label: Icons durchsuchen
+          search_placeholder: z. B. Fahrrad, Rathaus
+          no_results: Keine passenden Icons
+          groups:
+            places: Orte
+            buildings: Gebäude
+            dates: Termine und Zeit
+            people: Menschen
+            participation: Beteiligung
+            communication: Kommunikation
+            documents: Dokumente
+            media: Medien
+            transport: Verkehr
+            nature: Natur und Umwelt
+            health: Gesundheit und Soziales
+            education: Bildung und Kultur
+            leisure: Sport und Freizeit
+            work: Bauen und Arbeit
+            money: Geld und Einkauf
+            safety: Sicherheit
+            symbols: Symbole
+          icons:
+            map_marker_alt: Standort
+            map_marker: Kartenmarkierung
+            map_pin: Stecknadel
+            map: Karte
+            map_marked_alt: Markierte Karte
+            map_signs: Wegweiser
+            compass: Kompass
+            globe_europe: Europa
+            city: Stadt
+            street_view: Straßenansicht
+            route: Route
+            road: Straße
+            draw_polygon: Fläche
+            layer_group: Ebenen
+            flag_checkered: Ziel
+            bullseye: Zielscheibe
+            building: Gebäude
+            home: Wohnhaus
+            house_user: Bewohner
+            landmark: Rathaus
+            school: Schule
+            university: Hochschule
+            church: Kirche
+            mosque: Moschee
+            synagogue: Synagoge
+            store: Geschäft
+            warehouse: Lager
+            industry: Industrie
+            hotel: Hotel
+            monument: Denkmal
+            door_open: Offene Tür
+            calendar_alt: Kalender
+            calendar: Kalenderblatt
+            calendar_check: Bestätigter Termin
+            calendar_plus: Termin hinzufügen
+            calendar_times: Abgesagter Termin
+            calendar_day: Tag
+            clock: Uhrzeit
+            hourglass_half: Frist
+            stopwatch: Stoppuhr
+            history: Geschichte
+            bell: Erinnerung
+            birthday_cake: Geburtstag
+            user: Person
+            users: Gruppe
+            user_friends: Gemeinschaft
+            user_plus: Person hinzufügen
+            user_check: Bestätigte Person
+            user_tie: Ansprechperson
+            user_graduate: Studierende
+            child: Kind
+            baby: Baby
+            baby_carriage: Kinderwagen
+            female: Frau
+            male: Mann
+            people_arrows: Abstand
+            universal_access: Barrierefreiheit
+            wheelchair: Rollstuhl
+            blind: Blinde Person
+            deaf: Gehörlose Person
+            sign_language: Gebärdensprache
+            id_card: Ausweis
+            smile: Lächeln
+            comments: Diskussion
+            comment_dots: Rückmeldung
+            lightbulb: Idee
+            thumbs_up: Zustimmung
+            thumbs_down: Ablehnung
+            handshake: Zusammenarbeit
+            vote_yea: Abstimmung
+            bullhorn: Ankündigung
+            hands_helping: Ehrenamt
+            poll: Ergebnisse
+            poll_h: Umfrage
+            chart_bar: Balkendiagramm
+            chart_pie: Tortendiagramm
+            chart_line: Entwicklung
+            balance_scale: Abwägung
+            clipboard_check: Geprüfte Liste
+            tasks: Aufgaben
+            check_square: Ankreuzfeld
+            question: Frage
+            hand_paper: Wortmeldung
+            award: Auszeichnung
+            comment: Kommentar
+            envelope: Nachricht
+            envelope_open_text: Newsletter
+            paper_plane: Senden
+            inbox: Posteingang
+            at: E-Mail-Adresse
+            phone_alt: Telefon
+            mobile_alt: Handy
+            headset: Beratung
+            microphone: Mikrofon
+            share_alt: Teilen
+            link: Link
+            external_link_alt: Externer Link
+            reply: Antwort
+            language: Sprache
+            globe: Webseite
+            qrcode: QR-Code
+            file_alt: Dokument
+            file: Datei
+            file_pdf: PDF-Datei
+            file_word: Word-Datei
+            file_excel: Tabelle
+            file_signature: Unterschriebenes Dokument
+            folder: Ordner
+            folder_open: Offener Ordner
+            clipboard_list: Checkliste
+            book_open: Buch
+            book: Handbuch
+            print: Drucken
+            paperclip: Anhang
+            edit: Bearbeiten
+            pencil_alt: Bleistift
+            list_ul: Liste
+            list_ol: Nummerierte Liste
+            quote_left: Zitat
+            download: Herunterladen
+            upload: Hochladen
+            video: Video
+            film: Film
+            play: Abspielen
+            closed_captioning: Untertitel
+            image: Bild
+            images: Galerie
+            camera: Kamera
+            volume_up: Audio
+            th_large: Kacheln
+            laptop: Laptop
+            desktop: Computer
+            newspaper: Zeitung
+            bus: Bus
+            train: Bahn
+            subway: U-Bahn
+            tram: Straßenbahn
+            bicycle: Fahrrad
+            biking: Radfahrer
+            car: Auto
+            taxi: Taxi
+            truck: Lastwagen
+            motorcycle: Motorrad
+            plane: Flugzeug
+            ship: Schiff
+            walking: Zu Fuß
+            shoe_prints: Fußspuren
+            charging_station: Ladestation
+            traffic_light: Ampel
+            parking: Parken
+            tree: Baum
+            leaf: Blatt
+            seedling: Setzling
+            water: Wasser
+            tint: Tropfen
+            sun: Sonne
+            cloud: Wolke
+            cloud_sun: Heiter bis wolkig
+            cloud_rain: Regen
+            snowflake: Schnee
+            wind: Wind
+            mountain: Berg
+            fish: Fisch
+            dog: Hund
+            paw: Pfote
+            dove: Taube
+            recycle: Recycling
+            trash_alt: Mülleimer
+            solar_panel: Solaranlage
+            bolt: Strom
+            fire: Feuer
+            apple_alt: Apfel
+            heartbeat: Gesundheit
+            hospital: Krankenhaus
+            clinic_medical: Arztpraxis
+            first_aid: Erste Hilfe
+            stethoscope: Arzt
+            pills: Medikamente
+            syringe: Impfung
+            ambulance: Krankenwagen
+            user_nurse: Pflegekraft
+            user_md: Ärztin
+            hand_holding_heart: Fürsorge
+            hands_wash: Hygiene
+            head_side_mask: Maske
+            graduation_cap: Bildung
+            chalkboard_teacher: Unterricht
+            book_reader: Lesen
+            pencil_ruler: Entwurf
+            microscope: Forschung
+            flask: Experiment
+            palette: Kunst
+            paint_brush: Malen
+            music: Musik
+            guitar: Gitarre
+            theater_masks: Theater
+            ticket_alt: Eintrittskarte
+            puzzle_piece: Puzzle
+            futbol: Fußball
+            basketball_ball: Basketball
+            swimmer: Schwimmen
+            running: Laufen
+            hiking: Wandern
+            dumbbell: Fitness
+            campground: Camping
+            umbrella_beach: Strand
+            gamepad: Videospiele
+            dice: Spiele
+            coffee: Café
+            utensils: Essen
+            pizza_slice: Imbiss
+            ice_cream: Eis
+            glass_cheers: Anstoßen
+            gift: Geschenk
+            hammer: Bau
+            hard_hat: Baustelle
+            tools: Werkzeug
+            wrench: Reparatur
+            toolbox: Werkzeugkasten
+            paint_roller: Renovierung
+            ruler_combined: Maße
+            drafting_compass: Planung
+            briefcase: Arbeit
+            cog: Einstellungen
+            tractor: Landwirtschaft
+            truck_loading: Lieferung
+            euro_sign: Euro
+            coins: Münzen
+            money_bill_wave: Bargeld
+            wallet: Geldbörse
+            piggy_bank: Sparen
+            credit_card: Kartenzahlung
+            receipt: Beleg
+            calculator: Berechnung
+            percent: Prozent
+            shopping_cart: Einkaufen
+            shopping_bag: Einkaufstasche
+            tag: Preisschild
+            shield_alt: Schutz
+            user_shield: Datenschutz
+            lock: Gesperrt
+            lock_open: Entsperrt
+            key: Schlüssel
+            fire_extinguisher: Brandschutz
+            exclamation_triangle: Warnung
+            eye: Sichtbar
+            eye_slash: Verborgen
+            life_ring: Rettungsring
+            ban: Verboten
+            check_circle: Häkchen
+            times_circle: Kreuz
+            check: Haken
+            times: Schließen
+            plus: Plus
+            minus: Minus
+            minus_circle: Entfernen
+            arrow_right: Pfeil
+            arrow_left: Pfeil links
+            arrow_up: Pfeil nach oben
+            arrow_down: Pfeil nach unten
+            arrows_alt_h: Pfeile horizontal
+            exchange_alt: Austausch
+            chevron_right: Winkel
+            star: Stern
+            heart: Herz
+            bookmark: Lesezeichen
+            flag: Fahne
+            thumbtack: Reißzwecke
+            info_circle: Information
+            info: Info
+            exclamation_circle: Hinweis
+            exclamation: Ausrufezeichen
+            question_circle: Hilfe
+            hashtag: Hashtag
+            search: Suche
+          keywords:
+            map_marker_alt: Ort Adresse Karte Markierung Treffpunkt
+            map_marker: Ort Standort Punkt Markierung
+            map_pin: Ort Standort Markierung Pin
+            map: Stadtplan Plan Gebiet Lageplan
+            map_marked_alt: Karte Standort Gebiet Plan
+            map_signs: Richtung Weg Schild Orientierung
+            compass: Richtung Orientierung Navigation
+            globe_europe: Globus Welt Erde international
+            city: Stadtteil Skyline Innenstadt Quartier Kommune
+            street_view: Straße Person Nachbarschaft Quartier
+            route: Weg Strecke Pfad Wegbeschreibung
+            road: Weg Verkehr Fahrbahn
+            draw_polygon: Gebiet Zone Grenze Bereich Polygon
+            layer_group: Schichten Stapel Übersicht
+            flag_checkered: Zielflagge Ende Ankunft
+            bullseye: Ziel Fokus Mitte Treffer
+            building: Haus Büro Bürogebäude Wohnblock
+            home: Haus Zuhause Wohnen Startseite
+            house_user: Haushalt Wohnen Zuhause Anwohner
+            landmark: Verwaltung Behörde Amt Regierung Stadtverwaltung
+            school: Bildung Schüler Unterricht Grundschule
+            university: Universität Uni Campus Institut
+            church: Religion Glaube Gemeinde Pfarrei
+            mosque: Religion Glaube Islam
+            synagogue: Religion Glaube jüdisch
+            store: Laden Einzelhandel Markt Einkaufen
+            warehouse: Lagerhalle Depot Logistik
+            industry: Fabrik Gewerbe Werk Betrieb
+            hotel: Unterkunft Übernachtung Tourismus
+            monument: Mahnmal Gedenken Kulturerbe Wahrzeichen
+            door_open: Eingang Willkommen Tag der offenen Tür
+            calendar_alt: Datum Termin Veranstaltung Zeitplan
+            calendar: Datum Tag Termin
+            calendar_check: Termin gebucht erledigt Zusage
+            calendar_plus: neuer Termin Veranstaltung Anmeldung
+            calendar_times: Absage abgesagt Termin Veranstaltung
+            calendar_day: Datum heute Termin
+            clock: Uhr Zeit Stunde Öffnungszeiten
+            hourglass_half: Zeitraum Ablauf Wartezeit Deadline
+            stopwatch: Zeit Dauer Timer
+            history: Verlauf Vergangenheit Chronik Rückblick
+            bell: Benachrichtigung Hinweis Glocke
+            birthday_cake: Jubiläum Fest Kuchen Feier
+            user: Nutzer Bürger Mensch Profil
+            users: Menschen Team Leute Gemeinschaft
+            user_friends: Freunde Nachbarn zusammen Miteinander
+            user_plus: Anmeldung Registrierung Mitglied beitreten
+            user_check: bestätigt geprüft Teilnehmer
+            user_tie: Kontakt Mitarbeiter Verwaltung Geschäft
+            user_graduate: Student Absolvent Lernende Bildung
+            child: Kinder Jugend Nachwuchs
+            baby: Säugling Kleinkind Familie
+            baby_carriage: Baby Familie Eltern
+            female: weiblich Frauen
+            male: männlich Männer
+            people_arrows: Austausch Abstand halten Begegnung
+            universal_access: barrierefrei Inklusion Zugänglichkeit
+            wheelchair: barrierefrei Behinderung Mobilität
+            blind: sehbehindert blind Barrierefreiheit
+            deaf: hörbehindert gehörlos Barrierefreiheit
+            sign_language: Gebärden gehörlos Dolmetscher
+            id_card: Personalausweis Mitgliedsausweis Karte
+            smile: fröhlich zufrieden freundlich Smiley
+            comments: Kommentare Gespräch Dialog Debatte
+            comment_dots: Kommentar Meinung Feedback
+            lightbulb: Vorschlag Anregung Einfall Innovation
+            thumbs_up: gefällt dafür Unterstützung Daumen hoch
+            thumbs_down: dagegen gefällt nicht Daumen runter
+            handshake: Partnerschaft Vereinbarung Kooperation
+            vote_yea: Wahl Stimmzettel Wahlurne
+            bullhorn: Megafon Aufruf Bekanntmachung Kampagne
+            hands_helping: Hilfe Unterstützung Engagement helfen
+            poll: Umfrage Diagramm Statistik
+            poll_h: Befragung Ranking Ergebnisse
+            chart_bar: Statistik Daten Zahlen Auswertung
+            chart_pie: Anteil Statistik Haushalt Verteilung
+            chart_line: Trend Wachstum Verlauf Liniendiagramm
+            balance_scale: Gerechtigkeit Recht Waage Entscheidung
+            clipboard_check: erledigt geprüft Prüfung Aufgabe
+            tasks: To-do Schritte Fortschritt
+            check_square: ankreuzen auswählen Kontrollkästchen
+            question: fragen Rückfrage Hilfe
+            hand_paper: melden Hand Stopp Meldung
+            award: Preis Gewinner Ehrung Anerkennung
+            comment: Nachricht Sprechblase
+            envelope: E-Mail Post Brief
+            envelope_open_text: Brief Post Rundschreiben
+            paper_plane: abschicken einreichen Nachricht
+            inbox: Eingang Post erhalten
+            at: At-Zeichen E-Mail Kontakt
+            phone_alt: anrufen Hotline Rufnummer
+            mobile_alt: Smartphone App Mobiltelefon
+            headset: Hotline Service Kundendienst Hilfe
+            microphone: Rede Ton Audio Interview
+            share_alt: soziale Netzwerke weitergeben
+            link: Verknüpfung Webadresse URL
+            external_link_alt: Webseite öffnen neues Fenster
+            reply: antworten zurück Rückmeldung
+            language: Übersetzung Sprachen mehrsprachig
+            globe: Internet online Welt Globus
+            qrcode: scannen Code Link
+            file_alt: Datei Text Seite
+            file: Dokument leere Seite
+            file_pdf: PDF Dokument Download
+            file_word: Textdokument Text doc
+            file_excel: Excel Tabellenkalkulation xls
+            file_signature: Vertrag Unterschrift Vereinbarung
+            folder: Verzeichnis Dateien Sammlung
+            folder_open: Dateien Dokumente Sammlung
+            clipboard_list: Liste Aufgaben Klemmbrett
+            book_open: lesen Leitfaden Handbuch
+            book: Buch Leitfaden Nachschlagewerk
+            print: Drucker Ausdruck Papier
+            paperclip: Büroklammer anhängen Datei
+            edit: schreiben ändern Stift
+            pencil_alt: schreiben Notiz zeichnen Stift
+            list_ul: Aufzählung Stichpunkte Punkte
+            list_ol: Schritte Reihenfolge Nummerierung
+            quote_left: Aussage Stimme Anführungszeichen
+            download: Download speichern Datei
+            upload: Upload Datei einreichen
+            video: Kamera Film Aufnahme
+            film: Kino Video Filmstreifen
+            play: Start Wiedergabe Video
+            closed_captioning: Untertitelung Barrierefreiheit Video
+            image: Foto Abbildung
+            images: Bilder Fotos Bildergalerie
+            camera: Foto Fotografie Bild
+            volume_up: Ton Lautsprecher Lautstärke
+            th_large: Raster Übersicht Galerie
+            laptop: Computer online digital Notebook
+            desktop: Bildschirm Monitor PC
+            newspaper: Nachrichten Presse Artikel Neuigkeiten
+            bus: ÖPNV Haltestelle Linie Nahverkehr
+            train: Zug Bahnhof Schiene
+            subway: Metro Untergrundbahn
+            tram: Tram Stadtbahn
+            bicycle: Rad Radweg Radfahren
+            biking: Radfahren Fahrrad Radler
+            car: Fahrzeug PKW Autofahren
+            taxi: Fahrt Fahrdienst
+            truck: LKW Lieferung Transport
+            motorcycle: Moped Roller
+            plane: Flug Flughafen Reise
+            ship: Boot Fähre Hafen
+            walking: Fußgänger gehen Spaziergang
+            shoe_prints: Schritte gehen Spur
+            charging_station: Elektroauto E-Mobilität Laden
+            traffic_light: Verkehr Signal Kreuzung
+            parking: Parkplatz Parkhaus
+            tree: Wald Park Grün
+            leaf: grün Natur Öko
+            seedling: Pflanze Wachstum Keimling
+            water: Wellen Fluss See Meer
+            tint: Wassertropfen Trinkwasser
+            sun: sonnig Wetter Sommer
+            cloud: Wetter Himmel
+            cloud_sun: Wetter Sonne Wolke
+            cloud_rain: Wetter regnerisch Schauer
+            snowflake: Winter kalt Frost Schneeflocke
+            wind: Luft Brise Sturm
+            mountain: Hügel Landschaft Gebirge
+            fish: Tier Wasser Angeln
+            dog: Haustier Tier
+            paw: Tier Haustier Spuren
+            dove: Vogel Frieden
+            recycle: Wiederverwertung Müll Umwelt
+            trash_alt: Müll Abfall Abfalleimer
+            solar_panel: Energie Photovoltaik erneuerbar
+            bolt: Energie Elektrizität Blitz
+            fire: Flamme Hitze
+            apple_alt: Obst Essen gesund
+            heartbeat: Herz Puls Wohlbefinden
+            hospital: Klinik Gesundheit Versorgung
+            clinic_medical: Praxis Arzt Klinik
+            first_aid: Notfall Hilfe Verbandskasten
+            stethoscope: Medizin Untersuchung Gesundheit
+            pills: Tabletten Apotheke Arznei
+            syringe: Spritze Injektion
+            ambulance: Notfall Rettungsdienst Rettungswagen
+            user_nurse: Pflege Krankenpflege Personal
+            user_md: Arzt Mediziner
+            hand_holding_heart: Spende Unterstützung Soziales Wohltätigkeit
+            hands_wash: Hände waschen sauber
+            head_side_mask: Mundschutz Schutz Infektion
+            graduation_cap: Abschluss Studium Ausbildung
+            chalkboard_teacher: Lehrer Kurs Workshop Schulung
+            book_reader: Leser Bibliothek Lernen
+            pencil_ruler: Planung Skizze Zeichnung
+            microscope: Wissenschaft Labor Mikroskop
+            flask: Wissenschaft Chemie Labor
+            palette: Malerei Farben kreativ
+            paint_brush: Pinsel Kunst Basteln
+            music: Lied Konzert Klang
+            guitar: Musik Instrument Konzert
+            theater_masks: Kultur Bühne Aufführung
+            ticket_alt: Ticket Eintritt Veranstaltung
+            puzzle_piece: Baustein Teil Lösung
+            futbol: Ball Sport Kicken
+            basketball_ball: Ball Sport Spiel
+            swimmer: schwimmen Schwimmbad Bad
+            running: Joggen Sport Fitness
+            hiking: Wanderung Spaziergang Natur
+            dumbbell: Training Hantel Sport
+            campground: Zelt Zeltplatz Urlaub
+            umbrella_beach: Urlaub Sommer Freizeit
+            gamepad: Spiele Gaming Konsole
+            dice: Würfel Brettspiel spielen
+            coffee: Kaffee Pause Treffen
+            utensils: Restaurant Mahlzeit Gastronomie
+            pizza_slice: Pizza Essen Feier
+            ice_cream: Sommer Nachtisch süß
+            glass_cheers: Feier Fest Party Prost
+            gift: Überraschung Präsent
+            hammer: Hammer Bauen Arbeit Reparatur
+            hard_hat: Helm Bauarbeiten Bauarbeiter
+            tools: Reparatur Wartung Werkstatt
+            wrench: Schraubenschlüssel Wartung reparieren
+            toolbox: Werkzeug Handwerk
+            paint_roller: Farbe Streichen Malerarbeiten
+            ruler_combined: Größe Fläche Lineal Plan
+            drafting_compass: Architektur Entwurf Konstruktion
+            briefcase: Job Beruf Büro Geschäft
+            cog: Zahnrad Technik Konfiguration
+            tractor: Bauernhof Traktor Landwirt
+            truck_loading: Verladen Umzug Waren
+            euro_sign: Geld Preis Kosten Budget
+            coins: Geld Finanzen Budget Haushalt
+            money_bill_wave: Geld Geldschein Zahlung
+            wallet: Geld Portemonnaie Zahlung
+            piggy_bank: Sparschwein Geld sparen Rücklage
+            credit_card: Kreditkarte EC-Karte bezahlen
+            receipt: Rechnung Quittung Zahlung
+            calculator: Taschenrechner Budget Kosten
+            percent: Rabatt Anteil Quote
+            shopping_cart: Einkaufswagen kaufen Einkauf
+            shopping_bag: kaufen Laden Einzelhandel
+            tag: Etikett Preis Kategorie Schlagwort
+            shield_alt: Sicherheit Schild absichern
+            user_shield: Privatsphäre Sicherheit persönliche Daten
+            lock: Schloss geschlossen sicher privat
+            lock_open: offen Zugang Schloss
+            key: Zugang Anmeldung Passwort
+            fire_extinguisher: Feuerlöscher Feuerwehr
+            exclamation_triangle: Vorsicht Gefahr Achtung
+            eye: sehen ansehen Auge
+            eye_slash: unsichtbar privat ausgeblendet
+            life_ring: Hilfe Rettung Unterstützung
+            ban: nicht erlaubt Verbot
+            check_circle: erledigt ja richtig erfolgreich
+            times_circle: nein falsch Abbruch schließen
+            check: ja erledigt richtig
+            times: x nein entfernen
+            plus: hinzufügen mehr neu
+            minus: entfernen weniger reduzieren
+            minus_circle: Minus löschen weniger
+            arrow_right: rechts weiter vorwärts
+            arrow_left: zurück vorherige
+            arrow_up: oben steigen
+            arrow_down: unten sinken
+            arrows_alt_h: links rechts Breite vergleichen
+            exchange_alt: tauschen wechseln vergleichen
+            chevron_right: weiter mehr fortfahren
+            star: Favorit Bewertung Highlight
+            heart: Liebe gefällt Favorit
+            bookmark: merken speichern
+            flag: Meilenstein Markierung melden
+            thumbtack: Pinnnadel angeheftet wichtig Aushang
+            info_circle: Info Details Hinweis
+            info: Information Hinweis
+            exclamation_circle: wichtig Achtung
+            exclamation: wichtig Warnung
+            question_circle: Frage FAQ Fragen
+            hashtag: Thema Schlagwort Raute
+            search: finden Lupe suchen

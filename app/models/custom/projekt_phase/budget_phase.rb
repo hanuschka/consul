@@ -190,6 +190,11 @@ class ProjektPhase::BudgetPhase < ProjektPhase
         key: "feasibility",
         templates: [
           { mailer_class: "Mailer", mailer_action: "budget_investment_feasible", recipient_type: "author" },
+          {
+            mailer_class: "Mailer",
+            mailer_action: "budget_investment_feasible_with_changes",
+            recipient_type: "author"
+          },
           { mailer_class: "Mailer", mailer_action: "budget_investment_unfeasible", recipient_type: "author" }
         ]
       },

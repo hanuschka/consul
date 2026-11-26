@@ -14,7 +14,8 @@ class Adm::EmailTemplatesController < Adm::BaseController
   def send_test
     authorize @email_template, :update?, policy_class: Adm::SiteCustomization::EmailTemplatePolicy
 
-    sample_variables = @email_template.registered_variables.index_with { |v| "[#{v}]" }
+    sample_variables = (@email_template.registered_variables + @email_template.hidden_variables)
+                       .index_with { |v| "[#{v}]" }
 
     Mailer.customizable_test_email(
       current_user.email,

@@ -2,6 +2,8 @@
 <% mobile_header_image_attachment = local_assigns[:mobile_header_image_attachment] %>
 <% header_video_attachment = local_assigns[:header_video_attachment] %>
 <% mobile_header_video_attachment = local_assigns[:mobile_header_video_attachment] %>
+<% header_image_credits = local_assigns[:header_image_credits] %>
+<% mobile_header_image_credits = local_assigns[:mobile_header_image_credits] %>
 
 <% if header_image_attachment&.attached? %>
   <style>
@@ -12,10 +14,14 @@
 <% end %>
 
 <% any_header_video = header_video_attachment&.attached? || mobile_header_video_attachment&.attached? %>
-<div class="homepage-image-header not-print">
+<div class="homepage-image-header not-print <%= "-with-video" if any_header_video %>">
   <%= render Shared::HomepageHeaderImageComponent.new(
     desktop_attachment: header_image_attachment,
-    mobile_attachment: mobile_header_image_attachment
+    mobile_attachment: mobile_header_image_attachment,
+    desktop_credits: header_image_credits,
+    mobile_credits: mobile_header_image_credits,
+    desktop_video: header_video_attachment&.attached?,
+    mobile_video: mobile_header_video_attachment&.attached?
   ) %>
 
   <% if header_video_attachment&.attached? %>

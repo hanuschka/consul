@@ -19,6 +19,8 @@ en:
         export_queued: "Export queued, you will receive a link by email."
     budget_investments:
       index:
+        feasibility:
+          feasible_with_changes: Meets the criteria with changes
         download_geojson: Download GeoJSON
         source_filter_label: Source
         source_all: All

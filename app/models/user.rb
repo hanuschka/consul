@@ -270,6 +270,8 @@ class User < ApplicationRecord
 
   def erase(erase_reason = nil, destroy_votes: false)
     destroy_votes! if destroy_votes #custom
+    PhoneSignInCode.for_phone(confirmed_phone).delete_all if confirmed_phone.present? #custom
+    erased_identifiers = erased_identity_digests
     update!(
       erased_at: Time.current,
       erase_reason: erase_reason,
@@ -282,13 +284,15 @@ class User < ApplicationRecord
       reset_password_token: nil,
       email_verification_token: nil,
       confirmed_phone: nil,
-      unconfirmed_phone: nil
+      unconfirmed_phone: nil,
+      **ERASED_PERSONAL_DATA,
+      **erased_identifiers
     )
-    unverify! if verified? #custom
     identities.destroy_all
     remove_roles
     remove_audits #custom
     remove_subscriptions #custom
+    remove_personal_records
   end
 
   # custom: irreversibly removes the user's votes and refreshes the denormalized
@@ -327,8 +331,8 @@ class User < ApplicationRecord
   end
 
   def take_votes_if_erased_document(document_number, document_type)
-    erased_user = User.erased.find_by(document_number: document_number,
-                                      document_type: document_type)
+    erased_document = User.erased_document_identifier(document_number, document_type)
+    erased_user = User.erased.find_by(document_number: erased_document)
     if erased_user.present?
       take_votes_from(erased_user)
       erased_user.update!(document_number: nil, document_type: nil)
@@ -379,6 +383,8 @@ class User < ApplicationRecord
   end
 
   def email_required?
+    return false if phone_account? #custom
+
     !erased? && (unverified? || registering_from_web)
   end
 

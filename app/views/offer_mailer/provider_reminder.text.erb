@@ -1,0 +1,23 @@
+<% scope = "custom.offer_mailer.provider_reminder" %>
+<%= @user.recipient_greeting %>,
+
+<%= t("#{scope}.intro", provider: @provider.name) %>
+
+<%= t("#{scope}.offers_title") %>
+<% @offers.each do |offer| %>
+<% state = (:suspended if offer.suspended?) || (:deactivated if offer.deactivated?) || (:expired if offer.expired?) %>
+
+- <%= t("#{scope}.edit_link", title: offer.title) %><%= " (#{t("#{scope}.states.#{state}", date: offer.expires_on && l(offer.expires_on, format: "%d.%m.%Y"))})" if state %>
+  <%= edit_offer_url(offer) %>
+<% end %>
+
+<%= t("#{scope}.closing") %>
+<% if custom_email_footer_present? %>
+<% footer_text = CGI.unescapeHTML(strip_tags(customizable_email_footer_html.to_str.gsub(%r{<br\s*/?>|</(?:p|div|li|h[1-6])>}i, "\n"))).lines.map(&:squish).reject(&:blank?).join("\n") %>
+
+<%= footer_text %>
+<% else %>
+
+<%= t("mailers.shared.sincerely") %>
+<%= t("mailers.shared.signature") %>
+<% end %>

@@ -1,15 +1,15 @@
 class PointOfInterestPinSerializer < BaseSerializer
   attr_reader :pin
 
-  def initialize(pin)
+  def initialize(pin, client: nil)
     @pin = pin
+    @client = client
   end
 
   def serialize
     pin_data = pin.as_json(
       only: [
         :id,
-        :author_id,
         :projekt_point_of_interest_category_id,
         :description,
         :projekt_phase_id,
@@ -18,12 +18,18 @@ class PointOfInterestPinSerializer < BaseSerializer
       ]
     )
 
+    pin_data.merge!(
+      translations: serialize_translations(pin),
+      map_location: serialize_map_location(pin.map_location),
+      **serialize_external_reference(pin)
+    )
+
+    if admin_client?
+      pin_data[:author_id] = pin.author_id
+    end
+
     if pin.author.present?
-      pin_data[:author] = {
-        id: pin.author.id,
-        username: pin.author.username,
-        public_name: pin.author.public_name
-      }
+      pin_data[:author] = serialize_author(pin.author)
     end
 
     if pin.respond_to?(:projekt_point_of_interest_category) && pin.projekt_point_of_interest_category.present?
@@ -52,19 +58,11 @@ class PointOfInterestPinSerializer < BaseSerializer
       end
     end
 
-    if pin.map_location.present?
-      pin_data[:map_location] = {
-        latitude: pin.map_location.latitude,
-        longitude: pin.map_location.longitude,
-        zoom: pin.map_location.zoom
-      }
-    end
-
     pin_data
   end
 
-  def self.serialize_collection(pins)
-    pins.map { |pin| new(pin).serialize }
+  def self.serialize_collection(pins, client: nil)
+    pins.map { |pin| new(pin, client: client).serialize }
   end
 end
 

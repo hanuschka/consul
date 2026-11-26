@@ -90,7 +90,8 @@
           image_url: image_url,
           image_placeholder_icon_class: "fa-comments",
           resource: resource,
-          ai_generated: resource.image&.ai_generated?
+          ai_generated: resource.image&.ai_generated?,
+          credits: resource.image&.credits
         )
       ) %>
     <% end %>

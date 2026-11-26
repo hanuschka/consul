@@ -64,9 +64,9 @@ en:
       proposal_navigation:
         back_to_detail_view: Activate browse mode
         back_to_overview: Back to overview
-        next: "Weiter"
+        next: "Next"
         back: "Back"
-        first: "Erster Vorschlag"
+        first: "First proposal"
       cta:
         title: Participation
         voting_phase: Take part in the poll

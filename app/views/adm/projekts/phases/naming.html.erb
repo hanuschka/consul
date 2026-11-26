@@ -10,6 +10,7 @@
     <%= render Adm::AttributeEditorComponent.new(@poll_image, :attachment, :image,
           label: t(".poll_image_label"),
           description: t(".poll_image_description")) %>
+    <%= render "adm/shared/image_credits_editor", record: @poll_image %>
   <% end %>
 
   <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :phase_tab_name, :string) %>

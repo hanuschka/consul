@@ -34,6 +34,10 @@ class Whatsapp::Inbound::EntryTokenCapture
 
       return if projekt_phase.blank?
 
+      if !Whatsapp::EligiblePhasesQuery.projekt_visible?(projekt_phase.projekt)
+        return
+      end
+
       @conversation.start_draft!(projekt_phase)
 
       :phase
@@ -46,7 +50,9 @@ class Whatsapp::Inbound::EntryTokenCapture
 
       scanned_projekt = ::Projekt.find_by(id: projekt_id)
 
-      return if scanned_projekt.blank?
+      if !Whatsapp::EligiblePhasesQuery.projekt_visible?(scanned_projekt)
+        return
+      end
 
       store_projekt_entry(scanned_projekt)
     end

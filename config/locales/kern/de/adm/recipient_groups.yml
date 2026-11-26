@@ -1,6 +1,7 @@
 de:
   adm:
     recipient_groups:
+      projekt_subscribers_group_name: "Projekt-Abonnenten: %{title}"
       index:
         title: Empfängergruppen
         new_recipient_group: Neue Empfängergruppe erstellen
@@ -21,6 +22,7 @@ de:
           edit: Bearbeiten
           delete: Löschen
           delete_confirm: Sind Sie sicher, dass Sie diese Empfängergruppe löschen möchten?
+          automatic: Automatisch verwaltet
         empty_title: Keine Empfängergruppen vorhanden
         empty_description: Erstellen Sie eine Empfängergruppe, um Newsletter gezielt an bestimmte Nutzerkreise zu versenden.
       new:
@@ -58,7 +60,7 @@ de:
           newsletter_subscriber_ids: Alle Nutzer mit Einverständniserklärung
           all_newsletter_subscriber_ids: Alle Nutzer mit Einverständniserklärung plus Newsletterabbonenten ohne Konto
           administrators_ids: Administratoren
-          any_phase_subscribers_ids: Abonnenten aller Phasen
+          subscriber_ids: Abonnenten des Projekts
           authors_of_feasible_ids: Autoren, deren Vorschläge den Kriterien entsprechen
           authors_of_unfeasible_ids: Autoren, deren Vorschläge den Kriterien nicht entsprechen
           authors_of_selected_ids: Autoren, deren Vorschläge für die Abstimmungsphase ausgewählt wurden
@@ -86,8 +88,7 @@ de:
           newsletter_subscribers: Newsletter-Abonnenten
           role: Rolle
           phase_authors: Autoren einer Projektphase
-          phase_subscribers: Abonnenten einer Phase
-          projekt_subscribers: Abonnenten eines Projekts (Sidebar-Schalter)
+          projekt_subscribers: Abonnenten eines Projekts
           comment_authors: Kommentatoren
           voting_participants: Abstimmungs-Teilnehmer
           district: Stadtteil

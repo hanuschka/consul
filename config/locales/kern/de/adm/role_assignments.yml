@@ -23,6 +23,7 @@ de:
         landing_page_manager: "Als Themenseiten-Manager einladen"
         deficiency_report_manager: "Als Mängel-Administrator einladen"
         idea_manager: "Als Ideen-Administrator einladen"
+        offer_manager: "Als Angebote-Administrator einladen"
       role_name:
         administrator: "Administrator"
         moderator: "Moderator"
@@ -32,4 +33,5 @@ de:
         landing_page_manager: "Themenseiten-Manager"
         deficiency_report_manager: "Mängel-Administrator"
         idea_manager: "Ideen-Administrator"
+        offer_manager: "Angebote-Administrator"
 

@@ -1,7 +1,7 @@
 load Rails.root.join("app", "components", "proposals", "votes_component.rb")
 
 class Proposals::VotesComponent < ApplicationComponent
-  delegate :user_signed_in?, :link_to_signin, :link_to_signup,
+  delegate :user_signed_in?, :link_to_signin, :link_to_signup, :link_to_sms_signin,
            :link_to_verify_account, :projekt_feature?, :projekt_phase_feature?, to: :helpers
 
   private
@@ -14,8 +14,8 @@ class Proposals::VotesComponent < ApplicationComponent
       return nil if permission_problem_key.blank?
 
       if permission_problem_key == :not_logged_in
-        t(path_to_key,
-          sign_in: link_to_signin, sign_up: link_to_signup)
+        safe_join([sanitize(t(path_to_key, sign_in: link_to_signin, sign_up: link_to_signup)),
+                   link_to_sms_signin(projekt_phase: @proposal_phase)].compact, " ")
 
       else
         t(path_to_key,

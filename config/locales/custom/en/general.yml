@@ -28,6 +28,9 @@ en:
       retired_explanation_hint: "Maximum 500 characters"
       back_to_proposal: "Back to proposal"
   shared:
+    two_click_iframes:
+      explainer_text: "By loading this content, you agree that your data will be sent to third parties and confirm that you have read the privacy policy."
+      consent_button: "Accept"
     suggest:
       deficiency_report:
         found:

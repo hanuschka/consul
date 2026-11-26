@@ -4,7 +4,7 @@ en:
       title: Administration
     actions:
       actions: Actions
-      confirm: Sind Sie sich sicher?
+      confirm: Are you sure?
       block_author: "Block author"
       confirm_action: "Are you sure? %{action} \"%{name}\""
       confirm_delete: "Are you sure? This action will delete \"%{name}\" and can't be undone."

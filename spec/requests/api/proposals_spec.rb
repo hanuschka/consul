@@ -7,7 +7,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
   let(:Authorization) { "Bearer #{api_client.access_token}" }
 
   def create_phase_with_context
-    projekt = Projekt.create!(name: 'Projekt For Proposals')
+    projekt = Projekt.create!(name: 'Projekt For Proposals', activated: true)
     geozone = Geozone.create!(name: "Zone #{SecureRandom.hex(2)}")
     phase = projekt.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true, phase_tab_name: 'Proposals')
     [projekt, geozone, phase]
@@ -259,6 +259,90 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         run_test!
       end
 
+      response '201', 'proposal created with texts in two languages, an external id and a drawn area' do
+        let!(:context) { create_phase_with_context }
+        let(:projekt_phase_id) { context[2].id }
+        let(:line) { [[7.21, 51.48], [7.22, 51.49]] }
+        let(:proposal) do
+          {
+            proposal: {
+              geozone_id: context[1].id,
+              external_source: 'stadtportal',
+              external_id: 'A-1042',
+              translations: {
+                de: { title: 'Mehr Radwege', description: 'Radwege entlang der Hauptstraße' },
+                en: { title: 'More bike lanes', description: 'Bike lanes along the main road' }
+              },
+              map_location_attributes: {
+                latitude: 51.48,
+                longitude: 7.21,
+                zoom: 14,
+                features: {
+                  type: 'FeatureCollection',
+                  features: [{ type: 'Feature', geometry: { type: 'LineString', coordinates: line }, properties: {} }]
+                }
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          proposal_data = JSON.parse(response.body)['data']['proposal']
+
+          expect(proposal_data['translations']['en']['title']).to eq('More bike lanes')
+          expect(proposal_data['translations']['de']['title']).to eq('Mehr Radwege')
+          expect(proposal_data['external_source']).to eq('stadtportal')
+          expect(proposal_data['external_id']).to eq('A-1042')
+          expect(proposal_data['map_location']['features']['features'].first['geometry']['coordinates']).to eq(line)
+        end
+      end
+
+      response '422', 'external id already used in the phase' do
+        let!(:context) { create_phase_with_context }
+        let(:projekt_phase_id) { context[2].id }
+
+        before do
+          Proposal.create!(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            resource_terms: true,
+            title: 'Synced Proposal',
+            description: 'Already synced',
+            external_source: 'stadtportal',
+            external_id: 'A-1042'
+          )
+        end
+
+        let(:proposal) do
+          {
+            proposal: {
+              title: 'Synced Proposal again',
+              description: 'Second copy',
+              external_source: 'stadtportal',
+              external_id: 'A-1042'
+            }
+          }
+        end
+
+        run_test! do
+          expect(Proposal.where(external_id: 'A-1042').count).to eq(1)
+        end
+      end
+
       response '422', 'invalid request' do
         let!(:context) { create_phase_with_context }
         let(:projekt_phase_id) { context[2].id }
@@ -451,7 +535,7 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
                    properties: {
                      proposals: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/Proposal' }
                      }
                    },
                    required: ['proposals']
@@ -590,6 +674,32 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
         run_test!
       end
 
+      response '403', 'forbidden - public_data cannot access a proposal staff did not accept' do
+        before do
+          api_client.update!(access_level: :public_data)
+        end
+
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          Proposal.create!(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: false,
+            resource_terms: true,
+            title: 'Pending Proposal',
+            description: 'Waiting for review',
+            published_at: Time.current
+          )
+        end
+        let(:id) { record.id }
+
+        run_test! do |response|
+          expect(JSON.parse(response.body)['error']['type']).to eq('forbidden')
+        end
+      end
+
       response '403', 'forbidden - public_data cannot access draft proposal' do
         before do
           api_client.update!(access_level: :public_data)
@@ -640,6 +750,66 @@ RSpec.describe 'Proposals API', type: :request, openapi_spec: 'v1/swagger.yaml' 
       description "Update an existing proposal. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :proposal, in: :body, description: 'Attributes to update on the proposal', schema: Schemas::CommentsProposals::PROPOSAL_UPDATE_PARAMS
+
+      request_body_example(
+        name: 'retire',
+        summary: 'Retire a proposal that was already done',
+        value: {
+          proposal: {
+            retired: true,
+            retired_reason: 'done',
+            translations: { de: { retired_explanation: 'Wurde 2026 umgesetzt.' } }
+          }
+        }
+      )
+
+      response '200', 'proposal retired with an explanation per language' do
+        let!(:context) { create_phase_with_context }
+        let!(:record) do
+          Proposal.create!(
+            author: api_client.user,
+            projekt_phase: context[2],
+            geozone: context[1],
+            responsible_name: 'John Doe',
+            admin_accepted: true,
+            resource_terms: true,
+            title: 'Test Proposal',
+            description: 'Test Description'
+          )
+        end
+        let(:id) { record.id }
+        let(:proposal) do
+          {
+            proposal: {
+              retired: true,
+              retired_reason: 'done',
+              summary: 'Kurzfassung',
+              translations: { en: { retired_explanation: 'Implemented in 2026.' } }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     proposal: { '$ref' => '#/components/schemas/Proposal' }
+                   },
+                   required: ['proposal']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          proposal_data = JSON.parse(response.body)['data']['proposal']
+
+          expect(proposal_data['retired_at']).to be_present
+          expect(proposal_data['retired_reason']).to eq('done')
+          expect(proposal_data['translations']['en']['retired_explanation']).to eq('Implemented in 2026.')
+          expect(proposal_data['summary']).to eq('Kurzfassung')
+        end
+      end
 
       response '200', 'proposal updated' do
         let!(:context) { create_phase_with_context }

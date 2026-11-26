@@ -49,6 +49,11 @@ namespace :email_templates do
         call: -> { Mailer.budget_investment_feasible(investment).deliver_now }
       }
       tests << {
+        name: "Mailer#budget_investment_feasible_with_changes",
+        phase: budget_phase,
+        call: -> { Mailer.budget_investment_feasible_with_changes(investment).deliver_now }
+      }
+      tests << {
         name: "Mailer#budget_investment_unfeasible",
         phase: budget_phase,
         call: -> { Mailer.budget_investment_unfeasible(investment).deliver_now }

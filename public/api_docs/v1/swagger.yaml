@@ -1067,8 +1067,8 @@ paths:
       - name: feasibility
         in: query
         required: false
-        description: 'Filter by feasibility assessment: "feasible", "unfeasible",
-          or "undecided"'
+        description: 'Filter by feasibility assessment: "feasible" (includes "feasible_with_changes"),
+          "feasible_with_changes", "unfeasible", or "undecided"'
         schema:
           type: string
       - name: selected
@@ -1258,14 +1258,16 @@ paths:
                         budget's currency.
                     feasibility:
                       type: string
-                      nullable: true
                       enum:
                       - feasible
+                      - feasible_with_changes
                       - unfeasible
                       - undecided
                       description: Admin feasibility assessment (admin only). Set
-                        to "feasible" (can be completed), "unfeasible" (cannot be
-                        done), or "undecided" (still evaluating).
+                        to "feasible" (can be completed), "feasible_with_changes"
+                        (can be completed with changes by the administration, described
+                        in the valuator explanation), "unfeasible" (cannot be done),
+                        or "undecided" (still evaluating).
                     valuator_explanation:
                       type: string
                       nullable: true
@@ -1273,7 +1275,8 @@ paths:
                         shown on the public proposal page. HTML, stored as-is like
                         the /adm feasibility editor (e.g. "<p>Does not meet the criteria
                         because ...</p>"). Required when feasibility is "unfeasible"
-                        and valuation_finished is true; can be sent in the same request.'
+                        or "feasible_with_changes" and valuation_finished is true;
+                        can be sent in the same request.'
                     valuation_finished:
                       type: boolean
                       nullable: true
@@ -1618,9 +1621,9 @@ paths:
         criteria check (feasibility, explanation, valuation_finished) works in a single
         request. Like the /adm feasibility form, a request that sets feasibility or
         valuation_finished emails the author once when the valuation is finished as
-        feasible or unfeasible. All fields are optional - only provide fields to change.
-        \n\n*Authorization: Requires `admin` access level. Requests with `public_data`
-        access level will receive `403 Forbidden`.*"
+        feasible, feasible with changes or unfeasible. All fields are optional - only
+        provide fields to change. \n\n*Authorization: Requires `admin` access level.
+        Requests with `public_data` access level will receive `403 Forbidden`.*"
       parameters: []
       responses:
         '200':
@@ -1716,14 +1719,16 @@ paths:
                       description: Estimated project cost in budget currency
                     feasibility:
                       type: string
-                      nullable: true
                       enum:
                       - feasible
+                      - feasible_with_changes
                       - unfeasible
                       - undecided
                       description: Admin feasibility assessment (admin only). Set
-                        to "feasible" (can be completed), "unfeasible" (cannot be
-                        done), or "undecided" (still evaluating).
+                        to "feasible" (can be completed), "feasible_with_changes"
+                        (can be completed with changes by the administration, described
+                        in the valuator explanation), "unfeasible" (cannot be done),
+                        or "undecided" (still evaluating).
                     valuator_explanation:
                       type: string
                       nullable: true
@@ -1731,7 +1736,8 @@ paths:
                         shown on the public proposal page. HTML, stored as-is like
                         the /adm feasibility editor (e.g. "<p>Does not meet the criteria
                         because ...</p>"). Required when feasibility is "unfeasible"
-                        and valuation_finished is true; can be sent in the same request.'
+                        or "feasible_with_changes" and valuation_finished is true;
+                        can be sent in the same request.'
                     valuation_finished:
                       type: boolean
                       nullable: true
@@ -18691,7 +18697,8 @@ paths:
                           provider:
                             type: object
                             nullable: true
-                            description: The provider (Anbieter) the offer belongs to
+                            description: The provider (Anbieter) the offer belongs
+                              to
                             properties:
                               id:
                                 type: integer
@@ -29632,12 +29639,18 @@ components:
           nullable: true
           enum:
           - feasible
+          - feasible_with_changes
           - unfeasible
           - undecided
           -
           description: Feasibility assessment
         feasible:
           type: boolean
+          description: Meets the criteria, with or without changes by the administration.
+        feasible_with_changes:
+          type: boolean
+          description: Meets the criteria only with changes by the administration,
+            described in valuator_explanation.
         unfeasible:
           type: boolean
         undecided:
@@ -29654,8 +29667,8 @@ components:
           type: string
           nullable: true
           description: 'Explanation of the feasibility assessment as HTML. Read-only
-            clients: where the public page shows it (price, unfeasibility or feasibility
-            explanation). Omitted when empty.'
+            clients: where the public page shows it (price, unfeasibility, feasibility
+            or changes explanation). Omitted when empty.'
           example: "<p>Does not meet the criteria.</p>"
         selected:
           type: boolean

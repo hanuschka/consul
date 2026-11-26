@@ -39,6 +39,12 @@ module MailerHelper
             .html_safe
   end
 
+  def projekt_page_link_or_text(text, projekt)
+    return text if projekt&.page.blank?
+
+    link_to(text, page_url(projekt.page.slug))
+  end
+
   def mailer_simple_format(text)
     simple_format(sanitize_and_auto_link(text), { style: css_for_mailer_text }, sanitize: false)
   end

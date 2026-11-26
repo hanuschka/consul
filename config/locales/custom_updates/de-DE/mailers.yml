@@ -29,6 +29,13 @@ de:
       projekt_link_2_text: Projekts
       text: "wir haben Ihren Vorschlag %{investment_title} geprüft: Ihr Vorschlag entspricht den %{projekt_link_1}. Damit wird er zur nächsten Phase des %{projekt_link_2} zugelassen."
       sincerely: Mit freundlichen Grüßen
+    budget_investment_feasible_with_changes:
+      subject: "Ihr Vorschlag entspricht den Kriterien mit Änderungen."
+      title: "Ihr Vorschlag entspricht den Kriterien mit Änderungen."
+      projekt_link_1_text: Kriterien
+      projekt_link_2_text: Projekts
+      text: "wir haben Ihren Vorschlag %{investment_title} geprüft: Ihr Vorschlag entspricht den %{projekt_link_1}, allerdings nur mit Änderungen. Was wir angepasst haben, steht auf der Vorschlagsseite. Damit wird er zur nächsten Phase des %{projekt_link_2} zugelassen."
+      sincerely: Mit freundlichen Grüßen
     newsletter_subscription_for_existing_user:
       subject: Anmeldung zum Newsletter
       p1_html: "Es gab einen Versuch, sich mit Ihrer E-Mail-Adresse für unseren Newsletter anzumelden. Da Sie bereits ein Konto auf der Beteiligungsplattform haben, möchten wir Sie bitten, sich anzumelden und die Option zum Empfang des Newsletters in Ihren <a href=%{account_url}>Konto-Einstellungen</a> zu aktivieren."

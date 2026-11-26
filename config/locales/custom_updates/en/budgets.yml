@@ -108,6 +108,7 @@ en:
           unverified_note_no_data_html: "Please %{verify_account} to make sure your votes are counted."
           unfeasible_html: "This investment proposal <strong>was marked as not feasible</strong> and will not take part in voting."
           feasible_html: "This proposal was classified as feasible."
+          feasible_with_changes_html: "This proposal meets the criteria <strong>only with changes</strong> by the administration"
         show:
           callouts:
             publishing_prices:
@@ -118,6 +119,7 @@ en:
               unfeasible: This investment proposal was marked as unfeasible.
           price: Cost estimation by the administration
           feasibility_explanation: Assessment of the administration
+          changes_explanation: Changes by the administration
           implementation_city_text: "Implementation: Should be implemented by the city administration"
           implementation_user_text: "Implementation: %{author} will assist with the implementation"
           user_cost_estimate_text: "User cost estimate: %{user_cost_estimate}"

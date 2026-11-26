@@ -46,6 +46,7 @@ de:
         currency: "€"
         feasibility: Entspricht den Kriterien
         feasible: Entspricht den Kriterien
+        feasible_with_changes: Entspricht mit Änderungen den Kriterien
         unfeasible: Entspricht nicht den Kriterien
         undefined: Noch nicht bewertet
         valuation_finished: Begutachtung abgeschlossen

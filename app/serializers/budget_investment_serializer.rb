@@ -119,6 +119,7 @@ class BudgetInvestmentSerializer < BaseSerializer
     end
 
     investment_data[:feasible] = budget_investment.feasible?
+    investment_data[:feasible_with_changes] = budget_investment.feasible_with_changes?
     investment_data[:unfeasible] = budget_investment.unfeasible?
     investment_data[:undecided] = budget_investment.undecided?
 
@@ -264,7 +265,8 @@ class BudgetInvestmentSerializer < BaseSerializer
       admin_client? ||
         budget_investment.should_show_price_explanation? ||
         budget_investment.should_show_unfeasibility_explanation? ||
-        budget_investment.should_show_feasibility_explanation?
+        budget_investment.should_show_feasibility_explanation? ||
+        budget_investment.should_show_changes_explanation?
     end
 
     def results_public?(budget)

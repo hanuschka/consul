@@ -1,12 +1,6 @@
 require "uri"
 
-branch = ENV["branch"]
-
-if branch.nil? || branch.empty?
-  branch = `git rev-parse --abbrev-ref HEAD`.strip
-end
-
-set :branch, branch
+set :branch, deploy_branch
 
 deploy_staging_domain = ENV["DEPLOY_STAGING_DOMAIN"]
 

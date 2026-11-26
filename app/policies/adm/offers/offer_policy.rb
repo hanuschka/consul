@@ -1,0 +1,41 @@
+class Adm::Offers::OfferPolicy < ApplicationPolicy
+  def index?
+    @user&.administrator? || @user&.offer_manager?
+  end
+
+  def update?
+    index?
+  end
+
+  def edit?
+    update?
+  end
+
+  def destroy?
+    index?
+  end
+
+  def import?
+    index?
+  end
+
+  def mark_checked?
+    index?
+  end
+
+  def suspend?
+    index?
+  end
+
+  def unsuspend?
+    index?
+  end
+
+  class Scope < Scope
+    def resolve
+      return scope.all if user&.administrator? || user&.offer_manager?
+
+      scope.none
+    end
+  end
+end

@@ -46,6 +46,7 @@ en:
       budget/investment:
         feasibility_undecided: Not evaluated
         feasibility_feasible: Meets criteria
+        feasibility_feasible_with_changes: Meets criteria with changes
         feasibility_unfeasible: Does not meet criteria
       tag:
         name: Tag name

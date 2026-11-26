@@ -19,7 +19,12 @@ module PdfServices
             @deficiency_report.map_location,
             image_max_height: 520
           )
-          render_official_answer(pdf)
+          if DeficiencyReport.separate_reporter_answer?
+            render_answer(pdf, @deficiency_report.reporter_answer, "adm.deficiency_reports.deficiency_reports.show.reporter_answer")
+            render_answer(pdf, @deficiency_report.official_answer, "adm.deficiency_reports.deficiency_reports.show.public_answer")
+          else
+            render_answer(pdf, @deficiency_report.official_answer, "adm.deficiency_reports.deficiency_reports.show.official_answer")
+          end
         end
       end
     end
@@ -72,12 +77,11 @@ module PdfServices
         rows
       end
 
-      def render_official_answer(pdf)
-        body = html_to_paragraphs(@deficiency_report.official_answer.to_s)
+      def render_answer(pdf, answer, heading_key)
+        body = html_to_paragraphs(answer.to_s)
         return unless body.present?
 
-        pdf.text I18n.t("adm.deficiency_reports.deficiency_reports.show.official_answer"),
-                 size: 12, style: :bold, color: COLORS[:accent]
+        pdf.text I18n.t(heading_key), size: 12, style: :bold, color: COLORS[:accent]
         pdf.move_down 4
         pdf.text body, size: 10, color: COLORS[:primary], leading: 4, inline_format: true
         pdf.move_down 16

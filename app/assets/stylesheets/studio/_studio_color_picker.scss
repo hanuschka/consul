@@ -1,0 +1,178 @@
+// Shared studio color picker (Shared::StudioColorPickerComponent,
+// App.Studio.StudioColorPicker): a round trigger opening an <inline-popup>
+// with preset swatches, recently used colors and a custom color field.
+.studio-color-picker {
+  display: inline-flex;
+}
+
+.studio-color-picker--trigger {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.7);
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 120ms ease-out;
+
+  &:hover {
+    background: #f1f1f1;
+  }
+
+  &:active {
+    background: #e4e4e4;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px;
+  }
+}
+
+// A fixed width, so the custom row and the actions get room instead of the
+// popup shrinking to its swatch grid.
+.studio-color-picker--popup {
+  --inline-popup-max-width: min(292px, calc(100vw - 24px));
+  width: var(--inline-popup-max-width);
+  padding: 14px;
+}
+
+.studio-color-picker--title {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.studio-color-picker--section {
+  margin: 0 0 14px;
+}
+
+.studio-color-picker--section-title {
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #4a4f57;
+}
+
+.studio-color-picker--swatches {
+  display: grid;
+  grid-template-columns: repeat(6, 28px);
+  gap: 12px;
+  padding: 0 2px;
+}
+
+// Selection is the dark ring drawn by the outline; keyboard focus adds a
+// blue ring outside it, so both stay visible on the same swatch.
+.studio-color-picker--swatch {
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  background: var(--studio-color-picker-swatch-color);
+  border: 1px solid rgba(15, 23, 42, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  user-select: none;
+
+  &[aria-pressed="true"] {
+    outline: 2px solid #1c1c1c;
+    outline-offset: 2px;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 4px #fff, 0 0 0 6px var(--focus-outline-color);
+  }
+
+  @media (forced-colors: active) {
+    &:focus-visible {
+      outline: 3px dashed CanvasText;
+      outline-offset: 2px;
+    }
+  }
+}
+
+.studio-color-picker--custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// Native <input type="color"> as a plain swatch; vendor pseudo-elements need
+// rules of their own.
+.studio-color-picker--native {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 1px solid #80868e;
+  border-radius: 6px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &::-webkit-color-swatch {
+    border: 0;
+    border-radius: 5px;
+  }
+
+  &::-moz-color-swatch {
+    border: 0;
+    border-radius: 5px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px;
+  }
+}
+
+.studio-color-picker--hex {
+  flex: 1 1 auto;
+  width: 0;
+  min-width: 0;
+  height: 36px;
+  margin: 0;
+  padding: 0 8px;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid #80868e;
+  border-radius: 6px;
+  box-shadow: none;
+
+  &[aria-invalid="true"] {
+    border-color: #b91c1c;
+  }
+}
+
+.studio-color-picker--error {
+  margin: 6px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #b91c1c;
+}
+
+// "Übernehmen" keeps the previewed color; "Abbrechen" restores the color the
+// popup opened with.
+.studio-color-picker--actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 0 0;
+}

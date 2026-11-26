@@ -1,0 +1,32 @@
+<div class="sidebar-projekt-subscription">
+  <% if projekt_subscription.present? %>
+    <div class="sidebar-projekt-subscription--row">
+      <label
+        class="sidebar-projekt-subscription--label"
+        for="<%= dom_id(projekt, :subscription_toggler) %>"
+      >
+        <%= t("custom.projekts.page.sidebar.projekt_subscription.switch_label") %>
+      </label>
+
+      <%= render "projekt_subscriptions/switch",
+        projekt_subscription: projekt_subscription,
+        path: projekt_subscription_path(projekt) %>
+    </div>
+  <% end %>
+
+  <p class="sidebar-projekt-subscription--hint">
+    <%= t("custom.projekts.page.sidebar.projekt_subscription.hint") %>
+  </p>
+
+  <% if projekt_subscription.blank? %>
+    <p class="sidebar-projekt-subscription--hint">
+      <%= t(
+        "custom.projekts.page.sidebar.projekt_subscription.sign_in_html",
+        link: link_to(
+          t("custom.projekts.page.sidebar.projekt_subscription.sign_in_link"),
+          new_user_session_path
+        )
+      ) %>
+    </p>
+  <% end %>
+</div>

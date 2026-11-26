@@ -119,10 +119,6 @@
       @include icon(user, solid);
     }
 
-    &.ml-link {
-      @include icon(brain, solid);
-    }
-
     &.api-clients-link {
       @include icon(plug, solid);
     }

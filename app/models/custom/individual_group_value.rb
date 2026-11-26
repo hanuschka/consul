@@ -1,4 +1,10 @@
+require "csv"
+
 class IndividualGroupValue < ApplicationRecord
+  translates :name, touch: true
+  include Globalizable
+  include MachineTranslatable
+
   belongs_to :individual_group
   has_many :user_individual_group_values, dependent: :destroy
   has_many :users, through: :user_individual_group_values

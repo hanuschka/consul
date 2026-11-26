@@ -14,16 +14,25 @@
   </div>
 
   <div id="proposal-graph"
-    data-proposal-graph-url="<%= proposal_dashboard_supports_path(proposal, format: :json) %>"
-    data-successful-proposal-graph-url="<%= proposal_dashboard_successful_supports_path(proposal, format: :json) %>"
-    data-proposal-achievements-url="<%= proposal_dashboard_achievements_path(proposal, format: :json) %>"
-    data-proposal-graph-group-by="<%= params[:group_by] %>"
+    data-proposal-graph-url="<%= proposal_dashboard_supports_path(proposal, format: :json, group_by: group_by) %>"
+    data-successful-proposal-graph-url="<%= proposal_dashboard_successful_supports_path(proposal, format: :json, group_by: group_by) %>"
+    data-proposal-achievements-url="<%= proposal_dashboard_achievements_path(proposal, format: :json, group_by: group_by) %>"
+    data-proposal-graph-group-by="<%= group_by %>"
     data-proposal-graph-progress-label="<%= t("dashboard.progress.progress") %>"
     data-proposal-graph-supports-label="<%= t("dashboard.progress.supports") %>"
     data-proposal-graph-success-label="<%= t("dashboard.progress.success") %>"
     data-proposal-success="<%= custom_votes_for_proposal_success(@proposal) || Setting["votes_for_proposal_success"] %>"
     data-proposal-resources-url="<%= proposal_dashboard_resources_path(proposal, format: :json) %>"
-    class="c3 proposal-graph"></div>
-
-  <%= javascript_include_tag "dashboard_graphs", "data-turbolinks-track" => "reload" %>
+    class="proposal-graph js-proposal-progress-chart">
+    <div class="chart-loading-placeholder">
+      <%= render Shared::SkeletonPlaceholderComponent.new %>
+    </div>
+    <p
+      class="proposals-dashboard-progress-chart--error"
+      role="alert"
+    >
+      <%= t("dashboard.progress.load_error") %>
+    </p>
+    <canvas></canvas>
+  </div>
 </div>

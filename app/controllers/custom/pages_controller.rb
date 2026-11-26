@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "pages_controller").to_s
+load Rails.root.join("app", "controllers", "pages_controller.rb")
 
 class PagesController < ApplicationController
   include CommentableActions
@@ -57,8 +57,8 @@ class PagesController < ApplicationController
 
       resolve_landing_page_for_projekt(@projekt)
 
-      if @projekt.feature?("sidebar.show_notification_subscription_toggler")
-        @projekt_subscription = ProjektSubscription.find_or_create_by!(projekt: @projekt, user: current_user)
+      if current_user.present?
+        @projekt_subscription = ProjektSubscription.find_or_initialize_by(projekt: @projekt, user: current_user)
       end
 
       if @projekt.projekt_phases.active.frontend_visible.any? || helpers.show_admin_controls_for_projekt?(@projekt)
@@ -87,11 +87,15 @@ class PagesController < ApplicationController
       render action: custom_page_name
 
     elsif @custom_page.present? && @custom_page.projekt.present?
-      @individual_group_value_names = @custom_page.projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @custom_page.projekt.individual_group_values.map(&:name)
       render "custom/pages/forbidden", layout: false
 
     elsif @custom_page.present?
       @cards = @custom_page.cards
+      @accessibility_report = AccessibilityReport.new if @custom_page.footer_key == "accessibility_report"
+      if @custom_page.footer_key == "accessibility"
+        @accessibility_report_page = SiteCustomization::Page.find_by(footer_key: "accessibility_report", status: "published")
+      end
       render action: custom_page_name
 
     else
@@ -102,6 +106,12 @@ class PagesController < ApplicationController
   end
 
   def projekt_phase_footer_tab
+    unless request.xhr? || request.format.csv?
+      return redirect_to helpers.url_to_footer_tab(extras: { anchor: "projekt-footer" }) if request.format.html?
+
+      return head :not_acceptable
+    end
+
     @projekt_phase = ProjektPhase.find(params[:projekt_phase_id])
     @projekt = @projekt_phase.projekt
 

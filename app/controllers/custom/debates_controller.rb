@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "debates_controller").to_s
+load Rails.root.join("app", "controllers", "debates_controller.rb")
 
 class DebatesController < ApplicationController
   include ImageAttributes
@@ -121,7 +121,6 @@ class DebatesController < ApplicationController
     @debate.author = current_user
 
     if @debate.save
-      track_event
       NotificationServices::NewDebateNotifier.new(@debate.id).call
 
       if @debate.projekt_phase.active?
@@ -185,7 +184,7 @@ class DebatesController < ApplicationController
       redirect_to debate_path(@debate), status: :moved_permanently
 
     elsif !@projekt.visible_for?(current_user)
-      @individual_group_value_names = @projekt.individual_group_values.pluck(:name)
+      @individual_group_value_names = @projekt.individual_group_values.map(&:name)
       render "custom/pages/forbidden", layout: false
 
     elsif Setting.new_design_enabled?

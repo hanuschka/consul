@@ -1,0 +1,130 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs,
+                                    back_button_url: adm_offers_root_path) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+    <ul class="adm-hint__list">
+      <li><%= t(".rules.format") %></li>
+      <li><%= t(".rules.rows") %></li>
+      <li><%= t(".rules.provider") %></li>
+      <li><%= t(".rules.categories") %></li>
+      <li><%= t(".rules.dates") %></li>
+      <li><%= t(".rules.id") %></li>
+    </ul>
+    <p class="adm-hint__text adm-hint__text--spaced"><%= t(".rules_outro") %></p>
+  <% end %>
+<% end %>
+
+<div class="kern-container my-5">
+  <% if @result %>
+    <section class="mb-5" aria-labelledby="offer-import-result-title">
+      <h2 id="offer-import-result-title" class="kern-title kern-title--small mb-3"><%= t(".result_title") %></h2>
+
+      <% if @result.file_errors.any? %>
+        <%= kern_alert(title: t(".file_errors_title"), style: :danger) do %>
+          <ul class="kern-list kern-list--bullet">
+            <% @result.file_errors.each do |error| %>
+              <li><%= error %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      <% elsif @result.rows.empty? %>
+        <%= kern_alert(title: t(".no_rows"), style: :info) %>
+      <% else %>
+        <div class="mb-4">
+          <%= kern_alert(title: t(".summary",
+                                  created: t(".created", count: @result.created_count),
+                                  updated: t(".updated", count: @result.updated_count),
+                                  unchanged: t(".unchanged", count: @result.unchanged_count),
+                                  failed: t(".failed", count: @result.failed_count)),
+                         style: @result.failed_count.zero? ? :success : :warning) %>
+        </div>
+
+        <div class="kern-table-responsive" tabindex="0">
+          <table class="kern-table">
+            <thead class="kern-table__head">
+              <tr class="kern-table__row">
+                <th scope="col" class="kern-table__header"><%= t(".table.line") %></th>
+                <th scope="col" class="kern-table__header"><%= t(".table.title") %></th>
+                <th scope="col" class="kern-table__header"><%= t(".table.result") %></th>
+              </tr>
+            </thead>
+            <tbody class="kern-table__body">
+              <% @result.rows.each do |row| %>
+                <tr class="kern-table__row">
+                  <td class="kern-table__cell"><%= row.line %></td>
+                  <td class="kern-table__cell">
+                    <% if row.offer.present? %>
+                      <%= link_to row.title, edit_adm_offers_offer_path(row.offer), class: "kern-link" %>
+                    <% else %>
+                      <%= row.title.presence || t(".table.untitled") %>
+                    <% end %>
+                  </td>
+                  <td class="kern-table__cell">
+                    <% case row.status %>
+                    <% when :created %>
+                      <span class="kern-badge kern-badge--success kern-badge--small"><%= t(".table.created") %></span>
+                    <% when :updated %>
+                      <span class="kern-badge kern-badge--info kern-badge--small"><%= t(".table.updated") %></span>
+                    <% when :unchanged %>
+                      <%= t(".table.unchanged") %>
+                    <% else %>
+                      <span class="kern-badge kern-badge--danger kern-badge--small"><%= t(".table.failed") %></span>
+                      <ul class="kern-list kern-list--bullet kern-list--small mt-2">
+                        <% row.errors.each do |error| %>
+                          <li><%= error %></li>
+                        <% end %>
+                      </ul>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+
+  <section class="mb-5" aria-labelledby="offer-import-upload-title">
+    <h2 id="offer-import-upload-title" class="kern-title kern-title--small mb-3"><%= t(".upload_title") %></h2>
+
+    <div class="d-flex flex-wrap justify-content-start gap-2 mb-4">
+      <%= kern_link_button(template_adm_offers_import_path, text: t(".template"), icon: "download",
+                           data: { turbo: false }) %>
+      <%= kern_link_button(sample_adm_offers_import_path, text: t(".sample"), icon: "download",
+                           data: { turbo: false }) %>
+    </div>
+
+    <%= form_with url: adm_offers_import_path, multipart: true, data: { turbo: false } do |f| %>
+      <div class="kern-form-input mb-4">
+        <%= f.label :file, t(".file_label"), class: "kern-label" %>
+        <div class="kern-hint" id="offer-import-file-hint">
+          <%= t(".file_hint", max: number_to_human_size(Adm::Offers::ImportsController::MAX_FILE_SIZE)) %>
+        </div>
+        <%= f.file_field :file, accept: ".csv,text/csv", class: "kern-form-input__input",
+                                aria: { describedby: "offer-import-file-hint" } %>
+      </div>
+
+      <%= kern_button(type: :submit, text: t(".submit"), icon: "upload_file") %>
+    <% end %>
+  </section>
+
+  <details class="kern-accordion">
+    <summary class="kern-accordion__header"><span class="kern-title"><%= t(".columns_title") %></span></summary>
+    <section class="kern-accordion__body">
+      <ul class="kern-list kern-list--bullet">
+        <li><%= Offers::CsvImport.id_header %> <%= t(".id_marker") %></li>
+        <% Offers::CsvImport::COLUMNS.zip(Offers::CsvImport.headers).each do |column, header| %>
+          <li>
+            <%= header %>
+            <% if Offers::CsvImport::REQUIRED_COLUMNS.include?(column) %>
+              <%= t(".required_marker") %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  </details>
+</div>

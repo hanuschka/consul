@@ -1,69 +1,71 @@
-<!-- BlockID: E01 Timeline – Vertikal mit border-left Akzentlinie und Datum als Badge -->
+<!-- BlockID: E01 Zeitstrahl vertikal - Phasen mit Statussymbol, Status-Etikett und Zeitraum -->
 <!-- Geeignet für: Zeitplan-Darstellung, Phasenübersicht mit Statusanzeige -->
+<!-- Editor: jede Phase ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte (geplante) Phase; Nummer, Texte und Etikett danach anpassen. Die Verbindungslinie läuft durchgehend hinter allen Phasen, nichts muss beim letzten Eintrag weggelassen werden. Status: erledigt grün mit Haken, aktiv Markenfarbe mit linker Kante, geplant gestrichelt. -->
+<!-- Umbruch: Symbol bleibt immer links neben der Karte, Titel und Status-Etikett brechen innerhalb der Karte um. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Phasentitel = Theme-H4, Status, Zeitraum und Text 1rem; Status über Fläche statt Farbe der Schrift -->
 
-<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; letter-spacing: -0.3px; margin-bottom: 28px; margin-top: 0; padding-left: 16px; border-left: 3px solid var(--brand-color, #1779ba);">Zeitplan der Bürgerbeteiligung</h3>
+  <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 6px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="far fa-calendar-alt" style="font-size: 18px;"></i></span>
+    <h3 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Zeitplan der Bürgerbeteiligung</h3>
+  </div>
+  <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 20px;">Vier Phasen von der Bestandsaufnahme bis zur Umsetzung – wo wir gerade stehen, sehen Sie am Etikett.</p>
 
-  <ul style="display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none;">
+  <div style="position: relative;">
+    <div aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; left: 19px; top: 24px; bottom: 24px; width: 2px; border-radius: 2px; background: #d5dde7; pointer-events: none; z-index: 0;"></div>
 
-    <!-- Timeline-Eintrag 1: Abgeschlossen -->
-    <li style="display: flex; flex-wrap: wrap; align-items: flex-start; position: relative;">
-      <!-- Linie -->
-      <div style="position: absolute; left: 19px; top: 44px; bottom: -22px; width: 2px; background: rgba(0,0,0,0.08); z-index: 0; pointer-events: none;"></div>
-      <!-- Icon -->
-      <div style="width: 40px; height: 40px; border-radius: 50%; background: #065f46; border: 3px solid #ffffff; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 16px; z-index: 1; font-size: 14px; color: #ffffff; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);">&#10003;</div>
-      <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.85); padding: 16px 20px; flex: 1;">
-        <div style="display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 8px;">
-          <h4 style="font-size: 15px; font-weight: 700; color: #1a202c; margin: 0 12px 4px 0; line-height: 1.4;">Bestandsaufnahme &amp; Analyse</h4>
-          <div style="background: #f0fdf4; border: 1px solid rgba(187,247,208,0.8); border-radius: 4px; padding: 3px 10px; font-size: 11px; color: #065f46; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;">Abgeschlossen</div>
+    <ul style="position: relative; z-index: 1; display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; list-style: none;">
+
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0;">
+        <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #047857; border: 3px solid #ffffff; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-check" style="font-size: 15px;"></i></span>
+        <div style="flex: 1 1 auto; min-width: 0; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid #047857; border-radius: 12px; padding: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0 0 4px;">
+            <h4 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Bestandsaufnahme und Analyse</h4>
+            <span style="display: inline-block; background: #e7f5ee; border: 1px solid #b7e0c9; border-radius: 999px; padding: 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600;">Abgeschlossen</span>
+          </div>
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 0 0 4px;">Januar – Februar 2026</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Erfassung des Ist-Zustands, erste Bürgergespräche, Stärken-Schwächen-Analyse durchgeführt.</p>
         </div>
-        <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px; font-weight: 500;">Januar – Februar 2025</div>
-        <p style="font-size: 14px; color: #4b5563; margin: 0; line-height: 1.65;">Erfassung des Ist-Zustands, erste Bürgergespräche, Stärken-Schwächen-Analyse durchgeführt.</p>
-      </div>
-    </li>
+      </li>
 
-    <!-- Timeline-Eintrag 2: Aktiv -->
-    <li style="display: flex; flex-wrap: wrap; align-items: flex-start; position: relative;">
-      <div style="position: absolute; left: 19px; top: 44px; bottom: -22px; width: 2px; background: rgba(0,0,0,0.08); z-index: 0; pointer-events: none;"></div>
-      <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--brand-color, #1779ba); border: 3px solid #ffffff; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 16px; z-index: 1; font-size: 16px; color: #ffffff; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);">&#9679;</div>
-      <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.85); border-left: 4px solid var(--brand-color, #1779ba); padding: 16px 20px; flex: 1;">
-        <div style="display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 8px;">
-          <h4 style="font-size: 15px; font-weight: 700; color: #1a202c; margin: 0 12px 4px 0; line-height: 1.4;">Online-Beteiligung &amp; Workshops</h4>
-          <div style="background: #eff6ff; border: 1px solid rgba(191,219,254,0.8); border-radius: 4px; padding: 3px 10px; font-size: 11px; color: var(--brand-color, #1779ba); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;">Jetzt aktiv</div>
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0;">
+        <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--brand-color, #1779ba); border: 3px solid #ffffff; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-play" style="font-size: 13px;"></i></span>
+        <div style="flex: 1 1 auto; min-width: 0; background: #ffffff; border: 1px solid #e8edf3; border-left: 4px solid var(--brand-color, #1779ba); border-radius: 12px; padding: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0 0 4px;">
+            <h4 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Online-Beteiligung und Workshops</h4>
+            <span style="display: inline-block; background: var(--brand-color, #1779ba); border: 1px solid var(--brand-color, #1779ba); border-radius: 999px; padding: 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600; color: #ffffff;">Jetzt aktiv</span>
+          </div>
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 0 0 4px;">März – September 2026</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Vorschläge einreichen, Online-Abstimmung, drei Stadtteil-Workshops vor Ort.</p>
         </div>
-        <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px; font-weight: 500;">März – September 2025</div>
-        <p style="font-size: 14px; color: #374151; margin: 0; line-height: 1.65;">Vorschläge einreichen, Online-Abstimmung, drei Stadtteil-Workshops vor Ort.</p>
-      </div>
-    </li>
+      </li>
 
-    <!-- Timeline-Eintrag 3: Geplant -->
-    <li style="display: flex; flex-wrap: wrap; align-items: flex-start; position: relative;">
-      <div style="position: absolute; left: 19px; top: 44px; bottom: -22px; width: 2px; background: rgba(0,0,0,0.08); z-index: 0; pointer-events: none;"></div>
-      <div style="width: 40px; height: 40px; border-radius: 50%; background: #e2e5ea; border: 3px solid #ffffff; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 16px; z-index: 1; font-size: 14px; color: #94a3b8; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);">3</div>
-      <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.85); padding: 16px 20px; flex: 1;">
-        <div style="display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 8px;">
-          <h4 style="font-size: 15px; font-weight: 700; color: #64748b; margin: 0 12px 4px 0; line-height: 1.4;">Auswertung &amp; Ergebnisbericht</h4>
-          <div style="background: #f3f4f6; border: 1px solid rgba(226,229,234,0.8); border-radius: 4px; padding: 3px 10px; font-size: 11px; color: #64748b; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;">Geplant</div>
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0;">
+        <span style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #ffffff; border: 2px dashed #c5cfdb; box-shadow: 0 0 0 3px #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700;">3</span>
+        <div style="flex: 1 1 auto; min-width: 0; background: #ffffff; border: 1px dashed #c5cfdb; border-left: 4px solid #c5cfdb; border-radius: 12px; padding: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0 0 4px;">
+            <h4 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Auswertung und Ergebnisbericht</h4>
+            <span style="display: inline-block; background: #ffffff; border: 1px dashed #c5cfdb; border-radius: 999px; padding: 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600;">Geplant</span>
+          </div>
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 0 0 4px;">Oktober – November 2026</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Alle Beiträge werden ausgewertet. Der Ergebnisbericht wird veröffentlicht und dem Stadtrat vorgelegt.</p>
         </div>
-        <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px; font-weight: 500;">Oktober – November 2025</div>
-        <p style="font-size: 14px; color: #6b7280; margin: 0; line-height: 1.65;">Alle Beiträge werden ausgewertet. Ergebnisbericht wird veröffentlicht und dem Stadtrat vorgelegt.</p>
-      </div>
-    </li>
+      </li>
 
-    <!-- Timeline-Eintrag 4: Geplant -->
-    <li style="display: flex; flex-wrap: wrap; align-items: flex-start;">
-      <div style="width: 40px; height: 40px; border-radius: 50%; background: #e2e5ea; border: 3px solid #ffffff; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 16px; z-index: 1; font-size: 14px; color: #94a3b8; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);">4</div>
-      <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: 12px; border: 1px solid rgba(255,255,255,0.85); padding: 16px 20px; flex: 1;">
-        <div style="display: flex; flex-wrap: wrap; align-items: center; margin-bottom: 8px;">
-          <h4 style="font-size: 15px; font-weight: 700; color: #64748b; margin: 0 12px 4px 0; line-height: 1.4;">Umsetzung der Maßnahmen</h4>
-          <div style="background: #f3f4f6; border: 1px solid rgba(226,229,234,0.8); border-radius: 4px; padding: 3px 10px; font-size: 11px; color: #64748b; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;">Ab 2026</div>
+      <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0;">
+        <span style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #ffffff; border: 2px dashed #c5cfdb; box-shadow: 0 0 0 3px #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700;">4</span>
+        <div style="flex: 1 1 auto; min-width: 0; background: #ffffff; border: 1px dashed #c5cfdb; border-left: 4px solid #c5cfdb; border-radius: 12px; padding: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0 0 4px;">
+            <h4 style="margin: 0; hyphens: auto; overflow-wrap: break-word;">Umsetzung der Maßnahmen</h4>
+            <span style="display: inline-block; background: #ffffff; border: 1px dashed #c5cfdb; border-radius: 999px; padding: 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600;">Ab 2027</span>
+          </div>
+          <p style="font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 0 0 4px;">Ab Frühjahr 2027</p>
+          <p style="font-size: 1rem; line-height: 1.6; margin: 0;">Stadtratsbeschluss, Vergabe und Beginn der baulichen Maßnahmen auf Grundlage der Beteiligungsergebnisse.</p>
         </div>
-        <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px; font-weight: 500;">Ab Frühjahr 2026</div>
-        <p style="font-size: 14px; color: #6b7280; margin: 0; line-height: 1.65;">Stadtratsbeschluss, Vergabe und Beginn der baulichen Maßnahmen basierend auf den Beteiligungsergebnissen.</p>
-      </div>
-    </li>
+      </li>
 
-  </ul>
+    </ul>
+  </div>
 
 </div>

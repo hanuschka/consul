@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "moderation", "shared", "index_component").to_s
+load Rails.root.join("app", "components", "moderation", "shared", "index_component.rb")
 
 class Moderation::Shared::IndexComponent < ApplicationComponent
   private

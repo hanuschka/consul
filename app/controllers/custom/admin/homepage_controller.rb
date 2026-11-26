@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "admin", "homepage_controller").to_s
+load Rails.root.join("app", "controllers", "admin", "homepage_controller.rb")
 
 class Admin::HomepageController < Admin::BaseController
   def show

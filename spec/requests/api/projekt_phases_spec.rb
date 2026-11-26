@@ -114,121 +114,10 @@ end
       security [bearer_auth: []]
       description "Create a new phase for a projekt. Phases are time-bounded periods that enable specific types of participation (comments, proposals, voting, etc.). Supports restrictions by geozone, age range, user status, and demographic groups. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_phase, in: :body, description: 'Phase configuration with required type and optional start/end dates, visibility, restrictions, and settings', schema: {
+      parameter name: :projekt_phase, in: :body, description: 'Phase configuration with required type and optional start/end dates, visibility, restrictions, texts per language and settings', schema: {
         type: :object,
         properties: {
-          projekt_phase: {
-            type: :object,
-            properties: {
-              type: {
-                type: :string,
-                example: 'ProjektPhase::CommentPhase',
-                enum: ProjektPhase::PROJEKT_PHASES_TYPES,
-                description: 'Phase type determining participation type. Required for creation.'
-              },
-              start_date: {
-                type: :string,
-                format: :date,
-                nullable: true,
-                description: 'Date when the phase becomes active (YYYY-MM-DD). Must be before end_date if both provided.'
-              },
-              end_date: {
-                type: :string,
-                format: :date,
-                nullable: true,
-                description: 'Date when the phase becomes inactive (YYYY-MM-DD). Must be after start_date if both provided.'
-              },
-              active: {
-                type: :boolean,
-                description: 'Whether the phase is currently active and allowing participation.'
-              },
-              frontend_visibility: {
-                type: :boolean,
-                description: 'Whether the phase is visible to users on the frontend interface.'
-              },
-              given_order: {
-                type: :integer,
-                nullable: true,
-                description: 'Display order of this phase. Lower numbers appear first.'
-              },
-              geozone_restricted: {
-                type: :boolean,
-                description: 'Whether participation is restricted to specific geographic zones.'
-              },
-              age_range_id: {
-                type: :integer,
-                nullable: true,
-                description: 'ID of an age range restriction. If null, there is no age restriction.'
-              },
-              user_status: {
-                type: :string,
-                nullable: true,
-                description: 'Minimum user status required. Valid values: "guest", "registered", "verified".'
-              },
-              lock_on: {
-                type: :string,
-                format: :date,
-                nullable: true,
-                description: 'Date after which the phase becomes locked and no longer editable (YYYY-MM-DD).'
-              },
-              phase_tab_name: {
-                type: :string,
-                nullable: true,
-                description: 'Display name shown in frontend navigation tabs and phase listings.'
-              },
-              registered_address_grouping_restriction: {
-                type: :boolean,
-                nullable: true,
-                description: 'Whether participation is restricted based on registered address grouping.'
-              },
-              registered_address_grouping_restrictions: {
-                type: :object,
-                nullable: true,
-                description: 'Restrictions by address grouping as key-value pairs. Example: { "district": ["North", "South"] }.',
-                additionalProperties: { type: :array, items: { type: :string } }
-              },
-              individual_group_value_ids: {
-                type: :array,
-                items: { type: :integer },
-                description: 'Array of demographic group IDs allowed to participate.'
-              },
-              geozone_restriction_ids: {
-                type: :array,
-                items: { type: :integer },
-                description: 'Array of geographic zone IDs where participation is allowed. Requires geozone_restricted to be true.'
-              },
-              settings_attributes: {
-                type: :array,
-                description: 'Configuration settings for the phase. Provide id when updating existing settings.',
-                items: {
-                  type: :object,
-                  properties: {
-                    id: {
-                      type: :integer,
-                      nullable: true,
-                      description: 'ID of the setting when updating. Omit when creating new.'
-                    },
-                    key: {
-                      type: :string,
-                      nullable: true,
-                      description: 'Setting identifier/key (e.g., "feature.general.newest_first").'
-                    },
-                    value: {
-                      type: :string,
-                      nullable: true,
-                      description: 'Setting value (e.g., "active", "inactive", "true", "false").'
-                    },
-                    _destroy: {
-                      type: :boolean,
-                      nullable: true,
-                      description: 'Set to true to delete this setting during update.'
-                    }
-                  }
-                }
-              }
-            },
-            required: ['type']
-          }
+          projekt_phase: { '$ref' => '#/components/schemas/ProjektPhaseRequestParams' }
         },
         required: ['projekt_phase']
       }
@@ -326,16 +215,20 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update or create a configuration setting for a projekt phase. Settings control behavior and features for the phase (e.g., feature.general.newest_first controls comment sorting). Returns the updated setting. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update one setting of a projekt phase. Only the keys the phase's type lists " \
+                  "(see `ProjektPhaseSettingsUpdate` for all keys and their types) can be changed; " \
+                  "unknown keys answer 404 and are never created. Switches take `true`/`false` " \
+                  "(the stored forms `\"active\"`/`\"\"` are accepted as well). Every change is " \
+                  "recorded in the audit trail. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_phase_setting, in: :body, description: 'Setting with required key and optional value to update or create', schema: {
+      parameter name: :projekt_phase_setting, in: :body, description: 'Setting key and its new value', schema: {
         type: :object,
         properties: {
           projekt_phase_setting: {
             type: :object,
             properties: {
               key: { type: :string },
-              value: { type: :string, nullable: true }
+              value: { nullable: true, description: 'New value, typed as `ProjektPhaseSettingsUpdate` lists for the key' }
             },
             required: ['key']
           }
@@ -345,10 +238,10 @@ end
 
       response '200', 'projekt phase setting updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Setting Update') }
-        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true) }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::DebatePhase', active: true) }
         let(:id) { phase.id }
         let(:projekt_phase_setting) do
-          { projekt_phase_setting: { key: 'feature.general.newest_first', value: 'active' } }
+          { projekt_phase_setting: { key: 'feature.general.only_admins_create_debates', value: true } }
         end
 
         schema type: :object,
@@ -363,7 +256,25 @@ end
                },
                required: ['data']
 
-        run_test!
+        run_test! do
+          stored_setting = phase.settings.find_by(key: 'feature.general.only_admins_create_debates')
+
+          expect(stored_setting.value).to eq('active')
+          expect(stored_setting.audits.last.comment).to eq("api_client:#{api_client.id}")
+        end
+      end
+
+      response '404', 'setting key the phase type does not have' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Setting Update') }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true) }
+        let(:id) { phase.id }
+        let(:projekt_phase_setting) do
+          { projekt_phase_setting: { key: 'feature.general.newest_first', value: true } }
+        end
+
+        run_test! do
+          expect(phase.settings.find_by(key: 'feature.general.newest_first')).to be_nil
+        end
       end
 
       response '422', 'invalid request' do
@@ -387,6 +298,19 @@ end
         run_test!
       end
 
+      response '422', 'value of the wrong type' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Setting Update') }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true) }
+        let(:id) { phase.id }
+        let(:projekt_phase_setting) do
+          { projekt_phase_setting: { key: 'option.form.description_max_length', value: 'long' } }
+        end
+
+        run_test! do
+          expect(phase.settings.find_by(key: 'option.form.description_max_length').value).to eq('6000')
+        end
+      end
+
       unauthorized_response { let(:id) { 1 } }
       forbidden_response { let(:id) { existing_projekt_phase.id } }
     end
@@ -400,27 +324,32 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Bulk-update several projekt phase settings in a single request. Provide a settings object mapping each setting key to its new value; missing keys are created. Returns the list of updated keys and a per-key errors map for any that failed. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Bulk-update several settings of a projekt phase. Every key must be one the " \
+                  "phase's type lists (`ProjektPhaseSettingsUpdate` shows all keys and their " \
+                  "types); unknown keys are never created. All or nothing: when one key is " \
+                  "rejected no setting is written, `updated` is empty and `errors` lists each " \
+                  "problem per key. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :settings, in: :body, description: 'Object whose keys are projekt phase setting keys and whose values are the new setting values', schema: {
         type: :object,
         properties: {
-          settings: {
-            type: :object,
-            description: 'Map of setting key => value (e.g. feature.general.newest_first).',
-            additionalProperties: { type: :string },
-            example: { 'feature.general.newest_first' => 'active' }
-          }
+          settings: { '$ref' => '#/components/schemas/ProjektPhaseSettingsUpdate' }
         },
         required: ['settings']
       }
 
       response '200', 'settings processed' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Settings Update') }
-        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true) }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true) }
         let(:id) { phase.id }
         let(:settings) do
-          { settings: { 'feature.general.newest_first' => 'active' } }
+          {
+            settings: {
+              'feature.form.show_map' => false,
+              'option.form.description_max_length' => 3000,
+              'selectable_setting.general.default_order' => 'created_at'
+            }
+          }
         end
 
         schema type: :object,
@@ -436,7 +365,28 @@ end
                },
                required: ['data']
 
-        run_test!
+        run_test! do |response|
+          expect(JSON.parse(response.body)['data']['updated']).to match_array(settings[:settings].keys)
+          expect(phase.settings.find_by(key: 'option.form.description_max_length').value).to eq('3000')
+        end
+      end
+
+      response '200', 'unknown key - nothing is written or created' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Settings Update') }
+        let(:phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::ProposalPhase', active: true) }
+        let(:id) { phase.id }
+        let(:settings) do
+          { settings: { 'feature.form.show_map' => false, 'feature.general.newest_first' => 'active' } }
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)['data']
+
+          expect(data['updated']).to eq([])
+          expect(data['errors'].keys).to eq(['feature.general.newest_first'])
+          expect(phase.settings.find_by(key: 'feature.general.newest_first')).to be_nil
+          expect(phase.settings.find_by(key: 'feature.form.show_map').value).to eq('active')
+        end
       end
 
       response '422', 'settings parameter missing' do
@@ -470,7 +420,7 @@ end
       tags 'Projekt Phases'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a single projekt phase by ID with all its configuration details. Returns the phase type, active status, dates, visibility settings, restrictions (geozone, age range, user status), and all settings. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a single projekt phase by ID with all its configuration details. Returns the phase type, active status, dates, visibility settings, restrictions (geozone, age range, user status), and all settings. The author_id of nested questions and pins is only returned to admin clients. #{ApiAccessRequirements::GET_READ_ONLY}"
 
       response '200', 'projekt phase found and returned' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Show') }
@@ -492,6 +442,37 @@ end
         run_test!
       end
 
+      response '200', 'Mitmachbox survey id returned to admin clients only' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Show') }
+        let(:test_phase) do
+          projekt.projekt_phases.create!(type: 'ProjektPhase::MitmachboxPhase', active: true).tap do |mitmachbox_phase|
+            mitmachbox_phase.update_column(:mitmachbox_survey_id, 'svy_8c1d')
+          end
+        end
+        let(:id) { test_phase.id }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt_phase: { '$ref' => '#/components/schemas/ProjektPhase' }
+                   },
+                   required: ['projekt_phase']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          expect(JSON.parse(response.body)['data']['projekt_phase']['mitmachbox_survey_id']).to eq('svy_8c1d')
+
+          public_client = create_api_client(name: 'Public Client', access_level: :public_data)
+          public_phase_data = ProjektPhaseSerializer.new(test_phase.reload, current_api_client: public_client).serialize
+
+          expect(public_phase_data).not_to have_key(:mitmachbox_survey_id)
+        end
+      end
+
       response '404', 'projekt phase not found' do
         let(:id) { 999999 }
 
@@ -506,129 +487,28 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update an existing projekt phase configuration. All fields are optional - only provide fields to change. Supports updating type, dates, visibility, restrictions, settings, and more. Returns the updated phase. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update an existing projekt phase configuration. All fields are optional - only provide fields to change. Supports updating dates, visibility, restrictions, texts per language (translations), settings, and more. The phase type cannot be changed. Returns the updated phase. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_phase, in: :body, description: 'Phase attributes to update - all optional (type, dates, active status, visibility, restrictions, settings, etc.)', schema: {
+      parameter name: :projekt_phase, in: :body, description: 'Phase attributes to update - all optional (dates, active status, visibility, restrictions, texts per language, settings, etc.). The type of a phase cannot be changed.', schema: {
         type: :object,
         properties: {
+          projekt_phase: { '$ref' => '#/components/schemas/ProjektPhaseRequestParams' }
+        },
+        required: ['projekt_phase']
+      }
+
+      request_body_example(
+        name: 'texts_in_two_languages',
+        summary: 'Write the tab name and button texts in German and English',
+        value: {
           projekt_phase: {
-            type: :object,
-            properties: {
-              type: {
-                type: :string,
-                enum: ProjektPhase::PROJEKT_PHASES_TYPES,
-                description: 'Phase type determining participation type.'
-              },
-              start_date: {
-                type: :string,
-                format: :date,
-                nullable: true,
-                description: 'Date when the phase becomes active (YYYY-MM-DD). Must be before end_date if both provided.'
-              },
-              end_date: {
-                type: :string,
-                format: :date,
-                nullable: true,
-                description: 'Date when the phase becomes inactive (YYYY-MM-DD). Must be after start_date if both provided.'
-              },
-              active: {
-                type: :boolean,
-                nullable: true,
-                description: 'Whether the phase is currently active and allowing participation.'
-              },
-              frontend_visibility: {
-                type: :boolean,
-                nullable: true,
-                description: 'Whether the phase is visible to users on the frontend interface.'
-              },
-              given_order: {
-                type: :integer,
-                nullable: true,
-                description: 'Display order of this phase. Lower numbers appear first.'
-              },
-              geozone_restricted: {
-                type: :boolean,
-                nullable: true,
-                description: 'Whether participation is restricted to specific geographic zones.'
-              },
-              age_range_id: {
-                type: :integer,
-                nullable: true,
-                description: 'ID of an age range restriction. If null, there is no age restriction.'
-              },
-              user_status: {
-                type: :string,
-                nullable: true,
-                description: 'Minimum user status required. Valid values: "guest", "registered", "verified".'
-              },
-              lock_on: {
-                type: :string,
-                format: :date,
-                nullable: true,
-                description: 'Date after which the phase becomes locked and no longer editable (YYYY-MM-DD).'
-              },
-              phase_tab_name: {
-                type: :string,
-                nullable: true,
-                description: 'Display name shown in frontend navigation tabs and phase listings.'
-              },
-              registered_address_grouping_restriction: {
-                type: :boolean,
-                nullable: true,
-                description: 'Whether participation is restricted based on registered address grouping.'
-              },
-              registered_address_grouping_restrictions: {
-                type: :object,
-                nullable: true,
-                description: 'Restrictions by address grouping as key-value pairs. Example: { "district": ["North", "South"] }.',
-                additionalProperties: { type: :array, items: { type: :string } }
-              },
-              individual_group_value_ids: {
-                type: :array,
-                items: { type: :integer },
-                nullable: true,
-                description: 'Array of demographic group IDs allowed to participate.'
-              },
-              geozone_restriction_ids: {
-                type: :array,
-                items: { type: :integer },
-                nullable: true,
-                description: 'Array of geographic zone IDs where participation is allowed. Requires geozone_restricted to be true.'
-              },
-              settings_attributes: {
-                type: :array,
-                nullable: true,
-                description: 'Configuration settings for the phase. Provide id when updating existing settings.',
-                items: {
-                  type: :object,
-                  properties: {
-                    id: {
-                      type: :integer,
-                      nullable: true,
-                      description: 'ID of the setting when updating. Omit when creating new.'
-                    },
-                    key: {
-                      type: :string,
-                      nullable: true,
-                      description: 'Setting identifier/key (e.g., "feature.general.newest_first").'
-                    },
-                    value: {
-                      type: :string,
-                      nullable: true,
-                      description: 'Setting value (e.g., "active", "inactive", "true", "false").'
-                    },
-                    _destroy: {
-                      type: :boolean,
-                      nullable: true,
-                      description: 'Set to true to delete this setting during update.'
-                    }
-                  }
-                }
-              }
+            translations: {
+              de: { phase_tab_name: 'Vorschläge', cta_button_name: 'Vorschlag einreichen' },
+              en: { phase_tab_name: 'Proposals', cta_button_name: 'Submit a proposal' }
             }
           }
         }
-      }
+      )
 
       response '200', 'projekt phase updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Update') }
@@ -658,6 +538,83 @@ end
         run_test!
       end
 
+      response '200', 'texts written per language, restrictions set, type kept' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Update') }
+        let(:test_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true, phase_tab_name: 'Comments') }
+        let(:district) { RegisteredAddress::District.create!(name: 'Mitte') }
+        let(:street) { RegisteredAddress::Street.create!(name: 'Hauptstraße', plz: '44787') }
+        let(:id) { test_phase.id }
+        let(:projekt_phase) do
+          {
+            projekt_phase: {
+              type: 'ProjektPhase::ProposalPhase',
+              geozone_restricted: 'only_streets',
+              registered_address_district_ids: [district.id],
+              registered_address_street_ids: [street.id],
+              translations: {
+                de: { phase_tab_name: 'Vorschläge', cta_button_name: 'Vorschlag einreichen' },
+                en: { phase_tab_name: 'Proposals', cta_button_name: 'Submit a proposal' }
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt_phase: { '$ref' => '#/components/schemas/ProjektPhase' }
+                   },
+                   required: ['projekt_phase']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          phase_data = JSON.parse(response.body)['data']['projekt_phase']
+
+          expect(phase_data['type']).to eq('ProjektPhase::CommentPhase')
+          expect(phase_data['translations']['de']).to include('phase_tab_name' => 'Vorschläge', 'cta_button_name' => 'Vorschlag einreichen')
+          expect(phase_data['translations']['en']).to include('phase_tab_name' => 'Proposals', 'cta_button_name' => 'Submit a proposal')
+          expect(phase_data['registered_address_district_ids']).to eq([district.id])
+          expect(phase_data['registered_address_street_ids']).to eq([street.id])
+          expect(test_phase.reload.type).to eq('ProjektPhase::CommentPhase')
+        end
+      end
+
+      response '200', 'nested translations_attributes keep working' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Update') }
+        let(:test_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true, phase_tab_name: 'Comments') }
+        let(:id) { test_phase.id }
+        let(:other_locale) { (I18n.available_locales - [I18n.locale]).first }
+        let(:projekt_phase) do
+          {
+            projekt_phase: {
+              translations_attributes: [{ locale: other_locale, phase_tab_name: 'Discussion', description: 'Talk about it' }]
+            }
+          }
+        end
+
+        run_test! do
+          added_translation = test_phase.reload.translations.find { |translation| translation.locale == other_locale }
+
+          expect(added_translation.phase_tab_name).to eq('Discussion')
+          expect(added_translation.description).to eq('Talk about it')
+        end
+      end
+
+      response '422', 'language the instance does not offer' do
+        let(:projekt) { Projekt.create!(name: 'Projekt For Phase Update') }
+        let(:test_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true, phase_tab_name: 'Comments') }
+        let(:id) { test_phase.id }
+        let(:projekt_phase) { { projekt_phase: { translations: { xx: { phase_tab_name: 'Unknown' } } } } }
+
+        run_test! do |response|
+          expect(JSON.parse(response.body)['error']['details']['translations']).to eq(['contain unsupported languages: xx'])
+        end
+      end
+
       response '422', 'invalid request' do
         let(:projekt) { Projekt.create!(name: 'Projekt For Phase Update') }
         let(:test_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::CommentPhase', active: true, phase_tab_name: 'Comments') }
@@ -672,7 +629,7 @@ end
         end
 
         before do
-          allow_any_instance_of(ProjektPhase).to receive(:update).and_return(false)
+          allow_any_instance_of(ProjektPhase).to receive(:save).and_return(false)
           errors_mock = double('errors').as_null_object
           allow(errors_mock).to receive(:full_messages).and_return(['End date must be after start date'])
           allow_any_instance_of(ProjektPhase).to receive(:errors).and_return(errors_mock)

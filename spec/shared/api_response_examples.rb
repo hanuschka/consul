@@ -47,6 +47,22 @@ module ApiResponseExamples
     end
   end
 
+  def configuration_forbidden_response(&setup)
+    body_parameter_names = declared_body_parameter_names
+
+    response '403', 'forbidden - client lacks the instance configuration access right' do
+      before { api_client.update_column(:instance_configuration_access, false) }
+      body_parameter_names.each { |parameter_name| let(parameter_name) { {} } }
+      instance_exec(&setup) if setup
+
+      schema ApiResponseExamples::ERROR_SCHEMA
+
+      run_test! do |response|
+        expect(JSON.parse(response.body)['error']['type']).to eq('forbidden')
+      end
+    end
+  end
+
   # rswag requires a `let` for every declared body parameter, even for
   # examples where the payload is irrelevant (401/403 short-circuit before
   # the body is read).

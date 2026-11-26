@@ -44,6 +44,7 @@ module CsvServices
           "Anzahl Votes bei Auswahl",
           "Gebiet",
           "KI-generiertes Bild",
+          "Bildnachweis",
           "URL",
           "Ähnliche Beiträge"
         ]
@@ -67,6 +68,7 @@ module CsvServices
           investment.total_ballot_votes.to_s,
           investment.district&.name,
           investment.image&.ai_generated,
+          sanitize_for_csv(investment.image&.credits),
           Rails.application.routes.url_helpers.budget_investment_url(investment.budget, investment, host: @host),
           similar_contributions_count(investment)
         ]

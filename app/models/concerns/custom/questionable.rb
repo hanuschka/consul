@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "concerns", "questionable").to_s
+load Rails.root.join("app", "models", "concerns", "questionable.rb")
 
 module Questionable
   def max_votes

@@ -11,7 +11,7 @@ class MapLocation < ApplicationRecord
     "RegisteredAddress::District": "district"
   }.freeze
 
-  enum rendering_library: { leaflet: 0, mapbox: 1, virtualcity: 2,
+  enum :rendering_library, { leaflet: 0, mapbox: 1, virtualcity: 2,
                             leaflet_plus_masterportal: 3 }
 
   attr_accessor :skip_masterportal_geocoding

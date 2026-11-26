@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "content_blocks_helper").to_s
+load Rails.root.join("app", "helpers", "content_blocks_helper.rb")
 
 module ContentBlocksHelper
   # A <p> may only contain phrasing content, so any block-level body (e.g. the
@@ -137,7 +137,7 @@ module ContentBlocksHelper
   def wrap_with_admin_empty_hint(block_html)
     wrapper_classes = "content-block-empty-hint-wrap js-toggle-empty-hint-on-content is-content-empty"
 
-    hint = "<div class=\"content-block-empty-hint js-content-block-empty-hint js-studio-hide-on-preview\" role=\"note\">"
+    hint = +"<div class=\"content-block-empty-hint js-content-block-empty-hint js-studio-hide-on-preview\" role=\"note\">"
     hint << "<span class=\"content-block-empty-hint--icon\" aria-hidden=\"true\"><i class=\"fas fa-circle-info\"></i></span>"
     hint << "<span class=\"content-block-empty-hint--text\">"
     hint << "<strong class=\"content-block-empty-hint--title\">#{ERB::Util.html_escape(I18n.t("custom.content_blocks.admin_empty_hint_title"))}</strong>"

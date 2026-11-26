@@ -407,7 +407,7 @@ module Whatsapp::AssistantActions
   def tells_more?(action, param)
     return true if action != :view_projekt
 
-    projekt = ::Projekt.find_by(id: param.to_i)
+    projekt = ::Projekt.visible_for(nil).find_by(id: param.to_i)
 
     return false if projekt.blank?
 
@@ -841,7 +841,7 @@ module Whatsapp::AssistantActions
   end
 
   def projekt_label(param)
-    projekt = ::Projekt.find_by(id: param.to_i)
+    projekt = ::Projekt.visible_for(nil).find_by(id: param.to_i)
 
     return if projekt.blank?
 
@@ -858,11 +858,23 @@ module Whatsapp::AssistantActions
   # still reading "Jetzt abstimmen" would be the card's own mark contradicted by the
   # message under it.
   def phase_action_label(param, conversation)
-    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+    projekt_phase = visible_phase(param)
 
     return if projekt_phase.blank?
 
     ::Whatsapp::ProjektCardActions.label_for(projekt_phase, user: conversation.user)
+  end
+
+  # A phase a pill names, only while an anonymous visitor can see its projekt:
+  # no label or row line ever names what the portal hides.
+  def visible_phase(param)
+    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+
+    return if projekt_phase.blank?
+
+    if ::Whatsapp::EligiblePhasesQuery.projekt_visible?(projekt_phase.projekt)
+      projekt_phase
+    end
   end
 
   # The line under a row, for the rows whose twenty-character label cannot say which
@@ -898,7 +910,7 @@ module Whatsapp::AssistantActions
   # only thing that differs; ahead of the projekt's name because the description is
   # cut at its end, and the name is what the row above usually says already.
   def phase_row_description(param)
-    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+    projekt_phase = visible_phase(param)
 
     return if projekt_phase.blank?
 
@@ -928,7 +940,7 @@ module Whatsapp::AssistantActions
   end
 
   def phase_projekt_label(param)
-    projekt_phase = ::ProjektPhase.find_by(id: param.to_i)
+    projekt_phase = visible_phase(param)
 
     return if projekt_phase.blank?
 

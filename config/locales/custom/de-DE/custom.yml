@@ -383,9 +383,6 @@ de:
           placed: Pin gesetzt.
           removed: Pin entfernt.
           remove_hint: Pin entfernen
-          csv_pin_count:
-            one: 1 Pin gesetzt
-            other: "%{count} Pins gesetzt"
           limit_reached: Sie haben die maximale Anzahl an Pins gesetzt. Entfernen Sie einen Pin, um einen anderen zu setzen.
           outside_boundary: Dieser Punkt liegt außerhalb des zugelassenen Gebiets.
           error: Der Pin konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.

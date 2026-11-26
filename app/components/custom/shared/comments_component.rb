@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "shared", "comments_component").to_s
+load Rails.root.join("app", "components", "shared", "comments_component.rb")
 
 class Shared::CommentsComponent < ApplicationComponent
   private
@@ -47,9 +47,9 @@ class Shared::CommentsComponent < ApplicationComponent
 
     def pagination_links
       if params[:projekt_phase_id].present?
-        paginate comment_tree.root_comments, params: { action: "projekt_phase_footer_tab" }, remote: true
+        helpers.paginate comment_tree.root_comments, params: { action: "projekt_phase_footer_tab" }, remote: true
       else
-        paginate comment_tree.root_comments, params: { anchor: "comments" }
+        helpers.paginate comment_tree.root_comments, params: { anchor: "comments" }
       end
     end
 

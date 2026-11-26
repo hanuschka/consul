@@ -31,7 +31,7 @@ class Adm::ApiClientsController < Adm::BaseController
       .where(api_client_id: @api_client.id)
     filtered = Adm::ApiRequestLogsQuery.call(scope.includes(:api_client), params)
 
-    @pagy, @api_request_logs = pagy(filtered.order(created_at: :desc), items: 50)
+    @pagy, @api_request_logs = pagy(filtered.order(created_at: :desc), limit: 50)
 
     @logs_present = scope.exists?
     assign_log_filter_options(@api_client)
@@ -151,7 +151,10 @@ class Adm::ApiClientsController < Adm::BaseController
     end
 
     def api_client_params
-      params.require(:api_client).permit(:name, :domain, :access_level, :service_user_email, :use_system_user)
+      params.require(:api_client).permit(
+        :name, :domain, :access_level, :service_user_email, :use_system_user,
+        :instance_configuration_access
+      )
     end
 
     def service_user_attributes

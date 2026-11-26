@@ -26,9 +26,25 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       tags 'Ideas'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a paginated list of citizen ideas and proposals. Ideas are user-submitted suggestions for community improvements that may have been reviewed and accepted by administrators. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a paginated list of accepted citizen ideas. Ideas that are still pending, including ideas created through the API without `accepted: true`, are not listed until they are accepted. Filters and sorting apply to the whole list before it is paginated. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
+      parameter name: :acceptance, in: :query, type: :string, enum: %w[accepted pending all], required: false, description: 'Admin clients only: list accepted ideas (**default**), pending ideas, or all. Read-only clients always get accepted ideas.'
+
+      response '200', 'pending ideas listed for an admin client' do
+        let(:acceptance) { 'pending' }
+
+        before do
+          Idea.create!(author: api_client.user, resource_terms: true, title: 'Pending Idea', description: 'Waiting')
+          Idea.create!(author: api_client.user, resource_terms: true, admin_accepted_at: Time.current, title: 'Accepted Idea', description: 'Listed')
+        end
+
+        run_test! do |response|
+          titles = JSON.parse(response.body)['data']['ideas'].map { it['title'] }
+
+          expect(titles).to eq(['Pending Idea'])
+        end
+      end
 
       response '200', 'ideas found and returned' do
         before do
@@ -50,7 +66,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     ideas: { type: :array, items: { type: :object } }
+                     ideas: { type: :array, items: { '$ref' => '#/components/schemas/Idea' } }
                    },
                    required: ['ideas']
                  },
@@ -82,7 +98,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     ideas: { type: :array, items: { type: :object } }
+                     ideas: { type: :array, items: { '$ref' => '#/components/schemas/Idea' } }
                    },
                    required: ['ideas']
                  },
@@ -101,7 +117,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Submit a new citizen idea for community improvement. Ideas go through an admin review process before being published. Supports categorization, video attachments, location mapping, image attachments, and optional on-behalf-of attribution. Requires acceptance of terms and conditions. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Submit a new citizen idea for community improvement. A new idea is pending and not listed until it is accepted, either here with `accepted: true` or later through the update endpoint. Supports categorization, video attachments, location mapping, image attachments, and optional on-behalf-of attribution. Requires acceptance of terms and conditions. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :idea, in: :body, description: 'Idea submission with required title/description and optional category, location, video, image, and behalf-of information', schema: {
         type: :object,
@@ -115,23 +131,12 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               on_behalf_of: { type: :string, nullable: true },
               idea_category_id: { type: :integer, nullable: true },
               resource_terms: { type: :boolean },
-              map_location_attributes: {
-                type: :object,
-                nullable: true,
-                description: 'Geographic location data for mapping the idea',
-                properties: {
-                  id: { type: :integer, nullable: true },
-                  latitude: { type: :number, description: 'Latitude coordinate' },
-                  longitude: { type: :number, description: 'Longitude coordinate' },
-                  altitude: { type: :number, nullable: true },
-                  zoom: { type: :integer, nullable: true },
-                  features: { type: :string, nullable: true },
-                  rendering_library: { type: :string, nullable: true },
-                  show_admin_shape: { type: :boolean, nullable: true },
-                  _destroy: { type: :boolean, nullable: true }
-                },
-                required: %w[latitude longitude]
-              },
+              accepted: { type: :boolean, nullable: true, description: 'Set to true to accept the idea, which publishes it in the ideas list and starts its timeframe. Ideas created without it stay pending and are not listed.' },
+              official_answer: { type: :string, nullable: true, description: 'Official answer of the administration in the current language (HTML). Admin-only; not shown on the public site.' },
+              timeframe: { type: :integer, description: 'Days the idea collects supports after acceptance' },
+              votes_needed_for_success: { type: :integer, description: 'Supports the idea needs to succeed' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[title description official_answer]),
+              map_location_attributes: { '$ref' => '#/components/schemas/MapLocationWriteParams' },
               image_attributes: {
                 type: :object,
                 nullable: true,
@@ -150,7 +155,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               documents_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the idea. Upload documents as base64-encoded data.',
+                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the idea. New documents are attributed to the content author of the API client; the author cannot be set or changed via the API. Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...); invalid base64 returns 422. Returned documents carry a download url.',
                 items: {
                   type: :object,
                   properties: {
@@ -158,7 +163,6 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                     title: { type: :string, nullable: true, description: 'Document title or filename' },
                     attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
                     cached_attachment: { type: :string, nullable: true },
-                    user_id: { type: :integer, nullable: true },
                     _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
                   }
                 }
@@ -186,7 +190,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     idea: { type: :object }
+                     idea: { '$ref' => '#/components/schemas/Idea' }
                    },
                    required: ['idea']
                  }
@@ -246,7 +250,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     idea: { type: :object }
+                     idea: { '$ref' => '#/components/schemas/Idea' }
                    },
                    required: ['idea']
                  }
@@ -294,12 +298,46 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     idea: { type: :object }
+                     idea: { '$ref' => '#/components/schemas/Idea' }
                    },
                    required: ['idea']
                  }
                },
                required: ['data']
+
+        run_test!
+      end
+
+      response '200', 'idea found with public_data access, without the official answer' do
+        before { api_client.update!(access_level: :public_data) }
+
+        let(:idea) do
+          Idea.create!(
+            author: api_client.user,
+            resource_terms: true,
+            admin_accepted_at: Time.current,
+            title: 'Test Idea',
+            description: 'Test Description',
+            official_answer: 'Internal answer'
+          )
+        end
+        let(:id) { idea.id }
+
+        run_test! do |response|
+          idea_data = JSON.parse(response.body)['data']['idea']
+
+          expect(idea_data).not_to have_key('official_answer')
+          expect(idea_data['translations']['en']).not_to have_key('official_answer')
+        end
+      end
+
+      response '403', 'pending idea with public_data access' do
+        before { api_client.update!(access_level: :public_data) }
+
+        let(:idea) do
+          Idea.create!(author: api_client.user, resource_terms: true, title: 'Pending Idea', description: 'Waiting')
+        end
+        let(:id) { idea.id }
 
         run_test!
       end
@@ -317,7 +355,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update an existing idea with new content, category, location, video, or image. Can add, replace, or remove the idea image. All fields are optional - only provide fields to change. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update an existing idea with new content, category, location, video, or image, or accept it with `accepted: true`. Can add, replace, or remove the idea image. All fields are optional - only provide fields to change. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :idea, in: :body, description: 'Idea attributes to update (title, description, category, video_url, image, translations). Any field not provided remains unchanged.', schema: {
         type: :object,
@@ -330,6 +368,12 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               video_url: { type: :string, nullable: true },
               on_behalf_of: { type: :string, nullable: true },
               idea_category_id: { type: :integer, nullable: true },
+              accepted: { type: :boolean, nullable: true, description: 'true accepts the idea, so it appears in the ideas list and its timeframe starts; accepting an already accepted idea keeps the original acceptance date. false moves it back to pending, which removes it from the list.' },
+              official_answer: { type: :string, nullable: true, description: 'Official answer of the administration in the current language (HTML). Admin-only; not shown on the public site.' },
+              timeframe: { type: :integer, description: 'Days the idea collects supports after acceptance' },
+              votes_needed_for_success: { type: :integer, description: 'Supports the idea needs to succeed' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[title description official_answer]),
+              map_location_attributes: { '$ref' => '#/components/schemas/MapLocationWriteParams' },
               image_attributes: {
                 type: :object,
                 nullable: true,
@@ -348,7 +392,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
               documents_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true).',
+                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true). New documents are attributed to the content author of the API client; the author cannot be set or changed via the API. Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...); invalid base64 returns 422. Returned documents carry a download url.',
                 items: {
                   type: :object,
                   properties: {
@@ -356,7 +400,6 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                     title: { type: :string, nullable: true, description: 'Document title or filename' },
                     attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
                     cached_attachment: { type: :string, nullable: true },
-                    user_id: { type: :integer, nullable: true },
                     _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
                   }
                 }
@@ -392,7 +435,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     idea: { type: :object }
+                     idea: { '$ref' => '#/components/schemas/Idea' }
                    },
                    required: ['idea']
                  }
@@ -400,6 +443,72 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                required: ['data']
 
         run_test!
+      end
+
+      response '200', 'official answer, timeframe and texts per language written' do
+        let(:existing_idea) do
+          Idea.create!(
+            author: api_client.user,
+            resource_terms: true,
+            admin_accepted_at: Time.current,
+            title: 'Original Idea',
+            description: 'Original Description'
+          )
+        end
+        let(:id) { existing_idea.id }
+        let(:idea) do
+          {
+            idea: {
+              timeframe: 90,
+              votes_needed_for_success: 250,
+              translations: {
+                en: { official_answer: '<p>We will build it.</p>' },
+                de: { title: 'Mehr Bänke', description: 'Bänke im Stadtpark', official_answer: '<p>Wird umgesetzt.</p>' }
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     idea: { '$ref' => '#/components/schemas/Idea' }
+                   },
+                   required: ['idea']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          idea_data = JSON.parse(response.body)['data']['idea']
+
+          expect(idea_data['timeframe']).to eq(90)
+          expect(idea_data['votes_needed_for_success']).to eq(250)
+          expect(idea_data['official_answer']).to eq('<p>We will build it.</p>')
+          expect(idea_data['translations']['de']['official_answer']).to eq('<p>Wird umgesetzt.</p>')
+        end
+      end
+
+      response '200', 'pending idea accepted' do
+        let(:existing_idea) do
+          Idea.create!(
+            author: api_client.user,
+            resource_terms: true,
+            title: 'Pending Idea',
+            description: 'Waiting for acceptance'
+          )
+        end
+        let(:id) { existing_idea.id }
+        let(:idea) { { idea: { accepted: true } } }
+
+        run_test! do |response|
+          status = JSON.parse(response.body)['data']['idea']['status']
+
+          expect(status).to eq('active')
+          expect(Idea.accepted).to include(existing_idea)
+        end
       end
 
       response '403', 'forbidden - admin access required' do
@@ -515,7 +624,7 @@ RSpec.describe 'Ideas API', type: :request, openapi_spec: 'v1/swagger.yaml' do
                  data: {
                    type: :object,
                    properties: {
-                     idea: { type: :object }
+                     idea: { '$ref' => '#/components/schemas/Idea' }
                    },
                    required: ['idea']
                  }

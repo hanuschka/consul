@@ -1,32 +1,23 @@
-<!-- BlockID: F02 Split Text CTA – Links Text + Kontext, rechts CTA-Buttons -->
-<!-- Geeignet für: Bereichsabschluss mit Erklärung + Handlungsaufforderung -->
+<!-- BlockID: F02 Split Text CTA - Links Text und Kontext, rechts Buttons -->
+<!-- Geeignet für: Bereichsabschluss mit Erklärung und Handlungsaufforderung -->
+<!-- Editor: Etikett, Titel, Text und beide Buttons direkt im Block ändern; jeder Button bekommt einen Bearbeiten-Stift für den Link. -->
+<!-- Umbruch: zwei Spalten auf breiten Bildschirmen, unter etwa 600 px stehen die Buttons volle Breite unter dem Text. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H3, Text, Etikett und Buttons = 1rem -->
 
-<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; padding: 32px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+<div style="position: relative; overflow: hidden; background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <div class="row" style="align-items: center;">
+  <div style="position: relative; z-index: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 20px; align-items: center;">
 
-    <!-- Linke Spalte: Text -->
-    <div class="column small-12 medium-8">
-      <div style="margin-bottom: 16px;">
-        <div style="display: flex; flex-wrap: wrap; margin-bottom: 14px;">
-          <span style="background: rgba(5,150,105,0.1); border: 1px solid rgba(5,150,105,0.25); border-radius: 4px; padding: 5px 14px; font-size: 13px; color: #065f46; font-weight: 600;">Phase 2 gestartet</span>
-        </div>
-
-        <h3 style="font-size: 22px; font-weight: 700; letter-spacing: -0.3px; color: #1a202c; margin-bottom: 10px; margin-top: 0; padding-left: 16px; border-left: 3px solid var(--brand-color, #1779ba);">Jetzt Vorschl&auml;ge bewerten und priorisieren</h3>
-        <p style="font-size: 15px; color: #6b7280; margin: 0; line-height: 1.65;">In Phase 2 k&ouml;nnen Sie alle eingegangenen Vorschl&auml;ge bewerten und die wichtigsten nach oben voten. Die Top-10-Ideen flie&szlig;en in die Stadtplanung ein.</p>
-      </div>
+    <div style="border-left: 4px solid var(--brand-color, #1779ba); padding: 2px 0 2px 18px;">
+      <span style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; border: 1px solid #e8edf3; border-radius: 999px; padding: 2px 14px; margin: 0 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 700; color: var(--brand-color, #1779ba); box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 6px 14px -8px rgba(16,24,40,0.2);"><i class="fas fa-circle" aria-hidden="true" style="font-size: 8px;"></i> Phase 2 gestartet</span>
+      <h3 style="margin: 0 0 8px; hyphens: auto; overflow-wrap: break-word;">Jetzt Vorschläge bewerten und priorisieren</h3>
+      <p style="font-size: 1rem; line-height: 1.6; margin: 0;">In Phase 2 können Sie alle eingegangenen Vorschläge bewerten und die wichtigsten nach oben voten. Die Top-10-Ideen fließen in die Stadtplanung ein.</p>
     </div>
 
-    <!-- Rechte Spalte: CTA -->
-    <div class="column small-12 medium-4">
-      <div style="text-align: center;">
-        <a href="#" class="button"
-           style="display: flex; align-items: center; justify-content: center; padding: 14px 20px; text-decoration: none; font-size: 15px; font-weight: 700; height: 48px; box-sizing: border-box; margin-bottom: 10px; border-radius: 8px;">Vorschl&auml;ge bewerten</a>
-        <a href="#" class="button hollow"
-           style="display: flex; align-items: center; justify-content: center; padding: 11px 20px; text-decoration: none; font-size: 14px; font-weight: 600; height: 44px; box-sizing: border-box; border-radius: 8px;">Alle Beitr&auml;ge sehen</a>
-      </div>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <a href="#" class="button" style="text-decoration: none; width: 100%; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Vorschläge bewerten</a>
+      <a href="#" class="button hollow" style="text-decoration: none; width: 100%; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; background: #ffffff;">Alle Beiträge sehen</a>
     </div>
 
   </div>
-
 </div>

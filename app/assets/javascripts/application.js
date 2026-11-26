@@ -55,8 +55,6 @@
 //= require turbolinks
 //= require turbolinks_anchors
 //= require social-share-button
-//= require initial
-//= require ahoy
 //= require app
 //= require config/map_zoom
 //= require check_all_none
@@ -73,7 +71,6 @@
 //= require annotator
 //= require jquery.amsify.suggestags
 //= require tags
-//= require users
 //= require participation_not_allowed
 //= require advanced_search
 //= require registration_form
@@ -153,7 +150,6 @@ var initialize_modules = function() {
   App.Answers.initialize();
   App.Questions.initialize();
   App.Comments.initialize();
-  App.Users.initialize();
   App.ParticipationNotAllowed.initialize();
   App.Tags.initialize();
   App.FoundationExtras.initialize();
@@ -185,6 +181,7 @@ var initialize_modules = function() {
   App.PollMapPoints.initialize();
   App.PollMapResults.initialize();
   App.MunicipalPlansMap.initialize();
+  App.OffersMap.initialize();
   App.Polls.initialize();
   App.Sortable.initialize();
   App.TableSortable.initialize();
@@ -198,7 +195,6 @@ var initialize_modules = function() {
     App.ColumnsSelector.initialize();
   }
   App.AdminBudgetsWizardCreationStep.initialize();
-  App.AdminMachineLearningScripts.initialize();
   App.BudgetEditAssociations.initialize();
   App.BudgetHideMoney.initialize();
   App.Datepicker.initialize();
@@ -249,6 +245,7 @@ var destroy_non_idempotent_modules = function() {
   App.LegislationAnnotatable.destroy();
   App.Map.destroy();
   App.MunicipalPlansMap.destroy();
+  App.OffersMap.destroy();
   App.SocialShare.destroy();
   App.StikyHeader.destroy();
   App.PollsCustom.destroy();

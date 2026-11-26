@@ -1,8 +1,9 @@
 class LivestreamSerializer < BaseSerializer
   attr_reader :projekt_livestream
 
-  def initialize(projekt_livestream)
+  def initialize(projekt_livestream, client: nil)
     @projekt_livestream = projekt_livestream
+    @client = client
   end
 
   def serialize
@@ -41,15 +42,16 @@ class LivestreamSerializer < BaseSerializer
 
     if projekt_livestream.projekt_questions.any?
       livestream_data[:questions] = QuestionSerializer.serialize_collection(
-        projekt_livestream.projekt_questions
+        projekt_livestream.projekt_questions,
+        client: client
       )
     end
 
     livestream_data
   end
 
-  def self.serialize_collection(livestreams)
-    livestreams.map { |livestream| new(livestream).serialize }
+  def self.serialize_collection(livestreams, client: nil)
+    livestreams.map { |livestream| new(livestream, client: client).serialize }
   end
 end
 

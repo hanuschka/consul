@@ -39,7 +39,7 @@ class Adm::AttributeEditorComponent < ApplicationComponent
   def update_not_permitted?
     return false if update_policy.nil?
 
-    !update_policy.update?
+    !update_policy.public_send(@options[:policy_action] || :update?)
   end
 
   def ai_gated?
@@ -110,6 +110,10 @@ class Adm::AttributeEditorComponent < ApplicationComponent
     @options[:hide_label] == true
   end
 
+  def field_token(kind)
+    Adm::AttributeEditorToken.generate(@record, @attribute, kind)
+  end
+
   private
 
     def update_policy
@@ -141,7 +145,8 @@ class Adm::AttributeEditorComponent < ApplicationComponent
       elsif setting_type?
         "setting.#{@record.key}#{'_description' if type == :description}"
       elsif @record.is_a?(::SiteCustomization::Image) || @record.is_a?(::SiteCustomization::Video)
-        "adm.attribute_editor.#{record_type_key}.#{@record.name}_#{type}"
+        name_key = @attribute.to_s.in?(%w[image video]) ? @record.name : "#{@record.name}_#{@attribute}"
+        "adm.attribute_editor.#{record_type_key}.#{name_key}_#{type}"
       elsif @record.is_a?(::SiteCustomization::ContentBlock) && @record.key.present?
         ["adm.attribute_editor", record_type_key, @record.key, "#{@attribute}_#{type}"].join(".")
       else

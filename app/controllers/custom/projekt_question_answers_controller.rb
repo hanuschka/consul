@@ -1,4 +1,6 @@
 class ProjektQuestionAnswersController < ApplicationController
+  CLOSED_PROBLEMS = %i[phase_not_active phase_expired phase_not_current].freeze
+
   include GuestUsers
   before_action :authenticate_user!, unless: -> { current_user&.guest? }
 
@@ -14,10 +16,9 @@ class ProjektQuestionAnswersController < ApplicationController
   def create
     question_option = ProjektQuestionOption.find(params[:projekt_question_answer][:projekt_question_option_id])
     @question = question_option.question
-    question_phase = @question.projekt_phase
 
-    if !question_phase.active? && @question.root_question?
-      render text: "Question phase not active", status: :unprocessable_entity
+    if (problem = @question.permission_problem(current_user)).present?
+      render_permission_problem(problem)
     else
       @answer = ProjektQuestionAnswer.find_or_initialize_by(
         user: current_user,
@@ -34,7 +35,7 @@ class ProjektQuestionAnswersController < ApplicationController
       @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
       set_comment_flags(@comment_tree.comments)
 
-      render "custom/projekt_questions/show.js.erb", format: :js
+      render "custom/projekt_questions/show", formats: [:js]
     end
   end
 
@@ -46,8 +47,8 @@ class ProjektQuestionAnswersController < ApplicationController
       head :not_found and return
     end
 
-    if @question.permission_problem(current_user).present?
-      head :forbidden
+    if (problem = @question.permission_problem(current_user)).present?
+      render_permission_problem(problem)
     else
       @answer = ProjektQuestionAnswer.find(params[:id])
       @answer.update(question_option: question_option)
@@ -58,11 +59,19 @@ class ProjektQuestionAnswersController < ApplicationController
       @comment_tree = CommentTree.new(@commentable, params[:page], @current_order)
       set_comment_flags(@comment_tree.comments)
 
-      render "custom/projekt_questions/show.js.erb"
+      render "custom/projekt_questions/show", formats: [:js]
     end
   end
 
   private
+
+  def render_permission_problem(problem)
+    if problem.in?(CLOSED_PROBLEMS)
+      render json: { error: "closed" }, status: :unprocessable_entity
+    else
+      render json: { error: "forbidden" }, status: :forbidden
+    end
+  end
 
   def set_projekt
     @projekt = Projekt.find(params[:projekt_id])

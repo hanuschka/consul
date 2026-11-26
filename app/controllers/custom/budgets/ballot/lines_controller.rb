@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "budgets", "ballot", "lines_controller").to_s
+load Rails.root.join("app", "controllers", "budgets", "ballot", "lines_controller.rb")
 
 module Budgets
   module Ballot

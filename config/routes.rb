@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   draw "adm/landing_pages"
   draw "adm/deficiency_reports"
   draw "adm/municipal_plans"
+  draw "adm/offers"
   draw "adm/moderation"
   draw "adm/valuation"
   draw "adm/officing"
@@ -41,6 +42,7 @@ Rails.application.routes.draw do
   draw :projekt
   draw :ideas
   draw :municipal_plans
+  draw :offers
   draw :projekt_management
   draw :deficiency_report_management
   draw :idea_management
@@ -54,7 +56,7 @@ Rails.application.routes.draw do
   get "/consul.json", to: "installation#details"
   get "/latest_activity", to: "welcome#latest_activity" #custom
 
-  resources :stats, only: [:index]
+  get "/stats", to: redirect("/")
   resources :images, only: [:destroy]
   resources :documents, only: [:destroy]
   resources :follows, only: [:create, :destroy]

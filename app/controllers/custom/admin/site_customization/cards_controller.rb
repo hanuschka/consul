@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "admin", 'site_customization', "cards_controller").to_s
+load Rails.root.join("app", "controllers", "admin", 'site_customization', "cards_controller.rb")
 
 class Admin::SiteCustomization::CardsController < Admin::SiteCustomization::BaseController
   def index

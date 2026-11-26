@@ -161,7 +161,7 @@ class DocumentImageExtractor < ApplicationService
 
     Dir.mktmpdir("archive_image") do |directory|
       source_path = File.join(directory, File.basename(entry.name))
-      entry.extract(source_path)
+      entry.extract(File.basename(entry.name), destination_directory: directory)
 
       next convert_archive_entry(entry, source_path, directory) if content_type.blank?
 

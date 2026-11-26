@@ -1,3 +1,5 @@
+require "csv"
+
 class RegisteredAddress < ApplicationRecord
   validates :registered_address_city_id, :registered_address_street_id, :street_number, presence: true
 

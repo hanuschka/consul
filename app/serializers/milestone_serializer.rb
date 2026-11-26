@@ -1,18 +1,18 @@
 class MilestoneSerializer < BaseSerializer
+  TRANSLATED_ATTRIBUTES = %w[title description custom_date].freeze
+
   attr_reader :milestone
 
-  def initialize(milestone)
+  def initialize(milestone, client: nil)
     @milestone = milestone
+    @client = client
   end
 
   def serialize
     milestone_data = milestone.as_json(
       only: [
         :id,
-        :title,
-        :description,
         :publication_date,
-        :custom_date,
         :milestoneable_type,
         :milestoneable_id,
         :status_id,
@@ -21,12 +21,14 @@ class MilestoneSerializer < BaseSerializer
       ]
     )
 
-    if milestone.status.present?
-      milestone_data[:status] = {
-        id: milestone.status.id,
-        name: milestone.status.name
-      }
-    end
+    milestone_data.merge!(
+      title: milestone.title,
+      description: milestone.description,
+      custom_date: milestone.custom_date,
+      translations: serialize_translations(milestone, TRANSLATED_ATTRIBUTES),
+      status: serialize_status,
+      documents: DocumentSerializer.serialize_collection(milestone.documents)
+    )
 
     if milestone.milestoneable.present?
       milestoneable = milestone.milestoneable
@@ -50,7 +52,7 @@ class MilestoneSerializer < BaseSerializer
       end
     end
 
-    if milestone.respond_to?(:image) && milestone.image.present?
+    if milestone.image.present?
       serialized_image = ImageSerializer.new(milestone.image, include_variants: false).serialize
       milestone_data[:image] = serialized_image if serialized_image.present?
     end
@@ -58,7 +60,19 @@ class MilestoneSerializer < BaseSerializer
     milestone_data
   end
 
-  def self.serialize_collection(milestones)
-    milestones.map { |milestone| new(milestone).serialize }
+  def self.serialize_collection(milestones, client: nil)
+    milestones.map { |milestone| new(milestone, client: client).serialize }
   end
+
+  private
+
+    def serialize_status
+      return if milestone.status.blank?
+
+      {
+        id: milestone.status.id,
+        name: milestone.status.name,
+        description: milestone.status.description
+      }
+    end
 end

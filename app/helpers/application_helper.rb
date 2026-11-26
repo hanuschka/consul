@@ -37,7 +37,11 @@ module ApplicationHelper
   end
 
   def wysiwyg(text)
-    WYSIWYGSanitizer.new.sanitize(text)
+    html = WYSIWYGSanitizer.new.sanitize(text)
+    return html if Setting["extended_feature.gdpr.two_click_iframe_solution"].blank?
+    return html unless html.to_s.include?("</iframe>")
+
+    process_iframe_embeds(html).html_safe
   end
 
   def author_of?(authorable, user)

@@ -1,7 +1,7 @@
 # SDG goals and targets are seeded from the same fixed list on every instance,
 # so their code identifies one both here and on another instance, where their id
 # would not.
-class Projekts::Copying::Serializing::SdgCodeSerializer < ApplicationService
+class Projekts::Copying::Serializing::SDGCodeSerializer < ApplicationService
   MODEL_BY_TYPE = {
     "SDG::Goal" => SDG::Goal,
     "SDG::Target" => SDG::Target

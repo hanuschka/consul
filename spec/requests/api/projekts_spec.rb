@@ -11,7 +11,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a list of all projekts. By default ordered by creation date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring next at the top). By default returns only public projekts (activated and shown in the overview). Users with public_data access level can only access public projekts. Pagination is optional: by default all matching projekts are returned, but supplying 'page' (and optionally 'per_page', default 20) paginates the results and adds a 'pagination' object to the response. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a list of all projekts. By default ordered by creation date (oldest first); use 'sort_by' and 'sort_direction' to change the ordering (e.g. sort_by=total_duration_end&sort_direction=asc surfaces projekts expiring next at the top). By default returns only public projekts (activated and shown in the overview). Users with public_data access level can only access public projekts, and never see a projekt restricted to an individual group, matching what an anonymous visitor sees on the website. Pagination is optional: by default all matching projekts are returned, but supplying 'page' (and optionally 'per_page', default 20) paginates the results and adds a 'pagination' object to the response. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :filter, in: :query, type: :string, required: false,
                 description: <<~DESC
                   Filter projekts by lifecycle stage or special status. Valid values:
@@ -52,7 +52,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                 DESC
       parameter name: :only_public, in: :query, type: :boolean, required: false,
                 description: <<~DESC
-                  If false, returns all projekts (admin only); true returns only activated projekts shown in overview. Users with public_data access can only access public projekts.
+                  If false, returns all projekts (admin only); true returns only activated projekts shown in overview. Users with public_data access can only access public projekts and never see projekts restricted to an individual group.
 
                   **Default:** true (only public projekts).
                 DESC
@@ -269,7 +269,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           {
             projekt: {
               name: 'Test Projekt',
-              geozone_affiliated: false,
+              geozone_affiliated: "no_affiliation",
               show_start_date_in_frontend: true,
               show_end_date_in_frontend: true
             }
@@ -326,7 +326,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           {
             projekt: {
               name: 'Test Projekt',
-              geozone_affiliated: false
+              geozone_affiliated: "no_affiliation"
             }
           }
         end
@@ -359,7 +359,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       tags 'Projekts'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve a single projekt by ID with all its details. Can optionally include/exclude nested phases and content blocks. Returns full projekt hierarchy information, page metadata, and settings. #{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve a single projekt by ID with all its details. Can optionally include/exclude nested phases and content blocks. Returns full projekt hierarchy information, page metadata, and settings. Users with public_data access level get 403 for a projekt an anonymous visitor cannot open on the website (not activated, or restricted to an individual group). A projekt left out of the overview can still be retrieved, as on the website by its address. #{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :include_phases, in: :query, type: :boolean, required: false,
                 description: <<~DESC
                   If true, includes projekt phases in response with all phases, settings, and configuration. Users with public_data access will only see phases that are: visible to frontend (frontend_visibility=true), active, and within the current date range. Admin users see all phases.
@@ -538,6 +538,113 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
           }
         }
       )
+      request_body_example(
+        name: 'translations_and_shape',
+        summary: 'Write the description in two languages, set colour and icon, draw an area',
+        value: {
+          projekt: {
+            color: '#2e7d32',
+            icon: 'tree',
+            translations: {
+              de: { description: 'Neugestaltung des Marktplatzes' },
+              en: { description: 'Redesign of the market square' }
+            },
+            map_location_attributes: {
+              latitude: 51.4818,
+              longitude: 7.2162,
+              zoom: 15,
+              features: {
+                type: 'FeatureCollection',
+                features: [{
+                  type: 'Feature',
+                  geometry: { type: 'Polygon', coordinates: [[[7.21, 51.48], [7.22, 51.48], [7.22, 51.49], [7.21, 51.48]]] },
+                  properties: {}
+                }]
+              }
+            }
+          }
+        }
+      )
+
+      response '200', 'projekt updated with translations, colour and a drawn area' do
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:polygon) { [[[7.21, 51.48], [7.22, 51.48], [7.22, 51.49], [7.21, 51.48]]] }
+        let(:projekt) do
+          {
+            projekt: {
+              color: '#2e7d32',
+              icon: 'tree',
+              translations: {
+                de: { description: 'Neugestaltung des Marktplatzes' },
+                en: { description: 'Redesign of the market square' }
+              },
+              map_location_attributes: {
+                latitude: 51.4818,
+                longitude: 7.2162,
+                zoom: 15,
+                features: {
+                  type: 'FeatureCollection',
+                  features: [{ type: 'Feature', geometry: { type: 'Polygon', coordinates: polygon }, properties: {} }]
+                }
+              }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt: { '$ref' => '#/components/schemas/Projekt' }
+                   },
+                   required: ['projekt']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          projekt_data = JSON.parse(response.body)['data']['projekt']
+
+          expect(projekt_data['color']).to eq('#2e7d32')
+          expect(projekt_data['icon']).to eq('tree')
+          expect(projekt_data['translations']['de']['description']).to eq('Neugestaltung des Marktplatzes')
+          expect(projekt_data['translations']['en']['description']).to eq('Redesign of the market square')
+          expect(projekt_data['map_location']['features']['features'].first['geometry']['coordinates']).to eq(polygon)
+        end
+      end
+
+      response '200', 'map location updated in place when the body carries no id' do
+        let(:test_projekt) do
+          Projekt.create!(name: 'Original Name').tap do |created_projekt|
+            created_projekt.create_map_location!(latitude: 51.0, longitude: 7.0, zoom: 10)
+          end
+        end
+        let(:id) { test_projekt.id }
+        let(:projekt) { { projekt: { map_location_attributes: { latitude: 52.0, longitude: 8.0, zoom: 12 } } } }
+
+        run_test! do |response|
+          map_location_data = JSON.parse(response.body)['data']['projekt']['map_location']
+
+          expect(map_location_data['id']).to eq(test_projekt.map_location.id)
+          expect(map_location_data['latitude']).to eq(52.0)
+          expect(MapLocation.where(mappable: test_projekt).count).to eq(1)
+        end
+      end
+
+      response '422', 'language the instance does not offer' do
+        let(:test_projekt) { Projekt.create!(name: 'Original Name') }
+        let(:id) { test_projekt.id }
+        let(:projekt) { { projekt: { translations: { xx: { description: 'Unknown' } } } } }
+
+        run_test! do |response|
+          error_data = JSON.parse(response.body)['error']
+
+          expect(error_data['details']['translations']).to eq(['contain unsupported languages: xx'])
+          expect(test_projekt.reload.translations.map(&:locale)).not_to include(:xx)
+        end
+      end
 
       response '200', 'projekt updated successfully' do
         let(:test_projekt) { Projekt.create!(name: 'Original Name') }
@@ -964,16 +1071,25 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update a specific projekt configuration setting identified by key. Settings control feature flags and behaviors (e.g., show_map, enable_comments). Creates the setting if it does not exist, otherwise updates the existing value. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update one projekt setting identified by key. Only the keys listed in " \
+                  "`ProjektSettingsUpdate` can be changed, each with its type: switches take " \
+                  "`true`/`false` (the stored forms `\"active\"`/`\"\"` are accepted as well), the " \
+                  "external participation link an absolute http(s) URL, the default footer tab the " \
+                  "id of one of the projekt's phases. Unknown keys answer 404, values of the wrong " \
+                  "type 422. Every change is recorded in the audit trail. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :setting, in: :body, description: 'Setting key/value pair: key identifies the setting (e.g., show_map, enable_comments), value is the new setting value', schema: {
+      parameter name: :setting, in: :body, description: 'Setting key and its new value', schema: {
         type: :object,
         properties: {
           setting: {
             type: :object,
             properties: {
-              key: { type: :string, description: 'Setting key' },
-              value: { type: :string, description: 'Setting value' }
+              key: {
+                type: :string,
+                enum: ProjektSetting.defaults.keys.map(&:to_s),
+                description: 'Setting key'
+              },
+              value: { description: 'New value, typed as `ProjektSettingsUpdate` lists for the key' }
             },
             required: ['key', 'value']
           }
@@ -985,17 +1101,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt with Setting') }
         let(:id) { test_projekt.id }
         let(:setting) do
-          {
-            setting: {
-              key: 'test_setting',
-              value: 'test_value'
-            }
-          }
-        end
-
-        # Create the setting before the test runs
-        before do
-          test_projekt.projekt_settings.create!(key: 'test_setting', value: 'old_value')
+          { setting: { key: 'projekt_feature.sidebar.show_map', value: false } }
         end
 
         schema type: :object,
@@ -1008,7 +1114,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                        properties: {
                          id: { type: :integer },
                          key: { type: :string },
-                         value: { type: :string },
+                         value: { type: :string, nullable: true, description: 'Stored value' },
                          projekt_id: { type: :integer }
                        },
                        required: %w[id key value projekt_id]
@@ -1020,19 +1126,21 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                },
                required: %w[data message]
 
-        run_test!
+        run_test! do |response|
+          stored_setting = test_projekt.projekt_settings.find_by(key: 'projekt_feature.sidebar.show_map')
+          audit = stored_setting.audits.last
+
+          expect(JSON.parse(response.body)['data']['setting']['value']).to eq('')
+          expect(audit.audited_changes['value']).to eq(['active', ''])
+          expect(audit.comment).to eq("api_client:#{api_client.id}")
+        end
       end
 
-      response '404', 'setting not found' do
+      response '404', 'setting key is not configurable' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:id) { test_projekt.id }
         let(:setting) do
-          {
-            setting: {
-              key: 'nonexistent_setting',
-              value: 'test_value'
-            }
-          }
+          { setting: { key: 'nonexistent_setting', value: 'test_value' } }
         end
 
         schema type: :object,
@@ -1048,32 +1156,16 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  }
                }
 
-        run_test!
+        run_test! do
+          expect(test_projekt.projekt_settings.find_by(key: 'nonexistent_setting')).to be_nil
+        end
       end
 
-      response '422', 'invalid request' do
+      response '422', 'value of the wrong type' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:id) { test_projekt.id }
         let(:setting) do
-          {
-            setting: {
-              key: 'existing_setting',
-              value: 'invalid_value'  # This will fail validation
-            }
-          }
-        end
-
-        # Create the setting first, then mock update to fail
-        before do
-          test_projekt.projekt_settings.create!(key: 'existing_setting', value: 'old_value')
-
-          # Mock the update to fail validation
-          allow_any_instance_of(ProjektSetting).to receive(:update).and_return(false)
-
-          # Create errors mock for validation failure
-          errors_mock = double('errors').as_null_object
-          allow(errors_mock).to receive(:full_messages).and_return(['Value is invalid'])
-          allow_any_instance_of(ProjektSetting).to receive(:errors).and_return(errors_mock)
+          { setting: { key: 'projekt_option.general.external_participation_link', value: 'javascript:alert(1)' } }
         end
 
         schema type: :object,
@@ -1089,24 +1181,22 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  }
                }
 
-        run_test!
+        run_test! do
+          stored_setting = test_projekt.projekt_settings.find_by(key: 'projekt_option.general.external_participation_link')
+
+          expect(stored_setting.value).to be_blank
+        end
       end
 
       response '403', 'forbidden - admin access required' do
         before do
           api_client.update!(access_level: :public_data)
-          test_projekt.projekt_settings.create!(key: 'test_setting', value: 'old_value')
         end
 
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:id) { test_projekt.id }
         let(:setting) do
-          {
-            setting: {
-              key: 'test_setting',
-              value: 'test_value'
-            }
-          }
+          { setting: { key: 'projekt_feature.sidebar.show_map', value: true } }
         end
 
         schema type: :object,
@@ -1138,17 +1228,15 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Bulk-update several projekt settings in a single request. Provide a settings object mapping each existing setting key to its new value. Returns the list of updated keys and a per-key errors map for keys that could not be updated (e.g. unknown keys). #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Bulk-update several projekt settings in a single request. Every key must be " \
+                  "listed in `ProjektSettingsUpdate` and every value must match the key's type. " \
+                  "All or nothing: when one key is rejected no setting is written, `updated` is " \
+                  "empty and `errors` lists each problem per key. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :settings, in: :body, description: 'Object whose keys are setting keys and whose values are the new setting values', schema: {
         type: :object,
         properties: {
-          settings: {
-            type: :object,
-            description: 'Map of setting key => value. Each key must match an existing projekt setting.',
-            additionalProperties: { type: :string },
-            example: { 'show_map' => 'true', 'enable_comments' => 'false' }
-          }
+          settings: { '$ref' => '#/components/schemas/ProjektSettingsUpdate' }
         },
         required: ['settings']
       }
@@ -1157,11 +1245,12 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
         let(:test_projekt) { Projekt.create!(name: 'Projekt With Settings') }
         let(:id) { test_projekt.id }
         let(:settings) do
-          { settings: { 'show_map' => 'true' } }
-        end
-
-        before do
-          test_projekt.projekt_settings.create!(key: 'show_map', value: 'false')
+          {
+            settings: {
+              'projekt_feature.sidebar.show_map' => false,
+              'projekt_option.general.external_participation_link' => 'https://example.org/beteiligung'
+            }
+          }
         end
 
         schema type: :object,
@@ -1177,7 +1266,38 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                },
                required: ['data']
 
-        run_test!
+        before do
+          test_projekt
+          expect_any_instance_of(Projekt).to receive(:perform_sync_update_for_global_overview).once
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)['data']
+
+          expect(data['updated']).to match_array(settings[:settings].keys)
+          expect(test_projekt.projekt_settings.find_by(key: 'projekt_feature.sidebar.show_map').value).to eq('')
+        end
+      end
+
+      response '200', 'one rejected key - nothing is written' do
+        let(:test_projekt) { Projekt.create!(name: 'Projekt With Settings') }
+        let(:id) { test_projekt.id }
+        let(:settings) do
+          { settings: { 'projekt_feature.sidebar.show_map' => false, 'unknown.key' => true } }
+        end
+
+        before do
+          test_projekt
+          expect_any_instance_of(Projekt).not_to receive(:perform_sync_update_for_global_overview)
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)['data']
+
+          expect(data['updated']).to eq([])
+          expect(data['errors']).to eq('unknown.key' => ['is not a configurable key'])
+          expect(test_projekt.projekt_settings.find_by(key: 'projekt_feature.sidebar.show_map').value).to eq('active')
+        end
       end
 
       response '422', 'settings parameter missing' do
@@ -1253,16 +1373,7 @@ RSpec.describe 'Projekts API', type: :request, openapi_spec: 'v1/swagger.yaml' d
                  data: {
                    type: :object,
                    properties: {
-                     content_block: {
-                       type: :object,
-                       properties: {
-                         id: { type: :integer },
-                         body: { type: :string },
-                         name: { type: :string },
-                         locale: { type: :string },
-                         position: { type: :integer }
-                       }
-                     }
+                     content_block: { '$ref' => '#/components/schemas/ContentBlock' }
                    },
                    required: ['content_block']
                  },

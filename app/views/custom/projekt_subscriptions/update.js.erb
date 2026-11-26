@@ -1,0 +1,3 @@
+$("#<%= dom_id(@projekt, :subscription_switch) %>").replaceWith(
+  "<%= j render("projekt_subscriptions/switch", projekt_subscription: @projekt_subscription, path: projekt_subscription_path(@projekt)) %>"
+);

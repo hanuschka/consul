@@ -1,10 +1,10 @@
 <td style="<%= css_for_mailer_content %>">
   <p style="<%= css_for_mailer_text %>">
-    <%= t("mailers.resource_hidden.hi", username: @author.username) %>
+    <%= @author.recipient_greeting %>,
   </p>
 
   <p style="<%= css_for_mailer_text %>">
-    <%= t("mailers.resource_hidden.text1", text: @resource_text) %>
+    <%= t("mailers.resource_hidden.text1", resource_text: @resource_text) %>
   </p>
 
   <p style="<%= css_for_mailer_text %>">
@@ -28,6 +28,6 @@
   <p style="<%= css_for_mailer_text %>">
     <%= t("mailers.resource_hidden.sincerely") %>
     <br>
-    <%= t("mailers.resource_hidden.signature") %>
+    <%= t("mailers.shared.signature") %>
   </p>
 </td>

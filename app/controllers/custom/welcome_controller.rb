@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "welcome_controller").to_s
+load Rails.root.join("app", "controllers", "welcome_controller.rb")
 
 class WelcomeController < ApplicationController
   include Takeable
@@ -12,8 +12,8 @@ class WelcomeController < ApplicationController
   end
 
   def index
-    @header_image = header_image_attachment("header_image", "header_large")
-    @mobile_header_image = header_image_attachment("mobile_header_image", "header_mobile")
+    @header_image, @header_image_credits = header_image("header_image", "header_large")
+    @mobile_header_image, @mobile_header_image_credits = header_image("mobile_header_image", "header_mobile")
     @header_video = SiteCustomization::Video.find_by(name: "header_video")&.persisted_video
     @mobile_header_video = SiteCustomization::Video.find_by(name: "mobile_header_video")&.persisted_video
     @content_cards = SiteCustomization::ContentCard.homepage.active.to_a
@@ -35,11 +35,12 @@ class WelcomeController < ApplicationController
 
   private
 
-    def header_image_attachment(image_name, card_title)
+    def header_image(image_name, card_title)
       site_image = SiteCustomization::Image.by_name(image_name)
 
-      return site_image.image if site_image&.persisted_attachment?
+      return [site_image.image, site_image.credits] if site_image&.persisted_attachment?
 
-      Widget::Card.header.find_by(title: card_title)&.image&.attachment
+      card_image = Widget::Card.header.find_by(title: card_title)&.image
+      [card_image&.attachment, card_image&.credits]
     end
 end

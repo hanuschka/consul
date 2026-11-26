@@ -1,51 +1,34 @@
-<!-- BlockID: B07 – Hero Split Image Left: Bild links, Text rechts -->
+<!-- BlockID: B07 Hero Split Image Left - Bild links, Text rechts -->
 <!-- Geeignet für: Projektseiten mit Ortsbezug, Standortvorstellungen -->
-<!-- ANPASSEN: src-Attribut im img-Tag ersetzen -->
+<!-- Editor: Bild über das Bild-Werkzeug austauschen (Maus auf das Bild, Alternativtext setzen); Etiketten, Titel, Text und Buttons direkt bearbeiten, Link über den Stift. -->
+<!-- Umbruch: zwei Spalten auf breiten Bildschirmen, unter etwa 600 px steht das Bild oben und der Text darunter; Buttons brechen untereinander um. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H2, Text, Etiketten und Buttons 1rem -->
 
-<div style="position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); position: relative; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <div class="row" style="min-height: 420px;">
+  <div style="position: relative; background: #ffffff;">
+    <img src="https://placehold.co/700x600/1a365d/ffffff?text=Standort+%2F+Foto" alt="Projektstandort" style="display: block; width: 100%; height: 240px; height: clamp(220px, 40vw, 380px); min-height: 100%; object-fit: cover; margin: 0;">
+  </div>
 
-    <!-- Linke Spalte: Bild (randlos) -->
-    <div class="column small-12 medium-5">
-      <div style="position: relative; min-height: 420px; height: 100%; overflow: hidden;">
-        <img src="https://placehold.co/600x500/1a365d/ffffff?text=Standort+%2F+Foto" alt="Projektstandort" style=" width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
-        <div style="position: absolute; inset: 0; background: linear-gradient(to left, rgba(238,242,247,0.4) 0%, transparent 30%); pointer-events: none;"></div>
+  <div style="position: relative; z-index: 1; padding: 24px; padding: clamp(20px, 4vw, 36px); align-self: center; background: #ffffff; background: linear-gradient(160deg, #ffffff 0%, #eef4fa 100%); background: linear-gradient(160deg, #ffffff 0%, color-mix(in srgb, var(--brand-color, #1779ba) 9%, #ffffff) 100%);">
+    <div aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; top: 0; bottom: 0; left: -80px; width: 80px; background: linear-gradient(to right, rgba(255,255,255,0) 0%, #ffffff 100%); pointer-events: none;"></div><div aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; left: 0; right: 0; top: -56px; height: 56px; background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #ffffff 100%); pointer-events: none;"></div>
+
+    <div style="position: relative; z-index: 1;">
+
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px;">
+        <span style="display: inline-flex; align-items: center; gap: 8px; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 4px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-map-marker-alt" aria-hidden="true" style="font-size: 12px;"></i> Stadtteil Mitte</span>
+        <span style="display: inline-flex; align-items: center; gap: 8px; background: #e7f5ee; border: 1px solid #b7e0c9; border-radius: 999px; padding: 4px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700;"><i class="fas fa-circle" aria-hidden="true" style="font-size: 8px; color: #047857;"></i> Beteiligung offen</span>
       </div>
-    </div>
 
-    <!-- Rechte Spalte: Text + CTAs -->
-    <div class="column small-12 medium-7">
-      <div style="position: relative; padding: 52px 44px; background: linear-gradient(160deg, #f8f9fb 0%, #eef2f7 100%); height: 100%;">
+      <h2 style="margin: 0 0 12px; hyphens: auto; overflow-wrap: break-word;">Neugestaltung des Marktplatzes</h2>
 
-        <!-- Vertikale Akzentlinie rechts -->
-        <div style="position: absolute; right: 0; top: 40px; bottom: 40px; width: 3px; background: linear-gradient(180deg, var(--brand-color, #1779ba), rgba(23,121,186,0.15)); border-radius: 2px;"></div>
+      <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 20px; max-width: 36rem;">Der historische Marktplatz soll zu einem lebendigen Treffpunkt werden. Sagen Sie uns, was Ihnen wichtig ist: von Grünflächen über Sitzgelegenheiten bis hin zu Veranstaltungsflächen.</p>
 
-        <!-- Badge -->
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
-          <div style="background: rgba(23,121,186,0.07); border: 1px solid rgba(23,121,186,0.15); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: var(--brand-color, #1779ba); font-weight: 600; letter-spacing: 0.04em;">Stadtteil Mitte</div>
-          <div style="background: rgba(5,150,105,0.07); border: 1px solid rgba(5,150,105,0.15); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #065f46; font-weight: 600; letter-spacing: 0.04em;">Beteiligung offen</div>
-        </div>
-
-        <h3 style="font-size: 30px; font-weight: 800; color: #1a202c; margin-bottom: 16px; margin-top: 0; line-height: 1.2; letter-spacing: -0.4px;">Neugestaltung des Marktplatzes</h3>
-
-        <p style="font-size: 16px; color: #4b5563; line-height: 1.7; margin-bottom: 28px; margin-top: 0; max-width: 460px;">
-          Der historische Marktplatz soll zu einem lebendigen Treffpunkt werden. Sagen Sie uns, was Ihnen wichtig ist &ndash; von Gr&uuml;nfl&auml;chen &uuml;ber Sitzgelegenheiten bis hin zu Veranstaltungsfl&auml;chen.
-        </p>
-
-        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px;">
-          <a href="#" class="button"
-             style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 700; height: 48px; box-sizing: border-box; border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
-             onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'"
-             onmouseout="this.style.transform='none';this.style.boxShadow='none'">Idee einreichen</a>
-          <a href="#" class="button hollow"
-             style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 600; height: 48px; box-sizing: border-box; border-radius: 8px; transition: transform 0.2s ease, background 0.2s ease;"
-             onmouseover="this.style.transform='translateY(-2px)';this.style.background='rgba(23,121,186,0.05)'"
-             onmouseout="this.style.transform='none';this.style.background='transparent'">Karte ansehen</a>
-        </div>
-
+      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Idee einreichen</a></div>
+        <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button hollow" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; background: #ffffff;">Karte ansehen</a></div>
       </div>
-    </div>
 
+    </div>
   </div>
 </div>

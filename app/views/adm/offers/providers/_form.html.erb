@@ -1,0 +1,20 @@
+<% url = @provider.persisted? ? adm_offers_provider_path(@provider) : adm_offers_providers_path %>
+
+<%= form_with model: @provider, scope: :offer_provider, url: url do |f| %>
+  <%= render Kern::FormFieldComponent.new(label: Offer::Provider.human_attribute_name(:name), hint: t(".hints.name"),
+                                          required: true, form: f, attribute: :name) do %>
+    <%= f.text_field :name, label: false, placeholder: t(".placeholders.name") %>
+  <% end %>
+
+  <%= render Kern::FormFieldComponent.new(label: Offer::Provider.human_attribute_name(:email_list),
+                                          hint: t(".hints.email_list"), stacked: true,
+                                          form: f, attribute: :email_list) do %>
+    <%= f.text_area :email_list, label: false, rows: 8, placeholder: t(".placeholders.email_list") %>
+  <% end %>
+
+  <div class="d-flex gap-2 mb-4">
+    <%= kern_button(text: f.object.new_record? ? t("shared.create") : t("shared.submit"), icon: "save",
+                    type: "submit") %>
+    <%= kern_link_button(adm_offers_providers_path, text: t("shared.cancel"), style: :secondary) %>
+  </div>
+<% end %>

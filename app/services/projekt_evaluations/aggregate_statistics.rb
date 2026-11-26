@@ -301,42 +301,11 @@ class ProjektEvaluations::AggregateStatistics < ApplicationService
   end
 
   def build_answer_vote_totals(question_ids)
-    return empty_answer_vote_totals if question_ids.empty?
-
-    {
-      weighted: Poll::Answer
-        .where(question_id: question_ids)
-        .where.not(question_answer_id: nil)
-        .group(:question_id, :question_answer_id)
-        .sum(:answer_weight),
-      open_counts: Poll::Answer
-        .where(question_id: question_ids)
-        .where.not(open_answer_text: [nil, ""])
-        .group(:question_id, :question_answer_id)
-        .count,
-      partial_amount: ::Poll::PartialResult
-        .where(question_id: question_ids)
-        .group(:question_id, :question_answer_id)
-        .sum(:amount),
-      partial_counts: ::Poll::PartialResult
-        .where(question_id: question_ids)
-        .group(:question_id, :question_answer_id)
-        .count
-    }
-  end
-
-  def empty_answer_vote_totals
-    { weighted: {}, open_counts: {}, partial_amount: {}, partial_counts: {} }
+    ::Polls::AnswerVoteTotals.call(question_ids)
   end
 
   def answer_total_votes(answer, vote_totals)
-    key = [answer.question_id, answer.id]
-
-    if answer.open_answer?
-      (vote_totals[:open_counts][key] || 0) + (vote_totals[:partial_counts][key] || 0)
-    else
-      (vote_totals[:weighted][key] || 0) + (vote_totals[:partial_amount][key] || 0)
-    end
+    vote_totals.votes_for(answer)
   end
 
   def rating_average(vote_type, answers)

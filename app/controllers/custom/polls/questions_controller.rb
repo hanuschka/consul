@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "polls", "questions_controller").to_s
+load Rails.root.join("app", "controllers", "polls", "questions_controller.rb")
 
 class Polls::QuestionsController < ApplicationController
   include GuestUsers

@@ -16,6 +16,12 @@ de:
         ai_marker_tooltip_title: "Titelbild als KI-Bild kennzeichnen"
         ai_marker_tooltip_text: "Setzt den Hinweis „KI-generiertes Bild“ auf dem Titelbild. Aktivieren Sie ihn für Bilder, die mit KI erstellt oder bearbeitet wurden."
         ai_marker_tooltip_note: "Bilder, die über die Funktion „Bild generieren“ auf der Projektseite erstellt werden, werden automatisch als KI-generiert gekennzeichnet."
+        credit_button_label: "Bildnachweis bearbeiten"
+        credit_tooltip_text: "Zeigt einen Bildnachweis klein unten links auf dem Titelbild an, z. B. „©Name_stock.adobe.com“. Beim Ersetzen des Bildes wird der Nachweis entfernt."
+        credit_input_label: "Bildnachweis"
+        credit_save: "Speichern"
+        credit_cancel: "Abbrechen"
+        credit_failed: "Der Bildnachweis konnte nicht gespeichert werden. Bitte laden Sie die Seite neu."
       banner_generate_modal:
         title: "Titelbild mit KI generieren"
         description: "Erstellt ein Titelbild auf Basis von Projekttitel, Untertitel und optional den Projektinhalten. Mit einem eigenen Prompt können Sie das gewünschte Motiv genauer beschreiben."
@@ -89,6 +95,36 @@ de:
           clear: Zurücksetzen
           order_error: Das Ende darf nicht vor dem Beginn liegen.
           save_error: Der Zeitraum konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.
+        content_block_youtube_popup:
+          add_link: YouTube-Link hinzufügen
+          description: Fügen Sie den Link zu einem YouTube-Video ein. Unterstützt werden Links aus der Adresszeile, Teilen-Links (youtu.be), Shorts und Einbettungslinks; eine Startzeit im Link wird übernommen.
+          edit_link: YouTube-Link bearbeiten
+          invalid_url: Das ist kein gültiger YouTube-Link. Bitte kopieren Sie den Link direkt von YouTube.
+          placeholder: https://www.youtube.com/watch?v=…
+          url_label: YouTube-Link
+        content_block_progress_bar:
+          slider_label: Fortschritt in Prozent
+          color_button: Balkenfarbe
+        studio_color_picker:
+          presets_title: Farbpalette
+          recent_title: Zuletzt verwendet
+          custom_title: Eigene Farbe
+          native_label: Farbe frei wählen
+          hex_label: Farbwert als Hex-Code
+          apply: Übernehmen
+          hex_error: "Bitte einen Farbwert wie #1a2e44 eingeben."
+          colors:
+            brand: Hauptfarbe
+            navy: Nachtblau
+            blue: Blau
+            teal: Petrol
+            green: Grün
+            olive: Olivgrün
+            amber: Orange
+            red: Rot
+            magenta: Magenta
+            violet: Violett
+            slate: Schiefergrau
         toggle_background_label: Hintergrund
         toggle_background_tooltip: Weißen Hintergrund hinter dem Inhalt ein- oder ausblenden
         color_picker:
@@ -178,9 +214,12 @@ de:
             title: Aufbau
           projekt_start: Projektstart
           projekt_end: Geplante Fertigstellung
-          phases_subscription:
-            title: Benachrichtigungen
-            description: Möchten Sie zu diesem Projekt auf dem Laufenden bleiben?
+          projekt_subscription:
+            title: Projekt abonnieren
+            switch_label: Nachrichten zu diesem Projekt erhalten
+            hint: Sie erhalten Nachrichten der Stadt zu diesem Projekt, etwa Newsletter und Ankündigungen. Über einzelne neue Beiträge werden Sie nicht benachrichtigt.
+            sign_in_html: "%{link}, um dieses Projekt zu abonnieren."
+            sign_in_link: Melden Sie sich an
           share:
             title: Teilen
         tabs:
@@ -239,6 +278,8 @@ de:
         new_question_notification: "Neue Frage: %{question_title}"
         all_questions: Alle Fragen
         go_to_question: Zur Frage wechseln
+        answer_error: Ihre Stimme wurde nicht gespeichert. Bitte laden Sie die Seite neu und versuchen Sie es erneut.
+        answer_closed: Die Abstimmung ist beendet. Ihre Stimme wurde nicht gespeichert.
         participation_not_allowed:
           login_to_answer: Sie müssen sich %{signin} oder %{signup}, um an der Kurzumfrage teilzunehmen.
           organizations: Organisationen dürfen sich nicht an der Diskussion beteiligen

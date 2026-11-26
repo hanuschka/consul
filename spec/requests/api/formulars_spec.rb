@@ -9,63 +9,6 @@ RSpec.describe 'Formulars API', type: :request, openapi_spec: 'v1/swagger.yaml' 
 let(:existing_formular_phase) { create_projekt_phase('ProjektPhase::FormularPhase') }
 let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_phase.id) }
 
-  FORMULAR_RESPONSE_SCHEMA = {
-    type: :object,
-    properties: {
-      id: {
-        type: :integer,
-        description: 'Unique identifier for the formular',
-        example: 1
-      },
-      projekt_phase_id: {
-        type: :integer,
-        description: 'ID of the projekt phase this formular belongs to',
-        example: 5
-      },
-      formular_fields_count: {
-        type: :integer,
-        description: 'Number of form fields defined in this formular',
-        example: 12
-      },
-      formular_answers_count: {
-        type: :integer,
-        description: 'Number of participant responses submitted to this formular',
-        example: 45
-      },
-      projekt_phase: {
-        type: :object,
-        description: 'The projekt phase this formular belongs to',
-        properties: {
-          id: { type: :integer, example: 5 },
-          title: { type: :string, nullable: true, example: 'Feedback Phase' },
-          type: { type: :string, example: 'ProjektPhase::FormularPhase' },
-          projekt_id: { type: :integer, example: 2 }
-        }
-      },
-      projekt: {
-        type: :object,
-        description: 'The projekt this formular belongs to',
-        properties: {
-          id: { type: :integer, example: 2 },
-          title: { type: :string, example: 'Community Survey' }
-        }
-      },
-      created_at: {
-        type: :string,
-        format: :date_time,
-        description: 'Timestamp when the formular was created',
-        example: '2024-01-10T10:00:00Z'
-      },
-      updated_at: {
-        type: :string,
-        format: :date_time,
-        description: 'Timestamp when the formular was last modified',
-        example: '2024-01-15T14:30:00Z'
-      }
-    },
-    required: %w[id projekt_phase_id created_at updated_at]
-  }.freeze
-
   path '/api/projekt_phases/{projekt_phase_id}/formulars' do
     parameter name: :projekt_phase_id, in: :path, type: :integer, description: 'Projekt Phase ID (FormularPhase)'
 
@@ -89,7 +32,7 @@ let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_p
                    properties: {
                      formulars: {
                        type: :array,
-                       items: FORMULAR_RESPONSE_SCHEMA
+                       items: { '$ref' => '#/components/schemas/Formular' }
                      }
                    },
                    required: ['formulars']
@@ -121,7 +64,7 @@ let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_p
                  data: {
                    type: :object,
                    properties: {
-                     formular: FORMULAR_RESPONSE_SCHEMA
+                     formular: { '$ref' => '#/components/schemas/Formular' }
                    },
                    required: ['formular']
                  }
@@ -181,7 +124,7 @@ let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_p
                  data: {
                    type: :object,
                    properties: {
-                     formular: FORMULAR_RESPONSE_SCHEMA
+                     formular: { '$ref' => '#/components/schemas/Formular' }
                    },
                    required: ['formular']
                  }
@@ -205,31 +148,91 @@ let(:existing_formular) { Formular.create!(projekt_phase_id: existing_formular_p
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update a formular. The formular has no editable attributes besides its projekt phase association; this endpoint persists the record and returns it. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update the submission settings of a formular: its cutoff date and how many times one user may submit it. They are stored on the formular's phase, the same values /adm edits. Send only the settings to change; an empty `primary_cutoff_date` removes the cutoff. Invalid values return 422 and change nothing; a body without a `formular` object returns 400. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+
+      parameter name: :formular, in: :body, description: 'Formular settings to change', schema: {
+        type: :object,
+        properties: {
+          formular: {
+            type: :object,
+            properties: {
+              primary_cutoff_date: {
+                type: :string,
+                nullable: true,
+                description: 'ISO 8601 date (YYYY-MM-DD) after which no more submissions are accepted, or empty to remove the cutoff',
+                example: '2026-12-31'
+              },
+              submissions_limit: {
+                type: :integer,
+                description: 'How many times one user may submit the formular; a positive integer',
+                example: 3
+              }
+            }
+          }
+        },
+        required: ['formular']
+      }
 
       response '200', 'formular updated' do
         let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
         let(:projekt_phase) { ProjektPhase::FormularPhase.create!(projekt: test_projekt) }
         let(:test_formular) { Formular.create!(projekt_phase_id: projekt_phase.id) }
         let(:id) { test_formular.id }
+        let(:formular) do
+          { formular: { primary_cutoff_date: '2026-12-31', submissions_limit: 3 } }
+        end
 
         schema type: :object,
                properties: {
                  data: {
                    type: :object,
                    properties: {
-                     formular: FORMULAR_RESPONSE_SCHEMA
+                     formular: { '$ref' => '#/components/schemas/Formular' }
                    },
                    required: ['formular']
                  }
                },
                required: ['data']
 
-        run_test!
+        run_test! do |response|
+          settings = JSON.parse(response.body)['data']['formular']['settings']
+
+          expect(settings).to eq('primary_cutoff_date' => '2026-12-31', 'submissions_limit' => '3')
+          expect(projekt_phase.reload.regular_formular_cutoff_date).to eq(Date.new(2026, 12, 31))
+        end
+      end
+
+      response '422', 'invalid settings' do
+        let(:test_projekt) { Projekt.create!(name: 'Test Projekt') }
+        let(:projekt_phase) { ProjektPhase::FormularPhase.create!(projekt: test_projekt) }
+        let(:test_formular) { Formular.create!(projekt_phase_id: projekt_phase.id) }
+        let(:id) { test_formular.id }
+        let(:formular) do
+          { formular: { primary_cutoff_date: '31.12.2026', submissions_limit: 0 } }
+        end
+
+        schema ApiResponseExamples::ERROR_SCHEMA
+
+        run_test! do |response|
+          expect(JSON.parse(response.body)['error']['messages'].size).to eq(2)
+          expect(projekt_phase.reload.regular_formular_cutoff_date).to be_nil
+        end
+      end
+
+      response '400', 'formular object missing' do
+        let(:id) { existing_formular.id }
+        let(:formular) { {} }
+
+        schema ApiResponseExamples::ERROR_SCHEMA
+
+        run_test! do |response|
+          expect(JSON.parse(response.body)['error']['type']).to eq('bad_request')
+        end
       end
 
       response '404', 'formular not found' do
         let(:id) { 999999 }
+        let(:formular) { { formular: { submissions_limit: 2 } } }
 
         run_test!
       end

@@ -18,6 +18,8 @@ module HasRegisteredAddress
     end
 
     def set_address_attributes
+      params[:user]&.delete(:registered_address_id)
+
       if params[:form_registered_address_id].present? && params[:form_registered_address_id] != "0"
         registered_address = RegisteredAddress.find(params[:form_registered_address_id])
         params[:user][:registered_address_id] = registered_address.id

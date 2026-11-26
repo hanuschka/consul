@@ -1,10 +1,12 @@
-require_dependency Rails.root.join("app", "models", "geozone").to_s
+load Rails.root.join("app", "models", "geozone.rb")
 
 class Geozone < ApplicationRecord
   has_many :projekt_phase_geozones
   has_many :projekt_phases, through: :projekt_phase_geozones
   has_many :limited_projekts, through: :projekt_phases, source: :projekt
   has_and_belongs_to_many :affiliated_projekts, through: :geozones_projekts, class_name: 'Projekt'
+
+  audited
 
   def self.find_with_plz(plz)
     return nil unless plz.present?

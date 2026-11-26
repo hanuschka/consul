@@ -114,12 +114,11 @@ describe Whatsapp::StatePills do
   end
 
   describe "for a projekt" do
-    let(:projekt) { double(:projekt, id: 45) }
+    let(:projekt) { double(:projekt, id: 45, visible_for?: true) }
     let(:following) { false }
 
     before do
-      allow(Projekt).to receive_message_chain(:activated, :find_by)
-        .with(id: 45).and_return(projekt)
+      allow(Projekt).to receive(:find_by).with(id: 45).and_return(projekt)
       allow(Whatsapp::Subscriptions)
         .to receive(:following?).with(user: user, projekt: projekt).and_return(following)
 
@@ -179,9 +178,9 @@ describe Whatsapp::StatePills do
   end
 
   it "follows the last thing the turn surfaced" do
-    projekt = double(:projekt, id: 45)
+    projekt = double(:projekt, id: 45, visible_for?: true)
 
-    allow(Projekt).to receive_message_chain(:activated, :find_by).and_return(projekt)
+    allow(Projekt).to receive(:find_by).and_return(projekt)
     allow(Whatsapp::Subscriptions).to receive(:following?).and_return(false)
 
     Whatsapp::StatePills.focus_proposal(482)

@@ -17,6 +17,10 @@ class Adm::Projekts::ProjektPolicy < ApplicationPolicy
     manage_permitted?
   end
 
+  def contributions?
+    manage_permitted? || moderate_permitted? || approve_permitted?
+  end
+
   def destroy?
     manage_permitted?
   end

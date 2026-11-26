@@ -16,8 +16,9 @@ de:
             „whatsapp.broadcast_template“).
           not_configured: WhatsApp ist nicht vollständig konfiguriert.
           not_published: >-
-            Dieses Projekt ist derzeit nicht veröffentlicht. Es muss aktiviert sein und eine
-            veröffentlichte Projektseite haben, bevor eine Benachrichtigung versendet werden kann.
+            Dieses Projekt ist derzeit nicht veröffentlicht oder auf individuelle Gruppen
+            beschränkt. Es muss aktiviert sein, eine veröffentlichte Projektseite haben und für
+            alle sichtbar sein, bevor eine Benachrichtigung versendet werden kann.
           enqueued:
             one: Die WhatsApp-Benachrichtigung wird an 1 Person gesendet.
             other: Die WhatsApp-Benachrichtigung wird an %{count} Personen gesendet.

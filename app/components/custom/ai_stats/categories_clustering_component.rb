@@ -70,7 +70,7 @@ class AiStats::CategoriesClusteringComponent < ApplicationComponent
         commentable.is_a?(Budget::Investment)
       end
 
-      ActiveRecord::Associations::Preloader.new.preload(budget_commentables, :budget)
+      ActiveRecord::Associations::Preloader.new(records: budget_commentables, associations: :budget).call
 
       comments
     elsif @resource_class == Budget::Investment

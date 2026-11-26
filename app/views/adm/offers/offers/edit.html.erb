@@ -1,0 +1,46 @@
+<%= content_for :title, t(".title") %>
+
+<%= render Adm::HeaderComponent.new(title: t(".title"), breadcrumbs: @breadcrumbs,
+                                    back_button_url: adm_offers_root_path) %>
+
+<article class="kern-container mb-5">
+  <% policy = Adm::Offers::OfferPolicy.new(current_user, @offer) %>
+
+  <div class="d-flex align-items-center flex-wrap gap-4 mb-3">
+    <span class="d-flex align-items-center gap-2">
+      <strong><%= t("adm.offers.offers.index.table.review_status") %>:</strong>
+      <%= render "review_status", offer: @offer %>
+    </span>
+    <span class="d-flex align-items-center gap-2">
+      <strong><%= t("adm.offers.offers.index.table.visibility") %>:</strong>
+      <%= render "visibility", offer: @offer %>
+    </span>
+  </div>
+
+  <div class="adm-detail-action-row d-flex align-items-center flex-wrap gap-2 mb-4">
+    <% if !@offer.review_checked? && policy.mark_checked? %>
+      <%= form_with url: mark_checked_adm_offers_offer_path(@offer), method: :patch, class: "d-flex" do %>
+        <%= kern_button(type: :submit, text: t("adm.offers.offers.actions.mark_checked"),
+                        icon: "task_alt", style: :secondary) %>
+      <% end %>
+    <% end %>
+
+    <% if @offer.suspended? %>
+      <% if policy.unsuspend? %>
+        <%= form_with url: unsuspend_adm_offers_offer_path(@offer), method: :patch, class: "d-flex" do %>
+          <%= kern_button(type: :submit, text: t("adm.offers.offers.actions.unsuspend"),
+                          icon: "visibility", style: :secondary) %>
+        <% end %>
+      <% end %>
+    <% elsif policy.suspend? %>
+      <%= form_with url: suspend_adm_offers_offer_path(@offer), method: :patch, class: "d-flex" do %>
+        <%= kern_button(type: :submit, text: t("adm.offers.offers.actions.suspend"),
+                        icon: "visibility_off", style: :secondary) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= form_with model: @offer, url: adm_offers_offer_path(@offer), method: :patch, multipart: true do |form| %>
+    <%= render "form", form: form %>
+  <% end %>
+</article>

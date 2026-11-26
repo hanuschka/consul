@@ -1,4 +1,4 @@
-require_dependency "mitmachbox/error"
+require "mitmachbox/error"
 
 module Mitmachbox::TokenProvider
   module_function

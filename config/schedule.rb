@@ -41,6 +41,10 @@ every 1.day, at: "3:30 am", roles: [:cron] do
   rake "-s municipal_plans:apply_due_archiving"
 end
 
+every 1.day, at: "8:00 am", roles: [:cron] do
+  rake "-s offers:send_reminders"
+end
+
 every 2.hours do
   rake "-s stats:generate"
 end
@@ -103,6 +107,10 @@ every 1.day, at: "3:30 am", roles: [:cron] do
   rake "deficiency_reports:archive_closed"
 end
 
+every 1.hour, roles: [:cron] do
+  rake "deficiency_reports:management_reports"
+end
+
 every 1.day, at: "6:00 am", roles: [:cron] do
   rake "reminders:overdue_deficiency_reports"
   rake "reminders:not_assigned_deficiency_reports"
@@ -118,6 +126,7 @@ end
 
 every 1.day, at: "4:45 am", roles: [:cron] do
   rake "machine_translation:setting_cleanup"
+  rake "machine_translation:chrome_cleanup"
 end
 
 every 1.day, at: "3:00 am", roles: [:cron] do

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "legislation", "draft_version").to_s
+load Rails.root.join("app", "models", "legislation", "draft_version.rb")
 
 class Legislation::DraftVersion < ApplicationRecord
   clear_validators!
@@ -7,7 +7,7 @@ class Legislation::DraftVersion < ApplicationRecord
   validates :status, presence: true, inclusion: { in: ->(*) { VALID_STATUSES } }
 
   delegate :projekt_phase, to: :process
-  alias_attribute :legislation_phase, :projekt_phase
+  alias_method :legislation_phase, :projekt_phase
 
   def self.model_name
     mname = super

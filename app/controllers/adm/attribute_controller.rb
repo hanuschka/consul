@@ -2,9 +2,16 @@ module Adm
   class AttributeController < Adm::BaseController
     include Translatable
 
+    RECORD_CLASS_NAMES =
+      Adm::PolicyLookup::POLICY_CLASS_NAMES
+        .keys
+        .index_by { it.underscore.tr("/", "-") }
+        .freeze
+
     def update
       @record = find_record
       authorize @record, :update?, policy_class: policy_class_for(@record)
+      authorize_rendered_field!
       @kind = params[:kind]&.to_sym
 
       if ai_gated_blocked?
@@ -34,6 +41,7 @@ module Adm
           helpers.dom_id(@record, params[:attribute]),
           Adm::AttributeEditorComponent.new(@record, params[:attribute], params[:kind], **component_options)
         ),
+        credits_editor_stream,
         @whatsapp_webhook_alert
       ].compact
     end
@@ -67,6 +75,16 @@ module Adm
         )
       end
 
+      def credits_editor_stream
+        return if @kind != :image || !@record.has_attribute?(:credits)
+
+        turbo_stream.replace(
+          helpers.dom_id(@record, :credits_editor),
+          partial: "adm/shared/image_credits_editor",
+          locals: { record: @record }
+        )
+      end
+
       def attachment_kind?
         [:image, :video].include?(@kind)
       end
@@ -77,8 +95,20 @@ module Adm
       end
 
       def find_record
-        record_class = params[:record_type].tr("-", "/").classify.constantize
-        record_class.find(params[:id])
+        record_class_name = RECORD_CLASS_NAMES.fetch(params[:record_type].to_s) do
+          raise ActiveRecord::RecordNotFound
+        end
+
+        record_class_name.safe_constantize.find(params[:id])
+      end
+
+      def authorize_rendered_field!
+        field_token_valid = Adm::AttributeEditorToken.valid?(
+          params[:field_token], @record, params[:attribute], params[:kind]
+        )
+        return if field_token_valid
+
+        raise Pundit::NotAuthorizedError, "Field was not rendered as editable"
       end
 
       def permitted_params

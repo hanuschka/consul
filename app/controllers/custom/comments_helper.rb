@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "comments_helper").to_s
+load Rails.root.join("app", "helpers", "comments_helper.rb")
 
 module CommentsHelper
   def hide_comment_replies_by_default?

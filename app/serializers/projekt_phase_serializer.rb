@@ -1,10 +1,19 @@
 class ProjektPhaseSerializer < BaseSerializer
+  PRELOADS = [
+    :settings,
+    :translations,
+    :individual_group_values,
+    :geozone_restrictions,
+    :registered_address_districts,
+    :registered_address_streets
+  ].freeze
+
   attr_reader :projekt_phase
 
   def initialize(projekt_phase, options = {})
     @projekt_phase = projekt_phase
     @include_nested_fields = options.fetch(:include_nested_fields, false)
-    @current_api_client = options.fetch(:current_api_client, nil)
+    @client = options.fetch(:current_api_client, nil)
   end
 
   def serialize
@@ -30,31 +39,25 @@ class ProjektPhaseSerializer < BaseSerializer
       ]
     )
 
-    phase_data[:active] = false if phase_data[:active].nil?
+    phase_data["active"] = projekt_phase.active?
 
     # Add translated attributes if they exist
-    translatable_attributes = {}
-    if projekt_phase.respond_to?(:phase_tab_name)
-      translatable_attributes[:phase_tab_name] = projekt_phase.phase_tab_name || projekt_phase.type.split('::').last
-    end
-    if projekt_phase.respond_to?(:description)
-      translatable_attributes[:description] = projekt_phase.description
-    end
-    if projekt_phase.respond_to?(:cta_button_name)
-      translatable_attributes[:cta_button_name] = projekt_phase.cta_button_name
-    end
-    if projekt_phase.respond_to?(:welcome_text_in_show)
-      translatable_attributes[:welcome_text_in_show] = projekt_phase.welcome_text_in_show
-    end
-
-    phase_data.merge!(translatable_attributes) if translatable_attributes.any?
+    phase_data.merge!(current_locale_texts)
+    phase_data[:translations] = serialize_translations(projekt_phase)
 
     # Add settings
     phase_data.merge!(
       settings: projekt_phase_settings,
       individual_group_values: individual_group_values,
-      registered_address_districts: registered_address_districts
+      registered_address_districts: registered_address_districts,
+      geozone_restriction_ids: projekt_phase.geozone_restrictions.map(&:id),
+      registered_address_district_ids: projekt_phase.registered_address_districts.map(&:id),
+      registered_address_street_ids: projekt_phase.registered_address_streets.map(&:id)
     )
+
+    if admin_client? && projekt_phase.is_a?(ProjektPhase::MitmachboxPhase)
+      phase_data[:mitmachbox_survey_id] = projekt_phase.mitmachbox_survey_id
+    end
 
     # Add resources based on phase type (only if nested fields are requested)
     if @include_nested_fields
@@ -133,7 +136,7 @@ class ProjektPhaseSerializer < BaseSerializer
 
   def serialize_questions
     return [] unless projekt_phase.respond_to?(:questions)
-    projekt_phase.questions.as_json(only: [:id, :title, :created_at, :author_id])
+    projekt_phase.questions.as_json(only: [:id, :title, :created_at, *admin_only_author_id])
   end
 
   def serialize_formular
@@ -164,7 +167,12 @@ class ProjektPhaseSerializer < BaseSerializer
   def serialize_pins
     return [] unless projekt_phase.respond_to?(:projekt_point_of_interest_pins)
     projekt_phase.projekt_point_of_interest_pins.map do |pin|
-      pin_data = pin.as_json(only: [:id, :projekt_point_of_interest_category_id, :author_id, :created_at, :updated_at])
+      pin_data = pin.as_json(
+        only: [
+          :id, :projekt_point_of_interest_category_id, *admin_only_author_id,
+          :created_at, :updated_at
+        ]
+      )
 
       if pin.map_location.present?
         pin_data[:map_location] = {
@@ -191,8 +199,20 @@ class ProjektPhaseSerializer < BaseSerializer
 
   private
 
+  def admin_only_author_id
+    admin_client? ? [:author_id] : []
+  end
+
+  def current_locale_texts
+    texts = ProjektPhase.translated_attribute_names.to_h do |attribute_name|
+      [attribute_name, projekt_phase[attribute_name]]
+    end
+
+    texts.merge(phase_tab_name: projekt_phase.phase_tab_name || projekt_phase.type.split("::").last)
+  end
+
   def client_has_access_to_resources?
-    return true unless @current_api_client&.public_data?
+    return true unless client&.public_data?
     projekt_phase.frontend_visibility && projekt_phase.active && projekt_phase.current?
   end
 end

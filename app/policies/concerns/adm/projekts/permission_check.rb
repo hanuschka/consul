@@ -9,6 +9,10 @@ module Adm::Projekts::PermissionCheck
     @user&.has_pm_permission_to?("moderate", projekt_from_record)
   end
 
+  def approve_permitted?
+    @user&.has_pm_permission_to?("approve", projekt_from_record)
+  end
+
   def create_on_behalf_of_permitted?
     @user&.has_pm_permission_to?("create_on_behalf_of", projekt_from_record)
   end

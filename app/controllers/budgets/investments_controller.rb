@@ -80,7 +80,7 @@ module Budgets
       resolve_landing_page_for_projekt(@investment.projekt)
 
       if !@investment.projekt.visible_for?(current_user)
-        @individual_group_value_names = @investment.projekt.individual_group_values.pluck(:name)
+        @individual_group_value_names = @investment.projekt.individual_group_values.map(&:name)
         render "custom/pages/forbidden", layout: false
 
       elsif Setting.new_design_enabled?
@@ -141,7 +141,8 @@ module Budgets
         title: investment.title,
         budget_id: investment.budget.id,
         image_url: image_url,
-        image_ai_label_html: helpers.ai_image_label_html(investment.image)
+        image_ai_label_html: helpers.ai_image_label_html(investment.image),
+        image_credit_html: helpers.image_credit_html(investment.image)
       }.to_json
 
       respond_to do |format|

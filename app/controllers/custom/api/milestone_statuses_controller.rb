@@ -1,5 +1,4 @@
 class Api::MilestoneStatusesController < Api::BaseController
-  before_action :find_milestone, only: [:create], if: -> { params[:milestone_id].present? }
   before_action :find_milestone_status, only: [:show, :update, :destroy]
 
   def index
@@ -61,11 +60,7 @@ class Api::MilestoneStatusesController < Api::BaseController
   private
 
   def milestone_status_params
-    params.require(:milestone_status).permit(:name)
-  end
-
-  def find_milestone
-    Milestone.find(params[:milestone_id])
+    params.require(:milestone_status).permit(:name, :description)
   end
 
   def find_milestone_status

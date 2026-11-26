@@ -18,7 +18,7 @@ RSpec.describe "Poll Questions API", type: :request, openapi_spec: "v1/swagger.y
       parameter name: :per_page, in: :query, type: :integer, description: 'Number of items per page (**default:** 100, max: 2000)', required: false
 
       response "200", "questions found" do
-        let(:projekt) { Projekt.create!(name: "Projekt") }
+        let(:projekt) { Projekt.create!(name: "Projekt", activated: true) }
         let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
         let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
         let(:poll_id) { poll.id }
@@ -172,6 +172,56 @@ schema: Schemas::Polls::POLL_QUESTION_CREATE_PARAMS
         run_test! do |response|
           data = JSON.parse(response.body)
           expect(data["data"]["question"]["randomize_position"]).to eq(false)
+        end
+      end
+
+      response "201", "rating question with labels in two languages and a map position" do
+        let!(:administrator) { create_admin_user }
+        let(:projekt) { Projekt.create!(name: "Projekt") }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: "ProjektPhase::VotingPhase", active: true) }
+        let(:poll) { voting_phase.polls.create!(name: "Test Poll") }
+        let(:poll_id) { poll.id }
+        let(:question) do
+          {
+            question: {
+              translations: {
+                de: { title: "Wie bewerten Sie den Plan?" },
+                en: { title: "How do you rate the plan?" }
+              },
+              votation_type_attributes: {
+                vote_type: "rating_scale",
+                max_votes: 5,
+                translations: {
+                  de: { min_rating_scale_label: "schlecht", max_rating_scale_label: "sehr gut" },
+                  en: { min_rating_scale_label: "poor", max_rating_scale_label: "very good" }
+                }
+              },
+              map_location_attributes: { latitude: 51.48, longitude: 7.21, zoom: 14 }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     question: { "$ref" => "#/components/schemas/PollQuestion" }
+                   },
+                   required: ["question"]
+                 }
+               },
+               required: ["data"]
+
+        run_test! do |response|
+          question_data = JSON.parse(response.body)["data"]["question"]
+          votation_type_data = question_data["votation_type"]
+
+          expect(question_data["translations"]["de"]["title"]).to eq("Wie bewerten Sie den Plan?")
+          expect(votation_type_data["max_votes"]).to eq(5)
+          expect(votation_type_data["translations"]["en"]["max_rating_scale_label"]).to eq("very good")
+          expect(votation_type_data["translations"]["de"]["min_rating_scale_label"]).to eq("schlecht")
+          expect(question_data["map_location"]["latitude"]).to eq(51.48)
         end
       end
 

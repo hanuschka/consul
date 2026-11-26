@@ -37,6 +37,10 @@ module MachineTranslation
     glued(output).subset?(glued(source))
   end
 
+  def self.placeholders_supplied?(source, output)
+    (output.scan(INTERPOLATION) - source.scan(INTERPOLATION)).empty?
+  end
+
   def self.glued(text)
     text.enum_for(:scan, /(#{INTERPOLATION})(?=[[:alnum:]])/)
       .map { Regexp.last_match(1) }.to_set
@@ -60,6 +64,10 @@ module MachineTranslation
 
   def self.enabled?
     Deepl.configured?
+  end
+
+  def self.attribute_names(model)
+    model.translated_attribute_names - Array(model.try(:machine_translation_excluded_attributes))
   end
 
   def self.all_translations(record)

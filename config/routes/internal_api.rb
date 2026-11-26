@@ -36,6 +36,7 @@ namespace :internal_api do
   resources :projekt_phases do
     collection do
       post :reorder
+      get :participation_counts
     end
     member do
       post :send_notifications

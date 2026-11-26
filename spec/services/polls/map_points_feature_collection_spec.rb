@@ -61,4 +61,60 @@ describe Polls::MapPointsFeatureCollection do
 
     expect(described_class.new(question).coordinates).to eq([[50.90, 7.10]])
   end
+
+  describe "the export of a contextualised map question" do
+    let(:source) { create(:poll_question, poll: poll) }
+    let(:bundle) { create(:poll_question, :bundle, poll: poll, contextualize_by_poll_question_id: source.id) }
+    let!(:template) { create(:poll_question, :map_points, poll: poll, parent_question: bundle, given_order: 1) }
+
+    def pin_on(map_question, latitude, longitude)
+      answer = map_question.answers.new(author: create(:user))
+      answer.save_and_record_voter_participation
+      answer.map_points.create!(latitude: latitude, longitude: longitude)
+    end
+
+    before do
+      create(:poll_question_answer, question: source, title: "Radwege")
+      create(:poll_question_answer, question: source, title: "Beleuchtung")
+      bundle.regenerate_contexted_clones
+    end
+
+    it "contains the pins of every measure, each with its measure's title" do
+      radwege, beleuchtung = template.contexted_variants.sort_by(&:context_title).reverse
+      pin_on(radwege, 51.52, 6.92)
+      pin_on(beleuchtung, 51.53, 6.93)
+
+      features = described_class.new(template, export: true).call["features"]
+
+      expect(features.map { |feature| feature["properties"]["context_title"] }).to eq(["Radwege", "Beleuchtung"])
+      expect(features.map { |feature| feature["properties"]["created_at"] }).to all(be_present)
+    end
+
+    it "still finds the measures' pins after the template's subquestions were renumbered" do
+      pin_on(template.contexted_variants.first, 51.52, 6.92)
+      template.update_column(:given_order, 7)
+
+      features = described_class.new(template.reload, export: true).call["features"]
+
+      expect(features.size).to eq 1
+    end
+
+    it "keeps the evaluation map to the question's own pins" do
+      pin_on(template.contexted_variants.first, 51.52, 6.92)
+
+      expect(described_class.new(template).call["features"]).to be_empty
+    end
+  end
+
+  it "exports only its own pins for a map question that is not contextualised" do
+    place(create(:user), 50.90, 7.10)
+    other_question = create(:poll_question, :map_points, poll: poll)
+    other_answer = other_question.answers.new(author: create(:user))
+    other_answer.save_and_record_voter_participation
+    other_answer.map_points.create!(latitude: 48.1, longitude: 11.6)
+
+    features = described_class.new(question, export: true).call["features"]
+
+    expect(features.map { |feature| feature["geometry"]["coordinates"] }).to eq([[7.10, 50.90]])
+  end
 end

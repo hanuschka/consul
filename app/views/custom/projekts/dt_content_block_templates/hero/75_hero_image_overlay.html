@@ -1,41 +1,38 @@
-<!-- BlockID: B02 Image Overlay – Hero mit Vollbild-Hintergrundbild und dunklem Overlay -->
-<!-- Geeignet für: Bildstarke Intro-Bereiche, Ortsfotos, Projektbilder -->
-<!-- ANPASSEN: src-Attribut im img-Tag ersetzen -->
+<!-- BlockID: B02 Hero mit Bild - Projektbild, Titel, Aufrufe und Eckdaten -->
+<!-- Geeignet für: bildstarke Einstiege, Ortsfotos, Projektbilder -->
+<!-- Editor: Bild über das Bild-Werkzeug austauschen (Maus auf eine freie Bildstelle, Alternativtext setzen); der Textbereich lässt die Maus dafür durch. Eckdaten sind Listenelemente, „Weiteres Element hinzufügen“ kopiert das letzte; Icon über die Klasse fa-… tauschen. -->
+<!-- Umbruch: am Handy Titel, Buttons und Eckdaten untereinander, Buttons in voller Breite. Die Eckdaten-Karten ragen unten ins Foto hinein. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H2, aller Text 1rem -->
 
-<div style="position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 24px; min-height: 480px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.18);">
+<div style="border-radius: 16px; overflow: hidden; margin: 0; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <!-- Hintergrundbild (src anpassen) -->
-  <img src="https://placehold.co/1200x500/1a365d/ffffff?text=Ihr+Projektbild+hier" alt="Projektbild" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+  <div style="position: relative; display: grid; background: #1a2e44;">
+    <img src="https://placehold.co/1400x700/2f5d50/ffffff?text=Projektbild" alt="Blick über den Westpark" style="grid-row: 1; grid-column: 1; display: block; width: 100%; height: 340px; height: clamp(300px, 52vw, 460px); min-height: 100%; object-fit: cover; margin: 0;">
+    <div aria-hidden="true" class="js-content-block-element-not-editable" style="grid-row: 1; grid-column: 1; background: linear-gradient(180deg, rgba(10,20,35,0.05) 20%, rgba(10,20,35,0.80) 100%); pointer-events: none;"></div>
 
-  <!-- Dunkles Overlay mit Gradient -->
-  <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%);"></div>
-
-  <!-- Inhalt -->
-  <div style="position: relative; z-index: 1; text-align: center; padding: 48px 32px; max-width: 680px; width: 100%;">
-
-    <!-- Badge -->
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 24px;">
-      <div style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #ffffff; font-weight: 600; letter-spacing: 0.04em; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">Stadtentwicklung 2025</div>
-      <div style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #ffffff; font-weight: 600; letter-spacing: 0.04em; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">Beteiligung offen</div>
+    <div style="grid-row: 1; grid-column: 1; align-self: end; position: relative; z-index: 1; width: 100%; padding: 24px 24px 64px; padding: clamp(20px, 5vw, 44px) clamp(20px, 5vw, 44px) 68px; pointer-events: none;">
+      <span style="pointer-events: auto; display: inline-flex; align-items: center; gap: 8px; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 4px 14px; margin: 0 0 14px; font-size: 1rem; line-height: 1.6; font-weight: 700;"><i class="fas fa-circle" aria-hidden="true" style="font-size: 8px;"></i> Beteiligung läuft</span>
+      <h2 style="pointer-events: auto; color: #ffffff; margin: 0 0 10px; max-width: 34rem; hyphens: auto; overflow-wrap: break-word; text-shadow: 0 1px 2px rgba(0,0,0,0.35);">Gestalten Sie den Westpark mit</h2>
+      <p style="pointer-events: auto; font-size: 1rem; line-height: 1.6; color: #ffffff; margin: 0 0 20px; max-width: 34rem; text-shadow: 0 1px 2px rgba(0,0,0,0.35);">Was wünschen Sie sich: mehr Schatten, Platz zum Spielen, ruhige Ecken? Ihre Ideen fließen direkt in die Planung ein.</p>
+      <div style="pointer-events: auto; display: flex; flex-wrap: wrap; gap: 12px;">
+        <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Idee einreichen</a></div>
+        <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button hollow" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; color: #ffffff; border: 2px solid #ffffff; background: transparent;">Ideen ansehen</a></div>
+      </div>
     </div>
-
-    <h3 style="font-size: 34px; font-weight: 800; color: #ffffff; margin-bottom: 16px; margin-top: 0; line-height: 1.15; letter-spacing: -0.5px;">Gestalten Sie Ihren Stadtpark mit</h3>
-
-    <p style="font-size: 17px; color: rgba(255,255,255,0.88); margin-bottom: 32px; margin-top: 0; line-height: 1.65; max-width: 540px; margin-left: auto; margin-right: auto;">
-      Von der Idee zur Realität: Teilen Sie uns mit, was Sie sich für den Westpark wünschen. Ihre Stimme zählt.
-    </p>
-
-    <!-- CTAs -->
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px;">
-      <a href="#" class="button"
-         style="display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 700; height: 48px; box-sizing: border-box; border-radius: 8px; background: #ffffff; color: #1a2e44; transition: transform 0.2s ease, box-shadow 0.2s ease;"
-         onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.3)'"
-         onmouseout="this.style.transform='none';this.style.boxShadow='none'">Idee einreichen</a>
-      <a href="#" class="button hollow"
-         style="display: inline-flex; align-items: center; justify-content: center; color: #ffffff; padding: 14px 32px; text-decoration: none; font-size: 15px; font-weight: 600; height: 48px; box-sizing: border-box; border: 2px solid rgba(255,255,255,0.4); border-radius: 8px; background: transparent; transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;"
-         onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(255,255,255,0.7)';this.style.background='rgba(255,255,255,0.1)'"
-         onmouseout="this.style.transform='none';this.style.borderColor='rgba(255,255,255,0.4)';this.style.background='transparent'">Alle Beiträge ansehen</a>
-    </div>
-
   </div>
+
+  <ul style="position: relative; z-index: 1; list-style: none; margin: -40px 16px 0; margin: -40px clamp(16px, 4vw, 32px) 0; padding: 0 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 12px;">
+    <li style="display: flex; align-items: center; gap: 12px; margin: 0; background: rgba(255,255,255,0.8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid #e8edf3; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="far fa-calendar-alt" style="font-size: 16px;"></i></span>
+      <div style="flex: 1 1 auto; min-width: 0;"><span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Bis 30. November</span><span style="display: block; font-size: 1rem; line-height: 1.6;">Ideen einreichen</span></div>
+    </li>
+    <li style="display: flex; align-items: center; gap: 12px; margin: 0; background: rgba(255,255,255,0.8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid #e8edf3; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-map-marker-alt" style="font-size: 16px;"></i></span>
+      <div style="flex: 1 1 auto; min-width: 0;"><span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Westpark</span><span style="display: block; font-size: 1rem; line-height: 1.6;">4,2 Hektar Grünfläche</span></div>
+    </li>
+    <li style="display: flex; align-items: center; gap: 12px; margin: 0; background: rgba(255,255,255,0.8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid #e8edf3; border-radius: 12px; padding: 14px 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-users" style="font-size: 16px;"></i></span>
+      <div style="flex: 1 1 auto; min-width: 0;"><span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Für alle</span><span style="display: block; font-size: 1rem; line-height: 1.6;">ohne Anmeldung lesen</span></div>
+    </li>
+  </ul>
 </div>

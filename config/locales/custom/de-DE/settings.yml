@@ -123,8 +123,6 @@ de:
       allow_attached_documents_description: "Ermöglicht Nutzern das Hochladen von Dokumenten für Vorschläge und Investitionsvorschlägen"
       guides: "Anleitungen zum Erstellen von Vorschlägen und Investitionsprojekten"
       guides_description: "Zeigt eine Anleitung an, um Vorschlägen von Investitionsprojekten zu unterscheiden, falls es ein aktives partipatives Budget gibt"
-      public_stats: "Statistiken"
-      public_stats_description: "Statistiken im Administrationsbereich anzeigen"
       help_page: "Hilfeseite"
       help_page_description: 'Zeigt eine Hilfeseite zu den aktivieren Modulen'
       translation_interface: "Übersetzung Interface"

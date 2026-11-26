@@ -2,49 +2,28 @@
 <% mobile_header_image_attachment = local_assigns[:mobile_header_image_attachment] %>
 <% header_video_attachment = local_assigns[:header_video_attachment] %>
 <% mobile_header_video_attachment = local_assigns[:mobile_header_video_attachment] %>
+<% header_image_credits = local_assigns[:header_image_credits] %>
+<% mobile_header_image_credits = local_assigns[:mobile_header_image_credits] %>
 
 <% if header_image_attachment&.attached? %>
   <style>
-      <% image_variant = header_image_attachment.variant(resize_to_limit: [1920, nil], saver: { quality: 85 }, strip: true, format: 'jpeg') %>
-
-      .home-page .homepage-image-header {
-        background-image: url("<%= polymorphic_path(image_variant) %>");
-        background-size: cover;
-        background-position: top;
-      }
-
-      .top-bar-wrapper {
-        background: transparent;
-      }
-  </style>
-<% end %>
-
-
-<%
-  mobile_header_attachment_to_use =
-    if mobile_header_image_attachment&.attached?
-      mobile_header_image_attachment
-    elsif header_image_attachment&.attached?
-      header_image_attachment
-    end
-%>
-
-<% if mobile_header_attachment_to_use&.attached? %>
-  <% mobile_image_variant = mobile_header_attachment_to_use.variant(resize_to_limit: [nil, 1400], saver: { quality: 90 }, strip: true, format: 'jpeg') %>
-
-  <style>
-    @media(max-width: 750px) {
-      .home-page .homepage-image-header{
-        background-image: url("<%= polymorphic_path(mobile_image_variant) %>");
-        background-size: cover;
-        background-position: top;
-      }
+    .top-bar-wrapper {
+      background: transparent;
     }
   </style>
 <% end %>
 
 <% any_header_video = header_video_attachment&.attached? || mobile_header_video_attachment&.attached? %>
-<div class="homepage-image-header not-print">
+<div class="homepage-image-header not-print <%= "-with-video" if any_header_video %>">
+  <%= render Shared::HomepageHeaderImageComponent.new(
+    desktop_attachment: header_image_attachment,
+    mobile_attachment: mobile_header_image_attachment,
+    desktop_credits: header_image_credits,
+    mobile_credits: mobile_header_image_credits,
+    desktop_video: header_video_attachment&.attached?,
+    mobile_video: mobile_header_video_attachment&.attached?
+  ) %>
+
   <% if header_video_attachment&.attached? %>
     <video class="homepage-image-header--video homepage-image-header--video--desktop js-homepage-header-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
       <source src="<%= polymorphic_path(header_video_attachment) %>" type="<%= header_video_attachment.content_type %>">

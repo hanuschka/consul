@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "dashboard_controller").to_s
+load Rails.root.join("app", "controllers", "dashboard_controller.rb")
 
 class DashboardController < Dashboard::BaseController
   helper_method :dashboard_action, :active_resources, :course

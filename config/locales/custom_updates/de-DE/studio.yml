@@ -42,6 +42,7 @@ de:
       upload_image:
         title: "Bilder verwalten"
         button_label: "Bild hochladen"
+        load_failed: "Das ausgewählte Bild konnte nicht geladen werden. Das bisherige Bild bleibt erhalten."
       upload_document:
         title: "Dokumente verwalten"
         button_label: "Dokument hochladen"

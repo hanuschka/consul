@@ -5,6 +5,7 @@ module Adm
       "projekt_manager" => ProjektManager,
       "deficiency_report_manager" => DeficiencyReportManager,
       "idea_manager" => IdeaManager,
+      "offer_manager" => OfferManager,
       "moderator" => Moderator,
       "valuator" => Valuator,
       "officing_manager" => OfficingManager,
@@ -31,7 +32,7 @@ module Adm
 
     def create_pending
       role_class = role_class_from_param
-      authorize role_class, :index?, policy_class: policy_class_for(role_class)
+      authorize role_class, :create?, policy_class: policy_class_for(role_class)
 
       @pending = PendingRoleAssignment.new(
         email: params[:email],
@@ -53,7 +54,7 @@ module Adm
 
     def destroy_pending
       role_class = role_class_from_param
-      authorize role_class, :index?, policy_class: policy_class_for(role_class)
+      authorize role_class, :destroy?, policy_class: policy_class_for(role_class)
 
       @pending = PendingRoleAssignment.find(params[:pending_id])
       @pending.destroy!
@@ -93,8 +94,10 @@ module Adm
           adm_valuators_path
         when "OfficingManager"
           adm_officing_managers_path
+        when "OfferManager"
+          adm_offers_managers_path
         else
-          request.referer || adm_root_path
+          url_from(request.referer) || adm_root_path
         end
       end
 
@@ -104,8 +107,10 @@ module Adm
           adm_projekts_managers_path
         when "LandingPageManager"
           adm_landing_pages_managers_path
+        when "OfferManager"
+          adm_offers_managers_path
         else
-          request.referer || adm_root_path
+          url_from(request.referer) || adm_root_path
         end
       end
   end

@@ -9,7 +9,7 @@ class ProjektImports::Builders::EventBuilder < ProjektImports::Builders::Base
         datetime: event["datetime"],
         end_datetime: event["end_datetime"],
         location: event["location"],
-        weblink: event["weblink"]
+        weblink: WebLink.normalize(event["weblink"])
       )
     rescue ActiveRecord::RecordInvalid => e
       raise ProjektImports::Builders::BuilderError, "event(#{event['title']}): #{e.message}"

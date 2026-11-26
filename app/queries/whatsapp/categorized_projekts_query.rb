@@ -60,7 +60,7 @@ class Whatsapp::CategorizedProjektsQuery < ApplicationQuery
     # say how many were left out, which the capped window cannot answer.
     def window(key, limit:, offset:)
       Rails.cache.fetch(cache_key(key, limit: limit, offset: offset), expires_in: CACHE_TTL) do
-        scope = CATEGORY_SCOPES.fetch(key).call
+        scope = CATEGORY_SCOPES.fetch(key).call.visible_for(nil)
 
         {
           key: key,
@@ -98,6 +98,11 @@ class Whatsapp::CategorizedProjektsQuery < ApplicationQuery
     end
 
     def projekts_by_id(ids)
-      Projekt.index_order_all.where(id: ids).includes(:page).index_by(&:id)
+      Projekt
+        .index_order_all
+        .visible_for(nil)
+        .where(id: ids)
+        .includes(:page)
+        .index_by(&:id)
     end
 end

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "application_record").to_s
+load Rails.root.join("app", "models", "application_record.rb")
 
 class ApplicationRecord < ActiveRecord::Base
 end

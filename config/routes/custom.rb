@@ -1,3 +1,7 @@
+# The app uploads through its own /direct_uploads. Rails' endpoint stays unused
+# and accepts forged blob metadata (identified/analyzed) from the client.
+match "/rails/active_storage/direct_uploads", to: proc { [404, {}, []] }, via: :all
+
 delete "account/disconnect_identity", to: "account#disconnect_identity", as: :disconnect_identity_account
 
 get "/map_data", to: "map_data#show", as: :map_data
@@ -126,7 +130,6 @@ get "/:landing_page_slug/budgets/:budget_id/investments/:id",
   to: redirect("/budgets/%{budget_id}/investments/%{id}")
 
 
-post "/voice_assistant/create_session",               to: "voice_assistant#create_session"
 post "/voice_assistant/create_session_v2",            to: "voice_assistant#create_session_v2"
 get  "/voice_assistant/geocode_location_coordinates", to: "voice_assistant#geocode_location_coordinates"
 
@@ -152,3 +155,5 @@ namespace :api do
     resources :category_icons, only: [:create]
   end
 end
+
+resources :accessibility_reports, only: :create

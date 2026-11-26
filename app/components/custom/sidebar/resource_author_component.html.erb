@@ -41,7 +41,7 @@
         <% if user.proposals.exists? %>
           <%= link_to user_path(user), class: "sidebar-card--count-line" do %>
             <div>
-              Vorschläge
+              <%= t("custom.general.resource_names.proposals") %>
             </div>
             <div>
               <%= user.proposals.count %>
@@ -52,7 +52,7 @@
         <% if user.debates.exists? %>
           <%= link_to user_path(user), class: "sidebar-card--count-line" do %>
             <div class="sidebar-resource-author--resources-name">
-              Diskussionen
+              <%= t("custom.general.resource_names.debates") %>
             </div>
             <div class="sidebar-resource-author--resources-count">
               <%= user.debates.count %>
@@ -63,7 +63,7 @@
         <% if user.comments.exists? %>
           <%= link_to user_path(user), class: "sidebar-card--count-line" do %>
             <div class="sidebar-resource-author--resources-name">
-              Kommentare
+              <%= t("custom.general.resource_names.comments") %>
             </div>
             <div class="sidebar-resource-author--resoures-count">
               <%= user.comments.count %>

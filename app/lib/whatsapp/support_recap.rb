@@ -18,6 +18,14 @@ module Whatsapp::SupportRecap
 
   COUNT_KEY = "supports".freeze
 
+  # Stands in for the recap when the proposal's projekt is no longer public:
+  # taking a support back stays possible, but nothing may name what it was on.
+  UNLISTED_WITHDRAWN_HINT = "The support has been taken back. The contribution belongs to a " \
+                            "projekt that is no longer public, so nothing about it was sent " \
+                            "and nothing about it may be said: confirm in one short line that " \
+                            "the support is withdrawn, without naming the contribution, its " \
+                            "projekt or its count.".freeze
+
   module_function
 
   def registered_block(account:, proposal:, supports:)

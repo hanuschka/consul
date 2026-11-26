@@ -16,6 +16,12 @@ en:
         ai_marker_tooltip_title: "Mark banner as an AI image"
         ai_marker_tooltip_text: "Adds the \"AI-generated image\" notice to the banner. Turn it on for pictures created or edited with AI."
         ai_marker_tooltip_note: "Images created with the \"Generate image\" function on the projekt page are marked as AI-generated automatically."
+        credit_button_label: "Edit image credit"
+        credit_tooltip_text: "Shows an image credit small at the bottom left of the banner image, e.g. \"©Name_stock.adobe.com\". Replacing the image removes the credit."
+        credit_input_label: "Image credit"
+        credit_save: "Save"
+        credit_cancel: "Cancel"
+        credit_failed: "The image credit could not be saved. Please reload the page."
       banner_generate_modal:
         title: "Generate banner image with AI"
         description: "Creates a banner image based on the projekt title, subtitle and optionally the projekt content. Use a custom prompt to describe the desired image more precisely."
@@ -61,8 +67,8 @@ en:
         index_order_upcoming_title: 'The "Future project plans" tab lists participation projects that will only take place in the future.'
         index_order_individual_list: "Individual list"
         index_order_individual_list_title: "Individual list"
-        index_order_drafts: "Entwürfe"
-        index_order_drafts_title: "Entwürfe"
+        index_order_drafts: "Drafts"
+        index_order_drafts_title: "Drafts"
       search_form:
         placeholder: Search...
       homepage_search_form:
@@ -89,6 +95,36 @@ en:
           clear: Reset
           order_error: The end must not be before the start.
           save_error: The period could not be saved. Please try again.
+        content_block_youtube_popup:
+          add_link: Add YouTube link
+          description: Paste the link to a YouTube video. Links from the address bar, share links (youtu.be), Shorts and embed links all work; a start time in the link is kept.
+          edit_link: Edit YouTube link
+          invalid_url: This is not a valid YouTube link. Please copy the link straight from YouTube.
+          placeholder: https://www.youtube.com/watch?v=…
+          url_label: YouTube link
+        content_block_progress_bar:
+          slider_label: Progress in percent
+          color_button: Bar color
+        studio_color_picker:
+          presets_title: Palette
+          recent_title: Recently used
+          custom_title: Custom color
+          native_label: Choose any color
+          hex_label: Color as hex code
+          apply: Apply
+          hex_error: "Please enter a color value such as #1a2e44."
+          colors:
+            brand: Brand color
+            navy: Navy
+            blue: Blue
+            teal: Teal
+            green: Green
+            olive: Olive
+            amber: Orange
+            red: Red
+            magenta: Magenta
+            violet: Violet
+            slate: Slate
         toggle_background_label: Background
         toggle_background_tooltip: Show or hide the white background behind the content
         color_picker:
@@ -180,9 +216,12 @@ en:
             title: Composition
           projekt_start: Projekt start
           projekt_end: Planned completion
-          phases_subscription:
-            title: Notifications
-            description: Would you like to stay current?
+          projekt_subscription:
+            title: Subscribe to project
+            switch_label: Receive messages about this project
+            hint: You will receive messages from the city about this project, such as newsletters and announcements. You will not be notified about individual new contributions.
+            sign_in_html: "%{link} to subscribe to this project."
+            sign_in_link: Sign in
           share:
             title: Share
         tabs:
@@ -229,6 +268,8 @@ en:
         new_question_notification: "New question: %{question_title}"
         all_questions: All questions
         go_to_question: Go to question
+        answer_error: Your vote was not saved. Please reload the page and try again.
+        answer_closed: Voting has closed. Your vote was not saved.
         participation_not_allowed:
           login_to_answer: Please %{signin} or %{signup} to proceed.
           organizations: Organizations cannot take part

@@ -41,7 +41,7 @@ end
                    properties: {
                      categories: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/PointOfInterestCategory' }
                      }
                    },
                    required: ['categories']
@@ -63,20 +63,7 @@ end
       security [bearer_auth: []]
       description "Create a new point of interest category for organizing map pins and locations. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_point_of_interest_category, in: :body, description: 'Projekt point of interest category creation payload', schema: {
-        type: :object,
-        properties: {
-          projekt_point_of_interest_category: {
-            type: :object,
-            properties: {
-              name: { type: :string, nullable: true },
-              color: { type: :string, nullable: true },
-              icon: { type: :string, nullable: true }
-            }
-          }
-        },
-        required: ['projekt_point_of_interest_category']
-      }
+      parameter name: :projekt_point_of_interest_category, in: :body, description: 'Projekt point of interest category creation payload', schema: { '$ref' => '#/components/schemas/PointOfInterestCategoryWriteParams' }
 
       response '201', 'projekt point of interest category created' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -97,7 +84,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     category: { type: :object }
+                     category: { '$ref' => '#/components/schemas/PointOfInterestCategory' }
                    },
                    required: ['category']
                  }
@@ -171,7 +158,7 @@ end
                    properties: {
                      categories: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/PointOfInterestCategory' }
                      }
                    },
                    required: ['categories']
@@ -213,7 +200,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     category: { type: :object }
+                     category: { '$ref' => '#/components/schemas/PointOfInterestCategory' }
                    },
                    required: ['category']
                  }
@@ -239,20 +226,7 @@ end
       security [bearer_auth: []]
       description "Update an existing point of interest category. Allows modifying category name and properties. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
-      parameter name: :projekt_point_of_interest_category, in: :body, description: 'Attributes to update on the projekt point of interest category', schema: {
-        type: :object,
-        properties: {
-          projekt_point_of_interest_category: {
-            type: :object,
-            properties: {
-              name: { type: :string, nullable: true },
-              color: { type: :string, nullable: true },
-              icon: { type: :string, nullable: true }
-            }
-          }
-        },
-        required: ['projekt_point_of_interest_category']
-      }
+      parameter name: :projekt_point_of_interest_category, in: :body, description: 'Attributes to update on the projekt point of interest category', schema: { '$ref' => '#/components/schemas/PointOfInterestCategoryWriteParams' }
 
       response '200', 'projekt point of interest category updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -269,7 +243,8 @@ end
           {
             projekt_point_of_interest_category: {
               name: 'Updated Category',
-              color: '#00FF00'
+              color: '#00FF00',
+              position: 3
             }
           }
         end
@@ -279,14 +254,16 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     category: { type: :object }
+                     category: { '$ref' => '#/components/schemas/PointOfInterestCategory' }
                    },
                    required: ['category']
                  }
                },
                required: ['data']
 
-        run_test!
+        run_test! do |response|
+          expect(JSON.parse(response.body)['data']['category']['position']).to eq(3)
+        end
       end
 
       response '404', 'projekt point of interest category not found' do

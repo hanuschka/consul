@@ -9,7 +9,7 @@ en:
         label: By registering, you accept that we store the data collected here for processing.
       data_protection:
         title: Privacy Policy
-        label: By registering you accept the %{privacy_link}
+        label: By registering you confirm that you have taken note of the %{privacy_link}.
       general:
         title: General Terms of Use
         label: By registering you accept the %{terms_link}
@@ -18,7 +18,7 @@ en:
       terms_link:
         text: General Terms of Use
       revoke_consent:
-        text: You can revoke your consent to data storage at any time without giving reasons.
+        text: You can withdraw your consent to data storage at any time without giving reasons.
       resource_terms:
         title: Terms of User
-        label: My contribution complies with the %{terms_link} and %{privacy_link}
+        label: My contribution complies with the %{terms_link} and I have taken note of the %{privacy_link}.

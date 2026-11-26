@@ -49,6 +49,11 @@ namespace :email_templates do
         call: -> { Mailer.budget_investment_feasible(investment).deliver_now }
       }
       tests << {
+        name: "Mailer#budget_investment_feasible_with_changes",
+        phase: budget_phase,
+        call: -> { Mailer.budget_investment_feasible_with_changes(investment).deliver_now }
+      }
+      tests << {
         name: "Mailer#budget_investment_unfeasible",
         phase: budget_phase,
         call: -> { Mailer.budget_investment_unfeasible(investment).deliver_now }
@@ -148,6 +153,15 @@ namespace :email_templates do
         name: "NotificationServiceMailer#new_comment",
         phase: phase_comment.commentable,
         call: -> { NotificationServiceMailer.new_comment(user.id, phase_comment.id).deliver_now }
+      }
+    end
+
+    contribution_comment = Comment.all.find { |c| !c.commentable.is_a?(ProjektPhase) }
+    if contribution_comment
+      tests << {
+        name: "NotificationServiceMailer#new_contribution_comment",
+        phase: nil,
+        call: -> { NotificationServiceMailer.new_contribution_comment(user.id, contribution_comment.id).deliver_now }
       }
     end
 

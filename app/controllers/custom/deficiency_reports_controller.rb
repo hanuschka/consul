@@ -182,6 +182,7 @@ class DeficiencyReportsController < ApplicationController
       id: @deficiency_report.id,
       image_url: image_url,
       image_ai_label_html: helpers.ai_image_label_html(@deficiency_report.image),
+      image_credit_html: helpers.image_credit_html(@deficiency_report.image),
       title: @deficiency_report.title
     }.to_json
 
@@ -219,7 +220,7 @@ class DeficiencyReportsController < ApplicationController
                   documents_attributes: document_attributes,
                   image_attributes: image_attributes]
 
-    params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport))
+    params.require(:deficiency_report).permit(attributes, translation_params(DeficiencyReport, except: [:official_answer, :reporter_answer]))
   end
 
   def destroy_map_location_association

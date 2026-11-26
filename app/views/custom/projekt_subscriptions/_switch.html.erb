@@ -1,0 +1,9 @@
+<div id="<%= dom_id(projekt_subscription.projekt, :subscription_switch) %>">
+  <%= render Shared::ToggleAttributeComponent.new(
+    projekt_subscription,
+    :active,
+    path,
+    input_id: dom_id(projekt_subscription.projekt, :subscription_toggler),
+    method: :patch
+  ) %>
+</div>

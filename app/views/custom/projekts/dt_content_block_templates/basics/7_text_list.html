@@ -1,39 +1,41 @@
-<!-- BlockID: A04 – Text mit gestalteter Aufzählungsliste -->
+<!-- BlockID: A04 Text mit gestalteter Aufzählungsliste -->
 <!-- Geeignet für: Aufzählungen, Übersichten, Regeln, Teilnahmebedingungen -->
+<!-- Editor: jeder Listenpunkt ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert den letzten Punkt samt Häkchen. Icon über die Klasse fa-… tauschen, nur im Code-Modus. -->
+<!-- Umbruch: jeder Punkt bricht neben seinem Häkchen um, der Text bleibt bündig eingerückt. Hinweis unten auf getönter Fläche. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Text und Listenpunkte 1rem -->
 
-<div style="background: #ffffff; border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <h3 style="font-size: 22px; font-weight: 700; color: #1a202c; letter-spacing: -0.3px; margin-bottom: 14px; margin-top: 0; line-height: 1.3;">So funktioniert die Beteiligung</h3>
+  <h3 style="margin: 0 0 10px; hyphens: auto; overflow-wrap: break-word;">So funktioniert die Beteiligung</h3>
 
-  <p style="font-size: 15px; color: #374151; line-height: 1.7; margin: 0 0 18px 0;">
-    Die Teilnahme an der Online-Beteiligung steht allen Bürger:innen offen. Folgende Punkte sind dabei zu beachten:
-  </p>
+  <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 18px;">Die Teilnahme an der Online-Beteiligung steht allen Bürger:innen offen. Folgende Punkte sind dabei zu beachten:</p>
 
-  <ul style="display: flex; flex-direction: column; gap: 12px; margin: 0 0 18px 0; padding: 0; list-style: none;">
-    <li style="display: flex; align-items: flex-start; font-size: 15px; color: #374151; line-height: 1.7;">
-      <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 9px; margin-right: 14px; flex-shrink: 0;"></div>
-      Registrieren Sie sich mit einer gültigen E-Mail-Adresse auf der Plattform
+  <ul style="list-style: none; margin: 0 0 20px; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+    <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-check" style="font-size: 12px;"></i></span>
+      <span style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6;">Registrieren Sie sich mit einer gültigen E-Mail-Adresse auf der Plattform</span>
     </li>
-    <li style="display: flex; align-items: flex-start; font-size: 15px; color: #374151; line-height: 1.7;">
-      <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 9px; margin-right: 14px; flex-shrink: 0;"></div>
-      Reichen Sie Ihre Vorschläge und Ideen ein – es gibt keine Begrenzung der Anzahl
+    <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-check" style="font-size: 12px;"></i></span>
+      <span style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6;">Reichen Sie Ihre Vorschläge und Ideen ein, es gibt keine Begrenzung der Anzahl</span>
     </li>
-    <li style="display: flex; align-items: flex-start; font-size: 15px; color: #374151; line-height: 1.7;">
-      <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 9px; margin-right: 14px; flex-shrink: 0;"></div>
-      Unterstützen Sie bestehende Vorschläge anderer Teilnehmender
+    <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-check" style="font-size: 12px;"></i></span>
+      <span style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6;">Unterstützen Sie bestehende Vorschläge anderer Teilnehmender</span>
     </li>
-    <li style="display: flex; align-items: flex-start; font-size: 15px; color: #374151; line-height: 1.7;">
-      <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 9px; margin-right: 14px; flex-shrink: 0;"></div>
-      Nehmen Sie an Abstimmungen teil, sobald die Abstimmungsphase beginnt
+    <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-check" style="font-size: 12px;"></i></span>
+      <span style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6;">Nehmen Sie an Abstimmungen teil, sobald die Abstimmungsphase beginnt</span>
     </li>
-    <li style="display: flex; align-items: flex-start; font-size: 15px; color: #374151; line-height: 1.7;">
-      <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--brand-color, #1779ba); margin-top: 9px; margin-right: 14px; flex-shrink: 0;"></div>
-      Alle Beiträge werden im Ergebnisbericht dokumentiert und dem Stadtrat vorgelegt
+    <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; font-size: 1rem; line-height: 1.6;">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-check" style="font-size: 12px;"></i></span>
+      <span style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6;">Alle Beiträge werden im Ergebnisbericht dokumentiert und dem Stadtrat vorgelegt</span>
     </li>
   </ul>
 
-  <p style="font-size: 14px; color: #6b7280; line-height: 1.6; margin: 0;">
-    Bitte achten Sie auf eine respektvolle und konstruktive Kommunikation. Beiträge, die gegen die Nutzungsbedingungen verstoßen, werden von der Moderation entfernt.
-  </p>
+  <div style="display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: 12px; background: #eef4fa; background: linear-gradient(100deg, #e3eef8 0%, #f5f8fb 75%); background: linear-gradient(100deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 4%, #ffffff) 75%); border: 1px solid #e3e8ef;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-info" style="font-size: 16px;"></i></span>
+    <p style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6; margin: 0;">Bitte achten Sie auf eine respektvolle und konstruktive Kommunikation. Beiträge, die gegen die Nutzungsbedingungen verstoßen, werden von der Moderation entfernt.</p>
+  </div>
 
 </div>

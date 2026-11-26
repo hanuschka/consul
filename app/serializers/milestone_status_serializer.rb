@@ -10,6 +10,7 @@ class MilestoneStatusSerializer < BaseSerializer
       only: [
         :id,
         :name,
+        :description,
         :created_at,
         :updated_at
       ]

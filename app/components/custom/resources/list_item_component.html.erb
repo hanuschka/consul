@@ -8,12 +8,17 @@
   <% if image? %>
     <div class="resource-item--image-container">
       <% if image_overlay_item.present? %>
-        <div class="resource-item--image-overlay-item">
+        <div class="resource-item--image-overlay-item <%= "-with-credit" if @image_credits.present? %>">
           <%= image_overlay_item %>
+          <%= render Shared::ImageCreditComponent.new(credits: @image_credits) %>
         </div>
       <% end %>
 
       <%= image %>
+
+      <% unless image_overlay_item.present? %>
+        <%= render Shared::ImageCreditComponent.new(credits: @image_credits) %>
+      <% end %>
     </div>
   <% end %>
 

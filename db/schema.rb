@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_19_102809) do
+ActiveRecord::Schema.define(version: 2026_11_23_152929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.datetime "created_at", null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index "lower((key)::text)", name: "index_active_storage_blobs_on_lower_key"
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
@@ -164,56 +165,6 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.boolean "only_for_stats", default: false
   end
 
-  create_table "ahoy_events", force: :cascade do |t|
-    t.bigint "visit_id"
-    t.bigint "user_id"
-    t.string "name"
-    t.jsonb "properties"
-    t.datetime "time"
-    t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
-    t.index ["properties"], name: "index_ahoy_events_on_properties_jsonb_path_ops", opclass: :jsonb_path_ops, using: :gin
-    t.index ["user_id"], name: "index_ahoy_events_on_user_id"
-    t.index ["visit_id"], name: "index_ahoy_events_on_visit_id"
-  end
-
-  create_table "ahoy_events_old", id: :uuid, default: nil, force: :cascade do |t|
-    t.uuid "visit_id"
-    t.integer "user_id"
-    t.string "name"
-    t.jsonb "properties"
-    t.datetime "time"
-    t.string "ip"
-    t.index ["name", "time"], name: "index_ahoy_events_old_on_name_and_time"
-    t.index ["time"], name: "index_ahoy_events_old_on_time"
-    t.index ["user_id"], name: "index_ahoy_events_old_on_user_id"
-    t.index ["visit_id"], name: "index_ahoy_events_old_on_visit_id"
-  end
-
-  create_table "ahoy_visits", force: :cascade do |t|
-    t.string "visit_token"
-    t.string "visitor_token"
-    t.bigint "user_id"
-    t.string "ip"
-    t.text "user_agent"
-    t.text "referrer"
-    t.string "referring_domain"
-    t.text "landing_page"
-    t.string "browser"
-    t.string "os"
-    t.string "device_type"
-    t.string "country"
-    t.string "region"
-    t.string "city"
-    t.string "utm_source"
-    t.string "utm_medium"
-    t.string "utm_term"
-    t.string "utm_content"
-    t.string "utm_campaign"
-    t.datetime "started_at"
-    t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
-    t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
-  end
-
   create_table "ai_chat_messages", force: :cascade do |t|
     t.bigint "ai_chat_id", null: false
     t.string "role", null: false
@@ -276,6 +227,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "use_system_user", default: true, null: false
+    t.boolean "instance_configuration_access", default: false, null: false
   end
 
   create_table "api_request_logs", force: :cascade do |t|
@@ -511,7 +463,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.integer "administrator_id"
     t.string "external_url"
     t.bigint "price"
-    t.string "feasibility", limit: 15, default: "undecided"
+    t.string "feasibility", limit: 30, default: "undecided"
     t.text "price_explanation"
     t.text "unfeasibility_explanation"
     t.boolean "valuation_finished", default: false
@@ -566,8 +518,11 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.string "similar_contributions_check_status"
     t.jsonb "similar_contributions_matches"
     t.boolean "selection_email_deferred", default: false, null: false
+    t.string "external_source"
+    t.string "external_id"
     t.index ["administrator_id"], name: "index_budget_investments_on_administrator_id"
     t.index ["author_id"], name: "index_budget_investments_on_author_id"
+    t.index ["budget_id", "external_source", "external_id"], name: "index_budget_investments_on_budget_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
     t.index ["budget_id"], name: "index_budget_investments_on_budget_id"
     t.index ["community_id"], name: "index_budget_investments_on_community_id"
     t.index ["draft"], name: "index_budget_investments_on_draft"
@@ -674,6 +629,9 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.boolean "show_percentage_values_only", default: false
     t.boolean "show_results_after_first_vote", default: false
     t.integer "max_preselected", default: 0
+    t.datetime "tie_resolved_at"
+    t.datetime "winners_calculated_at"
+    t.boolean "winners_tie_open", default: false, null: false
     t.index ["projekt_id"], name: "index_budgets_on_projekt_id"
     t.index ["projekt_phase_id"], name: "index_budgets_on_projekt_phase_id"
   end
@@ -911,6 +869,25 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "deficiency_report_management_reports", force: :cascade do |t|
+    t.bigint "report_profile_id", null: false
+    t.string "profile_name", null: false
+    t.text "building_blocks", default: [], null: false, array: true
+    t.datetime "period_start", null: false
+    t.datetime "period_end", null: false
+    t.string "status", default: "pending", null: false
+    t.string "trigger", default: "manual", null: false
+    t.jsonb "figures", default: {}, null: false
+    t.jsonb "sections", default: [], null: false
+    t.text "error_message"
+    t.datetime "generated_at"
+    t.datetime "sent_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "deliver", default: false, null: false
+    t.index ["report_profile_id"], name: "index_dr_management_reports_on_report_profile_id"
+  end
+
   create_table "deficiency_report_managers", force: :cascade do |t|
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
@@ -946,6 +923,23 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
   create_table "deficiency_report_official_answer_templates", force: :cascade do |t|
     t.string "title"
     t.text "text"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "deficiency_report_report_profiles", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "building_blocks", default: [], null: false, array: true
+    t.integer "category_ids", default: [], null: false, array: true
+    t.integer "officer_group_ids", default: [], null: false, array: true
+    t.integer "recipient_user_ids", default: [], null: false, array: true
+    t.text "recipient_emails", default: [], null: false, array: true
+    t.text "instructions"
+    t.string "frequency", default: "weekly", null: false
+    t.integer "weekday"
+    t.integer "day_of_month"
+    t.integer "hour", default: 8, null: false
+    t.boolean "paused", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -1003,6 +997,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.text "description"
     t.text "summary"
     t.text "official_answer"
+    t.text "reporter_answer"
     t.index ["deficiency_report_id"], name: "index_deficiency_report_translations_on_deficiency_report_id"
     t.index ["locale"], name: "index_deficiency_report_translations_on_locale"
   end
@@ -1394,6 +1389,26 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.boolean "ai_generated_in_app", default: false, null: false
     t.index ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id"
     t.index ["user_id"], name: "index_images_on_user_id"
+  end
+
+  create_table "individual_group_translations", force: :cascade do |t|
+    t.bigint "individual_group_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["individual_group_id"], name: "index_individual_group_translations_on_individual_group_id"
+    t.index ["locale"], name: "index_individual_group_translations_on_locale"
+  end
+
+  create_table "individual_group_value_translations", force: :cascade do |t|
+    t.bigint "individual_group_value_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.index ["individual_group_value_id"], name: "index_2b0ea2ce3f866d3faad4ccd3adf1ca7d3c778e95"
+    t.index ["locale"], name: "index_individual_group_value_translations_on_locale"
   end
 
   create_table "individual_group_values", force: :cascade do |t|
@@ -2098,6 +2113,92 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "offer_categories", force: :cascade do |t|
+    t.string "kind", null: false
+    t.integer "given_order"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["kind", "given_order"], name: "index_offer_categories_on_kind_and_given_order"
+  end
+
+  create_table "offer_category_assignments", force: :cascade do |t|
+    t.bigint "offer_id", null: false
+    t.bigint "offer_category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["offer_category_id"], name: "index_offer_category_assignments_on_offer_category_id"
+    t.index ["offer_id", "offer_category_id"], name: "index_offer_category_assignments_unique", unique: true
+    t.index ["offer_id"], name: "index_offer_category_assignments_on_offer_id"
+  end
+
+  create_table "offer_category_translations", force: :cascade do |t|
+    t.bigint "offer_category_id", null: false
+    t.string "locale", null: false
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_offer_category_translations_on_locale"
+    t.index ["offer_category_id"], name: "index_offer_category_translations_on_offer_category_id"
+  end
+
+  create_table "offer_provider_users", force: :cascade do |t|
+    t.bigint "offer_provider_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["offer_provider_id", "user_id"], name: "index_offer_provider_users_unique", unique: true
+    t.index ["offer_provider_id"], name: "index_offer_provider_users_on_offer_provider_id"
+    t.index ["user_id"], name: "index_offer_provider_users_on_user_id"
+  end
+
+  create_table "offer_managers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_offer_managers_on_user_id", unique: true
+  end
+
+  create_table "offer_providers", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "auto_join_emails", default: [], null: false, array: true
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "last_reminded_at"
+  end
+
+  create_table "offer_translations", force: :cascade do |t|
+    t.bigint "offer_id", null: false
+    t.string "locale", null: false
+    t.string "title"
+    t.text "short_description"
+    t.text "times"
+    t.text "costs"
+    t.text "registration"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["locale"], name: "index_offer_translations_on_locale"
+    t.index ["offer_id"], name: "index_offer_translations_on_offer_id"
+  end
+
+  create_table "offers", force: :cascade do |t|
+    t.string "address"
+    t.string "contact_name"
+    t.string "contact_phone"
+    t.string "contact_email"
+    t.string "contact_website"
+    t.bigint "author_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "provider_id"
+    t.integer "review_status", default: 0, null: false
+    t.datetime "suspended_at"
+    t.date "expires_on"
+    t.datetime "deactivated_at"
+    t.index ["author_id"], name: "index_offers_on_author_id"
+    t.index ["provider_id"], name: "index_offers_on_provider_id"
+    t.index ["review_status"], name: "index_offers_on_review_status"
+  end
+
   create_table "officing_manager_assignments", force: :cascade do |t|
     t.bigint "officing_manager_id", null: false
     t.bigint "projekt_phase_id", null: false
@@ -2136,6 +2237,20 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.index ["email"], name: "index_pending_role_assignments_on_email"
     t.index ["invitation_token"], name: "index_pending_role_assignments_on_invitation_token", unique: true, where: "(invitation_token IS NOT NULL)"
     t.index ["role_type"], name: "index_pending_role_assignments_on_role_type"
+  end
+
+  create_table "phone_sign_in_codes", force: :cascade do |t|
+    t.string "phone_digest", null: false
+    t.string "code_digest", null: false
+    t.string "ip_digest"
+    t.integer "attempts", default: 0, null: false
+    t.datetime "expires_at", null: false
+    t.datetime "consumed_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["created_at"], name: "index_phone_sign_in_codes_on_created_at"
+    t.index ["ip_digest", "created_at"], name: "index_phone_sign_in_codes_on_ip_digest_and_created_at"
+    t.index ["phone_digest", "created_at"], name: "index_phone_sign_in_codes_on_phone_digest_and_created_at"
   end
 
   create_table "poll_answer_map_points", force: :cascade do |t|
@@ -2826,8 +2941,11 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "masterportal_pin_id"
+    t.string "external_source"
+    t.string "external_id"
     t.index ["author_id"], name: "index_projekt_point_of_interest_pins_on_author_id"
     t.index ["masterportal_pin_id"], name: "index_projekt_point_of_interest_pins_on_masterportal_pin_id"
+    t.index ["projekt_phase_id", "external_source", "external_id"], name: "index_poi_pins_on_phase_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
     t.index ["projekt_phase_id"], name: "index_projekt_point_of_interest_pins_on_projekt_phase_id"
     t.index ["projekt_point_of_interest_category_id"], name: "projekt_point_of_interest_category"
   end
@@ -2913,7 +3031,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["projekt_id"], name: "index_projekt_subscriptions_on_projekt_id"
-    t.index ["user_id"], name: "index_projekt_subscriptions_on_user_id"
+    t.index ["user_id", "projekt_id"], name: "index_projekt_subscriptions_on_user_id_and_projekt_id", unique: true
   end
 
   create_table "projekt_translations", force: :cascade do |t|
@@ -3060,6 +3178,8 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.boolean "generated_image", default: false, null: false
     t.string "similar_contributions_check_status"
     t.jsonb "similar_contributions_matches"
+    t.string "external_source"
+    t.string "external_id"
     t.index ["author_id", "hidden_at"], name: "index_proposals_on_author_id_and_hidden_at"
     t.index ["author_id"], name: "index_proposals_on_author_id"
     t.index ["cached_votes_down"], name: "index_proposals_on_cached_votes_down"
@@ -3072,6 +3192,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.index ["hot_score"], name: "index_proposals_on_hot_score"
     t.index ["masterportal_pin_id"], name: "index_proposals_on_masterportal_pin_id"
     t.index ["projekt_id"], name: "index_proposals_on_projekt_id"
+    t.index ["projekt_phase_id", "external_source", "external_id"], name: "index_proposals_on_phase_and_external_id", unique: true, where: "(external_id IS NOT NULL)"
     t.index ["projekt_phase_id"], name: "index_proposals_on_projekt_phase_id"
     t.index ["selected"], name: "index_proposals_on_selected"
     t.index ["sentiment_id"], name: "index_proposals_on_sentiment_id"
@@ -3098,6 +3219,8 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.string "access_method"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "projekt_id"
+    t.index ["projekt_id"], name: "index_recipient_groups_on_projekt_id", unique: true
   end
 
   create_table "registered_address_cities", force: :cascade do |t|
@@ -3526,6 +3649,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.datetime "image_updated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "credits"
     t.index ["name"], name: "index_site_customization_images_on_name", unique: true
   end
 
@@ -3777,6 +3901,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
     t.string "company_name"
     t.bigint "brevo_contact_id"
     t.datetime "brevo_synced_at"
+    t.datetime "welcome_email_sent_at"
     t.index ["bam_street_id"], name: "index_users_on_bam_street_id"
     t.index ["brevo_contact_id"], name: "index_users_on_brevo_contact_id", unique: true, where: "(brevo_contact_id IS NOT NULL)"
     t.index ["city_street_id"], name: "index_users_on_city_street_id"
@@ -4046,6 +4171,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
   add_foreign_key "debates", "sentiments"
   add_foreign_key "deficiency_report_confirmation_popup_answers", "deficiency_report_confirmation_popups", column: "confirmation_popup_id", on_delete: :cascade
   add_foreign_key "deficiency_report_feedback_forms", "deficiency_reports"
+  add_foreign_key "deficiency_report_management_reports", "deficiency_report_report_profiles", column: "report_profile_id", on_delete: :cascade
   add_foreign_key "deficiency_report_managers", "users"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officer_groups"
   add_foreign_key "deficiency_report_officer_group_assignments", "deficiency_report_officers"
@@ -4108,6 +4234,13 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
   add_foreign_key "navbar_items", "projekts"
   add_foreign_key "newsletters", "recipient_groups"
   add_foreign_key "notifications", "users"
+  add_foreign_key "offer_category_assignments", "offer_categories"
+  add_foreign_key "offer_category_assignments", "offers"
+  add_foreign_key "offer_managers", "users"
+  add_foreign_key "offer_provider_users", "offer_providers"
+  add_foreign_key "offer_provider_users", "users"
+  add_foreign_key "offers", "offer_providers", column: "provider_id"
+  add_foreign_key "offers", "users", column: "author_id", on_delete: :nullify
   add_foreign_key "officing_manager_assignments", "officing_managers"
   add_foreign_key "officing_manager_assignments", "projekt_phases"
   add_foreign_key "officing_managers", "users"
@@ -4175,6 +4308,7 @@ ActiveRecord::Schema.define(version: 2026_10_19_102809) do
   add_foreign_key "proposals", "projekts"
   add_foreign_key "proposals", "sentiments"
   add_foreign_key "recipient_group_filters", "recipient_groups"
+  add_foreign_key "recipient_groups", "projekts", on_delete: :nullify
   add_foreign_key "registered_address_district_projekt_phases", "projekt_phases"
   add_foreign_key "registered_address_district_projekt_phases", "registered_address_districts"
   add_foreign_key "registered_address_districts", "idea_officers"

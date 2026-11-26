@@ -30,7 +30,7 @@ let(:existing_milestone_status) { Milestone::Status.create!(name: 'Existing Stat
                    properties: {
                      milestone_statuses: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/MilestoneStatus' }
                      }
                    },
                    required: ['milestone_statuses']
@@ -58,7 +58,8 @@ let(:existing_milestone_status) { Milestone::Status.create!(name: 'Existing Stat
           milestone_status: {
             type: :object,
             properties: {
-              name: { type: :string }
+              name: { type: :string, description: 'Name of the status' },
+              description: { type: :string, nullable: true, description: 'What the status means' }
             },
             required: ['name']
           }
@@ -70,7 +71,8 @@ let(:existing_milestone_status) { Milestone::Status.create!(name: 'Existing Stat
         let(:milestone_status) do
           {
             milestone_status: {
-              name: 'Planning'
+              name: 'Planning',
+              description: 'The step is being planned'
             }
           }
         end
@@ -80,14 +82,16 @@ let(:existing_milestone_status) { Milestone::Status.create!(name: 'Existing Stat
                  data: {
                    type: :object,
                    properties: {
-                     milestone_status: { type: :object }
+                     milestone_status: { '$ref' => '#/components/schemas/MilestoneStatus' }
                    },
                    required: ['milestone_status']
                  }
                },
                required: ['data']
 
-        run_test!
+        run_test! do |response|
+          expect(JSON.parse(response.body)['data']['milestone_status']['description']).to eq('The step is being planned')
+        end
       end
 
       response '422', 'invalid request' do
@@ -135,7 +139,7 @@ let(:existing_milestone_status) { Milestone::Status.create!(name: 'Existing Stat
                  data: {
                    type: :object,
                    properties: {
-                     milestone_status: { type: :object }
+                     milestone_status: { '$ref' => '#/components/schemas/MilestoneStatus' }
                    },
                    required: ['milestone_status']
                  }
@@ -167,7 +171,8 @@ let(:existing_milestone_status) { Milestone::Status.create!(name: 'Existing Stat
           milestone_status: {
             type: :object,
             properties: {
-              name: { type: :string }
+              name: { type: :string, description: 'Name of the status' },
+              description: { type: :string, nullable: true, description: 'What the status means' }
             }
           }
         },
@@ -190,7 +195,7 @@ let(:existing_milestone_status) { Milestone::Status.create!(name: 'Existing Stat
                  data: {
                    type: :object,
                    properties: {
-                     milestone_status: { type: :object }
+                     milestone_status: { '$ref' => '#/components/schemas/MilestoneStatus' }
                    },
                    required: ['milestone_status']
                  }

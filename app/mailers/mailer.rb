@@ -207,6 +207,24 @@ class Mailer < ApplicationMailer
     end
   end
 
+  def budget_investment_feasible_with_changes(investment)
+    @investment = investment
+    @projekt = investment.projekt
+    @author = investment.author
+    @email_to = @author.email
+
+    with_user(@author) do
+      mail_with_custom_template(investment.budget&.projekt_phase, {
+        "username" => @author.username,
+        "recipient_greeting" => @author.recipient_greeting,
+        "investment_title" => @investment.title,
+        "projekt_title" => @projekt&.name,
+        "changes_explanation" => view_context.mailer_inline_html(@investment.valuator_explanation),
+        "investment_url" => budget_investment_url(@investment.budget, @investment)
+      }, to: @email_to, default_subject: t("mailers.budget_investment_feasible_with_changes.subject"))
+    end
+  end
+
   def budget_investment_selected(investment)
     @investment = investment
     @author = investment.author

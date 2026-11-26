@@ -263,6 +263,7 @@ en:
         no_valuators_assigned: No valuators assigned
         feasibility:
           feasible: "Feasible"
+          with_changes: "Meets criteria with changes"
           unfeasible: "Unfeasible"
           undecided: "Undecided"
         selected: "Selected"

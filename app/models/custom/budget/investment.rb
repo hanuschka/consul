@@ -111,6 +111,8 @@ to: :budget
 
       if unfeasible?
         Mailer.budget_investment_unfeasible(self).deliver_later
+      elsif with_changes?
+        Mailer.budget_investment_feasible_with_changes(self).deliver_later
       else
         Mailer.budget_investment_feasible(self).deliver_later
       end
@@ -139,7 +141,7 @@ to: :budget
 
     def should_show_feasibility_explanation?
       feasible? &&
-        selected? &&
+        valuation_finished? &&
         valuator_explanation.present?
     end
   end

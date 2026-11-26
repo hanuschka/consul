@@ -2,7 +2,7 @@
 <% phase_completed = investment.valuation_finished? %>
 <% phase_state = phase_enabled ? (phase_completed ? "completed" : "active") : "disabled" %>
 
-<details class="adm-admin-phase adm-admin-phase--<%= phase_state %>" <%= "open" if saved_editor == "feasibility" %>>
+<details class="adm-admin-phase adm-admin-phase--<%= phase_state %>" <%= "open" if [saved_editor, failed_editor].include?("feasibility") %>>
   <summary class="adm-admin-phase__header">
     <div class="adm-admin-phase__title">
       <span class="adm-admin-phase__icon material-symbols-outlined" aria-hidden="true">
@@ -15,6 +15,11 @@
         <% if investment.feasibility == "feasible" %>
           <span class="adm-admin-chip adm-admin-chip--success">
             <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+            <%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %>
+          </span>
+        <% elsif investment.with_changes? %>
+          <span class="adm-admin-chip adm-admin-chip--success">
+            <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
             <%= Budget::Investment.human_attribute_name("feasibility_#{investment.feasibility}") %>
           </span>
         <% elsif investment.feasibility == "unfeasible" %>

@@ -50,6 +50,9 @@
             <% end %>
 
             <% if @investment.valuator_explanation.present? %>
+              <% if @investment.with_changes? %>
+                <h4><%= t("custom.budgets.investments.show.with_changes_heading") %></h4>
+              <% end %>
               <%= auto_link_already_sanitized_html AdminWYSIWYGSanitizer.new.sanitize(@investment.valuator_explanation) %>
             <% end %>
           </div>

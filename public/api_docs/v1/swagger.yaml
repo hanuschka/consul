@@ -1261,11 +1261,13 @@ paths:
                       nullable: true
                       enum:
                       - feasible
+                      - with_changes
                       - unfeasible
                       - undecided
                       description: Admin feasibility assessment (admin only). Set
-                        to "feasible" (can be completed), "unfeasible" (cannot be
-                        done), or "undecided" (still evaluating).
+                        to "feasible" (can be completed), "with_changes" (can be completed
+                        with changes by the administration), "unfeasible" (cannot
+                        be done), or "undecided" (still evaluating).
                     valuator_explanation:
                       type: string
                       nullable: true
@@ -1273,7 +1275,8 @@ paths:
                         shown on the public proposal page. HTML, stored as-is like
                         the /adm feasibility editor (e.g. "<p>Does not meet the criteria
                         because ...</p>"). Required when feasibility is "unfeasible"
-                        and valuation_finished is true; can be sent in the same request.'
+                        or "with_changes" and valuation_finished is true; can be sent
+                        in the same request.'
                     valuation_finished:
                       type: boolean
                       nullable: true
@@ -1719,11 +1722,13 @@ paths:
                       nullable: true
                       enum:
                       - feasible
+                      - with_changes
                       - unfeasible
                       - undecided
                       description: Admin feasibility assessment (admin only). Set
-                        to "feasible" (can be completed), "unfeasible" (cannot be
-                        done), or "undecided" (still evaluating).
+                        to "feasible" (can be completed), "with_changes" (can be completed
+                        with changes by the administration), "unfeasible" (cannot
+                        be done), or "undecided" (still evaluating).
                     valuator_explanation:
                       type: string
                       nullable: true
@@ -1731,7 +1736,8 @@ paths:
                         shown on the public proposal page. HTML, stored as-is like
                         the /adm feasibility editor (e.g. "<p>Does not meet the criteria
                         because ...</p>"). Required when feasibility is "unfeasible"
-                        and valuation_finished is true; can be sent in the same request.'
+                        or "with_changes" and valuation_finished is true; can be sent
+                        in the same request.'
                     valuation_finished:
                       type: boolean
                       nullable: true

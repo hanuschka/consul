@@ -1,9 +1,9 @@
-<% phase_early_access = !budget.valuating_or_later? && investment.feasibility == "feasible" %>
+<% phase_early_access = !budget.valuating_or_later? && investment.feasible? %>
 <% phase_enabled = budget.valuating_or_later? || phase_early_access %>
 <% phase_completed = investment.price.present? && investment.price > 0 %>
 <% phase_state = phase_enabled ? (phase_completed ? "completed" : "active") : "disabled" %>
 
-<details class="adm-admin-phase adm-admin-phase--<%= phase_state %>" <%= "open" if saved_editor == "pricing" %>>
+<details class="adm-admin-phase adm-admin-phase--<%= phase_state %>" <%= "open" if [saved_editor, failed_editor].include?("pricing") %>>
   <summary class="adm-admin-phase__header">
     <div class="adm-admin-phase__title">
       <span class="adm-admin-phase__icon material-symbols-outlined" aria-hidden="true">

@@ -1,7 +1,8 @@
 class Budget
   class Investment < ApplicationRecord
     SORTING_OPTIONS = { id: "id", supports: "cached_votes_up", balloters: "ballot_lines_count" }.freeze
-    FEASIBILITIES = %w[undecided feasible unfeasible].freeze
+    FEASIBILITIES = %w[undecided feasible with_changes unfeasible].freeze
+    POSITIVE_FEASIBILITIES = %w[feasible with_changes].freeze
 
     include Measurable
     include Sanitizable
@@ -84,8 +85,8 @@ class Budget
     scope :valuating,                   -> { valuation_open.where("valuator_assignments_count > 0 OR valuator_group_assignments_count > 0") }
     scope :visible_to_valuators,        -> { where(visible_to_valuators: true) }
     scope :valuation_finished,          -> { where(valuation_finished: true) }
-    scope :valuation_finished_feasible, -> { where(valuation_finished: true, feasibility: "feasible") }
-    scope :feasible,                    -> { where(feasibility: "feasible") }
+    scope :valuation_finished_feasible, -> { where(valuation_finished: true, feasibility: POSITIVE_FEASIBILITIES) }
+    scope :feasible,                    -> { where(feasibility: POSITIVE_FEASIBILITIES) }
     scope :unfeasible,                  -> { where(feasibility: "unfeasible") }
     scope :not_unfeasible,              -> { where.not(feasibility: "unfeasible") }
     scope :undecided,                   -> { where(feasibility: "undecided") }
@@ -231,7 +232,11 @@ class Budget
     end
 
     def feasible?
-      feasibility == "feasible"
+      feasibility.in?(POSITIVE_FEASIBILITIES)
+    end
+
+    def with_changes?
+      feasibility == "with_changes"
     end
 
     def unfeasible?
@@ -239,7 +244,7 @@ class Budget
     end
 
     def valuator_explanation_required?
-      unfeasible? && valuation_finished?
+      (unfeasible? || with_changes?) && valuation_finished?
     end
 
     def price_required?

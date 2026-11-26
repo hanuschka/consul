@@ -15,7 +15,7 @@ describe Mailer do
       )
     end
 
-    %w[budget_investment_feasible budget_investment_unfeasible].each do |action|
+    %w[budget_investment_feasible budget_investment_feasible_with_changes budget_investment_unfeasible].each do |action|
       it "fills investment_url in #{action}" do
         customize(action)
 

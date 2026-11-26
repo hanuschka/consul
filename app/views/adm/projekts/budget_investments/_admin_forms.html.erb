@@ -1,7 +1,8 @@
 <% saved_editor = local_assigns.fetch(:saved_editor, nil) %>
+<% failed_editor = local_assigns.fetch(:failed_editor, nil) %>
 <% budget = investment.budget %>
 <% current_phase_index = budget.current_phase_index %>
-<% section_locals = { investment: investment, projekt_phase: projekt_phase, budget: budget, saved_editor: saved_editor } %>
+<% section_locals = { investment: investment, projekt_phase: projekt_phase, budget: budget, saved_editor: saved_editor, failed_editor: failed_editor } %>
 
 <%= turbo_frame_tag dom_id(investment, :admin_forms) do %>
 <section class="adm-admin-section" data-controller="adm-budget-investments--phases-accordion">
@@ -9,7 +10,7 @@
     <h2 class="adm-detail-section-title m-0"><%= t("adm.projekts.budget_investments.show.admin_section_title") %></h2>
     <%= render Adm::HintComponent.new do %>
       <p class="adm-hint__text"><%= t("adm.projekts.budget_investments.show.admin_info_banner") %></p>
-      <% if !budget.valuating_or_later? && investment.feasibility == "feasible" %>
+      <% if !budget.valuating_or_later? && investment.feasible? %>
         <p class="adm-hint__text adm-hint__text--spaced"><%= t("adm.projekts.budget_investments.show.early_pricing_hint") %></p>
       <% end %>
     <% end %>

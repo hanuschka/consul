@@ -36,6 +36,28 @@ describe "Feasibility in the /adm investment form", type: :request do
       .to have_enqueued_mail(Mailer, :budget_investment_unfeasible)
   end
 
+  it "tells the author a proposal meets the criteria with changes once the valuation is finished" do
+    expect { save_feasibility("with_changes", valuation_finished: true) }
+      .to have_enqueued_mail(Mailer, :budget_investment_feasible_with_changes)
+
+    expect(investment.reload.email_on_feasibility_sent_at).to be_present
+  end
+
+  it "keeps the section open with the error when a finished assessment with changes lacks an explanation" do
+    patch adm_projekts_phase_budget_investment_path(projekt_phase, investment),
+          params: {
+            editor: "feasibility",
+            budget_investment: { feasibility: "with_changes", valuator_explanation: "", valuation_finished: "1" }
+          },
+          headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+    section = Nokogiri::HTML(response.body).css("details.adm-admin-phase").first
+
+    expect(section["open"]).not_to be_nil
+    expect(section.css(".kern-error")).to be_present
+    expect(investment.reload.valuation_finished).to be false
+  end
+
   it "sends nothing while the valuation is not finished" do
     expect { save_feasibility("feasible", valuation_finished: false) }.not_to have_enqueued_mail
 

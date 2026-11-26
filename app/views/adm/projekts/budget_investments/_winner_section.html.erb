@@ -1,7 +1,7 @@
 <% phase_enabled = budget.balloting_finished? %>
 <% phase_state = phase_enabled ? "active" : "disabled" %>
 
-<details class="adm-admin-phase adm-admin-phase--<%= phase_state %>" <%= "open" if saved_editor == "winner" %>>
+<details class="adm-admin-phase adm-admin-phase--<%= phase_state %>" <%= "open" if [saved_editor, failed_editor].include?("winner") %>>
   <summary class="adm-admin-phase__header">
     <div class="adm-admin-phase__title">
       <span class="adm-admin-phase__icon material-symbols-outlined" aria-hidden="true">

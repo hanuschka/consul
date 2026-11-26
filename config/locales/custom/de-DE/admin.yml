@@ -286,6 +286,7 @@ de:
         no_valuators_assigned: Kein*e Gutachter*in*in zugewiesen
         feasibility:
           feasible: Entspricht den Kriterien
+          with_changes: Entspricht mit Änderungen den Kriterien
           unfeasible: Entspricht nicht den Kriterien
           undecided: Nicht bewertet
         selected: "Ausgewählt"

@@ -118,7 +118,8 @@ class Adm::Projekts::BudgetInvestmentsController < Adm::Projekts::BaseController
         locals: {
           investment: @investment,
           projekt_phase: @projekt_phase,
-          saved_editor: success ? params[:editor] : nil
+          saved_editor: success ? params[:editor] : nil,
+          failed_editor: success ? nil : params[:editor]
         }
       )
       return

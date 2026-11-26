@@ -46,6 +46,7 @@ de:
       budget/investment:
         feasibility_undecided: Nicht bewertet
         feasibility_feasible: Entspricht den Kriterien
+        feasibility_with_changes: Entspricht mit Änderungen den Kriterien
         feasibility_unfeasible: Entspricht nicht den Kriterien
       tag:
         name: Name des Tags

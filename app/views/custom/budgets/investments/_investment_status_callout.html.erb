@@ -1,6 +1,6 @@
 <% if investment.feasible? %>
   <div class="callout success" style="width:100% !important">
-    <%= t("custom.budgets.investments.investment.feasible_html") %>
+    <%= t("custom.budgets.investments.investment.#{investment.feasibility}_html") %>
   </div>
 
 <% elsif investment.unfeasible? %>
@@ -20,7 +20,7 @@
     </div>
   <% elsif investment.feasible? %>
     <div class="callout success" style="width:100% !important">
-      <%= t("custom.budgets.investments.investment.feasible_html") %>
+      <%= t("custom.budgets.investments.investment.#{investment.feasibility}_html") %>
     </div>
   <% end %>
 

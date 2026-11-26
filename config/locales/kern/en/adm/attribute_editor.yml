@@ -218,6 +218,7 @@ This logo should be readable on both light and dark backgrounds, since it appear
         feasibility_label_options:
           undecided: Not evaluated
           feasible: Meets criteria
+          with_changes: Meets criteria with changes
           unfeasible: Does not meet criteria
         selected_label: Selected
         selected_description: Has this proposal been selected for voting?

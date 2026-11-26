@@ -1,8 +1,9 @@
 class ProjektImports::ResolveContentBlocksService < ApplicationService
-  attr_reader :projekt_import, :phases, :image_urls
+  attr_reader :projekt_import, :projekt, :phases, :image_urls
 
-  def initialize(projekt_import:, phases: [], image_urls: [])
+  def initialize(projekt_import:, projekt:, phases: [], image_urls: [])
     @projekt_import = projekt_import
+    @projekt = projekt
     @phases = Array(phases)
     @image_urls = Array(image_urls)
   end
@@ -10,6 +11,8 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
   def call
     data = projekt_import.ai_result
     return ServiceResult.success(ai_result: data) if data["content_blocks"].blank?
+
+    template_ids = data["content_blocks"].filter_map { |block| block["template_id"] }
 
     resolve_result = ProjektImports::ResolveContentBlockHtmlService.call(
       blocks: data["content_blocks"],
@@ -24,6 +27,7 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
 
     data["content_blocks"] = resolve_result.data[:blocks]
     projekt_import.update!(ai_result: data)
+    record_template_ids(template_ids)
 
     ServiceResult.success(ai_result: data)
   rescue StandardError => e
@@ -39,6 +43,17 @@ class ProjektImports::ResolveContentBlocksService < ApplicationService
   end
 
   private
+
+  # Read before the rewrite above drops the template ids, and only this list is
+  # final: the chat may have replaced the analysis's blocks. Kept on the projekt
+  # because completed imports are purged after 30 days, and later imports must
+  # still see this page's layout. A resubmit finds the blocks rendered already
+  # and has nothing to record.
+  def record_template_ids(template_ids)
+    return if template_ids.empty?
+
+    projekt.update_column(:imported_content_block_template_ids, template_ids)
+  end
 
   # Every block falls back to escaped plain text when the template catalogue
   # cannot be reached, which looks like a styling bug rather than an outage

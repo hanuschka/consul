@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_23_152929) do
+ActiveRecord::Schema.define(version: 2026_11_26_170152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -3090,6 +3090,7 @@ ActiveRecord::Schema.define(version: 2026_11_23_152929) do
     t.bigint "municipal_plan_id"
     t.datetime "whatsapp_broadcast_sent_at"
     t.string "whatsapp_broadcast_slug"
+    t.integer "imported_content_block_template_ids", default: [], null: false, array: true
     t.index ["activated"], name: "index_projekts_on_activated"
     t.index ["copied_from_projekt_id"], name: "index_projekts_on_copied_from_projekt_id"
     t.index ["imported_by_ai"], name: "index_projekts_on_imported_by_ai"

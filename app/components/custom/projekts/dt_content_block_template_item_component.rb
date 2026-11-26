@@ -34,19 +34,13 @@ class Projekts::DtContentBlockTemplateItemComponent < ViewComponent::Base
   end
 
   def hidden_until_date
-    return nil if template["hidden_until"].blank?
-
-    Date.parse(template["hidden_until"].to_s)
-  rescue ArgumentError
-    nil
+    ContentBlockTemplates::Visibility.hidden_until_date(template)
   end
 
   def hidden_by_date?
-    date = hidden_until_date
     return false if hidden?
-    return false if date.nil?
 
-    date > Date.current
+    ContentBlockTemplates::Visibility.hidden_until_future?(template)
   end
 
   def show_visibility_badge?

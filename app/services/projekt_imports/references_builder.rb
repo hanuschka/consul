@@ -48,9 +48,20 @@ module ProjektImports::ReferencesBuilder
     {}
   end
 
+  # Hidden templates are dropped here rather than in the prompt alone, so the
+  # resolver cannot render one either, even when the chat proposes its id.
   def self.fetch_content_block_templates
-    ContentBlockTemplates::Catalogue
-      .call(section: "general")
-      .flat_map { |category| Array(category["templates"]) }
+    templates_by_category = ContentBlockTemplates::Catalogue.call(section: "general")
+
+    ContentBlockTemplates::Visibility
+      .without_hidden_templates(templates_by_category)
+      .flat_map do |category_data|
+        category = {
+          "category_id" => category_data.dig("category", "id"),
+          "category_name" => category_data.dig("category", "name_en")
+        }
+
+        category_data["templates"].map { |template| template.merge(category) }
+      end
   end
 end

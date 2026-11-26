@@ -45,7 +45,8 @@ class ProjektImports::FromUrlJob < ApplicationJob
       additional_user_instructions: projekt_import.additional_user_instructions,
       response_language: projekt_import.import_response_language,
       source_images: [],
-      source_label: fetch_result.data[:final_url]
+      source_label: fetch_result.data[:final_url],
+      recent_opening_template_ids: ProjektImports::RecentOpeningTemplateIdsQuery.call
     )
 
     if !ai_result.success?

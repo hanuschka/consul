@@ -8,13 +8,14 @@ class ProjektImports::PromptBuilder
 
   def initialize(
     base_prompt:, refs:, response_language: nil, source_images: [],
-    additional_user_instructions: nil
+    additional_user_instructions: nil, random: Random.new
   )
     @base_prompt = base_prompt
     @refs = refs
     @response_language = response_language.presence || default_response_language
     @source_images = Array(source_images)
     @additional_user_instructions = additional_user_instructions
+    @random = random
   end
 
   def call
@@ -117,18 +118,22 @@ class ProjektImports::PromptBuilder
     lines.join("\n")
   end
 
+  # Shuffled per import: listed in catalogue order, the first templates were
+  # the ones every import reached for, whatever the document said. The category
+  # is what the base prompt tells the model to choose and vary by.
   def build_templates_section
     templates = refs["content_block_templates"] || []
     return "" if templates.blank?
 
     lines = []
-    lines << "Available content block templates (ID — Name: Description):"
+    lines << "Available content block templates, in random order (ID — Name (Category): Description):"
 
-    templates.each do |t|
+    templates.shuffle(random: @random).each do |t|
+      category = t["category_name"].presence ? " (#{t['category_name']})" : ""
       desc = t["description"].presence ? ": #{t['description']}" : ""
       slots = image_slot_count(t)
       marker = slots.positive? ? " [has #{slots} image slot(s)]" : ""
-      lines << "  #{t['id']} — #{t['name']}#{desc}#{marker}"
+      lines << "  #{t['id']} — #{t['name']}#{category}#{desc}#{marker}"
     end
 
     lines.join("\n")

@@ -6,6 +6,7 @@ class ProjektImports::AiResultEditor
 
   class IndexError < StandardError; end
   class ResolvedContentBlocksError < StandardError; end
+  class UnavailableTemplatesError < StandardError; end
 
   attr_reader :projekt_import, :journal
 
@@ -31,6 +32,15 @@ class ProjektImports::AiResultEditor
 
   def content_blocks
     Array(data["content_blocks"]).dup
+  end
+
+  # The templates the chat may build blocks from: the import's own list, so a
+  # template hidden in the selector is not on offer here either.
+  def available_content_block_templates
+    @available_content_block_templates ||=
+      ProjektImports::ReferencesBuilder.fetch_content_block_templates.map do |template|
+        template.slice("id", "name", "description")
+      end
   end
 
   def update_fields(attributes)
@@ -90,6 +100,7 @@ class ProjektImports::AiResultEditor
 
   def propose_content_blocks(blocks)
     ensure_blocks_editable!
+    ensure_templates_available!(blocks)
 
     journal.propose("replace_content_blocks", count: blocks.size, blocks: Array(blocks))
   end
@@ -113,6 +124,25 @@ class ProjektImports::AiResultEditor
     raise ResolvedContentBlocksError,
       "content blocks were already rendered to HTML by a previous import and " \
       "can no longer be edited here"
+  end
+
+  # A hidden or unknown template id used to pass here and turn into a plain
+  # text block once the projekt was created. With no catalogue to check against
+  # the import warns about that on its own, so nothing is rejected. Ids the
+  # stored blocks already use pass too: the chat sends the whole list back, and
+  # a template hidden after the analysis would fail every later proposal.
+  def ensure_templates_available!(blocks)
+    available_ids = available_content_block_templates.map { |template| template["id"] }
+    return if available_ids.empty?
+
+    stored_ids = content_blocks.map { |block| block["template_id"] }
+    proposed_ids = blocks.map { |block| block["template_id"] }.uniq
+    unavailable_ids = proposed_ids - available_ids - stored_ids
+    return if unavailable_ids.empty?
+
+    raise UnavailableTemplatesError,
+      "template ids #{unavailable_ids.join(', ')} are not available. Use only ids " \
+      "from available_templates, which read_import_data returns for content_blocks"
   end
 
   def data

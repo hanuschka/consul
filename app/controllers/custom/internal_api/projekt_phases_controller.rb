@@ -140,7 +140,24 @@ class InternalApi::ProjektPhasesController < InternalApi::BaseController
     end
   end
 
+  def participation_counts
+    render json: ProjektPhaseParticipationCountsQuery.call(requested_projekt_phase_ids)
+  end
+
   private
+
+  # Accepts "1,2,3" as well as projekt_phase_ids[]=1&projekt_phase_ids[]=2.
+  def requested_projekt_phase_ids
+    raw_ids = params[:projekt_phase_ids]
+
+    if raw_ids.is_a?(String)
+      raw_ids = raw_ids.split(",")
+    end
+
+    return [] if !raw_ids.is_a?(Array)
+
+    raw_ids.filter_map { |id| Integer(id.to_s, 10, exception: false) }.uniq
+  end
 
   def find_projekt
     if params[:projekt_id].present?

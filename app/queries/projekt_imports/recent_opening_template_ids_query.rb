@@ -6,7 +6,9 @@
 # not submitted yet has no projekt, and without it several documents uploaded
 # back to back would all be analysed against the same history.
 class ProjektImports::RecentOpeningTemplateIdsQuery < ApplicationQuery
-  HISTORY_SIZE = 5
+  # Four heroes need neither images, video nor figures. Withholding at most
+  # three keeps one for a document without images.
+  HISTORY_SIZE = 3
   AWAITING_SUBMIT_STATUSES = %w[chatting submitting].freeze
   OPENING_TEMPLATE_ID_SQL = "ai_result -> 'content_blocks' -> 0 -> 'template_id'".freeze
 

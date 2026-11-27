@@ -1,0 +1,120 @@
+class Offer < ApplicationRecord
+  include Mappable
+  include Imageable
+
+  REQUIRED_CATEGORY_KINDS = %w[offer_type social_area].freeze
+
+  translates :title, touch: true
+  translates :short_description, touch: true
+  translates :times, touch: true
+  translates :costs, touch: true
+  translates :registration, touch: true
+  include Globalizable
+  include MachineTranslatable
+
+  belongs_to :author, class_name: "User", optional: true
+  belongs_to :provider, class_name: "Offer::Provider", optional: true, inverse_of: :offers
+
+  has_many :category_assignments, class_name: "Offer::CategoryAssignment", dependent: :destroy,
+    inverse_of: :offer
+  has_many :categories, through: :category_assignments, source: :category
+
+  enum :review_status, { checked: 0, added: 1, changed: 2 }, prefix: :review
+
+  scope :not_suspended, -> { where(suspended_at: nil) }
+  scope :suspended, -> { where.not(suspended_at: nil) }
+  scope :deactivated, -> { where.not(deactivated_at: nil) }
+  scope :expired, -> { where("offers.expires_on < ?", Date.current) }
+  scope :published, -> {
+    not_suspended.where(deactivated_at: nil).where("offers.expires_on IS NULL OR offers.expires_on >= ?", Date.current)
+  }
+
+  scope :sort_by_title, ->(direction = :asc) {
+    locale = connection.quote(I18n.locale.to_s)
+    direction = direction.to_s.casecmp?("desc") ? "DESC" : "ASC"
+
+    reorder(Arel.sql(<<~SQL.squish))
+      (SELECT t.title FROM offer_translations t
+        WHERE t.offer_id = offers.id
+        ORDER BY (t.locale = #{locale}) DESC, t.id ASC
+        LIMIT 1) #{direction} NULLS LAST, offers.id #{direction}
+    SQL
+  }
+
+  attr_accessor :provider_required
+
+  validates :provider_id, presence: true, if: :provider_required
+  validates_translation :title, presence: true
+  validate :short_description_present
+  validates :contact_email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
+  validates :contact_website, format: { with: %r{\Ahttps?://[^\s]+\z}i }, allow_blank: true
+  validate :required_categories_present
+
+  def self.listed_for(user)
+    return published if user.blank?
+    return all if user.administrator? || user.offer_manager?
+
+    published.or(where(provider_id: Offer::Provider.for_user(user).select(:id)))
+  end
+
+  def suspended?
+    suspended_at.present?
+  end
+
+  def deactivated?
+    deactivated_at.present?
+  end
+
+  def expired?
+    expires_on.present? && expires_on < Date.current
+  end
+
+  def published?
+    !suspended? && !deactivated? && !expired?
+  end
+
+  def deactivate!
+    update_column(:deactivated_at, Time.current)
+  end
+
+  def activate!
+    update_column(:deactivated_at, nil)
+  end
+
+  def mark_for_review
+    self.review_status = new_record? || review_added? ? :added : :changed
+  end
+
+  def mark_checked!
+    update_column(:review_status, :checked)
+  end
+
+  def suspend!
+    update_column(:suspended_at, Time.current)
+  end
+
+  def unsuspend!
+    update_column(:suspended_at, nil)
+  end
+
+  def categories_of(kind)
+    categories.select { |category| category.kind == kind.to_s }
+  end
+
+  private
+
+    def short_description_present
+      return if Nokogiri::HTML5.fragment(short_description.to_s).text.tr(" ", " ").strip.present?
+
+      errors.add(:short_description, :blank)
+    end
+
+    def required_categories_present
+      selected_kinds = category_assignments.reject(&:marked_for_destruction?).map { |a| a.category&.kind }
+
+      (REQUIRED_CATEGORY_KINDS - selected_kinds).each do |kind|
+        errors.add(:base, I18n.t("activerecord.errors.models.offer.category_required",
+                                 category: I18n.t("activerecord.attributes.offer/category.kinds.#{kind}")))
+      end
+    end
+end

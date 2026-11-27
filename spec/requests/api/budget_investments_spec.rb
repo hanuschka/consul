@@ -48,14 +48,42 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       tags 'Budget Investments'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Returns paginated results with voting/support information.#{ApiAccessRequirements::GET_READ_ONLY}"
+      description "Retrieve all budget investments (project proposals) for a specific participatory budget. Investments can be filtered by category (heading/group), feasibility status, selection status, and sorted by various criteria. Filters and sorting apply to the whole list before it is paginated, so every page is full and in order. Returns paginated results with voting/support information.#{ApiAccessRequirements::GET_READ_ONLY}"
       parameter name: :page, in: :query, type: :integer, required: false, description: 'Pagination page number (**default:** 1)'
       parameter name: :per_page, in: :query, type: :integer, required: false, description: 'Number of items per page (**default:** 500, max: 2000)'
       parameter name: :heading_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category heading'
       parameter name: :group_id, in: :query, type: :integer, required: false, description: 'Filter results to investments in a specific category group'
-      parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility assessment: "feasible", "unfeasible", or "undecided"'
+      parameter name: :feasibility, in: :query, type: :string, required: false, description: 'Filter by feasibility assessment: "feasible" (includes "feasible_with_changes"), "feasible_with_changes", "unfeasible", or "undecided"'
       parameter name: :selected, in: :query, type: :string, required: false, description: 'Filter by selection status: "true" for selected investments, "false" for unselected'
-      parameter name: :order, in: :query, type: :string, required: false, description: 'Sort by: "id" (**default**), "supports" (vote count), "confidence_score", "price", "ballots", or "newest"'
+      parameter name: :order, in: :query, type: :string, required: false, description: 'Sort by: "id" (**default**, highest id first), "supports" (vote count), "confidence_score", "price", "ballots", or "newest". Ties are broken by id, highest first.'
+
+      response '200', 'budget investments sorted before pagination' do
+        let(:investment_setup) { create_minimal_prereqs }
+        let(:budget_id) { investment_setup[1].id }
+        let(:order) { 'supports' }
+        let(:per_page) { 2 }
+
+        before do
+          author, budget, heading = investment_setup
+
+          [5, 1, 9].each do |supports|
+            Budget::Investment.create!(
+              author: author,
+              heading: heading,
+              budget: budget,
+              resource_terms: true,
+              title: "Investment with #{supports} supports",
+              description: 'Investment description'
+            ).update_column(:cached_votes_up, supports)
+          end
+        end
+
+        run_test! do |response|
+          titles = JSON.parse(response.body)['data']['budget_investments'].map { |investment| investment['title'] }
+
+          expect(titles).to eq(['Investment with 9 supports', 'Investment with 5 supports'])
+        end
+      end
 
       response '200', 'budget investments found and returned' do
         let(:budget_id) do
@@ -79,7 +107,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investments: { type: :array, items: { type: :object } }
+                     budget_investments: { type: :array, items: { '$ref' => '#/components/schemas/BudgetInvestment' } }
                    },
                    required: ['budget_investments']
                  },
@@ -94,6 +122,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
         let(:budget_id) do
           api_client.update!(access_level: :public_data)
           _user, budget, heading = create_minimal_prereqs
+          budget.update!(projekt_phase: create_projekt_phase('ProjektPhase::BudgetPhase'))
           2.times do |i|
             investment = Budget::Investment.new(
               author: api_client.user,
@@ -113,7 +142,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investments: { type: :array, items: { type: :object } }
+                     budget_investments: { type: :array, items: { '$ref' => '#/components/schemas/BudgetInvestment' } }
                    },
                    required: ['budget_investments']
                  },
@@ -147,28 +176,13 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               on_behalf_of: { type: :string, nullable: true, description: 'Optional: Organization or group name if the proposal is made on behalf of an entity rather than an individual.' },
               resource_terms: { type: :boolean, description: 'Must be true. Confirms the submitter accepts the terms and conditions.' },
               price: { type: :number, nullable: true, description: 'Estimated budget/cost for the investment in the budget\'s currency.' },
-              feasibility: { type: :string, nullable: true, enum: %w[feasible unfeasible undecided], description: 'Admin feasibility assessment (admin only). Set to "feasible" (can be completed), "unfeasible" (cannot be done), or "undecided" (still evaluating).' },
-              valuator_explanation: { type: :string, nullable: true, description: 'Admin-only: Explanation of the feasibility assessment, shown on the public proposal page. HTML, stored as-is like the /adm feasibility editor (e.g. "<p>Does not meet the criteria because ...</p>"). Required when feasibility is "unfeasible" and valuation_finished is true; can be sent in the same request.' },
+              feasibility: { type: :string, enum: %w[feasible feasible_with_changes unfeasible undecided], description: 'Admin feasibility assessment (admin only). Set to "feasible" (can be completed), "feasible_with_changes" (can be completed with changes by the administration, described in the valuator explanation), "unfeasible" (cannot be done), or "undecided" (still evaluating).' },
+              valuator_explanation: { type: :string, nullable: true, description: 'Admin-only: Explanation of the feasibility assessment, shown on the public proposal page. HTML, stored as-is like the /adm feasibility editor (e.g. "<p>Does not meet the criteria because ...</p>"). Required when feasibility is "unfeasible" or "feasible_with_changes" and valuation_finished is true; can be sent in the same request.' },
               valuation_finished: { type: :boolean, nullable: true, description: 'Admin-only: Whether feasibility assessment is complete' },
               selected: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is selected as a winner' },
               visible_to_valuators: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is visible to valuators during the assessment phase' },
-              map_location_attributes: {
-                type: :object,
-                nullable: true,
-                description: 'Geographic location data for mapping the investment',
-                properties: {
-                  id: { type: :integer, nullable: true },
-                  latitude: { type: :number, description: 'Latitude coordinate' },
-                  longitude: { type: :number, description: 'Longitude coordinate' },
-                  altitude: { type: :number, nullable: true },
-                  zoom: { type: :integer, nullable: true },
-                  features: { type: :string, nullable: true },
-                  rendering_library: { type: :string, nullable: true },
-                  show_admin_shape: { type: :boolean, nullable: true },
-                  _destroy: { type: :boolean, nullable: true }
-                },
-                required: %w[latitude longitude]
-              },
+              **Schemas::Budgets::BUDGET_INVESTMENT_WRITE_PROPERTIES,
+              **Schemas::Miscellaneous::EXTERNAL_REFERENCE_WRITE_PROPERTIES,
               image_attributes: {
                 type: :object,
                 nullable: true,
@@ -187,7 +201,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               documents_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the investment proposal. Upload documents as base64-encoded data.',
+                description: 'Array of document attachments (PDFs, Word docs, spreadsheets, etc.) to support the investment proposal. New documents are attributed to the content author of the API client; the author cannot be set or changed via the API. Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...); invalid base64 returns 422. Returned documents carry a download url.',
                 items: {
                   type: :object,
                   properties: {
@@ -195,7 +209,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                     title: { type: :string, nullable: true, description: 'Document title or filename' },
                     attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
                     cached_attachment: { type: :string, nullable: true },
-                    user_id: { type: :integer, nullable: true },
                     _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
                   }
                 }
@@ -211,6 +224,85 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
         },
         required: ['budget_investment']
       }
+
+      response '201', 'budget investment created with an external reference and texts in two languages' do
+        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
+        let(:budget) { Budget.find(budget_id) }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              heading_id: heading.id,
+              external_source: 'stadtportal',
+              external_id: 'A-1042',
+              translations: {
+                de: { title: 'Neue Bänke im Park', description: 'Zehn Bänke entlang des Weges' },
+                en: { title: 'New park benches', description: 'Ten benches along the path' }
+              },
+              implementation_performer: 'city',
+              user_cost_estimate: '5.000 €'
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
+                   },
+                   required: ['budget_investment']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          investment_data = JSON.parse(response.body)['data']['budget_investment']
+
+          expect(investment_data['external_source']).to eq('stadtportal')
+          expect(investment_data['external_id']).to eq('A-1042')
+          expect(investment_data['translations']['de']['title']).to eq('Neue Bänke im Park')
+          expect(investment_data['implementation_performer']).to eq('city')
+        end
+      end
+
+      response '422', 'external id already used in the budget' do
+        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
+        let(:budget) { Budget.find(budget_id) }
+        let(:group) { budget.create_group!(name: 'Test Group') }
+        let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
+
+        before do
+          budget.investments.create!(
+            heading: heading,
+            author: api_client.content_author,
+            resource_terms: true,
+            title: 'Synced before',
+            description: 'Synced before',
+            external_source: 'stadtportal',
+            external_id: 'A-1042'
+          )
+        end
+
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              heading_id: heading.id,
+              title: 'Synced again',
+              description: 'Synced again',
+              external_source: 'stadtportal',
+              external_id: 'A-1042'
+            }
+          }
+        end
+
+        run_test! do
+          expect(budget.investments.where(external_id: 'A-1042').count).to eq(1)
+        end
+      end
 
       response '201', 'budget investment created' do
         let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
@@ -234,7 +326,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -273,6 +365,20 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                }
 
         run_test!
+      end
+
+      response '400', 'empty request body' do
+        let(:budget_id) { Budget.create!(name: 'Test Budget', currency_symbol: '€').id }
+        let(:budget_investment) { {} }
+
+        schema ApiResponseExamples::ERROR_SCHEMA
+
+        run_test! do |response|
+          error = JSON.parse(response.body)['error']
+
+          expect(error['type']).to eq('bad_request')
+          expect(error['messages']).to eq(["The request body must contain a non-empty 'budget_investment' object."])
+        end
       end
 
       response '403', 'forbidden - admin access required' do
@@ -338,7 +444,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -396,7 +502,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                    properties: {
                      budget_investments: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/BudgetInvestment' }
                      }
                    },
                    required: ['budget_investments']
@@ -444,7 +550,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -460,7 +566,13 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       end
 
       response '200', 'budget investment found with public_data access' do
-        let(:budget) { Budget.create!(name: 'Test Budget', currency_symbol: '€') }
+        let(:budget) do
+          Budget.create!(
+            name: 'Test Budget',
+            currency_symbol: '€',
+            projekt_phase: create_projekt_phase('ProjektPhase::BudgetPhase')
+          )
+        end
         let(:group) { budget.create_group!(name: 'Test Group') }
         let(:heading) { group.create_heading!(name: 'Test Heading', price: 1000000, allow_custom_content: true) }
         let(:budget_investment) do
@@ -485,7 +597,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -503,7 +615,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update a budget investment details. Allows editing project information, admin feasibility assessment, selection status, or image. Can add, replace, or remove the investment image. Admin-only: can set feasibility status, the valuator explanation, valuation completion, and mark as selected. The full criteria check (feasibility, explanation, valuation_finished) works in a single request. Like the /adm feasibility form, a request that sets feasibility or valuation_finished emails the author once when the valuation is finished as feasible or unfeasible. All fields are optional - only provide fields to change. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update a budget investment details. Allows editing project information, admin feasibility assessment, selection status, or image. Can add, replace, or remove the investment image. Admin-only: can set feasibility status, the valuator explanation, valuation completion, and mark as selected. The full criteria check (feasibility, explanation, valuation_finished) works in a single request. Like the /adm feasibility form, a request that sets feasibility or valuation_finished emails the author once when the valuation is finished as feasible, feasible with changes or unfeasible. All fields are optional - only provide fields to change. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :budget_investment, in: :body, description: 'Investment attributes to update (title, description, price, feasibility, valuator explanation, selection status, image, translations). Any field not provided remains unchanged.', schema: {
         type: :object,
@@ -516,27 +628,12 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               video_url: { type: :string, nullable: true, description: 'URL to demonstration or explanation video' },
               on_behalf_of: { type: :string, nullable: true, description: 'Organization or group name if applicable' },
               price: { type: :number, nullable: true, description: 'Estimated project cost in budget currency' },
-              feasibility: { type: :string, nullable: true, enum: %w[feasible unfeasible undecided], description: 'Admin feasibility assessment (admin only). Set to "feasible" (can be completed), "unfeasible" (cannot be done), or "undecided" (still evaluating).' },
-              valuator_explanation: { type: :string, nullable: true, description: 'Admin-only: Explanation of the feasibility assessment, shown on the public proposal page. HTML, stored as-is like the /adm feasibility editor (e.g. "<p>Does not meet the criteria because ...</p>"). Required when feasibility is "unfeasible" and valuation_finished is true; can be sent in the same request.' },
+              feasibility: { type: :string, enum: %w[feasible feasible_with_changes unfeasible undecided], description: 'Admin feasibility assessment (admin only). Set to "feasible" (can be completed), "feasible_with_changes" (can be completed with changes by the administration, described in the valuator explanation), "unfeasible" (cannot be done), or "undecided" (still evaluating).' },
+              valuator_explanation: { type: :string, nullable: true, description: 'Admin-only: Explanation of the feasibility assessment, shown on the public proposal page. HTML, stored as-is like the /adm feasibility editor (e.g. "<p>Does not meet the criteria because ...</p>"). Required when feasibility is "unfeasible" or "feasible_with_changes" and valuation_finished is true; can be sent in the same request.' },
               valuation_finished: { type: :boolean, nullable: true, description: 'Admin-only: Whether feasibility assessment is complete' },
               selected: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is selected as a winner' },
               visible_to_valuators: { type: :boolean, nullable: true, description: 'Admin-only: Whether this investment is visible to valuators during the assessment phase' },
-              map_location_attributes: {
-                type: :object,
-                nullable: true,
-                description: 'Geographic location data for mapping the investment',
-                properties: {
-                  id: { type: :integer, nullable: true },
-                  latitude: { type: :number, nullable: true, description: 'Latitude coordinate' },
-                  longitude: { type: :number, nullable: true, description: 'Longitude coordinate' },
-                  altitude: { type: :number, nullable: true },
-                  zoom: { type: :integer, nullable: true },
-                  features: { type: :string, nullable: true },
-                  rendering_library: { type: :string, nullable: true },
-                  show_admin_shape: { type: :boolean, nullable: true },
-                  _destroy: { type: :boolean, nullable: true }
-                }
-              },
+              **Schemas::Budgets::BUDGET_INVESTMENT_WRITE_PROPERTIES,
               image_attributes: {
                 type: :object,
                 nullable: true,
@@ -555,7 +652,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
               documents_attributes: {
                 type: :array,
                 nullable: true,
-                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true).',
+                description: 'Update document attachments. Add new documents, update existing ones (provide id), or remove documents (set _destroy=true). New documents are attributed to the content author of the API client; the author cannot be set or changed via the API. Upload each file as base64, bare or as a data URI (data:application/pdf;base64,...); invalid base64 returns 422. Returned documents carry a download url.',
                 items: {
                   type: :object,
                   properties: {
@@ -563,7 +660,6 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                     title: { type: :string, nullable: true, description: 'Document title or filename' },
                     attachment: { type: :string, nullable: true, description: 'Base64-encoded document file. Supported formats: PDF, DOC, DOCX, XLS, XLSX, etc.' },
                     cached_attachment: { type: :string, nullable: true },
-                    user_id: { type: :integer, nullable: true },
                     _destroy: { type: :boolean, nullable: true, description: 'Set to true to remove this document' }
                   }
                 }
@@ -608,7 +704,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -616,6 +712,57 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                required: ['data']
 
         run_test!
+      end
+
+      response '200', 'winner kept when incompatible is changed in the same request' do
+        let(:existing_investment) do
+          create_investment_for_valuation(
+            feasibility: 'feasible',
+            valuation_finished: true,
+            selected: true,
+            valuator_explanation: '<p>Machbar</p>'
+          )
+        end
+        let(:id) { existing_investment.id }
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              incompatible: false,
+              winner: true,
+              physical_votes: 12,
+              price_explanation: 'Laut Kostenschätzung',
+              translations: {
+                de: { title: 'Bänke im Park', description: 'Zehn Bänke entlang des Weges' },
+                en: { title: 'Benches in the park' }
+              }
+            }
+          }
+        end
+
+        before { existing_investment.update_column(:incompatible, true) }
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
+                   },
+                   required: ['budget_investment']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          investment_data = JSON.parse(response.body)['data']['budget_investment']
+
+          expect(investment_data['winner']).to be(true)
+          expect(investment_data['incompatible']).to be(false)
+          expect(investment_data['physical_votes']).to eq(12)
+          expect(investment_data['price_explanation']).to eq('Laut Kostenschätzung')
+          expect(investment_data['translations']['en']['title']).to eq('Benches in the park')
+          expect(existing_investment.reload.winner).to be(true)
+        end
       end
 
       response '200', 'criteria check completed with explanation in one request' do
@@ -699,6 +846,77 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
           {
             budget_investment: {
               feasibility: 'unfeasible',
+              valuation_finished: true
+            }
+          }
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          explanation_label = Budget::Investment.human_attribute_name(:valuator_explanation)
+
+          expect(data['error']['messages']).to include(a_string_including(explanation_label))
+          expect(existing_investment.reload.valuation_finished).to be(false)
+        end
+      end
+
+      response '200', 'criteria check completed as feasible with changes' do
+        let(:existing_investment) { create_investment_for_valuation }
+        let(:id) { existing_investment.id }
+        let(:explanation) { '<p>Built at the other end of the park.</p>' }
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              feasibility: 'feasible_with_changes',
+              valuator_explanation: explanation,
+              valuation_finished: true
+            }
+          }
+        end
+
+        before do
+          allow(Mailer).to receive(:budget_investment_feasible_with_changes).and_call_original
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          existing_investment.reload
+
+          expect(data['data']['budget_investment']['feasible']).to be(true)
+          expect(data['data']['budget_investment']['feasible_with_changes']).to be(true)
+          expect(existing_investment).to be_feasible_with_changes
+          expect(existing_investment.email_on_feasibility_sent_at).to be_present
+          expect(Mailer).to have_received(:budget_investment_feasible_with_changes).with(existing_investment)
+        end
+      end
+
+      response '422', 'unknown feasibility value' do
+        let(:existing_investment) { create_investment_for_valuation }
+        let(:id) { existing_investment.id }
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              feasibility: 'maybe'
+            }
+          }
+        end
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          feasibility_label = Budget::Investment.human_attribute_name(:feasibility)
+
+          expect(data['error']['messages']).to include(a_string_including(feasibility_label))
+          expect(existing_investment.reload.feasibility).to eq('undecided')
+        end
+      end
+
+      response '422', 'feasible with changes valuation finished without explanation' do
+        let(:existing_investment) { create_investment_for_valuation }
+        let(:id) { existing_investment.id }
+        let(:budget_investment) do
+          {
+            budget_investment: {
+              feasibility: 'feasible_with_changes',
               valuation_finished: true
             }
           }
@@ -837,7 +1055,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }
@@ -1005,7 +1223,7 @@ RSpec.describe 'Budget Investments API', type: :request, openapi_spec: 'v1/swagg
                  data: {
                    type: :object,
                    properties: {
-                     budget_investment: { type: :object }
+                     budget_investment: { '$ref' => '#/components/schemas/BudgetInvestment' }
                    },
                    required: ['budget_investment']
                  }

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "dashboard", "polls_controller").to_s
+load Rails.root.join("app", "controllers", "dashboard", "polls_controller.rb")
 
 class Dashboard::PollsController < Dashboard::BaseController
   def create

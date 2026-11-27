@@ -20,6 +20,25 @@ describe "Projekt phases in the public API", type: :request do
     get api_projekt_phase_path(projekt_phase), headers: headers
   end
 
+  def listed_phase_active
+    response.parsed_body
+      .dig("data", "projekt_phases")
+      .find { |phase| phase["id"] == projekt_phase.id }
+      .fetch("active")
+  end
+
+  def shown_phase_active
+    response.parsed_body.dig("data", "projekt_phase", "active")
+  end
+
+  it "reports a switched-on phase as active" do
+    list_phases
+    expect(listed_phase_active).to be true
+
+    show_phase
+    expect(shown_phase_active).to be true
+  end
+
   it "serves the visible phases of a public projekt" do
     list_phases
     expect(response).to have_http_status(:ok)
@@ -67,6 +86,16 @@ describe "Projekt phases in the public API", type: :request do
 
       show_phase
       expect(response).to have_http_status(:ok)
+    end
+
+    it "reports a switched-off phase as inactive" do
+      projekt_phase.update!(active: false)
+
+      list_phases
+      expect(listed_phase_active).to be false
+
+      show_phase
+      expect(shown_phase_active).to be false
     end
   end
 end

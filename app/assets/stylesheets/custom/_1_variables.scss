@@ -31,6 +31,9 @@ $transition-base: 200ms ease;
   --admin-topbar-height: #{$admin-topbar-height};
   --tobar-max-width: #{$topbar-max-width};
   --mobile-custom-fixed-tabs-height: #{$mobile-custom-fixed-tabs-height};
+  // Studio content-block toolbar: above the in-page sticky bars (budget bar
+  // 500, browse navigation 1000), below the fixed site header (1002).
+  --z-index-content-block-toolbar: 1001;
 }
 
 // Below the small-tablet breakpoint the admin topbar is hidden (see

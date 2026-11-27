@@ -1,10 +1,12 @@
-require_dependency Rails.root.join("app", "models", "navbar_item").to_s
+load Rails.root.join("app", "models", "navbar_item.rb")
 
 class NavbarItem < ApplicationRecord
   # Presets whose menu label should follow the feature's configurable name
   # (deficiency_reports.feature_name / ideas.feature_name) when no per-item
   # custom_title is set.
   PRESETS_WITH_FEATURE_NAME = %w[deficiency_reports ideas].freeze
+
+  audited
 
   alias_method :consul_title, :title
 

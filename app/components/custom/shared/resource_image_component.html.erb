@@ -6,6 +6,7 @@
     <% if @ai_generated %>
       <%= render Shared::AiImageLabelComponent.new %>
     <% end %>
+    <%= render Shared::ImageCreditComponent.new(credits: @credits) %>
   <% else %>
     <div class="resource-image--missing-image-placeholder" role="img" aria-label="<%= t('custom.accessibility.shared.missing-image.aria-label') %>">
       <i class="resource-image--missing-image-placeholder-icon fa <%= @image_placeholder_icon_class %>" aria-hidden="true"></i>

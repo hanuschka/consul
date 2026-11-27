@@ -14,6 +14,21 @@
       this.bindToasts($toasts);
     },
 
+    showFromTemplate: function(template) {
+      var $renderedStack = $(template.content.firstElementChild.cloneNode(true));
+      var $toasts = $renderedStack.find(".js-flash-message");
+      var $existingStack = $(".js-toast-stack").first();
+
+      if ($existingStack.length) {
+        $existingStack.append($toasts);
+      } else {
+        $("body").append($renderedStack);
+      }
+
+      this.announce($toasts);
+      this.bindToasts($toasts);
+    },
+
     // Mirror toast text into a visually-hidden live region so screen readers
     // announce it without the toast stealing focus.
     announce: function($toasts) {

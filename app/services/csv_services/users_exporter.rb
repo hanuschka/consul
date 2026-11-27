@@ -41,7 +41,7 @@ module CsvServices
         user_row.push(user.gender.present? ? I18n.t("custom.devise_views.users.gender.#{user.gender}") : "")
         user_row.push(user.date_of_birth.present? ? I18n.l(user.date_of_birth, format: "%d.%m.%Y") : "")
         user_row.push(display_user_roles(user))
-        user_row.push(user.unique_stamp.to_s)
+        user_row.push(user.erased? ? "" : user.unique_stamp.to_s)
         user_row.push(user.verified_at.present? ? I18n.l(user.verified_at, format: "%d.%m.%Y") : "")
         user_row.push(I18n.t("shared.#{user.reverify ? 'yes' : 'no'}"))
 

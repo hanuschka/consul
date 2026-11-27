@@ -3,18 +3,18 @@ en:
     show:
       amount_available:
         distributed:
-          zero: "Sie können immer noch <span>%{count}</span> Stimmen abgeben."
-          one: "Sie können immer noch <span>%{count}</span> Stimme abgeben."
-          other: "Sie können immer noch <span>%{count}</span> Stimmen abgeben."
+          zero: "You can still cast <span>%{count}</span> votes."
+          one: "You can still cast <span>%{count}</span> vote."
+          other: "You can still cast <span>%{count}</span> votes."
       amount_spent:
         distributed:
-          zero: "Abgegebene Stimmen: <span>%{count}</span>"
-          one: "Abgegebene Stimme: <span>%{count}</span>"
-          other: "Abgegebene Stimmen: <span>%{count}</span>"
+          zero: "Votes cast: <span>%{count}</span>"
+          one: "Vote cast: <span>%{count}</span>"
+          other: "Votes cast: <span>%{count}</span>"
       amount_limit:
         distributed:
-          one: "Sie können noch <span>1</span> Stimme abgeben"
-          other: "Sie können bis zu <span>%{count}</span> Stimmen abgeben"
+          one: "You can cast <span>1</span> more vote"
+          other: "You can cast up to <span>%{count}</span> votes"
     investments:
       index:
         filters:
@@ -108,6 +108,7 @@ en:
           unverified_note_no_data_html: "Please %{verify_account} to make sure your votes are counted."
           unfeasible_html: "This investment proposal <strong>was marked as not feasible</strong> and will not take part in voting."
           feasible_html: "This proposal was classified as feasible."
+          feasible_with_changes_html: "This proposal meets the criteria <strong>only with changes</strong> by the administration"
         show:
           callouts:
             publishing_prices:
@@ -118,6 +119,7 @@ en:
               unfeasible: This investment proposal was marked as unfeasible.
           price: Cost estimation by the administration
           feasibility_explanation: Assessment of the administration
+          changes_explanation: Changes by the administration
           implementation_city_text: "Implementation: Should be implemented by the city administration"
           implementation_user_text: "Implementation: %{author} will assist with the implementation"
           user_cost_estimate_text: "User cost estimate: %{user_cost_estimate}"

@@ -1,46 +1,43 @@
-<!-- BlockID: E07 -->
-<!-- J1: KPI / Fakten-Kacheln – 4 gleichwertige Kacheln in einer Reihe -->
-<!-- Geeignet für: Kennzahlen, Projektzeitraum, Budget, Umfang -->
+<!-- BlockID: E07 Kennzahlen-Kacheln - Projekt auf einen Blick -->
+<!-- Geeignet für: Laufzeit, Budget, Umfang, Beteiligungszahlen -->
+<!-- Editor: jede Kachel ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Kachel. Icon über die Klasse fa-… tauschen (fontawesome.com, Version 5), nur im Code-Modus. -->
+<!-- Umbruch: zwei Kacheln nebeneinander am Handy, vier auf breiten Bildschirmen. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Kennzahl = Zahl-Ausnahme, aller Text 1rem -->
 
-<div style="background: linear-gradient(160deg, #1a2e44 0%, #243b55 100%); border-radius: 16px; padding: 32px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
-  <h3 style="font-size: 22px; font-weight: 700; color: #ffffff; margin-bottom: 6px; text-align: center; letter-spacing: -0.3px;">Das Projekt auf einen Blick</h3>
-  <p style="color: rgba(255,255,255,0.7); font-size: 15px; text-align: center; margin-bottom: 28px; margin-top: 0;">Alle wichtigen Fakten zur Buergerbeteiligung</p>
+<div style="position: relative; overflow: hidden; background: #1a2e44; background: linear-gradient(135deg, #1a2e44 0%, var(--brand-color, #1779ba) 140%); border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; color: #ffffff; box-shadow: 0 1px 2px rgba(16,24,40,0.12), 0 18px 40px -14px rgba(26,46,68,0.55);">
 
-  <ul class="row" style="margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap;">
+  <h3 style="position: relative; z-index: 1; color: #ffffff; margin: 0 0 6px; hyphens: auto; overflow-wrap: break-word;">Das Projekt auf einen Blick</h3>
+  <p style="position: relative; z-index: 1; font-size: 1rem; line-height: 1.6; color: #ffffff; margin: 0 0 20px;">Die wichtigsten Zahlen zur Bürgerbeteiligung im Westpark.</p>
 
-    <li class="column small-12 medium-3" style="margin-bottom: 16px;">
-      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 16px; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
-        <div style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Laufzeit</div>
-        <div style="font-size: 36px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">12 Mon.</div>
-      </div>
+  <ul style="position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr)); gap: 12px;">
+
+    <li style="margin: 0; background: rgba(255,255,255,0.10); background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 100%); border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; padding: 16px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 12px 24px -12px rgba(0,0,0,0.55);">
+      <span aria-hidden="true" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.18); color: #ffffff; margin: 0 0 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);"><i class="far fa-calendar-alt" style="font-size: 16px;"></i></span>
+      <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: #ffffff; white-space: nowrap;">12</div>
+      <div style="font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; margin: 4px 0 0;">Monate Laufzeit</div>
+      <div style="font-size: 1rem; line-height: 1.6; color: #ffffff; opacity: 0.85;">März 2026 bis Februar 2027</div>
     </li>
 
-    <li class="column small-12 medium-3" style="margin-bottom: 16px;">
-      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 16px; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
-        <div style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Stadtteile</div>
-        <div style="font-size: 36px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">7</div>
-      </div>
+    <li style="margin: 0; background: rgba(255,255,255,0.10); background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 100%); border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; padding: 16px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 12px 24px -12px rgba(0,0,0,0.55);">
+      <span aria-hidden="true" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.18); color: #ffffff; margin: 0 0 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);"><i class="fas fa-map-marker-alt" style="font-size: 16px;"></i></span>
+      <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: #ffffff; white-space: nowrap;">7</div>
+      <div style="font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; margin: 4px 0 0;">Stadtteile</div>
+      <div style="font-size: 1rem; line-height: 1.6; color: #ffffff; opacity: 0.85;">rund um den Park</div>
     </li>
 
-    <li class="column small-12 medium-3" style="margin-bottom: 16px;">
-      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 16px; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
-        <div style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Budget</div>
-        <div style="font-size: 36px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">250.000 &euro;</div>
-      </div>
+    <li style="margin: 0; background: rgba(255,255,255,0.10); background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 100%); border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; padding: 16px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 12px 24px -12px rgba(0,0,0,0.55);">
+      <span aria-hidden="true" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.18); color: #ffffff; margin: 0 0 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);"><i class="fas fa-euro-sign" style="font-size: 16px;"></i></span>
+      <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: #ffffff; white-space: nowrap;">250 T€</div>
+      <div style="font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; margin: 4px 0 0;">Budget</div>
+      <div style="font-size: 1rem; line-height: 1.6; color: #ffffff; opacity: 0.85;">für Ihre Ideen</div>
     </li>
 
-    <li class="column small-12 medium-3" style="margin-bottom: 16px;">
-      <div class="kpi-card" style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 16px; text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease;">
-        <div style="font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Beitr&auml;ge</div>
-        <div style="font-size: 36px; font-weight: 800; color: #ffffff; line-height: 1.1; letter-spacing: -1px;">1.847</div>
-      </div>
+    <li style="margin: 0; background: rgba(255,255,255,0.10); background: linear-gradient(180deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 100%); border: 1px solid rgba(255,255,255,0.22); border-radius: 12px; padding: 16px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 12px 24px -12px rgba(0,0,0,0.55);">
+      <span aria-hidden="true" style="display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.18); color: #ffffff; margin: 0 0 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);"><i class="fas fa-comment-dots" style="font-size: 16px;"></i></span>
+      <div style="font-size: 2rem; font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem); font-weight: 700; line-height: 1.1; color: #ffffff; white-space: nowrap;">1.847</div>
+      <div style="font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; margin: 4px 0 0;">Beiträge</div>
+      <div style="font-size: 1rem; line-height: 1.6; color: #ffffff; opacity: 0.85;">Stand 31.10.2026</div>
     </li>
 
   </ul>
 </div>
-<script>
-document.querySelectorAll('#J1 .kpi-card, [style*="linear-gradient(160deg"] .kpi-card').forEach(function(card){
-  card.addEventListener('mouseenter',function(){this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.24)';});
-  card.addEventListener('mouseleave',function(){this.style.transform='translateY(0)';this.style.boxShadow='none';});
-});
-</script>

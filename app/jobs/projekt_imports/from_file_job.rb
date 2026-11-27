@@ -37,7 +37,8 @@ class ProjektImports::FromFileJob < ApplicationJob
       additional_user_instructions: projekt_import.additional_user_instructions,
       response_language: projekt_import.import_response_language,
       source_images: images_result.data[:source_images],
-      source_label: projekt_import.source_files.map { |file| file.filename.to_s }.join(", ")
+      source_label: projekt_import.source_files.map { |file| file.filename.to_s }.join(", "),
+      recent_opening_template_ids: ProjektImports::RecentOpeningTemplateIdsQuery.call
     )
 
     if !ai_result.success?

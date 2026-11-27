@@ -50,7 +50,7 @@ end
                    properties: {
                      questions: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/Question' }
                      }
                    },
                    required: ['questions']
@@ -70,7 +70,7 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Create a new projekt question in a specific phase. Questions can be created as: (1) root questions in a QuestionPhase, (2) livestream questions in a LivestreamPhase by specifying projekt_livestream_id. Questions support multiple choice options via nested question_options_attributes. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Create a new projekt question in a specific phase. Questions can be created as: (1) root questions in a QuestionPhase, (2) livestream questions in a LivestreamPhase by specifying projekt_livestream_id. Questions support multiple choice options via nested question_options_attributes. Projekt questions have no description; a `description` field in the payload is ignored. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_question, in: :body, description: 'Projekt question creation payload', schema: {
         type: :object,
@@ -79,9 +79,12 @@ end
             type: :object,
             properties: {
               title: { type: :string, description: 'Title of the question' },
-              projekt_livestream_id: { type: :integer, nullable: true, description: 'Optional: ID of the livestream to associate this question with. If provided, validates that the livestream exists and the question becomes a livestream question.' }
+              projekt_livestream_id: { type: :integer, nullable: true, description: 'Optional: ID of the livestream to associate this question with. If provided, validates that the livestream exists and the question becomes a livestream question.' },
+              comments_enabled: { type: :boolean, description: 'Whether visitors can comment on the question' },
+              show_answers_count: { type: :boolean, description: 'Whether the site shows how many people chose each option' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[title])
             },
-            required: ['title']
+            required: []
           }
         },
         required: ['projekt_question']
@@ -94,7 +97,8 @@ end
         let(:projekt_question) do
           {
             projekt_question: {
-              title: 'Test Question'
+              title: 'Test Question',
+              description: 'Ignored: projekt questions have no description'
             }
           }
         end
@@ -104,7 +108,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     projekt_question: { type: :object }
+                     projekt_question: { '$ref' => '#/components/schemas/Question' }
                    },
                    required: ['projekt_question']
                  }
@@ -175,7 +179,7 @@ end
                    properties: {
                      questions: {
                        type: :array,
-                       items: { type: :object }
+                       items: { '$ref' => '#/components/schemas/Question' }
                      }
                    },
                    required: ['questions']
@@ -215,7 +219,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     projekt_question: { type: :object }
+                     projekt_question: { '$ref' => '#/components/schemas/Question' }
                    },
                    required: ['projekt_question']
                  }
@@ -223,6 +227,26 @@ end
                required: ['data']
 
         run_test!
+      end
+
+      response '200', 'answer counts hidden from public_data clients when the question hides them' do
+        before { api_client.update!(access_level: :public_data) }
+
+        let(:projekt) { Projekt.create!(name: 'Projekt', activated: true) }
+        let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
+        let(:test_projekt_question) do
+          question_phase.questions.create!(title: 'Hidden counts', show_answers_count: false).tap do |question|
+            question.question_options.create!(value: 'Yes')
+          end
+        end
+        let(:id) { test_projekt_question.id }
+
+        run_test! do |response|
+          question_data = JSON.parse(response.body)['data']['projekt_question']
+
+          expect(question_data).not_to have_key('answers_count')
+          expect(question_data['question_options'].first).not_to have_key('answers_count')
+        end
       end
 
       response '404', 'projekt question not found' do
@@ -239,7 +263,7 @@ end
       consumes 'application/json'
       produces 'application/json'
       security [bearer_auth: []]
-      description "Update an existing projekt question. Allows modifying question text and associated options. #{ApiAccessRequirements::ADMIN_REQUIRED}"
+      description "Update an existing projekt question. Allows modifying question text and associated options. Projekt questions have no description; a `description` field in the payload is ignored. #{ApiAccessRequirements::ADMIN_REQUIRED}"
 
       parameter name: :projekt_question, in: :body, description: 'Attributes to update on the projekt question', schema: {
         type: :object,
@@ -248,12 +272,51 @@ end
             type: :object,
             properties: {
               title: { type: :string, nullable: true },
-              projekt_livestream_id: { type: :integer, nullable: true }
+              projekt_livestream_id: { type: :integer, nullable: true },
+              comments_enabled: { type: :boolean, description: 'Whether visitors can comment on the question' },
+              show_answers_count: { type: :boolean, description: 'Whether the site shows how many people chose each option' },
+              translations: Schemas::Miscellaneous.translations_schema(%w[title])
             }
           }
         },
         required: ['projekt_question']
       }
+
+      response '200', 'switches and titles per language written' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:question_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::QuestionPhase', active: true) }
+        let(:test_projekt_question) { question_phase.questions.create!(title: 'Test Question') }
+        let(:id) { test_projekt_question.id }
+        let(:projekt_question) do
+          {
+            projekt_question: {
+              comments_enabled: false,
+              show_answers_count: false,
+              translations: { en: { title: 'Which day suits you?' }, de: { title: 'Welcher Tag passt Ihnen?' } }
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     projekt_question: { '$ref' => '#/components/schemas/Question' }
+                   },
+                   required: ['projekt_question']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          question_data = JSON.parse(response.body)['data']['projekt_question']
+
+          expect(question_data['comments_enabled']).to be(false)
+          expect(question_data['show_answers_count']).to be(false)
+          expect(question_data['translations']['de']['title']).to eq('Welcher Tag passt Ihnen?')
+        end
+      end
 
       response '200', 'projekt question updated' do
         let(:projekt) { Projekt.create!(name: 'Projekt') }
@@ -277,7 +340,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     projekt_question: { type: :object }
+                     projekt_question: { '$ref' => '#/components/schemas/Question' }
                    },
                    required: ['projekt_question']
                  }
@@ -438,7 +501,7 @@ end
                  data: {
                    type: :object,
                    properties: {
-                     projekt_question: { type: :object }
+                     projekt_question: { '$ref' => '#/components/schemas/Question' }
                    },
                    required: ['projekt_question']
                  }

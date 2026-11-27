@@ -8,6 +8,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
     name order_number preview_code published_at content_updated_at
     banner_image_generation_status copy_status copy_data copied_from_projekt_id
     import_file_status import_file_data imported_by_ai
+    imported_content_block_template_ids
     whatsapp_broadcast_sent_at whatsapp_broadcast_slug
     on_dt_global_overview from_dt special special_name
   ].freeze
@@ -180,7 +181,7 @@ class Projekts::Copying::ProjektCopier < ApplicationService
     end
 
     def copy_sdg_relations
-      related_sdgs = Projekts::Copying::Serializing::SdgCodeSerializer
+      related_sdgs = Projekts::Copying::Serializing::SDGCodeSerializer
         .resolve(bundle["sdg_relations"])
 
       related_sdgs.each do |related_sdg|

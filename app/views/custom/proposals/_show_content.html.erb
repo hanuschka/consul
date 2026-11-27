@@ -51,7 +51,7 @@
     <div class="flex-layout">
       <div class="main-column">
         <% if proposal.official_answer.present? %>
-          <div class="main-content-card" style="background-color:#E3FCE7;">
+          <div class="main-content-card -full-bleed-on-phone" style="background-color:#E3FCE7;">
             <%= auto_link_already_sanitized_html wysiwyg(proposal.official_answer) %>
           </div>
         <% end %>
@@ -62,7 +62,7 @@
             masterportal_pin: proposal.masterportal_pin
           ) %>
         <% else %>
-          <div class="resource-page--description new-card main-content-card">
+          <div class="resource-page--description new-card main-content-card -full-bleed-on-phone">
             <%= auto_link_already_sanitized_html wysiwyg(proposal.description) %>
           </div>
         <% end %>

@@ -1,11 +1,19 @@
-require_dependency Rails.root.join("app", "controllers", "application_controller").to_s
+load Rails.root.join("app", "controllers", "application_controller.rb")
 
 class ApplicationController < ActionController::Base
+  LEGACY_ANALYTICS_COOKIES = %w[ahoy_visit ahoy_visitor].freeze
+
+  class_attribute :html_params, default: %w[description]
+
   before_action :sanitize_pagination_params
   before_action :normalize_tags_param
   before_action :set_projekts_for_overview_page_navigation,
                 :set_default_social_media_images, :set_partner_emails
+  before_action :expire_legacy_analytics_cookies
+  before_action :sanitize_html_params, unless: -> { request.get? || request.head? }
   helper_method :set_comment_flags
+
+  rescue_from ActionController::InvalidAuthenticityToken, with: :handle_expired_session_token
 
   # unless Rails.env.production?
   #   around_action :n_plus_one_detection
@@ -19,6 +27,15 @@ class ApplicationController < ActionController::Base
   # end
 
   private
+
+    def handle_expired_session_token(exception)
+      raise exception if user_signed_in?
+
+      respond_to do |format|
+        format.html { redirect_to new_user_session_path, alert: t("devise.failure.timeout") }
+        format.any { head :unauthorized }
+      end
+    end
 
     # Overrides CanCan's default so a request arriving from an on-behalf-of account mail can read the
     # one hidden record that mail was about. Everything else about the visitor is unchanged: the
@@ -37,6 +54,21 @@ class ApplicationController < ActionController::Base
       )
     end
 
+    def expire_legacy_analytics_cookies
+      LEGACY_ANALYTICS_COOKIES.each do |cookie_name|
+        next if cookies[cookie_name].nil?
+
+        cookies.delete(cookie_name)
+      end
+    end
+
+    def sanitize_html_params
+      return if html_params.empty?
+      return if current_user&.administrator? || current_user&.projekt_manager?
+
+      ExternalContentSanitizer.new.sanitize_params(params, html_params)
+    end
+
     def sanitize_pagination_params
       %i[page per_page resource_browse_mode_page].each do |key|
         value = params[key]
@@ -51,7 +83,8 @@ class ApplicationController < ActionController::Base
     def normalize_tags_param
       return if params[:tags].blank?
 
-      normalized_tags = ::Tags::ExistingNamesService.call(params[:tags]).presence&.join(",")
+      tags_value = params[:tags].is_a?(String) ? params[:tags] : ""
+      normalized_tags = ::Tags::ExistingNamesService.call(tags_value).presence&.join(",")
       params[:tags] = normalized_tags
 
       if normalized_tags.blank?

@@ -10,6 +10,7 @@
     <%= render Adm::AttributeEditorComponent.new(@poll_image, :attachment, :image,
           label: t(".poll_image_label"),
           description: t(".poll_image_description")) %>
+    <%= render "adm/shared/image_credits_editor", record: @poll_image %>
   <% end %>
 
   <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :phase_tab_name, :string) %>
@@ -22,7 +23,7 @@
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_intro, :rich_text) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_title, :string) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_title_placeholder, :string) %>
-    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_description_placeholder, :string) %>
+    <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :resource_form_description_placeholder, :text) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :welcome_text_in_show, :rich_text) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :labels_name, :string) %>
     <%= render Adm::AttributeEditorComponent.new(@projekt_phase, :sentiments_name, :string) %>

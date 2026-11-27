@@ -3,6 +3,11 @@
 class Current < ActiveSupport::CurrentAttributes
   attribute :settings
   attribute :visible_projekt_ids
+
+  # The API client (ApiClient or InternalApiClient) changing configuration in
+  # this request, written onto every audit row as its comment.
+  attribute :api_client
+
   attribute :site_customization_images
   attribute :custom_content_blocks
   attribute :content_card_projekt_buckets

@@ -1,86 +1,49 @@
-<!-- BlockID: B06 Slider Lightbox – Hero mit Image-Slider, GLightbox und Text darunter -->
-<!-- Geeignet f&uuml;r: Projektstart mit mehreren Bildern (z.B. Foto + Lageplan), Beteiligungsseiten -->
-<!-- ANPASSEN: src-Attribute in den img-Tags durch eigene Bild-URLs ersetzen -->
-<!-- ANPASSEN: Slider-ID "slider-hero" muss pro Seite eindeutig sein, falls mehrere Slider verwendet werden -->
-<!-- HINWEIS: GLightbox-Links benoetigen background inline -->
+<!-- BlockID: B06 Slider Lightbox - Hero mit Bild-Slider, Lightbox und Text darunter -->
+<!-- Geeignet für: Projektstart mit mehreren Bildern (z.B. Foto und Lageplan), Beteiligungsseiten -->
+<!-- Editor: jede Folie ist ein Listenelement, „Weiteres Element hinzufügen“ kopiert die letzte Folie. Bild über das Bild-Werkzeug austauschen (Maus auf das Bild, Alternativtext setzen); die Lightbox-Adresse im Link zieht der Editor nach. -->
+<!-- Umbruch: Folien werden quer gewischt, je Folie ein Bild in voller Breite; Etiketten brechen in die nächste Zeile um, der Text steht unter dem Slider in voller Breite. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H2, Text, Etiketten und Wisch-Hinweis 1rem -->
 
-<div style="background: linear-gradient(160deg, #f8f9fb 0%, #eef2f7 100%); border-radius: 16px; padding: 0; margin-bottom: 24px; border-top: 3px solid var(--brand-color, #1779ba); border-left: 1px solid rgba(0,0,0,0.06); border-right: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); overflow: hidden;">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <!-- Image Slider -->
-  <div style="position: relative; background: #1a202c;">
+  <div style="position: relative; background: #1a2e44;">
 
-    <!-- Scroll-Container -->
-    <div id="slider-hero" style="display: flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none;">
+    <ul class="image-gallery-with-ligthbox" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
 
-      <!-- Slide 1 -->
-      <div style="flex: 0 0 100%; scroll-snap-align: start; position: relative; min-height: 340px; overflow: hidden;">
-        <img src="https://placehold.co/1200x500/1a365d/ffffff?text=Bild+1" alt="Projektbild" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
-        <!-- Gradient Overlay -->
-        <div style="pointer-events: none; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.4) 100%);"></div>
-        <!-- GLightbox Button -->
-        <div class="image-gallery-with-ligthbox" style="position: absolute; top: 12px; right: 12px; z-index: 10;">
-          <a class="glightbox" href="#" data-glightbox="href:https://placehold.co/1500x1000/1a365d/ffffff?text=Bild+1+gross;type:image" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 44px; height: 44px; text-decoration: none; transition: background 0.2s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" title="Bild vergr&ouml;&szlig;ern">
-            <div style="color: white; font-size: 20px; font-weight: bold; line-height: 1;">&#x2922;</div>
-          </a>
-        </div>
-      </div>
+      <li style="flex: 0 0 100%; margin: 0; scroll-snap-align: start; position: relative;">
+        <a class="glightbox" href="https://placehold.co/1500x1000/1a365d/ffffff?text=Bild+1+gross" data-gallery="gallery-b06" data-glightbox="type: image" target="_blank" title="Bild vergrößern" style="display: block; position: relative; text-decoration: none; background: #1a2e44;">
+          <img src="https://placehold.co/1200x500/1a365d/ffffff?text=Bild+1" alt="Projektbild" style="display: block; width: 100%; height: 240px; height: clamp(220px, 42vw, 400px); object-fit: cover; border-radius: 0; margin: 0;">
+          <span aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(180deg, rgba(10,20,35,0) 45%, rgba(10,20,35,0.6) 100%); pointer-events: none;"></span>
+          <span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; z-index: 2; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 10px; background: rgba(10,20,35,0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);; border: 1px solid rgba(255,255,255,0.35); color: #ffffff; box-shadow: 0 4px 10px -4px rgba(0,0,0,0.5);"><i class="fas fa-search-plus" style="font-size: 18px;"></i></span>
+        </a>
+      </li>
 
-      <!-- Slide 2 -->
-      <div style="flex: 0 0 100%; scroll-snap-align: start; position: relative; min-height: 340px; overflow: hidden;">
-        <img src="https://placehold.co/1200x500/2d3748/ffffff?text=Bild+2" alt="Lageplan" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
-        <!-- Gradient Overlay -->
-        <div style="pointer-events: none; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.4) 100%);"></div>
-        <!-- GLightbox Button -->
-        <div class="image-gallery-with-ligthbox" style="position: absolute; top: 12px; right: 12px; z-index: 10;">
-          <a class="glightbox" href="#" data-glightbox="href:https://placehold.co/1500x1000/2d3748/ffffff?text=Bild+2+gross;type:image" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 44px; height: 44px; text-decoration: none; transition: background 0.2s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);" title="Bild vergr&ouml;&szlig;ern">
-            <div style="color: white; font-size: 20px; font-weight: bold; line-height: 1;">&#x2922;</div>
-          </a>
-        </div>
-      </div>
+      <li style="flex: 0 0 100%; margin: 0; scroll-snap-align: start; position: relative;">
+        <a class="glightbox" href="https://placehold.co/1500x1000/2d3748/ffffff?text=Bild+2+gross" data-gallery="gallery-b06" data-glightbox="type: image" target="_blank" title="Bild vergrößern" style="display: block; position: relative; text-decoration: none; background: #1a2e44;">
+          <img src="https://placehold.co/1200x500/2d3748/ffffff?text=Bild+2" alt="Lageplan" style="display: block; width: 100%; height: 240px; height: clamp(220px, 42vw, 400px); object-fit: cover; border-radius: 0; margin: 0;">
+          <span aria-hidden="true" class="js-content-block-element-not-editable" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient(180deg, rgba(10,20,35,0) 45%, rgba(10,20,35,0.6) 100%); pointer-events: none;"></span>
+          <span aria-hidden="true" style="position: absolute; top: 12px; right: 12px; z-index: 2; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 10px; background: rgba(10,20,35,0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);; border: 1px solid rgba(255,255,255,0.35); color: #ffffff; box-shadow: 0 4px 10px -4px rgba(0,0,0,0.5);"><i class="fas fa-search-plus" style="font-size: 18px;"></i></span>
+        </a>
+      </li>
 
-      <!-- Weitere Slides: Block oben kopieren und src/alt/href anpassen -->
+    </ul>
 
-    </div>
-
-    <!-- Slider-Navigation (Pfeile) -->
-    <div style="position: absolute; bottom: 14px; right: 16px; display: flex; align-items: center; gap: 6px;">
-      <button onclick="document.getElementById('slider-hero').scrollBy({left: -document.getElementById('slider-hero').offsetWidth, behavior: 'smooth'})" style="cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 44px; height: 44px; padding: 0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background 0.2s ease;" title="Vorheriges Bild"
-        onmouseover="this.style.background='rgba(0,0,0,0.6)'"
-        onmouseout="this.style.background='rgba(0,0,0,0.45)'">
-        <div style="color: white; font-size: 14px; line-height: 1;">&#x276E;</div>
-      </button>
-      <button onclick="document.getElementById('slider-hero').scrollBy({left: document.getElementById('slider-hero').offsetWidth, behavior: 'smooth'})" style="cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; width: 44px; height: 44px; padding: 0; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background 0.2s ease;" title="N&auml;chstes Bild"
-        onmouseover="this.style.background='rgba(0,0,0,0.6)'"
-        onmouseout="this.style.background='rgba(0,0,0,0.45)'">
-        <div style="color: white; font-size: 14px; line-height: 1;">&#x276F;</div>
-      </button>
-    </div>
-
-    <!-- Wisch-Hinweis -->
-    <div style="position: absolute; bottom: 16px; left: 16px;">
-      <p style="font-size: 11px; color: rgba(255,255,255,0.55); margin: 0; letter-spacing: 0.02em;">&larr; Wischen zum Bl&auml;ttern &rarr;</p>
-    </div>
+    <p style="position: absolute; bottom: 12px; left: 12px; margin: 0; pointer-events: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; line-height: 1.6; font-weight: 600; color: #ffffff; background: rgba(10,20,35,0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 2px 14px;"><i class="fas fa-arrows-alt-h" aria-hidden="true" style="font-size: 14px;"></i> Wischen zum Blättern</p>
 
   </div>
 
-  <!-- Text-Content -->
-  <div style="padding: 32px 44px 36px;">
+  <div style="padding: 24px; padding: clamp(20px, 4vw, 32px);">
 
-    <!-- Badges -->
-    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;">
-      <div style="background: rgba(23,121,186,0.07); border: 1px solid rgba(23,121,186,0.15); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: var(--brand-color, #1779ba); font-weight: 600; letter-spacing: 0.04em;">Beteiligungsprojekt 2025</div>
-      <div style="background: rgba(5,150,105,0.07); border: 1px solid rgba(5,150,105,0.15); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #065f46; font-weight: 600; letter-spacing: 0.04em;">Beteiligung l&auml;uft</div>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px;">
+      <span style="display: inline-flex; align-items: center; gap: 8px; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 4px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">Beteiligungsprojekt 2026</span>
+      <span style="display: inline-flex; align-items: center; gap: 8px; background: #e7f5ee; border: 1px solid #b7e0c9; border-radius: 999px; padding: 4px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700;"><i class="fas fa-circle" aria-hidden="true" style="font-size: 8px; color: #047857;"></i> Beteiligung läuft</span>
     </div>
 
-    <h3 style="font-size: 26px; font-weight: 800; color: #1a202c; margin-bottom: 12px; margin-top: 0; line-height: 1.25; letter-spacing: -0.3px;">Gestalten Sie Ihr Projekt aktiv mit!</h3>
+    <h2 style="margin: 0 0 12px; hyphens: auto; overflow-wrap: break-word;">Gestalten Sie Ihr Projekt aktiv mit!</h2>
 
-    <p style="font-size: 16px; color: #4b5563; line-height: 1.7; margin-bottom: 16px; margin-top: 0; max-width: 600px;">
-      Kurze Beschreibung des Projekts und der Beteiligungsm&ouml;glichkeiten. Erkl&auml;ren Sie hier, worum es geht und wie B&uuml;rgerinnen und B&uuml;rger sich einbringen k&ouml;nnen.
-    </p>
+    <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px; max-width: 40rem;">Kurze Beschreibung des Projekts und der Beteiligungsmöglichkeiten. Erklären Sie hier, worum es geht und wie Bürgerinnen und Bürger sich einbringen können.</p>
 
-    <p style="font-size: 14px; color: #6b7280; line-height: 1.6; margin-bottom: 0; margin-top: 0;">
-      Erg&auml;nzender Hinweis &ndash; z.B. Anzahl der Beteiligungsbereiche, Verweis auf weitere Inhalte weiter unten auf der Seite.
-    </p>
+    <p style="font-size: 1rem; line-height: 1.6; margin: 0; max-width: 40rem;">Ergänzender Hinweis, z.B. Anzahl der Beteiligungsbereiche oder Verweis auf weitere Inhalte weiter unten auf der Seite.</p>
 
   </div>
 

@@ -39,7 +39,7 @@ class Admin::Legislation::ProcessesController < Admin::Legislation::BaseControll
         link = legislation_process_path(@process)
       end
 
-      redirect_back(fallback_location: (request.referer || root_path),
+      redirect_back(fallback_location: root_path,
                     notice: t("admin.legislation.processes.update.notice", link: link))
     else
       flash.now[:error] = t("admin.legislation.processes.update.error")

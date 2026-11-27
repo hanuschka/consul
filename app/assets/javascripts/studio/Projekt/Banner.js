@@ -27,6 +27,10 @@ App.Studio.Projekt.Banner = {
     $document.on("click", ".js-projekt-banner--image-generate-button", this.openGenerateImageModal.bind(this));
     $document.on("click", ".js-projekt-banner-generate-submit", this.submitGenerateImage.bind(this));
     $document.on("click", ".js-projekt-banner--ai-marker-button", this.toggleAiMarker.bind(this));
+    $document.on("click", ".js-projekt-banner--credit-button", this.toggleCreditEditor.bind(this));
+    $document.on("click", ".js-projekt-banner--credit-save", this.saveCredit.bind(this));
+    $document.on("click", ".js-projekt-banner--credit-cancel", this.cancelCreditEdit.bind(this));
+    $document.on("keydown", ".js-projekt-banner--credit-input", this.handleCreditKeydown.bind(this));
   },
 
   turnOnTextEdit(e) {
@@ -85,6 +89,7 @@ App.Studio.Projekt.Banner = {
         data: {
           kind: container.dataset.kind,
           attribute: container.dataset.attribute,
+          field_token: container.dataset.fieldToken,
           [container.dataset.fieldName]: plainText
         }
       })
@@ -306,6 +311,7 @@ App.Studio.Projekt.Banner = {
     this.setAiMarkerGeneratedInApp(container, false);
     this.toggleImageActionButtons(container, true);
     this.applyAiMarkerState(container, false);
+    this.resetCredit(container);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
   },
@@ -313,6 +319,7 @@ App.Studio.Projekt.Banner = {
   toggleImageActionButtons(container, imagePresent) {
     const deleteButton = container.querySelector(".js-projekt-banner--image-delete-button");
     const aiMarkerButton = container.querySelector(".js-projekt-banner--ai-marker-button");
+    const creditButton = container.querySelector(".js-projekt-banner--credit-button");
 
     // The generate button stays visible whether or not an image is set, so an
     // existing banner can be regenerated; the delete button and the AI marker
@@ -324,6 +331,8 @@ App.Studio.Projekt.Banner = {
 
       aiMarkerButton.classList.toggle("d-none", !imagePresent || generatedInApp);
     }
+
+    if (creditButton) creditButton.classList.toggle("d-none", !imagePresent);
   },
 
   // A banner the app generated is marked at attach time, so there is nothing
@@ -508,8 +517,123 @@ App.Studio.Projekt.Banner = {
     this.setAiMarkerGeneratedInApp(container, false);
     this.toggleImageActionButtons(container, false);
     this.applyAiMarkerState(container, false);
+    this.resetCredit(container);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
+  },
+
+  toggleCreditEditor(e) {
+    e.preventDefault();
+
+    const button = e.currentTarget;
+    const container = button.closest(".js-projekt-image-uploader");
+    if (!container) return;
+
+    if (button.getAttribute("aria-expanded") === "true") {
+      this.closeCreditEditor(container, true);
+    } else {
+      this.openCreditEditor(container);
+    }
+  },
+
+  openCreditEditor(container) {
+    const button = container.querySelector(".js-projekt-banner--credit-button");
+    const editor = container.querySelector(".js-projekt-banner--credit-editor");
+    const input = container.querySelector(".js-projekt-banner--credit-input");
+    if (!button || !editor || !input) return;
+
+    this.clearUploadError(container);
+    input.value = button.dataset.credits || "";
+    editor.hidden = false;
+    button.setAttribute("aria-expanded", "true");
+    input.focus();
+    input.select();
+  },
+
+  closeCreditEditor(container, restoreFocus) {
+    const button = container.querySelector(".js-projekt-banner--credit-button");
+    const editor = container.querySelector(".js-projekt-banner--credit-editor");
+    if (!editor || editor.hidden) return;
+
+    editor.hidden = true;
+
+    if (button) {
+      button.setAttribute("aria-expanded", "false");
+      if (restoreFocus) button.focus();
+    }
+  },
+
+  cancelCreditEdit(e) {
+    e.preventDefault();
+
+    const container = e.currentTarget.closest(".js-projekt-image-uploader");
+    if (container) this.closeCreditEditor(container, true);
+  },
+
+  handleCreditKeydown(e) {
+    const container = e.currentTarget.closest(".js-projekt-image-uploader");
+    if (!container) return;
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      this.submitCredit(container);
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      this.closeCreditEditor(container, true);
+    }
+  },
+
+  saveCredit(e) {
+    e.preventDefault();
+
+    const container = e.currentTarget.closest(".js-projekt-image-uploader");
+    if (container) this.submitCredit(container);
+  },
+
+  async submitCredit(container) {
+    const input = container.querySelector(".js-projekt-banner--credit-input");
+    const saveButton = container.querySelector(".js-projekt-banner--credit-save");
+    if (!input || (saveButton && saveButton.disabled)) return;
+
+    if (saveButton) saveButton.disabled = true;
+    this.clearUploadError(container);
+
+    try {
+      const response = await App.Ajax.request({
+        url: container.dataset.creditsUrl,
+        method: "PATCH",
+        dataType: "json",
+        data: { credits: input.value }
+      });
+
+      this.applyCreditState(container, response.credits || "", response.credit_html);
+      this.closeCreditEditor(container, true);
+    } catch (xhr) {
+      this.showUploadError(container, this.errorText(container, "creditFailedText"));
+    } finally {
+      if (saveButton) saveButton.disabled = false;
+    }
+  },
+
+  applyCreditState(container, credits, creditHtml) {
+    const button = container.querySelector(".js-projekt-banner--credit-button");
+
+    if (button) {
+      button.dataset.credits = credits;
+      button.classList.toggle("-active", credits !== "");
+    }
+
+    const resourceImage = container.querySelector(".resource-image");
+    if (!resourceImage) return;
+
+    resourceImage.querySelectorAll(".image-credit-label").forEach((label) => label.remove());
+
+    if (creditHtml) resourceImage.insertAdjacentHTML("beforeend", creditHtml);
+  },
+
+  resetCredit(container) {
+    this.closeCreditEditor(container, false);
+    this.applyCreditState(container, "", null);
   },
 
   openGenerateImageModal(e) {
@@ -620,6 +744,7 @@ App.Studio.Projekt.Banner = {
     this.setAiMarkerGeneratedInApp(container, true);
     this.toggleImageActionButtons(container, true);
     this.applyAiMarkerState(container, true);
+    this.resetCredit(container);
 
     if (typeof App !== "undefined" && App.ImageGallery) App.ImageGallery.initialize();
   },

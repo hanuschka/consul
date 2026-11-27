@@ -21,6 +21,7 @@ FactoryBot.define do
     trait :accepting_now do
       after(:create) do |budget|
         budget.phases.where.not(kind: "accepting").update_all(enabled: false)
+        budget.phases.find_by(kind: "accepting").update_columns(starts_at: 1.day.ago, ends_at: 1.month.from_now)
         budget.reload
       end
     end

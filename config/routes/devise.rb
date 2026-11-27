@@ -24,6 +24,12 @@ devise_scope :user do
   post "users/registrations/create_guest", to: "users/registrations#create_guest" # custom line
   delete "users/registrations/sign_out_guest", to: "users/registrations#sign_out_guest", as: :destroy_guest_user_session # custom line
 
+  get "users/sms_sign_in", to: "users/sms_sessions#new", as: :new_sms_sign_in
+  post "users/sms_sign_in", to: "users/sms_sessions#create", as: :sms_sign_in
+  get "users/sms_sign_in/code", to: "users/sms_sessions#edit", as: :sms_sign_in_code
+  post "users/sms_sign_in/code", to: "users/sms_sessions#update"
+  post "users/sms_sign_in/resend", to: "users/sms_sessions#resend", as: :resend_sms_sign_in
+
   #BundID
   get  "users/send_bund_id_request",  to: "users/omniauth_callbacks#send_bund_id_request",      as: :users_bund_id_send_request
   post "sp/SAML2/POST",               to: "users/omniauth_callbacks#process_bund_id_response",  as: :users_bund_id_process_response

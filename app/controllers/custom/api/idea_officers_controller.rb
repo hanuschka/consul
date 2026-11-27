@@ -3,9 +3,9 @@
 class Api::IdeaOfficersController < Api::BaseController
   def index
     check_read_access!
-    officers = paginate(Idea::Officer.includes(:user))
+    officers = paginate(Idea::Officer.includes(user: :organization))
 
-    serialized_officers = IdeaOfficerSerializer.serialize_collection(officers)
+    serialized_officers = IdeaOfficerSerializer.serialize_collection(officers, client: current_client)
 
     render json: {
       data: { idea_officers: serialized_officers },

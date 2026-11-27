@@ -1,6 +1,7 @@
 <%= form_with model: @record, url: path do |form| %>
   <%= hidden_field_tag :kind, "image" %>
   <%= hidden_field_tag :attribute, @attribute %>
+  <%= hidden_field_tag :field_token, field_token("image") %>
 
   <%= render Kern::Form::ImageComponent.new(form: form, attribute: @attribute, auto_submit: true, crop: @options[:crop], crop_aspect_ratio: @options[:crop_aspect_ratio], disabled: disabled?) %>
 <% end %>

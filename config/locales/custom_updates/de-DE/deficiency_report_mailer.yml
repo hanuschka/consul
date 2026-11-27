@@ -2,33 +2,36 @@ de:
   custom:
     deficiency_reports:
       mailers:
-        closing: Freundliche Grüße
-        signature: Euer Anliegenmanagement
-        contact_info: Bei inhaltlichen Fragen wendet euch bitte an <a href="mailto:%{email}">%{email}</a>
+        management_report:
+          subject: "Bericht „%{name}“ bis %{period_end}"
+          intro: "anbei erhalten Sie den Bericht „%{name}“ zu den Anliegen im Mängelmelder für den Zeitraum %{period}."
+          figures_title: Die wichtigsten Kennzahlen
+          attachment_hint: Den vollständigen Bericht mit allen Abschnitten finden Sie im PDF-Anhang.
+          adm_link_text: Bericht in der Verwaltung öffnen
+          ai_notice: Die Texte des Berichts wurden mit KI erstellt. Die Kennzahlen stammen direkt aus der Datenbank.
+          internal_notice: Dieser Bericht ist nur für den internen Gebrauch bestimmt.
+        closing: Mit freundlichen Grüßen
+        signature: Ihr Anliegenmanagement
+        contact_info: Bei inhaltlichen Fragen wenden Sie sich bitte an <a href="mailto:%{email}">%{email}</a>
         unwatch_hint: "Sie möchten zu diesem Anliegen keine Benachrichtigungen mehr erhalten?"
         unwatch_link_text: Benachrichtigungen für dieses Anliegen abbestellen
         notify_shared_report:
           subject: Anliegen mit Ihnen geteilt %{identifier}
-          hi: "Hallo %{username},"
           p1: "ein Anliegen wurde mit Ihnen geteilt:"
-          p1_by: "%{name} hat ein Anliegen mit Ihnen geteilt:"
+          p1_by: "%{shared_by_name} hat ein Anliegen mit Ihnen geteilt:"
           p2: Sie erhalten ab sofort Benachrichtigungen zu Änderungen an diesem Anliegen.
         notify_watcher_about_change:
           subject: Änderung an einem beobachteten Anliegen %{identifier}
-          hi: "Hallo %{username},"
           p1: "es gibt eine Änderung an einem Anliegen, das Sie beobachten:"
           current_status: "Aktueller Status:"
         notify_author_about_status_change:
           subject: Statusänderung Ihres Mangels
-          hi: Hallo
           p1: der Status des von Ihnen eingereichten Mangels wurde geändert.
         notify_author_about_official_answer:
           subject: Offizielle Antwort auf Ihr Anliegen
-          hi: "Hallo %{username},"
           p1: "auf Ihr Anliegen gibt es eine offizielle Antwort:"
         notify_officer:
           subject: Neue Meldung %{identifier}
-          hi: Liebe/r Sachbearbeiter*in,
           p1: Ihnen wurde eine Meldung vom Admin zugewiesen.
           adm_page: "Zur Bearbeitung gelangen Sie hier:"
           adm_page_link_text: Meldung im Verwaltungsbereich öffnen
@@ -36,20 +39,18 @@ de:
           public_page_link_text: Öffentliche Ansicht
         send_feedback_form_link:
           subject: Feedback zu Ihrem Anliegen
-          hi: Guten Tag %{username},
-          p1: "Ihr Anliegen %{deficiency_report_link} wurde mit folgendem Status abgeschlossen: <strong>%{status}.</strong>"
+          p1: "Ihr Anliegen %{deficiency_report_title} wurde mit folgendem Status abgeschlossen: <strong>%{status_name}.</strong>"
           p2: Wir hoffen, dass Sie mit der Bearbeitung zufrieden sind.
-          p3: "Um unseren Service weiter zu verbessern, freuen wir uns über Ihr kurzes Feedback: %{feedback_form_link}."
+          p3: "Um unseren Service weiter zu verbessern, freuen wir uns über Ihr kurzes Feedback: %{feedback_form_url}."
           feedback_form_link_text: Feedback-Formular
           p4: Vielen Dank für Ihre Unterstützung!
         notify_author_about_submission:
           subject: Eingangsbestätigung Ihrer Meldung
-          hi: "Hallo %{username},"
-          p1: "vielen Dank für Ihre %{deficiency_report_link}. Ihr Beitrag wurde erfolgreich übermittelt."
+          p1: "vielen Dank für Ihre %{deficiency_report_url}. Ihr Beitrag wurde erfolgreich übermittelt."
           deficiency_report_link_text: Mängelmeldung
           p2_pending_review: "Bitte beachten Sie, dass Ihre Meldung derzeit <strong>noch nicht öffentlich sichtbar ist</strong>. Unser Anliegenmanagement prüft den Inhalt zunächst, bevor er freigegeben und veröffentlicht werden kann."
           p2_published: "Ihre Meldung ist ab sofort öffentlich sichtbar."
           p3: "Sie erhalten automatisch eine E‑Mail, sobald sich der Status Ihrer Meldung ändert."
-          p4: "In Ihrem %{account_link} können Sie jederzeit nachvollziehen, welche Beiträge Sie eingereicht haben."
+          p4: "In Ihrem %{account_url} können Sie jederzeit nachvollziehen, welche Beiträge Sie eingereicht haben."
           account_link_text: Benutzerkonto
 

@@ -5,7 +5,9 @@ module Adm
     def index
       authorize [:adm, :newsletter]
       @pagy, @newsletters = pagy(
-        policy_scope([:adm, Newsletter]).order(created_at: :desc)
+        policy_scope([:adm, Newsletter])
+          .includes(recipient_group: { projekt: { page: :translations } })
+          .order(created_at: :desc)
       )
 
       @breadcrumbs = [

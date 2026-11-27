@@ -23,7 +23,9 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
       if resource.valid? # password is set correctly
         resource.save!
         set_official_position if resource.has_official_email?
+        first_confirmation = resource.confirmed_at.nil?
         resource.confirm
+        resource.send_welcome_email if first_confirmation
         set_flash_message(:notice, :confirmed) if is_flashing_format?
         sign_in_and_redirect(resource_name, resource)
       else
@@ -48,8 +50,10 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
       respond_with_navigational(resource) { render :show }
     elsif resource.errors.empty?
       set_official_position if resource.has_official_email?
+      first_confirmation = resource.confirmed_at.nil?
 
       if resource.confirm
+        resource.send_welcome_email if first_confirmation
         set_flash_message(:notice, :confirmed) if is_flashing_format?
         respond_with_navigational(resource) { redirect_to after_confirmation_path_for(resource_name, resource) }
       else

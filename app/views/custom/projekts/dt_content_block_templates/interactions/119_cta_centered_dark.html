@@ -1,36 +1,31 @@
-<!-- BlockID: F01 Centered CTA – Zentrierter Action-Block mit dominantem CTA auf dunklem Hintergrund -->
+<!-- BlockID: F01 Centered CTA - Zentrierter Aufruf mit dominantem Button auf dunklem Hintergrund -->
 <!-- Geeignet für: Ende einer Sektion, klarer Handlungsaufruf, Beteiligungsstart -->
+<!-- Editor: Etiketten und Vertrauenszeile sind Listen, „Weiteres Element hinzufügen“ kopiert den letzten Eintrag. Icon über die Klasse fa-… tauschen, nur im Code-Modus. -->
+<!-- Umbruch: Etiketten und Vertrauenszeile brechen selbständig um, der Button wird am Handy volle Breite (max. 18rem). Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H3, Text, Etiketten und Button = 1rem, Hierarchie über Gewicht -->
 
-<div style="position: relative; overflow: hidden; background: linear-gradient(160deg, #1a2e44 0%, #243b55 100%); border-radius: 16px; padding: 56px 36px; margin-bottom: 24px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 12px 32px rgba(0,0,0,0.16);">
+<div style="position: relative; overflow: hidden; background: #1a2e44; background: linear-gradient(135deg, #1a2e44 0%, var(--brand-color, #1779ba) 140%); border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 36px); margin: 0; color: #ffffff; text-align: center; box-shadow: 0 1px 2px rgba(16,24,40,0.12), 0 18px 40px -14px rgba(26,46,68,0.55);">
 
-  <!-- Subtiler Mesh-Gradient für Tiefe -->
-  <div style="position: absolute; top: -30%; right: -10%; width: 60%; height: 160%; background: radial-gradient(ellipse at center, rgba(23,121,186,0.15) 0%, transparent 70%); pointer-events: none;"></div>
-  <div style="position: absolute; bottom: -20%; left: -5%; width: 50%; height: 120%; background: radial-gradient(ellipse at center, rgba(5,150,105,0.08) 0%, transparent 70%); pointer-events: none;"></div>
+  <div style="position: relative; z-index: 1; max-width: 36rem; margin: 0 auto;">
 
-  <!-- Chip-Zeile -->
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 24px; position: relative; z-index: 1;">
-    <span style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #ffffff; font-weight: 600; letter-spacing: 0.04em; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">Noch 47 Tage</span>
-    <span style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 4px; padding: 6px 14px; font-size: 12px; color: #ffffff; font-weight: 600; letter-spacing: 0.04em; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">Abstimmung offen</span>
+    <ul style="list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.12); background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 100%); border: 1px solid rgba(255,255,255,0.28); border-radius: 999px; padding: 4px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);"><i class="far fa-clock" aria-hidden="true" style="font-size: 14px;"></i> Noch 47 Tage</li>
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.12); background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 100%); border: 1px solid rgba(255,255,255,0.28); border-radius: 999px; padding: 4px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);"><i class="fas fa-circle" aria-hidden="true" style="font-size: 8px;"></i> Abstimmung offen</li>
+    </ul>
+
+    <h3 style="color: #ffffff; margin: 0 0 12px; hyphens: auto; overflow-wrap: break-word;">Ihre Stimme zählt – stimmen Sie jetzt ab!</h3>
+
+    <p style="font-size: 1rem; line-height: 1.6; color: #ffffff; margin: 0 0 24px;">Die Abstimmungsphase endet am 30. September. Alle registrierten Bürger:innen können noch bis dahin teilnehmen.</p>
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;">
+      <div style="flex: 1 1 12rem; max-width: 18rem; min-width: 0;"><a href="#" class="button" style="width: 100%; text-decoration: none; margin: 0; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; font-weight: 700; background: #ffffff; color: #1a2e44; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Jetzt abstimmen <i class="fas fa-arrow-right" aria-hidden="true" style="font-size: 14px;"></i></a></div>
+    </div>
+
+    <ul style="list-style: none; margin: 20px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 20px;">
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; line-height: 1.6; color: #ffffff;"><i class="fas fa-check-circle" aria-hidden="true" style="font-size: 16px;"></i> DSGVO-konform</li>
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; line-height: 1.6; color: #ffffff;"><i class="fas fa-check-circle" aria-hidden="true" style="font-size: 16px;"></i> Anonym möglich</li>
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; line-height: 1.6; color: #ffffff;"><i class="fas fa-check-circle" aria-hidden="true" style="font-size: 16px;"></i> 3.847 Teilnehmende</li>
+    </ul>
+
   </div>
-
-  <h3 style="font-size: 28px; font-weight: 800; letter-spacing: -0.4px; color: #ffffff; margin-bottom: 16px; margin-top: 0; line-height: 1.2; position: relative; z-index: 1; max-width: 540px; margin-left: auto; margin-right: auto;">Ihre Stimme z&auml;hlt &ndash; stimmen Sie jetzt ab!</h3>
-
-  <p style="font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 36px; margin-top: 0; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.7; position: relative; z-index: 1;">
-    Die Abstimmungsphase endet am 30. September. Alle registrierten B&uuml;rger:innen k&ouml;nnen noch bis dahin teilnehmen.
-  </p>
-
-  <div style="position: relative; z-index: 1;">
-    <a href="#" class="button"
-       style="display: inline-flex; align-items: center; justify-content: center; padding: 16px 40px; background: #ffffff; color: #1a2e44; text-decoration: none; font-size: 16px; font-weight: 700; height: 52px; box-sizing: border-box; border: none; border-radius: 8px; transition: transform 0.2s ease, box-shadow 0.2s ease;"
-       onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.3)'"
-       onmouseout="this.style.transform='none';this.style.boxShadow='none'">Jetzt abstimmen &rarr;</a>
-  </div>
-
-  <!-- Vertrauenszeile -->
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-top: 24px; position: relative; z-index: 1;">
-    <span style="font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500;">DSGVO-konform</span>
-    <span style="font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500;">Anonym m&ouml;glich</span>
-    <span style="font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500;">3.847 Teilnehmende</span>
-  </div>
-
 </div>

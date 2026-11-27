@@ -42,6 +42,7 @@ en:
       upload_image:
         title: "Manage images"
         button_label: "Upload image"
+        load_failed: "The selected image could not be loaded. The previous image was kept."
       upload_document:
         title: "Manage documents"
         button_label: "Upload document"

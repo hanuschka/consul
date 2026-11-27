@@ -1,4 +1,5 @@
 class RecipientGroup < ApplicationRecord
+  belongs_to :projekt, optional: true
   has_many :newsletters, dependent: :restrict_with_exception
   has_many :filters,
            -> { order(:position) },
@@ -8,8 +9,28 @@ class RecipientGroup < ApplicationRecord
 
   validates :name, presence: true
 
+  scope :with_projekt_titles, -> { includes(projekt: { page: :translations }) }
+
   def self.base_options_for_kind
     %i[projekts user_roles]
+  end
+
+  def projekt_subscribers_group?
+    projekt_id.present?
+  end
+
+  def projekt_subscribers_audience?
+    if filters.any?
+      filters.all? { it.kind == "projekt_subscribers" }
+    else
+      origin_class_name == "Projekt" && access_method == "subscriber_ids"
+    end
+  end
+
+  def display_name
+    return name if projekt.blank?
+
+    I18n.t("adm.recipient_groups.projekt_subscribers_group_name", title: projekt.title)
   end
 
   def user_emails

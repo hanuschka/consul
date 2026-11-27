@@ -8,7 +8,7 @@
     <title><%= safe_join([yield(:title), adm_header_title].compact, " | ") %></title>
 
     <%= csrf_meta_tags %>
-    <%= favicon_link_tag "favicon.ico" %>
+    <%= site_favicon_link_tag %>
     <script>window.CESIUM_BASE_URL = "<%= request.base_url %>/vcmap/assets/cesium/";</script>
     <%= yield :vc_maps %>
 

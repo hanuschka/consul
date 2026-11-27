@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "images_helper").to_s
+load Rails.root.join("app", "helpers", "images_helper.rb")
 
 module ImagesHelper
  def render_image_attachment(builder, imageable, image)
@@ -37,5 +37,11 @@ module ImagesHelper
     return nil if image.blank? || !image.ai_generated?
 
     render(Shared::AiImageLabelComponent.new)
+  end
+
+  def image_credit_html(image)
+    return nil if image.blank? || image.credits.blank?
+
+    render(Shared::ImageCreditComponent.new(credits: image.credits))
   end
 end

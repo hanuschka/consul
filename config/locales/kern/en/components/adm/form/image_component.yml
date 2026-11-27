@@ -6,3 +6,5 @@ en:
           replace: Replace image
           remove: Remove image
           add: Add image
+          credits_label: Image credit
+          credits_hint: 'Shown small on the image, on the project idea page and on its tile in overviews, e.g. "©Name_stock.adobe.com". Leave empty if no credit is needed.'

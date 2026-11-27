@@ -1,4 +1,15 @@
-<% if investment.feasible? %>
+<% if investment.feasible_with_changes? %>
+  <% if investment.valuation_finished? %>
+    <div class="callout success" style="width:100% !important">
+      <%= t("custom.budgets.investments.investment.feasible_with_changes_html") %>
+    </div>
+  <% elsif investment.budget.current_phase.kind.in?(%w[accepting valuating reviewing reviewing_ballots]) %>
+    <div class="callout warning" style="width:100% !important">
+      <%= t("custom.budgets.investments.statuses.phases.#{investment.budget.current_phase.kind}") %>
+    </div>
+  <% end %>
+
+<% elsif investment.feasible? %>
   <div class="callout success" style="width:100% !important">
     <%= t("custom.budgets.investments.investment.feasible_html") %>
   </div>

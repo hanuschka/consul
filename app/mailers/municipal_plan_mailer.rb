@@ -17,6 +17,7 @@ class MunicipalPlanMailer < ApplicationMailer
 
   def submitted_for_release(municipal_plan, administrator)
     @municipal_plan = municipal_plan
+    @administrator = administrator
     @responsible_name = municipal_plan.responsible&.name
     @review_url = adm_municipal_plans_municipal_plan_url(municipal_plan)
     email_to = administrator.email

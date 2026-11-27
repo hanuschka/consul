@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "admin", 'site_customization', "information_texts_controller").to_s
+load Rails.root.join("app", "controllers", "admin", 'site_customization', "information_texts_controller.rb")
 
 class Admin::SiteCustomization::InformationTextsController < Admin::SiteCustomization::BaseController
 

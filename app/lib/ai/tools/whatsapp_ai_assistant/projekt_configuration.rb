@@ -171,7 +171,9 @@ class Ai::Tools::WhatsappAiAssistant::ProjektConfiguration <
     def projekt_phases_of(projekt)
       projekt_phases = ::Whatsapp::ProjektPhasesQuery.call(projekt: projekt)
 
-      ::ActiveRecord::Associations::Preloader.new.preload(projekt_phases, RESTRICTION_ASSOCIATIONS)
+      ::ActiveRecord::Associations::Preloader
+        .new(records: projekt_phases, associations: RESTRICTION_ASSOCIATIONS)
+        .call
 
       projekt_phases
     end

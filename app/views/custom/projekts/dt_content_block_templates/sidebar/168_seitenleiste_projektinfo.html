@@ -1,0 +1,43 @@
+<!-- BlockID: S01 Seitenleiste Projektinformation - Zeitraum, Status, Zuständigkeit und kurze Linkliste -->
+<!-- Geeignet für: Karte „Information“ in der rechten Seitenleiste einer Projektseite; am Handy steht sie in voller Breite über oder unter der Hauptspalte -->
+<!-- ANPASSEN: Werte der Zeilen ersetzen, Status-Chip anpassen (laufend = Markenfarbe, beendet = grüne Fläche wie im Zeitstrahl, geplant = gestrichelter Rand). Der Link zur Beteiligung springt zur Phase: die Zahl 123 in ?projekt_phase_id=123#projekt-footer durch die ID der eigenen Phase ersetzen. -->
+<!-- Editor: Eckdaten und Links sind Listenelemente, „Weiteres Element hinzufügen“ kopiert jeweils das letzte; Icons nur im Code-Modus tauschbar. Zeilen immer als eigene Elemente schreiben, Zeilenumbrüche entfernt Consul. -->
+<!-- Umbruch: kein Raster, alles untereinander; das Symbol bleibt links, Bezeichnung und Wert brechen daneben um; die Links brechen neben ihrem Pfeil um. Seitenleiste etwa 380 px breit, am Handy volle Breite. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Kartentitel = Theme-H4, Bezeichnungen, Werte, Chip und Links = 1rem; Bezeichnungen über Gewicht 600 abgesetzt -->
+
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; padding: clamp(16px, 4vw, 24px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+
+  <h4 style="margin: 0 0 12px; hyphens: auto; overflow-wrap: break-word;">Projektinformation</h4>
+
+  <ul style="list-style: none; margin: 0 0 16px; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+    <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; padding: 12px 14px; background: #f8fafc; border: 1px solid #e8edf3; border-radius: 12px;">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="far fa-calendar-alt" style="font-size: 16px;"></i></span>
+      <div style="flex: 1 1 auto; min-width: 0;">
+        <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Zeitraum der Beteiligung</span>
+        <span style="display: block; font-size: 1rem; line-height: 1.6;">15.01. bis 28.02.2027</span>
+      </div>
+    </li>
+    <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; padding: 12px 14px; background: #f8fafc; border: 1px solid #e8edf3; border-radius: 12px;">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-flag" style="font-size: 16px;"></i></span>
+      <div style="flex: 1 1 auto; min-width: 0;">
+        <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 0 0 4px;">Status</span>
+        <span style="display: inline-flex; align-items: center; gap: 8px; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 2px 14px; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-circle" aria-hidden="true" style="font-size: 8px;"></i> Beteiligung läuft</span>
+      </div>
+    </li>
+    <li style="display: flex; align-items: flex-start; gap: 12px; margin: 0; padding: 12px 14px; background: #f8fafc; border: 1px solid #e8edf3; border-radius: 12px;">
+      <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-building" style="font-size: 16px;"></i></span>
+      <div style="flex: 1 1 auto; min-width: 0;">
+        <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600;">Zuständig</span>
+        <span style="display: block; font-size: 1rem; line-height: 1.6;">Amt für Stadtplanung und Mobilität</span>
+      </div>
+    </li>
+  </ul>
+
+  <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 600; margin: 0 0 4px;">Weiterführende Links</span>
+  <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px;">
+    <li style="margin: 0;"><a href="?projekt_phase_id=123#projekt-footer" style="display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-size: 1rem; line-height: 1.6; font-weight: 600;"><i class="fas fa-arrow-right" aria-hidden="true" style="flex: 0 0 auto; font-size: 14px; margin-top: 6px; color: var(--brand-color, #1779ba);"></i><span style="flex: 1 1 auto; min-width: 0;">Zur Online-Beteiligung</span></a></li>
+    <li style="margin: 0;"><a href="#" style="display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-size: 1rem; line-height: 1.6; font-weight: 600;"><i class="fas fa-arrow-right" aria-hidden="true" style="flex: 0 0 auto; font-size: 14px; margin-top: 6px; color: var(--brand-color, #1779ba);"></i><span style="flex: 1 1 auto; min-width: 0;">Planungsunterlagen (PDF)</span></a></li>
+    <li style="margin: 0;"><a href="#" style="display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-size: 1rem; line-height: 1.6; font-weight: 600;"><i class="fas fa-arrow-right" aria-hidden="true" style="flex: 0 0 auto; font-size: 14px; margin-top: 6px; color: var(--brand-color, #1779ba);"></i><span style="flex: 1 1 auto; min-width: 0;">Häufige Fragen</span></a></li>
+  </ul>
+
+</div>

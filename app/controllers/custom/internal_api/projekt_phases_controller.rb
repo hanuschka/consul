@@ -1,6 +1,7 @@
 class InternalApi::ProjektPhasesController < InternalApi::BaseController
   before_action :find_projekt, only: [:update, :create]
   before_action :find_phase, only: [:update]
+  around_action :audit_changes_as_internal_client, only: [:update_setting]
 
   skip_authorization_check
 
@@ -91,18 +92,25 @@ class InternalApi::ProjektPhasesController < InternalApi::BaseController
 
   def update_setting
     phase = ProjektPhase.find(params[:id])
-    setting = phase.settings.find_by(key: params[:key])
+    configurable_keys = ProjektPhaseSetting::ConfigurableKeys.for_phase(phase)
+    key = params[:key].to_s
 
-    if setting.blank?
+    if !configurable_keys.key?(key)
       render json: { error: "Setting not found" }, status: :not_found
 
       return
     end
 
-    if setting.update(value: params[:value])
+    result = ConfigurableKeys::UpdateService.call(
+      changes: { key => params[:value] },
+      configurable_keys:,
+      setting_rows: phase.settings
+    )
+
+    if result.success?
       render json: { message: "Phase setting updated" }
     else
-      render json: { error: "Error updating phase setting" }, status: :unprocessable_entity
+      render_setting_errors(result.error_details)
     end
   end
 
@@ -132,7 +140,24 @@ class InternalApi::ProjektPhasesController < InternalApi::BaseController
     end
   end
 
+  def participation_counts
+    render json: ProjektPhaseParticipationCountsQuery.call(requested_projekt_phase_ids)
+  end
+
   private
+
+  # Accepts "1,2,3" as well as projekt_phase_ids[]=1&projekt_phase_ids[]=2.
+  def requested_projekt_phase_ids
+    raw_ids = params[:projekt_phase_ids]
+
+    if raw_ids.is_a?(String)
+      raw_ids = raw_ids.split(",")
+    end
+
+    return [] if !raw_ids.is_a?(Array)
+
+    raw_ids.filter_map { |id| Integer(id.to_s, 10, exception: false) }.uniq
+  end
 
   def find_projekt
     if params[:projekt_id].present?

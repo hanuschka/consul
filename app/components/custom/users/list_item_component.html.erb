@@ -56,7 +56,7 @@
       <% if user.comments.exists? %>
         <%= link_to user_path(user), class: "sidebar-card--count-line -no-default-style" do %>
           <div class="sidebar-resource-author--resources-name">
-            Kommentare
+            <%= t("custom.general.resource_names.comments") %>
           </div>
           <div class="sidebar-resource-author--resoures-count">
             <%= user.comments.count %>

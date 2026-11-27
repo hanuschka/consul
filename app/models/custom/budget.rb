@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "budget").to_s
+load Rails.root.join("app", "models", "budget.rb")
 
 class Budget < ApplicationRecord
   belongs_to :projekt_phase, optional: true
@@ -59,6 +59,10 @@ class Budget < ApplicationRecord
 
   def distributed_voting?
     voting_style == "distributed"
+  end
+
+  def winners_calculated?
+    winners_calculated_at.present? || investments.winners.exists?
   end
 
   def find_or_create_stats_version

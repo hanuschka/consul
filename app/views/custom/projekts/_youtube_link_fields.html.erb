@@ -1,0 +1,26 @@
+<div class="studio-edit-popup--intro studio-youtube-intro">
+  <i class="fas fa-video studio-edit-popup--intro-icon studio-youtube-icon" aria-hidden="true"></i>
+  <p class="studio-edit-popup--intro-text studio-youtube-intro--text">
+    <%= t("custom.projekts.page.content_block_youtube_popup.description") %>
+  </p>
+</div>
+
+<label class="studio-edit-popup--label">
+  <%= label %>:
+  <input
+    type="url"
+    class="content-block-youtube-popup--input <%= input_class %>"
+    placeholder="<%= t("custom.projekts.page.content_block_youtube_popup.placeholder") %>"
+    autocomplete="off"
+    <% if error_id %>aria-describedby="<%= error_id %>"<% end %>
+  >
+</label>
+
+<p
+  <% if error_id %>id="<%= error_id %>"<% end %>
+  class="content-block-youtube-popup--error <%= error_class %>"
+  role="alert"
+  hidden
+>
+  <%= t("custom.projekts.page.content_block_youtube_popup.invalid_url") %>
+</p>

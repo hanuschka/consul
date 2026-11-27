@@ -15,7 +15,7 @@ module ProjektImports::OutputSchemaBuilder
         },
         content_blocks: {
           type: "array",
-          items: content_block_item_schema
+          items: content_block_item_schema(template_ids: offered_template_ids(refs))
         },
         projekt_start_date: {
           type: %w[string null],
@@ -74,11 +74,23 @@ module ProjektImports::OutputSchemaBuilder
     { type: "array", items: items }
   end
 
-  def self.content_block_item_schema
+  # Without the enum, a template left out of the prompt (a hidden one) was still
+  # a valid answer, and its block then rendered as plain text.
+  def self.offered_template_ids(refs)
+    Array(refs["content_block_templates"]).map { |template| template["id"] }.compact.uniq
+  end
+
+  def self.content_block_item_schema(template_ids: [])
+    template_id_schema = { type: "integer", description: "ID of the chosen content block template" }
+
+    if template_ids.present?
+      template_id_schema[:enum] = template_ids
+    end
+
     {
       type: "object",
       properties: {
-        template_id: { type: "integer", description: "ID of the chosen content block template" },
+        template_id: template_id_schema,
         content_data: { type: "string", description: "The actual text content to fill into the template. Use markdown-like formatting." }
       },
       required: %w[template_id content_data],

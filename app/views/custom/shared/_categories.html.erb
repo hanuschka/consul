@@ -2,13 +2,23 @@
   <div class="sidebar-divider"></div>
   <h2 class="sidebar-title projekt-tag-chip-category projekt-tag-chip-icon"><%= t("shared.tags_cloud.categories") %></h2>
 
-  <ul id="categories" class="no-bullet categories">
+  <ul
+    id="categories"
+    class="no-bullet categories js-tag-filter"
+    data-tag-filter-base-path="<%= taggables_filter_base_path(taggable) %>"
+    data-selected-tags="<%= params[:tags] %>"
+  >
     <% selected_categories = params[:tags] ? params[:tags].split(',') : []%>
 
     <% @categories.each do |category| %>
       <li class="inline-block">
-        <% css_class = selected_categories.include?(category.name) ? "selected" : "" %>
-        <%= link_to taggables_path(taggable, category.name), class: css_class, rel: "nofollow" do %>
+        <% category_selected = selected_categories.include?(category.name) %>
+        <%= tag.button(
+          type: "button",
+          class: class_names("js-tag-filter-toggle", selected: category_selected),
+          data: { tag_name: category.name },
+          aria: { pressed: category_selected }
+        ) do %>
           <span class="tag"><%= category.name %></span>
         <% end %>
       </li>

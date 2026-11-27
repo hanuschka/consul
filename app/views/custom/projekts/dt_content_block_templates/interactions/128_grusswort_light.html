@@ -1,62 +1,37 @@
-<!-- BlockID: F10 Grußwort – Zitat mit ausklappbarem Grußwort auf hellem Hintergrund -->
+<!-- BlockID: F10 Grußwort - Zitat mit ausklappbarem Grußwort auf heller Fläche -->
 <!-- Geeignet für: Bürgermeister-Grußwort, Projektleiter-Statement, offizielle Einleitung -->
-<!-- VORAUSSETZUNG: Foundation 6 JS muss auf der Seite geladen sein (in Consul enthalten) -->
-<!-- ANPASSEN: src-Attribut im img-Tag ersetzen -->
+<!-- Voraussetzung: Foundation 6 JS ist auf der Seite geladen (in Consul enthalten) -->
+<!-- Editor: Porträt über das Bild-Werkzeug austauschen (Maus auf das Bild, Alternativtext setzen). Das vollständige Grußwort steht im aufklappbaren Bereich, dort Absätze wie gewohnt bearbeiten. -->
+<!-- Umbruch: Porträt steht neben Name und Funktion, das Zitat läuft darunter über die volle Breite, damit es am Handy nicht eingeengt wird. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Zitat = Zitat-Ausnahme 1.25rem im abgesetzten Zitatblock, Etikett, Name, Funktion und Grußworttext 1rem -->
 
-<div style="background: linear-gradient(160deg, #f8fafc 0%, #eef2f7 100%); border-radius: 16px; padding: 36px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);">
+<div style="position: relative; overflow: hidden; background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <!-- Header: Avatar + Name + Zitat -->
-  <div style="display: flex; align-items: flex-start; gap: 20px; margin-bottom: 24px;">
-
-    <!-- Avatar -->
-    <div style="flex-shrink: 0;">
-      <div style="width: 72px; height: 72px; border-radius: 12px; overflow: hidden; border: 2px solid rgba(0,0,0,0.06); box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-        <img src="https://placehold.co/144x144/1779ba/ffffff?text=BM" alt="Bürgermeisterin" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-      </div>
+  <div style="position: relative; z-index: 1; display: flex; align-items: center; gap: 16px; margin: 0 0 20px;">
+    <img src="https://placehold.co/192x192/1779ba/ffffff?text=BM" alt="Bürgermeisterin Dr. Maria Schneider" style="flex: 0 0 auto; width: 88px; height: auto; aspect-ratio: 1 / 1; object-fit: cover; display: block; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.3); margin: 0;">
+    <div style="flex: 1 1 auto; min-width: 0;">
+      <span style="display: inline-flex; align-items: center; gap: 8px; background: #dce8f4; background: color-mix(in srgb, var(--brand-color, #1779ba) 16%, #ffffff); color: var(--brand-color, #1779ba); border-radius: 999px; padding: 2px 14px; margin: 0 0 6px; font-size: 1rem; line-height: 1.6; font-weight: 700;">Grußwort</span>
+      <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Dr. Maria Schneider</span>
+      <span style="display: block; font-size: 1rem; line-height: 1.6;">Bürgermeisterin</span>
     </div>
-
-    <!-- Zitat + Attribution -->
-    <div style="flex: 1;">
-      <div style="font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">Gru&szlig;wort</div>
-
-      <p style="font-size: 17px; color: #1a202c; font-style: italic; line-height: 1.7; margin: 0 0 16px 0; font-weight: 500; border-left: 3px solid var(--brand-color, #1779ba); padding-left: 16px;">
-        &ldquo;Gute Stadtentwicklung lebt vom Dialog. Ich freue mich, dass Sie sich die Zeit nehmen, sich einzubringen &ndash; gemeinsam gestalten wir eine lebenswerte Zukunft.&rdquo;
-      </p>
-
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="font-size: 15px; font-weight: 700; color: #1a202c;">Dr. Maria Schneider</div>
-        <div style="width: 4px; height: 4px; border-radius: 50%; background: #d1d5db;"></div>
-        <div style="font-size: 13px; color: #6b7280;">B&uuml;rgermeisterin</div>
-      </div>
-    </div>
-
   </div>
 
-  <!-- Ausklappbares Grußwort -->
-  <ul class="accordion" data-accordion data-allow-all-closed="true" style="margin: 0; padding: 0; list-style: none;">
-    <li class="accordion-item" data-accordion-item style="background: rgba(255,255,255,0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.85); border-radius: 12px; overflow: hidden;">
+  <div style="position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 14px; margin: 0 0 20px;">
+    <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-color, #1779ba); color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);"><i class="fas fa-quote-left" style="font-size: 18px;"></i></span>
+    <p style="flex: 1 1 17rem; min-width: 0; font-size: 1.25rem; line-height: 1.5; font-weight: 600; margin: 0;">„Gute Stadtentwicklung lebt vom Dialog. Ich freue mich, dass Sie sich die Zeit nehmen, sich einzubringen – gemeinsam gestalten wir eine lebenswerte Zukunft.“</p>
+  </div>
 
-      <a href="#" class="accordion-title" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; font-size: 14px; font-weight: 700; color: var(--brand-color, #1779ba); text-decoration: none; min-height: 44px; background: transparent; line-height: 1.4; cursor: pointer;">
-        Vollst&auml;ndiges Gru&szlig;wort lesen
-      </a>
+  <ul class="accordion" data-accordion data-allow-all-closed="true" style="position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; background: transparent; border: 0;">
+    <li class="accordion-item" data-accordion-item style="margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
 
-      <div class="accordion-content" data-tab-content style="padding: 0 20px 20px 20px; background: transparent; border-top: 1px solid rgba(0,0,0,0.06);">
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.7; margin: 16px 0 0 0;">
-          Liebe B&uuml;rgerinnen und B&uuml;rger,
-        </p>
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.7; margin: 12px 0 0 0;">
-          unsere Stadt steht vor spannenden Ver&auml;nderungen. Mit diesem Beteiligungsverfahren m&ouml;chten wir sicherstellen, dass Ihre Perspektiven und Ideen von Anfang an in die Planung einflie&szlig;en.
-        </p>
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.7; margin: 12px 0 0 0;">
-          Ob jung oder alt, ob alteingesessen oder neu zugezogen &ndash; jede Stimme z&auml;hlt. Nutzen Sie diese Plattform, um Vorschl&auml;ge einzureichen, Ideen anderer zu unterst&uuml;tzen und den Dialog mitzugestalten. Alle Beitr&auml;ge werden ausgewertet und dem Stadtrat als Entscheidungsgrundlage vorgelegt.
-        </p>
-        <p style="font-size: 15px; color: #4b5563; line-height: 1.7; margin: 12px 0 0 0;">
-          Ich freue mich auf Ihre Beteiligung!
-        </p>
-        <p style="font-size: 15px; color: #1a202c; line-height: 1.7; margin: 16px 0 0 0; font-weight: 600;">
-          Ihre Dr. Maria Schneider<br>
-          <span style="font-weight: 400; color: #6b7280;">B&uuml;rgermeisterin der Stadt Musterstadt</span>
-        </p>
+      <a href="#" class="accordion-title" style="font-size: 1rem; line-height: 1.6; font-weight: 700; color: var(--brand-color, #1779ba); padding: 14px 48px 14px 18px; min-height: 44px; border: 0; background: transparent;">Vollständiges Grußwort lesen</a>
+
+      <div class="accordion-content" data-tab-content style="border: 0; padding: 0 18px 18px; background: transparent;">
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Liebe Bürgerinnen und Bürger,</p>
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">unsere Stadt steht vor spannenden Veränderungen. Mit diesem Beteiligungsverfahren möchten wir sicherstellen, dass Ihre Perspektiven und Ideen von Anfang an in die Planung einfließen.</p>
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 12px;">Ob jung oder alt, ob alteingesessen oder neu zugezogen – jede Stimme zählt. Nutzen Sie diese Plattform, um Vorschläge einzureichen, Ideen anderer zu unterstützen und den Dialog mitzugestalten. Alle Beiträge werden ausgewertet und dem Stadtrat als Entscheidungsgrundlage vorgelegt.</p>
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 16px;">Ich freue mich auf Ihre Beteiligung!</p>
+        <p style="font-size: 1rem; line-height: 1.6; margin: 0;"><span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Ihre Dr. Maria Schneider</span><span style="display: block; font-size: 1rem; line-height: 1.6;">Bürgermeisterin der Stadt Musterstadt</span></p>
       </div>
 
     </li>

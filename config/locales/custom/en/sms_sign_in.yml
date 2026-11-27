@@ -1,0 +1,31 @@
+en:
+  sms_sign_in:
+    message: "Your sign-in code for %{platform}: %{code}. Valid for %{minutes} minutes."
+    username_prefix: Participant
+    code_sent: We have sent you a code by text message.
+    hint:
+      text_html: Or %{link}.
+      link: take part with an SMS code
+    errors:
+      invalid_phone: Please enter a German mobile number, for example 0171 1234567.
+      rate_limited: You have requested too many codes. Please wait a moment and try again.
+      delivery_failed: The text message could not be sent. Please try again later.
+      invalid_code: The code is not correct.
+      expired_code: The code is no longer valid. Please request a new code.
+      account_blocked: This account is blocked.
+    new:
+      title: Take part with an SMS code
+      intro: Enter your mobile number. You will receive a code by text message to sign in with. If there is no account for your number yet, one is created.
+      phone_label: Mobile number
+      phone_hint: German mobile numbers only, for example 0171 1234567
+      terms_html: By signing in you accept the %{terms_link} and the %{privacy_link}.
+      terms_link: terms of use
+      privacy_link: privacy policy
+      submit: Request code
+    edit:
+      title: Enter code
+      intro: We have sent you a six-digit code by text message. It is valid for %{minutes} minutes.
+      code_label: Code
+      submit: Sign in
+      resend: Send code again
+      change_number: Use a different number

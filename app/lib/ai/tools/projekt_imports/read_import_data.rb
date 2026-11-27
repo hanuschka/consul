@@ -4,7 +4,9 @@ class Ai::Tools::ProjektImports::ReadImportData < Ai::Tools::ProjektImports::Edi
   description "Reads the current project import data. Call this before changing " \
               "anything, so you work from the stored values rather than from memory. " \
               "\"phases\" returns every phase in full, including its poll questions, " \
-              "events, milestones, arguments, notifications and other resources."
+              "events, milestones, arguments, notifications and other resources. " \
+              "\"content_blocks\" also returns available_templates, the only " \
+              "templates a block may use."
 
   parameters(
     type: "object",
@@ -23,7 +25,11 @@ class Ai::Tools::ProjektImports::ReadImportData < Ai::Tools::ProjektImports::Edi
     case section
     when "overview" then { overview: editor.overview }
     when "phases" then { phases: editor.phases }
-    when "content_blocks" then { content_blocks: editor.content_blocks }
+    when "content_blocks"
+      {
+        content_blocks: editor.content_blocks,
+        available_templates: editor.available_content_block_templates
+      }
     else { error: "Unknown section #{section}. Use one of: #{SECTIONS.join(", ")}" }
     end
   end

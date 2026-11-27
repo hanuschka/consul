@@ -12,8 +12,7 @@ en:
         destroy_confirmation: "Do you really want to delete this notification?"
     images:
       ai_generated_field_component:
-        label: "This image was created or edited with AI"
-        switch_label: "AI"
+        switch_label: "AI-generated image"
         tooltip_title: "AI disclosure"
         tooltip_text: "Please turn this on if the image was created or edited with artificial intelligence, in whole or in part."
         tooltip_note: "The image then publicly carries the notice \"AI-generated image\". This disclosure is required by law."
@@ -23,6 +22,8 @@ en:
       ai_image_label_component:
         text: "AI-generated image"
         tooltip: "This image was created or edited with artificial intelligence and does not show a real photograph. The notice is required by law."
+      image_credit_component:
+        prefix: "Image credit:"
     similar_contributions:
       check_section_component:
         checking_hint: "Your contribution is being compared with the ones already submitted in this phase. This only takes a moment."

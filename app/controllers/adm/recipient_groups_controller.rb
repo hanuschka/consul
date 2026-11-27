@@ -3,7 +3,7 @@ module Adm
     def index
       authorize [:adm, :recipient_group]
       @pagy, @recipient_groups = pagy(
-        policy_scope([:adm, RecipientGroup]).order(created_at: :desc)
+        policy_scope([:adm, RecipientGroup]).with_projekt_titles.order(created_at: :desc)
       )
 
       @breadcrumbs = [

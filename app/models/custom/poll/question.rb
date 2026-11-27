@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "poll", "question").to_s
+load Rails.root.join("app", "models", "poll", "question.rb")
 
 class Poll::Question < ApplicationRecord
   include Mappable
@@ -177,6 +177,23 @@ class Poll::Question < ApplicationRecord
   # must be regenerated whenever this question's answers change.
   def contextualized_dependents
     poll.questions.where(contextualize_by_poll_question_id: id)
+  end
+
+  def contexted_variants
+    return contexted_clones.to_a if contexted_clones.any?
+    return [] if parent_question.nil?
+
+    position = parent_question.nested_questions.index(self)
+    return [] if position.nil?
+
+    parent_question.contexted_clones.includes(nested_questions: :votation_type).filter_map do |bundle_clone|
+      variant = bundle_clone.nested_questions[position]
+      variant if variant&.votation_type&.vote_type == votation_type&.vote_type
+    end
+  end
+
+  def context_title
+    (context || parent_question&.context)&.title
   end
 
   # Auto-regeneration entry point for the /adm edit flow. Rebuilds the contexted

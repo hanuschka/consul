@@ -56,6 +56,28 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         run_test!
       end
 
+      response '200', 'vote counts hidden from read-only clients while results are not public' do
+        let(:projekt) { Projekt.create!(name: 'Projekt', activated: true) }
+        let(:voting_phase) do
+          projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true, frontend_visibility: true)
+        end
+        let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question', author: create_admin_user) }
+        let(:poll_question_id) { poll_question.id }
+
+        before do
+          poll_question.question_answers.create!(title: 'Yes', given_order: 1)
+          api_client.update!(access_level: :public_data)
+        end
+
+        run_test! do |response|
+          answer_data = JSON.parse(response.body)['data']['answers'].first
+
+          expect(answer_data).not_to have_key('total_votes')
+          expect(answer_data).not_to have_key('total_votes_percentage')
+        end
+      end
+
       response '404', 'question not found' do
         let(:poll_question_id) { 999999 }
 
@@ -106,6 +128,47 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
                required: ['data']
 
         run_test!
+      end
+
+      response '201', 'answer created with texts in two languages, an image and a document' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question', author: create_admin_user) }
+        let(:poll_question_id) { poll_question.id }
+        let(:answer) do
+          {
+            answer: {
+              translations: {
+                de: { title: 'Marktplatz', description: 'Neugestaltung des Platzes' },
+                en: { title: 'Market square', description: 'Redesign of the square' }
+              },
+              images_attributes: [{ title: 'Entwurf', attachment: base64_fixture('clippy.png') }],
+              documents_attributes: [{ title: 'Lageplan', attachment: base64_fixture('clippy.pdf') }]
+            }
+          }
+        end
+
+        schema type: :object,
+               properties: {
+                 data: {
+                   type: :object,
+                   properties: {
+                     answer: { '$ref' => '#/components/schemas/PollQuestionAnswer' }
+                   },
+                   required: ['answer']
+                 }
+               },
+               required: ['data']
+
+        run_test! do |response|
+          answer_data = JSON.parse(response.body)['data']['answer']
+
+          expect(answer_data['translations']['de']['title']).to eq('Marktplatz')
+          expect(answer_data['translations']['en']['description']).to eq('Redesign of the square')
+          expect(answer_data['images'].first['title']).to eq('Entwurf')
+          expect(answer_data['documents'].first['title']).to eq('Lageplan')
+        end
       end
 
       response '422', 'invalid request' do
@@ -338,6 +401,25 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
         end
       end
 
+      response '422', 'answer title locked: the poll is live and has voters' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:poll) { voting_phase.polls.create!(name: 'Live Poll', live: true) }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question') }
+        let(:poll_answer) { poll_question.question_answers.create!(title: 'Ja', given_order: 1) }
+        let(:id) { poll_answer.id }
+        let(:answer) do
+          { answer: { title: 'Nein' } }
+        end
+
+        before { poll.voters.create!(user: create_admin_user, origin: 'web') }
+
+        run_test! do |response|
+          expect(JSON.parse(response.body)['error']['messages']).to be_present
+          expect(poll_answer.reload.title).to eq('Ja')
+        end
+      end
+
       unauthorized_response { let(:id) { 1 } }
     end
 
@@ -363,6 +445,41 @@ RSpec.describe 'Poll Question Answers API', type: :request, openapi_spec: 'v1/sw
                required: ['message']
 
         run_test!
+      end
+
+      response '200', 'answer deleted while questions are contextualised by its question' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:poll) { voting_phase.polls.create!(name: 'Test Poll') }
+        let(:poll_question) { create_poll_question(poll, title: 'Context Question') }
+        let!(:poll_answer) { poll_question.question_answers.create!(title: 'Ja', given_order: 1) }
+        let!(:remaining_answer) { poll_question.question_answers.create!(title: 'Nein', given_order: 2) }
+        let(:dependent_question) { create_poll_question(poll, title: 'Dependent Question') }
+        let(:id) { poll_answer.id }
+
+        before do
+          dependent_question.update!(contextualize_by_poll_question_id: poll_question.id)
+          dependent_question.regenerate_contexted_clones
+        end
+
+        run_test! do
+          expect(dependent_question.reload.contexted_clones.map(&:context_id)).to eq([remaining_answer.id])
+        end
+      end
+
+      response '422', 'answer kept: the poll is live and has voters' do
+        let(:projekt) { Projekt.create!(name: 'Projekt') }
+        let(:voting_phase) { projekt.projekt_phases.create!(type: 'ProjektPhase::VotingPhase', active: true) }
+        let(:poll) { voting_phase.polls.create!(name: 'Live Poll', live: true) }
+        let(:poll_question) { create_poll_question(poll, title: 'Test Question') }
+        let(:poll_answer) { poll_question.question_answers.create!(title: 'Ja', given_order: 1) }
+        let(:id) { poll_answer.id }
+
+        before { poll.voters.create!(user: create_admin_user, origin: 'web') }
+
+        run_test! do
+          expect(Poll::Question::Answer.exists?(poll_answer.id)).to be(true)
+        end
       end
 
       response '404', 'answer not found' do

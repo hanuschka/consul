@@ -96,6 +96,7 @@ class IdeasController < ApplicationController
       id: @idea.id,
       image_url: image_url,
       image_ai_label_html: helpers.ai_image_label_html(@idea.image),
+      image_credit_html: helpers.image_credit_html(@idea.image),
       title: @idea.title
     }.to_json
 

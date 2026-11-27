@@ -1,7 +1,11 @@
-require_dependency Rails.root.join("app", "controllers", "users", "registrations_controller").to_s
+load Rails.root.join("app", "controllers", "users", "registrations_controller.rb")
 
 class Users::RegistrationsController < Devise::RegistrationsController
   include HasRegisteredAddress
+
+  before_action only: [:edit, :update] do
+    redirect_to account_path if current_user.phone_account?
+  end
 
   def create
     build_resource(sign_up_params)
@@ -27,7 +31,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
         redirect_to new_user_registration_path,
           alert: t("custom.devise_views.users.registrations.create.existing_user_with_same_stamp")
       else
-        super
+        super do |user|
+          user.send_welcome_email if user.persisted? && pending_invitation.present?
+        end
       end
     else
       render :new
@@ -111,6 +117,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
       params[:user].delete(:redeemable_code) if params[:user].present? &&
                                                 params[:user][:redeemable_code].blank?
 
+      drop_incomplete_date_of_birth
+
       params.require(:user).permit(:username, :email,
                                    :first_name, :last_name,
                                    :city_name, :plz, :street_name, :street_number, :street_number_extension,
@@ -122,5 +130,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
                                    :locale,
                                    :redeemable_code,
                                    individual_group_value_ids: [])
+    end
+
+    def drop_incomplete_date_of_birth
+      return if params[:user].blank?
+
+      keys = %w[date_of_birth(1i) date_of_birth(2i) date_of_birth(3i)]
+      return unless keys.any? { |key| params[:user][key].blank? }
+
+      keys.each { |key| params[:user].delete(key) }
     end
 end

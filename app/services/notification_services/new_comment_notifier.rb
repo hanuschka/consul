@@ -5,8 +5,10 @@ module NotificationServices
     end
 
     def call
+      mailer_action = @comment.commentable.is_a?(ProjektPhase) ? :new_comment : :new_contribution_comment
+
       users_to_notify.each do |user|
-        NotificationServiceMailer.new_comment(user.id, @comment.id).deliver_later
+        NotificationServiceMailer.public_send(mailer_action, user.id, @comment.id).deliver_later
         Notification.add(user, @comment)
         Activity.log(user, "email", @comment)
       end
@@ -15,7 +17,7 @@ module NotificationServices
     private
 
       def users_to_notify
-        [administrators, projekt_managers, projekt_phase_subscribers]
+        [administrators, projekt_managers]
           .flatten.uniq(&:id).reject { |user| user.id == @comment.user_id || user.not_actual? }
       end
 
@@ -28,16 +30,6 @@ module NotificationServices
           .where(adm_email_on_new_comment: true)
           .where(projekt_manager_assignments: { projekt_id: @comment&.projekt&.id })
           .where("projekt_manager_assignments.permissions @> ARRAY[?]::text[]", ["get_notifications"]).to_a
-      end
-
-      def projekt_phase_subscribers
-        if @comment.commentable.is_a?(ProjektPhase::CommentPhase)
-          @comment.commentable.subscribers.to_a
-        elsif @comment.commentable.respond_to?(:projekt_phase)
-          @comment.commentable.projekt_phase.subscribers.to_a
-        else
-          []
-        end
       end
   end
 end

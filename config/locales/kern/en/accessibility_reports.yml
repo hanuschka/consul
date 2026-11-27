@@ -1,0 +1,35 @@
+en:
+  activemodel:
+    models:
+      accessibility_report: Barrier report
+    attributes:
+      accessibility_report:
+        location: Page or feature
+        description: Description of the barrier
+        assistive_technology: Assistive technology used
+        email: Email address for a reply
+  accessibility_reports:
+    create:
+      success: Thank you! Your report has been submitted.
+    form:
+      error_title: Please check your entries
+      location: Page or feature (optional)
+      location_hint: Where did you come across the barrier? For example, the page address or the name of the feature.
+      description: Description of the barrier (required)
+      description_hint: Describe what did not work. Please do not include personal or health details that are not needed for the report. Maximum %{max} characters.
+      assistive_technology: Assistive technology used (optional)
+      assistive_technology_hint: For example, a screen reader, screen magnifier or voice control.
+      email: Email address for a reply (optional)
+      email_hint: You will receive a confirmation. We only use your email address to reply to your report.
+      submit: Submit report
+    accessibility_link:
+      title: Feedback and contact
+      text_html: "Have you come across a barrier on this website? Let us know using the %{link} form."
+  accessibility_report_mailer:
+    report_submitted:
+      subject: New barrier report
+      body: a new report was submitted through the "Report a barrier" form.
+      not_given: not provided
+    confirmation:
+      subject: We have received your barrier report
+      body: thank you for your report. We have received it and will get back to you once we have reviewed it.

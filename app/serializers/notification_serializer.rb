@@ -1,8 +1,9 @@
 class NotificationSerializer < BaseSerializer
   attr_reader :projekt_notification
 
-  def initialize(projekt_notification)
+  def initialize(projekt_notification, client: nil)
     @projekt_notification = projekt_notification
+    @client = client
   end
 
   def serialize
@@ -11,9 +12,6 @@ class NotificationSerializer < BaseSerializer
         :id,
         :title,
         :body,
-        :link_text,
-        :link_url,
-        :segment_recipient,
         :projekt_phase_id,
         :created_at,
         :updated_at
@@ -40,8 +38,8 @@ class NotificationSerializer < BaseSerializer
     notification_data
   end
 
-  def self.serialize_collection(notifications)
-    notifications.map { |notification| new(notification).serialize }
+  def self.serialize_collection(notifications, client: nil)
+    notifications.map { |notification| new(notification, client: client).serialize }
   end
 end
 

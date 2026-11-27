@@ -21,7 +21,7 @@ class Whatsapp::BrowsableProjektsQuery < ApplicationQuery
   # were running was offered votes in a ninth. Unordered, because the overview's
   # order means nothing inside a subquery.
   def self.projekt_ids
-    Projekt.index_order_underway.unscope(:order).select(:id)
+    Projekt.index_order_underway.visible_for(nil).unscope(:order).select(:id)
   end
 
   def initialize(from: 0)
@@ -55,6 +55,6 @@ class Whatsapp::BrowsableProjektsQuery < ApplicationQuery
     # both Whatsapp::ProjektLink.title and Whatsapp::ProjektCard.subtitle read the
     # translated page — one query per row of a list otherwise.
     def scope
-      Projekt.index_order_underway.includes(page: :translations)
+      Projekt.index_order_underway.visible_for(nil).includes(page: :translations)
     end
 end

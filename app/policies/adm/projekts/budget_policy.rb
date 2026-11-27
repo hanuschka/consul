@@ -30,11 +30,15 @@ class Adm::Projekts::BudgetPolicy < ApplicationPolicy
   end
 
   def calculate_winners?
-    manage_permitted? && @record.balloting_or_later?
+    manage_permitted? && @record.balloting_or_later? && !@record.winners_calculated?
   end
 
   def recalculate_winners?
-    manage_permitted? && @record.balloting_or_later?
+    manage_permitted? && @record.balloting_or_later? && @record.winners_calculated?
+  end
+
+  def resolve_tie?
+    manage_permitted? && @record.balloting_finished?
   end
 
   class Scope < Scope

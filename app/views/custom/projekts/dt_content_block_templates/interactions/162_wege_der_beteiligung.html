@@ -1,0 +1,74 @@
+<!-- BlockID: N11 Wege der Beteiligung - eine Stimme, drei Wege: online, im Bürgerbüro, an der Mitmachbox -->
+<!-- Geeignet für: hybride Abstimmungen und Umfragen mit Teilnahme online und vor Ort, Aufruf mit QR-Code -->
+<!-- ANPASSEN: QR-Code als Bild hochladen und über das Bild-Werkzeug austauschen. Button-Ziel auf die Phase setzen: ?projekt_phase_id=123#projekt-footer, die Zahl durch die Nummer der Phase ersetzen. Adresse, Öffnungszeiten, Standorte und Zeitraum eintragen; fehlende Werte bleiben als Etikett „Angabe folgt“ stehen. -->
+<!-- Editor: jeder Weg ist ein Listenelement und lässt sich löschen oder verschieben; „Weiteres Element hinzufügen“ kopiert die letzte Karte (Mitmachbox), Nummer und Inhalt danach anpassen. Die Standorte sind eine eigene Liste in der Karte. Nummernkacheln sind gesperrt, Icons nur im Code-Modus tauschbar. -->
+<!-- Umbruch: die drei Karten stehen am Handy untereinander, auf breiten Bildschirmen nebeneinander; der Button in der ersten Karte ist volle Kartenbreite. Der Hinweis darunter hält das Symbol links und bricht den Text daneben um. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Blocktitel = Theme-H3, Kartentitel = Theme-H4, aller Text 1rem -->
+
+<div style="position: relative; overflow: hidden; background: #eef4fa; background: linear-gradient(160deg, #e3eef8 0%, #ffffff 70%); background: linear-gradient(160deg, color-mix(in srgb, var(--brand-color, #1779ba) 14%, #ffffff) 0%, #ffffff 70%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; padding: clamp(20px, 4vw, 32px); margin: 0; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
+
+  <span style="position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; background: var(--brand-color, #1779ba); color: #ffffff; border-radius: 999px; padding: 4px 14px; margin: 0 0 12px; font-size: 1rem; line-height: 1.6; font-weight: 700;"><i class="fas fa-vote-yea" aria-hidden="true" style="font-size: 14px;"></i> So stimmen Sie ab</span>
+  <h3 style="position: relative; z-index: 1; margin: 0 0 8px; hyphens: auto; overflow-wrap: break-word;">Eine Stimme, drei Wege</h3>
+  <p style="position: relative; z-index: 1; font-size: 1rem; line-height: 1.6; margin: 0 0 20px; max-width: 44rem;">Alle Einwohnerinnen und Einwohner ab 16 Jahren erhalten einen Brief mit einem persönlichen Code. Damit stimmen Sie einmal ab, auf dem Weg, der Ihnen am besten passt.</p>
+
+  <ul style="position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 12px; gap: clamp(12px, 2vw, 16px);">
+
+    <li style="display: flex; flex-direction: column; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 20px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 10px;">
+        <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">01</span>
+        <h4 style="flex: 1 1 auto; min-width: 0; margin: 0; hyphens: auto; overflow-wrap: break-word;">Online</h4>
+      </div>
+      <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 14px;">Scannen Sie den QR-Code in Ihrem Brief mit dem Handy oder öffnen Sie die Abstimmung über den Button. Ihr Code schaltet Ihre Stimme frei.</p>
+      <img src="https://placehold.co/300x300/ffffff/1a2e44?text=QR-Code" alt="QR-Code zur Online-Abstimmung" style="width: 100%; max-width: 140px; height: auto; aspect-ratio: 1 / 1; display: block; margin: 0 0 16px; border: 1px solid #e8edf3; border-radius: 10px; box-shadow: 0 1px 2px rgba(16,24,40,0.05);">
+      <a href="?projekt_phase_id=123#projekt-footer" class="button" style="text-decoration: none; width: 100%; margin: auto 0 0; min-height: 44px; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 14px -6px rgba(16,24,40,0.45);">Online abstimmen</a>
+    </li>
+
+    <li style="display: flex; flex-direction: column; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 20px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 10px;">
+        <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">02</span>
+        <h4 style="flex: 1 1 auto; min-width: 0; margin: 0; hyphens: auto; overflow-wrap: break-word;">Im Bürgerbüro</h4>
+      </div>
+      <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 14px;">Bringen Sie Ihren Brief mit. Die Mitarbeiterinnen und Mitarbeiter erfassen Ihre Stimme vor Ort.</p>
+      <div style="display: flex; align-items: flex-start; gap: 12px; margin: 0 0 12px;">
+        <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="fas fa-map-marker-alt" style="font-size: 16px;"></i></span>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Adresse</span>
+          <span style="display: block; font-size: 1rem; line-height: 1.6;">Bürgerbüro im Rathaus</span>
+          <span style="display: block; font-size: 1rem; line-height: 1.6;">Marktplatz 1, 12345&nbsp;Musterstadt</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: 12px;">
+        <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: #dce8f4; background: linear-gradient(180deg, #e6eff8 0%, #d3e2f1 100%); background: linear-gradient(180deg, color-mix(in srgb, var(--brand-color, #1779ba) 12%, #ffffff) 0%, color-mix(in srgb, var(--brand-color, #1779ba) 22%, #ffffff) 100%); color: var(--brand-color, #1779ba); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(16,24,40,0.08);"><i class="far fa-clock" style="font-size: 16px;"></i></span>
+        <div style="flex: 1 1 auto; min-width: 0;">
+          <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Öffnungszeiten</span>
+          <span style="display: block; font-size: 1rem; line-height: 1.6;">Mo bis Fr, 8:00 bis 12:00&nbsp;Uhr</span>
+          <span style="display: block; font-size: 1rem; line-height: 1.6;">Do zusätzlich 14:00 bis 18:00&nbsp;Uhr</span>
+        </div>
+      </div>
+    </li>
+
+    <li style="display: flex; flex-direction: column; margin: 0; background: #ffffff; border: 1px solid #e8edf3; border-radius: 12px; padding: 20px; box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px -10px rgba(16,24,40,0.22);">
+      <div style="display: flex; align-items: center; gap: 12px; margin: 0 0 10px;">
+        <span aria-hidden="true" class="js-content-block-element-not-editable" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 14px; background: var(--brand-color, #1779ba); color: #ffffff; font-size: 1rem; line-height: 1.6; font-weight: 700; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.4);">03</span>
+        <h4 style="flex: 1 1 auto; min-width: 0; margin: 0; hyphens: auto; overflow-wrap: break-word;">An der Mitmachbox</h4>
+      </div>
+      <p style="font-size: 1rem; line-height: 1.6; margin: 0 0 14px;">An mehreren Orten stehen Mitmachboxen. Sie beantworten die Fragen per Tastendruck, ganz ohne Handy und ohne Anmeldung.</p>
+      <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Standorte</span>
+      <ul style="list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 4px;">
+        <li style="display: flex; align-items: flex-start; gap: 10px; margin: 0; font-size: 1rem; line-height: 1.6;"><i class="fas fa-map-pin" aria-hidden="true" style="flex: 0 0 auto; font-size: 14px; margin-top: 6px; color: var(--brand-color, #1779ba);"></i><span style="flex: 1 1 auto; min-width: 0;">Foyer im Rathaus</span></li>
+        <li style="display: flex; align-items: flex-start; gap: 10px; margin: 0; font-size: 1rem; line-height: 1.6;"><i class="fas fa-map-pin" aria-hidden="true" style="flex: 0 0 auto; font-size: 14px; margin-top: 6px; color: var(--brand-color, #1779ba);"></i><span style="flex: 1 1 auto; min-width: 0;">Stadtbibliothek</span></li>
+        <li style="display: flex; align-items: flex-start; gap: 10px; margin: 0; font-size: 1rem; line-height: 1.6;"><i class="fas fa-map-pin" aria-hidden="true" style="flex: 0 0 auto; font-size: 14px; margin-top: 6px; color: var(--brand-color, #1779ba);"></i><span style="flex: 1 1 auto; min-width: 0;">Wochenmarkt, samstags</span></li>
+        <li style="display: flex; align-items: flex-start; gap: 10px; margin: 0; font-size: 1rem; line-height: 1.6;"><i class="fas fa-map-pin" aria-hidden="true" style="flex: 0 0 auto; font-size: 14px; margin-top: 6px; color: var(--brand-color, #1779ba);"></i><span style="flex: 1 1 auto; min-width: 0;">Weitere Standorte: <span style="display: inline-block; background: #ffffff; border: 1px dashed #c5cfdb; border-radius: 999px; padding: 0 10px; font-size: 1rem; line-height: 1.6; font-weight: 600;">Angabe folgt</span></span></li>
+      </ul>
+      <span style="display: block; font-size: 1rem; line-height: 1.6; font-weight: 700;">Zeitraum</span>
+      <span style="display: block; font-size: 1rem; line-height: 1.6;">1. bis 30. Juni 2026</span>
+    </li>
+
+  </ul>
+
+  <div style="position: relative; z-index: 1; display: flex; align-items: flex-start; gap: 12px; margin: 16px 0 0; padding: 14px 16px; background: #e7f5ee; border: 1px solid #b7e0c9; border-radius: 12px;">
+    <span aria-hidden="true" style="flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: #047857; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 4px rgba(16,24,40,0.12);"><i class="fas fa-check" style="font-size: 14px;"></i></span>
+    <p style="flex: 1 1 auto; min-width: 0; font-size: 1rem; line-height: 1.6; margin: 0;">Jede Person stimmt einmal ab. Ihr Code wird bei der Abgabe entwertet: Wer online abgestimmt hat, kann im Bürgerbüro nicht ein zweites Mal abstimmen. Der Code enthält weder Ihren Namen noch Ihre Adresse.</p>
+  </div>
+
+</div>

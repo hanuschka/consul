@@ -9,9 +9,12 @@ class ProjektSetting < ApplicationRecord
     projekt_feature.general.show_in_sidebar_filter
     projekt_feature.general.consider_underway
   ].freeze
+  OVERVIEW_SYNC_BATCH_KEY = :projekt_setting_overview_sync_batch
 
   attr_accessor :form_field_disabled, :dependent_setting_ids, :dependent_setting_action
   belongs_to :projekt, touch: true
+
+  audited only: :value, on: :update, associated_with: :projekt
 
   validates :key, presence: true, uniqueness: { scope: :projekt_id }
 
@@ -19,7 +22,7 @@ class ProjektSetting < ApplicationRecord
 
   after_update :touch_projekt_content_updated_at,
     if: Proc.new { |setting| setting.key.in?(CONTENT_TIMESTAMP_KEYS) && setting.saved_change_to_value? }
-  after_update :trigger_sync_for_global_overview_related_projekt
+  after_update_commit :trigger_sync_for_global_overview_related_projekt
   after_save :sync_promoted_projekt_column, if: Proc.new { |setting| Projekt::KEY_TO_COLUMN.key?(setting.key) }
   after_save :reset_visible_projekt_ids_cache
   after_destroy :reset_visible_projekt_ids_cache
@@ -49,6 +52,20 @@ class ProjektSetting < ApplicationRecord
   end
 
   class << self
+
+    # Settings saved inside the block sync their projekt to the DT overview
+    # once when the block ends, instead of once per saved setting. Only
+    # committed changes are collected, so a rolled-back write syncs nothing.
+    def with_single_overview_sync
+      previous_batch = ActiveSupport::IsolatedExecutionState[OVERVIEW_SYNC_BATCH_KEY]
+      projekts_to_sync = {}
+      ActiveSupport::IsolatedExecutionState[OVERVIEW_SYNC_BATCH_KEY] = projekts_to_sync
+
+      yield
+    ensure
+      ActiveSupport::IsolatedExecutionState[OVERVIEW_SYNC_BATCH_KEY] = previous_batch
+      projekts_to_sync&.each_value(&:perform_sync_update_for_global_overview)
+    end
 
     def defaults
       {
@@ -111,7 +128,16 @@ class ProjektSetting < ApplicationRecord
   end
 
   def trigger_sync_for_global_overview_related_projekt
-    projekt.perform_sync_update_for_global_overview
+    # A soft-deleted projekt is out of the association's default scope.
+    return if projekt.blank?
+
+    projekts_to_sync = ActiveSupport::IsolatedExecutionState[OVERVIEW_SYNC_BATCH_KEY]
+
+    if projekts_to_sync
+      projekts_to_sync[projekt_id] = projekt
+    else
+      projekt.perform_sync_update_for_global_overview
+    end
   end
 
   # Seven settings are also columns on `projekts`, which the scopes filter on.

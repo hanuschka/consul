@@ -1,6 +1,8 @@
 class Projekts::DtContentBlockTemplateItemComponent < ViewComponent::Base
   include StudioTooltipHelper
 
+  PREVIEW_IFRAME_SRC_PATTERN = /<iframe\b(?![^>]*\bclass=)([^>]*?)\ssrc="/i
+
   def initialize(template:)
     @template = template
   end
@@ -21,24 +23,24 @@ class Projekts::DtContentBlockTemplateItemComponent < ViewComponent::Base
     template["content"]
   end
 
+  def preview_content
+    template_content.gsub(PREVIEW_IFRAME_SRC_PATTERN) do
+      "<iframe class=\"js-template-preview-iframe\"#{Regexp.last_match(1)} data-preview-src=\""
+    end
+  end
+
   def hidden?
     template["hidden"] == true
   end
 
   def hidden_until_date
-    return nil if template["hidden_until"].blank?
-
-    Date.parse(template["hidden_until"].to_s)
-  rescue ArgumentError
-    nil
+    ContentBlockTemplates::Visibility.hidden_until_date(template)
   end
 
   def hidden_by_date?
-    date = hidden_until_date
     return false if hidden?
-    return false if date.nil?
 
-    date > Date.current
+    ContentBlockTemplates::Visibility.hidden_until_future?(template)
   end
 
   def show_visibility_badge?

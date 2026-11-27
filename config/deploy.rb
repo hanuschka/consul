@@ -2,10 +2,81 @@
 lock "~> 3.17.3"
 
 require "base64"
+require "json"
+require "open3"
+
+OP_ACCOUNT = "demokratietoday.1password.eu".freeze
+DEMO_DEPLOY_ITEM = "cli_demo_2 prod".freeze
+HOSTS_ITEM_ENVS = { "production" => "prod", "staging" => "stage" }.freeze
 
 def deploysecret(key)
-  @deploy_secrets_yml ||= YAML.load_file("config/deploy-secrets/deploy-secrets-cli_rhf.yml")[fetch(:stage).to_s]
-  @deploy_secrets_yml.fetch(key.to_s, "undefined")
+  deploy_target.fetch(key.to_s, "undefined")
+end
+
+def deploy_branch
+  @deploy_branch ||= begin
+    branch = ENV["branch"].to_s.strip
+    abort "branch=<branch> is required, e.g. branch=cli_demo_2 cap #{fetch(:stage)} deploy" if branch.empty?
+
+    current_branch = `git rev-parse --abbrev-ref HEAD`.strip
+    abort "branch=#{branch} does not match the checked-out branch #{current_branch}" if branch != current_branch
+
+    branch
+  end
+end
+
+def deploy_target
+  @deploy_target ||= begin
+    deploy_branch
+    op_installed? ? deploy_target_from_hosts_vault : deploy_target_from_local_file
+  end
+end
+
+def op_installed?
+  !system("op", "--version", out: File::NULL, err: File::NULL).nil?
+end
+
+def deploy_target_from_hosts_vault
+  env = HOSTS_ITEM_ENVS[fetch(:stage).to_s]
+  abort "No hosts vault mapping for stage #{fetch(:stage)}" unless env
+
+  title = "#{deploy_branch} #{env}"
+  item = hosts_vault_item(title)
+
+  if item.nil?
+    abort "No hosts vault item #{title.inspect}; feature branches deploy only to production (#{DEMO_DEPLOY_ITEM})" if env != "prod"
+
+    title = DEMO_DEPLOY_ITEM
+    item = hosts_vault_item(title) || abort("No hosts vault item #{title.inspect}")
+  end
+
+  fields = item.fetch("fields", []).to_h { |field| [field["label"], field["value"].to_s] }.reject { |_, value| value.empty? }
+  abort "Hosts vault item #{title.inspect} has no ip" unless fields["ip"]
+
+  puts "Deploy target: #{deploy_branch} -> #{title} (#{fields["ip"]})"
+
+  {
+    "server" => fields["ip"],
+    "server1" => fields["ip"],
+    "user" => fields.fetch("deploy_user", "deploy"),
+    "ssh_port" => fields.fetch("ssh_port", "22"),
+    "deploy_to" => fields.fetch("deploy_to", "/home/deploy/consul")
+  }
+end
+
+def hosts_vault_item(title)
+  output, error, status = Open3.capture3("op", "item", "get", title, "--vault", "hosts", "--account", OP_ACCOUNT, "--format", "json")
+  return JSON.parse(output) if status.success?
+  return nil if error.include?("isn't an item")
+
+  abort "1Password lookup of #{title.inspect} failed: #{error.strip}"
+end
+
+def deploy_target_from_local_file
+  path = "config/deploy-secrets/deploy-secrets-#{deploy_branch.delete_suffix("_2")}.yml"
+  abort "1Password CLI not found and no #{path}" unless File.exist?(path)
+
+  YAML.load_file(path)[fetch(:stage).to_s] || abort("#{path} has no #{fetch(:stage)} entry")
 end
 
 set :rails_env, fetch(:stage)
@@ -51,6 +122,11 @@ set :puma_systemctl_user, :user
 # don't let capistrano-puma also generate a systemd .socket unit, otherwise
 # the two race to bind the same path and puma crashes on boot.
 set :puma_enable_socket_service, false
+# capistrano3-puma 8 renamed the unit and moved its access log. Keep the old
+# names: per-host drop-ins (jemalloc, OOMPolicy) live under the unit's name.
+# The unit itself comes from config/deploy/templates/puma.service.erb.
+set :puma_service_unit_name, -> { "puma_#{fetch(:application)}_#{fetch(:stage)}" }
+set :puma_access_log, -> { File.join(shared_path, "log", "puma_access.log") }
 
 set :delayed_job_workers, 2
 set :delayed_job_roles, :background
@@ -70,7 +146,6 @@ namespace :deploy do
   after "deploy:migrate", "add_new_settings"
 
   after :publishing, "setup_puma"
-  before "puma:restart", "stop_puma_daemon"
   after :finished, "restart_delayed_jobs"
   after :finished, "refresh_sitemap"
 
@@ -227,25 +302,7 @@ task :setup_puma do
     end
   end
 
-  after "setup_puma", "puma:systemd:config"
-  after "setup_puma", "puma:systemd:enable"
-end
-
-# Code adapted from the task to stop the daemon in capistrano3-puma
-desc "Stops the Puma daemon so systemd can start the Puma process"
-task :stop_puma_daemon do
-  on roles(fetch(:puma_role)) do |role|
-    within release_path do
-      with rails_env: fetch(:rails_env) do
-        if test("[ -f #{fetch(:puma_pid)} ]") &&
-           !test("systemctl --user is-active #{fetch(:puma_service_unit_name)}") &&
-           test(:kill, "-0 $( cat #{fetch(:puma_pid)} )")
-          info "Puma: stopping daemon"
-          execute :pumactl, "-S #{fetch(:puma_state)} -F #{fetch(:puma_conf)} stop"
-        end
-      end
-    end
-  end
+  after "setup_puma", "puma:install"
 end
 
 # Print total wall-clock deploy time as the final line. Registered after the

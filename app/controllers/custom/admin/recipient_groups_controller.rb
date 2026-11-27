@@ -73,7 +73,7 @@ class Admin::RecipientGroupsController < Admin::BaseController
         @available_access_methods = [["newsletter_subscriber_ids"], ["all_newsletter_subscriber_ids"], ["administrators_ids"]]
         @origin_class_name = "User"
       elsif params[:kind].start_with?("projekt_related")
-        @available_access_methods = [["any_phase_subscribers_ids"]]
+        @available_access_methods = [["subscriber_ids"]]
         @origin_class_name = "Projekt"
         @origin_class_object_id = params[:kind].split("_").last
       end

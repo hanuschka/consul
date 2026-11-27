@@ -6,7 +6,7 @@ class Admin::FieldEditComponent < ViewComponent::Base
     @allow_br_tags = allow_br_tags
   end
 
-  def field_name
+  def input_name
     "#{@record.model_name.param_key}[#{@attribute}]"
   end
 
@@ -15,6 +15,10 @@ class Admin::FieldEditComponent < ViewComponent::Base
       record_type: @record.class.base_class.name.underscore.tr("/", "-"),
       id: @record.id
     )
+  end
+
+  def field_token
+    Adm::AttributeEditorToken.generate(@record, @attribute, @kind)
   end
 
   def max_visible_length

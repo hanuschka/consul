@@ -1,4 +1,8 @@
 class ProjektSerializer < BaseSerializer
+  # The page body lives in the content blocks; content and its backup are
+  # never written on a projekt page.
+  PAGE_TRANSLATED_ATTRIBUTES = %w[title subtitle].freeze
+
   attr_reader :projekt
 
   def initialize(projekt, options = {})
@@ -8,7 +12,7 @@ class ProjektSerializer < BaseSerializer
     @include_text = options.fetch(:include_text, true)
     @include_projekt_settings = options.fetch(:include_projekt_settings, true)
     @include_nested_fields = options.fetch(:include_nested_fields, false)
-    @current_api_client = options.fetch(:current_api_client, nil)
+    @client = options.fetch(:current_api_client, nil)
     @image_variant_versions = options.fetch(:image_variant_versions, nil)
   end
 
@@ -30,9 +34,27 @@ class ProjektSerializer < BaseSerializer
           :show_start_date_in_frontend,
           :show_end_date_in_frontend,
           :top_level_projekt_id,
-          :preview_code
+          :color,
+          :icon,
+          :landing_page_id,
+          :activated,
+          :published_at,
+          :content_updated_at
         ]
       )
+
+    projekt_data.merge!(
+      description: projekt.description,
+      translations: serialize_translations(projekt),
+      tags: projekt.tags.map(&:name),
+      geozone_affiliation_ids: projekt.geozone_affiliations.map(&:id),
+      registered_address_district_affiliation_ids: projekt.registered_address_district_affiliations.map(&:id),
+      map_location: serialize_map_location(projekt.map_location)
+    )
+
+    if admin_client?
+      projekt_data[:preview_code] = projekt.preview_code
+    end
 
     serialized_image =
       if projekt&.page&.image.present?
@@ -45,7 +67,10 @@ class ProjektSerializer < BaseSerializer
 
     page_data = {
       title: projekt&.page&.title,
-      slug: projekt&.page&.slug
+      slug: projekt&.page&.slug,
+      status: projekt&.page&.status,
+      published_at: projekt&.page&.published_at,
+      translations: projekt.page.present? ? serialize_translations(projekt.page, PAGE_TRANSLATED_ATTRIBUTES) : {}
     }
     page_data[:image] = serialized_image if serialized_image
 
@@ -96,14 +121,14 @@ class ProjektSerializer < BaseSerializer
   def projekt_phases
     phases = @projekt.projekt_phases
 
-    if @current_api_client&.public_data?
+    if client&.public_data?
       phases = phases.select { |phase| phase_visible_to_client?(phase) }
     end
 
     ProjektPhaseSerializer.serialize_collection(
       phases,
       include_nested_fields: @include_nested_fields,
-      current_api_client: @current_api_client
+      current_api_client: client
     )
   end
 

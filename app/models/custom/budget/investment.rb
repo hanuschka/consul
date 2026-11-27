@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "budget", "investment").to_s
+load Rails.root.join("app", "models", "budget", "investment.rb")
 
 class Budget
   class Investment < ApplicationRecord
@@ -31,13 +31,15 @@ to: :budget
     scope :masterportal_linked, -> { where.not(masterportal_pin_id: nil) }
     scope :user_created, -> { where(masterportal_pin_id: nil) }
 
-    enum implementation_performer: { city: 0, user: 1 }
+    enum :implementation_performer, { city: 0, user: 1 }
 
     scope :sort_by_newest, -> { reorder(created_at: :desc) }
 
     # validates :terms_of_service, acceptance: { allow_nil: false }, on: :create
     validates :resource_terms, acceptance: { allow_nil: false }, on: :create #custom
     validate :description_sanitized #custom
+    validates :external_source, presence: true, if: :external_id?
+    validates :external_id, uniqueness: { scope: [:budget_id, :external_source] }, allow_nil: true
 
     def self.sort_by_total_votes
       left_joins(:votes_for)
@@ -49,6 +51,7 @@ to: :budget
       left_joins(budget_ballot_lines: :ballot)
         .group("budget_investments.id")
         .order(Arel.sql("COALESCE(SUM(CASE WHEN budget_ballots.conditional = false THEN budget_ballot_lines.line_weight ELSE 0 END), 0) DESC"))
+        .order(id: :desc)
     end
 
     def register_selection(user, vote_weight = 1)
@@ -108,9 +111,12 @@ to: :budget
 
       if unfeasible?
         Mailer.budget_investment_unfeasible(self).deliver_later
+      elsif feasible_with_changes?
+        Mailer.budget_investment_feasible_with_changes(self).deliver_later
       else
         Mailer.budget_investment_feasible(self).deliver_later
       end
+
       update_column(:email_on_feasibility_sent_at, Time.zone.now)
     end
 
@@ -137,6 +143,12 @@ to: :budget
     def should_show_feasibility_explanation?
       feasible? &&
         selected? &&
+        valuator_explanation.present?
+    end
+
+    def should_show_changes_explanation?
+      feasible_with_changes? &&
+        valuation_finished? &&
         valuator_explanation.present?
     end
   end

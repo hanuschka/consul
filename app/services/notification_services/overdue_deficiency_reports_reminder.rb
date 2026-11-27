@@ -1,18 +1,5 @@
 module NotificationServices
   class OverdueDeficiencyReportsReminder < ApplicationService
-    # Whichever of the two timestamps sits closer to now is the one the reminder delay counts from.
-    EFFECTIVE_DATE_SQL = <<~SQL.squish.freeze
-      (
-        CASE
-          WHEN abs(EXTRACT(EPOCH FROM (deficiency_reports.assigned_at - CURRENT_TIMESTAMP))) <
-               abs(EXTRACT(EPOCH FROM (deficiency_reports.status_changed_at - CURRENT_TIMESTAMP))) THEN deficiency_reports.assigned_at
-          ELSE deficiency_reports.status_changed_at
-        END
-      )::date
-    SQL
-
-    THRESHOLD_SQL = "CURRENT_DATE - (deficiency_report_statuses.reminder_delay || ' days')::interval".freeze
-
     def call
       # The personal nudge is a one-day event: it only fires for officers whose Anliegen cross their
       # reminder delay today, so it goes quiet by itself on days without arrivals.
@@ -33,24 +20,17 @@ module NotificationServices
 
     private
 
-      def candidate_reports
-        DeficiencyReport.assigned.not_closed
-          .where.not(status_changed_at: nil)
-          .where.not(deficiency_report_statuses: { reminder_delay: [nil, 0] })
-          .where(official_answer: [nil, ""])
-      end
-
       # The Anliegen that cross their reminder delay today. This is what nudges the responsible
       # officer, and what marks a row as new in the oversight overview.
       def overdue_reports
-        candidate_reports.where(Arel.sql("#{EFFECTIVE_DATE_SQL} = #{THRESHOLD_SQL}"))
+        DeficiencyReport.overdue_candidates.where(Arel.sql("#{DeficiencyReport::OVERDUE_EFFECTIVE_DATE_SQL} = #{DeficiencyReport::OVERDUE_THRESHOLD_SQL}"))
       end
 
       # Everything still sitting past its reminder delay. The oversight overview is a standing
       # backlog rather than a one-day snapshot, so an Anliegen stays visible until it moves — and a
       # missed cron run no longer drops it silently.
       def still_overdue_reports
-        candidate_reports.where(Arel.sql("#{EFFECTIVE_DATE_SQL} <= #{THRESHOLD_SQL}"))
+        DeficiencyReport.overdue
       end
 
       def officers_with_overdue_reports_ids

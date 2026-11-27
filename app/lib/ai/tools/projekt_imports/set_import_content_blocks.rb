@@ -2,9 +2,11 @@ class Ai::Tools::ProjektImports::SetImportContentBlocks < Ai::Tools::ProjektImpo
   description "Proposes a replacement for the whole content block list of the project " \
               "import. Read the current blocks with read_import_data first and send " \
               "them all back in order, with only the parts the user asked to change " \
-              "modified. The blocks are NOT replaced by this call: the administrator " \
-              "sees the proposal under your message and applies or discards it with a " \
-              "button. Call it once per requested change."
+              "modified. Every template_id must come from the available_templates " \
+              "that read_import_data returns with the blocks. The blocks are NOT " \
+              "replaced by this call: the administrator sees the proposal under your " \
+              "message and applies or discards it with a button. Call it once per " \
+              "requested change."
 
   parameters Ai::Tools::ProjektImports::ContentBlocksParamSchema.new
 
@@ -18,7 +20,8 @@ class Ai::Tools::ProjektImports::SetImportContentBlocks < Ai::Tools::ProjektImpo
       note: "Not replaced yet. Tell the user in one sentence to confirm the new " \
             "block list with the Apply button shown under this message."
     }
-  rescue ::ProjektImports::AiResultEditor::ResolvedContentBlocksError => e
+  rescue ::ProjektImports::AiResultEditor::ResolvedContentBlocksError,
+         ::ProjektImports::AiResultEditor::UnavailableTemplatesError => e
     { error: e.message }
   end
 end

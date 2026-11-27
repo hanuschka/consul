@@ -1,5 +1,7 @@
 module Adm
   class UsersController < Adm::BaseController
+    include HasRegisteredAddress
+
     def index
       authorize [:adm, User]
       base_scope = UsersQuery.call(policy_scope([:adm, User]).order(created_at: :desc), params)
@@ -74,6 +76,7 @@ module Adm
       # new address straight to :email (skipping Devise's reconfirmation flow)
       # so it takes effect at once and is captured by the audit log.
       @user.skip_reconfirmation!
+      process_temp_attributes_for(@user)
 
       if @user.update(user_params)
         # Only reverify when Melderegister is enabled — otherwise reverify!
@@ -136,10 +139,13 @@ module Adm
     private
 
       def user_params
+        set_address_attributes
+
         params.require(:user).permit(
           :email,
           :first_name, :last_name,
           :city_name, :plz, :street_name, :street_number, :street_number_extension,
+          :registered_address_id,
           :gender, :date_of_birth
         )
       end

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "shared", "order_links_component").to_s
+load Rails.root.join("app", "components", "shared", "order_links_component.rb")
 
 class Shared::OrderLinksComponent < ApplicationComponent
   private

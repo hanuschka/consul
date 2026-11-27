@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "models", "budget", "stats").to_s
+load Rails.root.join("app", "models", "budget", "stats.rb")
 
 class Budget::Stats
   delegate :show_percentage_values_only?, to: :budget

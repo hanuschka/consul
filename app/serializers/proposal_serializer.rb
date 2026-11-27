@@ -1,8 +1,11 @@
 class ProposalSerializer < BaseSerializer
+  TRANSLATED_ATTRIBUTES = %w[title description summary retired_explanation].freeze
+
   attr_reader :proposal
 
-  def initialize(proposal, similar_contributions_count: nil)
+  def initialize(proposal, client: nil, similar_contributions_count: nil)
     @proposal = proposal
+    @client = client
     @similar_contributions_count = similar_contributions_count
   end
 
@@ -10,7 +13,6 @@ class ProposalSerializer < BaseSerializer
     proposal_data = proposal.as_json(
       only: [
         :id,
-        :author_id,
         :cached_votes_up,
         :cached_votes_down,
         :comments_count,
@@ -18,7 +20,6 @@ class ProposalSerializer < BaseSerializer
         :confidence_score,
         :created_at,
         :updated_at,
-        :responsible_name,
         :video_url,
         :geozone_id,
         :retired_at,
@@ -27,25 +28,36 @@ class ProposalSerializer < BaseSerializer
         :selected,
         :sentiment_id,
         :official_answer,
-        :officing_bulk_votes
+        :officing_bulk_votes,
+        :on_behalf_of,
+        :projekt_phase_id
       ]
     )
 
     proposal_data[:similar_contributions_count] = similar_contributions_count
 
+    if admin_client?
+      proposal_data.merge!(
+        author_id: proposal.author_id,
+        responsible_name: proposal.responsible_name,
+        admin_accepted: proposal.admin_accepted
+      )
+    end
+
     proposal_data.merge!(
       title: proposal.title,
       description: proposal.description,
       summary: proposal.summary,
-      retired_explanation: proposal.retired_explanation
+      retired_explanation: proposal.retired_explanation,
+      translations: serialize_translations(proposal, TRANSLATED_ATTRIBUTES),
+      **serialize_external_reference(proposal),
+      tags: proposal.tags.map(&:name),
+      projekt_labels: serialize_projekt_labels,
+      map_location: serialize_map_location(proposal.map_location)
     )
 
     if proposal.author.present?
-      proposal_data[:author] = {
-        id: proposal.author.id,
-        username: proposal.author.username,
-        public_name: proposal.author.public_name
-      }
+      proposal_data[:author] = serialize_on_behalf_of_author(proposal)
     end
 
     # Add geozone
@@ -75,18 +87,8 @@ class ProposalSerializer < BaseSerializer
       end
     end
 
-    # Add tags
-    proposal_data[:tags] = proposal.tags.pluck(:name) if proposal.tags.any?
-
-    # Add projekt labels
-    if proposal.respond_to?(:projekt_labels) && proposal.projekt_labels.any?
-      proposal_data[:projekt_labels] = proposal.projekt_labels.as_json(
-        only: [:id, :name, :color]
-      )
-    end
-
     # Add sentiment
-    if proposal.respond_to?(:sentiment) && proposal.sentiment.present?
+    if proposal.sentiment.present?
       proposal_data[:sentiment] = {
         id: proposal.sentiment.id,
         name: proposal.sentiment.name,
@@ -94,38 +96,27 @@ class ProposalSerializer < BaseSerializer
       }
     end
 
-    if proposal.map_location.present?
-      proposal_data[:map_location] = {
-        latitude: proposal.map_location.latitude,
-        longitude: proposal.map_location.longitude,
-        zoom: proposal.map_location.zoom
-      }
-    end
-
-    if proposal.respond_to?(:image) && proposal.image.present?
+    if proposal.image.present?
       serialized_image = ImageSerializer.new(proposal.image, include_variants: true).serialize
       proposal_data[:image] = serialized_image if serialized_image.present?
     end
 
-    if proposal.respond_to?(:documents) && proposal.documents.any?
-      proposal_data[:documents] = proposal.documents.map do |doc|
-        {
-          id: doc.id,
-          title: doc.title,
-          attachment_file_name: doc.attachment_file_name,
-          attachment_file_size: doc.attachment_file_size
-        }
-      end
+    if proposal.documents.any?
+      proposal_data[:documents] = DocumentSerializer.serialize_collection(proposal.documents)
     end
 
     proposal_data
   end
 
-  def self.serialize_collection(proposals)
+  def self.serialize_collection(proposals, client: nil)
     counts = SimilarContributions::StoredCounts.call(proposals)
 
     proposals.map do |proposal|
-      new(proposal, similar_contributions_count: counts.fetch(proposal.id, 0)).serialize
+      new(
+        proposal,
+        client: client,
+        similar_contributions_count: counts.fetch(proposal.id, 0)
+      ).serialize
     end
   end
 
@@ -135,5 +126,15 @@ class ProposalSerializer < BaseSerializer
       @similar_contributions_count ||=
         SimilarContributions::StoredCounts.call([proposal]).fetch(proposal.id, 0)
     end
-end
 
+    def serialize_projekt_labels
+      proposal.projekt_labels.map do |projekt_label|
+        {
+          id: projekt_label.id,
+          name: projekt_label.name,
+          color: projekt_label.color,
+          icon: projekt_label.icon
+        }
+      end
+    end
+end

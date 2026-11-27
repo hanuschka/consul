@@ -1,0 +1,102 @@
+<%= content_for :title, @report_profile.name %>
+
+<%= render Adm::HeaderComponent.new(title: @report_profile.name, breadcrumbs: @breadcrumbs, back_button_url: adm_deficiency_reports_report_profiles_path) do |header| %>
+  <% header.with_hint do %>
+    <p class="adm-hint__text"><%= t(".page_hint") %></p>
+  <% end %>
+  <% header.with_actions do %>
+    <%= kern_link_button(edit_adm_deficiency_reports_report_profile_path(@report_profile), text: t(".edit"), icon: "edit") %>
+  <% end %>
+<% end %>
+
+<%
+  headers = {
+    created_at: Kern::Table::HeaderComponent.new(:created_at, t(".table.created_at"), data_field: "created_at"),
+    period:     Kern::Table::HeaderComponent.new(:period, t(".table.period"), data_field: "period"),
+    trigger:    Kern::Table::HeaderComponent.new(:trigger, t(".table.trigger"), data_field: "trigger"),
+    status:     Kern::Table::HeaderComponent.new(:status, t(".table.status"), data_field: "status"),
+    sent_at:    Kern::Table::HeaderComponent.new(:sent_at, t(".table.sent_at"), data_field: "sent_at")
+  }
+  status_badges = { "completed" => "success", "failed" => "danger", "pending" => "info", "processing" => "info" }
+  scope = "adm.deficiency_reports.management_reports"
+%>
+
+<div class="kern-container my-5">
+  <%= form_with url: generate_adm_deficiency_reports_report_profile_path(@report_profile), method: :post, class: "mb-4" do |f| %>
+    <%= f.check_box :deliver, label: t(".deliver") %>
+    <div class="d-flex flex-wrap align-items-center gap-3">
+      <%= kern_button(type: :submit, text: t(".generate"), icon: "summarize", aria: { describedby: "report-profile-generate-hint" }) %>
+      <p id="report-profile-generate-hint" class="kern-body kern-body--muted m-0"><%= t(".generate_hint") %></p>
+    </div>
+  <% end %>
+
+  <%= render Adm::IndexTableComponent.new(
+        turbo_frame_id: "deficiency_report_management_reports_table",
+        records: @management_reports,
+        pagy: @pagy,
+        headers: headers,
+        column_count: 6,
+        empty_state: {
+          title: t(".no_items_title"),
+          description: t(".no_items_description"),
+          icon: "summarize"
+        }
+      ) do |c| %>
+    <% c.with_header_row do %>
+      <%= render headers[:created_at] %>
+      <%= render headers[:period] %>
+      <%= render headers[:trigger] %>
+      <%= render headers[:status] %>
+      <%= render headers[:sent_at] %>
+      <th scope="col" class="kern-table__header"><%= t(".table.actions") %></th>
+    <% end %>
+
+    <% c.with_body do %>
+      <% @management_reports.each do |management_report| %>
+        <tr id="<%= dom_id(management_report) %>" class="kern-table__row">
+          <th scope="row" class="kern-table__header" data-field="created_at">
+            <%= link_to l(management_report.created_at, format: "%d.%m.%Y %H:%M"),
+                        adm_deficiency_reports_management_report_path(management_report),
+                        class: "kern-link", data: { turbo_frame: "_top" } %>
+          </th>
+          <td class="kern-table__cell" data-field="period">
+            <%= l(management_report.period_start, format: "%d.%m.%Y") %> – <%= l(management_report.period_end, format: "%d.%m.%Y") %>
+          </td>
+          <td class="kern-table__cell" data-field="trigger">
+            <%= t("#{scope}.triggers.#{management_report.trigger}") %>
+          </td>
+          <td class="kern-table__cell" data-field="status">
+            <span class="kern-badge kern-badge--<%= status_badges[management_report.status] %> kern-badge--small"><%= t("#{scope}.statuses.#{management_report.status}") %></span>
+          </td>
+          <td class="kern-table__cell" data-field="sent_at">
+            <%= management_report.sent_at ? l(management_report.sent_at, format: "%d.%m.%Y %H:%M") : t(".table.not_sent") %>
+          </td>
+          <td class="kern-table__cell">
+            <div class="d-flex align-items-center gap-2">
+              <%= render Kern::Table::InlineActionsComponent.new do |actions| %>
+                <% actions.with_action(
+                  label: t(".table.open"),
+                  url: adm_deficiency_reports_management_report_path(management_report),
+                  icon: "visibility",
+                  data: { turbo_frame: "_top" }
+                ) %>
+              <% end %>
+              <% if Adm::DeficiencyReports::ManagementReportPolicy.new(current_user, management_report).retry? %>
+                <% retry_label = t("#{scope}.retry.button_label", date: l(management_report.created_at, format: "%d.%m.%Y %H:%M")) %>
+                <%= form_with url: retry_adm_deficiency_reports_management_report_path(management_report),
+                      method: :post, class: "d-flex", data: { turbo_frame: "_top" } do %>
+                  <button type="submit" class="px-2"
+                          style="background: none; border: none; line-height: 0; cursor: pointer;"
+                          title="<%= t("#{scope}.retry.button") %>"
+                          aria-label="<%= retry_label %>">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 20px; color: var(--kern-grey-600);">refresh</span>
+                  </button>
+                <% end %>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

@@ -29,12 +29,17 @@ class Adm::AiSettingsController < Adm::BaseController
       return
     end
 
+    if invalid_api_endpoint?
+      redirect_to adm_ai_settings_path, alert: t("adm.ai_settings.flash.invalid_api_endpoint")
+      return
+    end
+
     provider_change = changing_llm_provider?
 
-    @setting.update!(settings_params)
+    @setting.update!(value: setting_value)
     Ai::Settings.reset_llm_model! if provider_change
 
-    redirect_to adm_ai_settings_path, notice: t("adm.ai_settings.flash.updated")
+    redirect_to adm_ai_settings_path, notice: update_notice
   end
 
   def update_api_key
@@ -148,5 +153,30 @@ class Adm::AiSettingsController < Adm::BaseController
       @setting.key == "ai.llm_custom_model" &&
         settings_params[:value].blank? &&
         Setting["ai.llm_api_endpoint"].present?
+    end
+
+    def api_endpoint_setting?
+      @setting.key == "ai.llm_api_endpoint"
+    end
+
+    def setting_value
+      return settings_params[:value] if !api_endpoint_setting?
+
+      Ai::EndpointUrl.normalize(settings_params[:value])
+    end
+
+    def invalid_api_endpoint?
+      return false if !api_endpoint_setting?
+      return false if setting_value.blank?
+
+      !Ai::EndpointUrl.valid?(setting_value)
+    end
+
+    def update_notice
+      if api_endpoint_setting? && Ai::EndpointUrl.request_path(settings_params[:value]).present?
+        return t("adm.ai_settings.flash.api_endpoint_shortened", url: setting_value)
+      end
+
+      t("adm.ai_settings.flash.updated")
     end
 end

@@ -20,7 +20,8 @@ RSpec.describe 'Deficiency Report Categories API', type: :request, openapi_spec:
               name: "Category #{i+1}",
               color: 'blue',
               icon: 'road',
-              given_order: i
+              given_order: i,
+              warning_text: 'Notfälle bitte unter 112 melden'
             )
           end
         end
@@ -30,7 +31,7 @@ RSpec.describe 'Deficiency Report Categories API', type: :request, openapi_spec:
                  data: {
                    type: :object,
                    properties: {
-                     deficiency_report_categories: { type: :array, items: { type: :object } }
+                     deficiency_report_categories: { type: :array, items: { '$ref' => '#/components/schemas/DeficiencyReportCategory' } }
                    },
                    required: ['deficiency_report_categories']
                  },
@@ -38,7 +39,12 @@ RSpec.describe 'Deficiency Report Categories API', type: :request, openapi_spec:
                },
                required: ['data']
 
-        run_test!
+        run_test! do |response|
+          categories = JSON.parse(response.body)['data']['deficiency_report_categories']
+
+          expect(categories.first['warning_text']).to eq('Notfälle bitte unter 112 melden')
+          expect(categories.first['deficiency_reports_count']).to eq(0)
+        end
       end
 
       unauthorized_response

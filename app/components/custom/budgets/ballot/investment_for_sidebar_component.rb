@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "budgets", "ballot", "investment_for_sidebar_component").to_s
+load Rails.root.join("app", "components", "budgets", "ballot", "investment_for_sidebar_component.rb")
 
 class Budgets::Ballot::InvestmentForSidebarComponent < Budgets::Ballot::InvestmentComponent
 

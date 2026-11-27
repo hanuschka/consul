@@ -16,9 +16,11 @@ class ProjektEvent < ApplicationRecord
   validates :title, presence: true
   validates :datetime, presence: true
   validates :max_attendees, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
+  validates :weblink, format: { with: WebLink::HTTP_SCHEME }, allow_blank: true, if: :weblink_changed?
 
   before_validation :nullify_zero_max_attendees
   before_validation :clear_max_attendees_without_registration
+  before_validation :normalize_weblink
 
   default_scope { order(datetime: :asc) }
 
@@ -66,6 +68,10 @@ class ProjektEvent < ApplicationRecord
     admin_emails.split(",").map { |e| e.strip.downcase }.include?(email.downcase)
   end
 
+  def weblink_url
+    WebLink.normalize(weblink)
+  end
+
   private
 
     def nullify_zero_max_attendees
@@ -74,5 +80,11 @@ class ProjektEvent < ApplicationRecord
 
     def clear_max_attendees_without_registration
       self.max_attendees = nil unless registration_enabled?
+    end
+
+    def normalize_weblink
+      return if weblink.blank?
+
+      self.weblink = weblink_url || weblink
     end
 end

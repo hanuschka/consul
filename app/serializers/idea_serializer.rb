@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 
 class IdeaSerializer < BaseSerializer
+  PUBLIC_TRANSLATED_ATTRIBUTES = %w[title description].freeze
+  ADMIN_TRANSLATED_ATTRIBUTES = %w[title description official_answer].freeze
+
   attr_reader :idea
 
-  def initialize(idea)
+  def initialize(idea, client: nil)
     @idea = idea
+    @client = client
   end
 
   def serialize
     idea_data = idea.as_json(
       only: [
         :id,
-        :author_id,
         :cached_votes_up,
         :comments_count,
         :created_at,
@@ -28,35 +31,33 @@ class IdeaSerializer < BaseSerializer
 
     idea_data.merge!(
       title: idea.title,
-      description: idea.description,
-      official_answer: idea.official_answer
+      description: idea.description
     )
+
+    if admin_client?
+      idea_data[:author_id] = idea.author_id
+      idea_data[:official_answer] = idea.official_answer
+      idea_data[:translations] = serialize_translations(idea, ADMIN_TRANSLATED_ATTRIBUTES)
+    else
+      idea_data[:translations] = serialize_translations(idea, PUBLIC_TRANSLATED_ATTRIBUTES)
+    end
 
     idea_data[:status] = idea.status if idea.respond_to?(:status)
 
     if idea.author.present?
-      idea_data[:author] = {
-        id: idea.author.id,
-        username: idea.author.username,
-        public_name: idea.author.public_name
-      }
+      idea_data[:author] = serialize_on_behalf_of_author(idea)
     end
 
     if idea.category.present?
       idea_data[:category] = {
         id: idea.category.id,
-        name: idea.category.name
+        name: idea.category.name,
+        color: idea.category.color,
+        icon: idea.category.icon
       }
     end
 
-    if idea.map_location.present?
-      idea_data[:map_location] = {
-        latitude: idea.map_location.latitude,
-        longitude: idea.map_location.longitude,
-        zoom: idea.map_location.zoom,
-        approximated_address: idea.approximated_address
-      }
-    end
+    idea_data[:map_location] = serialize_map_location(idea.map_location)
 
     if idea.respond_to?(:image) && idea.image.present?
       serialized_image = ImageSerializer.new(idea.image, include_variants: true).serialize
@@ -64,14 +65,7 @@ class IdeaSerializer < BaseSerializer
     end
 
     if idea.respond_to?(:documents) && idea.documents.any?
-      idea_data[:documents] = idea.documents.map do |doc|
-        {
-          id: doc.id,
-          title: doc.title,
-          attachment_file_name: doc.attachment_file_name,
-          attachment_file_size: doc.attachment_file_size
-        }
-      end
+      idea_data[:documents] = DocumentSerializer.serialize_collection(idea.documents)
     end
 
     idea_data[:remaining_days] = idea.remaining_days if idea.respond_to?(:remaining_days)
@@ -79,8 +73,8 @@ class IdeaSerializer < BaseSerializer
     idea_data
   end
 
-  def self.serialize_collection(ideas)
-    ideas.map { |idea| new(idea).serialize }
+  def self.serialize_collection(ideas, client: nil)
+    ideas.map { |idea| new(idea, client: client).serialize }
   end
 end
 

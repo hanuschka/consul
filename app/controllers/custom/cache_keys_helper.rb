@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "cache_keys_helper").to_s
+load Rails.root.join("app", "helpers", "cache_keys_helper.rb")
 
 module CacheKeysHelper
   def change_of_current_state(start_date, end_date)

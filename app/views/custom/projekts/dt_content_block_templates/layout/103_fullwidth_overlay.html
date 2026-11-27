@@ -1,30 +1,26 @@
-<!-- BlockID: D10 – Vollbild-Bild mit Text-Overlay am unteren Rand -->
+<!-- BlockID: D10 Vollbild-Bild mit Text am unteren Rand - Foto, Etiketten, Titel und Satz -->
 <!-- Geeignet für: Projekt-Header, atmosphärische Einstiege, Bildstatements -->
-<!-- ANPASSEN: src-Attribut im img-Tag ersetzen, Text und Badges anpassen -->
+<!-- Editor: Bild über das Bild-Werkzeug austauschen (Maus auf eine freie Bildstelle, Alternativtext setzen); der Textbereich lässt die Maus dafür durch. Etiketten sind Listenelemente, „Weiteres Element hinzufügen“ kopiert das letzte. -->
+<!-- Umbruch: Etiketten brechen in neue Zeilen um, die Höhe wächst mit dem Text; das Bild füllt immer die ganze Fläche. Eigene Fläche, funktioniert mit ausgeschaltetem Seitenhintergrund. -->
+<!-- Typo v3: Titel = Theme-H3 in Weiß, Etiketten und Text 1rem -->
 
-<div style="position: relative; border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); min-height: 340px;">
+<div style="position: relative; overflow: hidden; margin: 0; display: grid; background: #1a2e44; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 14px 36px -16px rgba(16,24,40,0.18);">
 
-  <!-- Vollbild-Bild -->
-  <img src="https://placehold.co/1200x400/1779ba/ffffff?text=Projektbild" alt="Projektbild" style="position: relative; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+  <img src="https://placehold.co/1200x400/1779ba/ffffff?text=Projektbild" alt="Blick über die Innenstadt am Abend" style="grid-row: 1; grid-column: 1; display: block; width: 100%; height: 360px; height: clamp(350px, 48vw, 440px); min-height: 100%; object-fit: cover; margin: 0;">
 
-  <!-- Gradient-Overlay von transparent nach dunkel -->
-  <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);"></div>
+  <div aria-hidden="true" class="js-content-block-element-not-editable" style="grid-row: 1; grid-column: 1; background: linear-gradient(180deg, rgba(10,20,35,0.05) 20%, rgba(10,20,35,0.82) 100%); pointer-events: none;"></div>
 
-  <!-- Text-Overlay unten -->
-  <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 32px;">
+  <div style="grid-row: 1; grid-column: 1; align-self: end; position: relative; z-index: 1; width: 100%; padding: 24px; padding: clamp(20px, 5vw, 40px); pointer-events: none;">
 
-    <!-- Badge-Reihe -->
-    <div style="display: flex; flex-wrap: wrap; margin-bottom: 14px;">
-      <div style="background: rgba(255,255,255,0.18); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; padding: 4px 12px; font-size: 11px; color: #ffffff; margin-right: 8px; margin-bottom: 6px; font-weight: 700;">Stadtentwicklung</div>
-      <div style="background: rgba(255,255,255,0.18); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; padding: 4px 12px; font-size: 11px; color: #ffffff; margin-right: 8px; margin-bottom: 6px; font-weight: 700;">Beteiligung 2026</div>
-      <div style="background: rgba(255,255,255,0.18); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; padding: 4px 12px; font-size: 11px; color: #ffffff; margin-bottom: 6px; font-weight: 700;">Aktiv</div>
-    </div>
+    <ul style="pointer-events: auto; list-style: none; margin: 0 0 14px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px;">
+      <li style="margin: 0; display: inline-flex; align-items: center; gap: 8px; background: var(--brand-color, #1779ba); border: 1px solid var(--brand-color, #1779ba); border-radius: 999px; padding: 2px 12px; font-size: 1rem; line-height: 1.6; font-weight: 700; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 10px -4px rgba(16,24,40,0.6);"><i class="fas fa-circle" aria-hidden="true" style="font-size: 8px;"></i> Aktiv</li>
+      <li style="margin: 0; display: inline-block; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 2px 12px; font-size: 1rem; line-height: 1.6; font-weight: 600; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);">Stadtentwicklung</li>
+      <li style="margin: 0; display: inline-block; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 2px 12px; font-size: 1rem; line-height: 1.6; font-weight: 600; color: #ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);">Beteiligung 2026</li>
+    </ul>
 
-    <h3 style="font-size: 22px; font-weight: 700; color: #ffffff; margin-bottom: 10px; margin-top: 0; line-height: 1.3; letter-spacing: -0.3px;">Gemeinsam unsere Innenstadt gestalten</h3>
+    <h3 style="pointer-events: auto; color: #ffffff; margin: 0 0 8px; max-width: 34rem; hyphens: auto; overflow-wrap: break-word; text-shadow: 0 1px 2px rgba(0,0,0,0.35);">Gemeinsam unsere Innenstadt gestalten</h3>
 
-    <p style="font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.65; margin-bottom: 0; margin-top: 0; max-width: 680px;">
-      Bringen Sie Ihre Ideen ein: Wie soll sich unsere Innenstadt in den kommenden Jahren entwickeln? Von Mobilität bis Aufenthaltsqualität – Ihre Meinung zählt.
-    </p>
+    <p style="pointer-events: auto; font-size: 1rem; line-height: 1.6; color: #ffffff; margin: 0; max-width: 42rem; text-shadow: 0 1px 2px rgba(0,0,0,0.35);">Bringen Sie Ihre Ideen ein: Wie soll sich unsere Innenstadt in den kommenden Jahren entwickeln? Von Mobilität bis Aufenthaltsqualität – Ihre Meinung zählt.</p>
 
   </div>
 </div>

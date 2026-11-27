@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "helpers", "stats_helper").to_s
+load Rails.root.join("app", "helpers", "stats_helper.rb")
 
 module StatsHelper
   def number_with_info_tags(number, text, html_class: "", show_percentage_values_only: false)

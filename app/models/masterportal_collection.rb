@@ -7,10 +7,10 @@ class MasterportalCollection < ApplicationRecord
   has_many :projekt_point_of_interest_categories, dependent: :destroy
   has_one_attached :geojson_file
 
-  enum source: {
+  enum :source, {
     geoserver: "geoserver",
     file: "file"
-  }, _prefix: true
+  }, prefix: true
 
   validates :collection_id, presence: true
   validates :collection_id, uniqueness: { scope: :projekt_phase_id }

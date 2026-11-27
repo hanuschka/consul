@@ -21,7 +21,7 @@ class Whatsapp::UpcomingEventsQuery < ApplicationQuery
         .where("projekt_events.datetime >= ?", Time.current)
         .joins(projekt_phase: { projekt: :page })
         .where(site_customization_pages: { status: "published" })
-        .merge(Projekt.activated)
+        .merge(Projekt.visible_for(nil))
         .order(:datetime)
 
       return relation if @projekt.blank?

@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "controllers", "admin", "site_customization", "pages_controller").to_s
+load Rails.root.join("app", "controllers", "admin", "site_customization", "pages_controller.rb")
 
 class Admin::SiteCustomization::PagesController < Admin::SiteCustomization::BaseController
   include ImageAttributes

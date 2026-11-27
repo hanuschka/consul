@@ -26,9 +26,17 @@ class WYSIWYGSanitizer
   end
 
   def sanitize(html)
-    sanitized = ActionController::Base.helpers.sanitize(html, tags: allowed_tags, attributes: allowed_attributes)
+    sanitized = ActionController::Base.helpers.sanitize(remove_embedded_code(html), tags: allowed_tags, attributes: allowed_attributes)
 
     repair_email_links(sanitized)
+  end
+
+  def remove_embedded_code(html)
+    return html if html.blank? || !html.match?(/<(style|script)\b/i)
+
+    fragment = Nokogiri::HTML::DocumentFragment.parse(html)
+    fragment.css("style, script").each(&:remove)
+    fragment.to_html
   end
 
   def stripped?(original, sanitized)

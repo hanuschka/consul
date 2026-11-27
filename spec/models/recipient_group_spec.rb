@@ -88,15 +88,14 @@ describe RecipientGroup do
 
       it "calls the access method on the record when an object id is set" do
         projekt = create(:projekt)
-        phase = create(:projekt_phase, projekt: projekt)
-        create(:projekt_phase_subscription, projekt_phase: phase, user: create(:user, email: "phase@x.test"))
+        ProjektSubscription.create!(projekt: projekt, user: create(:user, email: "sub@x.test"), active: true)
         create(:user, email: "other@x.test")
 
         group = create(:recipient_group, origin_class_name: "Projekt",
                                          origin_class_object_id: projekt.id,
-                                         access_method: "any_phase_subscribers_ids")
+                                         access_method: "subscriber_ids")
 
-        expect(group.user_emails).to contain_exactly("phase@x.test")
+        expect(group.user_emails).to contain_exactly("sub@x.test")
       end
 
       context "with access_method all_newsletter_subscriber_ids" do

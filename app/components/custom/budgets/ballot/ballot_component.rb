@@ -1,4 +1,4 @@
-require_dependency Rails.root.join("app", "components", "budgets", "ballot", "ballot_component").to_s
+load Rails.root.join("app", "components", "budgets", "ballot", "ballot_component.rb")
 
 class Budgets::Ballot::BallotComponent < ApplicationComponent
   private
